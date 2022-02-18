@@ -22,20 +22,30 @@ Builder.load_string("""
         orientation: 'vertical'
 
         GridLayout:
-            cols: 3
+            cols: 2
 
             Button:
                 text: 'Back'
                 on_press: root.back_to_fac_settings()
 
             Button:
-                text: 'Run overnight test (6hr)'
-                on_press: root.run_overnight_test()
-
-            Button:
                 text: 'STOP'
                 background_color: [1,0,0,1]
                 on_press: root.stop()
+
+            GridLayout:
+                cols: 2
+                Button:
+                    text: 'Run overnight test (6hr)'
+                    on_press: root.run_overnight_test()
+
+                Image:
+                    id: overnight_test_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
         GridLayout:
             cols: 2
@@ -173,6 +183,7 @@ class OvernightTesting(Screen):
 
             if self.OVERNIGHT_TOTAL_RUNS == self.OVERNIGHT_REQUIRED_RUNS:
                 Clock.unschedule(self.OVERNIGHT_CLOCK)
+                self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
                 self.overnight_running = False
 
             self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)

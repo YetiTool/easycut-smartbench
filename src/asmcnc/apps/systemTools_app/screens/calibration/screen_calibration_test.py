@@ -228,12 +228,26 @@ class CalibrationTesting(Screen):
     def disable_y_measurement(self, dt):
         self.y_running = False
 
+    def confirm_unweighted(self, dt):
+        self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    def confirm_x(self, dt):
+        self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    def confirm_y(self, dt):
+        self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    def confirm_z(self, dt):
+        self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
     def run_unweighted_test(self):
         self.run_z_procedure(None)
 
         Clock.schedule_once(self.run_x_procedure, TIME_TO_RUN_Z + 10)
 
         Clock.schedule_once(self.run_y_procedure, TIME_TO_RUN_Z + TIME_TO_RUN_X + 20)
+
+        Clock.schedule_once(self.confirm_unweighted, TIME_TO_RUN_Z + TIME_TO_RUN_X + TIME_TO_RUN_Y)
 
     def stop_all_procedures(self):
         self.disable_x_measurement(None)
@@ -279,6 +293,7 @@ class CalibrationTesting(Screen):
                 self.z_distance_left = 0
 
                 Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
+                Clock.schedule_once(self.confirm_z, TIME_FOR_MOVEMENT)
 
         run(None)
 
@@ -320,6 +335,7 @@ class CalibrationTesting(Screen):
                 self.y_distance_left = 0
 
                 Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
+                Clock.schedule_once(self.confirm_y, TIME_FOR_MOVEMENT)
 
         run(None)
 
@@ -358,6 +374,7 @@ class CalibrationTesting(Screen):
                 self.x_distance_left = 0
 
                 Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
+                Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
 
         run(None)
 

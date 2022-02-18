@@ -70,6 +70,7 @@ class SerialConnection(object):
         self.l = localization
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
+        self.FINAL_TEST = False
 
     def __del__(self):
         print 'Destructor'
@@ -986,6 +987,10 @@ class SerialConnection(object):
                     self.y_axis = int(sg_values[2])
                     self.y1_motor = int(sg_values[3])
                     self.y2_motor = int(sg_values[4])
+
+                    if self.FINAL_TEST:
+                        self.sm.get_screen('calibration_testing').measure()
+                        self.sm.get_screen('overnight_testing').measure()
 
                 elif part.startswith('Sp:'):
 
