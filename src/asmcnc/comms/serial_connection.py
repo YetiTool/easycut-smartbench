@@ -643,8 +643,8 @@ class SerialConnection(object):
     g28_z = '0.0'
 
     # Feeds and speeds
-    spindle_speed = '0.0'
-    feed_rate = '0.0'
+    spindle_speed = 0
+    feed_rate = 0
 
     # Analogue spindle feedback
     spindle_load_voltage = None

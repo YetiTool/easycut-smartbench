@@ -2050,7 +2050,7 @@ class RouterMachine(object):
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
 
                     # But don't measure the backwards fast jogs!
-                    elif self.m.feed_rate > 303:
+                    elif self.feed_rate() > 303:
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
 
