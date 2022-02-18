@@ -228,7 +228,7 @@ class CalibrationTesting(Screen):
     def disable_y_measurement(self, dt):
         self.y_running = False
 
-    def run_unweighted(self):
+    def run_unweighted_test(self):
         self.run_z_procedure(None)
 
         Clock.schedule_once(self.run_x_procedure, TIME_TO_RUN_Z + 10)
