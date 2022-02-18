@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from datetime import datetime
+from asmcnc.skavaUI import popup_info
 import math
 
 Builder.load_string("""
@@ -17,6 +18,8 @@ Builder.load_string("""
     z_peak_load:z_peak_load
     y1_peak_load:y1_peak_load
     y2_peak_load:y2_peak_load
+
+    overnight_test_check:overnight_test_check
 
     BoxLayout:
         orientation: 'vertical'
@@ -129,7 +132,7 @@ class OvernightTesting(Screen):
 
     def stop(self):
         self.overnight_running = False
-        #send stop to grbl
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def setup_arrays(self):
         #x loads with vector & pos

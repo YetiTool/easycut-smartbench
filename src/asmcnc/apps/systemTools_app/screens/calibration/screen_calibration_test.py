@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from datetime import datetime
+from asmcnc.skavaUI import popup_info
 import math
 
 Builder.load_string("""
@@ -17,6 +18,11 @@ Builder.load_string("""
     z_peak_load:z_peak_load
     y1_peak_load:y1_peak_load
     y2_peak_load:y2_peak_load
+
+    x_test_check:x_test_check
+    y_test_check:y_test_check
+    z_test_check:z_test_check
+    unweighted_test_check:unweighted_test_check
 
     BoxLayout:
         orientation: 'vertical'
@@ -253,8 +259,7 @@ class CalibrationTesting(Screen):
         self.disable_x_measurement(None)
         self.disable_y_measurement(None)
         self.disable_z_measurement(None)
-        #send stop to grbl
-        log("Stopped all procedures")
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def run_z_procedure(self, dt):
         self.z_vals = []
