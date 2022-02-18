@@ -1790,6 +1790,9 @@ class RouterMachine(object):
     temp_toff = 2
     temp_sgt = 0
 
+    toff_max = 3 # 10
+    sgt_max = 2 # 20
+
 
     def reset_tuning_flags(self):
 
@@ -1982,6 +1985,8 @@ class RouterMachine(object):
         time.sleep(0.5)
         tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
 
+        log("Sweep finished")
+
         if X: 
             X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
             x_toff_tuned, x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
@@ -2009,9 +2014,9 @@ class RouterMachine(object):
 
         # having empty initial values, so that running through indices with 
         # self.temp_toff and self.temp_sgt is easy and readable :) 
-        tuning_array = [[[]]*21]*11
+        tuning_array = [[[]]*(self.sgt_max + 1)]*(self.toff_max + 1)
 
-        while self.temp_toff <= 10:
+        while self.temp_toff <= self.toff_max:
 
             # Commands have to be sent at least 0.05 s apart, so sleeps after commands are sent give time for each command to be sent and recieved
 
@@ -2026,7 +2031,7 @@ class RouterMachine(object):
                 self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.05)
 
-            while self.temp_sgt <= 20:
+            while self.temp_sgt <= self.sgt_max:
 
                 if X: 
                     self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
@@ -2088,11 +2093,13 @@ class RouterMachine(object):
 
         # idx is motor/axis index
 
+        log("Find best combo for axis idx: " + str(idx) + ", target: " + str(target_SG))
+
         # toff, sgt, dsg
         prev_best = [None, None, None]
 
-        for toff in range(2,11):
-            for sgt in range(0,21):
+        for toff in range(2,self.toff_max + 1):
+            for sgt in range(0,self.sgt_max + 1):
                 try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
 
                 # compare delta sg (between read in and target)
@@ -2101,6 +2108,8 @@ class RouterMachine(object):
                     prev_best = [toff, sgt, try_dsg]
 
         # at end of loop, prev_best == best
+        log("FOUND FOR IDX: " + str(idx) + str(prev_best[0] +"," + str(prev_best[1]) + "," + str(prev_best[2])))
+
         return prev_best[0], prev_best[1]
 
 
@@ -2117,6 +2126,7 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
+        log("Calculate target SG " + str(motor))
         reference_temp = 45
         reference_SG = 500
 
@@ -2146,6 +2156,8 @@ class RouterMachine(object):
 
         if self.toff_and_sgt_found:
 
+            log("TOFF and SGT foundd - applying settings")
+
             if not self.tuning_poll: Clock.unschedule(self.tuning_poll)
 
             # Stop slow jog
@@ -2170,6 +2182,8 @@ class RouterMachine(object):
 
     def store_tuned_settings_and_unset_raw_SG_reporting(self, dt):
 
+        log("Storing TMC parameters in EEPROM")
+
         # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS
         self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
 
@@ -2180,6 +2194,9 @@ class RouterMachine(object):
 
 
     def finish_tuning(self, dt):
+
+        log("Tuning complete")
+
         self.reset_tuning_flags()
         self.tuning_in_progress = False
 
