@@ -1726,6 +1726,7 @@ class RouterMachine(object):
         self.prepare_for_tuning()
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
+        self.s.write_command('$J=G53 X' + self.x_min_jog_abs_limit ' Z' + self.z_max_jog_abs_limit + ' F6046')
         self.s.write_command('$J=G53 X-1192 Z-149 F6046')
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
 
@@ -1737,6 +1738,7 @@ class RouterMachine(object):
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
         self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
+        self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
@@ -1787,22 +1789,29 @@ class RouterMachine(object):
 
     time_to_check_for_tuning_prep = 0
 
+    temp_toff = 2
+    temp_sgt = 0
+
+
     def reset_tuning_flags(self):
 
         log("Reset tuning flags")
 
-        toff_and_sgt_found = False
-        tuning_poll = None
-        x_toff_tuned = None
-        x_sgt_tuned = None
-        y1_toff_tuned = None
-        y1_sgt_tuned = None
-        y2_toff_tuned = None
-        y2_sgt_tuned = None
-        z_toff_tuned = None
-        z_sgt_tuned = None
+        self.toff_and_sgt_found = False
+        self.tuning_poll = None
+        self.x_toff_tuned = None
+        self.x_sgt_tuned = None
+        self.y1_toff_tuned = None
+        self.y1_sgt_tuned = None
+        self.y2_toff_tuned = None
+        self.y2_sgt_tuned = None
+        self.z_toff_tuned = None
+        self.z_sgt_tuned = None
 
-        temp_sg_array = []
+        self.temp_sg_array = []
+
+        self.temp_toff = 2
+        self.temp_sgt = 0
 
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
@@ -1841,7 +1850,7 @@ class RouterMachine(object):
             self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
             self.time_to_check_for_tuning_prep = time.time()
-            self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z)
+            Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z), 2)
 
 
         elif (self.time_to_check_for_tuning_prep + 180) < time.time():
@@ -1849,7 +1858,7 @@ class RouterMachine(object):
             log("RAW SG VALUES NOT ENABLED")
 
         else: 
-            Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 2)
+            Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 1)
 
 
 
@@ -1860,7 +1869,7 @@ class RouterMachine(object):
             log("Temperature reads valid, check machine is Idle...")
 
             self.time_to_check_for_tuning_prep = time.time()
-            self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z)
+            Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 2)
 
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
@@ -1877,7 +1886,7 @@ class RouterMachine(object):
         if self.state().startswith('Idle'):
 
             log("Ready for tuning, start slow jog...")
-            self.start_slow_calibration_jog(X=X, Y=Y, Z=Z)
+            self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
             log("Start tuning...")
             self.start_tuning(X,Y,Z)
 
@@ -1890,13 +1899,13 @@ class RouterMachine(object):
 
 
 
-    def start_slow_calibration_jog(self, X = False, Y = False, Z = False):
+    def start_slow_tuning_jog(self, X = False, Y = False, Z = False):
 
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
         if X and Z and not Y: 
             self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
-            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F301.5')
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
@@ -1915,6 +1924,25 @@ class RouterMachine(object):
         # - X and Y
         # - Y and Z
 
+    def jog_back_fast_pause_tuning(self, X=False, Y=False, Z=False):
+
+        if X and Z and not Y: 
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
+
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
+
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, 6000)
+
+        elif Z: 
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
+        self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z)
 
     def start_tuning(self, X, Y, Z):
 
@@ -1964,40 +1992,38 @@ class RouterMachine(object):
         # Sweep SGT in the range 0-20
         # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid.
 
-        temp_toff = 2
+        
 
         # having empty initial values, so that running through indices with 
-        # temp_toff and temp_sgt is easy and readable :) 
+        # self.temp_toff and self.temp_sgt is easy and readable :) 
         tuning_array = [[[]]*21]*11
 
-        while temp_toff <= 10:
-
-            temp_sgt = 0
+        while self.temp_toff <= 10:
 
             # Commands have to be sent at least 0.05 s apart, so sleeps after commands are sent give time for each command to be sent and recieved
 
             if X: 
-                self.send_command_to_motor("SET TOFF X " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.05)
             if Y: 
-                self.send_command_to_motor("SET TOFF Y1 " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET TOFF Y2 " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.1)
             if Z: 
-                self.send_command_to_motor("SET TOFF Z " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.05)
 
-            while temp_sgt <= 20:
+            while self.temp_sgt <= 20:
 
                 if X: 
-                    self.send_command_to_motor("SET SGT X " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.05)
                 if Y: 
-                    self.send_command_to_motor("SET SGT Y1 " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
-                    self.send_command_to_motor("SET SGT Y2 " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
+                    self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.1)
                 if Z: 
-                    self.send_command_to_motor("SET SGT Z " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.05)
 
                 while len(self.temp_sg_array) <= 15:
@@ -2006,19 +2032,20 @@ class RouterMachine(object):
 
                     # Keep jogging!
                     if self.state().startswith('Idle'):
-                        self.start_slow_calibration_jog(X=X, Y=Y, Z=Z)
+                        self.jog_back_fast_pause_tuning(X=X, Y=Y, Z=Z)
+                        break
 
                 self.s.tuning_flag = False
-                tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
+                tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
                 self.temp_sg_array = []
 
-                log("SWEPT TOFF AND SGT: " + str(temp_toff) + ", " + str(temp_sgt))
+                log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
 
                 temperature_list.append(self.s.motor_driver_temp)
 
-                temp_sgt = temp_sgt + 1
+                self.temp_sgt = self.temp_sgt + 1
 
-            temp_toff = temp_toff + 1
+            self.temp_toff = self.temp_toff + 1
 
         try:
             avg_temperature = sum(temperature_list) / len(temperature_list)
@@ -2098,16 +2125,16 @@ class RouterMachine(object):
             # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
 
             if X: 
-                self.send_command_to_motor("SET TOFF X " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET SGT X " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
+                self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
             if Y: 
-                self.send_command_to_motor("SET TOFF Y1 " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET TOFF Y2 " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET SGT Y1 " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
-                self.send_command_to_motor("SET SGT Y2 " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
+                self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
+                self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
             if Z: 
-                self.send_command_to_motor("SET TOFF Z " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET SGT Z " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
+                self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
 
             Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
 
