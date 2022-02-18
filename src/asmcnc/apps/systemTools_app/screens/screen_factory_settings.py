@@ -5,6 +5,7 @@ Menu screen for system tools app
 @author: Letty
 '''
 import os
+import sys
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -13,6 +14,9 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+
+from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 
 Builder.load_string("""
 
@@ -288,7 +292,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 4
+                        rows: 7
                         padding: 10
                         spacing: 10
                         ToggleButton:
@@ -305,6 +309,15 @@ Builder.load_string("""
                         Button:
                             text: 'Final test'
                             on_press: root.final_test()
+                        Button:
+                            text: 'Retrieve lower beam calibration parameters'
+                            on_press: root.retrieve_lower_beam_parameters()
+                        Button:
+                            text: 'Calibration test'
+                            on_press: root.enter_calibration_test()
+                        Button:
+                            text: 'Overnight test'
+                            on_press: root.enter_overnight_test()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -658,9 +671,10 @@ class FactorySettingsScreen(Screen):
     def set_smartbench_model(self):
         self.update_product_code_with_model()
         print('Writing ' + self.smartbench_model.text)
-        file = open(self.smartbench_model_path, "w+")
-        file.write(str(self.smartbench_model.text))
-        file.close()
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            file = open(self.smartbench_model_path, "w+")
+            file.write(str(self.smartbench_model.text))
+            file.close()
 
     def get_smartbench_model(self):
         try:
@@ -755,3 +769,19 @@ class FactorySettingsScreen(Screen):
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
+    def retrieve_lower_beam_parameters(self):
+        pass#todo
+
+    def enter_calibration_test(self):
+        if not self.systemtools_sm.sm.has_screen('calibration_testing'):
+            calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm)
+            self.systemtools_sm.sm.add_widget(calibration_testing)
+        
+        self.systemtools_sm.sm.current = 'calibration_testing'
+
+    def enter_overnight_test(self):
+        if not self.systemtools_sm.sm.has_screen('overnight_testing'):
+            overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm)
+            self.systemtools_sm.sm.add_widget(overnight_testing)
+        
+        self.systemtools_sm.sm.current = 'overnight_testing'
