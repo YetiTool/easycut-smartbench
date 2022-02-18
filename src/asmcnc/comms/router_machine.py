@@ -1726,7 +1726,7 @@ class RouterMachine(object):
         self.prepare_for_tuning()
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
-        self.s.write_command('$J=G53 X' + self.x_min_jog_abs_limit + ' Z' + self.z_max_jog_abs_limit + ' F6046')
+        self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F6046')
         self.s.write_command('$J=G53 X-1192 Z-149 F6046')
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
 
