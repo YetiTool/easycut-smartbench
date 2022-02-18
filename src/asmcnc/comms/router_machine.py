@@ -2072,6 +2072,7 @@ class RouterMachine(object):
 
                 self.temp_sgt = self.temp_sgt + 1
 
+            self.temp_sgt = 0
             self.temp_toff = self.temp_toff + 1
 
         try:
