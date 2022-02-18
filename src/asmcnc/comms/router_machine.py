@@ -1894,13 +1894,21 @@ class RouterMachine(object):
 
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
-        if X and Z and not Y: self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
+        if X and Z and not Y: 
+            self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F301.5')
 
-        elif Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
+            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 300)
 
-        elif X: self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, 300)
 
-        elif Z: self.jog_absolute_single_axis('Z', -149, 30)
+        elif Z: 
+            self.jog_absolute_single_axis('Z', -149, 30)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
 
         # does not yet handle: 
         # - X, Y, Z
@@ -1995,6 +2003,10 @@ class RouterMachine(object):
                 while len(self.temp_sg_array) <= 15:
 
                     self.s.tuning_flag = True
+
+                    # Keep jogging!
+                    if self.state().startswith('Idle'):
+                        self.start_slow_calibration_jog(X=X, Y=Y, Z=Z)
 
                 self.s.tuning_flag = False
                 tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
