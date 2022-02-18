@@ -1888,7 +1888,6 @@ class RouterMachine(object):
         if self.state().startswith('Idle'):
 
             log("Ready for tuning, start slow jog...")
-            self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
             log("Start tuning...")
             self.start_tuning(X,Y,Z)
 
@@ -2047,12 +2046,14 @@ class RouterMachine(object):
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
                         self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                        time.sleep(10)
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
 
                     # But don't measure the backwards fast jogs!
                     elif self.feed_rate() > 303:
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
+                        time.sleep(1)
 
                     # Record if conditions are good :)
                     else:
