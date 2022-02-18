@@ -1864,7 +1864,6 @@ class RouterMachine(object):
 
 
 
-
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
         if (0 < self.s.motor_driver_temp < 100)  and (self.time_to_check_for_tuning_prep + 15) < time.time():
