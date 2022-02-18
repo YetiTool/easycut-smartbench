@@ -1726,8 +1726,7 @@ class RouterMachine(object):
         self.prepare_for_tuning()
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
-        self.s.write_command('$J=G53 X-1192 Z-149 F6046')
-        self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F6046')
+        self.tuning_jog_forwards_fast(X = True, Y = False, Z = True)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
 
     def tune_Y_for_calibration(self):
@@ -1737,8 +1736,7 @@ class RouterMachine(object):
         self.prepare_for_tuning()
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
-        self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
+        self.tuning_jog_forwards_fast(X = False, Y = True, Z = False)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
@@ -1859,7 +1857,8 @@ class RouterMachine(object):
 
         else: 
             if self.state().startswith('Idle'):
-                self.jog_back_fast(X=X, Y=Y, Z=Z)
+                self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                self.tuning_jog_forwards_fast(X=X, Y=Y, Z=Z)
 
             Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 1)
 
@@ -1924,7 +1923,7 @@ class RouterMachine(object):
         # - X and Y
         # - Y and Z
 
-    def jog_back_fast(self, X=False, Y=False, Z=False):
+    def tuning_jog_back_fast(self, X=False, Y=False, Z=False):
 
         if X and Z and not Y: 
             self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
@@ -1937,6 +1936,25 @@ class RouterMachine(object):
 
         elif Z: 
             self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
+
+    def tuning_jog_forwards_fast(self, X=False, Y=False, Z=False):
+
+        if X and Z and not Y: 
+            self.s.write_command('$J=G53 X-1192 Z-149 F6046')
+
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
+
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 6000)
+
+        elif Z: 
+            self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
         # does not yet handle: 
         # - X, Y, Z
@@ -2029,7 +2047,7 @@ class RouterMachine(object):
                     if self.state().startswith('Idle'):
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
-                        self.jog_back_fast_pause_tuning(X=X, Y=Y, Z=Z)
+                        self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
 
                     # But don't measure the backwards fast jogs!
