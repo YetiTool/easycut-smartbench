@@ -2106,8 +2106,15 @@ class RouterMachine(object):
 
                 # compare delta sg (between read in and target)
                 # if it's smaller than any values found previously, then it's better, so save it
-                if abs(try_dsg) < abs(prev_best[2]) or prev_best[2]==None:
-                    prev_best = [toff, sgt, try_dsg]
+
+                try 
+
+                    if abs(try_dsg) < abs(prev_best[2]):
+                        prev_best = [toff, sgt, try_dsg]
+
+                except:
+                    if prev_best[2] == None:
+                        prev_best = [toff, sgt, try_dsg]
 
         # at end of loop, prev_best == best
         log("FOUND FOR IDX: " + str(idx) + str(prev_best[0]) + "," + str(prev_best[1]) + "," + str(prev_best[2]))
