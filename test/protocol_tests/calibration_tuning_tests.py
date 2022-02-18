@@ -75,7 +75,7 @@ class MotorCommandsTest(unittest.TestCase):
         self.m.s.start_services(1)
         self.m.s.motor_driver_temp = self.temp_to_test_against
 
-        self.tuning_array_to_test, temp_temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
+        # self.tuning_array_to_test, temp_temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
 
         sleep(0.01)
 
@@ -93,22 +93,22 @@ class MotorCommandsTest(unittest.TestCase):
 
     # TEST THAT self.m.sweep_toff_and_sgt() DOES ROUGHLY WHAT'S EXPECTED
 
-    def test_sweep_toff_and_sgt(self):
-        tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
+    # def test_sweep_toff_and_sgt(self):
+    #     tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
 
-        for toff in range(2,11):
+    #     for toff in range(2,11):
 
-            for sgt in range(0,21):
+    #         for sgt in range(0,21):
 
-                self.assertEqual(len(tuning_array[toff][sgt]), 8)
+    #             self.assertEqual(len(tuning_array[toff][sgt]), 8)
 
-                for sg in range(0,8):
-                    self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
-                    self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
+    #             for sg in range(0,8):
+    #                 self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
+    #                 self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
 
-        self.assertEqual(temp, self.temp_to_test_against)
+    #     self.assertEqual(temp, self.temp_to_test_against)
 
-        self.tuning_array_to_test = tuning_array
+    #     self.tuning_array_to_test = tuning_array
 
     # def test_start_tuning(self):
     #     self.m.start_tuning(False, False, False)
@@ -126,11 +126,17 @@ class MotorCommandsTest(unittest.TestCase):
     #     self.assertEqual(toff, 2)
     #     self.assertEqual(sgt, 0)
 
-    # def test_get_target(self):
-    #     '''get_target_SG_from_current_temperature'''
-    #     target = self.m.get_target_SG_from_current_temperature('X', self.temp_to_test_against)
-    #     self.assertEqual(target, 500)
+    def test_get_target(self):
+        '''get_target_SG_from_current_temperature'''
+        target = self.m.get_target_SG_from_current_temperature('Y', -100)
+        # self.assertEqual(target, 500)
+        print("SG TARG: " + str(target))
 
+    def test_get_another_target(self):
+        '''get_target_SG_from_current_temperature'''
+        target = self.m.get_target_SG_from_current_temperature('Y', 100)
+        # self.assertEqual(target, 500)
+        print("SG TARG: " + str(target))
 
 
 if __name__ == "__main__":

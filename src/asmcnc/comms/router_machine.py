@@ -2174,16 +2174,16 @@ class RouterMachine(object):
             # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
 
             if X: 
-                self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
-                self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
+                self.send_command_to_motor("SET TOFF X " + str(self.x_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x_toff_tuned)
+                self.send_command_to_motor("SET SGT X " + str(self.x_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x_sgt_tuned)
             if Y: 
-                self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
-                self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
-                self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
-                self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
+                self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
+                self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
+                self.send_command_to_motor("SET SGT Y1 " + str(self.y1_sgt_tuned), motor = TMC_Y1, command = SET_SGT, value = self.y1_sgt_tuned)
+                self.send_command_to_motor("SET SGT Y2 " + str(self.y2_sgt_tuned), motor = TMC_Y2, command = SET_SGT, value = self.y2_sgt_tuned)
             if Z: 
-                self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
-                self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
+                self.send_command_to_motor("SET TOFF Z " + str(self.z_toff_tuned), motor = TMC_Z, command = SET_TOFF, value = self.z_toff_tuned)
+                self.send_command_to_motor("SET SGT Z " + str(self.z_sgt_tuned), motor = TMC_Z, command = SET_SGT, value = self.z_sgt_tuned)
 
             Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
 
