@@ -1858,7 +1858,11 @@ class RouterMachine(object):
             log("RAW SG VALUES NOT ENABLED")
 
         else: 
+            if self.state().startswith('Idle'):
+                self.jog_back_fast(X=X, Y=Y, Z=Z)
+
             Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 1)
+
 
 
 
@@ -1905,26 +1909,22 @@ class RouterMachine(object):
 
         if X and Z and not Y: 
             self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
-            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
-            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 300)
 
         elif X: 
             self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
-            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, 300)
 
         elif Z: 
             self.jog_absolute_single_axis('Z', -149, 30)
-            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
 
         # does not yet handle: 
         # - X, Y, Z
         # - X and Y
         # - Y and Z
 
-    def jog_back_fast_pause_tuning(self, X=False, Y=False, Z=False):
+    def jog_back_fast(self, X=False, Y=False, Z=False):
 
         if X and Z and not Y: 
             self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
@@ -1942,7 +1942,6 @@ class RouterMachine(object):
         # - X, Y, Z
         # - X and Y
         # - Y and Z
-        self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z)
 
     def start_tuning(self, X, Y, Z):
 
@@ -1992,8 +1991,6 @@ class RouterMachine(object):
         # Sweep SGT in the range 0-20
         # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid.
 
-        
-
         # having empty initial values, so that running through indices with 
         # self.temp_toff and self.temp_sgt is easy and readable :) 
         tuning_array = [[[]]*21]*11
@@ -2028,12 +2025,21 @@ class RouterMachine(object):
 
                 while len(self.temp_sg_array) <= 15:
 
-                    self.s.tuning_flag = True
-
                     # Keep jogging!
                     if self.state().startswith('Idle'):
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
                         self.jog_back_fast_pause_tuning(X=X, Y=Y, Z=Z)
-                        break
+                        self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
+
+                    # But don't measure the backwards fast jogs!
+                    elif self.m.feed_rate > 303:
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
+
+                    # Record if conditions are good :)
+                    else:
+                        self.s.tuning_flag = True
 
                 self.s.tuning_flag = False
                 tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
