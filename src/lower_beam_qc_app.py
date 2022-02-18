@@ -34,8 +34,11 @@ from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
 from kivy.clock import Clock
+from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.skavaUI.screen_home import HomeScreen
+from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_error
 from asmcnc.production.lower_beam_qc_jig.lower_beam_qc import LowerBeamQC
 from asmcnc.production.lower_beam_qc_jig.lower_beam_qc_warranty import LowerBeamQCWarranty
 
@@ -62,11 +65,19 @@ class LowerBeamQCApp(App):
 
         m = RouterMachine(Cmport, sm, sett, l, jd)
 
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
+
+        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
+        sm.add_widget(error_screen)
+
+        door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(door_screen)
 
         lower_beam_qc = LowerBeamQC(name='qc', sm = sm, m = m, l=l)
         sm.add_widget(lower_beam_qc)
