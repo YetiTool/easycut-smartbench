@@ -98,6 +98,10 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
+            Button:
+                text: 'Send data to database'
+                on_press: root.send_data()
+
         GridLayout:
             cols: 2
 
@@ -176,6 +180,7 @@ class CalibrationTesting(Screen):
 
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
+        self.calibration_db = kwargs['calibration_db']
 
         # used to only measure axis in motion
         self.x_running = False
@@ -208,6 +213,12 @@ class CalibrationTesting(Screen):
         #raw y2 vals
         self.raw_y2_vals = []
 
+        self.unweighted_data = []
+
+    def send_data(self):
+        serial = self.calibration_db.get_serial_number()
+        self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
+
     def on_enter(self):
         self.m.s.FINAL_TEST = True
 
@@ -236,6 +247,9 @@ class CalibrationTesting(Screen):
 
     def confirm_unweighted(self, dt):
         self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        self.unweighted_data.append(self.x_vals)
+        self.unweighted_data.append(self.y_vals)
+        self.unweighted_data.append(self.z_vals)
 
     def confirm_x(self, dt):
         self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -346,6 +360,9 @@ class CalibrationTesting(Screen):
 
     #change distances and speeds
     def run_x_procedure(self, dt):
+        self.raw_x_vals = []
+        self.x_vals = []
+
         #total distance required
         TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
 

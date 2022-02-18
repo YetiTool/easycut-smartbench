@@ -20,13 +20,6 @@ class CalibrationDatabase(object):
 
     def is_connected(self):
         return self.conn.product_version != None
-
-    def send_final_test_payload(self, serial_number, non_weighted_payload, weighted_payload, overnight_payload):
-        with self.conn.cursor() as cursor:
-            date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            query = "INSERT INTO FinalTest (MachineSerialNo, NonWeightedPayload, WeightedPayload, OvernightPayload, Date) VALUES ('" + serial_number + "', '" + non_weighted_payload + "', '" + weighted_payload + "', '" + overnight_payload + "', '" + date + "')"
-            cursor.execute(query)
-            self.conn.commit()
         
     def get_serial_number(self):
         serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
@@ -40,5 +33,24 @@ class CalibrationDatabase(object):
             print 'Could not get serial number! Please contact YetiTool support!'
             
         return str(serial_number_from_file)
+
+    def send_final_test_calibration(self, serial_number, unweighted_x, unweighted_y, unweighted_z, weighted_x, weighted_y, weighted_z):
+        with self.conn.cursor() as cursor:
+            date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', " + unweighted_x + "', '" + unweighted_y + "', " + unweighted_z + "', '" + weighted_x + "', " + weighted_y + "', '" + weighted_z + "')"
+            cursor.execute(query)
+
+            self.conn.commit()
+
+    def get_lower_beam_parameters(self, serial_number):
+        with self.conn.cursor() as cursor:
+            query = "SELECT * FROM LowerBeam WHERE SerialNo = %s" % serial_number
+
+            cursor.execute(query)
+
+            data = cursor.fetchone()
+
+            return data
+
 
     

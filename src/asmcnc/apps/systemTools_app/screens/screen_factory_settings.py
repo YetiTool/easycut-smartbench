@@ -18,6 +18,8 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 
+from asmcnc.production.database.calibration_database import CalibrationDatabase
+
 Builder.load_string("""
 
 <FactorySettingsScreen>
@@ -427,6 +429,9 @@ class FactorySettingsScreen(Screen):
         self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
+        #create calibration database
+        self.calibration_db = CalibrationDatabase()
+
         try: 
             serial_number_string = self.get_serial_number()
             self.serial_prefix.text = serial_number_string[0:3]
@@ -774,14 +779,14 @@ class FactorySettingsScreen(Screen):
 
     def enter_calibration_test(self):
         if not self.systemtools_sm.sm.has_screen('calibration_testing'):
-            calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm)
+            calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db)
             self.systemtools_sm.sm.add_widget(calibration_testing)
         
         self.systemtools_sm.sm.current = 'calibration_testing'
 
     def enter_overnight_test(self):
         if not self.systemtools_sm.sm.has_screen('overnight_testing'):
-            overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm)
+            overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db)
             self.systemtools_sm.sm.add_widget(overnight_testing)
         
         self.systemtools_sm.sm.current = 'overnight_testing'
