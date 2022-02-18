@@ -2001,7 +2001,7 @@ class RouterMachine(object):
             z_toff_tuned, z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
 
 
-        toff_and_sgt_found = True
+        self.toff_and_sgt_found = True
 
 
     def sweep_toff_and_sgt_and_motor_driver_temp(self, X = False, Y = False, Z = False):
@@ -2083,6 +2083,8 @@ class RouterMachine(object):
 
         try:
             avg_temperature = sum(temperature_list) / len(temperature_list)
+            log("Average temperature: " + str(avg_temperature))
+
             return tuning_array, avg_temperature
 
         except: 
@@ -2104,7 +2106,7 @@ class RouterMachine(object):
 
                 # compare delta sg (between read in and target)
                 # if it's smaller than any values found previously, then it's better, so save it
-                if try_dsg < prev_best[2] or prev_best[2]==None:
+                if abs(try_dsg) < abs(prev_best[2]) or prev_best[2]==None:
                     prev_best = [toff, sgt, try_dsg]
 
         # at end of loop, prev_best == best
