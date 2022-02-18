@@ -2107,8 +2107,7 @@ class RouterMachine(object):
                 # compare delta sg (between read in and target)
                 # if it's smaller than any values found previously, then it's better, so save it
 
-                try 
-
+                try:
                     if abs(try_dsg) < abs(prev_best[2]):
                         prev_best = [toff, sgt, try_dsg]
 
