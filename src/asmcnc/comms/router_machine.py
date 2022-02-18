@@ -1724,6 +1724,9 @@ class RouterMachine(object):
         self.tuning_in_progress = True
         log("Tuning X and Z...")
         self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.s.write_command('$J=G53 X-1192 Z-149 F6046')
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
 
     def tune_Y_for_calibration(self):
@@ -1731,6 +1734,9 @@ class RouterMachine(object):
         self.tuning_in_progress = True
         log("Tuning Y...")
         self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
@@ -1803,20 +1809,16 @@ class RouterMachine(object):
 
         log("Prepare for tuning")
 
+        # Enable raw SG reporting: command REPORT_RAW_SG
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
+
         self.reset_tuning_flags()
 
-        # 1. Zero position
+        # Zero position
         log("Zero position")
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
-        # 2. Enable raw SG reporting: command REPORT_RAW_SG
-        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
-
-        # THEN JOG AWAY AT MAX SPEED
-        log("Jog to check SG values")
-        self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', -149, 750)
         self.time_to_check_for_tuning_prep = time.time()
 
     # CHECK SG VALUES FIRST (TO MAKE SURE THEY'RE RAW)
@@ -1842,7 +1844,7 @@ class RouterMachine(object):
             self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z)
 
 
-        elif (self.time_to_check_for_tuning_prep + 10) < time.time():
+        elif (self.time_to_check_for_tuning_prep + 180) < time.time():
             # raise error popup
             log("RAW SG VALUES NOT ENABLED")
 
@@ -1892,11 +1894,18 @@ class RouterMachine(object):
 
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
-        if X: self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+        if X and Z and not Y: self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
 
-        if Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
+        elif Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
 
-        if Z: self.jog_absolute_single_axis('Z', -149, 30)
+        elif X: self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+
+        elif Z: self.jog_absolute_single_axis('Z', -149, 30)
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
 
 
     def start_tuning(self, X, Y, Z):
@@ -1990,6 +1999,8 @@ class RouterMachine(object):
                 self.s.tuning_flag = False
                 tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
                 self.temp_sg_array = []
+
+                log("SWEPT TOFF AND SGT: " + str(temp_toff) + ", " + str(temp_sgt))
 
                 temperature_list.append(self.s.motor_driver_temp)
 
@@ -2086,20 +2097,23 @@ class RouterMachine(object):
                 self.send_command_to_motor("SET TOFF Z " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
                 self.send_command_to_motor("SET SGT Z " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
 
+            Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
 
-            # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS
-            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
 
-            # Disable raw SG reporting: command REPORT_RAW_SG
-            self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=0)
+    def store_tuned_settings_and_unset_raw_SG_reporting(self, dt):
 
-            Clock.schedule_once(self.finish_tuning, 5) # Give settings plenty of time to be sent and parsed
+        # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS
+        self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+
+        # Disable raw SG reporting: command REPORT_RAW_SG
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=0)
+
+        Clock.schedule_once(self.finish_tuning, 2) # Give settings plenty of time to be sent and parsed
 
 
     def finish_tuning(self, dt):
         self.reset_tuning_flags()
         self.tuning_in_progress = False
-
 
 
     # MEAT OF CALIBRATION FUNCTIONS - DON'T CALL FROM MAIN APP
@@ -2168,23 +2182,22 @@ class RouterMachine(object):
 
     def check_idle_and_buffer_then_start_calibration(self, axis): 
 
-        if axis == 'X': 
-            calibrate_mode = 32
-            calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
-            altDisplayText = "CALIBRATE X AXIS"
-
-        if axis == 'Y': 
-            calibrate_mode = 64
-            calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
-            altDisplayText = "CALIBRATE Y AXIS"
-
-        if axis == 'Z': 
-            calibrate_mode = 128
-            calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
-            altDisplayText = "CALIBRATE Z AXIS"
-
-
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            if axis == 'X': 
+                calibrate_mode = 32
+                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE X AXIS"
+
+            if axis == 'Y': 
+                calibrate_mode = 64
+                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE Y AXIS"
+
+            if axis == 'Z': 
+                calibrate_mode = 128
+                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
             Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.1)
