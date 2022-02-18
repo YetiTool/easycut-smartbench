@@ -2043,6 +2043,7 @@ class RouterMachine(object):
 
                     # Keep jogging!
                     if self.state().startswith('Idle'):
+                        log('Idle - restart jogs')
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
                         self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
@@ -2051,6 +2052,7 @@ class RouterMachine(object):
 
                     # But don't measure the backwards fast jogs!
                     elif self.feed_rate() > 303:
+                        log('Feed rate too high, skipping')
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
                         time.sleep(1)
