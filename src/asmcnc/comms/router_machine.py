@@ -2060,6 +2060,7 @@ class RouterMachine(object):
                     # Record if conditions are good :)
                     else:
                         self.s.tuning_flag = True
+                        time.sleep(0.01)
 
                 self.s.tuning_flag = False
                 tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
