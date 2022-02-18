@@ -1790,8 +1790,8 @@ class RouterMachine(object):
     temp_toff = 2
     temp_sgt = 0
 
-    toff_max = 4 # 10
-    sgt_max = 5 # 20
+    toff_max = 10 # 10
+    sgt_max = 20 # 20
 
 
     def reset_tuning_flags(self):
