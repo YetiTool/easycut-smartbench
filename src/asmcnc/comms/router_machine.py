@@ -2067,6 +2067,7 @@ class RouterMachine(object):
                 self.temp_sg_array = []
 
                 log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
+                print(tuning_array[self.temp_toff][self.temp_sgt])
 
                 temperature_list.append(self.s.motor_driver_temp)
 
