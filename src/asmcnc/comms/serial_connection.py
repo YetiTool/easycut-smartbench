@@ -1214,22 +1214,29 @@ class SerialConnection(object):
 
 
     def check_for_sustained_max_overload(self, dt):
-        
-        if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
-            
-            self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
-            self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
-            self.sm.current = 'spindle_shutdown'
 
-            try:
-                self.sm.get_screen('go').update_overload_peak(self.overload_state)
+        try:
 
-            except:
-                log('Unable to update overload peak on go screen')
+            if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+                
+                self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+                self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
+                self.sm.current = 'spindle_shutdown'
 
-        else: # must have just been a noisy blip
-            
-            self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+                try:
+                    self.sm.get_screen('go').update_overload_peak(self.overload_state)
+
+                except:
+                    log('Unable to update overload peak on go screen')
+
+            else: # must have just been a noisy blip
+                
+                self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+
+        except:
+
+            log("Could not display spindle overload - are you on diagnostics mode?")
+
         
     def check_for_sustained_peak(self, dt):
 
