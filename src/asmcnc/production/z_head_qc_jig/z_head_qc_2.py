@@ -343,7 +343,7 @@ class ZHeadQC2(Screen):
 
         load = self.m.s.digital_spindle_ld_qdA
         log('Digital Spindle Load: %s' % load)
-        if load < 100 or load > 10000:
+        if load < 50 or load > 10000:
             fail_report.append("Load test failed.")
 
         killtime = self.m.s.digital_spindle_kill_time
