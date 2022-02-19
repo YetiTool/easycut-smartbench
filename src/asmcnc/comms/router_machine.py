@@ -1910,7 +1910,7 @@ class RouterMachine(object):
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
         if X and Z and not Y: 
-            self.s.write_command('$J=G53 X-1490 Z-149 F301.5')
+            self.s.write_command('G91 X-1490 Z-149 F301.5')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
@@ -2342,7 +2342,9 @@ class RouterMachine(object):
         if not self.s.is_sequential_streaming: 
             Clock.unschedule(self.poll_end_of_calibration_file_seq_stream)
             self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 0.1)
+            
+            # FW needs 5 seconds to compute & store after calibration
+            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
 
     def do_next_axis_or_finish_calibration_sequence(self):
