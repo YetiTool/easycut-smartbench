@@ -1068,6 +1068,24 @@ class SerialConnection(object):
                     except:
                         log("Could not print TMC registers")
 
+                elif part.startswith('TCAL:M'):
+
+                    [index, all_cal_data] = part[6:].split(':')
+                    all_cal_data_list = all_cal_data.strip(',').split(',')
+
+                    try: 
+                        map(int, all_cal_data_list)
+
+                    except: 
+                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        return
+
+                    self.m.TMC_motor[int(index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
+                    self.m.TMC_motor[int(index)].calibrated_at_current_setting = int(all_cal_data_list[128])
+                    self.m.TMC_motor[int(index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
+                    self.m.TMC_motor[int(index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
+                    self.m.TMC_motor[int(index)].calibrated_at_temperature = int(all_cal_data_list[131])
+
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
@@ -1196,25 +1214,29 @@ class SerialConnection(object):
 
 
     def check_for_sustained_max_overload(self, dt):
-        if self.sm.get_screen('qchome') != None:
-            log('Skipping overload - on diagnostics mode')
-            return
 
-        if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
-            
-            self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
-            self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
-            self.sm.current = 'spindle_shutdown'
+        try:
 
-            try:
-                self.sm.get_screen('go').update_overload_peak(self.overload_state)
+            if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+                
+                self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+                self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
+                self.sm.current = 'spindle_shutdown'
 
-            except:
-                log('Unable to update overload peak on go screen')
+                try:
+                    self.sm.get_screen('go').update_overload_peak(self.overload_state)
 
-        else: # must have just been a noisy blip
-            
-            self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+                except:
+                    log('Unable to update overload peak on go screen')
+
+            else: # must have just been a noisy blip
+                
+                self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+
+        except:
+
+            log("Could not display spindle overload - are you on diagnostics mode?")
+
         
     def check_for_sustained_peak(self, dt):
 
