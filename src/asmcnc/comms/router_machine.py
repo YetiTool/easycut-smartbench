@@ -1721,6 +1721,8 @@ class RouterMachine(object):
 
     def tune_X_and_Z_for_calibration(self):
 
+        self.send_command_to_motor("RESTORE TMC DEFAULTS", command=RESTORE_TMC_DEFAULTS)
+
         self.tuning_in_progress = True
         log("Tuning X and Z...")
         self.prepare_for_tuning()
