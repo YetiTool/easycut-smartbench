@@ -2264,6 +2264,7 @@ class RouterMachine(object):
             log("Calibrate X")
 
             Clock.unschedule(self.poll_for_x_ready)
+            self.poll_for_x_ready = None
             self.x_ready_to_calibrate = False
             self.time_to_check_for_calibration_prep = time.time()
             self.check_idle_and_buffer_then_start_calibration('X')
@@ -2275,6 +2276,7 @@ class RouterMachine(object):
             log("Calibrate Y")
 
             Clock.unschedule(self.poll_for_y_ready)
+            self.poll_for_y_ready = None
             self.y_ready_to_calibrate = False
             self.time_to_check_for_calibration_prep = time.time()
             self.check_idle_and_buffer_then_start_calibration('Y')
@@ -2287,6 +2289,7 @@ class RouterMachine(object):
             log("Calibrate Z")
 
             Clock.unschedule(self.poll_for_z_ready)
+            self.poll_for_z_ready = None
             self.z_ready_to_calibrate = False
             self.time_to_check_for_calibration_prep = time.time()
             self.check_idle_and_buffer_then_start_calibration('Z')
@@ -2325,8 +2328,9 @@ class RouterMachine(object):
     def stream_calibration_file(self, filename):
 
         with open(filename) as f:
-            calibration_gcode = f.readlines()
+            calibration_gcode_pre_scrubbed = f.readlines()
 
+        calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
 
         log("Calibration gcode:")
         print(calibration_gcode)
@@ -2335,6 +2339,11 @@ class RouterMachine(object):
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
         self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
+
+    def quick_scrub(self, line):
+
+        l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())
+        return l_block
 
 
     def post_calibration_file_stream(self, dt):
@@ -2350,8 +2359,8 @@ class RouterMachine(object):
     def do_next_axis_or_finish_calibration_sequence(self):
 
             # X is always first, so check y and then z
-            if self.poll_for_y_ready: self.y_ready_to_calibrate = True
-            elif self.poll_for_z_ready: self.z_ready_to_calibrate = True
+            if self.poll_for_y_ready != None: self.y_ready_to_calibrate = True
+            elif self.poll_for_z_ready != None: self.z_ready_to_calibrate = True
             else: self.save_calibration_coefficients_to_motor_classes()
 
 
