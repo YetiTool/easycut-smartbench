@@ -2326,7 +2326,7 @@ class RouterMachine(object):
 
         log("Calibrating...")
 
-        self.m.s.start_sequential_stream(calibration_gcode)
+        self.s.start_sequential_stream(calibration_gcode)
         self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
 
