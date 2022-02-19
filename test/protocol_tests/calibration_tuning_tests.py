@@ -39,7 +39,7 @@ class MotorCommandsTest(unittest.TestCase):
     sg_values = [-12,-20,15,46,-2]
     # sg_values = [500,500,500,500,500]
 
-    normalized_SGs = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-12,-20,15,46,-2>"
+    normalized_SGs = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-12,-20,15,46,-2>"
     raw_SGs = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:500,500,500,500,500>"
 
     temp_to_test_against = 45
@@ -102,12 +102,7 @@ class MotorCommandsTest(unittest.TestCase):
 
             for sgt in range(0,self.m.sgt_max + 1):
 
-
-                print(tuning_array[toff][sgt])
-
-
                 self.assertEqual(len(tuning_array[toff][sgt]), 8)
-
                 for sg in range(0,8):
 
 

@@ -2014,7 +2014,9 @@ class RouterMachine(object):
 
         # having empty initial values, so that running through indices with 
         # self.temp_toff and self.temp_sgt is easy and readable :) 
-        tuning_array = [[[]]*(self.sgt_max + 1)]*(self.toff_max + 1)
+
+        tuning_array = [[[] for sgt_holder in xrange(self.sgt_max + 1)] for toff_holder in xrange(self.toff_max + 1)]
+
 
         while self.temp_toff <= self.toff_max:
 
@@ -2068,7 +2070,8 @@ class RouterMachine(object):
                         time.sleep(0.01)
 
                 self.s.tuning_flag = False
-                tuning_array[self.temp_toff][self.temp_sgt] = (self.temp_sg_array[8:16])
+
+                tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
                 self.temp_sg_array = []
 
                 log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
