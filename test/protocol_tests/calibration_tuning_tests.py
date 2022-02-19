@@ -95,24 +95,24 @@ class MotorCommandsTest(unittest.TestCase):
 
     # TEST THAT self.m.sweep_toff_and_sgt() DOES ROUGHLY WHAT'S EXPECTED
 
-    def test_sweep_toff_and_sgt(self):
-        tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
+    # def test_sweep_toff_and_sgt(self):
+    #     tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
 
-        for toff in range(2,self.m.toff_max + 1):
+    #     for toff in range(2,self.m.toff_max + 1):
 
-            for sgt in range(0,self.m.sgt_max + 1):
+    #         for sgt in range(0,self.m.sgt_max + 1):
 
-                self.assertEqual(len(tuning_array[toff][sgt]), 8)
-                for sg in range(0,8):
+    #             self.assertEqual(len(tuning_array[toff][sgt]), 8)
+    #             for sg in range(0,8):
 
 
 
-                    self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
-                    self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
+    #                 self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
+    #                 self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
 
-        self.assertEqual(temp, self.temp_to_test_against)
+    #     self.assertEqual(temp, self.temp_to_test_against)
 
-        self.tuning_array_to_test = tuning_array
+    #     self.tuning_array_to_test = tuning_array
 
     # def test_start_tuning(self):
     #     self.m.start_tuning(False, False, False)
@@ -150,7 +150,82 @@ class MotorCommandsTest(unittest.TestCase):
 
 
 
+    temps_in = [
+                    30,
+                    31,
+                    32,
+                    33,
+                    34,
+                    35,
+                    36,
+                    37,
+                    38,
+                    39,
+                    40,
+                    41,
+                    42,
+                    43,
+                    44,
+                    45,
+                    46,
+                    47,
+                    48,
+                    49,
+                    50,
+                    51,
+                    52,
+                    53,
+                    54,
+                    55,
+                    56,
+                    57,
+                    58,
+                    59
+    ]
 
+    targets_out = [
+                    713,
+                    699,
+                    685,
+                    670,
+                    656,
+                    642,
+                    628,
+                    613,
+                    599,
+                    585,
+                    571,
+                    556,
+                    542,
+                    528,
+                    514,
+                    500,
+                    486,
+                    472,
+                    458,
+                    444,
+                    429,
+                    415,
+                    401,
+                    387,
+                    372,
+                    358,
+                    344,
+                    330,
+                    315,
+                    301
+
+    ]
+
+
+
+    def test_get_target(self):
+
+        for idx, val in enumerate(self.temps_in):
+
+            '''get_target_SG_from_current_temperature'''
+            target = self.m.get_target_SG_from_current_temperature('Z', val)
+            # self.assertEqual(target, self.targets_out[idx])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

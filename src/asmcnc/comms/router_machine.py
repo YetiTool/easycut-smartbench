@@ -1793,6 +1793,8 @@ class RouterMachine(object):
     toff_max = 10 # 10
     sgt_max = 20 # 20
 
+    reference_temp = 45.0
+
 
     def reset_tuning_flags(self):
 
@@ -1869,7 +1871,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if (0 < self.s.motor_driver_temp < 100)  and (self.time_to_check_for_tuning_prep + 15) < time.time():
+        if ((self.reference_temp - 15) < self.s.motor_driver_temp < (self.reference_temp + 15)):
 
             log("Temperature reads valid, check machine is Idle...")
 
@@ -1987,18 +1989,25 @@ class RouterMachine(object):
 
         log("Sweep finished")
 
-        if X: 
-            X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
-            self.x_toff_tuned, self.x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
+        try: 
 
-        if Y: 
-            Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
-            self.y1_toff_tuned, self.y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
-            self.y2_toff_tuned, self.y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
+            if X: 
+                X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
+                self.x_toff_tuned, self.x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
 
-        if Z: 
-            Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
-            self.z_toff_tuned, self.z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
+            if Y: 
+                Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
+                self.y1_toff_tuned, self.y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
+                self.y2_toff_tuned, self.y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
+
+            if Z: 
+                Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
+                self.z_toff_tuned, self.z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
+
+        except: 
+
+            log("Could not complete tuning! Check log for errors")
+            Clock.unschedule(self.tuning_poll)
 
 
         self.toff_and_sgt_found = True
@@ -2146,26 +2155,31 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
-        log("Calculate target SG " + str(motor))
-        reference_temp = 45
+        if ((self.reference_temp - 15) > current_temperature > (self.reference_temp + 15)):
+
+            log("Temperatures out of expected range! Check set-up!")
+            return
+
         reference_SG = 500
 
         if motor == 'X':
-            gradient_per_Celsius = 4000
-            rpm = 300/(3200/(170/3))
+            gradient_per_Celsius = 4000.0
+            rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Y':
-            gradient_per_Celsius = 1500
-            rpm = 300/(3200/(170/3))
+            gradient_per_Celsius = 1500.0
+            rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Z':
-            gradient_per_Celsius = 4000
-            rpm = 30/(3200/(1066.67))
+            gradient_per_Celsius = 4000.0
+            rpm = 30.0/(3200/(1066.67))
 
-        delta_to_current_temperature = reference_temp - current_temperature
+        delta_to_current_temperature = self.reference_temp - current_temperature
         step_us = 60000000 / (rpm * 3200)
         compensation_SG_offset = gradient_per_Celsius/1000000 * delta_to_current_temperature * step_us
         target_SG = reference_SG + int(compensation_SG_offset)
+
+        log("Calculate target SG " + str(motor) + ": " + str(target_SG))
 
         return target_SG
 
