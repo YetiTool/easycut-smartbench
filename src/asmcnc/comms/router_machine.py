@@ -1871,7 +1871,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if ((self.reference_temp - 15) < self.s.motor_driver_temp < (self.reference_temp + 15)):
+        if ((self.reference_temp - 15) <= self.s.motor_driver_temp <= (self.reference_temp + 15)):
 
             log("Temperature reads valid, check machine is Idle...")
 
