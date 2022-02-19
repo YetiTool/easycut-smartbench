@@ -2084,7 +2084,6 @@ class RouterMachine(object):
                 self.temp_sg_array = []
 
                 log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
-                print(tuning_array[self.temp_toff][self.temp_sgt])
 
                 temperature_list.append(self.s.motor_driver_temp)
 
@@ -2096,11 +2095,6 @@ class RouterMachine(object):
         try:
             avg_temperature = sum(temperature_list) / len(temperature_list)
             log("Average temperature: " + str(avg_temperature))
-
-            # IT IS ALREADY FUCKED HERE
-            log("TUNING ARRAY OUT")
-            print(tuning_array)
-
             return tuning_array, avg_temperature
 
         except: 
@@ -2125,9 +2119,6 @@ class RouterMachine(object):
 
                 # compare delta sg (between read in and target)
                 # if it's smaller than any values found previously, then it's better, so save it
-
-                log("TESTING: " + str(toff) + "," + str(sgt) + "," + str(try_dsg))
-
                 try:
                     if abs(try_dsg) < abs(prev_best[2]):
                         prev_best = [toff, sgt, try_dsg]
