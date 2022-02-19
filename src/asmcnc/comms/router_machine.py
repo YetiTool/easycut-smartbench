@@ -2046,26 +2046,26 @@ class RouterMachine(object):
 
                 while len(self.temp_sg_array) <= 15:
 
-                    # # Keep jogging!
-                    # if self.state().startswith('Idle'):
-                    #     log('Idle - restart jogs')
-                    #     self.s.tuning_flag = False
-                    #     self.temp_sg_array = []
-                    #     self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
-                    #     time.sleep(10)
-                    #     self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
+                    # Keep jogging!
+                    if self.state().startswith('Idle'):
+                        log('Idle - restart jogs')
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
+                        self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                        time.sleep(10)
+                        self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
 
-                    # # But don't measure the backwards fast jogs!
-                    # elif self.feed_rate() > 303:
-                    #     log('Feed rate too high, skipping')
-                    #     self.s.tuning_flag = False
-                    #     self.temp_sg_array = []
-                    #     time.sleep(1)
+                    # But don't measure the backwards fast jogs!
+                    elif self.feed_rate() > 303:
+                        log('Feed rate too high, skipping')
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
+                        time.sleep(1)
 
-                    # # Record if conditions are good :)
-                    # else:
-                    self.s.tuning_flag = True
-                    time.sleep(0.01)
+                    # Record if conditions are good :)
+                    else:
+                        self.s.tuning_flag = True
+                        time.sleep(0.01)
 
                 self.s.tuning_flag = False
                 tuning_array[self.temp_toff][self.temp_sgt] = (self.temp_sg_array[8:16])
