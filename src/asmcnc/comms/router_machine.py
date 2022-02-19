@@ -2113,8 +2113,6 @@ class RouterMachine(object):
         for toff in range(2,self.toff_max + 1):
             for sgt in range(0,self.sgt_max + 1):
 
-                print(tuning_array[toff][sgt])
-
                 try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
 
                 # compare delta sg (between read in and target)
