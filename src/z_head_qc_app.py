@@ -52,7 +52,6 @@ from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
 from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
 from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
 from asmcnc.skavaUI import screen_door
-from asmcnc.skavaUI import screen_spindle_shutdown 
 from asmcnc.skavaUI import screen_error
 
 
@@ -108,9 +107,6 @@ class ZHeadQC(App):
 
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(door_screen)
-
-        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
-        sm.add_widget(spindle_shutdown_screen)
 
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
