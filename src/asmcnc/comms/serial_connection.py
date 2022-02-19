@@ -278,7 +278,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
 
@@ -676,8 +676,8 @@ class SerialConnection(object):
     hw_version = ''
 
     # TEMPERATURES
-    pcb_temp = None
     motor_driver_temp = None
+    pcb_temp = None
     transistor_heatsink_temp = None
 
     # VOLTAGES
@@ -936,8 +936,8 @@ class SerialConnection(object):
                         log("ERROR status parse: Temperature invalid: " + message)
                         return
 
-                    self.pcb_temp = float(temps[0])
-                    self.motor_driver_temp = float(temps[1])
+                    self.motor_driver_temp = float(temps[0])
+                    self.pcb_temp = float(temps[1])
 
                     try:
                         float(temps[2])
