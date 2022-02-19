@@ -306,7 +306,7 @@ class ZHeadQC2(Screen):
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     elif self.brush_reset_test_count == 5:
-                        fail_report.append("Spindle brush reset test failed.")
+                        fail_report.append("Spindle brush time after reset was " + str(self.m.s.spindle_brush_run_time_seconds) + ". Should be 0")
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     else:
@@ -325,7 +325,7 @@ class ZHeadQC2(Screen):
     def test_rpm(self, fail_report):
         def read_rpm(dt): 
             if self.m.s.spindle_speed < 8000 or self.m.s.spindle_speed > 12000:
-                fail_report.append("Spindle RPM test failed.")
+                fail_report.append("Spindle RPM was " + str(self.m.s.spindle_speed) + ". Should be 8000-12000")
 
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
@@ -339,22 +339,22 @@ class ZHeadQC2(Screen):
         temperature = self.m.s.digital_spindle_temperature
         log('Digital Spindle Temperature: %s' % temperature)
         if temperature < 0 or temperature > 50:
-            fail_report.append("Temperature test failed.")
+            fail_report.append("Temperature was " + str(temperature) + ". Should be 0-50")
 
         load = self.m.s.digital_spindle_ld_qdA
         log('Digital Spindle Load: %s' % load)
         if load < 50 or load > 10000:
-            fail_report.append("Load test failed.")
+            fail_report.append("Load was " + str(load) + ". Should be 50-10000")
 
         killtime = self.m.s.digital_spindle_kill_time
         log('Digital Spindle KillTime: %s' % killtime)
         if killtime != 255:
-            fail_report.append("KillTime test failed.")
+            fail_report.append("KillTime was " + str(killtime) + ". Should be 255")
 
         voltage = self.m.s.digital_spindle_mains_voltage
         log('Digital Spindle Voltage: %s' % voltage)
         if voltage < 100 or voltage > 255:
-            fail_report.append("Voltage test failed.")
+            fail_report.append("Voltage was " + str(voltage) + ". Should be 100-255")
 
         if not fail_report:
             log('Test passed')
