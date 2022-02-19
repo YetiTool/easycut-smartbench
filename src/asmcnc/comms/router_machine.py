@@ -1790,8 +1790,8 @@ class RouterMachine(object):
     temp_toff = 2
     temp_sgt = 0
 
-    toff_max = 10 # 10
-    sgt_max = 20 # 20
+    toff_max = 4 # 10
+    sgt_max = 2 # 20
 
 
     def reset_tuning_flags(self):
@@ -2093,6 +2093,9 @@ class RouterMachine(object):
 
     def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
 
+        log("TUNING ARRAY")
+        print(tuning_array)
+
         # idx is motor/axis index
 
         log("Find best combo for axis idx: " + str(idx) + ", target: " + str(target_SG))
@@ -2102,6 +2105,9 @@ class RouterMachine(object):
 
         for toff in range(2,self.toff_max + 1):
             for sgt in range(0,self.sgt_max + 1):
+
+                print(tuning_array[toff][sgt])
+
                 try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
 
                 # compare delta sg (between read in and target)
