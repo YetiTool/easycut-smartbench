@@ -956,7 +956,7 @@ class RouterMachine(object):
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
             if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
-                self.send_command_to_motor(altDisplayText="GET REGISTERS", command=GET_REGISTERS)
+                self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
         else: 
             # In case handshake is too soon, it keeps trying until it can read a FW version
@@ -2213,7 +2213,10 @@ class RouterMachine(object):
         # Disable raw SG reporting: command REPORT_RAW_SG
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=0)
 
-        Clock.schedule_once(self.finish_tuning, 2) # Give settings plenty of time to be sent and parsed
+        # Read registers back in
+        self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
+
+        Clock.schedule_once(self.finish_tuning, 3) # Give settings plenty of time to be sent and parsed
 
 
     def finish_tuning(self, dt):
@@ -2308,7 +2311,7 @@ class RouterMachine(object):
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
-            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.1)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 5)
 
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
@@ -2342,7 +2345,7 @@ class RouterMachine(object):
 
             # X is always first, so check y and then z
             if self.poll_for_y_ready: self.y_ready_to_calibrate = True
-            elif self.poll_for_z_ready: self.z_ready_to_calibrate = False
+            elif self.poll_for_z_ready: self.z_ready_to_calibrate = True
             else: self.save_calibration_coefficients_to_motor_classes()
 
 

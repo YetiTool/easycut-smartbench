@@ -1083,7 +1083,7 @@ class SerialConnection(object):
 
                 elif part.startswith('TCAL:M'):
 
-                    [index, all_cal_data] = part[6:].split(':')
+                    [motor_index, all_cal_data] = part[6:].split(':')
                     all_cal_data_list = all_cal_data.strip(',').split(',')
 
                     try: 
@@ -1093,11 +1093,30 @@ class SerialConnection(object):
                         log("ERROR status parse: TCAL registers invalid: " + message)
                         return
 
-                    self.m.TMC_motor[int(index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
-                    self.m.TMC_motor[int(index)].calibrated_at_current_setting = int(all_cal_data_list[128])
-                    self.m.TMC_motor[int(index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
-                    self.m.TMC_motor[int(index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
-                    self.m.TMC_motor[int(index)].calibrated_at_temperature = int(all_cal_data_list[131])
+                    self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting = int(all_cal_data_list[128])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
+
+
+                    try: 
+
+                        calibration_report_string = (
+                        "-------------------------------------" + "\n" + \
+                        "MOTOR ID: " + str(int(motor_index)) + "\n" + \
+                        "Calibration coefficients: " + str(all_cal_data_list[0:128]) + "\n" + \
+                        "Current setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting) + "\n" + \
+                        "SGT setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting) + "\n" + \
+                        "TOFF setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting) + "\n" + \
+                        "Calibration temperature: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_temperature) + "\n" + \
+                        "-------------------------------------"
+                        )
+
+                        map(log, calibration_report_string.split("\n"))
+
+                    except:
+                        log("Could not print calibration output")
 
                 # end of for loop
 
