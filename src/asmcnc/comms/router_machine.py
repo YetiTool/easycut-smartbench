@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging, threading
+import logging, threading, re
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
