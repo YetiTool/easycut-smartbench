@@ -2327,6 +2327,10 @@ class RouterMachine(object):
         with open(filename) as f:
             calibration_gcode = f.readlines()
 
+
+        log("Calibration gcode:")
+        print(calibration_gcode)
+
         log("Calibrating...")
 
         self.s.start_sequential_stream(calibration_gcode)
