@@ -2332,7 +2332,7 @@ class RouterMachine(object):
 
     def post_calibration_file_stream(self, dt):
 
-        if not self.m.s.is_sequential_streaming: 
+        if not self.s.is_sequential_streaming: 
             Clock.unschedule(self.poll_end_of_calibration_file_seq_stream)
             self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
             Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 0.1)
