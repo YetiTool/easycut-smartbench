@@ -470,9 +470,7 @@ class ZHeadQC1(Screen):
         # I think its fine to run both at the same time, but check on HW
         # self.m.jog_relative('X', 700, 8000) # move for 5 seconds at 8000 mm/min
         # self.m.jog_relative('Z', 63, 750) # move for 5 seconds at 750 mm/min
-        self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-        self.m.s.write_command('$J=G91 X700 Z63 F8035') # move for 5 seconds in x and z directions at max speed
+        self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
         Clock.schedule_once(self.check_sg_values, 3)
 
     def check_sg_values(self, dt):
