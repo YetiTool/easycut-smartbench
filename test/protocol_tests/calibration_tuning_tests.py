@@ -95,22 +95,29 @@ class MotorCommandsTest(unittest.TestCase):
 
     # TEST THAT self.m.sweep_toff_and_sgt() DOES ROUGHLY WHAT'S EXPECTED
 
-    # def test_sweep_toff_and_sgt(self):
-    #     tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
+    def test_sweep_toff_and_sgt(self):
+        tuning_array, temp = self.m.sweep_toff_and_sgt_and_motor_driver_temp()
 
-    #     for toff in range(2,11):
+        for toff in range(2,self.m.toff_max + 1):
 
-    #         for sgt in range(0,21):
+            for sgt in range(0,self.m.sgt_max + 1):
 
-    #             self.assertEqual(len(tuning_array[toff][sgt]), 8)
 
-    #             for sg in range(0,8):
-    #                 self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
-    #                 self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
+                print(tuning_array[toff][sgt])
 
-    #     self.assertEqual(temp, self.temp_to_test_against)
 
-    #     self.tuning_array_to_test = tuning_array
+                self.assertEqual(len(tuning_array[toff][sgt]), 8)
+
+                for sg in range(0,8):
+
+
+
+                    self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
+                    self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
+
+        self.assertEqual(temp, self.temp_to_test_against)
+
+        self.tuning_array_to_test = tuning_array
 
     # def test_start_tuning(self):
     #     self.m.start_tuning(False, False, False)
@@ -140,11 +147,11 @@ class MotorCommandsTest(unittest.TestCase):
     #     # self.assertEqual(target, 500)
     #     print("SG TARG: " + str(target))
 
-    def test_find_combo(self):
+    # def test_find_combo(self):
 
-        out = self.m.find_best_combo_per_motor_or_axis(self.test_arr, 800, 0)
+    #     out = self.m.find_best_combo_per_motor_or_axis(self.test_arr, 800, 0)
 
-        print out
+    #     print out
 
 
 

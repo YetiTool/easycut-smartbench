@@ -2046,29 +2046,29 @@ class RouterMachine(object):
 
                 while len(self.temp_sg_array) <= 15:
 
-                    # Keep jogging!
-                    if self.state().startswith('Idle'):
-                        log('Idle - restart jogs')
-                        self.s.tuning_flag = False
-                        self.temp_sg_array = []
-                        self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
-                        time.sleep(10)
-                        self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
+                    # # Keep jogging!
+                    # if self.state().startswith('Idle'):
+                    #     log('Idle - restart jogs')
+                    #     self.s.tuning_flag = False
+                    #     self.temp_sg_array = []
+                    #     self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                    #     time.sleep(10)
+                    #     self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
 
-                    # But don't measure the backwards fast jogs!
-                    elif self.feed_rate() > 303:
-                        log('Feed rate too high, skipping')
-                        self.s.tuning_flag = False
-                        self.temp_sg_array = []
-                        time.sleep(1)
+                    # # But don't measure the backwards fast jogs!
+                    # elif self.feed_rate() > 303:
+                    #     log('Feed rate too high, skipping')
+                    #     self.s.tuning_flag = False
+                    #     self.temp_sg_array = []
+                    #     time.sleep(1)
 
-                    # Record if conditions are good :)
-                    else:
-                        self.s.tuning_flag = True
-                        time.sleep(0.01)
+                    # # Record if conditions are good :)
+                    # else:
+                    self.s.tuning_flag = True
+                    time.sleep(0.01)
 
                 self.s.tuning_flag = False
-                tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
+                tuning_array[self.temp_toff][self.temp_sgt] = (self.temp_sg_array[8:16])
                 self.temp_sg_array = []
 
                 log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
@@ -2085,7 +2085,7 @@ class RouterMachine(object):
             avg_temperature = sum(temperature_list) / len(temperature_list)
             log("Average temperature: " + str(avg_temperature))
 
-            # is it already f*cked here??
+            # IT IS ALREADY FUCKED HERE
             log("TUNING ARRAY OUT")
             print(tuning_array)
 
@@ -2095,7 +2095,6 @@ class RouterMachine(object):
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
-    # this looks like it's working
     def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
 
         # idx is motor/axis index
@@ -2105,8 +2104,8 @@ class RouterMachine(object):
         # toff, sgt, dsg
         prev_best = [None, None, None]
 
-        for toff in tuning_array:
-            for sgt in toff:
+        for toff in range(2,self.toff_max + 1):
+            for sgt in range(0,self.sgt_max + 1):
 
                 print(tuning_array[toff][sgt])
 
