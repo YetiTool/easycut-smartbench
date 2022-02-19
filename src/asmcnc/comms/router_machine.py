@@ -2333,7 +2333,7 @@ class RouterMachine(object):
 
         log("Calibrating...")
 
-        self.s.run_skeleton_buffer_stuffer(self, calibration_gcode)
+        self.s.run_skeleton_buffer_stuffer(calibration_gcode)
         self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
 
