@@ -2319,7 +2319,7 @@ class RouterMachine(object):
             log("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
 
         else: 
-            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration('X'), 2)
+            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 2)
 
 
     def stream_calibration_file(self, filename):
@@ -2333,13 +2333,13 @@ class RouterMachine(object):
 
         log("Calibrating...")
 
-        self.s.start_sequential_stream(calibration_gcode)
+        self.s.run_skeleton_buffer_stuffer(self, calibration_gcode)
         self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
 
     def post_calibration_file_stream(self, dt):
 
-        if not self.s.is_sequential_streaming: 
+        if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
             Clock.unschedule(self.poll_end_of_calibration_file_seq_stream)
             self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
             
