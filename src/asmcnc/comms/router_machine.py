@@ -1880,7 +1880,7 @@ class RouterMachine(object):
 
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
-            log("TEMPS AREN'T RIGHT??")
+            log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
 
 
         else: 
