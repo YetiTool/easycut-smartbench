@@ -2085,16 +2085,18 @@ class RouterMachine(object):
             avg_temperature = sum(temperature_list) / len(temperature_list)
             log("Average temperature: " + str(avg_temperature))
 
+            # is it already f*cked here??
+            log("TUNING ARRAY OUT")
+            print(tuning_array)
+
             return tuning_array, avg_temperature
 
         except: 
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
+    # this looks like it's working
     def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
-
-        log("TUNING ARRAY")
-        print(tuning_array)
 
         # idx is motor/axis index
 
@@ -2103,8 +2105,8 @@ class RouterMachine(object):
         # toff, sgt, dsg
         prev_best = [None, None, None]
 
-        for toff in range(2,self.toff_max + 1):
-            for sgt in range(0,self.sgt_max + 1):
+        for toff in tuning_array:
+            for sgt in toff:
 
                 print(tuning_array[toff][sgt])
 
