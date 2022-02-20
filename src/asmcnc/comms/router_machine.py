@@ -1842,7 +1842,7 @@ class RouterMachine(object):
 
         if Z: SG_to_check = self.s.sg_z_motor_axis
         elif X: SG_to_check = self.s.sg_x_motor_axis
-        elif Y: SG_to_check = self.s.sg_y_axis
+        elif Y: SG_to_check = self.s.sg_y1_motor
 
 
         if 200 < SG_to_check < 800:
