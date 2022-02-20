@@ -323,9 +323,12 @@ class ZHeadQC2(Screen):
             popup_info.PopupError(self.sm, self.l, "Machine should be in idle state for this test")
 
     def test_rpm(self, fail_report):
-        def read_rpm(dt): 
-            if self.m.spindle_speed() < 8000 or self.m.spindle_speed() > 12000:
-                fail_report.append("Spindle RPM was " + str(self.m.spindle_speed()) + ". Should be 8000-12000")
+        def read_rpm(dt):
+            lower = int(round(self.m.convert_from_230_to_110(8000)))
+            upper = int(round(self.m.convert_from_230_to_110(12000)))
+            speed = self.m.spindle_speed()
+            if speed < lower or speed > upper:
+                fail_report.append("Spindle RPM was " + str(speed) + ". Should be " + str(lower) + "-" + str(upper))
 
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
