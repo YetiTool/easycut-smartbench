@@ -445,6 +445,8 @@ class ZHeadQC1(Screen):
                     '$30=25000.0',    #Max spindle speed, RPM
                     '$31=0.0',        #Min spindle speed, RPM
                     '$32=0',          #Laser mode, boolean
+                    '$51=0',          #Enable digital feedback spindle, boolean
+                    '$53=0',          #Enable stall guard alarm operation, boolean
                     # '$100=56.649',    #X steps/mm
                     # '$101=56.665',    #Y steps/mm
                     # '$102=1066.667',  #Z steps/mm
