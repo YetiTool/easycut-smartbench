@@ -2403,11 +2403,11 @@ class RouterMachine(object):
 
         self.calibration_upload_in_progress = True
 
-        self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = coeff_array
-        self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting = params[0]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = params[1]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = params[2]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = params[3]
+        self.TMC_motor[int(motor_index)].calibration_dataset_SG_values = coeff_array
+        self.TMC_motor[int(motor_index)].calibrated_at_current_setting = params[0]
+        self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = params[1]
+        self.TMC_motor[int(motor_index)].calibrated_at_toff_setting = params[2]
+        self.TMC_motor[int(motor_index)].calibrated_at_temperature = params[3]
 
         Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 1)
 
