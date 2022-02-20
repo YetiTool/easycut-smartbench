@@ -309,7 +309,7 @@ class ZHeadQC2(Screen):
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     else:
-                        self.run_digital_spindle_test()
+                        spindle_brush_reset()
 
                 fail_report = []
                 self.brush_reset_test_count += 1
@@ -364,6 +364,7 @@ class ZHeadQC2(Screen):
             fail_report_string = "\n".join(fail_report)
             popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
             self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            self.run_digital_spindle_test()
 
     def run_analogue_spindle_check(self):
         
