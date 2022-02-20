@@ -279,48 +279,43 @@ class ZHeadQC2(Screen):
     def run_digital_spindle_test(self):
 
         if self.m.s.m_state == "Idle":
-
             log('testing')
-
             self.brush_reset_test_count = 0
-
-            def spindle_brush_reset(*args):
-                def read_info(dt):
-                    self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(get_info, 1)
-
-                def get_info(dt):
-                    initial_run_time = self.m.s.spindle_brush_run_time_seconds
-                    if initial_run_time == 0:
-                        fail_report.append("Spindle brush run time was 0 before reset.")
-                    self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
-                    Clock.schedule_once(read_info_again, 3)
-
-                def read_info_again(dt):
-                    self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(compare_info, 1)
-
-                def compare_info(dt):
-                    if self.m.s.spindle_brush_run_time_seconds == 0:
-                        self.m.s.write_command('M5')
-                        self.test_rpm(fail_report)
-                    elif self.brush_reset_test_count == 5:
-                        fail_report.append("Spindle brush time after reset was " + str(self.m.s.spindle_brush_run_time_seconds) + ". Should be 0")
-                        self.m.s.write_command('M5')
-                        self.test_rpm(fail_report)
-                    else:
-                        spindle_brush_reset()
-
-                fail_report = []
-                self.brush_reset_test_count += 1
-                self.m.s.write_command('M3 S0')
-
-                Clock.schedule_once(read_info, 3)
-
-            spindle_brush_reset()
+            self.spindle_brush_reset()
 
         else:
             popup_info.PopupError(self.sm, self.l, "Machine should be in idle state for this test")
+
+    def spindle_brush_reset(self):
+        def read_info(dt):
+            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            Clock.schedule_once(get_info, 1)
+
+        def get_info(dt):
+            initial_run_time = self.m.s.spindle_brush_run_time_seconds
+            if initial_run_time == 0:
+                fail_report.append("Spindle brush run time was 0 before reset.")
+            self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
+            Clock.schedule_once(read_info_again, 3)
+
+        def read_info_again(dt):
+            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            Clock.schedule_once(compare_info, 1)
+
+        def compare_info(dt):
+            if self.m.s.spindle_brush_run_time_seconds == 0:
+                self.m.s.write_command('M5')
+                self.test_rpm(fail_report)
+            else:
+                fail_report.append("Spindle brush time after reset was " + str(self.m.s.spindle_brush_run_time_seconds) + ". Should be 0")
+                self.m.s.write_command('M5')
+                self.test_rpm(fail_report)
+
+        fail_report = []
+        self.brush_reset_test_count += 1
+        self.m.s.write_command('M3 S0')
+
+        Clock.schedule_once(read_info, 3)
 
     def test_rpm(self, fail_report):
         def read_rpm(dt):
@@ -360,11 +355,13 @@ class ZHeadQC2(Screen):
             log('Test passed')
             self.digital_spindle_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            log('Test failed')
-            fail_report_string = "\n".join(fail_report)
-            popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
-            self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            self.run_digital_spindle_test()
+            if self.brush_reset_test_count < 5:
+                self.spindle_brush_reset()
+            else:
+                log('Test failed')
+                fail_report_string = "\n".join(fail_report)
+                popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+                self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
     def run_analogue_spindle_check(self):
         
