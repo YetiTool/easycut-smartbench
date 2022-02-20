@@ -2320,7 +2320,7 @@ class RouterMachine(object):
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
-            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 5)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 10)
 
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
@@ -2344,7 +2344,7 @@ class RouterMachine(object):
         log("Calibrating...")
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
-        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
+        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 9)
 
     def quick_scrub(self, line):
 
