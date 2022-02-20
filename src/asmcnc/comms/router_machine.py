@@ -2471,10 +2471,10 @@ class RouterMachine(object):
 
     def send_calibration_parameters(self, motor_index, data_length):
 
-        self.send_one_calibration_upload_value(motor_index, data_length - 3, self.TMC_motor[int(motor_index)].calibrated_at_current_setting)
-        self.send_one_calibration_upload_value(motor_index, data_length - 2, self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
-        self.send_one_calibration_upload_value(motor_index, data_length - 1, self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
-        self.send_one_calibration_upload_value(motor_index, data_length, self.TMC_motor[int(motor_index)].calibrated_at_temperature)
+        self.send_one_calibration_upload_value(motor_index, data_length - 4, self.TMC_motor[int(motor_index)].calibrated_at_current_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 3, self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 2, self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 1, self.TMC_motor[int(motor_index)].calibrated_at_temperature)
 
 
     def send_one_calibration_upload_value(self, motor_index, idx, val):
