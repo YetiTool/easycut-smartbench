@@ -2320,7 +2320,7 @@ class RouterMachine(object):
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
-            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 10)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 5)
 
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
@@ -2343,7 +2343,7 @@ class RouterMachine(object):
         self.cal_line_idx = 0
 
         log("Calibration gcode:")
-        print(calibration_gcode)
+        print(self.calibration_gcode)
 
         log("Calibrating...")
 
