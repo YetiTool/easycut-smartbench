@@ -2250,8 +2250,6 @@ class RouterMachine(object):
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
-        self.s.write_command('$21=0')
-
         self.s.write_command('G1 X0 f1000')
         self.s.write_command('G91 X0 f1000')
 
@@ -2381,7 +2379,6 @@ class RouterMachine(object):
     def save_calibration_coefficients_to_motor_classes(self):
 
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
-        self.s.write_command('$21=1')
         Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
 
 
