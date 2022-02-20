@@ -356,7 +356,7 @@ class ZHeadQC2(Screen):
             log('Test passed')
             self.digital_spindle_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            if self.brush_reset_test_count < 5 and (self.initial_run_time == 0 or self.m.s.spindle_brush_run_time_seconds == 0):
+            if self.brush_reset_test_count < 5 and (self.initial_run_time == 0 or self.m.s.spindle_brush_run_time_seconds != 0):
                 self.spindle_brush_reset()
             else:
                 log('Test failed')
