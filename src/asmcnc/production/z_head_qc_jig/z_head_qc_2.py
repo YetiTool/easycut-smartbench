@@ -81,7 +81,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '21. Test digital spindle (up to 15s)'
+                        text: '21. Test digital spindle (up to 45s)'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -315,7 +315,7 @@ class ZHeadQC2(Screen):
         self.brush_reset_test_count += 1
         self.m.s.write_command('M3 S0')
 
-        Clock.schedule_once(read_info, 3)
+        Clock.schedule_once(read_info, 1)
 
     def test_rpm(self, fail_report):
         def read_rpm(dt):
