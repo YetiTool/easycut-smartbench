@@ -315,7 +315,7 @@ class ZHeadQC2(Screen):
                 self.brush_reset_test_count += 1
                 self.m.s.write_command('M3 S0')
 
-                Clock.schedule_once(read_info, 1)
+                Clock.schedule_once(read_info, 3)
 
             spindle_brush_reset()
 
