@@ -281,6 +281,7 @@ class ZHeadQC2(Screen):
         if self.m.s.m_state == "Idle":
             log('testing')
             self.brush_reset_test_count = 0
+            self.initial_run_time = None
             self.spindle_brush_reset()
 
         else:
@@ -292,8 +293,8 @@ class ZHeadQC2(Screen):
             Clock.schedule_once(get_info, 1)
 
         def get_info(dt):
-            initial_run_time = self.m.s.spindle_brush_run_time_seconds
-            if initial_run_time == 0:
+            self.initial_run_time = self.m.s.spindle_brush_run_time_seconds
+            if self.initial_run_time == 0:
                 fail_report.append("Spindle brush run time was 0 before reset.")
             self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
             Clock.schedule_once(read_info_again, 3)
@@ -355,7 +356,7 @@ class ZHeadQC2(Screen):
             log('Test passed')
             self.digital_spindle_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            if self.brush_reset_test_count < 5:
+            if self.brush_reset_test_count < 5 and (self.initial_run_time == 0 or self.m.s.spindle_brush_run_time_seconds == 0):
                 self.spindle_brush_reset()
             else:
                 log('Test failed')
