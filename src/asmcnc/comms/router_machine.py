@@ -2331,20 +2331,23 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 2)
 
 
+    cal_line_idx = 0
+    calibration_gcode = []
+
     def stream_calibration_file(self, filename):
 
         with open(filename) as f:
             calibration_gcode_pre_scrubbed = f.readlines()
 
-        calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
+        self.calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
+        self.cal_line_idx = 0
 
         log("Calibration gcode:")
         print(calibration_gcode)
 
         log("Calibrating...")
 
-        self.s.run_skeleton_buffer_stuffer(calibration_gcode)
-        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 60)
+        Clock.schedule_interval(self.send_calibration_commands, 1)
 
     def quick_scrub(self, line):
 
@@ -2352,16 +2355,22 @@ class RouterMachine(object):
         return l_block
 
 
+    def send_calibration_commands(self, dt):
+
+        try: 
+            self.s.write_command(self.calibration_gcode[self.cal_line_idx])
+            self.cal_line_idx = self.cal_line_idx + 1
+
+        except IndexError:
+            Clock.schedule_once(self.post_calibration_file_stream, 5)
+
+
     def post_calibration_file_stream(self, dt):
 
-        if self.state().startswith('Idle'):
-
-            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-                Clock.unschedule(self.poll_end_of_calibration_file_stream)
-                self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-                
-                # FW needs 5 seconds to compute & store after calibration
-                Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
+        self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+        
+        # FW needs 5 seconds to compute & store after calibration
+        Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
 
     def do_next_axis_or_finish_calibration_sequence(self):
