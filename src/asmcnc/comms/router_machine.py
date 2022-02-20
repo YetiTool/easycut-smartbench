@@ -1821,6 +1821,8 @@ class RouterMachine(object):
 
         log("Prepare for tuning")
 
+        self.s.write_command('$20=0')
+
         # Enable raw SG reporting: command REPORT_RAW_SG
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
 
@@ -1910,16 +1912,16 @@ class RouterMachine(object):
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
         if X and Z and not Y: 
-            self.s.write_command('$J = G91 X1290 Z-129 F301.5')
+            self.s.write_command('$J = G91 X2000 Z-200 F301.5')
 
         elif Y: 
-            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
+            self.s.write_command('$J = G91 Y2000 F300')
 
         elif X: 
-            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+            self.s.write_command('$J = G91 X2000 F300')
 
-        elif Z: 
-            self.jog_absolute_single_axis('Z', -149, 30)
+        elif Z:
+            self.s.write_command('$J = G91 Z-200 F30')
 
         # does not yet handle: 
         # - X, Y, Z
@@ -2063,8 +2065,8 @@ class RouterMachine(object):
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
                         self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
-                        time.sleep(10)
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
+                        time.sleep(0.01)
 
                     # But don't measure the backwards fast jogs!
                     elif self.feed_rate() > 303:
@@ -2220,6 +2222,8 @@ class RouterMachine(object):
 
 
     def finish_tuning(self, dt):
+
+        self.s.write_command('$20=1')
 
         log("Tuning complete")
 
