@@ -309,7 +309,7 @@ class ZHeadQC2(Screen):
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     else:
-                        spindle_brush_reset()
+                        self.run_digital_spindle_test()
 
                 fail_report = []
                 self.brush_reset_test_count += 1
