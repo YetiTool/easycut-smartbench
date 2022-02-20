@@ -126,8 +126,8 @@ class TempsVoltagesTest(unittest.TestCase):
         elif case == 2:
 
             self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|TC:" + \
-                str(pcb_temp) + "," + \
-                str(motor_driver_temp) + "|V:" + \
+                str(motor_driver_temp) + "," + \
+                str(pcb_temp) + "|V:" + \
                 str(microcontroller_mV) + "," + \
                 str(LED_mV) + "," + \
                 str(PSU_mV) + "," + \
@@ -136,8 +136,8 @@ class TempsVoltagesTest(unittest.TestCase):
         elif case == 3:
 
             self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|TC:" + \
-                str(pcb_temp) + "," + \
                 str(motor_driver_temp) + "," + \
+                str(pcb_temp) + "," + \
                 str(transistor_heatsink_temp) + "|V:" + \
                 str(microcontroller_mV) + "," + \
                 str(LED_mV) + "," + \
