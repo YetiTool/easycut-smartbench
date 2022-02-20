@@ -2249,14 +2249,9 @@ class RouterMachine(object):
 
         self.s.write_command('$20=0')
 
-        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
-
-        self.s.write_command('$J=G1 X0 F1000')
-
-        self.s.write_command('$J=G1 Y0 F1000')
-
-        self.s.write_command('$J=G1 Z0 F750')
+        self.s.write_command('$J=G53 X0 F1000')
+        self.s.write_command('$J=G53 Y0 F1000')
+        self.s.write_command('$J=G53 Z0 F750')
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
