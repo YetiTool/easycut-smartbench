@@ -288,7 +288,7 @@ class ZHeadQC2(Screen):
             def spindle_brush_reset():
                 def read_info(dt):
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(get_info, 0.1)
+                    Clock.schedule_once(get_info, 3)
 
                 def get_info(dt):
                     initial_run_time = self.m.s.spindle_brush_run_time_seconds
@@ -299,7 +299,7 @@ class ZHeadQC2(Screen):
 
                 def read_info_again(dt):
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(compare_info, 0.1)
+                    Clock.schedule_once(compare_info, 3)
 
                 def compare_info(dt):
                     if self.m.s.spindle_brush_run_time_seconds == 0:
