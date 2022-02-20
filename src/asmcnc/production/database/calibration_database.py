@@ -37,7 +37,7 @@ class CalibrationDatabase(object):
     def send_final_test_calibration(self, serial_number, unweighted_x, unweighted_y, unweighted_z, weighted_x, weighted_y, weighted_z):
         with self.conn.cursor() as cursor:
             date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', " + unweighted_x + "', '" + unweighted_y + "', " + unweighted_z + "', '" + weighted_x + "', " + weighted_y + "', '" + weighted_z + "')"
+            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', " + str(unweighted_x) + "', '" + str(unweighted_y) + "', " + str(unweighted_z) + "', '" + str(weighted_x) + "', " + str(weighted_y) + "', '" + str(weighted_z) + "')"
             cursor.execute(query)
 
             self.conn.commit()

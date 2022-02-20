@@ -477,6 +477,7 @@ class CalibrationTesting(Screen):
                 self.x_distance_left = 0
 
                 Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
+                Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
 
         run(None)
 
