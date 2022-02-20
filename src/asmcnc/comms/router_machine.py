@@ -2354,12 +2354,14 @@ class RouterMachine(object):
 
     def post_calibration_file_stream(self, dt):
 
-        if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-            Clock.unschedule(self.poll_end_of_calibration_file_stream)
-            self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-            
-            # FW needs 5 seconds to compute & store after calibration
-            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
+        if self.state().startswith('Idle'):
+
+            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_calibration_file_stream)
+                self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+                
+                # FW needs 5 seconds to compute & store after calibration
+                Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
 
     def do_next_axis_or_finish_calibration_sequence(self):
