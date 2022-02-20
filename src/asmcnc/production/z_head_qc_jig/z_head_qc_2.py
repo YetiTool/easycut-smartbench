@@ -283,23 +283,22 @@ class ZHeadQC2(Screen):
             log('testing')
 
             self.brush_reset_test_count = 0
-            fail_report = []
 
             def spindle_brush_reset():
                 def read_info(dt):
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(get_info, 0.1)
+                    Clock.schedule_once(get_info, 1)
 
                 def get_info(dt):
                     initial_run_time = self.m.s.spindle_brush_run_time_seconds
-                    if initial_run_time == 0 and not fail_report:
+                    if initial_run_time == 0:
                         fail_report.append("Spindle brush run time was 0 before reset.")
                     self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
                     Clock.schedule_once(read_info_again, 3)
 
                 def read_info_again(dt):
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                    Clock.schedule_once(compare_info, 0.1)
+                    Clock.schedule_once(compare_info, 1)
 
                 def compare_info(dt):
                     if self.m.s.spindle_brush_run_time_seconds == 0:
@@ -312,10 +311,11 @@ class ZHeadQC2(Screen):
                     else:
                         spindle_brush_reset()
 
+                fail_report = []
                 self.brush_reset_test_count += 1
                 self.m.s.write_command('M3 S0')
 
-                Clock.schedule_once(read_info, 0.1)
+                Clock.schedule_once(read_info, 1)
 
             spindle_brush_reset()
 
