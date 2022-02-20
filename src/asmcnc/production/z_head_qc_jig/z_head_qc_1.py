@@ -476,8 +476,13 @@ class ZHeadQC1(Screen):
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
         # self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
         # self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-        self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
-        Clock.schedule_once(self.check_sg_values, 3)
+        self.start_motor_chips_test = Clock.schedule_interval(self.try_start_motor_chips_test, 0.4)
+
+    def try_start_motor_chips_test(self, dt):
+        if self.m.s.m_state == "Idle":
+            Clock.unschedule(self.start_motor_chips_test)
+            self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
+            Clock.schedule_once(self.check_sg_values, 3)
 
     def check_sg_values(self, dt):
 
