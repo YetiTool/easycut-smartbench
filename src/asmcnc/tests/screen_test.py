@@ -116,11 +116,11 @@ class TestScreen(Screen):
         coeffs = [509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 509, 508, 508, 508, 508, 508, 508, 508, 508, 507, 505, 506, 504, 506, 504, 504, 504, 505, 504, 505, 504, 503, 502, 501, 501, 502, 502, 501, 501, 500, 499, 498, 500, 499, 496, 497, 496, 496, 494, 494, 492, 492, 491, 489, 489, 490, 490, 485, 487, 484, 484, 484, 487, 487, 485, 486, 484, 484, 483, 481, 480, 479, 481, 478, 476, 477, 475, 474, 473, 470, 471, 469, 465, 465, 461, 453, 439, 440, 450, 464, 460, 459, 457, 458, 456, 452, 452, 450, 448, 448, 444, 444, 443, 440, 438, 436, 435, 432, 431, 431, 428, 428, 426, 427, 422, 421, 421, 418, 418, 416]
         params = [31, 8, 6, 5200]
 
-        self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = coeffs
-        self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting = params[0]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = params[1]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = params[2]
-        self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = params[3]
+        self.m.TMC_motor[4].calibration_dataset_SG_values = coeffs
+        self.m.TMC_motor[4].calibrated_at_current_setting = params[0]
+        self.m.TMC_motor[4].calibrated_at_sgt_setting = params[1]
+        self.m.TMC_motor[4].calibrated_at_toff_setting = params[2]
+        self.m.TMC_motor[4].calibrated_at_temperature = params[3]
 
         time.sleep(0.5)
 
