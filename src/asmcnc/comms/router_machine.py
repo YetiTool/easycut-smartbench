@@ -2448,7 +2448,7 @@ class RouterMachine(object):
         # calibrated_at_toff_setting      = 0
         # calibrated_at_temperature       = 0
 
-        sleep(5) # allow time for calibration mode to initialise
+        time.sleep(5) # allow time for calibration mode to initialise
         second_motor = None
 
         if (motor_index == TMC_X1) or (motor_index == TMC_Y1): # second motor
