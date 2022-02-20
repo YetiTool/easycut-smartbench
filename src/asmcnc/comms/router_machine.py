@@ -2399,17 +2399,10 @@ class RouterMachine(object):
     # UPLOADING CALIBRATION TO FW:
     calibration_upload_in_progress = False
 
-    def upload_calibration_settings_to_chips(self, axis, coeff_array, params):
+    def upload_Z_calibration_settings_from_motor_class(self):
 
         self.calibration_upload_in_progress = True
-
-        self.TMC_motor[int(motor_index)].calibration_dataset_SG_values = coeff_array
-        self.TMC_motor[int(motor_index)].calibrated_at_current_setting = params[0]
-        self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = params[1]
-        self.TMC_motor[int(motor_index)].calibrated_at_toff_setting = params[2]
-        self.TMC_motor[int(motor_index)].calibrated_at_temperature = params[3]
-
-        Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 1)
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
 
     time_to_check_for_upload_prep = 0
 
