@@ -301,7 +301,7 @@ class ZHeadQC2(Screen):
                     Clock.schedule_once(compare_info, 1)
 
                 def compare_info(dt):
-                    if self.m.s.spindle_brush_run_time_seconds == 0:
+                    if self.m.s.spindle_brush_run_time_seconds == 0 and not fail_report:
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     elif self.brush_reset_test_count == 5:
@@ -309,9 +309,7 @@ class ZHeadQC2(Screen):
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     else:
-                        self.m.s.write_command('M5')
-                        # Clock.schedule_once(spindle_brush_reset, 3)
-                        log("Test failed")
+                        spindle_brush_reset()
 
                 fail_report = []
                 self.brush_reset_test_count += 1
