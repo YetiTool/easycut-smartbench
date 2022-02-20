@@ -50,14 +50,33 @@ Builder.load_string("""
             text_size: self.size
             text: root.test_label
 
-        Button:
-            on_press: root.do_test()
-            size_hint_y: 1
+        BoxLayout: 
+            orientation: 'horizontal'
 
-        Button:
-            on_press: root.do_next_test()
-            size_hint_y: 1
-    
+            Button:
+                text: "Tune X and Z"
+                on_press: root.tune_X_Z()
+                size_hint_y: 1
+
+            Button:
+                text: "Cal X and Z"
+                on_press: root.cal_X_Z()
+                size_hint_y: 1
+        
+        BoxLayout: 
+            orientation: 'horizontal'
+
+            Button:
+                text: "Tune Y"
+                on_press: root.tune_Y()
+                size_hint_y: 1
+
+            Button:
+                text: "Cal Y"
+                on_press: root.cal_Y()
+                size_hint_y: 1
+        
+
 
 """)
 
@@ -74,11 +93,17 @@ class TestScreen(Screen):
         self.m=kwargs['machine']
 
 
-    def do_test(self):
+    def tune_X_Z(self):
         self.m.tune_X_and_Z_for_calibration()
 
-    def do_next_test(self):
+    def cal_X_Z(self):
         self.m.calibrate_X_and_Z()
+
+    def tune_Y(self):
+        self.m.tune_Y_for_calibration()
+
+    def cal_Y(self):
+        self.m.calibrate_Y()
 
 
 
