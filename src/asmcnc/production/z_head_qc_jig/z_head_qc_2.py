@@ -310,7 +310,8 @@ class ZHeadQC2(Screen):
                         self.test_rpm(fail_report)
                     else:
                         self.m.s.write_command('M5')
-                        Clock.schedule_once(spindle_brush_reset, 3)
+                        # Clock.schedule_once(spindle_brush_reset, 3)
+                        log("Test failed")
 
                 fail_report = []
                 self.brush_reset_test_count += 1
