@@ -1910,8 +1910,7 @@ class RouterMachine(object):
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
         if X and Z and not Y: 
-            # self.s.write_command('$J = G91 X1490 Z-149 F301.5') # try this first without soft limits disabled
-            self.s.write_command('$J = G91 X1290 Z-129 F301.5') # this one might be the one that works
+            self.s.write_command('$J = G91 X1290 Z-129 F301.5')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
@@ -2034,27 +2033,27 @@ class RouterMachine(object):
 
             if X: 
                 self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
-                time.sleep(0.05)
+                time.sleep(0.1)
             if Y: 
                 self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
                 self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
-                time.sleep(0.1)
+                time.sleep(0.2)
             if Z: 
                 self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
-                time.sleep(0.05)
+                time.sleep(0.1)
 
             while self.temp_sgt <= self.sgt_max:
 
                 if X: 
                     self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
-                    time.sleep(0.05)
+                    time.sleep(0.1)
                 if Y: 
                     self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
                     self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
-                    time.sleep(0.1)
+                    time.sleep(0.2)
                 if Z: 
                     self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
-                    time.sleep(0.05)
+                    time.sleep(0.1)
 
                 while len(self.temp_sg_array) <= 15:
 
@@ -2247,6 +2246,17 @@ class RouterMachine(object):
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
+        self.s.write_command('$21=0')
+
+        self.s.write_command('G1 X0 f1000')
+        self.s.write_command('G91 X0 f1000')
+
+        self.s.write_command('G1 Y0 f1000')
+        self.s.write_command('G91 Y0 f1000')
+
+        self.s.write_command('G1 Z0 f1000')
+        self.s.write_command('G91 Z0 f1000')
+
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
         if Z: self.poll_for_z_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
@@ -2367,6 +2377,7 @@ class RouterMachine(object):
     def save_calibration_coefficients_to_motor_classes(self):
 
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        self.s.write_command('$21=1')
         Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
 
 
