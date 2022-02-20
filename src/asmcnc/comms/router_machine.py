@@ -2427,9 +2427,9 @@ class RouterMachine(object):
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
 
-            tune_thread = threading.Thread(target=self.do_calibration_upload, args=(motor_index))
-            tune_thread.daemon = True
-            tune_thread.start()
+            upload_cal_thread = threading.Thread(target=self.do_calibration_upload, args=(motor_index,))
+            upload_cal_thread.daemon = True
+            upload_cal_thread.start()
 
         elif (self.time_to_check_for_upload_prep + 120) < time.time():
 
