@@ -1910,7 +1910,7 @@ class RouterMachine(object):
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
         if X and Z and not Y: 
-            self.s.write_command('$J = G91 X-1490 Z-149 F301.5')
+            self.s.write_command('$J = G91 X1490 Z-149 F301.5')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
