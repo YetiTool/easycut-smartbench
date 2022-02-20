@@ -173,13 +173,13 @@ class OvernightTesting(Screen):
 
         Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED
 
-        self.OVERNIGHT_RECTANGLE_TIME = ((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60))
+        self.OVERNIGHT_RECTANGLE_TIME = ((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2
 
         self.OVERNIGHT_TOTAL_RUNS = 0
 
         self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
 
-        def run_rectangle(self, dt):
+        def run_rectangle(dt):
             if not self.overnight_running:
                 Clock.unschedule(self.OVERNIGHT_CLOCK)
                 return
