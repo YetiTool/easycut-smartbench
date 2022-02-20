@@ -284,7 +284,7 @@ class ZHeadQC2(Screen):
 
             self.brush_reset_test_count = 0
 
-            def spindle_brush_reset():
+            def spindle_brush_reset(*args):
                 def read_info(dt):
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
                     Clock.schedule_once(get_info, 1)
@@ -309,7 +309,8 @@ class ZHeadQC2(Screen):
                         self.m.s.write_command('M5')
                         self.test_rpm(fail_report)
                     else:
-                        spindle_brush_reset()
+                        self.m.s.write_command('M5')
+                        Clock.schedule_once(spindle_brush_reset, 3)
 
                 fail_report = []
                 self.brush_reset_test_count += 1
