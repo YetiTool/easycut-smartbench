@@ -150,82 +150,82 @@ class MotorCommandsTest(unittest.TestCase):
 
 
 
-    temps_in = [
-                    30,
-                    31,
-                    32,
-                    33,
-                    34,
-                    35,
-                    36,
-                    37,
-                    38,
-                    39,
-                    40,
-                    41,
-                    42,
-                    43,
-                    44,
-                    45,
-                    46,
-                    47,
-                    48,
-                    49,
-                    50,
-                    51,
-                    52,
-                    53,
-                    54,
-                    55,
-                    56,
-                    57,
-                    58,
-                    59
-    ]
+    # temps_in = [
+    #                 30,
+    #                 31,
+    #                 32,
+    #                 33,
+    #                 34,
+    #                 35,
+    #                 36,
+    #                 37,
+    #                 38,
+    #                 39,
+    #                 40,
+    #                 41,
+    #                 42,
+    #                 43,
+    #                 44,
+    #                 45,
+    #                 46,
+    #                 47,
+    #                 48,
+    #                 49,
+    #                 50,
+    #                 51,
+    #                 52,
+    #                 53,
+    #                 54,
+    #                 55,
+    #                 56,
+    #                 57,
+    #                 58,
+    #                 59
+    # ]
 
-    targets_out = [
-                    713,
-                    699,
-                    685,
-                    670,
-                    656,
-                    642,
-                    628,
-                    613,
-                    599,
-                    585,
-                    571,
-                    556,
-                    542,
-                    528,
-                    514,
-                    500,
-                    486,
-                    472,
-                    458,
-                    444,
-                    429,
-                    415,
-                    401,
-                    387,
-                    372,
-                    358,
-                    344,
-                    330,
-                    315,
-                    301
+    # targets_out = [
+    #                 713,
+    #                 699,
+    #                 685,
+    #                 670,
+    #                 656,
+    #                 642,
+    #                 628,
+    #                 613,
+    #                 599,
+    #                 585,
+    #                 571,
+    #                 556,
+    #                 542,
+    #                 528,
+    #                 514,
+    #                 500,
+    #                 486,
+    #                 472,
+    #                 458,
+    #                 444,
+    #                 429,
+    #                 415,
+    #                 401,
+    #                 387,
+    #                 372,
+    #                 358,
+    #                 344,
+    #                 330,
+    #                 315,
+    #                 301
 
-    ]
+    # ]
 
 
 
-    def test_get_target(self):
+    # def test_get_target(self):
 
-        for idx, val in enumerate(self.temps_in):
+    #     for idx, val in enumerate(self.temps_in):
 
-            '''get_target_SG_from_current_temperature'''
-            target = self.m.get_target_SG_from_current_temperature('Z', val)
-            # self.assertEqual(target, self.targets_out[idx])
+    #         '''get_target_SG_from_current_temperature'''
+    #         target = self.m.get_target_SG_from_current_temperature('X', val)
+    #         self.assertEqual(target, self.targets_out[idx])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

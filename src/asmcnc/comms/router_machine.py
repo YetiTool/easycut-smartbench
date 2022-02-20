@@ -2248,8 +2248,7 @@ class RouterMachine(object):
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
-        if Z: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
-
+        if Z: self.poll_for_z_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
 
         # Only sets one ready to begin with
         if X: self.x_ready_to_calibrate = True
