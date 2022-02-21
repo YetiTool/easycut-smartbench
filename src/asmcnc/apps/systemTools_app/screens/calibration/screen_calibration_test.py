@@ -244,7 +244,6 @@ class CalibrationTesting(Screen):
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except Exception as e:
             self.send_data_check = "./asmcnc/skavaUI/img/template_cancel.png"
-            log(e)
 
     def stop(self):
         self.x_running = False

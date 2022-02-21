@@ -12,7 +12,6 @@ class CalibrationDatabase(object):
         except ImportError:
             log("Can't import credentials")
 
-            # try to load from usb stick here
         try:
             self.conn = pytds.connect(credentials.server, credentials.database, credentials.username, credentials.password)
         except: 
