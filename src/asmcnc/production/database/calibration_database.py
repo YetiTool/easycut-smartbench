@@ -59,6 +59,13 @@ class CalibrationDatabase(object):
 
             self.conn.commit()
 
+    def send_lower_beam_calibration(self, serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature):
+        with self.conn.cursor() as cursor:
+            query = "INSERT INTO TMC (SerialNumber, MotorIndex, CS, SG, SGT, TOFF, Temperature) VALUES ('" + str(serial_number) + "', '" + str(motor_index) + "', '" + str(cs) + "', '" + str(sg_coefficients) + "', '" + str(sgt) + "', '" + str(toff) + "', '" + str(temperature) + "')"
+            cursor.execute(query)
+
+            self.conn.commit()
+
     def get_lower_beam_parameters(self, serial_number):
         with self.conn.cursor() as cursor:
             query = "SELECT * FROM TMC WHERE SerialNumber = '%s'" % serial_number
