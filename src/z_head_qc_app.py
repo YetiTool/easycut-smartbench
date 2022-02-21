@@ -106,6 +106,8 @@ class ZHeadQC(App):
 
         # calibration_db = CalibrationDatabase()
 
+        calibration_db = None
+
         usb_stick = usb_storage.USB_storage(sm, l)
         usb_stick.enable()
 
