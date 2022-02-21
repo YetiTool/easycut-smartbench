@@ -20,16 +20,20 @@ class ZHeadQCDB2(Screen):
         self.m = kwargs['m']
         self.calibration_db = kwargs['calibration_db']
 
-    def on_enter(self):
-        motor_index = TMC_Z
-        sg_coefficients = self.m.TMC_MOTOR[int(motor_index)].calibration_dataset_SG_values
-        cs = self.m.TMC_MOTOR[int(motor_index)].calibrated_at_current_setting
-        sgt = self.m.TMC_MOTOR[int(motor_index)].calibrated_at_sgt_setting
-        toff = self.m.TMC_MOTOR[int(motor_index)].calibrated_at_toff_setting
-        temperature = self.m.TMC_motor[int(motor_index)].calibrated_at_temperature
+    def send_calibration_payload(self, motor_index):
+        sg_coefficients = self.m.TMC_MOTOR[motor_index].calibration_dataset_SG_values
+        cs = self.m.TMC_MOTOR[motor_index].calibrated_at_current_setting
+        sgt = self.m.TMC_MOTOR[motor_index].calibrated_at_sgt_setting
+        toff = self.m.TMC_MOTOR[motor_index].calibrated_at_toff_setting
+        temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
+        
+        self.calibration_db.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
 
+    def on_enter(self):
         try:
-            self.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
+            self.send_calibration_payload(TMC_Z)
+            self.send_calibration_payload(TMC_X1)
+            self.send_calibration_payload(TMC_X2)
             self.sm.current = 'qcDB3'
         except:
             self.sm.current = 'qcDB4'
