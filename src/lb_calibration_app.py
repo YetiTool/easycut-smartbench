@@ -16,15 +16,7 @@ PLATFORM
 This app needs following platform changes to run
 as default application at startup: 
 
-sudo systemctl disable ansible.service
-
 touch /home/pi/YETI_LBCAL_PROD_JIG.txt
-
-sudo nano /boot/config.txt
-
-# Copy and paste to end of file: 
-
-        dtoverlay=pi3-disable-bt
 
 # Exit and save file
 

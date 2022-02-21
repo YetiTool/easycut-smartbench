@@ -4,6 +4,8 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 <LBCalibration2>:
+
+    calibration_label : calibration_label
     
     canvas:
         Color:
@@ -17,6 +19,7 @@ Builder.load_string("""
         orientation: 'vertical'
 
         Label:
+            id: calibration_label
             text: 'Calibrating...'
             font_size: dp(50)
 
@@ -60,5 +63,5 @@ class LBCalibration2(Screen):
                 self.calibration_label.text = self.m.calibration_tuning_fail_info
 
 
-    def enter_next_screen(self, dt):
+    def enter_next_screen(self):
         self.sm.current = 'lbc3'
