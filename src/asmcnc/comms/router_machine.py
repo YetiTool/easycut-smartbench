@@ -1716,6 +1716,8 @@ class RouterMachine(object):
 
     # CALL THESE FROM MAIN APP
 
+    calibration_tuning_fail_info = ''
+
     # QUERY THIS FLAG AFTER CALLING TUNING FUNCTIONS, TO SEE IF TUNING HAS FINISHED
     tuning_in_progress = False
 
@@ -1820,6 +1822,7 @@ class RouterMachine(object):
     def prepare_for_tuning(self):
 
         log("Prepare for tuning")
+        self.calibration_tuning_fail_info = ''
 
         self.s.write_command('$20=0')
 
@@ -1861,6 +1864,8 @@ class RouterMachine(object):
         elif (self.time_to_check_for_tuning_prep + 180) < time.time():
             # raise error popup
             log("RAW SG VALUES NOT ENABLED")
+            self.calibration_tuning_fail_info = "Raw SG values are still not enabled or reads are bad after 3 mins"
+            Clock.schedule_once(self.finish_tuning, 0.1)
 
         else: 
             if self.state().startswith('Idle'):
@@ -1883,6 +1888,8 @@ class RouterMachine(object):
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
             log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
+            self.calibration_tuning_fail_info = "Temps aren't in expected range (30-60), motor_driver_temp is: " + str(self.s.motor_driver_temp)
+            Clock.schedule_once(self.finish_tuning, 0.1)
 
 
         else: 
@@ -1901,6 +1908,8 @@ class RouterMachine(object):
         elif (self.time_to_check_for_tuning_prep + 120) < time.time():
             # raise error popup
             log("STILL NOT IDLE ??")
+            self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(self.finish_tuning, 0.1)
 
         else: 
             Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 5)
@@ -2010,6 +2019,8 @@ class RouterMachine(object):
 
             log("Could not complete tuning! Check log for errors")
             Clock.unschedule(self.tuning_poll)
+            Clock.schedule_once(self.finish_tuning, 0.1)
+            return
 
 
         self.toff_and_sgt_found = True
@@ -2149,6 +2160,7 @@ class RouterMachine(object):
         if ((self.reference_temp - 15) > current_temperature > (self.reference_temp + 15)):
 
             log("Temperatures out of expected range! Check set-up!")
+            self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
             return
 
         reference_SG = 500
@@ -2247,6 +2259,8 @@ class RouterMachine(object):
 
         log("Initialise Calibration")
 
+        self.calibration_tuning_fail_info = ''
+
         self.s.write_command('$20=0')
 
         self.s.write_command('$J=G53 X0 F6000')
@@ -2326,6 +2340,8 @@ class RouterMachine(object):
 
             # gives error message to popup
             log("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
+            self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
 
         else: 
             Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 2)
@@ -2337,9 +2353,6 @@ class RouterMachine(object):
             calibration_gcode_pre_scrubbed = f.readlines()
 
         calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
-
-        log("Calibration gcode:")
-        print(calibration_gcode)
 
         log("Calibrating...")
 
@@ -2398,10 +2411,12 @@ class RouterMachine(object):
 
     # UPLOADING CALIBRATION TO FW:
     calibration_upload_in_progress = False
+    calibration_upload_fail_info = ''
 
     def upload_Z_calibration_settings_from_motor_class(self):
 
         self.calibration_upload_in_progress = True
+        self.calibration_upload_fail_info = ''
         Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
 
     time_to_check_for_upload_prep = 0
@@ -2432,11 +2447,12 @@ class RouterMachine(object):
             upload_cal_thread.start()
 
         elif (self.time_to_check_for_upload_prep + 120) < time.time():
-
-            Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 2)
+            log("PROBLEM! Can't initialise calibration upload")
+            self.calibration_upload_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 0.1)
 
         else: 
-            log("PROBLEM! Can't initialise calibration upload")
+            Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 2)
 
 
     def do_calibration_upload(self, motor_index):
@@ -2496,10 +2512,10 @@ class RouterMachine(object):
 
     def output_uploaded_coefficients(self):
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
-        Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
+        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
 
 
-    def complete_calibration(self):
+    def complete_calibration_upload(self):
         self.time_to_check_for_upload_prep = 0
         self.calibration_upload_in_progress = False
         log("Calibration upload complete")
