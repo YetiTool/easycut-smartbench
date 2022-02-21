@@ -4,6 +4,8 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 <ZHeadQC4>:
+
+    calibration_label : calibration_label
     
     canvas:
         Color:
@@ -17,6 +19,7 @@ Builder.load_string("""
         orientation: 'vertical'
 
         Label:
+            id: calibration_label
             text: 'Calibrating...'
             font_size: dp(50)
 
@@ -40,13 +43,24 @@ class ZHeadQC4(Screen):
     def start_calibrating(self, dt):
         if not self.m.tuning_in_progress:
             Clock.unschedule(self.poll_for_tuning_completion)
-            self.m.calibrate_X_and_Z()
-            self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 0.4)
+
+            if not self.m.calibration_tuning_fail_info:
+                self.m.calibrate_X_and_Z()
+                self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 0.4)
+
+            else:
+                self.calibration_label.text = self.m.calibration_tuning_fail_info
+
 
     def finish_calibrating(self, dt):
         if not self.m.run_calibration:
             Clock.unschedule(self.poll_for_calibration_completion)
-            self.enter_next_screen()
+
+            if not self.m.calibration_tuning_fail_info:
+                self.enter_next_screen()
+
+            else:
+                self.calibration_label.text = self.m.calibration_tuning_fail_info
 
     def enter_next_screen(self):
         self.sm.current = 'qc5'
