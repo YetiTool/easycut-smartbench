@@ -77,9 +77,14 @@ class SerialConnection(object):
 
     def get_serial_screen(self, serial_error):
 
-        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
-            self.sm.current = 'serialScreen'
+        try:
+            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+                self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
+                self.sm.current = 'serialScreen'
+
+        except:
+            log("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
+            log("Serial error: " + str(serial_error))
 
 
     def is_port_SmartBench(self, available_port):
