@@ -2493,10 +2493,10 @@ class RouterMachine(object):
 
     def output_uploaded_coefficients(self):
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
-        Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
+        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
 
 
-    def complete_calibration(self):
+    def complete_calibration_upload(self):
         self.time_to_check_for_upload_prep = 0
         self.calibration_upload_in_progress = False
         log("Calibration upload complete")
