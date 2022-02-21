@@ -3,7 +3,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from datetime import datetime
 from asmcnc.skavaUI import popup_info
-import math
+import traceback
 
 Builder.load_string("""
 <CalibrationTesting>:
@@ -242,8 +242,9 @@ class CalibrationTesting(Screen):
         try:
             self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        except Exception as e:
-            self.send_data_check = "./asmcnc/skavaUI/img/template_cancel.png"
+        except:
+            self.send_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            print(traceback.format_exc())
 
     def stop(self):
         self.x_running = False
