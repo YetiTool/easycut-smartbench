@@ -33,11 +33,11 @@ sudo reboot
 #######################################################
 '''
 
-try:
-  from hanging_threads import start_monitoring
-  monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
-except:
-  print("Could not import hanging_threads")
+# try:
+#   from hanging_threads import start_monitoring
+#   monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
+# except:
+#   print("Could not import hanging_threads")
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition

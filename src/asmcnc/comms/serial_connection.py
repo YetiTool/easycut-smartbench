@@ -1036,12 +1036,12 @@ class SerialConnection(object):
                                                     self.sg_y2_motor
                                                 ])
 
-                    # if self.FINAL_TEST:
-                    #     if self.sm.has_screen('calibration_testing'):
-                    #         self.sm.get_screen('calibration_testing').measure()
+                    if self.FINAL_TEST:
+                        if self.sm.has_screen('calibration_testing'):
+                            self.sm.get_screen('calibration_testing').measure()
 
-                    #     if self.sm.has_screen('overnight_testing'):
-                    #         self.sm.get_screen('overnight_testing').measure()
+                        if self.sm.has_screen('overnight_testing'):
+                            self.sm.get_screen('overnight_testing').measure()
 
                 elif part.startswith('Sp:'):
 
