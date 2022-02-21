@@ -312,7 +312,7 @@ Builder.load_string("""
                             text: 'Final test'
                             on_press: root.final_test()
                         Button:
-                            text: 'Retrieve lower beam calibration parameters'
+                            text: 'Retrieve LB cal data'
                             on_press: root.retrieve_lower_beam_parameters()
                         Button:
                             text: 'Calibration test'
@@ -775,7 +775,7 @@ class FactorySettingsScreen(Screen):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
     def retrieve_lower_beam_parameters(self):
-        pass#todo
+        pass
 
     def enter_calibration_test(self):
         if not self.systemtools_sm.sm.has_screen('calibration_testing'):
