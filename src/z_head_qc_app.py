@@ -110,7 +110,7 @@ class ZHeadQC(App):
         usb_stick.enable()
 
         if m.s.is_connected():
-            Clock.schedule_once(m.s.start_services, 4)
+            Clock.schedule_once(m.s.start_services)
 
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
         sm.add_widget(error_screen)
