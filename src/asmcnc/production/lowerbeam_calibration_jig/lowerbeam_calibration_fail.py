@@ -60,3 +60,6 @@ class LBCalibrationFail(Screen):
 
     def retry_send(self):
         self.sm.current = 'lbc4'
+
+    def set_serial_no(self, serial_no):
+        self.success_label.text = 'Database update failed: ' + serial_no

@@ -1,3 +1,4 @@
+import traceback
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -63,13 +64,14 @@ class LBCalibration4(Screen):
 
     def enter_next_screen(self):
         try:
-            self.calibration_db.send_calibration_payload(TMC_Y1)
-            self.calibration_db.send_calibration_payload(TMC_Y2)
+            self.send_calibration_payload(TMC_Y1)
+            self.send_calibration_payload(TMC_Y2)
             self.sm.get_screen('lbc5').set_serial_no(self.serial_no_input.text)
             self.sm.current = 'lbc5'
-        except:
+        except Exception as e:
             self.sm.get_screen('lbc6').set_serial_no(self.serial_no_input.text)
             self.sm.current = 'lbc6'
+            print(traceback.format_exc())
 
     def send_calibration_payload(self, motor_index):
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
@@ -78,4 +80,4 @@ class LBCalibration4(Screen):
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         
-        self.calibration_db.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
+        self.calibration_db.send_lower_beam_calibration(self.serial_no_input.text, motor_index, sg_coefficients, cs, sgt, toff, temperature)
