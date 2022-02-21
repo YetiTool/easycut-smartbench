@@ -80,4 +80,4 @@ class LBCalibration4(Screen):
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         
-        self.calibration_db.send_z_head_calibration(self.serial_no_input.text, motor_index, sg_coefficients, cs, sgt, toff, temperature)
+        self.calibration_db.send_lower_beam_calibration(self.serial_no_input.text, motor_index, sg_coefficients, cs, sgt, toff, temperature)
