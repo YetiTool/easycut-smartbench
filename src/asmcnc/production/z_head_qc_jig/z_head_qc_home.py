@@ -44,12 +44,12 @@ Builder.load_string("""
 
                 Button:
                     id: test_fw_update_button 
-                    text: 'NO - Update FW now!'
+                    text: 'NO - Update FW now! (For v1.3)'
                     font_size: dp(20)
                     on_press: root.test_fw_update()
 
                 Button:
-                    text: 'YES - Take me to QC!'
+                    text: 'YES - Take me to QC! (For v1.3)'
                     font_size: dp(20)
                     on_press: root.enter_qc()
 
@@ -57,7 +57,7 @@ Builder.load_string("""
                 cols: 2
 
                 Button: 
-                    text: 'Secret option C - take me to WARRANTY QC!'
+                    text: 'Take me to WARRANTY QC! (For v1.2)'
                     font_size: dp(20)
                     on_press: root.secret_option_c()
 
