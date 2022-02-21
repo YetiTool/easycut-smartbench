@@ -33,6 +33,12 @@ sudo reboot
 #######################################################
 '''
 
+# try:
+#   from hanging_threads import start_monitoring
+#   monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
+# except:
+#   print("Could not import hanging_threads")
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
@@ -102,6 +108,9 @@ class ZHeadQC(App):
 
         usb_stick = usb_storage.USB_storage(sm, l)
         usb_stick.enable()
+
+        if m.s.is_connected():
+            Clock.schedule_once(m.s.start_services, 1)
 
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
         sm.add_widget(error_screen)

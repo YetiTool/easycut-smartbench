@@ -73,6 +73,7 @@ class SerialConnection(object):
         self.FINAL_TEST = False
 
     def __del__(self):
+        self.s.close()
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
