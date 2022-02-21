@@ -87,8 +87,6 @@ class SerialConnection(object):
             log("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
             log("Serial error: " + str(serial_error))
 
-        return
-
 
     def is_port_SmartBench(self, available_port):
 
