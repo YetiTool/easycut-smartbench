@@ -34,7 +34,7 @@ class LBCalibration1(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        self.update_time(30 * 0.67) 
+        self.update_time(30 * 0.7) 
 
     def update_time(self, time_left):
         seconds = time_left
