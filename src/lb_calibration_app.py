@@ -16,15 +16,7 @@ PLATFORM
 This app needs following platform changes to run
 as default application at startup: 
 
-sudo systemctl disable ansible.service
-
 touch /home/pi/YETI_LBCAL_PROD_JIG.txt
-
-sudo nano /boot/config.txt
-
-# Copy and paste to end of file: 
-
-        dtoverlay=pi3-disable-bt
 
 # Exit and save file
 
@@ -73,6 +65,12 @@ class LBCalibration(App):
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
+
+        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
+        sm.add_widget(error_screen)
+
+        door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(door_screen)
 
         lb_calibration_1 = LBCalibration1(name = 'lbc1', sm = sm, m = m)
         sm.add_widget(lb_calibration_1)
