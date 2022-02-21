@@ -64,8 +64,8 @@ class LBCalibration4(Screen):
 
     def enter_next_screen(self):
         try:
-            self.calibration_db.send_calibration_payload(TMC_Y1)
-            self.calibration_db.send_calibration_payload(TMC_Y2)
+            self.send_calibration_payload(TMC_Y1)
+            self.send_calibration_payload(TMC_Y2)
             self.sm.get_screen('lbc5').set_serial_no(self.serial_no_input.text)
             self.sm.current = 'lbc5'
         except Exception as e:
