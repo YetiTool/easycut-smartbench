@@ -48,5 +48,5 @@ class ZHeadQC4(Screen):
             Clock.unschedule(self.poll_for_calibration_completion)
             self.enter_next_screen()
 
-    def enter_next_screen(self, dt):
+    def enter_next_screen(self):
         self.sm.current = 'qc5'
