@@ -178,8 +178,8 @@ Builder.load_string("""
                     text: 'Z:'
 """)
 
-MAX_XY_SPEED = 1186
-MAX_Z_SPEED = 75
+MAX_XY_SPEED = 1186.0
+MAX_Z_SPEED = 75.0
 
 MAX_Z_DISTANCE = 115
 MAX_X_DISTANCE = 1135
