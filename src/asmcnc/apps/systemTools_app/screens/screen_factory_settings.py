@@ -779,14 +779,14 @@ class FactorySettingsScreen(Screen):
 
     def enter_calibration_test(self):
         if not self.systemtools_sm.sm.has_screen('calibration_testing'):
-            calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm)
+            calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm, l = self.l)
             self.systemtools_sm.sm.add_widget(calibration_testing)
         
         self.systemtools_sm.sm.current = 'calibration_testing'
 
     def enter_overnight_test(self):
         if not self.systemtools_sm.sm.has_screen('overnight_testing'):
-            overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm)
+            overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm, l = self.l)
             self.systemtools_sm.sm.add_widget(overnight_testing)
         
         self.systemtools_sm.sm.current = 'overnight_testing'

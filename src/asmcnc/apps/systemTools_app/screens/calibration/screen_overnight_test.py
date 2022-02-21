@@ -148,6 +148,7 @@ class OvernightTesting(Screen):
         self.systemtools_sm = kwargs['systemtools']
         self.calibration_db = kwargs['calibration_db']
         self.sm = kwargs['sm']
+        self.l = kwargs['l']
 
         self.setup_arrays()
         self.overnight_running = False

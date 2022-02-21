@@ -202,6 +202,7 @@ class CalibrationTesting(Screen):
         self.systemtools_sm = kwargs['systemtools']
         self.calibration_db = kwargs['calibration_db']
         self.sm = kwargs['sm']
+        self.l = kwargs['l']
 
         # used to only measure axis in motion
         self.x_running = False
@@ -234,7 +235,7 @@ class CalibrationTesting(Screen):
         #raw y2 vals
         self.raw_y2_vals = []
 
-        self.unweighted_data = [self.x_vals, self.y_vals, self.z_vals]
+        self.unweighted_data = []
 
     def send_data(self):
         serial = self.calibration_db.get_serial_number()
