@@ -22,10 +22,10 @@ class ZHeadQCDB2(Screen):
         self.calibration_db = kwargs['calibration_db']
 
     def send_calibration_payload(self, motor_index):
-        sg_coefficients = self.m.TMC_MOTOR[motor_index].calibration_dataset_SG_values
-        cs = self.m.TMC_MOTOR[motor_index].calibrated_at_current_setting
-        sgt = self.m.TMC_MOTOR[motor_index].calibrated_at_sgt_setting
-        toff = self.m.TMC_MOTOR[motor_index].calibrated_at_toff_setting
+        sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
+        cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
+        sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
+        toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         
         self.calibration_db.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
