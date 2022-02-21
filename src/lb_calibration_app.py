@@ -43,6 +43,7 @@ from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_success i
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_fail import LBCalibrationFail
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_error
+from asmcnc.skavaUI.screen_home import HomeScreen
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -75,6 +76,9 @@ class LBCalibration(App):
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
+
+        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        sm.add_widget(home_screen)
 
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
         sm.add_widget(error_screen)
