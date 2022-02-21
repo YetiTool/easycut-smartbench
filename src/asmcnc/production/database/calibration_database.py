@@ -59,10 +59,9 @@ class CalibrationDatabase(object):
 
             self.conn.commit()
 
-    #check what data looks like
     def get_lower_beam_parameters(self, serial_number):
         with self.conn.cursor() as cursor:
-            query = "SELECT * FROM LowerBeam WHERE SerialNo = %s" % serial_number
+            query = "SELECT * FROM TMC WHERE SerialNumber = '%s'" % serial_number
 
             cursor.execute(query)
 
