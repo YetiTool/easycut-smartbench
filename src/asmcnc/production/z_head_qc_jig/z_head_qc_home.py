@@ -79,9 +79,6 @@ class ZHeadQCHome(Screen):
 
         self.start_calibration_timer(0.5)
 
-        if self.m.s.is_connected():
-            Clock.schedule_once(self.m.s.start_services, 4)
-
     def start_calibration_timer(self, minutes):
         self.sm.get_screen('qc3').update_time(minutes*30)
 
