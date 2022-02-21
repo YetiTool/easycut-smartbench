@@ -71,6 +71,8 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_db2 import ZHeadQCDB2
 from asmcnc.production.z_head_qc_jig.z_head_qc_db_success import ZHeadQCDBSuccess
 from asmcnc.production.z_head_qc_jig.z_head_qc_db_fail import ZHeadQCDBFail
 
+from asmcnc.production.database.calibration_database import CalibrationDatabase
+
 from datetime import datetime
 
 Cmport = 'COM3'
@@ -95,6 +97,8 @@ class ZHeadQC(App):
         m = RouterMachine(Cmport, sm, sett, l, jd)
 
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        calibration_db = CalibrationDatabase()
 
         usb_stick = usb_storage.USB_storage(sm, l)
         usb_stick.enable()
@@ -135,7 +139,7 @@ class ZHeadQC(App):
         z_head_qc_4 = ZHeadQC4(name='qc4', sm = sm, m = m)
         sm.add_widget(z_head_qc_4)
 
-        z_head_qc_5 = ZHeadQC5(name='qc5', sm = sm, m = m)
+        z_head_qc_5 = ZHeadQC5(name='qc5', sm = sm, m = m, calibration_db = calibration_db)
         sm.add_widget(z_head_qc_5)
 
         z_head_qc_6 = ZHeadQC6(name='qc6', sm = sm, m = m)
@@ -159,7 +163,7 @@ class ZHeadQC(App):
         z_head_qc_db1 = ZHeadQCDB1(name='qcDB1', sm = sm, m = m)
         sm.add_widget(z_head_qc_db1)
 
-        z_head_qc_db2 = ZHeadQCDB2(name='qcDB2', sm = sm, m = m)
+        z_head_qc_db2 = ZHeadQCDB2(name='qcDB2', sm = sm, m = m, calibration_db = calibration_db)
         sm.add_widget(z_head_qc_db2)
 
         z_head_qc_db_success = ZHeadQCDBSuccess(name='qcDB3', sm = sm, m = m)

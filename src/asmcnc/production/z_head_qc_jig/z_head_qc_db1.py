@@ -62,4 +62,5 @@ class ZHeadQCDB1(Screen):
     def enter_next_screen(self):
         self.sm.get_screen('qcDB3').set_serial_no(self.serial_no_input.text)
         self.sm.get_screen('qcDB4').set_serial_no(self.serial_no_input.text)
+        self.sm.get_screen('qcDB2').set_serial_no(self.serial_no_input.text)
         self.sm.current = 'qcDB2'
