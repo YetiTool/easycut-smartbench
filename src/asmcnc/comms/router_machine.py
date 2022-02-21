@@ -2338,9 +2338,6 @@ class RouterMachine(object):
 
         calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
 
-        log("Calibration gcode:")
-        print(calibration_gcode)
-
         log("Calibrating...")
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
