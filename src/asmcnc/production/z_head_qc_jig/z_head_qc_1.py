@@ -439,8 +439,8 @@ class ZHeadQC1(Screen):
                     '$11=0.010',      #Junction deviation, mm
                     '$12=0.002',      #Arc tolerance, mm
                     '$13=0',          #Report inches, boolean
-                    # '$20=1',          #Soft limits, boolean <-------------------
-                    # '$21=1',          #Hard limits, boolean <------------------
+                    '$20=1',          #Soft limits, boolean <-------------------
+                    '$21=1',          #Hard limits, boolean <------------------
                     '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
                     '$24=600.0',      #Homing feed, mm/min
