@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+import traceback
 
 Builder.load_string("""
 <ZHeadQCDB2>:
@@ -37,6 +38,7 @@ class ZHeadQCDB2(Screen):
             self.sm.current = 'qcDB3'
         except:
             self.sm.current = 'qcDB4'
+            print(traceback.format_exc())
 
     def set_serial_no(self, serial_number):
         self.serial_number = serial_number
