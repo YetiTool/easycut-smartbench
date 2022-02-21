@@ -185,9 +185,9 @@ MAX_Z_DISTANCE = 115
 MAX_X_DISTANCE = 1135
 MAX_Y_DISTANCE = 2275
 
-TIME_TO_RUN_Z = 10 #241
-TIME_TO_RUN_X = 10 #120
-TIME_TO_RUN_Y = 10 #239
+TIME_TO_RUN_Z = 90 #241
+TIME_TO_RUN_X = 90 #120
+TIME_TO_RUN_Y = 90 #239
 
 def log(message):
     timestamp = datetime.now()
