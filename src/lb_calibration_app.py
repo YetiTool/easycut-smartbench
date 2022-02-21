@@ -44,6 +44,8 @@ from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_fail impo
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_error
 
+from asmcnc.production.database.calibration_database import CalibrationDatabase
+
 
 from datetime import datetime
 
@@ -68,6 +70,8 @@ class LBCalibration(App):
         m = RouterMachine(Cmport, sm, sett, l, jd)
 
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        calibration_db = CalibrationDatabase()
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
