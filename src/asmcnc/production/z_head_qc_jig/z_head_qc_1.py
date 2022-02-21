@@ -401,6 +401,11 @@ class ZHeadQC1(Screen):
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
         self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5)
 
+    def on_leave(self):
+        Clock.unschedule(self.poll_for_status)
+        Clock.unschedule(self.poll_for_limits)
+        Clock.unschedule(self.poll_for_temps_power) # Otherwise a load of popups appear at once on failure
+
     def update_status_text(self, dt):
         try:
             self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
