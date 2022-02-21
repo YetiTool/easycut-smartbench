@@ -35,7 +35,7 @@ class LBCalibration2(Screen):
 
     def on_enter(self):
         # self.run_calibration()
-        self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        self.m.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
         self.enter_next_screen()
 
     # def run_calibration(self):
