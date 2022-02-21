@@ -562,11 +562,11 @@ class CalibrationTesting(Screen):
             if len(self.z_vals) > 0:
                 cur_pos = self.m.mpos_z()
                 if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
-                    self.z_vals.append([1, float(self.m.s.mpos_z()), self.m.s.sg_z_motor_axis])
+                    self.z_vals.append([1, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
                 else:
-                    self.z_vals.append([0, float(self.m.s.mpos_z()), self.m.s.sg_z_motor_axis])
+                    self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
             else:
-                self.z_vals.append([0, float(self.m.s.mpos_z()), self.m.s.sg_z_motor_axis])
+                self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
 
             self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
             self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
