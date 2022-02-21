@@ -33,6 +33,7 @@ from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
+from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_1 import LBCalibration1
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_2 import LBCalibration2
@@ -65,6 +66,8 @@ class LBCalibration(App):
         jd = JobData(localization = l, settings_manager = sett)
 
         m = RouterMachine(Cmport, sm, sett, l, jd)
+
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
