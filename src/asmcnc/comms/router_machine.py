@@ -1842,7 +1842,7 @@ class RouterMachine(object):
 
         if Z: SG_to_check = self.s.sg_z_motor_axis
         elif X: SG_to_check = self.s.sg_x_motor_axis
-        elif Y: SG_to_check = self.s.sg_y_axis
+        elif Y: SG_to_check = self.s.sg_y1_motor
 
 
         if 200 < SG_to_check < 800:
@@ -2320,7 +2320,7 @@ class RouterMachine(object):
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
-            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 5)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 10)
 
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
@@ -2344,7 +2344,7 @@ class RouterMachine(object):
         log("Calibrating...")
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
-        self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
+        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
     def quick_scrub(self, line):
 
@@ -2354,12 +2354,14 @@ class RouterMachine(object):
 
     def post_calibration_file_stream(self, dt):
 
-        if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-            Clock.unschedule(self.poll_end_of_calibration_file_seq_stream)
-            self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-            
-            # FW needs 5 seconds to compute & store after calibration
-            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
+        if self.state().startswith('Idle'):
+
+            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_calibration_file_stream)
+                self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+                
+                # FW needs 5 seconds to compute & store after calibration
+                Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
 
     def do_next_axis_or_finish_calibration_sequence(self):
@@ -2392,3 +2394,114 @@ class RouterMachine(object):
         self.run_calibration = False
 
         log("Calibration complete")
+
+
+    # UPLOADING CALIBRATION TO FW:
+    calibration_upload_in_progress = False
+
+    def upload_Z_calibration_settings_from_motor_class(self):
+
+        self.calibration_upload_in_progress = True
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
+
+    time_to_check_for_upload_prep = 0
+
+    def initialise_calibration_upload(self, axis):
+
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            if axis == 'X': 
+                calibrate_mode = 32
+                altDisplayText = "UPLOAD CALIBRATION TO X AXIS"
+                motor_index = TMC_X1
+
+            if axis == 'Y': 
+                calibrate_mode = 64
+                altDisplayText = "UPLOAD CALIBRATION TO Y AXIS"
+                motor_index = TMC_Y1
+
+            if axis == 'Z': 
+                calibrate_mode = 128
+                altDisplayText = "UPLOAD CALIBRATION TO Z AXIS"
+                motor_index = TMC_Z
+
+            self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+
+            upload_cal_thread = threading.Thread(target=self.do_calibration_upload, args=(motor_index,))
+            upload_cal_thread.daemon = True
+            upload_cal_thread.start()
+
+        elif (self.time_to_check_for_upload_prep + 120) < time.time():
+
+            Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 2)
+
+        else: 
+            log("PROBLEM! Can't initialise calibration upload")
+
+
+    def do_calibration_upload(self, motor_index):
+
+        # # CALIBRATION PARAMS
+        # calibration_dataset_SG_values   = []
+        # calibrated_at_current_setting   = 0
+        # calibrated_at_sgt_setting       = 0
+        # calibrated_at_toff_setting      = 0
+        # calibrated_at_temperature       = 0
+
+        time.sleep(5) # allow time for calibration mode to initialise
+        second_motor = None
+
+        if (motor_index == TMC_X1) or (motor_index == TMC_Y1): # second motor
+
+            second_motor = motor_index + 1
+
+        data_length = len(self.TMC_motor[int(motor_index)].calibration_dataset_SG_values) + 4
+
+        for idx in range(data_length - 4):
+            self.send_one_calibration_upload_value(motor_index, idx, self.TMC_motor[int(motor_index)].calibration_dataset_SG_values[idx])
+
+            if second_motor:
+                self.send_one_calibration_upload_value(second_motor, idx, self.TMC_motor[int(second_motor)].calibration_dataset_SG_values[idx])
+
+        self.send_calibration_parameters(motor_index, data_length)
+        if second_motor: self.send_calibration_parameters(second_motor, data_length)
+
+        Clock.schedule_once(lambda dt: self.tell_FW_to_finish_calibration_upload(), 5)
+
+
+    def send_calibration_parameters(self, motor_index, data_length):
+
+        self.send_one_calibration_upload_value(motor_index, data_length - 4, self.TMC_motor[int(motor_index)].calibrated_at_current_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 3, self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 2, self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 1, self.TMC_motor[int(motor_index)].calibrated_at_temperature)
+
+
+    def send_one_calibration_upload_value(self, motor_index, idx, val):
+
+        altDisplayText = "UPLOAD CAL: M" + str(motor_index) + ":I" + str(idx) + ":COEFF " + str(val)
+
+        constructed_value  = (motor_index << 24)      & 0xFF000000
+        constructed_value |= (idx   << 16)      & 0x00FF0000
+        constructed_value |= (val)              & 0x0000FFFF
+
+        self.send_command_to_motor(altDisplayText, motor = motor_index, command=UPLOAD_CALIBR_VALUE, value = constructed_value)
+        time.sleep(0.1)
+
+
+    def tell_FW_to_finish_calibration_upload(self):
+        self.send_command_to_motor("FINISH UPLOAD", command=SET_CALIBR_MODE, value=2)
+        Clock.schedule_once(lambda dt: self.output_uploaded_coefficients(), 5)
+
+
+    def output_uploaded_coefficients(self):
+        self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
+
+
+    def complete_calibration(self):
+        self.time_to_check_for_upload_prep = 0
+        self.calibration_upload_in_progress = False
+        log("Calibration upload complete")
+
+

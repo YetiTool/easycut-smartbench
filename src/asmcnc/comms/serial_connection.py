@@ -548,6 +548,8 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
+        log("Ending stream...")
+
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
