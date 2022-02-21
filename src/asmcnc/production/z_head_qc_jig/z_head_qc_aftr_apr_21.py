@@ -524,13 +524,13 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
-        if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
+        if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 60):
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
-            fail_report.append("Should be greater than 10 and less than 50 deg C.")
+            fail_report.append("Should be greater than 10 and less than 60 deg C.")
 
         if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
             pass_fail = pass_fail*(True)
