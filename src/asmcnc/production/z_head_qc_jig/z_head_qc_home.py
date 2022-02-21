@@ -2,10 +2,25 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.clock import Clock
 
+from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+
+import subprocess
+
+import sys, os
+
+try: 
+    import pigpio
+
+except:
+    pass
 
 Builder.load_string("""
 <ZHeadQCHome>:
+    
+    test_fw_update_button : test_fw_update_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -28,17 +43,30 @@ Builder.load_string("""
                 cols: 2
 
                 Button:
-                    text: 'YES - Take me to QC!'
+                    id: test_fw_update_button 
+                    text: 'NO - Update FW now! (For v1.3)'
+                    font_size: dp(20)
+                    on_press: root.test_fw_update()
+
+                Button:
+                    text: 'YES - Take me to QC! (For v1.3)'
                     font_size: dp(20)
                     on_press: root.enter_qc()
 
-                Button:
-                    text: 'NO - Update FW now!'
-                    font_size: dp(20)
+            GridLayout:
+                cols: 2
 
-            Button: 
-                text: 'Secret option C - take me to WARRANTY QC!'
-                font_size: dp(20)
+                Button: 
+                    text: 'Take me to WARRANTY QC! (For v1.2)'
+                    font_size: dp(20)
+                    on_press: root.secret_option_c()
+
+                Button:
+                    text: 'Shut down'
+                    font_size: dp(20)
+                    background_color: [1,0,0,1]
+                    background_normal: ''
+                    on_press: root.shutdown_console()
 """)
 
 
@@ -47,6 +75,7 @@ class ZHeadQCHome(Screen):
         super(ZHeadQCHome, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
+        self.m = kwargs['m']
 
         self.start_calibration_timer(0.5)
 
@@ -56,5 +85,37 @@ class ZHeadQCHome(Screen):
     def enter_qc(self):
         self.sm.current = 'qc1'
 
+    def test_fw_update(self):
 
+        self.test_fw_update_button.text = "  Updating..."
+
+        def nested_do_fw_update(dt):
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            print(pi.get_mode(17))
+            pi.stop()
+            self.m.s.s.close()
+
+            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            stdout, stderr = proc.communicate()
+            exit_code = int(proc.returncode)
+
+            if exit_code == 0: 
+                did_fw_update_succeed = "Success! Disconnect or reboot to reconnect to Z head."
+
+            else: 
+                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
+
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
+
+        Clock.schedule_once(nested_do_fw_update, 1)
+
+
+    def secret_option_c(self):
+        self.sm.current = 'qcWC'
+
+    def shutdown_console(self):
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            os.system('sudo shutdown -h now')
 

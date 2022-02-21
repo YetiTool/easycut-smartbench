@@ -30,13 +30,23 @@ class ZHeadQC4(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-    #temporary hack to fake calibration
-
     def on_enter(self):
         self.run_calibration()
 
     def run_calibration(self):
-        Clock.schedule_once(self.enter_next_screen, 5)
+        self.m.tune_X_and_Z_for_calibration()
+        self.poll_for_tuning_completion = Clock.schedule_interval(self.start_calibrating, 0.4)
+
+    def start_calibrating(self, dt):
+        if not self.m.tuning_in_progress:
+            Clock.unschedule(self.poll_for_tuning_completion)
+            self.m.calibrate_X_and_Z()
+            self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 0.4)
+
+    def finish_calibrating(self, dt):
+        if not self.m.run_calibration:
+            Clock.unschedule(self.poll_for_calibration_completion)
+            self.enter_next_screen()
 
     def enter_next_screen(self, dt):
         self.sm.current = 'qc5'

@@ -2,13 +2,17 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 
+import os, sys
+
 import datetime
 
 Builder.load_string("""
-<ZHeadQC5>:
+<ZHeadQCDBSuccess>:
+    success_label:success_label
+
     canvas:
         Color:
-            rgba: hex('#FF9E40FF')
+            rgba: hex('#4CAF50FF')
         Rectangle:
             pos:self.pos
             size: self.size
@@ -34,8 +38,12 @@ Builder.load_string("""
             rows: 2
 
             Label:
-                text: 'Calibration complete!'
+                id: success_label
+                text: 'Database updated for '
                 font_size: dp(50)
+                text_size: self.size
+                halign: 'center'
+                valign: 'center'
             
             Button:
                 on_press: root.enter_next_screen()
@@ -46,9 +54,9 @@ Builder.load_string("""
 
 """)
 
-class ZHeadQC5(Screen):
+class ZHeadQCDBSuccess(Screen):
     def __init__(self, **kwargs):
-        super(ZHeadQC5, self).__init__(**kwargs)
+        super(ZHeadQCDBSuccess, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
@@ -57,4 +65,7 @@ class ZHeadQC5(Screen):
         self.sm.current = 'qc2'
 
     def enter_next_screen(self):
-        self.sm.current = 'qcDB1'
+        self.sm.current = 'qc6'
+
+    def set_serial_no(self, serial_no):
+        self.success_label.text = 'Database updated for:\n' + serial_no

@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
+from asmcnc.skavaUI import popup_info
 
 import datetime
 import os, sys
@@ -38,11 +39,13 @@ Builder.load_string("""
                 text: 'STOP'
                 background_color: [1,0,0,1]
                 background_normal: ''
+                on_press: root.stop()
 
         Button:
             text: 'CYCLE Z HEAD'
             font_size: dp(30)
             size_hint_y: 0.35
+            on_press: root.do_cycle()
 
         Button:
             id: shutdown_button
@@ -60,6 +63,7 @@ class ZHeadQC7(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.l = kwargs['l']
 
     def on_enter(self):
         Clock.schedule_once(self.enable_button, 5)
@@ -73,3 +77,28 @@ class ZHeadQC7(Screen):
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
+
+    def do_cycle(self):
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)
