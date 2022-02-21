@@ -40,6 +40,9 @@ from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_3 import 
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_4 import LBCalibration4
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_success import LBCalibrationSuccess
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_fail import LBCalibrationFail
+from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_error
+
 
 from datetime import datetime
 
