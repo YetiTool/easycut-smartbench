@@ -99,6 +99,7 @@ class ZHeadQCHome(Screen):
             print(pi.get_mode(17))
             pi.stop()
             self.m.s.s.close()
+            self.m.s.__del__()
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
