@@ -282,7 +282,6 @@ class CalibrationTesting(Screen):
         self.unweighted_data.append(self.x_vals)
         self.unweighted_data.append(self.y_vals)
         self.unweighted_data.append(self.z_vals)
-        print(self.unweighted_data)
 
     def confirm_x(self, dt):
         self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -555,56 +554,56 @@ class CalibrationTesting(Screen):
 
     def measure(self):
         if self.z_running:
-            if self.m.s.z_motor_axis == "-999":
+            if self.m.s.sg_z_motor_axis == "-999":
                 return
 
             if len(self.z_vals) > 0:
                 cur_pos = self.m.mpos_z()
                 if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
-                    self.z_vals.append(['Z+', self.m.s.m_z, self.m.s.z_motor_axis])
+                    self.z_vals.append(['Z+', self.m.s.m_z, self.m.s.sg_z_motor_axis])
                 else:
-                    self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.z_motor_axis])
+                    self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.sg_z_motor_axis])
             else:
-                self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.z_motor_axis])
+                self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.sg_z_motor_axis])
 
-            self.raw_z_vals.append(self.m.s.z_motor_axis)
+            self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
             self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
-            self.z_rt_load.text = "Z: " + str(self.m.s.z_motor_axis)
+            self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
         elif self.x_running:
-            if self.m.s.x_motor_axis == "-999":
+            if self.m.s.sg_x_motor_axis == "-999":
                 return
 
             if len(self.x_vals) > 0:
                 cur_pos = self.m.mpos_x()
                 if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
-                    self.x_vals.append(['X+', self.m.mpos_x(), self.m.s.x_motor_axis])
+                    self.x_vals.append(['X+', self.m.mpos_x(), self.m.s.sg_x_motor_axis])
                 else:
-                    self.x_vals.append(['X-', self.m.mpos_x(), self.m.s.x_motor_axis])
+                    self.x_vals.append(['X-', self.m.mpos_x(), self.m.s.sg_x_motor_axis])
             else:
-                self.x_vals.append(['X-', self.m.mpos_x(), self.m.s.x_motor_axis])
+                self.x_vals.append(['X-', self.m.mpos_x(), self.m.s.sg_x_motor_axis])
 
-            self.raw_x_vals.append(self.m.s.x_motor_axis)
+            self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
             self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
-            self.x_rt_load.text = "X: " + str(self.m.s.x_motor_axis)
+            self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
         elif self.y_running:
-            if self.m.s.y_axis == "-999" or self.m.s.y1_motor == "-999" or self.m.s.y2_motor == "-999":
+            if self.m.s.sg_y_axis == "-999" or self.m.s.sg_y1_motor == "-999" or self.m.s.sg_y2_motor == "-999":
                 return
 
             if len(self.y_vals) > 0:
                 cur_pos = self.m.mpos_y()
                 if self.y_vals[len(self.y_vals)-1][1] <  cur_pos:
-                    self.y_vals.append(['Y+', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                    self.y_vals.append(['Y+', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
                 else:
-                    self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                    self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
             else:
-                self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
 
-            self.raw_y_vals.append(self.m.s.y_axis)
-            self.raw_y1_vals.append(self.m.s.y1_motor)
-            self.raw_y2_vals.append(self.m.s.y2_motor)
+            self.raw_y_vals.append(self.m.s.sg_y_axis)
+            self.raw_y1_vals.append(self.m.s.sg_y1_motor)
+            self.raw_y2_vals.append(self.m.s.sg_y2_motor)
             self.y_peak_load.text = "Y: " + str(max(self.raw_y_vals))
-            self.y_rt_load.text = "Y: " + str(self.m.s.y_axis)
+            self.y_rt_load.text = "Y: " + str(self.m.s.sg_y_axis)
             self.y1_peak_load.text = "Y: " + str(max(self.raw_y1_vals))
             self.y2_peak_load.text = "Y: " + str(max(self.raw_y2_vals))
-            self.y1_rt_load.text = "Y: " + str(self.m.s.y1_motor)
-            self.y2_rt_load.text = "Y: " + str(self.m.s.y2_motor)
+            self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
+            self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)

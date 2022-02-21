@@ -38,6 +38,10 @@ Builder.load_string("""
                 background_color: [1,0,0,1]
                 on_press: root.stop()
 
+            Button:
+                text: 'Home'
+                on_press: root.home()
+
             GridLayout:
                 cols: 2
                 Button:
@@ -182,18 +186,23 @@ class OvernightTesting(Screen):
         #raw y_motor loads
         self.raw_y_vals = []
 
-        #y1_motor loads with vector & pos
+        #sg_y1_motor loads with vector & pos
         self.y1_vals = []
         #raw y1 loads
         self.raw_y1_vals = []
 
-        #y2_motor loads with vector & pos
+        #sg_y2_motor loads with vector & pos
         self.y2_vals = []
         #raw y2 vals
         self.raw_y2_vals = []
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
+
+    def home(self):
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('overnight_testing','overnight_testing')
 
     def run_overnight_test(self):
         self.overnight_running = True
@@ -240,39 +249,39 @@ class OvernightTesting(Screen):
 
     def measure(self):
         if self.overnight_running:
-            if not self.m.s.z_motor_axis == "-999":
+            if not self.m.s.sg_z_motor_axis == "-999":
                 if len(self.z_vals) > 0:
                     cur_pos = self.m.mpos_z()
                     if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
-                        self.z_vals.append(['Z+', self.m.s.m_z, self.m.s.z_motor_axis])
+                        self.z_vals.append(['Z+', self.m.s.m_z, self.m.s.sg_z_motor_axis])
                     else:
-                        self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.z_motor_axis])
+                        self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.sg_z_motor_axis])
                 else:
-                    self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.z_motor_axis])
+                    self.z_vals.append(['Z-', self.m.s.m_z, self.m.s.sg_z_motor_axis])
 
-                self.raw_z_vals.append(self.m.s.z_motor_axis)
+                self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
                 self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
-                self.z_rt_load.text = "Z: " + str(self.m.s.z_motor_axis)
+                self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
-            if not self.m.s.y_axis == "-999":
+            if not self.m.s.sg_y_axis == "-999":
                 if len(self.y_vals) > 0:
                     cur_pos = self.m.mpos_y()
                     if self.y_vals[len(self.y_vals)-1][1] <  cur_pos:
-                        self.y_vals.append(['Y+', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                        self.y_vals.append(['Y+', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
                     else:
-                        self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                        self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
                 else:
-                    self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.y_axis, self.m.s.y1_motor, self.m.s.y2_motor])
+                    self.y_vals.append(['Y-', self.m.mpos_y(), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
 
-                self.raw_y_vals.append(self.m.s.y_axis)
-                self.raw_y1_vals.append(self.m.s.y1_motor)
-                self.raw_y2_vals.append(self.m.s.y2_motor)
+                self.raw_y_vals.append(self.m.s.sg_y_axis)
+                self.raw_y1_vals.append(self.m.s.sg_y1_motor)
+                self.raw_y2_vals.append(self.m.s.sg_y2_motor)
                 self.y_peak_load.text = "Y: " + str(max(self.raw_y_vals))
-                self.y_rt_load.text = "Y: " + str(self.m.s.y_axis)
+                self.y_rt_load.text = "Y: " + str(self.m.s.sg_y_axis)
                 self.y1_peak_load.text = "Y: " + str(max(self.raw_y1_vals))
                 self.y2_peak_load.text = "Y: " + str(max(self.raw_y2_vals))
-                self.y1_rt_load.text = "Y: " + str(self.m.s.y1_motor)
-                self.y2_rt_load.text = "Y: " + str(self.m.s.y2_motor)
+                self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
+                self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
 
             if not self.m.s.x_motor_axis == "-999":
                 if len(self.x_vals) > 0:
