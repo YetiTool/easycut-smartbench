@@ -2419,6 +2419,12 @@ class RouterMachine(object):
         self.calibration_upload_fail_info = ''
         Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
 
+    def upload_Y_calibration_settings_from_motor_classes(self):
+        self.calibration_upload_in_progress = True
+        self.calibration_upload_fail_info = ''
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 0.5)
+
+
     time_to_check_for_upload_prep = 0
 
     def initialise_calibration_upload(self, axis):
