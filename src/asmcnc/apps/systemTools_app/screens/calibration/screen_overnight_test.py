@@ -20,6 +20,8 @@ Builder.load_string("""
     y2_peak_load:y2_peak_load
 
     overnight_test_check:overnight_test_check
+    sent_data_check:sent_data_check
+    retry_data_send:retry_data_send
 
     BoxLayout:
         orientation: 'vertical'
@@ -49,6 +51,25 @@ Builder.load_string("""
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: 'Successfully sent data: '
+                
+                Image:
+                    id: sent_data_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+            Button:
+                text: 'Retry data send'
+                on_press: root.send_overnight_payload()
+                id: retry_data_send
 
         GridLayout:
             cols: 2
@@ -120,6 +141,8 @@ class OvernightTesting(Screen):
 
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
+        self.calibration_db = kwargs['calibration_db']
+        self.sm = kwargs['sm']
 
         self.setup_arrays()
         self.overnight_running = False
@@ -133,6 +156,15 @@ class OvernightTesting(Screen):
     def stop(self):
         self.overnight_running = False
         popup_info.PopupStop(self.m, self.sm, self.l)
+
+    def send_overnight_payload(self):
+        serial = self.calibration_db.get_serial_number()
+        
+        try:
+            self.calibration_db.send_overnight_test_calibration(serial, self.x_vals, self.y_vals, self.z_vals)
+            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        except:
+            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
     def setup_arrays(self):
         #x loads with vector & pos
@@ -188,6 +220,9 @@ class OvernightTesting(Screen):
                 Clock.unschedule(self.OVERNIGHT_CLOCK)
                 self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
                 self.overnight_running = False
+                self.send_overnight_payload()
+                self.retry_data_send.disabled = False
+                return
 
             self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
             self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)

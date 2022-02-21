@@ -23,6 +23,7 @@ Builder.load_string("""
     y_test_check:y_test_check
     z_test_check:z_test_check
     unweighted_test_check:unweighted_test_check
+    sent_data_check:sent_data_check
 
     BoxLayout:
         orientation: 'vertical'
@@ -37,6 +38,11 @@ Builder.load_string("""
             Button:
                 text: 'Home'
                 on_press: root.home()
+
+            Button:
+                text: 'STOP'
+                background_color: [1,0,0,1]
+                on_press: root.stop()
 
             GridLayout:
                 cols: 2
@@ -101,6 +107,20 @@ Builder.load_string("""
             Button:
                 text: 'Send data to database'
                 on_press: root.send_data()
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: 'Successfully sent data: '
+                
+                Image:
+                    id: sent_data_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
         GridLayout:
             cols: 2
@@ -181,6 +201,7 @@ class CalibrationTesting(Screen):
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
         self.calibration_db = kwargs['calibration_db']
+        self.sm = kwargs['sm']
 
         # used to only measure axis in motion
         self.x_running = False
@@ -213,11 +234,23 @@ class CalibrationTesting(Screen):
         #raw y2 vals
         self.raw_y2_vals = []
 
-        self.unweighted_data = []
+        self.unweighted_data = [self.x_vals, self.y_vals, self.z_vals]
 
     def send_data(self):
         serial = self.calibration_db.get_serial_number()
-        self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
+
+        try:
+            self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
+            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        except Exception as e:
+            self.send_data_check = "./asmcnc/skavaUI/img/template_cancel.png"
+            log(e)
+
+    def stop(self):
+        self.x_running = False
+        self.y_running = False
+        self.z_running = False
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
