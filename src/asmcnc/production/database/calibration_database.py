@@ -40,19 +40,16 @@ class CalibrationDatabase(object):
     def send_final_test_calibration(self, serial_number, unweighted_x, unweighted_y, unweighted_z, weighted_x, weighted_y, weighted_z):
         with self.conn.cursor() as cursor:
             date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            # query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', '" + str(unweighted_x) + "', '" + str(unweighted_y) + "', '" + str(unweighted_z) + "', '" + str(weighted_x) + "', '" + str(weighted_y) + "', '" + str(weighted_z) + "')"
+            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', '" + str(unweighted_x) + "', '" + str(unweighted_y) + "', '" + str(unweighted_z) + "', '" + str(weighted_x) + "', '" + str(weighted_y) + "', '" + str(weighted_z) + "')"
 
-            query = ("INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-
-            cursor.execute(query, (serial_number, date, str(unweighted_x), str(unweighted_y), str(unweighted_z), str(weighted_x), str(weighted_y), str(weighted_z)))
-
+            cursor.execute(query)
             self.conn.commit()
 
     def send_overnight_test_calibration(self, serial_number, overnight_x, overnight_y, overnight_z):
         with self.conn.cursor() as cursor:
             query = "UPDATE FinalTest SET OvernightX = ?, OvernightY = ?, OvernightZ = ? WHERE SerialNumber = ?"
             
-            cursor.execute(query, params=(str(overnight_x), str(overnight_y), str(overnight_z), serial_number))
+            cursor.execute(query)
 
             self.conn.commit()
 
