@@ -42,9 +42,9 @@ class CalibrationDatabase(object):
             date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', '" + str(unweighted_x) + "', '" + str(unweighted_y) + "', '" + str(unweighted_z) + "', '" + str(weighted_x) + "', '" + str(weighted_y) + "', '" + str(weighted_z) + "')"
 
-            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            query = ("INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 
-            cursor.execute(query, (serial_number, date, unweighted_x, unweighted_y, unweighted_z, weighted_x, weighted_y, weighted_z))
+            cursor.execute(query, (serial_number, date, str(unweighted_x), str(unweighted_y), str(unweighted_z), str(weighted_x), str(weighted_y), str(weighted_z)))
 
             self.conn.commit()
 
@@ -52,7 +52,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "UPDATE FinalTest SET OvernightX = ?, OvernightY = ?, OvernightZ = ? WHERE SerialNumber = ?"
             
-            cursor.execute(query, params=(serial_number, overnight_x, overnight_y, overnight_z))
+            cursor.execute(query, params=(str(overnight_x), str(overnight_y), str(overnight_z), serial_number))
 
             self.conn.commit()
 
@@ -70,7 +70,7 @@ class CalibrationDatabase(object):
 
             self.conn.commit()
 
-    def get_lower_beam_parameters(self, serial_number):
+    def get_lower_beam_parameters(self, serial_number, motor_index):
         with self.conn.cursor() as cursor:
             query = "SELECT * FROM TMC WHERE SerialNumber = '%s'" % serial_number
 
