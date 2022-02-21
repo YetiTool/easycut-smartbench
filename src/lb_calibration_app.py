@@ -91,7 +91,7 @@ class LBCalibration(App):
         lb_calibration_3 = LBCalibration3(name = 'lbc3', sm = sm, m = m)
         sm.add_widget(lb_calibration_3)
 
-        lb_calibration_4 = LBCalibration4(name = 'lbc4', sm = sm, m = m)
+        lb_calibration_4 = LBCalibration4(name = 'lbc4', sm = sm, m = m, calibration_db = calibration_db)
         sm.add_widget(lb_calibration_4)
 
         lb_calibration_5 = LBCalibrationSuccess(name = 'lbc5', sm = sm, m = m)
