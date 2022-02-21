@@ -243,7 +243,7 @@ class CalibrationTesting(Screen):
             self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except:
-            self.send_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             print(traceback.format_exc())
 
     def stop(self):
