@@ -270,7 +270,7 @@ class SerialConnection(object):
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
-        t.start()
+        # t.start()
         
         # Clear any hard switch presses that may have happened during boot
         self.m.bootup_sequence() 
