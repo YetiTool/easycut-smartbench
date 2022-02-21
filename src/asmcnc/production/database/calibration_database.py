@@ -1,9 +1,13 @@
-import pytds
 from datetime import datetime
 
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
+try:
+    import pytds
+except:
+    log('Pytds not installed - pip install python-tds')
 
 class CalibrationDatabase(object):
     def __init__(self):
