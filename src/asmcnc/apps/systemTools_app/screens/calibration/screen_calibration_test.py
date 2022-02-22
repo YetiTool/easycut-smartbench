@@ -348,8 +348,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
         self.run_unweighted_z()
 
@@ -423,7 +423,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
         self.z_vals = []
         self.raw_z_vals = []
@@ -476,7 +476,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
 
         self.y_vals = []
         self.raw_y_vals = []
@@ -575,7 +575,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
 
         self.raw_x_vals = []
         self.x_vals = []
