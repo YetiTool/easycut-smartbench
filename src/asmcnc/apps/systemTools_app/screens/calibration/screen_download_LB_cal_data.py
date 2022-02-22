@@ -74,6 +74,8 @@ class DownloadLBCalDataScreen(Screen):
         Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
         Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
 
+        print(Y1_data)
+
         self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
         self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
 
@@ -82,11 +84,20 @@ class DownloadLBCalDataScreen(Screen):
         Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
 
     def save_calibration_data_to_motor(self, motor_index, data):
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[2]
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data[3]
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data[4]
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data[5]
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = data[6]
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[3]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data[4]
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data[5]
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data[6]
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = data[7]
+
+        print("FROM HERE")
+        print(self.m.TMC_motor[motor_index].calibration_dataset_SG_values)
+        print(self.m.TMC_motor[motor_index].calibrated_at_current_setting)
+        print(self.m.TMC_motor[motor_index].calibrated_at_sgt_setting)
+        print(self.m.TMC_motor[motor_index].calibrated_at_toff_setting)
+        print(self.m.TMC_motor[motor_index].calibrated_at_temperature)
+
+
 
     def report_info_back_to_user_and_return(self):
 
