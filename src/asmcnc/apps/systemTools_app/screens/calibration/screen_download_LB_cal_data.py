@@ -84,11 +84,11 @@ class DownloadLBCalDataScreen(Screen):
         Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
 
     def save_calibration_data_to_motor(self, motor_index, data):
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[3]
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data[4]
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data[5]
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data[6]
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = data[7]
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = [int(i) for i in data[3]]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = int(data[4])
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = int(data[5])
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = int(data[6])
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = int(data[7])
 
         print("FROM HERE")
         print(self.m.TMC_motor[motor_index].calibration_dataset_SG_values)
