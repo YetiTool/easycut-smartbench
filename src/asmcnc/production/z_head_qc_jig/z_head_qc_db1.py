@@ -27,10 +27,6 @@ Builder.load_string("""
 
             spacing: 50
 
-            Label:
-                text: 'Enter ZH Serial number:'
-                font_size: dp(50)
-            
             GridLayout:
                 cols: 1
                 rows: 1
@@ -40,6 +36,11 @@ Builder.load_string("""
                 TextInput:
                     id: serial_no_input
                     font_size: dp(50)
+                    multiline: False
+
+            Label:
+                text: '^ Enter ZH Serial number: ^'
+                font_size: dp(50)
 
             Button:
                 on_press: root.enter_next_screen()
