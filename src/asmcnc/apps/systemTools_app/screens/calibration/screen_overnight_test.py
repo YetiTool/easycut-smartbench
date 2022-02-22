@@ -286,7 +286,7 @@ class OvernightTesting(Screen):
                 self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
                 self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
 
-            if not self.m.s.x_motor_axis == "-999":
+            if not self.m.s.sg_x_motor_axis == "-999":
                 if len(self.x_vals) > 0:
                     cur_pos = self.m.mpos_x()
                     if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
