@@ -310,11 +310,11 @@ Builder.load_string("""
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
                         Button:
-                            text: 'Final test'
-                            on_press: root.final_test()
-                        Button:
                             text: 'Retrieve LB cal data'
                             on_press: root.enter_retrieve_screen()
+                        Button:
+                            text: 'Final test'
+                            on_press: root.final_test()
                         Button:
                             text: 'Calibration test'
                             on_press: root.enter_calibration_test()
