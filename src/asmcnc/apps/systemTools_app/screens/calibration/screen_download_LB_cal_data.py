@@ -80,11 +80,11 @@ class LBCalibration4(Screen):
         Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
 
     def save_calibration_data_to_motor(self, motor_index, data):
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = ''
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = ''
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[2]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data[3]
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data[4]
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data[5]
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = data[6]
 
     def report_info_back_to_user_and_return(self):
 

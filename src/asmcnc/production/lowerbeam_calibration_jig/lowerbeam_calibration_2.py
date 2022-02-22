@@ -50,7 +50,7 @@ class LBCalibration2(Screen):
 
     def run_calibration(self):
         self.m.tune_Y_for_calibration()
-        self.poll_for_tuning_completion = Clock.schedule_interval(self.start_calibrating, 0.4)
+        self.poll_for_tuning_completion = Clock.schedule_interval(self.start_calibrating, 5)
 
     def start_calibrating(self, dt):
         if not self.m.tuning_in_progress:
@@ -58,7 +58,7 @@ class LBCalibration2(Screen):
 
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_Y()
-                self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 0.4)
+                self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 5)
 
             else:
                 self.calibration_label.text = self.m.calibration_tuning_fail_info
