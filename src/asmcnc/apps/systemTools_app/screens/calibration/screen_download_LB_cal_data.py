@@ -69,10 +69,11 @@ class LBCalibration4(Screen):
 
         self.main_label.text = "Getting data..."
 
-        data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text)
+        Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
+        Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
 
-        self.save_calibration_data_to_motor(TMC_Y1, data)
-        self.save_calibration_data_to_motor(TMC_Y2, data)
+        self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
+        self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
 
         self.main_label.text = "Uploading to ZH..."
 
