@@ -1,9 +1,10 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from kivy.clock import Clock
 
 Builder.load_string("""
-<LBCalibration4>:
+<DownloadLBCalDataScreen>:
     serial_no_input : serial_no_input
     main_label : main_label
     main_button : main_button
@@ -30,11 +31,6 @@ Builder.load_string("""
 
             spacing: 50
 
-            Label:
-                id: main_label
-                text: 'Enter LB serial number:'
-                font_size: dp(50)
-            
             GridLayout:
                 cols: 1
                 rows: 1
@@ -44,6 +40,12 @@ Builder.load_string("""
                 TextInput:
                     id: serial_no_input
                     font_size: dp(50)
+                    multiline: False
+            Label:
+                id: main_label
+                text: '^ Enter LB serial number:^'
+                font_size: dp(50)
+            
 
             Button:
                 id: main_button
@@ -54,9 +56,9 @@ Builder.load_string("""
 
 """)
 
-class LBCalibration4(Screen):
+class DownloadLBCalDataScreen(Screen):
     def __init__(self, **kwargs):
-        super(LBCalibration4, self).__init__(**kwargs)
+        super(DownloadLBCalDataScreen, self).__init__(**kwargs)
 
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['m']
@@ -69,21 +71,22 @@ class LBCalibration4(Screen):
 
         self.main_label.text = "Getting data..."
 
-        data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text)
+        Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
+        Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
 
-        self.save_calibration_data_to_motor(TMC_Y1, data)
-        self.save_calibration_data_to_motor(TMC_Y2, data)
+        self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
+        self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
 
         self.main_label.text = "Uploading to ZH..."
 
         Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
 
     def save_calibration_data_to_motor(self, motor_index, data):
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = ''
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = ''
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = ''
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[2]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data[3]
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data[4]
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data[5]
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = data[6]
 
     def report_info_back_to_user_and_return(self):
 
@@ -96,27 +99,3 @@ class LBCalibration4(Screen):
                 self.main_label = "Success!!"
 
             self.main_button.on_press = self.go_back()
-
-# (4, u'test', 4, u'[454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 454, 456, 458, 458, 457, 460, 461, 463, 463, 463, 465, 466, 470, 470, 470, 471, 471, 472, 473, 473, 473, 475, 478, 478, 479, 480, 482, 481, 482, 482, 482, 482, 483, 482, 482, 482, 481, 481, 481, 480, 480, 479, 479, 478, 478, 478, 478, 477, 477, 474, 475, 473, 472, 473, 472, 472, 472, 471, 471, 470, 469, 468, 467, 465, 464, 459, 458, 440, 443, 449, 444, 452, 463, 458, 458, 457, 455, 456, 452, 452, 449, 449, 446, 445, 443, 441, 438, 437, 437, 436, 436, 433, 431, 432, 430, 430, 427, 429, 423, 423, 422, 419]', u'31', u'7', u'5', u'5187')
-
-
-
-
-    # def enter_next_screen(self):
-    #     try:
-    #         self.calibration_db.send_calibration_payload(TMC_Y1)
-    #         self.calibration_db.send_calibration_payload(TMC_Y2)
-    #         self.sm.get_screen('lbc5').set_serial_no(self.serial_no_input.text)
-    #         self.sm.current = 'lbc5'
-    #     except:
-    #         self.sm.get_screen('lbc6').set_serial_no(self.serial_no_input.text)
-    #         self.sm.current = 'lbc6'
-
-    # def send_calibration_payload(self, motor_index):
-    #     sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
-    #     cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
-    #     sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
-    #     toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
-    #     temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
-        
-    #     self.calibration_db.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
