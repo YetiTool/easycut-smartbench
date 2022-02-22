@@ -777,7 +777,7 @@ class FactorySettingsScreen(Screen):
             
     def enter_retrieve_screen(self):
         if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
-            retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db)
+            retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, system_tools = self.systemtools_sm, calibration_db = self.calibration_db)
             self.systemtools_sm.sm.add_widget(retrieve_lb_cal_data)
         
         self.systemtools_sm.sm.current = 'retrieve_lb_cal_data'
