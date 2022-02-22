@@ -272,12 +272,18 @@ class CalibrationTesting(Screen):
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
+        if self.next_run_event != None: Clock.unschedule(self.next_run_event)
+        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
+        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
+        self.enable_run_buttons()
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
         self.enable_run_buttons()
 
     def back_to_fac_settings(self):
@@ -292,6 +298,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
 
         self.m.resume_from_alarm()
         self.enable_run_buttons()
@@ -361,6 +368,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
 
         self.enable_run_buttons()
 
