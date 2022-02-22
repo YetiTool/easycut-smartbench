@@ -14,8 +14,8 @@ Builder.load_string("""
         size_hint_y: 1.00
 
         Button:
-            text: '<<< REPEAT CALIBRATION'
-            on_press: root.enter_prev_screen()
+            text: '<<< BACK'
+            on_press: root.go_back()
             text_size: self.size
             markup: 'True'
             halign: 'left'
@@ -57,6 +57,9 @@ Builder.load_string("""
 """)
 
 class DownloadLBCalDataScreen(Screen):
+
+    poll_for_end_of_upload = None
+
     def __init__(self, **kwargs):
         super(DownloadLBCalDataScreen, self).__init__(**kwargs)
 
@@ -83,9 +86,9 @@ class DownloadLBCalDataScreen(Screen):
 
         Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
 
+        self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 5)
+
     def save_calibration_data_to_motor(self, motor_index, data):
-
-
 
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = [int(i) for i in data[3].strip('[]').split(',')]
         self.m.TMC_motor[motor_index].calibrated_at_current_setting = int(data[4])
@@ -93,23 +96,20 @@ class DownloadLBCalDataScreen(Screen):
         self.m.TMC_motor[motor_index].calibrated_at_toff_setting = int(data[6])
         self.m.TMC_motor[motor_index].calibrated_at_temperature = int(data[7])
 
-        print("FROM HERE")
-        print(self.m.TMC_motor[motor_index].calibration_dataset_SG_values)
-        print(self.m.TMC_motor[motor_index].calibrated_at_current_setting)
-        print(self.m.TMC_motor[motor_index].calibrated_at_sgt_setting)
-        print(self.m.TMC_motor[motor_index].calibrated_at_toff_setting)
-        print(self.m.TMC_motor[motor_index].calibrated_at_temperature)
-
-
-
-    def report_info_back_to_user_and_return(self):
+    def report_info_back_to_user_and_return(self, dt):
 
         if not self.m.calibration_upload_in_progress:
+
+            Clock.unschedule(self.poll_for_end_of_upload)
             
             if self.m.calibration_upload_fail_info:
                 self.main_label.text = self.m.calibration_upload_fail_info
 
             else:
-                self.main_label = "Success!!"
+                self.main_label.text = "Success!!"
 
+            self.main_button.text = "Back to factory"
             self.main_button.on_press = self.go_back()
+
+    def on_leave(self):
+        if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)        
