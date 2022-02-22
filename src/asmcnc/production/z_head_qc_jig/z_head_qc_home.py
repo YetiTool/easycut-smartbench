@@ -78,7 +78,7 @@ class ZHeadQCHome(Screen):
         self.m = kwargs['m']
         self.usb = kwargs['usb']
 
-        self.start_calibration_timer(0.5)
+        self.start_calibration_timer(60)
 
     def start_calibration_timer(self, minutes):
         self.sm.get_screen('qc3').update_time(minutes*30)
