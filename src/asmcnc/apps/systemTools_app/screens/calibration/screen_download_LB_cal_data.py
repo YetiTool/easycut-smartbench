@@ -77,8 +77,6 @@ class DownloadLBCalDataScreen(Screen):
         Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
         Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
 
-        print(Y1_data)
-
         self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
         self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
 
@@ -109,6 +107,7 @@ class DownloadLBCalDataScreen(Screen):
                 self.main_label.text = "Success!!"
 
             self.main_button.text = "Back to factory"
+            self.main_button.state = 'normal'
             self.main_button.on_press = self.go_back()
 
     def on_leave(self):
