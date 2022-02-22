@@ -707,7 +707,7 @@ class CalibrationTesting(Screen):
             self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
 
         elif self.y_running and self.m.feed_rate() < 1200:
-            if self.m.s.sg_y1_motor == "-999" or self.m.s.sg_y2_motor == "-999":
+            if self.m.s.sg_y_axis == "-999" and self.m.s.sg_y1_motor == "-999" and self.m.s.sg_y2_motor == "-999":
                 return
 
             if len(self.y_vals) > 0:
