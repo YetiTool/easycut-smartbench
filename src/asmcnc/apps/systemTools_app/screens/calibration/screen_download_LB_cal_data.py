@@ -67,6 +67,13 @@ class DownloadLBCalDataScreen(Screen):
         self.m = kwargs['m']
         self.calibration_db = kwargs['calibration_db']
 
+    def on_enter(self):
+            
+        self.main_label.text = "^ Enter LB serial number:^"
+        self.main_button.text = "Download"
+        self.main_button.state = 'normal'
+        self.main_button.on_press = self.download_and_upload_LB_cal_data()
+
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
 
