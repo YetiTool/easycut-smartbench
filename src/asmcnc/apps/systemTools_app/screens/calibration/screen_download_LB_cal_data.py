@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from kivy.clock import Clock
 
 Builder.load_string("""
 <DownloadLBCalDataScreen>:
