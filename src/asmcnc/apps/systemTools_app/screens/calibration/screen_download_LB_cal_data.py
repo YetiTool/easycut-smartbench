@@ -71,8 +71,6 @@ class DownloadLBCalDataScreen(Screen):
             
         self.main_label.text = "^ Enter LB serial number:^"
         self.main_button.text = "Download"
-        self.main_button.state = 'normal'
-        self.main_button.on_press = self.download_and_upload_LB_cal_data()
 
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -112,10 +110,6 @@ class DownloadLBCalDataScreen(Screen):
 
             else:
                 self.main_label.text = "Success!!"
-
-            self.main_button.text = "Back to factory"
-            self.main_button.state = 'normal'
-            self.main_button.on_press = self.go_back()
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)        
