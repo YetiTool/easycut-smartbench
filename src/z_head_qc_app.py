@@ -154,7 +154,7 @@ class ZHeadQC(App):
         z_head_qc_7 = ZHeadQC7(name='qc7', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_7)
 
-        z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm, m = m)
+        z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm, m = m, usb = usb_stick)
         sm.add_widget(z_head_qc_home)
 
         z_head_qc_warranty_choice = ZHeadWarrantyChoice(name='qcWC', sm = sm, m = m)

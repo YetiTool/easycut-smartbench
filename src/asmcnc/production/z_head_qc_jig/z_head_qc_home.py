@@ -76,6 +76,7 @@ class ZHeadQCHome(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.usb = kwargs['usb']
 
         self.start_calibration_timer(0.5)
 
@@ -84,6 +85,23 @@ class ZHeadQCHome(Screen):
 
     def enter_qc(self):
         self.sm.current = 'qc1'
+
+    def on_leave(self):
+        self.usb.disable()
+
+    def load_usb_stick_with_hex_file(self):
+
+        if not self.usb.stick_enabled:
+            self.usb.enable()
+
+        if self.usb.is_available():
+            if os.path.exists("/media/usb/GRBL*.hex"):
+                print("GRBL file found on USB, start update...")
+                self.test_fw_update()
+                return
+
+        Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file, 1)
+
 
     def test_fw_update(self):
 
@@ -99,7 +117,7 @@ class ZHeadQCHome(Screen):
 
             print("SERIAL COMMS KILLED")
 
-            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            cmd = "sudo rpirtscts/rpirtscts on && grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/serial0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
             exit_code = int(proc.returncode)
