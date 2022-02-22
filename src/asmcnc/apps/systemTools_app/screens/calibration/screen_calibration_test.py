@@ -268,6 +268,7 @@ class CalibrationTesting(Screen):
         self.y_running = False
         self.z_running = False
         popup_info.PopupStop(self.m, self.sm, self.l)
+        self.enable_run_buttons()
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
@@ -277,6 +278,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        self.enable_run_buttons()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -292,6 +294,7 @@ class CalibrationTesting(Screen):
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
 
         self.m.resume_from_alarm()
+        self.enable_run_buttons()
 
     def disable_x_measurement(self, dt):
         self.x_running = False
@@ -338,6 +341,9 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
+        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
         self.run_unweighted_z()
 
         self.unweighted_event_x = Clock.schedule_once(self.run_unweighted_x, TIME_TO_RUN_Z + 10)
@@ -356,7 +362,7 @@ class CalibrationTesting(Screen):
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
 
-        self.unweighted_test_button.disabled = False
+        self.enable_run_buttons()
 
     def run_unweighted_z(self):
         self.z_vals = []
@@ -409,6 +415,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
+        self.m.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
         self.z_vals = []
         self.raw_z_vals = []
 
@@ -459,6 +467,8 @@ class CalibrationTesting(Screen):
     def run_y_procedure(self, dt):
 
         self.disable_run_buttons()
+
+        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
 
         self.y_vals = []
         self.raw_y_vals = []
@@ -557,6 +567,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
+        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+
         self.raw_x_vals = []
         self.x_vals = []
 
@@ -650,7 +662,9 @@ class CalibrationTesting(Screen):
         run(None)
 
     def measure(self):
-        if self.z_running:
+
+        if self.z_running and self.feed_rate() < 80:
+
             if self.m.s.sg_z_motor_axis == "-999":
                 return
 
@@ -666,7 +680,8 @@ class CalibrationTesting(Screen):
             self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
             self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
             self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
-        elif self.x_running:
+
+        elif self.x_running and self.feed_rate() < 1200:
             if self.m.s.sg_x_motor_axis == "-999":
                 return
 
@@ -682,7 +697,8 @@ class CalibrationTesting(Screen):
             self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
             self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
             self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
-        elif self.y_running:
+
+        elif self.y_running and self.feed_rate() < 1200:
             if self.m.s.sg_y_axis == "-999" or self.m.s.sg_y1_motor == "-999" or self.m.s.sg_y2_motor == "-999":
                 return
 
