@@ -290,12 +290,12 @@ class OvernightTesting(Screen):
                 if len(self.x_vals) > 0:
                     cur_pos = self.m.mpos_x()
                     if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
-                        self.x_vals.append([1, float(self.m.mpos_x()), self.m.s.x_motor_axis])
+                        self.x_vals.append([1, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
                     else:
-                        self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.x_motor_axis])
+                        self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
                 else:
-                    self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.x_motor_axis])
+                    self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
 
-                self.raw_x_vals.append(self.m.s.x_motor_axis)
+                self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
                 self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
-                self.x_rt_load.text = "X: " + str(self.m.s.x_motor_axis)
+                self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
