@@ -671,7 +671,7 @@ class CalibrationTesting(Screen):
 
     def measure(self):
 
-        if self.z_running and self.feed_rate() < 80:
+        if self.z_running and self.m.feed_rate() < 80:
 
             if self.m.s.sg_z_motor_axis == "-999":
                 return
@@ -689,7 +689,7 @@ class CalibrationTesting(Screen):
             self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
             self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
-        elif self.x_running and self.feed_rate() < 1200:
+        elif self.x_running and self.m.feed_rate() < 1200:
             if self.m.s.sg_x_motor_axis == "-999":
                 return
 
@@ -706,7 +706,7 @@ class CalibrationTesting(Screen):
             self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
             self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
 
-        elif self.y_running and self.feed_rate() < 1200:
+        elif self.y_running and self.m.feed_rate() < 1200:
             if self.m.s.sg_y_axis == "-999" or self.m.s.sg_y1_motor == "-999" or self.m.s.sg_y2_motor == "-999":
                 return
 
