@@ -399,6 +399,10 @@ class CalibrationTesting(Screen):
 
                     Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
 
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
+
+
         run(None)
 
     def run_z_procedure(self, dt):
@@ -445,6 +449,9 @@ class CalibrationTesting(Screen):
 
                     Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
                     self.confirm_event = Clock.schedule_once(self.confirm_z, TIME_FOR_MOVEMENT)
+
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
 
         run(None)
 
@@ -494,6 +501,9 @@ class CalibrationTesting(Screen):
                     Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
                     self.confirm_event = Clock.schedule_once(self.confirm_y, TIME_FOR_MOVEMENT)
 
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
+
         run(None)
 
     def run_unweighted_y(self, dt):
@@ -536,6 +546,9 @@ class CalibrationTesting(Screen):
                     self.y_distance_left = 0
 
                     Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
+
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
 
         run(None)
 
@@ -585,6 +598,9 @@ class CalibrationTesting(Screen):
                     Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
                     self.confirm_event = Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
 
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
+
         run(None)
 
     def run_unweighted_x(self, dt):
@@ -627,6 +643,9 @@ class CalibrationTesting(Screen):
                     self.x_distance_left = 0
 
                     Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
+
+            else:
+                self.next_run_event = Clock.schedule_once(run, 2)
 
         run(None)
 
