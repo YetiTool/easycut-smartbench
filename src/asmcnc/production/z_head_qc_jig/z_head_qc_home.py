@@ -108,16 +108,13 @@ class ZHeadQCHome(Screen):
         self.test_fw_update_button.text = "  Updating..."
 
         def nested_do_fw_update(dt):
-            pi = pigpio.pi()
-            pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
-            pi.stop()
-
+            # pi = pigpio.pi()
+            # pi.set_mode(17, pigpio.ALT3)
+            # print(pi.get_mode(17))
+            # pi.stop()
             self.m.s.__del__()
 
-            print("SERIAL COMMS KILLED")
-
-            cmd = "sudo rpirtscts/rpirtscts on && grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/serial0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            cmd = "sudo ~/rpirtscts/rpirtscts on && grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/serial0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
             exit_code = int(proc.returncode)

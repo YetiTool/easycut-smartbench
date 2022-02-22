@@ -20,6 +20,12 @@ sudo systemctl disable ansible.service
 
 touch /home/pi/YETI_ZHEADQC_PROD_JIG.txt
 
+git clone git://github.com/mholling/rpirtscts.git
+cd rpirtscts/
+make
+
+------------------------------------------
+
 sudo nano /boot/config.txt
 
 # Copy and paste to end of file: 
