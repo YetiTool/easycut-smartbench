@@ -275,7 +275,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
+        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
     def on_leave(self):
@@ -283,7 +283,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
+        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
     def back_to_fac_settings(self):
@@ -298,7 +298,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
+        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
 
         self.m.resume_from_alarm()
         self.enable_run_buttons()
@@ -368,7 +368,7 @@ class CalibrationTesting(Screen):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
         if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.self.confirm_event)
+        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
 
         self.enable_run_buttons()
 
@@ -417,7 +417,7 @@ class CalibrationTesting(Screen):
                 self.next_run_event = Clock.schedule_once(run, 2)
 
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     def run_z_procedure(self, dt):
 
@@ -469,7 +469,7 @@ class CalibrationTesting(Screen):
             else:
                 self.next_run_event = Clock.schedule_once(run, 2)
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     #change distances and speeds
     def run_y_procedure(self, dt):
@@ -522,7 +522,7 @@ class CalibrationTesting(Screen):
             else:
                 self.next_run_event = Clock.schedule_once(run, 2)
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     def run_unweighted_y(self, dt):
         self.y_vals = []
@@ -568,7 +568,7 @@ class CalibrationTesting(Screen):
             else:
                 self.next_run_event = Clock.schedule_once(run, 2)
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     #change distances and speeds
     def run_x_procedure(self, dt):
@@ -621,7 +621,7 @@ class CalibrationTesting(Screen):
             else:
                 self.next_run_event = Clock.schedule_once(run, 2)
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     def run_unweighted_x(self, dt):
         self.raw_x_vals = []
@@ -667,7 +667,7 @@ class CalibrationTesting(Screen):
             else:
                 self.next_run_event = Clock.schedule_once(run, 2)
 
-        run(None)
+        self.next_run_event = Clock.schedule_once(run, 0.5)
 
     def measure(self):
 
