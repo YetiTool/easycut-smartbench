@@ -256,7 +256,7 @@ class CalibrationTesting(Screen):
     def on_enter(self):
         self.m.s.FINAL_TEST = True
 
-    def on_exit(self):
+    def on_leave(self):
         self.m.s.FINAL_TEST = False
 
     def back_to_fac_settings(self):
