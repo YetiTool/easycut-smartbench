@@ -41,11 +41,27 @@ Builder.load_string("""
                 background_normal: ''
                 on_press: root.stop()
 
-        Button:
-            text: 'CYCLE Z HEAD'
-            font_size: dp(30)
+        BoxLayout:
+            orientation: 'vertical'
             size_hint_y: 0.35
-            on_press: root.do_cycle()
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                Button:
+                    text: '1. HOME'
+                    font_size: dp(30)
+                    on_press: root.home()
+
+                Button:
+                    text: "2. RESET"
+                    font_size: dp(30)
+                    on_press: root.resume_from_alarm()
+
+            Button:
+                text: '3. CYCLE Z HEAD x10'
+                font_size: dp(30)
+                on_press: root.do_cycle()
 
         Button:
             id: shutdown_button
@@ -77,6 +93,14 @@ class ZHeadQC7(Screen):
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
+
+    def home(self):
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('qc7','qc7')
+
+    def resume_from_alarm(self):
+        self.m.resume_from_alarm()
 
     def do_cycle(self):
         self.m.s.write_command('G53 G0 Z-150')

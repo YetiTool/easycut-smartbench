@@ -71,7 +71,7 @@ Builder.load_string("""
                             text: 'Down'
                             text_size: self.size
                             markup: 'True'
-                            halign: 'left'
+                            halign: 'center'
                             valign: 'middle'
                             padding: [dp(10),0]
                             on_press: root.x_motor_down()
@@ -81,7 +81,7 @@ Builder.load_string("""
                             text: 'Up'
                             text_size: self.size
                             markup: 'True'
-                            halign: 'left'
+                            halign: 'center'
                             valign: 'middle'
                             padding: [dp(10),0]
                             on_press: root.x_motor_up()
@@ -109,39 +109,49 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
-                GridLayout:
-                    cols: 2
+                BoxLayout:
+                    orientation: "horizontal"
 
                     Label:
-                        text: '6. Z Motors'
+                        text: '6. Z Motor'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
+                        size_hint_x: 1.6
 
-                    GridLayout:
-                        cols: 2
+                    Button: 
+                        text: 'Down'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
+                        valign: 'middle'
+                        padding: [dp(5),0]
+                        on_press: root.z_motor_down()
+                        on_release: root.quit_jog()
+                        size_hint_x: 1
 
-                        Button: 
-                            text: 'Down'
-                            text_size: self.size
-                            markup: 'True'
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.z_motor_down()
-                            on_release: root.quit_jog()
+                    Button:
+                        text: 'Up'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.z_motor_up()
+                        on_release: root.quit_jog()
+                        size_hint_x: 1
 
-                        Button:
-                            text: 'Up'
-                            text_size: self.size
-                            markup: 'True'
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.z_motor_up()
-                            on_release: root.quit_jog()
+                    Button: 
+                        text: 'Cycle'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.mini_cycle()
+                        size_hint_x: 1
 
                 Button:
                     text: '12. Disable alarms'
@@ -539,6 +549,10 @@ class ZHeadQC1(Screen):
 
     def z_motor_down(self):
         self.m.jog_relative('Z', -20, 750)
+
+    def mini_cycle(self):
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
 
     def quit_jog(self):
         self.m.quit_jog()
