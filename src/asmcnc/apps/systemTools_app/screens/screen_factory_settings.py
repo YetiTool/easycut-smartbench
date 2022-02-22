@@ -297,7 +297,7 @@ Builder.load_string("""
                         cols: 1
                         rows: 7
                         padding: 10
-                        spacing: 10
+                        spacing: 2
                         ToggleButton:
                             id: maintenance_reminder_toggle
                             text: 'Turn reminders off'
