@@ -29,6 +29,10 @@ Builder.load_string("""
 """)
 
 class LBCalibration2(Screen):
+
+    poll_for_tuning_completion = None
+    poll_for_calibration_completion = None
+
     def __init__(self, **kwargs):
         super(LBCalibration2, self).__init__(**kwargs)
 
@@ -36,7 +40,13 @@ class LBCalibration2(Screen):
         self.m = kwargs['m']
 
     def on_enter(self):
-        self.run_calibration()
+        if not self.m.run_calibration and not self.m.tuning_in_progress:
+            self.calibration_label.text = "Calibrating..."
+            self.run_calibration()
+
+        else: 
+            self.calibration_label.text = "Try later"
+            Clock.schedule_once(self.reenter_screen, 3)
 
     def run_calibration(self):
         self.m.tune_Y_for_calibration()
@@ -67,3 +77,11 @@ class LBCalibration2(Screen):
 
     def enter_next_screen(self):
         self.sm.current = 'lbc3'
+
+    def reenter_screen(self):
+        self.sm.current = 'lbc1'
+        self.sm.current = 'lbc2'
+
+    def on_leave(self):
+        if self.poll_for_tuning_completion != None: Clock.unschedule(self.poll_for_tuning_completion)
+        if self.poll_for_calibration_completion != None: Clock.unschedule(self.poll_for_calibration_completion)
