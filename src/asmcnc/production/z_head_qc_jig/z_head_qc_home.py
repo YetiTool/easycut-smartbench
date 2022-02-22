@@ -10,6 +10,12 @@ import subprocess
 
 import sys, os
 
+try: 
+    import pigpio
+
+except:
+    pass
+
 Builder.load_string("""
 <ZHeadQCHome>:
     
@@ -104,7 +110,12 @@ class ZHeadQCHome(Screen):
         def nested_do_fw_update(dt):
             self.m.s.__del__()
 
-            cmd = "sudo ~/rpirtscts/rpirtscts on && grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            print(pi.get_mode(17))
+            pi.stop()
+
+            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
             exit_code = int(proc.returncode)
