@@ -156,7 +156,7 @@ class OvernightTesting(Screen):
     def on_enter(self):
         self.m.s.FINAL_TEST = True
 
-    def on_exit(self):
+    def on_leave(self):
         self.m.s.FINAL_TEST = False
 
     def stop(self):
