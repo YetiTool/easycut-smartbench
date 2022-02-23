@@ -61,13 +61,13 @@ class ZHeadQC3(Screen):
     def start_calibration_timer(self, minutes):
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
-        self.jog_relative('Y', 0.01, 6000)
+        self.jog_relative('X', 2, 6000)
         self.sm.get_screen('qc3').update_time(minutes*30)
         self.timer_started = True
 
 
     def update_time(self, time_left):
-        self.seconds = time_left
+        seconds = time_left
 
         def count_down(seconds):
             if seconds == 0:
