@@ -5,6 +5,7 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import math
 import traceback
+from time import sleep
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -256,7 +257,7 @@ class OvernightTesting(Screen):
                 self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
                 self.OVERNIGHT_TOTAL_RUNS += 1
 
-                time.sleep(0.01)
+                sleep(0.01)
 
             else:
                 Clock.schedule_once(run_rectangle, 1)
