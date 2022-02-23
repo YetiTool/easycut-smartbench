@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from kivy.clock import Clock
+import traceback
 
 Builder.load_string("""
 <DownloadLBCalDataScreen>:
@@ -95,6 +96,7 @@ class DownloadLBCalDataScreen(Screen):
 
         except:
             self.main_label.text = "Could not get data"
+            print(traceback.format_exc())
 
     def save_calibration_data_to_motor(self, motor_index, data):
 
