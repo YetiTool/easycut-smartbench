@@ -673,7 +673,7 @@ class CalibrationTesting(Screen):
 
         if self.z_running and self.m.feed_rate() < 80:
 
-            if self.m.s.sg_z_motor_axis == "-999":
+            if self.m.s.sg_z_motor_axis == -999:
                 return
 
             if len(self.z_vals) > 0:
@@ -686,11 +686,11 @@ class CalibrationTesting(Screen):
                 self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
 
             self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
-            self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
+            self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals, key=abs))
             self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
         elif self.x_running and self.m.feed_rate() < 1200:
-            if self.m.s.sg_x_motor_axis == "-999":
+            if self.m.s.sg_x_motor_axis == -999:
                 return
 
             if len(self.x_vals) > 0:
@@ -703,11 +703,11 @@ class CalibrationTesting(Screen):
                 self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
 
             self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
-            self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
+            self.x_peak_load.text = "X: " + str(max(self.raw_x_vals, key=abs))
             self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
 
         elif self.y_running and self.m.feed_rate() < 1200:
-            if self.m.s.sg_y_axis == "-999" or self.m.s.sg_y1_motor == "-999" or self.m.s.sg_y2_motor == "-999":
+            if self.m.s.sg_y_axis == -999 or self.m.s.sg_y1_motor == -999 or self.m.s.sg_y2_motor == -999:
                 return
 
             if len(self.y_vals) > 0:
