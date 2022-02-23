@@ -46,6 +46,8 @@ Builder.load_string("""
 class ZHeadQC3(Screen):
 
     timer_started = False
+    seconds = 60*30
+
 
     def __init__(self, **kwargs):
         super(ZHeadQC3, self).__init__(**kwargs)
@@ -65,7 +67,7 @@ class ZHeadQC3(Screen):
 
 
     def update_time(self, time_left):
-        seconds = time_left
+        self.seconds = time_left
 
         def count_down(seconds):
             if seconds == 0:
