@@ -861,30 +861,30 @@ class CalibrationTesting(Screen):
 
         X_SG_to_kg_scaling = 13.7
         Y_SG_to_kg_scaling = 11.5
-        Z_SG_to_kg_scaling = 5
+        Z_SG_to_kg_scaling = 5.0
 
-        xy_friction = 5
-        z_friction = 2
+        xy_friction = 5.0
+        z_friction = 3.0
 
         tolerance = 0.8
 
-        y_fw_expected_min = (xy_friction + y_load)*(1 - tolerance)
-        y_fw_expected_max = (xy_friction + y_load)*(1 + tolerance)
+        y_fw_expected_min = (xy_friction + float(y_load))*(1.0 - tolerance)
+        y_fw_expected_max = (xy_friction + float(y_load))*(1.0 + tolerance)
 
-        y_bw_expected_min = (xy_friction - y_load)*(1 - tolerance)
-        y_bw_expected_max = (xy_friction - y_load)*(1 + tolerance)
+        y_bw_expected_min = (xy_friction - float(y_load))*(1.0 - tolerance)
+        y_bw_expected_max = (xy_friction - float(y_load))*(1.0 + tolerance)
 
-        x_fw_expected_min = (xy_friction + x_load)*(1 - tolerance)
-        x_fw_expected_max = (xy_friction + x_load)*(1 + tolerance)
+        x_fw_expected_min = (xy_friction + float(x_load))*(1.0 - tolerance)
+        x_fw_expected_max = (xy_friction + float(x_load))*(1.0 + tolerance)
 
-        x_bw_expected_min = (xy_friction - x_load)*(1 - tolerance)
-        x_bw_expected_max = (xy_friction - x_load)*(1 + tolerance)
+        x_bw_expected_min = (xy_friction - float(x_load))*(1.0 - tolerance)
+        x_bw_expected_max = (xy_friction - float(x_load))*(1.0 + tolerance)
 
-        z_fw_expected_min = (z_friction + z_load)*(1 - tolerance)
-        z_fw_expected_max = (z_friction + z_load)*(1 + tolerance)
+        z_fw_expected_min = (z_friction + float(z_load))*(1.0 - tolerance)
+        z_fw_expected_max = (z_friction + float(z_load))*(1.0 + tolerance)
 
-        z_bw_expected_min = (z_friction - z_load)*(1 - tolerance)
-        z_bw_expected_max = (z_friction - z_load)*(1 + tolerance)
+        z_bw_expected_min = (z_friction - float(z_load))*(1.0 - tolerance)
+        z_bw_expected_max = (z_friction - float(z_load))*(1.0 + tolerance)
 
         y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_fw_expected_max*Y_SG_to_kg_scaling)
         x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_fw_expected_max*X_SG_to_kg_scaling)
