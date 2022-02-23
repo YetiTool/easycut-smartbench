@@ -77,8 +77,7 @@ class LBCalibration(App):
         calibration_db = CalibrationDatabase()
 
         if m.s.is_connected():
-            time.sleep(1)
-            m.s.start_services(1)
+            Clock.schedule_once(m.s.start_services, 1)
 
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
