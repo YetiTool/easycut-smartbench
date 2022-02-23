@@ -886,13 +886,13 @@ class CalibrationTesting(Screen):
         z_bw_expected_min = (z_friction - z_load)*(1 - tolerance)
         z_bw_expected_max = (z_friction - z_load)*(1 + tolerance)
 
-        y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" str(y_fw_expected_max*Y_SG_to_kg_scaling)
-        x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" str(x_fw_expected_max*X_SG_to_kg_scaling)
-        z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" str(z_fw_expected_max*Z_SG_to_kg_scaling)
+        y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_fw_expected_max*Y_SG_to_kg_scaling)
+        x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_fw_expected_max*X_SG_to_kg_scaling)
+        z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_fw_expected_max*Z_SG_to_kg_scaling)
 
-        y_bw_range_text = str(y_bw_expected_min*Y_SG_to_kg_scaling) + "-" str(y_bw_expected_max*Y_SG_to_kg_scaling)
-        x_bw_range_text = str(x_bw_expected_min*X_SG_to_kg_scaling) + "-" str(x_bw_expected_max*X_SG_to_kg_scaling)
-        z_bw_range_text = str(z_bw_expected_min*Z_SG_to_kg_scaling) + "-" str(z_bw_expected_max*Z_SG_to_kg_scaling)
+        y_bw_range_text = str(y_bw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_bw_expected_max*Y_SG_to_kg_scaling)
+        x_bw_range_text = str(x_bw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_bw_expected_max*X_SG_to_kg_scaling)
+        z_bw_range_text = str(z_bw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_bw_expected_max*Z_SG_to_kg_scaling)
 
         self.y_axis_fw_range.text = y_fw_range_text
         self.y1_fw_range.text = y_fw_range_text
