@@ -196,7 +196,7 @@ Builder.load_string("""
                     on_press: root.set_spindle_analogue()
 
                 Button:
-                    text: '28. CONFIRM BELT OFF: START AUTO-CALIBRATE'
+                    text: '28. CONFIRM BELT OFF AND COVER ON: START AUTO-CALIBRATE'
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'

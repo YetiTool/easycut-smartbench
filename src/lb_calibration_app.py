@@ -29,6 +29,8 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
 
+from time import sleep
+
 from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
@@ -75,7 +77,8 @@ class LBCalibration(App):
         calibration_db = CalibrationDatabase()
 
         if m.s.is_connected():
-            Clock.schedule_once(m.s.start_services, 4)
+            time.sleep(1)
+            m.s.start_services
 
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)

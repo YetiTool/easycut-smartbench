@@ -34,6 +34,8 @@ class LBCalibration1(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
+    def on_enter(self):
+        self.m.jog_relative('X', 0.1, 6000)
         self.update_time(30 * 60) # 30 minutes 
 
     def update_time(self, time_left):

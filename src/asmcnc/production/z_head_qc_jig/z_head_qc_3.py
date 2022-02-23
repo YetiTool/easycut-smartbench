@@ -24,9 +24,13 @@ Builder.load_string("""
             size_hint_x: 0.5
             font_size: dp(20)
 
-        GridLayout:
-            cols: 1
-            rows: 2
+        BoxLayout: 
+            orientation: "vertical"
+            spacing: dp(10)
+
+            Label:
+                text: 'ENSURE COVER ON AND BELT OFF'
+                font_size: dp(50)
 
             Label:
                 text: 'Countdown to calibration...'
