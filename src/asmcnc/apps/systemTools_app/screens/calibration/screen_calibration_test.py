@@ -38,6 +38,11 @@ Builder.load_string("""
 
     data_send_button : data_send_button
 
+    home_button : home_button
+    x0y0_jog_button : x0y0_jog_button
+    x7y0_jog_button : x7y0_jog_button
+    z0_jog_button : z0_jog_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -54,18 +59,22 @@ Builder.load_string("""
                     on_press: root.back_to_fac_settings()
 
                 Button:
+                    id: home_button
                     text: 'Home'
                     on_press: root.home()
 
                 Button:
+                    id: x0y0_jog_button
                     text: 'X0Y0'
                     on_press: root.zero_x_and_y()
 
                 Button:
+                    id: x7y0_jog_button
                     text: 'X-700Y0'
                     on_press: root.mid_x_and_zero_y()
 
                 Button:
+                    id: z0_jog_button
                     text: 'Z0'
                     on_press: root.zero_Z()
 
@@ -387,12 +396,20 @@ class CalibrationTesting(Screen):
         self.y_load_button.disabled = False
         self.z_load_button.disabled = False
         self.unweighted_test_button.disabled = False
+        self.home_button.disabled = False
+        self.x0y0_jog_button.disabled = False
+        self.x7y0_jog_button.disabled = False
+        self.z0_jog_button.disabled = False        
 
     def disable_run_buttons(self):
         self.x_load_button.disabled = True
         self.y_load_button.disabled = True
         self.z_load_button.disabled = True
         self.unweighted_test_button.disabled = True
+        self.home_button.disabled = True
+        self.x0y0_jog_button.disabled = True
+        self.x7y0_jog_button.disabled = True
+        self.z0_jog_button.disabled = True
 
     def confirm_unweighted(self, dt):
         self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
