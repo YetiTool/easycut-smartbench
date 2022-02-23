@@ -6,6 +6,7 @@ from asmcnc.skavaUI import popup_info
 import math
 import traceback
 from time import sleep
+import threading
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -50,7 +51,7 @@ Builder.load_string("""
                 cols: 2
                 Button:
                     text: 'Run overnight test (6hr)'
-                    on_press: root.run_overnight_test()
+                    on_press: root.start_overnight_test()
                     id: overnight_test_button
 
                 Image:
@@ -145,6 +146,9 @@ MAX_X_DISTANCE = 1299
 MAX_Y_DISTANCE = 2501
 
 class OvernightTesting(Screen):
+
+    poll_end_of_overnight_file_stream = None
+
     def __init__(self, **kwargs):
         super(OvernightTesting, self).__init__(**kwargs)
 
@@ -164,9 +168,10 @@ class OvernightTesting(Screen):
         self.m.s.FINAL_TEST = False
 
     def stop(self):
-        self.overnight_running = False
-        if self.OVERNIGHT_CLOCK != None: Clock.unschedule(self.OVERNIGHT_CLOCK)
         popup_info.PopupStop(self.m, self.sm, self.l)
+        self.overnight_running = False
+        if self.poll_end_of_overnight_file_stream != None: Clock.unschedule(self.poll_end_of_overnight_file_stream)
+        self.overnight_test_button.disabled = False
 
     def send_overnight_payload(self):
         serial = self.calibration_db.get_serial_number()
@@ -212,59 +217,104 @@ class OvernightTesting(Screen):
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('overnight_testing','overnight_testing')
 
-    def run_overnight_test(self):
-        self.overnight_running = True
-        self.overnight_test_button.disabled = True
-        self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
 
-        X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
+    def start_overnight_test(self):
 
-        Z_TOTAL_TIME = MAX_Z_DISTANCE / MAX_Z_SPEED
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
-        Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED 
+        Clock.schedule_once(self.stream_overnight_file, 5)
 
-        self.OVERNIGHT_RECTANGLE_TIME = (((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2) + 10
+    def stream_overnight_file(self):
 
-        self.OVERNIGHT_TOTAL_RUNS = 0
+        if self.m.state().startswith('Idle') and not self.overnight_running:
 
-        self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
+            self.overnight_running = True
+            self.overnight_test_button.disabled = True
+            self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
 
-        def run_rectangle(dt):
+            filename = './asmcnc/apps/systemTools_app/files/overnight_test.gc'
 
-            if not self.overnight_running:
-                Clock.unschedule(self.OVERNIGHT_CLOCK)
-                return
+            with open(filename) as f:
+                overnight_gcode_pre_scrubbed = f.readlines()
 
-            if self.OVERNIGHT_TOTAL_RUNS == self.OVERNIGHT_REQUIRED_RUNS:
-                Clock.unschedule(self.OVERNIGHT_CLOCK)
+            overnight_gcode = [self.quick_scrub(line) for line in overnight_gcode_pre_scrubbed]
+
+            print("Running overnight test...")
+
+            self.m.s.run_skeleton_buffer_stuffer(overnight_gcode)
+            self.poll_end_of_overnight_file_stream = Clock.schedule_interval(self.post_overnight_file_stream, 60)
+
+        else:
+            Clock.schedule_once(self.stream_overnight_file, 3)
+
+
+    def post_overnight_file_stream(self):
+
+        if self.m.state().startswith('Idle'):
+
+            if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_overnight_file_stream)
+
                 self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
                 self.overnight_running = False
                 self.send_overnight_payload()
                 self.retry_data_send.disabled = False
                 self.overnight_test_button.disabled = False
-                return
-
-            if self.m.state().startswith('Idle'):
-
-                self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
-                self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
-                self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
-
-                self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
-                self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
-                self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
-
-                self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
-                self.OVERNIGHT_TOTAL_RUNS += 1
-
-                sleep(0.01)
-
-            else:
-                Clock.schedule_once(run_rectangle, 1)
 
 
-        run_rectangle(None)
-        self.OVERNIGHT_CLOCK = Clock.schedule_interval(run_rectangle, self.OVERNIGHT_RECTANGLE_TIME)
+    # def run_overnight_test(self):
+    #     self.overnight_running = True
+    #     self.overnight_test_button.disabled = True
+    #     self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
+
+    #     X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
+
+    #     Z_TOTAL_TIME = MAX_Z_DISTANCE / MAX_Z_SPEED
+
+    #     Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED 
+
+    #     self.OVERNIGHT_RECTANGLE_TIME = (((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2) + 10
+
+    #     self.OVERNIGHT_TOTAL_RUNS = 0
+
+    #     self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
+
+    #     def run_rectangle(dt):
+
+    #         if not self.overnight_running:
+    #             Clock.unschedule(self.OVERNIGHT_CLOCK)
+    #             return
+
+    #         if self.OVERNIGHT_TOTAL_RUNS == self.OVERNIGHT_REQUIRED_RUNS:
+    #             Clock.unschedule(self.OVERNIGHT_CLOCK)
+    #             self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+    #             self.overnight_running = False
+    #             self.send_overnight_payload()
+    #             self.retry_data_send.disabled = False
+    #             self.overnight_test_button.disabled = False
+    #             return
+
+
+    #             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
+    #             self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
+    #             self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
+
+    #             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
+    #             self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
+    #             self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
+
+    #             self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
+    #             self.OVERNIGHT_TOTAL_RUNS += 1
+
+    #             sleep(0.01)
+
+    #         else:
+    #             Clock.schedule_once(run_rectangle, 1)
+
+
+    #     run_rectangle(None)
+    #     self.OVERNIGHT_CLOCK = Clock.schedule_interval(run_rectangle, self.OVERNIGHT_RECTANGLE_TIME)
 
     def measure(self):
         if self.overnight_running:
