@@ -217,8 +217,9 @@ class OvernightTesting(Screen):
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('overnight_testing','overnight_testing')
 
-
     def start_overnight_test(self):
+
+        self.overnight_test_button.disabled = True
 
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
@@ -230,8 +231,6 @@ class OvernightTesting(Screen):
         if self.m.state().startswith('Idle') and not self.overnight_running:
 
             self.overnight_running = True
-            self.overnight_test_button.disabled = True
-            self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
 
             filename = './asmcnc/apps/systemTools_app/files/overnight_test.gc'
 
