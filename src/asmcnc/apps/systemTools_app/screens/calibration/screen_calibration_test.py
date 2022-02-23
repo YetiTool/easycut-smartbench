@@ -886,6 +886,20 @@ class CalibrationTesting(Screen):
         z_bw_expected_min = (z_friction - float(z_load))*(1.0 - tolerance)
         z_bw_expected_max = (z_friction - float(z_load))*(1.0 + tolerance)
 
+
+        print(y_fw_expected_min)
+        print(y_fw_expected_max)
+        print(y_bw_expected_min)
+        print(y_bw_expected_max)
+        print(x_fw_expected_min)
+        print(x_fw_expected_max)
+        print(x_bw_expected_min)
+        print(x_bw_expected_max)
+        print(z_fw_expected_min)
+        print(z_fw_expected_max)
+        print(z_bw_expected_min)
+        print(z_bw_expected_max)
+
         y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_fw_expected_max*Y_SG_to_kg_scaling)
         x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_fw_expected_max*X_SG_to_kg_scaling)
         z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_fw_expected_max*Z_SG_to_kg_scaling)
