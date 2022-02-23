@@ -7,6 +7,7 @@ import datetime
 Builder.load_string("""
 <ZHeadQC3>:
     calibrate_time:calibrate_time
+    user_text : user_text
 
     BoxLayout:
         orientation: 'vertical'
@@ -33,7 +34,8 @@ Builder.load_string("""
                 font_size: dp(50)
 
             Label:
-                text: 'Countdown to calibration...'
+                id: user_text
+                text: "Getting ready..."
                 font_size: dp(50)
             
             Label:
@@ -60,17 +62,24 @@ class ZHeadQC3(Screen):
             self.sm.current = 'qc4'
 
         elif not self.timer_started:
-            self.start_calibration_timer(60)
+            Clock.schedule_once(lambda dt: self.start_calibration_timer(60), 1)
 
     def start_calibration_timer(self, minutes):
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-        self.m.jog_relative('X', 2, 6000)
-        self.update_time(minutes*30)
-        self.timer_started = True
+
+        if self.m.state().startswith('Idle'):
+            self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+            self.m.jog_relative('X', 30, 6000)
+            self.update_time(30 * 60) # 30 minutes
+            self.timer_started = True
+
+        else: 
+            Clock.schedule_once(lambda dt: self.start_calibration_timer(60), 1)
 
 
     def update_time(self, time_left):
+
+        self.user_text.text = 'Countdown to calibration...'
         seconds = time_left
 
         def count_down(seconds):
