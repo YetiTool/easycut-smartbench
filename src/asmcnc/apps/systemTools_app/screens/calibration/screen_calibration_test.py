@@ -13,11 +13,16 @@ Builder.load_string("""
     y1_rt_load:y1_rt_load
     y2_rt_load:y2_rt_load
 
-    y_axis_range : y_axis_range
-    y1_range : y1_range
-    y2_range : y2_range
-    x_range : x_range
-    z_range : z_range
+    y_axis_fw_range : y_axis_fw_range
+    y1_fw_range : y1_fw_range
+    y2_fw_range : y2_fw_range
+    x_fw_range : x_fw_range
+    z_fw_range : z_fw_range
+    y_axis_bw_range : y_axis_bw_range
+    y1_bw_range : y1_bw_range
+    y2_bw_range : y2_bw_range
+    x_bw_range : x_bw_range
+    z_bw_range : z_bw_range
 
     y_peak_load:y_peak_load
     x_peak_load:x_peak_load
@@ -174,7 +179,7 @@ Builder.load_string("""
                     allow_stretch: True
 
         GridLayout:
-            cols: 3
+            cols: 4
 
             GridLayout:
                 rows: 6
@@ -206,26 +211,52 @@ Builder.load_string("""
                 rows: 6
 
                 Label:
-                    text: 'RANGE (TBC):'
+                    text: '<<--'
 
                 Label:
-                    id: y_axis_range
+                    id: y_axis_fw_range
                     text: 'Y:'
 
                 Label:
-                    id: y1_range
+                    id: y1_fw_range
                     text: 'Y1:'
 
                 Label:
-                    id: y2_range
+                    id: y2_fw_range
                     text: 'Y2:'
 
                 Label:
-                    id: x_range
+                    id: x_fw_range
                     text: 'X:'
 
                 Label:
-                    id: z_range
+                    id: z_fw_range
+                    text: 'Z:'
+
+            GridLayout:
+                rows: 6
+
+                Label:
+                    text: '-->>'
+
+                Label:
+                    id: y_axis_bw_range
+                    text: 'Y:'
+
+                Label:
+                    id: y1_bw_range
+                    text: 'Y1:'
+
+                Label:
+                    id: y2_bw_range
+                    text: 'Y2:'
+
+                Label:
+                    id: x_bw_range
+                    text: 'X:'
+
+                Label:
+                    id: z_bw_range
                     text: 'Z:'
 
 
@@ -436,6 +467,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
+        self.show_expected_ranges(0,0,0)
+
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
@@ -511,6 +544,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
+        self.show_expected_ranges(0,0,2)
+
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
         self.z_vals = []
@@ -563,6 +598,8 @@ class CalibrationTesting(Screen):
     def run_y_procedure(self, dt):
 
         self.disable_run_buttons()
+
+        self.show_expected_ranges(0,7.5,0)
 
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
 
@@ -662,6 +699,8 @@ class CalibrationTesting(Screen):
     def run_x_procedure(self, dt):
 
         self.disable_run_buttons()
+
+        self.show_expected_ranges(7.5,0,0)
 
         self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
 
@@ -818,16 +857,51 @@ class CalibrationTesting(Screen):
             self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
 
 
-    def show_expected_ranges(self):
-
-        self.y_axis_range.text = "-"
-        self.y1_range.text = "-"
-        self.y2_range.text = "-"
-        self.x_range.text = "-"
-        self.z_range.text = "-"
+    def show_expected_ranges(self, x_load, y_load, z_load):
 
         X_SG_to_kg_scaling = 13.7
         Y_SG_to_kg_scaling = 11.5
         Z_SG_to_kg_scaling = 5
-        Squareness_scaling = 100
 
+        xy_friction = 5
+        z_friction = 2
+
+        tolerance = 0.8
+
+        y_fw_expected_min = (xy_friction + y_load)*(1 - tolerance)
+        y_fw_expected_max = (xy_friction + y_load)*(1 + tolerance)
+
+        y_bw_expected_min = (xy_friction - y_load)*(1 - tolerance)
+        y_bw_expected_max = (xy_friction - y_load)*(1 + tolerance)
+
+        x_fw_expected_min = (xy_friction + x_load)*(1 - tolerance)
+        x_fw_expected_max = (xy_friction + x_load)*(1 + tolerance)
+
+        x_bw_expected_min = (xy_friction - x_load)*(1 - tolerance)
+        x_bw_expected_max = (xy_friction - x_load)*(1 + tolerance)
+
+        z_fw_expected_min = (z_friction + z_load)*(1 - tolerance)
+        z_fw_expected_max = (z_friction + z_load)*(1 + tolerance)
+
+        z_bw_expected_min = (z_friction - z_load)*(1 - tolerance)
+        z_bw_expected_max = (z_friction - z_load)*(1 + tolerance)
+
+        y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" str(y_fw_expected_max*Y_SG_to_kg_scaling)
+        x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" str(x_fw_expected_max*X_SG_to_kg_scaling)
+        z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" str(z_fw_expected_max*Z_SG_to_kg_scaling)
+
+        y_bw_range_text = str(y_bw_expected_min*Y_SG_to_kg_scaling) + "-" str(y_bw_expected_max*Y_SG_to_kg_scaling)
+        x_bw_range_text = str(x_bw_expected_min*X_SG_to_kg_scaling) + "-" str(x_bw_expected_max*X_SG_to_kg_scaling)
+        z_bw_range_text = str(z_bw_expected_min*Z_SG_to_kg_scaling) + "-" str(z_bw_expected_max*Z_SG_to_kg_scaling)
+
+        self.y_axis_fw_range.text = y_fw_range_text
+        self.y1_fw_range.text = y_fw_range_text
+        self.y2_fw_range.text = y_fw_range_text
+        self.x_fw_range.text = x_fw_range_text
+        self.z_fw_range.text = z_fw_range_text
+
+        self.y_axis_bw_range.text = y_bw_range_text
+        self.y1_bw_range.text = y_bw_range_text
+        self.y2_bw_range.text = y_bw_range_text
+        self.x_bw_range.text = x_bw_range_text
+        self.z_bw_range.text = z_bw_range_text
