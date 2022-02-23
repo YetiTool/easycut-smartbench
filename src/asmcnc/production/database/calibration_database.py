@@ -69,7 +69,7 @@ class CalibrationDatabase(object):
 
     def get_lower_beam_parameters(self, serial_number, motor_index):
         with self.conn.cursor() as cursor:
-            query = "SELECT * FROM TMC WHERE SerialNumber = '" + str(serial_number) + "' AND MotorIndex = '" + str(motor_index) + "'"
+            query = "SELECT * FROM TMC WHERE SerialNumber = '" + str(serial_number) + "' AND MotorIndex = '" + str(motor_index) + "' ORDER BY Id DESC"
 
             cursor.execute(query)
 
