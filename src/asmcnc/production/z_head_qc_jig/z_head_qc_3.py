@@ -56,7 +56,10 @@ class ZHeadQC3(Screen):
         self.m = kwargs['m']
 
     def on_enter(self):
-        if not self.timer_started:
+        if self.seconds < 1:
+            self.sm.current = 'qc4'
+
+        elif not self.timer_started:
             self.start_calibration_timer(60)
 
     def start_calibration_timer(self, minutes):
@@ -85,10 +88,6 @@ class ZHeadQC3(Screen):
             Clock.schedule_once(lambda dt: count_down(seconds), 1)
 
         Clock.schedule_once(lambda dt: count_down(seconds), 0)
-
-    def on_enter(self):
-        if self.seconds < 1:
-            self.sm.current = 'qc4'
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
