@@ -139,9 +139,9 @@ Builder.load_string("""
 MAX_XY_SPEED = 6000
 MAX_Z_SPEED = 750
 
-MAX_Z_DISTANCE = 115
-MAX_X_DISTANCE = 1135
-MAX_Y_DISTANCE = 2275
+MAX_Z_DISTANCE = 149
+MAX_X_DISTANCE = 1299
+MAX_Y_DISTANCE = 2501
 
 class OvernightTesting(Screen):
     def __init__(self, **kwargs):
@@ -229,6 +229,7 @@ class OvernightTesting(Screen):
         self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
 
         def run_rectangle(dt):
+
             if not self.m.state().startswith('Idle'):
                 Clock.schedule_once(run_rectangle, 2)
                 return
@@ -246,13 +247,14 @@ class OvernightTesting(Screen):
                 self.overnight_test_button.disabled = False
                 return
 
-            self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
-            self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
-            self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
+            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
+            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
 
-            self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
-            self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
-            self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, MAX_Z_SPEED)
+            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, MAX_XY_SPEED)
+            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, MAX_XY_SPEED)
+
 
             self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
             self.OVERNIGHT_TOTAL_RUNS += 1
