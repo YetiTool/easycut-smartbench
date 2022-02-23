@@ -238,7 +238,7 @@ class OvernightTesting(Screen):
             with open(filename) as f:
                 overnight_gcode_pre_scrubbed = f.readlines()
 
-            overnight_gcode = [self.quick_scrub(line) for line in overnight_gcode_pre_scrubbed]
+            overnight_gcode = [self.m.quick_scrub(line) for line in overnight_gcode_pre_scrubbed]
 
             print("Running overnight test...")
 
