@@ -230,10 +230,6 @@ class OvernightTesting(Screen):
 
         def run_rectangle(dt):
 
-            if not self.m.state().startswith('Idle'):
-                Clock.schedule_once(run_rectangle, 2)
-                return
-
             if not self.overnight_running:
                 Clock.unschedule(self.OVERNIGHT_CLOCK)
                 return
@@ -247,17 +243,22 @@ class OvernightTesting(Screen):
                 self.overnight_test_button.disabled = False
                 return
 
-            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
-            self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
-            self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
+            if self.m.state().startswith('Idle'):
 
-            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
-            self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
-            self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
+                self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
+                self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
+                self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
 
+                self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
+                self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
+                self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
 
-            self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
-            self.OVERNIGHT_TOTAL_RUNS += 1
+                self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
+                self.OVERNIGHT_TOTAL_RUNS += 1
+
+            else:
+                Clock.schedule_once(run_rectangle, 1)
+
 
         run_rectangle(None)
         self.OVERNIGHT_CLOCK = Clock.schedule_interval(run_rectangle, self.OVERNIGHT_RECTANGLE_TIME)
