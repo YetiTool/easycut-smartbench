@@ -36,6 +36,8 @@ Builder.load_string("""
     y_load_button : y_load_button
     z_load_button : z_load_button
 
+    data_send_button : data_send_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -143,8 +145,10 @@ Builder.load_string("""
                     allow_stretch: True
 
             Button:
+                id: data_send_button
                 text: 'Send data to database'
                 on_press: root.send_data()
+                disabled: True
 
             GridLayout:
                 cols: 2
@@ -397,6 +401,7 @@ class CalibrationTesting(Screen):
         self.unweighted_data.append(self.z_vals)
 
         self.enable_run_buttons()
+        self.data_send_button.disabled = False
 
     def confirm_x(self, dt):
         self.enable_run_buttons()
