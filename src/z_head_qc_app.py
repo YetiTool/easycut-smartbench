@@ -184,8 +184,6 @@ class ZHeadQC(App):
         z_head_qc_db_fail = ZHeadQCDBFail(name='qcDB4', sm = sm, m = m)
         sm.add_widget(z_head_qc_db_fail)
 
-        sleep(4)
-
         sm.current = 'qchome'
         return sm
 
