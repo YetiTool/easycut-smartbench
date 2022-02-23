@@ -232,7 +232,8 @@ class OvernightTesting(Screen):
 
             self.overnight_running = True
 
-            filename = './asmcnc/apps/systemTools_app/files/overnight_test.gc'
+            # filename = './asmcnc/apps/systemTools_app/files/overnight_test.gc'
+            filename = './asmcnc/apps/systemTools_app/files/mini_run.gc'
 
             with open(filename) as f:
                 overnight_gcode_pre_scrubbed = f.readlines()
