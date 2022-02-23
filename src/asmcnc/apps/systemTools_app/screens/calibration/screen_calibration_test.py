@@ -99,7 +99,7 @@ Builder.load_string("""
 
                 Button:
                     id: unweighted_test_button
-                    text: 'Run unweighted test'
+                    text: 'Run XYZ 0kg'
                     on_press: root.run_unweighted_test()
 
                 Image:
@@ -168,7 +168,7 @@ Builder.load_string("""
                 cols: 2
 
                 Label:
-                    text: 'Successfully sent data: '
+                    text: 'Sent data?'
                 
                 Image:
                     id: sent_data_check
