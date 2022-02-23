@@ -57,7 +57,7 @@ class LBCalibration1(Screen):
             self.update_time(30 * 60) # 30 minutes
             self.timer_started = True
 
-        elif: 
+        else: 
             Clock.schedule_once(lambda dt: self.start_calibration_timer(60), 1)
 
     def update_time(self, time_left):
