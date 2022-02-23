@@ -247,13 +247,13 @@ class OvernightTesting(Screen):
                 self.overnight_test_button.disabled = False
                 return
 
-            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
-            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
-            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
+            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
+            self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
+            self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
 
-            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, MAX_Z_SPEED)
-            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, MAX_XY_SPEED)
-            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, MAX_XY_SPEED)
+            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
+            self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
+            self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
 
 
             self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
