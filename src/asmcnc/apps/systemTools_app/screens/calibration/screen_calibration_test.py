@@ -476,7 +476,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
 
         self.y_vals = []
         self.raw_y_vals = []
