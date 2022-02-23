@@ -63,8 +63,8 @@ class ZHeadQC3(Screen):
             self.start_calibration_timer(60)
 
     def start_calibration_timer(self, minutes):
-        self.m.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
         self.m.jog_relative('X', 2, 6000)
         self.update_time(minutes*30)
         self.timer_started = True

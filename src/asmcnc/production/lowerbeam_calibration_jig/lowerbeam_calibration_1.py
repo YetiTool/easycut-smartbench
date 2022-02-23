@@ -28,6 +28,10 @@ Builder.load_string("""
 """)
 
 class LBCalibration1(Screen):
+
+    timer_started = False
+    seconds = 60*30
+
     def __init__(self, **kwargs):
         super(LBCalibration1, self).__init__(**kwargs)
 
@@ -35,10 +39,16 @@ class LBCalibration1(Screen):
         self.m = kwargs['m']
 
     def on_enter(self):
-        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
-        self.jog_relative('X', 0.01, 6000)
-        self.update_time(30 * 60) # 30 minutes 
+
+        if self.seconds < 1:
+            self.sm.current = 'lbc2'
+
+        elif not self.timer_started:
+            self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+            self.m.jog_relative('X', 2, 6000)
+            self.update_time(30 * 60) # 30 minutes
+            self.timer_started = True
 
     def update_time(self, time_left):
         seconds = time_left
@@ -60,6 +70,3 @@ class LBCalibration1(Screen):
 
         Clock.schedule_once(lambda dt: count_down(seconds), 0)
 
-    def on_enter(self):
-        if self.seconds < 1:
-            self.sm.current = 'lbc2'
