@@ -24,6 +24,8 @@ Builder.load_string("""
     sent_data_check:sent_data_check
     retry_data_send:retry_data_send
 
+    overnight_test_button:overnight_test_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -48,6 +50,7 @@ Builder.load_string("""
                 Button:
                     text: 'Run overnight test (6hr)'
                     on_press: root.run_overnight_test()
+                    id: overnight_test_button
 
                 Image:
                     id: overnight_test_check
@@ -209,6 +212,7 @@ class OvernightTesting(Screen):
 
     def run_overnight_test(self):
         self.overnight_running = True
+        self.overnight_test_button.disabled = True
         self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
 
         X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
@@ -217,13 +221,17 @@ class OvernightTesting(Screen):
 
         Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED
 
-        self.OVERNIGHT_RECTANGLE_TIME = ((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2
+        self.OVERNIGHT_RECTANGLE_TIME = (((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2) + 10
 
         self.OVERNIGHT_TOTAL_RUNS = 0
 
         self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
 
         def run_rectangle(dt):
+            if not self.m.state().startswith('Idle'):
+                Clock.schedule_once(run_rectangle, 2)
+                return
+
             if not self.overnight_running:
                 Clock.unschedule(self.OVERNIGHT_CLOCK)
                 return
@@ -234,6 +242,7 @@ class OvernightTesting(Screen):
                 self.overnight_running = False
                 self.send_overnight_payload()
                 self.retry_data_send.disabled = False
+                self.overnight_test_button.disabled = False
                 return
 
             self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
