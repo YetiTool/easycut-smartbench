@@ -79,17 +79,22 @@ class DownloadLBCalDataScreen(Screen):
 
         self.main_label.text = "Getting data..."
 
-        Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
-        Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
+        try: 
 
-        self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
-        self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
+            Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y1)
+            Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text, TMC_Y2)
 
-        self.main_label.text = "Uploading to ZH..."
+            self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
+            self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
 
-        Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
+            self.main_label.text = "Uploading to ZH..."
 
-        self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 5)
+            Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
+
+            self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 5)
+
+        except:
+            self.main_label.text = "Could not get data"
 
     def save_calibration_data_to_motor(self, motor_index, data):
 
