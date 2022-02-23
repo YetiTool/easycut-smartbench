@@ -214,7 +214,7 @@ class OvernightTesting(Screen):
     def run_overnight_test(self):
         self.overnight_running = True
         self.overnight_test_button.disabled = True
-        self.OVERNIGHT_TIME_TO_RUN = 360 #21600
+        self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
 
         X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
 
