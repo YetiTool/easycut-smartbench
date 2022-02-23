@@ -83,7 +83,7 @@ class ZHeadQCHome(Screen):
         self.start_calibration_timer(60)
 
     def start_calibration_timer(self, minutes):
-        self.m.jog_relative('Y', 0.1, 6000)
+        # self.m.jog_relative('Y', 0.1, 6000)
         self.sm.get_screen('qc3').update_time(minutes*30)
 
     def enter_qc(self):
