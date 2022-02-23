@@ -164,6 +164,7 @@ class OvernightTesting(Screen):
 
     def stop(self):
         self.overnight_running = False
+        if self.OVERNIGHT_CLOCK != None: Clock.unschedule(self.OVERNIGHT_CLOCK)
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def send_overnight_payload(self):
@@ -215,11 +216,11 @@ class OvernightTesting(Screen):
         self.overnight_test_button.disabled = True
         self.OVERNIGHT_TIME_TO_RUN = 360 #21600
 
-        X_TOTAL_TIME = (MAX_X_DISTANCE / MAX_XY_SPEED) / 60
+        X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
 
-        Z_TOTAL_TIME = (MAX_Z_DISTANCE / MAX_Z_SPEED) / 60
+        Z_TOTAL_TIME = MAX_Z_DISTANCE / MAX_Z_SPEED
 
-        Y_TOTAL_TIME = (MAX_Y_DISTANCE / MAX_XY_SPEED) / 60
+        Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED 
 
         self.OVERNIGHT_RECTANGLE_TIME = (((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2) + 10
 

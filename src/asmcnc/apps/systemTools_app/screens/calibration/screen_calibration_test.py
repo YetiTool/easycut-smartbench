@@ -367,6 +367,10 @@ class CalibrationTesting(Screen):
         self.x_running = False
         self.y_running = False
         self.z_running = False
+        if self.next_run_event != None: Clock.unschedule(self.next_run_event)
+        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
+        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.enable_run_buttons()
 

@@ -47,7 +47,7 @@ class CalibrationDatabase(object):
 
     def send_overnight_test_calibration(self, serial_number, overnight_x, overnight_y, overnight_z):
         with self.conn.cursor() as cursor:
-            query = "UPDATE FinalTest SET OvernightX = '" + overnight_x + "', OvernightY = '" + overnight_y + "', OvernightZ = '" + overnight_z + "' WHERE SerialNumber = '" + serial_number + "'"
+            query = "UPDATE FinalTest SET OvernightX = '" + str(overnight_x) + "', OvernightY = '" + str(overnight_y) + "', OvernightZ = '" + str(overnight_z) + "' WHERE SerialNumber = '" + serial_number + "'"
             
             cursor.execute(query)
 
