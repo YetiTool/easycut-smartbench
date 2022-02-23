@@ -225,7 +225,7 @@ class OvernightTesting(Screen):
 
         Clock.schedule_once(self.stream_overnight_file, 5)
 
-    def stream_overnight_file(self):
+    def stream_overnight_file(self, dt):
 
         if self.m.state().startswith('Idle') and not self.overnight_running:
 
@@ -249,7 +249,7 @@ class OvernightTesting(Screen):
             Clock.schedule_once(self.stream_overnight_file, 3)
 
 
-    def post_overnight_file_stream(self):
+    def post_overnight_file_stream(self, dt):
 
         if self.m.state().startswith('Idle'):
 
