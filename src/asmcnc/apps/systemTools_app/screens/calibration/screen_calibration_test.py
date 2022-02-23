@@ -13,6 +13,12 @@ Builder.load_string("""
     y1_rt_load:y1_rt_load
     y2_rt_load:y2_rt_load
 
+    y_axis_range : y_axis_range
+    y1_range : y1_range
+    y2_range : y2_range
+    x_range : x_range
+    z_range : z_range
+
     y_peak_load:y_peak_load
     x_peak_load:x_peak_load
     z_peak_load:z_peak_load
@@ -35,7 +41,7 @@ Builder.load_string("""
 
         BoxLayout:
             orientation: "horizontal"
-            size_hint_y: 0.2
+            size_hint_y: 0.3
 
             BoxLayout:
                 orientation: "horizontal"
@@ -70,7 +76,7 @@ Builder.load_string("""
 
         GridLayout: 
             cols: 3
-            size_hint_y: 0.4
+            size_hint_y: 0.6
 
             GridLayout:
                 cols: 2
@@ -155,7 +161,7 @@ Builder.load_string("""
                     allow_stretch: True
 
         GridLayout:
-            cols: 2
+            cols: 3
 
             GridLayout:
                 rows: 6
@@ -182,6 +188,33 @@ Builder.load_string("""
                 Label:
                     id: z_rt_load
                     text: 'Z:'
+
+            GridLayout:
+                rows: 6
+
+                Label:
+                    text: 'RANGE (TBC):'
+
+                Label:
+                    id: y_axis_range
+                    text: 'Y:'
+
+                Label:
+                    id: y1_range
+                    text: 'Y1:'
+
+                Label:
+                    id: y2_range
+                    text: 'Y2:'
+
+                Label:
+                    id: x_range
+                    text: 'X:'
+
+                Label:
+                    id: z_range
+                    text: 'Z:'
+
 
             GridLayout:
                 rows: 6
@@ -761,3 +794,18 @@ class CalibrationTesting(Screen):
             self.y2_peak_load.text = "Y: " + str(max(self.raw_y2_vals, key=abs))
             self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
             self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
+
+
+    def show_expected_ranges(self):
+
+        self.y_axis_range.text = "-"
+        self.y1_range.text = "-"
+        self.y2_range.text = "-"
+        self.x_range.text = "-"
+        self.z_range.text = "-"
+
+        X_SG_to_kg_scaling = 13.7
+        Y_SG_to_kg_scaling = 11.5
+        Z_SG_to_kg_scaling = 5
+        Squareness_scaling = 100
+
