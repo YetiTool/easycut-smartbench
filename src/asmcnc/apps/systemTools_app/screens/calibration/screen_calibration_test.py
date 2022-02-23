@@ -33,21 +33,44 @@ Builder.load_string("""
     BoxLayout:
         orientation: 'vertical'
 
-        GridLayout: 
-            cols: 3
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: 0.2
 
-            Button:
-                text: 'Back'
-                on_press: root.back_to_fac_settings()
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_x: 0.7
 
-            Button:
-                text: 'Home'
-                on_press: root.home()
+                Button:
+                    text: 'Back'
+                    on_press: root.back_to_fac_settings()
+
+                Button:
+                    text: 'Home'
+                    on_press: root.home()
+
+                Button:
+                    text: 'X0Y0'
+                    on_press: root.zero_x_and_y()
+
+                Button:
+                    text: 'X-700Y0'
+                    on_press: root.mid_x_and_zero_y()
+
+                Button:
+                    text: 'Z0'
+                    on_press: root.zero_Z()
 
             Button:
                 text: 'STOP'
                 background_color: [1,0,0,1]
                 on_press: root.stop()
+                size_hint_x: 0.3
+
+
+        GridLayout: 
+            cols: 3
+            size_hint_y: 0.4
 
             GridLayout:
                 cols: 2
@@ -254,9 +277,9 @@ class CalibrationTesting(Screen):
         self.unweighted_data = []
 
     def send_data(self):
-        serial = self.calibration_db.get_serial_number()
 
         try:
+            serial = self.calibration_db.get_serial_number()
             self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except:
@@ -302,6 +325,16 @@ class CalibrationTesting(Screen):
 
         self.m.resume_from_alarm()
         self.enable_run_buttons()
+
+
+    def zero_x_and_y(self):
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+
+    def mid_x_and_zero_y(self):
+        self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
+
+    def zero_Z(self):
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
     def disable_x_measurement(self, dt):
         self.x_running = False
@@ -476,7 +509,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
 
         self.y_vals = []
         self.raw_y_vals = []
@@ -575,7 +608,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
 
         self.raw_x_vals = []
         self.x_vals = []

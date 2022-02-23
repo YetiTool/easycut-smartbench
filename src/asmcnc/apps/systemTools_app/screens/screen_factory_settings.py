@@ -316,7 +316,7 @@ Builder.load_string("""
                             text: 'Final test'
                             on_press: root.final_test()
                         Button:
-                            text: 'Calibration test'
+                            text: 'SG & Load test'
                             on_press: root.enter_calibration_test()
                         Button:
                             text: 'Overnight test'
