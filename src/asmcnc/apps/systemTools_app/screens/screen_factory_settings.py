@@ -415,12 +415,15 @@ class FactorySettingsScreen(Screen):
 
     dev_mode = False
 
+    poll_for_creds_file = None
+
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.usb_stick = kwargs['usb_stick']
 
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -448,18 +451,40 @@ class FactorySettingsScreen(Screen):
             self.serial_number_input.text = '0000'
             self.product_number_input.text = '00'
 
+
+        # load in credentials and start db connection
+        self.usb_stick.usb_notifications = False
+        self.usb_stick.enable()
+        self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
+
+    def connect_to_db_when_creds_loaded(self, dt):
+
+        if "credentials.py" in os.listdir("/media/usb/"):
+
+            if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
+
+            print("Credentials file found on USB")
+            self.calibration_db.set_up_connection("console")
+
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
+        self.stop_usb_doing_stuff()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+        self.stop_usb_doing_stuff()
+
+    def stop_usb_doing_stuff(self):
+        self.usb_stick.usb_notifications = True
+        self.usb_stick.disable()
+        if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
     def on_enter(self):
+        self.usb_stick.usb_notifications = False
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
-
 
     def set_toggle_buttons(self):
 

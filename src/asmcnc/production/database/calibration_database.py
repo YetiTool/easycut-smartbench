@@ -11,13 +11,25 @@ except:
 
 class CalibrationDatabase(object):
     def __init__(self):
+        self.conn = None
+
+    def set_up_connection(self, location):
+
         try:
-            from asmcnc.production.database import credentials
+
+            if location  == "console":
+                from asmcnc.production.database import credentials
+
+            elif location == "usb":
+                from ......media.usb import credentials
+
         except ImportError:
             log("Can't import credentials")
 
         try:
             self.conn = pytds.connect(credentials.server, credentials.database, credentials.username, credentials.password)
+            log("Connected to database")
+
         except: 
             log('Unable to connect to database')
 
