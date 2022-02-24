@@ -119,7 +119,7 @@ class USB_storage(object):
         unmount_command = 'echo posys | sudo umount '+ self.linux_usb_path
 
 
-        dismiss_event = self.show_user_usb_status("ejecting")
+        dismiss_event, ejecting_popup = self.show_user_usb_status("ejecting")
 
         # if (self.sm.current == 'local_filechooser' or 
         #     self.sm.current == 'usb_filechooser' or
@@ -156,7 +156,7 @@ class USB_storage(object):
                     Clock.unschedule(poll_for_dismount)
 
                     def tell_user_safe_to_remove_usb():
-                        if dismiss_event != None: popup_USB.popup.dismiss()
+                        if dismiss_event != None: ejecting_popup.popup.dismiss()
 
                         self.show_user_usb_status("ejected")
 
@@ -242,5 +242,7 @@ class USB_storage(object):
                 elif mode == "ejecting": popup_mode = False
 
                 popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, popup_mode)
-                return Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+                event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+
+                return event, popup_USB
 

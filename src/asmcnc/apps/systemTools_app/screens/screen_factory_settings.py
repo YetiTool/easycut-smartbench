@@ -469,18 +469,22 @@ class FactorySettingsScreen(Screen):
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
+        self.stop_usb_doing_stuff()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+        self.stop_usb_doing_stuff()
+
+    def stop_usb_doing_stuff(self):
+        self.usb_stick.usb_notifications = True
+        self.usb_stick.disable()
+        if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
     def on_enter(self):
         self.usb_stick.usb_notifications = False
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
-
-    def on_leave(self):
-        self.usb_stick.usb_notifications = True
 
     def set_toggle_buttons(self):
 
