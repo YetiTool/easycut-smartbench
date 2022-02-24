@@ -156,7 +156,7 @@ class USB_storage(object):
                     Clock.unschedule(poll_for_dismount)
 
                     def tell_user_safe_to_remove_usb():
-                        if dismiss_event != None: ejecting_popup.popup.dismiss()
+                        if dismiss_event != None: popup_USB.popup.dismiss()
 
                         self.show_user_usb_status("ejected")
 
@@ -176,7 +176,7 @@ class USB_storage(object):
                     Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
   
         
-        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)
+        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(ejecting_popup), 0.5)
     
     def mount_linux_usb(self, device):
 
