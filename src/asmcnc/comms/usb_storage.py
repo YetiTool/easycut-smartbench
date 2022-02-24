@@ -212,3 +212,9 @@ class USB_storage(object):
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        
             self.is_usb_mounted_flag = False
             self.start_polling_for_usb()  # restart checking for USB
+
+
+    def show_user_usb_status(self):
+
+        pass
+
