@@ -457,7 +457,7 @@ class FactorySettingsScreen(Screen):
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
 
-    def connect_to_db_when_creds_loaded(self):
+    def connect_to_db_when_creds_loaded(self, dt):
 
         if "credentials.py" in os.listdir("/media/usb/"):
 
