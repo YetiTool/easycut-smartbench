@@ -75,6 +75,7 @@ class LBCalibration(App):
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
         calibration_db = CalibrationDatabase()
+        calibration_db.set_up_connection("console")
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 1)
