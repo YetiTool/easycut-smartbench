@@ -853,12 +853,12 @@ class CalibrationTesting(Screen):
             self.raw_y_vals.append(self.m.s.sg_y_axis)
             self.raw_y1_vals.append(self.m.s.sg_y1_motor)
             self.raw_y2_vals.append(self.m.s.sg_y2_motor)
-            self.y_peak_load.text = "Y: " + str(max(self.raw_y_vals, key=abs))
-            self.y_rt_load.text = "Y: " + str(self.m.s.sg_y_axis)
-            self.y1_peak_load.text = "Y: " + str(max(self.raw_y1_vals, key=abs))
-            self.y2_peak_load.text = "Y: " + str(max(self.raw_y2_vals, key=abs))
-            self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
-            self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
+            self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals, key=abs))
+            self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
+            self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals, key=abs))
+            self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals, key=abs))
+            self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
+            self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
 
 
     def show_expected_ranges(self, x_load, y_load, z_load):

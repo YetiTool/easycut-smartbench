@@ -263,59 +263,6 @@ class OvernightTesting(Screen):
                 self.overnight_test_button.disabled = False
 
 
-    # def run_overnight_test(self):
-    #     self.overnight_running = True
-    #     self.overnight_test_button.disabled = True
-    #     self.OVERNIGHT_TIME_TO_RUN = 21600 #21600
-
-    #     X_TOTAL_TIME = MAX_X_DISTANCE / MAX_XY_SPEED
-
-    #     Z_TOTAL_TIME = MAX_Z_DISTANCE / MAX_Z_SPEED
-
-    #     Y_TOTAL_TIME = MAX_Y_DISTANCE / MAX_XY_SPEED 
-
-    #     self.OVERNIGHT_RECTANGLE_TIME = (((X_TOTAL_TIME * 60) + (Z_TOTAL_TIME * 60) + (Y_TOTAL_TIME * 60)) * 2) + 10
-
-    #     self.OVERNIGHT_TOTAL_RUNS = 0
-
-    #     self.OVERNIGHT_REQUIRED_RUNS = math.ceil(self.OVERNIGHT_TIME_TO_RUN / self.OVERNIGHT_RECTANGLE_TIME)
-
-    #     def run_rectangle(dt):
-
-    #         if not self.overnight_running:
-    #             Clock.unschedule(self.OVERNIGHT_CLOCK)
-    #             return
-
-    #         if self.OVERNIGHT_TOTAL_RUNS == self.OVERNIGHT_REQUIRED_RUNS:
-    #             Clock.unschedule(self.OVERNIGHT_CLOCK)
-    #             self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #             self.overnight_running = False
-    #             self.send_overnight_payload()
-    #             self.retry_data_send.disabled = False
-    #             self.overnight_test_button.disabled = False
-    #             return
-
-
-    #             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - MAX_Z_DISTANCE, MAX_Z_SPEED)
-    #             self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit + MAX_Y_DISTANCE, MAX_XY_SPEED)
-    #             self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit + MAX_X_DISTANCE, MAX_XY_SPEED)
-
-    #             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, MAX_Z_SPEED)
-    #             self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, MAX_XY_SPEED)
-    #             self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, MAX_XY_SPEED)
-
-    #             self.OVERNIGHT_TIME_TO_RUN -= self.OVERNIGHT_RECTANGLE_TIME
-    #             self.OVERNIGHT_TOTAL_RUNS += 1
-
-    #             sleep(0.01)
-
-    #         else:
-    #             Clock.schedule_once(run_rectangle, 1)
-
-
-    #     run_rectangle(None)
-    #     self.OVERNIGHT_CLOCK = Clock.schedule_interval(run_rectangle, self.OVERNIGHT_RECTANGLE_TIME)
-
     def measure(self):
         if self.overnight_running:
             if not self.m.s.sg_z_motor_axis == "-999":
@@ -345,12 +292,12 @@ class OvernightTesting(Screen):
                 self.raw_y_vals.append(self.m.s.sg_y_axis)
                 self.raw_y1_vals.append(self.m.s.sg_y1_motor)
                 self.raw_y2_vals.append(self.m.s.sg_y2_motor)
-                self.y_peak_load.text = "Y: " + str(max(self.raw_y_vals))
-                self.y_rt_load.text = "Y: " + str(self.m.s.sg_y_axis)
-                self.y1_peak_load.text = "Y: " + str(max(self.raw_y1_vals))
-                self.y2_peak_load.text = "Y: " + str(max(self.raw_y2_vals))
-                self.y1_rt_load.text = "Y: " + str(self.m.s.sg_y1_motor)
-                self.y2_rt_load.text = "Y: " + str(self.m.s.sg_y2_motor)
+                self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals))
+                self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
+                self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals))
+                self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals))
+                self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
+                self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
 
             if not self.m.s.sg_x_motor_axis == "-999":
                 if len(self.x_vals) > 0:
