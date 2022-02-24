@@ -115,7 +115,7 @@ class USB_storage(object):
 
     def unmount_linux_usb(self):
         dismiss_event = None
-        popup_USB = None
+        ejecting_popup = None
         unmount_command = 'echo posys | sudo umount '+ self.linux_usb_path
 
 
