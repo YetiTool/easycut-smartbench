@@ -13,15 +13,10 @@ class CalibrationDatabase(object):
     def __init__(self):
         self.conn = None
 
-    def set_up_connection(self, location):
+    def set_up_connection(self):
 
         try:
-
-            if location  == "console":
-                from asmcnc.production.database import credentials
-
-            elif location == "usb":
-                from ......media.usb import credentials
+            from asmcnc.production.database import credentials
 
         except ImportError:
             log("Can't import credentials")

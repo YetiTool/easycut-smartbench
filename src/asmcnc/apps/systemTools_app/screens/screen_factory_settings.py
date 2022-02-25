@@ -463,8 +463,10 @@ class FactorySettingsScreen(Screen):
 
             if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
+            os.system("cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py")
+
             print("Credentials file found on USB")
-            self.calibration_db.set_up_connection("usb")
+            self.calibration_db.set_up_connection()
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -593,6 +595,7 @@ class FactorySettingsScreen(Screen):
 
         def nested_factory_reset():
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
+                os.system("rm ./asmcnc/production/database/credentials.py")
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
