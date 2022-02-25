@@ -615,7 +615,7 @@ class FactorySettingsScreen(Screen):
             if nested_factory_reset():
 
                 print("doing factory reset...")
-                Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(self.close_sw, 5)
 
         else:
 
@@ -650,6 +650,9 @@ class FactorySettingsScreen(Screen):
                     warning_message = 'There was an issue doing the factory reset! Get Letty for help.'
                     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
+
+    def close_sw(self):
+        sys.exit()
 
 
     def shutdown_console(self, dt):
