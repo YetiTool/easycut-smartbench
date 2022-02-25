@@ -595,7 +595,7 @@ class FactorySettingsScreen(Screen):
     def remove_creds_file(self):
 
         try: 
-            os.system("rm ./asmcnc/production/database/credentials.py")
+            os.system("rm ./asmcnc/production/database/credentials.py*")
 
         except:
             pass
