@@ -651,7 +651,7 @@ class FactorySettingsScreen(Screen):
                     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
 
-    def close_sw(self):
+    def close_sw(self, dt):
         sys.exit()
 
 
