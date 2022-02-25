@@ -265,7 +265,7 @@ class OvernightTesting(Screen):
 
     def measure(self):
         if self.overnight_running:
-            if not self.m.s.sg_z_motor_axis == "-999":
+            if not self.m.s.sg_z_motor_axis == -999:
                 if len(self.z_vals) > 0:
                     cur_pos = self.m.mpos_z()
                     if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
@@ -279,7 +279,7 @@ class OvernightTesting(Screen):
                 self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
                 self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
-            if not self.m.s.sg_y_axis == "-999":
+            if not self.m.s.sg_y_axis == -999:
                 if len(self.y_vals) > 0:
                     cur_pos = self.m.mpos_y()
                     if self.y_vals[len(self.y_vals)-1][1] <  cur_pos:
@@ -299,7 +299,7 @@ class OvernightTesting(Screen):
                 self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
                 self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
 
-            if not self.m.s.sg_x_motor_axis == "-999":
+            if not self.m.s.sg_x_motor_axis == -999:
                 if len(self.x_vals) > 0:
                     cur_pos = self.m.mpos_x()
                     if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
