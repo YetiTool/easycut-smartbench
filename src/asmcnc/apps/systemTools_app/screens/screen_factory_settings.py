@@ -464,7 +464,7 @@ class FactorySettingsScreen(Screen):
             if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
             print("Credentials file found on USB")
-            self.calibration_db.set_up_connection("console")
+            self.calibration_db.set_up_connection("usb")
 
     ## EXIT BUTTONS
     def go_back(self):
