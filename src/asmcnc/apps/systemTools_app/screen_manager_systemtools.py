@@ -201,6 +201,7 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('retrieve_lb_cal_data')
         self.destroy_screen('calibration_testing')
         self.destroy_screen('overnight_testing')
+        self.destroy_screen('current_adjustment')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):

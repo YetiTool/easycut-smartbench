@@ -1043,6 +1043,9 @@ class SerialConnection(object):
                         if self.sm.has_screen('overnight_testing'):
                             self.sm.get_screen('overnight_testing').measure()
 
+                        if self.sm.has_screen('current_adjustment'):
+                            self.sm.get_screen('current_adjustment').measure()
+
                 elif part.startswith('Sp:'):
 
                     spindle_statistics = part[3:].split(',')

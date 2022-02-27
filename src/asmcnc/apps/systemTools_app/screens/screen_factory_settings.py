@@ -18,6 +18,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_download_LB_cal_data import DownloadLBCalDataScreen
+from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -295,7 +296,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 7
+                        rows: 8
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -321,6 +322,9 @@ Builder.load_string("""
                         Button:
                             text: 'Overnight test'
                             on_press: root.enter_overnight_test()
+                        Button:
+                            text: 'Current Adjustment'
+                            on_press: root.enter_current_adjustment()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -832,3 +836,10 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+    def enter_current_adjustment(self):
+        if not self.systemtools_sm.sm.has_screen('current_adjustment'):
+            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l)
+            self.systemtools_sm.sm.add_widget(current_adjustment)
+        
+        self.systemtools_sm.sm.current = 'current_adjustment'
