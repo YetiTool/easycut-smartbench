@@ -23,8 +23,17 @@ Circles:
 
 Also: 
 Distinguish effectively between modal (changing mode within gcode) and
-non-modal (just detailing more coordinates)
-As per Ed's original code
+non-modal (just detailing more coordinates). As per Ed's original code.
+
+NEXT (CURRENT) FOCUS:
+    set_job_envelope
+    line & ff: 104
+        parsing the parts in blocks and lines...
+    AIM:
+        A: Segregate effectively modal (with G) from just coordinate setting
+        B: Segregate effectively arcs (with G2 or G3)
+        C: Discount all other Gcodes for now - see https://github.com/gnea/grbl/wiki
+            G4 and above are 'out of scope' for now
 
 '''
 from distutils.errors import UnknownFileError
@@ -80,11 +89,11 @@ class BoundingBox():
         g_values = []
         # use sample data for now to prove a point 
         # these 'get through' but datum_x is still zero
-        sample_only_value = 1.1
-        x_values.append(sample_only_value)
-        y_values.append(sample_only_value+0.1)
-        z_values.append(sample_only_value+0.2)
-        g_values.append(sample_only_value+0.3)
+        # sample_only_value = 1.1
+        # x_values.append(sample_only_value)
+        # y_values.append(sample_only_value+0.1)
+        # z_values.append(sample_only_value+0.2)
+        # g_values.append(sample_only_value+0.3)
 
         values_list_xyzg = [x_values, y_values, z_values, g_values]
         includes_arcs = 0
