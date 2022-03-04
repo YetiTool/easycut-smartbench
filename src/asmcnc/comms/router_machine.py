@@ -2018,6 +2018,13 @@ class RouterMachine(object):
         # self.sg_y2_motor = int(sg_values[4])
 
         time.sleep(0.5)
+
+        self.print_tmc_registers(0)
+        self.print_tmc_registers(1)
+        self.print_tmc_registers(2)
+        self.print_tmc_registers(3)
+        self.print_tmc_registers(4)
+
         tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
 
         log("Sweep finished")
