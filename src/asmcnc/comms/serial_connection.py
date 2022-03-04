@@ -1104,25 +1104,8 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(tmc_registers[0])].temperatureCoefficient = int(tmc_registers[10])
                     self.m.TMC_motor[int(tmc_registers[0])].got_registers = True
 
-                    try: 
-
-                        TMC_registers_report_string = (
-                        "-------------------------------------" + "\n" + \
-                        "MOTOR ID: " + str(tmc_registers[0]) + "\n" + \
-                        "Driver Control Reg: " + str(self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0]) + "\n" + \
-                        "Chopper Config Reg: " + str(self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[1]) + "\n" + \
-                        "CoolStep Config Reg: " + str(self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[2]) + "\n" + \
-                        "Stall Guard Config Reg: " + str(self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[3]) + "\n" + \
-                        "Driver Config Reg: " + str(self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[4]) + "\n" + \
-                        "Active Current Scale: " + str(self.m.TMC_motor[int(tmc_registers[0])].ActiveCurrentScale) + "\n" + \
-                        "Idle Current Scale: " + str(self.m.TMC_motor[int(tmc_registers[0])].standStillCurrentScale) + "\n" + \
-                        "Stall Guard Threshold: " + str(self.m.TMC_motor[int(tmc_registers[0])].stallGuardAlarmThreshold) + "\n" + \
-                        "Max Stall Guard Step: " + str(self.m.TMC_motor[int(tmc_registers[0])].max_step_period_us_SG) + "\n" + \
-                        "Thermal Coefficient: " + str(self.m.TMC_motor[int(tmc_registers[0])].temperatureCoefficient) + "\n" + \
-                        "-------------------------------------"
-                        )
-
-                        map(log, TMC_registers_report_string.split("\n"))
+                    try:
+                        self.m.print_tmc_registers(int(tmc_registers[0]))
 
                     except:
                         log("Could not print TMC registers")
