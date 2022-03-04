@@ -85,11 +85,6 @@ class MotorCommandsTest(unittest.TestCase):
         self.status_and_PCB_constructor()
         assert self.m.s.m_state == "Idle", 'not idle'
 
-    def test_the_mock_interface(self):
-        """Test that we're getting statuses back"""
-        self.status_and_PCB_constructor()
-        assert self.m.s.m_state == "Idle", 'not idle'
-
     # def test_tmc_handshake_with_old_fw(self):
     #     """Test handshake with old FW"""
     #     self.status_and_PCB_constructor(ver='1.1.2')
