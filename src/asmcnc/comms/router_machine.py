@@ -1620,6 +1620,28 @@ class RouterMachine(object):
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
+    # PRINT REGISTERS
+
+    def print_tmc_registers(self, motor_idx):
+
+        TMC_registers_report_string = (
+        "-------------------------------------" + "\n" + \
+        "MOTOR ID: " + str(motor_idx) + "\n" + \
+        "Driver Control Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
+        "Chopper Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
+        "CoolStep Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
+        "Stall Guard Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
+        "Driver Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
+        "Active Current Scale: " + str(self.TMC_motor[int(motor_idx)].ActiveCurrentScale) + "\n" + \
+        "Idle Current Scale: " + str(self.TMC_motor[int(motor_idx)].standStillCurrentScale) + "\n" + \
+        "Stall Guard Threshold: " + str(self.TMC_motor[int(motor_idx)].stallGuardAlarmThreshold) + "\n" + \
+        "Max Stall Guard Step: " + str(self.TMC_motor[int(motor_idx)].max_step_period_us_SG) + "\n" + \
+        "Thermal Coefficient: " + str(self.TMC_motor[int(motor_idx)].temperatureCoefficient) + "\n" + \
+        "-------------------------------------"
+        )
+
+        map(log, TMC_registers_report_string.split("\n"))
+
 
     def send_command_to_motor(self, altDisplayText, motor=TMC_X1, command=SET_ACTIVE_CURRENT, value=0, printlog=True):
 
