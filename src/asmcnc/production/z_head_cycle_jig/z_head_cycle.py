@@ -169,11 +169,11 @@ class ZHeadCycle(Screen):
 
     def do_connection(self, dt):
         self.m.reconnect_serial_connection()
-        Clock.schedule_once(self.try_start_services, 5)
+        Clock.schedule_once(self.try_start_services, 0.4)
 
     def try_start_services(self, dt):
         if self.m.s.is_connected():
-            Clock.schedule_once(self.m.s.start_services, 10)
+            Clock.schedule_once(self.m.s.start_services, 1)
         else:
             Clock.schedule_once(self.try_start_services, 0.4)
 
