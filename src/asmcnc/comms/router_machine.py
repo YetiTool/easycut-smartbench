@@ -135,6 +135,8 @@ class RouterMachine(object):
         self.jd = job
         self.set_jog_limits()
 
+        self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
+
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(win_serial_port)
@@ -152,6 +154,17 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+    # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
+    def reconnect_serial_connection(self):
+        if self.s.is_connected():
+            self.s.s.close()
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
+        self.s.establish_connection(self.win_serial_port)
+
+    def close_serial_connection(self, dt):
+        if self.s.is_connected():
+            self.s.s.close()
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
