@@ -169,13 +169,12 @@ class ZHeadCycle(Screen):
 
     def do_connection(self, dt):
         self.m.reconnect_serial_connection()
-        Clock.schedule_once(self.try_start_services, 0.4)
+        self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 0.4)
 
     def try_start_services(self, dt):
         if self.m.s.is_connected():
+            Clock.unschedule(self.poll_for_reconnection)
             Clock.schedule_once(self.m.s.start_services, 1)
-        else:
-            Clock.schedule_once(self.try_start_services, 0.4)
 
     def disconnect(self):
         self.m.s.grbl_scanner_running = False
