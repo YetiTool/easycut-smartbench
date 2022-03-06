@@ -162,8 +162,9 @@ class ZHeadCycle(Screen):
         self.m.s.write_command('G53 G0 Z-1')
 
     def connect(self):
-        self.m.s.grbl_scanner_running = False
-        Clock.schedule_once(self.do_connection, 0.1)
+        if not self.m.starting_serial_connection:
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.do_connection, 0.1)
 
     def do_connection(self, dt):
         self.m.reconnect_serial_connection()

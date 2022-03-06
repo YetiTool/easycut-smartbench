@@ -279,7 +279,9 @@ class SerialConnection(object):
         t.start()
         
         # Clear any hard switch presses that may have happened during boot
-        self.m.bootup_sequence() 
+        self.m.bootup_sequence()
+
+        self.m.starting_serial_connection = False
 
 # SCANNER: listens for responses from Grbl
 
