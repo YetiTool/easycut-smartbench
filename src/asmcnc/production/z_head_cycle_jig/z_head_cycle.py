@@ -163,6 +163,7 @@ class ZHeadCycle(Screen):
 
     def connect(self):
         if not self.m.starting_serial_connection:
+            self.starting_serial_connection = True
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.do_connection, 0.1)
 
