@@ -32,7 +32,8 @@ Builder.load_string("""
 class LBCalibration1(Screen):
 
     timer_started = False
-    seconds = 60*30
+    one_minute = 60 # 60 seconds
+    seconds = one_minute*30
 
     def __init__(self, **kwargs):
         super(LBCalibration1, self).__init__(**kwargs)
@@ -46,19 +47,19 @@ class LBCalibration1(Screen):
             self.sm.current = 'lbc2'
 
         elif not self.timer_started:
-            Clock.schedule_once(lambda dt: self.start_calibration_timer(60), 5)
+            Clock.schedule_once(lambda dt: self.start_calibration_timer(), 5)
 
-    def start_calibration_timer(self, minutes):
+    def start_calibration_timer(self):
 
         if self.m.state().startswith('Idle'):
             self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
             self.m.jog_relative('X', 30, 6000)
-            self.update_time(30 * 60) # 30 minutes
+            self.update_time(30 * self.one_minute) # 30 minutes
             self.timer_started = True
 
         else: 
-            Clock.schedule_once(lambda dt: self.start_calibration_timer(60), 1)
+            Clock.schedule_once(lambda dt: self.start_calibration_timer(), 1)
 
     def update_time(self, time_left):
 

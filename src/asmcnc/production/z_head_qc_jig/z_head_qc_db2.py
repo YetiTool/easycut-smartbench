@@ -27,8 +27,9 @@ class ZHeadQCDB2(Screen):
         sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
+        serial_number = self.serial_number.replace(" ", "").lower()
         
-        self.calibration_db.send_z_head_calibration(self.serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
+        self.calibration_db.send_z_head_calibration(serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
 
     def on_enter(self):
         try:

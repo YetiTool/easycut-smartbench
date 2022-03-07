@@ -7,6 +7,7 @@ import math
 import traceback
 from time import sleep
 import threading
+from datetime import datetime
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -264,30 +265,32 @@ class OvernightTesting(Screen):
 
 
     def measure(self):
+        #motor_driver_temp,pcb_temp,transistor_heatsink_temp
+
         if self.overnight_running:
-            if not self.m.s.sg_z_motor_axis == "-999":
+            if not self.m.s.sg_z_motor_axis == -999:
                 if len(self.z_vals) > 0:
                     cur_pos = self.m.mpos_z()
                     if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
-                        self.z_vals.append([1, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
+                        self.z_vals.append([1, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                     else:
-                        self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
+                        self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                 else:
-                    self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis])
+                    self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
 
                 self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
                 self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals))
                 self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
-            if not self.m.s.sg_y_axis == "-999":
+            if not self.m.s.sg_y_axis == -999:
                 if len(self.y_vals) > 0:
                     cur_pos = self.m.mpos_y()
                     if self.y_vals[len(self.y_vals)-1][1] <  cur_pos:
-                        self.y_vals.append([1, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
+                        self.y_vals.append([1, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                     else:
-                        self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
+                        self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                 else:
-                    self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor])
+                    self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
 
                 self.raw_y_vals.append(self.m.s.sg_y_axis)
                 self.raw_y1_vals.append(self.m.s.sg_y1_motor)
@@ -299,15 +302,15 @@ class OvernightTesting(Screen):
                 self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
                 self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
 
-            if not self.m.s.sg_x_motor_axis == "-999":
+            if not self.m.s.sg_x_motor_axis == -999:
                 if len(self.x_vals) > 0:
                     cur_pos = self.m.mpos_x()
                     if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
-                        self.x_vals.append([1, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
+                        self.x_vals.append([1, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                     else:
-                        self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
+                        self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
                 else:
-                    self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis])
+                    self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
 
                 self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
                 self.x_peak_load.text = "X: " + str(max(self.raw_x_vals))
