@@ -152,6 +152,7 @@ class CurrentAdjustment(Screen):
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
+        self.reset_currents()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
