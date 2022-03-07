@@ -58,6 +58,7 @@ class CurrentAdjustmentWidget(Widget):
         self.m = kwargs['m']
         self.motor = kwargs['motor']
         self.l = kwargs['localization']
+        self.systemtools_sm = kwargs['systemtools']
 
         self.motor_name_dict = {TMC_X1:'X', TMC_Y1:'Y1', TMC_Y2:'Y2'}
         self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
