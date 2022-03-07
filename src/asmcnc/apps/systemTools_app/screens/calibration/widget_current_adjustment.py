@@ -58,7 +58,7 @@ class CurrentAdjustmentWidget(Widget):
         self.motor = kwargs['motor']
 
         self.motor_name_dict = {TMC_X1:'X', TMC_Y1:'Y1', TMC_Y2:'Y2'}
-        self.current_current = self.m.TMC_motor[self.motor].calibrated_at_current_setting
+        self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
         self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
 
     def current_up(self):
@@ -74,6 +74,6 @@ class CurrentAdjustmentWidget(Widget):
             self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
 
     def reset_current(self):
-        self.current_current = self.m.TMC_motor[self.motor].calibrated_at_current_setting
+        self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
         self.m.send_command_to_motor('SET ACTIVE CURRENT ' + self.motor_name_dict[self.motor] + ' ' + str(self.current_current), motor=self.motor, command=SET_ACTIVE_CURRENT, value=self.current_current)
         self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
