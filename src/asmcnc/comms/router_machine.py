@@ -951,7 +951,7 @@ class RouterMachine(object):
 
     def tmc_handshake(self):
 
-        if self.s.fw_version:
+        if self.s.fw_version and self.state().startswith('Idle'):
 
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
@@ -959,8 +959,8 @@ class RouterMachine(object):
                 self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
         else: 
-            # In case handshake is too soon, it keeps trying until it can read a FW version
-            self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
+            # In case handshake is too soon, it tries one more time to see if it can read a FW version
+            self.handshake_event = Clock.schedule_once(lambda dt: self.tmc_handshake(), 10)
 
 # CRITICAL START/STOP
 
