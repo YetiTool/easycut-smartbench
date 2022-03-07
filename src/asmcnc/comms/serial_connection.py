@@ -315,10 +315,10 @@ class SerialConnection(object):
 
             del self.write_realtime_buffer[0:(realtime_counter)]
 
-            # if self.write_protocol_buffer and self.last_protocol_send_time + 0.05 < time.time():
-            #     protocol_command = self.write_protocol_buffer[0]
-            #     self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
-            #     del self.write_protocol_buffer[0]
+            if self.write_protocol_buffer and self.last_protocol_send_time + 0.05 < time.time():
+                protocol_command = self.write_protocol_buffer[0]
+                self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
+                del self.write_protocol_buffer[0]
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
