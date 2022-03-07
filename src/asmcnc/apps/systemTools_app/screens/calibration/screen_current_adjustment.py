@@ -136,13 +136,13 @@ class CurrentAdjustment(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         # Current adjustment widgets
-        self.x_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1)
+        self.x_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.x_current_adjustment_widget)
 
-        self.y1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y1)
+        self.y1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y1, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y1_current_adjustment_widget)
 
-        self.y2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y2)
+        self.y2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y2, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y2_current_adjustment_widget)
 
         self.clear_sg_vals()
