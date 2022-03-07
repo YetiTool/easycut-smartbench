@@ -71,10 +71,10 @@ class ZHeadCycleApp(App):
         squaring_active_screen = SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
         sm.add_widget(squaring_active_screen)
 
-        z_head_cycle = ZHeadCycle(name='cycle', sm = sm, m = m, l=l, sett=sett, jd=jd)
+        z_head_cycle = ZHeadCycle(name='lobby', sm = sm, m = m, l=l, sett=sett, jd=jd)
         sm.add_widget(z_head_cycle)
 
-        sm.current = 'cycle'
+        sm.current = 'lobby'
         return sm
 
 if __name__ == '__main__':
