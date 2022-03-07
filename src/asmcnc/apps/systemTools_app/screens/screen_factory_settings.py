@@ -296,7 +296,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 8
+                        rows: 7
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -322,9 +322,9 @@ Builder.load_string("""
                         Button:
                             text: 'Overnight test'
                             on_press: root.enter_overnight_test()
-                        Button:
-                            text: 'Current Adjustment'
-                            on_press: root.enter_current_adjustment()
+                        # Button:
+                        #     text: 'Current Adjustment'
+                        #     on_press: root.enter_current_adjustment()
 
             BoxLayout:
                 size_hint: (None,None)
