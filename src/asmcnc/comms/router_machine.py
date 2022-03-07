@@ -951,7 +951,7 @@ class RouterMachine(object):
 
     def tmc_handshake(self):
 
-        if self.s.fw_version:
+        if self.s.fw_version and self.state().startswith('Idle'):
 
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
