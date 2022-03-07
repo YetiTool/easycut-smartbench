@@ -311,11 +311,11 @@ Builder.load_string("""
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
                         Button:
-                            text: 'Retrieve LB cal data'
-                            on_press: root.enter_retrieve_screen()
-                        Button:
                             text: 'Final test'
                             on_press: root.final_test()
+                        Button:
+                            text: 'Retrieve LB cal data'
+                            on_press: root.enter_retrieve_screen()
                         Button:
                             text: 'SG & Load test'
                             on_press: root.enter_calibration_test()
@@ -805,11 +805,14 @@ class FactorySettingsScreen(Screen):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
     def enter_retrieve_screen(self):
-        if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
-            retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, system_tools = self.systemtools_sm, calibration_db = self.calibration_db)
-            self.systemtools_sm.sm.add_widget(retrieve_lb_cal_data)
+        if self.calibration_db.conn != None:
+            if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
+                retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, system_tools = self.systemtools_sm, calibration_db = self.calibration_db)
+                self.systemtools_sm.sm.add_widget(retrieve_lb_cal_data)
         
-        self.systemtools_sm.sm.current = 'retrieve_lb_cal_data'
+            self.systemtools_sm.sm.current = 'retrieve_lb_cal_data'
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
     def enter_calibration_test(self):
         if self.calibration_db.conn != None:
