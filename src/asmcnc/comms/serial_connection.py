@@ -1069,6 +1069,8 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
                     self.m.TMC_motor[int(index)].calibrated_at_temperature = int(all_cal_data_list[131])
 
+                else:
+                    continue
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
