@@ -1315,39 +1315,39 @@ class SerialConnection(object):
 
                 elif protocol == True:
                         self.s.write(serialCommand)
-                        # self.last_protocol_send_time = time.time()
+                        self.last_protocol_send_time = time.time()
 
             except:
 
-                # try:
+                try:
 
-                #     if not protocol:
-                #         log("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
-                #         self.get_serial_screen('Could not write last command to serial buffer.')
+                    if not protocol:
+                        log("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
 
-                #     else:
-                #         log("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
-                #         self.get_serial_screen('Could not write last command to serial buffer.')
+                    else:
+                        log("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
 
-                # except:
+                except:
                     log("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
 
 
-        # else:
+        else:
 
-        #     try:
-        #         if not protocol:
-        #             log("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
-        #             self.get_serial_screen('Could not write last command to serial buffer.')
+            try:
+                if not protocol:
+                    log("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
 
-        #         else:
-        #             log("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
-        #             self.get_serial_screen('Could not write last command to serial buffer.')
-        #     except:
+                else:
+                    log("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+            except:
 
-        #         log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
-        #         self.get_serial_screen('Could not write last command to serial buffer.')
+                log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                self.get_serial_screen('Could not write last command to serial buffer.')
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
