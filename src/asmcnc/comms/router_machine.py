@@ -958,9 +958,9 @@ class RouterMachine(object):
             if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
                 self.send_command_to_motor(altDisplayText="GET REGISTERS", command=GET_REGISTERS)
 
-        # else: 
-        #     # In case handshake is too soon, it keeps trying until it can read a FW version
-        #     self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
+        else: 
+            # In case handshake is too soon, it tries one more time to see if it can read a FW version
+            self.handshake_event = Clock.schedule_once(lambda dt: self.tmc_handshake(), 10)
 
 # CRITICAL START/STOP
 
