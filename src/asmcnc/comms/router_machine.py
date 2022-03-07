@@ -1621,17 +1621,17 @@ class RouterMachine(object):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
 
-    # PRINT REGISTERS
+    # PRINT REGISTERS print("0x{:08X}".format(
     def print_tmc_registers(self, motor_idx):
 
         TMC_registers_report_string = (
         "-------------------------------------" + "\n" + \
         "MOTOR ID: " + str(motor_idx) + "\n" + \
-        "Driver Control Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
-        "Chopper Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
-        "CoolStep Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
-        "Stall Guard Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
-        "Driver Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
+        "Driver Control Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
+        "Chopper Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
+        "CoolStep Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
+        "Stall Guard Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
+        "Driver Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
         "Active Current Scale: " + str(self.TMC_motor[int(motor_idx)].ActiveCurrentScale) + "\n" + \
         "Idle Current Scale: " + str(self.TMC_motor[int(motor_idx)].standStillCurrentScale) + "\n" + \
         "Stall Guard Threshold: " + str(self.TMC_motor[int(motor_idx)].stallGuardAlarmThreshold) + "\n" + \
@@ -2018,6 +2018,13 @@ class RouterMachine(object):
         # self.sg_y2_motor = int(sg_values[4])
 
         time.sleep(0.5)
+
+        self.print_tmc_registers(0)
+        self.print_tmc_registers(1)
+        self.print_tmc_registers(2)
+        self.print_tmc_registers(3)
+        self.print_tmc_registers(4)
+
         tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
 
         log("Sweep finished")
