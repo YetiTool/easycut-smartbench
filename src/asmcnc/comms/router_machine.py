@@ -1817,7 +1817,7 @@ class RouterMachine(object):
     toff_max = 10 # 10
     sgt_max = 20 # 20
 
-    reference_temp = 45.0
+    reference_temp = 55.0
 
 
     def reset_tuning_flags(self):
@@ -1900,7 +1900,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if ((self.reference_temp - 15) <= self.s.motor_driver_temp <= (self.reference_temp + 15)):
+        if ((self.reference_temp - 10) <= self.s.motor_driver_temp <= (self.reference_temp + 10)):
 
             log("Temperature reads valid, check machine is Idle...")
 
@@ -2186,7 +2186,7 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
-        if ((self.reference_temp - 15) > current_temperature > (self.reference_temp + 15)):
+        if ((self.reference_temp - 10) > current_temperature > (self.reference_temp + 10)):
 
             log("Temperatures out of expected range! Check set-up!")
             self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
