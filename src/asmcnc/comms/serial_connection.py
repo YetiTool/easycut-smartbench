@@ -1147,6 +1147,8 @@ class SerialConnection(object):
                     except:
                         log("Could not print calibration output")
 
+                # else:
+                #     continue
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
@@ -1360,7 +1362,6 @@ class SerialConnection(object):
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
             serialCommand = str(serialCommand)
-
 
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:

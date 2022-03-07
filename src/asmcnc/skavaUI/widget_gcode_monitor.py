@@ -248,7 +248,7 @@ class GCodeMonitor(Widget):
             if input_or_output == 'snd': self.monitor_text_buffer.append( '> ' + content)
             if input_or_output == 'rec': self.monitor_text_buffer.append(content)
             if input_or_output == 'debug': self.monitor_text_buffer.append(content)
-            
+        
     
     def update_display_text(self, dt):   
 
