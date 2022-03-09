@@ -951,7 +951,7 @@ class RouterMachine(object):
 
     def tmc_handshake(self):
 
-        if self.s.fw_version:
+        if self.s.fw_version and self.state().startswith('Idle'):
 
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
@@ -959,8 +959,8 @@ class RouterMachine(object):
                 self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
         else: 
-            # In case handshake is too soon, it keeps trying until it can read a FW version
-            self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
+            # In case handshake is too soon, it tries one more time to see if it can read a FW version
+            self.handshake_event = Clock.schedule_once(lambda dt: self.tmc_handshake(), 10)
 
 # CRITICAL START/STOP
 
@@ -1620,6 +1620,28 @@ class RouterMachine(object):
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
+
+    # PRINT REGISTERS print("0x{:08X}".format(
+    def print_tmc_registers(self, motor_idx):
+
+        TMC_registers_report_string = (
+        "-------------------------------------" + "\n" + \
+        "MOTOR ID: " + str(motor_idx) + "\n" + \
+        "Driver Control Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
+        "Chopper Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
+        "CoolStep Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
+        "Stall Guard Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
+        "Driver Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
+        "Active Current Scale: " + str(self.TMC_motor[int(motor_idx)].ActiveCurrentScale) + "\n" + \
+        "Idle Current Scale: " + str(self.TMC_motor[int(motor_idx)].standStillCurrentScale) + "\n" + \
+        "Stall Guard Threshold: " + str(self.TMC_motor[int(motor_idx)].stallGuardAlarmThreshold) + "\n" + \
+        "Max Stall Guard Step: " + str(self.TMC_motor[int(motor_idx)].max_step_period_us_SG) + "\n" + \
+        "Thermal Coefficient: " + str(self.TMC_motor[int(motor_idx)].temperatureCoefficient) + "\n" + \
+        "-------------------------------------"
+        )
+
+        map(log, TMC_registers_report_string.split("\n"))
+
     #####################################################################
     # PROTOCOL MOTOR FUNCTIONS - USE THIS TO SEND ANY MOTOR COMMANDS
     #####################################################################
@@ -1795,7 +1817,7 @@ class RouterMachine(object):
     toff_max = 10 # 10
     sgt_max = 20 # 20
 
-    reference_temp = 45.0
+    reference_temp = 55.0
 
 
     def reset_tuning_flags(self):
@@ -1878,7 +1900,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if ((self.reference_temp - 15) <= self.s.motor_driver_temp <= (self.reference_temp + 15)):
+        if ((self.reference_temp - 10) <= self.s.motor_driver_temp <= (self.reference_temp + 10)):
 
             log("Temperature reads valid, check machine is Idle...")
 
@@ -1996,6 +2018,13 @@ class RouterMachine(object):
         # self.sg_y2_motor = int(sg_values[4])
 
         time.sleep(0.5)
+
+        self.print_tmc_registers(0)
+        self.print_tmc_registers(1)
+        self.print_tmc_registers(2)
+        self.print_tmc_registers(3)
+        self.print_tmc_registers(4)
+
         tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
 
         log("Sweep finished")
@@ -2157,7 +2186,7 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
-        if ((self.reference_temp - 15) > current_temperature > (self.reference_temp + 15)):
+        if ((self.reference_temp - 10) > current_temperature > (self.reference_temp + 10)):
 
             log("Temperatures out of expected range! Check set-up!")
             self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"

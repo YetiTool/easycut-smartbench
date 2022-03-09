@@ -82,6 +82,6 @@ class LBCalibration4(Screen):
         sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
-        serial_number = self.serial_no_input.text.replace(" ", "")
+        serial_number = self.serial_no_input.text.replace(" ", "").lower()
         
         self.calibration_db.send_lower_beam_calibration(serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
