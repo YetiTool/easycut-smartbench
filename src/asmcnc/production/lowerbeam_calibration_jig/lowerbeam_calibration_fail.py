@@ -1,14 +1,15 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
 
-import datetime
+import os, sys
 
 Builder.load_string("""
-<ZHeadQC5>:
+<LBCalibrationFail>:
+    success_label:success_label
+
     canvas:
         Color:
-            rgba: hex('#FF9E40FF')
+            rgba: [1,0,0,1]
         Rectangle:
             pos:self.pos
             size: self.size
@@ -34,27 +35,31 @@ Builder.load_string("""
             rows: 2
 
             Label:
-                text: 'Calibration complete!'
+                id: success_label
+                text: 'Database update failed'
                 font_size: dp(50)
             
             Button:
-                on_press: root.enter_next_screen()
-                text: 'OK'
+                on_press: root.retry_send()
+                text: 'RETRY DATA SEND'
                 font_size: dp(30)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
 """)
 
-class ZHeadQC5(Screen):
+class LBCalibrationFail(Screen):
     def __init__(self, **kwargs):
-        super(ZHeadQC5, self).__init__(**kwargs)
+        super(LBCalibrationFail, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc2'
+        self.sm.current = 'lbc4'
 
-    def enter_next_screen(self):
-        self.sm.current = 'qcDB1'
+    def retry_send(self):
+        self.sm.current = 'lbc4'
+
+    def set_serial_no(self, serial_no):
+        self.success_label.text = 'Database update failed: ' + serial_no

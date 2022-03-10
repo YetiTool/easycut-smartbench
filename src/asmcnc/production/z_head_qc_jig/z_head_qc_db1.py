@@ -1,17 +1,9 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
-
-import datetime
 
 Builder.load_string("""
-<ZHeadQC5>:
-    canvas:
-        Color:
-            rgba: hex('#FF9E40FF')
-        Rectangle:
-            pos:self.pos
-            size: self.size
+<ZHeadQCDB1>:
+    serial_no_input:serial_no_input
 
     BoxLayout:
         orientation: 'vertical'
@@ -31,24 +23,36 @@ Builder.load_string("""
 
         GridLayout:
             cols: 1
-            rows: 2
+            rows: 3
+
+            spacing: 50
+
+            GridLayout:
+                cols: 1
+                rows: 1
+
+                padding: [200, 0]
+
+                TextInput:
+                    id: serial_no_input
+                    font_size: dp(50)
+                    multiline: False
 
             Label:
-                text: 'Calibration complete!'
+                text: '^ Enter ZH Serial number: ^'
                 font_size: dp(50)
-            
+
             Button:
                 on_press: root.enter_next_screen()
                 text: 'OK'
                 font_size: dp(30)
-                size_hint_y: 0.2
-                size_hint_x: 0.3
+                size_hint_y: 0.6
 
 """)
 
-class ZHeadQC5(Screen):
+class ZHeadQCDB1(Screen):
     def __init__(self, **kwargs):
-        super(ZHeadQC5, self).__init__(**kwargs)
+        super(ZHeadQCDB1, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
@@ -57,4 +61,7 @@ class ZHeadQC5(Screen):
         self.sm.current = 'qc2'
 
     def enter_next_screen(self):
-        self.sm.current = 'qcDB1'
+        self.sm.get_screen('qcDB3').set_serial_no(self.serial_no_input.text)
+        self.sm.get_screen('qcDB4').set_serial_no(self.serial_no_input.text)
+        self.sm.get_screen('qcDB2').set_serial_no(self.serial_no_input.text)
+        self.sm.current = 'qcDB2'

@@ -1,14 +1,11 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
-
-import datetime
 
 Builder.load_string("""
-<ZHeadQC5>:
+<LBCalibration3>:
     canvas:
         Color:
-            rgba: hex('#FF9E40FF')
+            rgba: hex('#4CAF50FF')
         Rectangle:
             pos:self.pos
             size: self.size
@@ -18,7 +15,7 @@ Builder.load_string("""
         size_hint_y: 1.00
 
         Button:
-            text: '<<< Back'
+            text: '<<< REPEAT CALIBRATION'
             on_press: root.enter_prev_screen()
             text_size: self.size
             markup: 'True'
@@ -46,15 +43,15 @@ Builder.load_string("""
 
 """)
 
-class ZHeadQC5(Screen):
+class LBCalibration3(Screen):
     def __init__(self, **kwargs):
-        super(ZHeadQC5, self).__init__(**kwargs)
+        super(LBCalibration3, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc2'
+        self.sm.current = 'lbc2'
 
     def enter_next_screen(self):
-        self.sm.current = 'qcDB1'
+        self.sm.current = 'lbc4'

@@ -70,15 +70,22 @@ class SerialConnection(object):
         self.l = localization
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
+        self.FINAL_TEST = False
 
     def __del__(self):
+        self.s.close()
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
 
-        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
-            self.sm.current = 'serialScreen'
+        try:
+            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+                self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
+                self.sm.current = 'serialScreen'
+
+        except:
+            log("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
+            log("Serial error: " + str(serial_error))
 
 
     def is_port_SmartBench(self, available_port):
@@ -401,6 +408,8 @@ class SerialConnection(object):
     stream_paused_accumulated_time = 0
 
     check_streaming_started = False
+
+    NOT_SKELETON_STUFF = True # do buffer stuffing in "skeleton mode" - no go/job screens/spindle moves etc. 
     
     def check_job(self, job_object):
         
@@ -443,16 +452,10 @@ class SerialConnection(object):
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)
-
-        def set_streaming_flags_to_true():
-            # self.m.set_pause(False) # moved to go screen for timing reasons
-            self.is_stream_lines_remaining = True
-            self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
-            log('Job running')           
+        ### (if not initialised - come back to this one later w/ pausing functionality)    
 
         if self.initialise_job() and self.jd.job_gcode_running:
-            Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
                                        
         elif not self.jd.job_gcode_running:
             log('Could not start job: File empty')
@@ -465,9 +468,28 @@ class SerialConnection(object):
             self.m.zUp()
   
         self.FLUSH_FLAG = True
+        self.NOT_SKELETON_STUFF = True
         time.sleep(0.1)
         self._reset_counters()
         return True
+
+
+    # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
+    def run_skeleton_buffer_stuffer(self, gcode_obj):
+        self.jd.job_gcode_running = gcode_obj
+
+        log('Skeleton buffer stuffing starting...')
+        # SET UP FOR BUFFER STUFFING ONLY: 
+        ### (if not initialised - come back to this one later w/ pausing functionality)    
+
+        self.FLUSH_FLAG = True
+        self.NOT_SKELETON_STUFF = False
+        time.sleep(0.1)
+        self._reset_counters()
+
+        if self.jd.job_gcode_running:
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
+
 
     def _reset_counters(self):
         
@@ -478,6 +500,12 @@ class SerialConnection(object):
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
+
+    def set_streaming_flags_to_true(self):
+        # self.m.set_pause(False) # moved to go screen for timing reasons
+        self.is_stream_lines_remaining = True
+        self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
+        log('Job running')
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -526,28 +554,36 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
+        log("Ending stream...")
+
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
 
-        if self.m_state != "Check":
+        if self.NOT_SKELETON_STUFF:
 
-            if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
-                self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
-                self.sm.current = 'spindle_cooldown'
+            if self.m_state != "Check":
+
+                if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
+                    Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
+                    self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
+                    self.sm.current = 'spindle_cooldown'
+                else:
+                    self.m.spindle_off()
+                    time.sleep(0.4)
+                    self.update_machine_runtime()
+                    self.sm.current = 'job_feedback'
+
             else:
-                self.m.spindle_off()
-                time.sleep(0.4)
-                self.update_machine_runtime()
-                self.sm.current = 'job_feedback'
+                self.check_streaming_started = False
+                self.m.disable_check_mode()
+                self.suppress_error_screens = False
+                self._reset_counters()
 
         else:
-            self.check_streaming_started = False
-            self.m.disable_check_mode()
-            self.suppress_error_screens = False
             self._reset_counters()
+            self.NOT_SKELETON_STUFF = True
 
         self.jd.job_gcode_running = []
         self.jd.percent_thru_job = 100
@@ -643,8 +679,8 @@ class SerialConnection(object):
     g28_z = '0.0'
 
     # Feeds and speeds
-    spindle_speed = '0.0'
-    feed_rate = '0.0'
+    spindle_speed = 0
+    feed_rate = 0
 
     # Analogue spindle feedback
     spindle_load_voltage = None
@@ -676,8 +712,8 @@ class SerialConnection(object):
     hw_version = ''
 
     # TEMPERATURES
-    pcb_temp = None
     motor_driver_temp = None
+    pcb_temp = None
     transistor_heatsink_temp = None
 
     # VOLTAGES
@@ -687,11 +723,14 @@ class SerialConnection(object):
     spindle_speed_monitor_mV = None
 
     # STALL GUARD
-    z_motor_axis = None
-    x_motor_axis = None
-    y_axis = None
-    y1_motor = None
-    y2_motor = None
+    sg_z_motor_axis = None
+    sg_x_motor_axis = None
+    sg_y_axis = None
+    sg_y1_motor = None
+    sg_y2_motor = None
+
+    # FOR CALIBRATION TUNING
+    tuning_flag = False
 
     # SPINDLE STATISTICS
     spindle_serial_number = None
@@ -933,8 +972,8 @@ class SerialConnection(object):
                         log("ERROR status parse: Temperature invalid: " + message)
                         return
 
-                    self.pcb_temp = float(temps[0])
-                    self.motor_driver_temp = float(temps[1])
+                    self.motor_driver_temp = float(temps[0])
+                    self.pcb_temp = float(temps[1])
 
                     try:
                         float(temps[2])
@@ -981,11 +1020,31 @@ class SerialConnection(object):
                         log("ERROR status parse: SG values invalid: " + message)
                         return
 
-                    self.z_motor_axis = int(sg_values[0])
-                    self.x_motor_axis = int(sg_values[1])
-                    self.y_axis = int(sg_values[2])
-                    self.y1_motor = int(sg_values[3])
-                    self.y2_motor = int(sg_values[4])
+                    self.sg_z_motor_axis = int(sg_values[0])
+                    self.sg_x_motor_axis = int(sg_values[1])
+                    self.sg_y_axis = int(sg_values[2])
+                    self.sg_y1_motor = int(sg_values[3])
+                    self.sg_y2_motor = int(sg_values[4])
+
+                    if self.tuning_flag:
+
+                        self.m.temp_sg_array.append([
+                                                    self.sg_z_motor_axis,
+                                                    self.sg_x_motor_axis,
+                                                    self.sg_y_axis,
+                                                    self.sg_y1_motor,
+                                                    self.sg_y2_motor
+                                                ])
+
+                    if self.FINAL_TEST:
+                        if self.sm.has_screen('calibration_testing'):
+                            self.sm.get_screen('calibration_testing').measure()
+
+                        if self.sm.has_screen('overnight_testing'):
+                            self.sm.get_screen('overnight_testing').measure()
+
+                        if self.sm.has_screen('current_adjustment'):
+                            self.sm.get_screen('current_adjustment').measure()
 
                 elif part.startswith('Sp:'):
 
@@ -1053,7 +1112,7 @@ class SerialConnection(object):
 
                 elif part.startswith('TCAL:M'):
 
-                    [index, all_cal_data] = part[6:].split(':')
+                    [motor_index, all_cal_data] = part[6:].split(':')
                     all_cal_data_list = all_cal_data.strip(',').split(',')
 
                     try: 
@@ -1063,11 +1122,30 @@ class SerialConnection(object):
                         log("ERROR status parse: TCAL registers invalid: " + message)
                         return
 
-                    self.m.TMC_motor[int(index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
-                    self.m.TMC_motor[int(index)].calibrated_at_current_setting = int(all_cal_data_list[128])
-                    self.m.TMC_motor[int(index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
-                    self.m.TMC_motor[int(index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
-                    self.m.TMC_motor[int(index)].calibrated_at_temperature = int(all_cal_data_list[131])
+                    self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting = int(all_cal_data_list[128])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
+
+
+                    try: 
+
+                        calibration_report_string = (
+                        "-------------------------------------" + "\n" + \
+                        "MOTOR ID: " + str(int(motor_index)) + "\n" + \
+                        "Calibration coefficients: " + str(all_cal_data_list[0:128]) + "\n" + \
+                        "Current setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting) + "\n" + \
+                        "SGT setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting) + "\n" + \
+                        "TOFF setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting) + "\n" + \
+                        "Calibration temperature: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_temperature) + "\n" + \
+                        "-------------------------------------"
+                        )
+
+                        map(log, calibration_report_string.split("\n"))
+
+                    except:
+                        log("Could not print calibration output")
 
                 # else:
                 #     continue

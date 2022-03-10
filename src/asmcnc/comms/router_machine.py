@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging
+import logging, threading, re
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
@@ -823,7 +823,7 @@ class RouterMachine(object):
     
         # Z 
         self.z_max_jog_abs_limit = -self.limit_switch_safety_distance
-        self.z_min_jog_abs_limit = -self.grbl_z_max_travel       
+        self.z_min_jog_abs_limit = -self.grbl_z_max_travel
 
 
 # HW/FW VERSION CAPABILITY
@@ -956,7 +956,7 @@ class RouterMachine(object):
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
             if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
-                self.send_command_to_motor(altDisplayText="GET REGISTERS", command=GET_REGISTERS)
+                self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
         else: 
             # In case handshake is too soon, it tries one more time to see if it can read a FW version
@@ -1620,18 +1620,18 @@ class RouterMachine(object):
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
-    # PRINT REGISTERS
 
+    # PRINT REGISTERS print("0x{:08X}".format(
     def print_tmc_registers(self, motor_idx):
 
         TMC_registers_report_string = (
         "-------------------------------------" + "\n" + \
         "MOTOR ID: " + str(motor_idx) + "\n" + \
-        "Driver Control Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
-        "Chopper Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
-        "CoolStep Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
-        "Stall Guard Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
-        "Driver Config Reg: " + str(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
+        "Driver Control Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[0]) + "\n" + \
+        "Chopper Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[1]) + "\n" + \
+        "CoolStep Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[2]) + "\n" + \
+        "Stall Guard Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[3]) + "\n" + \
+        "Driver Config Reg: " + "0x{:08X}".format(self.TMC_motor[int(motor_idx)].shadowRegisters[4]) + "\n" + \
         "Active Current Scale: " + str(self.TMC_motor[int(motor_idx)].ActiveCurrentScale) + "\n" + \
         "Idle Current Scale: " + str(self.TMC_motor[int(motor_idx)].standStillCurrentScale) + "\n" + \
         "Stall Guard Threshold: " + str(self.TMC_motor[int(motor_idx)].stallGuardAlarmThreshold) + "\n" + \
@@ -1642,6 +1642,9 @@ class RouterMachine(object):
 
         map(log, TMC_registers_report_string.split("\n"))
 
+    #####################################################################
+    # PROTOCOL MOTOR FUNCTIONS - USE THIS TO SEND ANY MOTOR COMMANDS
+    #####################################################################
 
     def send_command_to_motor(self, altDisplayText, motor=TMC_X1, command=SET_ACTIVE_CURRENT, value=0, printlog=True):
 
@@ -1728,3 +1731,828 @@ class RouterMachine(object):
         self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] & ~ (           mask   << shift) #clear
         self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] |   ( ( value & mask ) << shift) #set
         return self.TMC_motor[motor].shadowRegisters[register]
+
+    #####################################################################
+    # CALIBRATION AND TUNNING PROCEDURES
+    #####################################################################
+
+    # CALL THESE FROM MAIN APP
+
+    calibration_tuning_fail_info = ''
+
+    # QUERY THIS FLAG AFTER CALLING TUNING FUNCTIONS, TO SEE IF TUNING HAS FINISHED
+    tuning_in_progress = False
+
+    def tune_X_and_Z_for_calibration(self):
+
+        self.tuning_in_progress = True
+        log("Tuning X and Z...")
+        self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.tuning_jog_forwards_fast(X = True, Y = False, Z = True)
+        self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
+
+    def tune_Y_for_calibration(self):
+
+        self.tuning_in_progress = True
+        log("Tuning Y...")
+        self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.tuning_jog_forwards_fast(X = False, Y = True, Z = False)
+        self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
+
+    # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
+    run_calibration = False
+
+    def calibrate_X_and_Z(self):
+
+        self.run_calibration = True
+        log("Calibrating X and Z...")
+        self.initialise_calibration(X = True, Y = False, Z = True)
+
+    def calibrate_Y(self):
+
+        self.run_calibration = True
+        log("Calibrating Y...")
+        self.initialise_calibration(X = False, Y = True, Z = False)
+
+
+    # MEAT OF TUNING - DON'T CALL FROM MAIN APP
+
+    # Zero position
+    # Enable raw SG reporting: command REPORT_RAW_SG
+    # Check that machine is reporting sensible temperatures
+    # Check that machine is Idle
+    # Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
+    # Sweep TOFF in the range 2-10
+    # Sweep SGT in the range 0-20
+    # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid. Average the remaining 8 points. 
+    # Adjust target SG based on temperature (example)
+    # Find the TOFF/SGT combination which gives the SG reading nearest to target SG (500 in this case)
+    # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
+    # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS 
+    # Disable raw SG reporting: command REPORT_RAW_SG
+
+
+    toff_and_sgt_found = False
+    tuning_poll = None
+    x_toff_tuned = None
+    x_sgt_tuned = None
+    y1_toff_tuned = None
+    y1_sgt_tuned = None
+    y2_toff_tuned = None
+    y2_sgt_tuned = None
+    z_toff_tuned = None
+    z_sgt_tuned = None
+
+    temp_sg_array = []
+
+    time_to_check_for_tuning_prep = 0
+
+    temp_toff = 2
+    temp_sgt = 0
+
+    toff_max = 10 # 10
+    sgt_max = 20 # 20
+
+    reference_temp = 55.0
+
+
+    def reset_tuning_flags(self):
+
+        log("Reset tuning flags")
+
+        self.toff_and_sgt_found = False
+        self.tuning_poll = None
+        self.x_toff_tuned = None
+        self.x_sgt_tuned = None
+        self.y1_toff_tuned = None
+        self.y1_sgt_tuned = None
+        self.y2_toff_tuned = None
+        self.y2_sgt_tuned = None
+        self.z_toff_tuned = None
+        self.z_sgt_tuned = None
+
+        self.temp_sg_array = []
+
+        self.temp_toff = 2
+        self.temp_sgt = 0
+
+    # ALL MOTORS ARE FREE RUNNING
+    def prepare_for_tuning(self):
+
+        log("Prepare for tuning")
+        self.calibration_tuning_fail_info = ''
+
+        self.s.write_command('$20=0')
+
+        # Enable raw SG reporting: command REPORT_RAW_SG
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
+
+        self.reset_tuning_flags()
+
+        # Zero position
+        log("Zero position")
+        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
+        self.time_to_check_for_tuning_prep = time.time()
+
+    # CHECK SG VALUES FIRST (TO MAKE SURE THEY'RE RAW)
+    def check_SGs_rezero_and_go_to_next_checks_then_tune(self, X = False, Y = False, Z = False):
+
+        SG_to_check = None
+
+        if Z: SG_to_check = self.s.sg_z_motor_axis
+        elif X: SG_to_check = self.s.sg_x_motor_axis
+        elif Y: SG_to_check = self.s.sg_y1_motor
+
+
+        if 200 < SG_to_check < 950:
+
+            self.quit_jog()
+
+            log("SG values in range - re-zero")
+
+            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
+            self.time_to_check_for_tuning_prep = time.time()
+            Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z), 2)
+
+
+        elif (self.time_to_check_for_tuning_prep + 180) < time.time():
+            # raise error popup
+            log("RAW SG VALUES NOT ENABLED")
+            self.calibration_tuning_fail_info = "Raw SG values are still not enabled or reads are bad after 3 mins"
+            Clock.schedule_once(self.finish_tuning, 0.1)
+
+        else: 
+            if self.state().startswith('Idle'):
+                self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                self.tuning_jog_forwards_fast(X=X, Y=Y, Z=Z)
+
+            Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 1)
+
+
+
+    def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
+
+        if ((self.reference_temp - 10) <= self.s.motor_driver_temp <= (self.reference_temp + 10)):
+
+            log("Temperature reads valid, check machine is Idle...")
+
+            self.time_to_check_for_tuning_prep = time.time()
+            Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 2)
+
+        elif (self.time_to_check_for_tuning_prep + 15) < time.time():
+            # raise error popup
+            log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
+            self.calibration_tuning_fail_info = "Temps aren't in expected range (30-60), motor_driver_temp is: " + str(self.s.motor_driver_temp)
+            Clock.schedule_once(self.finish_tuning, 0.1)
+
+
+        else: 
+            Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z), 3)
+
+
+    # NEED TO ADD IN WHAT HAPPENS IF TIME RUNS OUT ELSES HERE ALSO
+    def is_machine_idle_for_tuning(self, X = False, Y = False, Z = False):
+
+        if self.state().startswith('Idle'):
+
+            log("Ready for tuning, start slow jog...")
+            log("Start tuning...")
+            self.start_tuning(X,Y,Z)
+
+        elif (self.time_to_check_for_tuning_prep + 120) < time.time():
+            # raise error popup
+            log("STILL NOT IDLE ??")
+            self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(self.finish_tuning, 0.1)
+
+        else: 
+            Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 5)
+
+
+
+    def start_slow_tuning_jog(self, X = False, Y = False, Z = False):
+
+        # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
+
+        if X and Z and not Y: 
+            self.s.write_command('$J = G91 X2000 Z-200 F301.5')
+
+        elif Y: 
+            self.s.write_command('$J = G91 Y2000 F300')
+
+        elif X: 
+            self.s.write_command('$J = G91 X2000 F300')
+
+        elif Z:
+            self.s.write_command('$J = G91 Z-200 F30')
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
+
+    def tuning_jog_back_fast(self, X=False, Y=False, Z=False):
+
+        if X and Z and not Y: 
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
+
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
+
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, 6000)
+
+        elif Z: 
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
+
+    def tuning_jog_forwards_fast(self, X=False, Y=False, Z=False):
+
+        if X and Z and not Y: 
+            self.s.write_command('$J=G53 X-1192 Z-149 F6046')
+
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
+
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 6000)
+
+        elif Z: 
+            self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+
+        # does not yet handle: 
+        # - X, Y, Z
+        # - X and Y
+        # - Y and Z
+
+    def start_tuning(self, X, Y, Z):
+
+        # start thread
+        tune_thread = threading.Thread(target=self.do_tuning, args=(X, Y, Z))
+        tune_thread.daemon = True
+        tune_thread.start()
+
+        # start poll - this will check when toff and sgt parameters have been found, and then apply settings
+        self.tuning_poll = Clock.schedule_interval(lambda dt: self.apply_tuned_settings(X=X, Y=Y, Z=Z), 10)
+
+
+    def do_tuning(self, X, Y, Z):
+
+        # ORDER IS: 
+        # self.sg_z_motor_axis = int(sg_values[0])
+        # self.sg_x_motor_axis = int(sg_values[1])
+        # self.sg_y_axis = int(sg_values[2]) (this depends on y1 and y2 motors)
+        # self.sg_y1_motor = int(sg_values[3])
+        # self.sg_y2_motor = int(sg_values[4])
+
+        time.sleep(0.5)
+
+        self.print_tmc_registers(0)
+        self.print_tmc_registers(1)
+        self.print_tmc_registers(2)
+        self.print_tmc_registers(3)
+        self.print_tmc_registers(4)
+
+        tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
+
+        log("Sweep finished")
+
+        try: 
+
+            if X: 
+                X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
+                self.x_toff_tuned, self.x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
+
+            if Y: 
+                Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
+                self.y1_toff_tuned, self.y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
+                self.y2_toff_tuned, self.y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
+
+            if Z: 
+                Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
+                self.z_toff_tuned, self.z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
+
+        except: 
+
+            log("Could not complete tuning! Check log for errors")
+            Clock.unschedule(self.tuning_poll)
+            Clock.schedule_once(self.finish_tuning, 0.1)
+            return
+
+
+        self.toff_and_sgt_found = True
+
+
+    def sweep_toff_and_sgt_and_motor_driver_temp(self, X = False, Y = False, Z = False):
+
+        temperature_list = []
+
+        # Sweep TOFF in the range 2-10
+        # Sweep SGT in the range 0-20
+        # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid.
+
+        # having empty initial values, so that running through indices with 
+        # self.temp_toff and self.temp_sgt is easy and readable :) 
+
+        tuning_array = [[[] for sgt_holder in xrange(self.sgt_max + 1)] for toff_holder in xrange(self.toff_max + 1)]
+
+
+        while self.temp_toff <= self.toff_max:
+
+            # Commands have to be sent at least 0.05 s apart, so sleeps after commands are sent give time for each command to be sent and recieved
+
+            if X: 
+                self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
+                time.sleep(0.1)
+            if Y: 
+                self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
+                time.sleep(0.2)
+            if Z: 
+                self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
+                time.sleep(0.1)
+
+            while self.temp_sgt <= self.sgt_max:
+
+                if X: 
+                    self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
+                    time.sleep(0.1)
+                if Y: 
+                    self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
+                    self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
+                    time.sleep(0.2)
+                if Z: 
+                    self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
+                    time.sleep(0.1)
+
+                while len(self.temp_sg_array) <= 15:
+
+                    # Keep jogging!
+                    if self.state().startswith('Idle'):
+                        log('Idle - restart jogs')
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
+                        self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
+                        self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
+                        time.sleep(0.01)
+
+                    # But don't measure the backwards fast jogs!
+                    elif self.feed_rate() > 303:
+                        log('Feed rate too high, skipping')
+                        self.s.tuning_flag = False
+                        self.temp_sg_array = []
+                        time.sleep(1)
+
+                    # Record if conditions are good :)
+                    else:
+                        self.s.tuning_flag = True
+                        time.sleep(0.01)
+
+                self.s.tuning_flag = False
+
+                tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
+                self.temp_sg_array = []
+
+                log("SWEPT TOFF AND SGT: " + str(self.temp_toff) + ", " + str(self.temp_sgt))
+
+                temperature_list.append(self.s.motor_driver_temp)
+
+                self.temp_sgt = self.temp_sgt + 1
+
+            self.temp_sgt = 0
+            self.temp_toff = self.temp_toff + 1
+
+        try:
+            avg_temperature = sum(temperature_list) / len(temperature_list)
+            log("Average temperature: " + str(avg_temperature))
+            return tuning_array, avg_temperature
+
+        except: 
+            log("BAD TEMPERATURES! CAN'T CALIBRATE")
+
+
+    def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
+
+        # idx is motor/axis index
+
+        log("Find best combo for axis idx: " + str(idx) + ", target: " + str(target_SG))
+
+        # toff, sgt, dsg
+        prev_best = [None, None, None]
+
+        for toff in range(2,self.toff_max + 1):
+            for sgt in range(0,self.sgt_max + 1):
+
+                try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
+
+                # compare delta sg (between read in and target)
+                # if it's smaller than any values found previously, then it's better, so save it
+                try:
+                    if abs(try_dsg) < abs(prev_best[2]):
+                        prev_best = [toff, sgt, try_dsg]
+
+                except:
+                    if prev_best[2] == None:
+                        prev_best = [toff, sgt, try_dsg]
+
+        # at end of loop, prev_best == best
+        log("FOUND FOR IDX: " + str(idx) + ":" + str(prev_best[0]) + "," + str(prev_best[1]) + "," + str(prev_best[2]))
+
+        return prev_best[0], prev_best[1]
+
+
+    def average_points_in_sub_array(self, sub_array, index):
+        # Average the remaining 8 points. 
+        just_idx_sgs = [sg_arr[index] for sg_arr in sub_array]
+        avg_idx = sum(just_idx_sgs) / len(just_idx_sgs)
+        return avg_idx
+
+
+    def get_target_SG_from_current_temperature(self, motor, current_temperature):
+        # To start with lets stick to
+        # target temp = 45C
+        # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
+        # use "Motor Driver temperature"
+
+        if ((self.reference_temp - 10) > current_temperature > (self.reference_temp + 10)):
+
+            log("Temperatures out of expected range! Check set-up!")
+            self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
+            return
+
+        reference_SG = 500
+
+        if motor == 'X':
+            gradient_per_Celsius = 4000.0
+            rpm = 300.0/(3200/(170/3))
+
+        elif motor == 'Y':
+            gradient_per_Celsius = 1500.0
+            rpm = 300.0/(3200/(170/3))
+
+        elif motor == 'Z':
+            gradient_per_Celsius = 4000.0
+            rpm = 30.0/(3200/(1066.67))
+
+        delta_to_current_temperature = self.reference_temp - current_temperature
+        step_us = 60000000 / (rpm * 3200)
+        compensation_SG_offset = gradient_per_Celsius/1000000 * delta_to_current_temperature * step_us
+        target_SG = reference_SG + int(compensation_SG_offset)
+
+        log("Calculate target SG " + str(motor) + ": " + str(target_SG))
+
+        return target_SG
+
+
+    def apply_tuned_settings(self, X = False, Y = False, Z = False):
+
+        # NB: ALL THE SETTINGS HERE WILL TAKE A FEW SECONDS TO COMPLETE
+
+        if self.toff_and_sgt_found:
+
+            log("TOFF and SGT found - applying settings")
+
+            if not self.tuning_poll: Clock.unschedule(self.tuning_poll)
+
+            # Stop slow jog
+            self.quit_jog()
+
+            # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
+
+            if X: 
+                self.send_command_to_motor("SET TOFF X " + str(self.x_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x_toff_tuned)
+                self.send_command_to_motor("SET SGT X " + str(self.x_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x_sgt_tuned)
+            if Y: 
+                self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
+                self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
+                self.send_command_to_motor("SET SGT Y1 " + str(self.y1_sgt_tuned), motor = TMC_Y1, command = SET_SGT, value = self.y1_sgt_tuned)
+                self.send_command_to_motor("SET SGT Y2 " + str(self.y2_sgt_tuned), motor = TMC_Y2, command = SET_SGT, value = self.y2_sgt_tuned)
+            if Z: 
+                self.send_command_to_motor("SET TOFF Z " + str(self.z_toff_tuned), motor = TMC_Z, command = SET_TOFF, value = self.z_toff_tuned)
+                self.send_command_to_motor("SET SGT Z " + str(self.z_sgt_tuned), motor = TMC_Z, command = SET_SGT, value = self.z_sgt_tuned)
+
+            Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
+
+
+    def store_tuned_settings_and_unset_raw_SG_reporting(self, dt):
+
+        log("Storing TMC parameters in EEPROM")
+
+        # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS
+        self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+
+        # Disable raw SG reporting: command REPORT_RAW_SG
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=0)
+
+        # Read registers back in
+        self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
+
+        Clock.schedule_once(self.finish_tuning, 3) # Give settings plenty of time to be sent and parsed
+
+
+    def finish_tuning(self, dt):
+
+        self.s.write_command('$20=1')
+
+        log("Tuning complete")
+
+        self.reset_tuning_flags()
+        self.tuning_in_progress = False
+
+
+    # MEAT OF CALIBRATION FUNCTIONS - DON'T CALL FROM MAIN APP
+
+    x_ready_to_calibrate = False
+    y_ready_to_calibrate = False
+    z_ready_to_calibrate = False
+
+    poll_for_x_ready = None
+    poll_for_y_ready = None
+    poll_for_z_ready = None
+
+    time_to_check_for_calibration_prep = 0
+
+    def initialise_calibration(self, X=False, Y=False, Z=False):
+
+        log("Initialise Calibration")
+
+        self.calibration_tuning_fail_info = ''
+
+        self.s.write_command('$20=0')
+
+        self.s.write_command('$J=G53 X0 F6000')
+        self.s.write_command('$J=G53 Y0 F6000')
+        self.s.write_command('$J=G53 Z0 F750')
+
+        if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
+        if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
+        if Z: self.poll_for_z_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
+
+        # Only sets one ready to begin with
+        if X: self.x_ready_to_calibrate = True
+        elif Y: self.y_ready_to_calibrate = True
+        elif Z: self.z_ready_to_calibrate = True
+
+
+    def do_calibrate_x(self, dt):
+
+        if self.x_ready_to_calibrate:
+
+            log("Calibrate X")
+
+            Clock.unschedule(self.poll_for_x_ready)
+            self.poll_for_x_ready = None
+            self.x_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('X')
+
+    def do_calibrate_y(self, dt):
+
+        if self.y_ready_to_calibrate:
+
+            log("Calibrate Y")
+
+            Clock.unschedule(self.poll_for_y_ready)
+            self.poll_for_y_ready = None
+            self.y_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('Y')
+
+
+    def do_calibrate_z(self, dt):
+
+        if self.z_ready_to_calibrate:
+
+            log("Calibrate Z")
+
+            Clock.unschedule(self.poll_for_z_ready)
+            self.poll_for_z_ready = None
+            self.z_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('Z')
+
+    def check_idle_and_buffer_then_start_calibration(self, axis): 
+
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            if axis == 'X': 
+                calibrate_mode = 32
+                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE X AXIS"
+
+            if axis == 'Y': 
+                calibrate_mode = 64
+                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE Y AXIS"
+
+            if axis == 'Z': 
+                calibrate_mode = 128
+                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
+                altDisplayText = "CALIBRATE Z AXIS"
+
+            self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 10)
+
+        elif (self.time_to_check_for_calibration_prep + 120) < time.time():
+
+            # gives error message to popup
+            log("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
+            self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
+
+        else: 
+            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 2)
+
+
+    def stream_calibration_file(self, filename):
+
+        with open(filename) as f:
+            calibration_gcode_pre_scrubbed = f.readlines()
+
+        calibration_gcode = [self.quick_scrub(line) for line in calibration_gcode_pre_scrubbed]
+
+        log("Calibrating...")
+
+        self.s.run_skeleton_buffer_stuffer(calibration_gcode)
+        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
+
+    def quick_scrub(self, line):
+
+        l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())
+        return l_block
+
+
+    def post_calibration_file_stream(self, dt):
+
+        if self.state().startswith('Idle'):
+
+            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_calibration_file_stream)
+                self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+                
+                # FW needs 5 seconds to compute & store after calibration
+                Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
+
+
+    def do_next_axis_or_finish_calibration_sequence(self):
+
+            # X is always first, so check y and then z
+            if self.poll_for_y_ready != None: self.y_ready_to_calibrate = True
+            elif self.poll_for_z_ready != None: self.z_ready_to_calibrate = True
+            else: self.save_calibration_coefficients_to_motor_classes()
+
+
+    def save_calibration_coefficients_to_motor_classes(self):
+
+        self.s.write_command('$20=1')
+        self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
+
+
+    def complete_calibration(self):
+
+        self.x_ready_to_calibrate = False
+        self.y_ready_to_calibrate = False
+        self.z_ready_to_calibrate = False
+
+        self.poll_for_x_ready = None
+        self.poll_for_y_ready = None
+        self.poll_for_z_ready = None
+
+        self.time_to_check_for_calibration_prep = 0
+
+        self.run_calibration = False
+
+        log("Calibration complete")
+
+
+    # UPLOADING CALIBRATION TO FW:
+    calibration_upload_in_progress = False
+    calibration_upload_fail_info = ''
+
+    def upload_Z_calibration_settings_from_motor_class(self):
+
+        self.calibration_upload_in_progress = True
+        self.calibration_upload_fail_info = ''
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
+
+    def upload_Y_calibration_settings_from_motor_classes(self):
+        self.calibration_upload_in_progress = True
+        self.calibration_upload_fail_info = ''
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 0.5)
+
+
+    time_to_check_for_upload_prep = 0
+
+    def initialise_calibration_upload(self, axis):
+
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            if axis == 'X': 
+                calibrate_mode = 32
+                altDisplayText = "UPLOAD CALIBRATION TO X AXIS"
+                motor_index = TMC_X1
+
+            if axis == 'Y': 
+                calibrate_mode = 64
+                altDisplayText = "UPLOAD CALIBRATION TO Y AXIS"
+                motor_index = TMC_Y1
+
+            if axis == 'Z': 
+                calibrate_mode = 128
+                altDisplayText = "UPLOAD CALIBRATION TO Z AXIS"
+                motor_index = TMC_Z
+
+            self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+
+            upload_cal_thread = threading.Thread(target=self.do_calibration_upload, args=(motor_index,))
+            upload_cal_thread.daemon = True
+            upload_cal_thread.start()
+
+        elif (self.time_to_check_for_upload_prep + 120) < time.time():
+            log("PROBLEM! Can't initialise calibration upload")
+            self.calibration_upload_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
+            Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 0.1)
+
+        else: 
+            Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 2)
+
+
+    def do_calibration_upload(self, motor_index):
+
+        # # CALIBRATION PARAMS
+        # calibration_dataset_SG_values   = []
+        # calibrated_at_current_setting   = 0
+        # calibrated_at_sgt_setting       = 0
+        # calibrated_at_toff_setting      = 0
+        # calibrated_at_temperature       = 0
+
+        time.sleep(5) # allow time for calibration mode to initialise
+        second_motor = None
+
+        if (motor_index == TMC_X1) or (motor_index == TMC_Y1): # second motor
+
+            second_motor = motor_index + 1
+
+        data_length = len(self.TMC_motor[int(motor_index)].calibration_dataset_SG_values) + 4
+
+        for idx in range(data_length - 4):
+            self.send_one_calibration_upload_value(motor_index, idx, self.TMC_motor[int(motor_index)].calibration_dataset_SG_values[idx])
+
+            if second_motor:
+                self.send_one_calibration_upload_value(second_motor, idx, self.TMC_motor[int(second_motor)].calibration_dataset_SG_values[idx])
+
+        self.send_calibration_parameters(motor_index, data_length)
+        if second_motor: self.send_calibration_parameters(second_motor, data_length)
+
+        Clock.schedule_once(lambda dt: self.tell_FW_to_finish_calibration_upload(), 5)
+
+
+    def send_calibration_parameters(self, motor_index, data_length):
+
+        self.send_one_calibration_upload_value(motor_index, data_length - 4, self.TMC_motor[int(motor_index)].calibrated_at_current_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 3, self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 2, self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
+        self.send_one_calibration_upload_value(motor_index, data_length - 1, self.TMC_motor[int(motor_index)].calibrated_at_temperature)
+
+
+    def send_one_calibration_upload_value(self, motor_index, idx, val):
+
+        altDisplayText = "UPLOAD CAL: M" + str(motor_index) + ":I" + str(idx) + ":COEFF " + str(val)
+
+        constructed_value  = (motor_index << 24)      & 0xFF000000
+        constructed_value |= (idx   << 16)      & 0x00FF0000
+        constructed_value |= (val)              & 0x0000FFFF
+
+        self.send_command_to_motor(altDisplayText, motor = motor_index, command=UPLOAD_CALIBR_VALUE, value = constructed_value)
+        time.sleep(0.1)
+
+
+    def tell_FW_to_finish_calibration_upload(self):
+        self.send_command_to_motor("FINISH UPLOAD", command=SET_CALIBR_MODE, value=2)
+        Clock.schedule_once(lambda dt: self.output_uploaded_coefficients(), 5)
+
+
+    def output_uploaded_coefficients(self):
+        self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
+
+
+    def complete_calibration_upload(self):
+        self.time_to_check_for_upload_prep = 0
+        self.calibration_upload_in_progress = False
+        log("Calibration upload complete")
+
+
