@@ -28,6 +28,10 @@
     pip:
       name: pytz
     ignore_errors: yes
+  - name: Install python-tds for calibration data upload
+    pip:
+      name: python-tds==1.11.0
+    ignore_errors: yes
   - name: Define glbal export for current tag
     template:
       src=profile-platform-v-var.sh

@@ -80,8 +80,6 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
-
-
 # developer testing
 Cmport = 'COM3'
 
@@ -265,7 +263,6 @@ class SkavaUI(App):
 		# 	Clock.schedule_interval(test_run_through_sequence, 3)
 
 		# Clock.schedule_once(start_loop, 10)
-
 
 		return sm
 

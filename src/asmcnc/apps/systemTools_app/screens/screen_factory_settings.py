@@ -5,6 +5,7 @@ Menu screen for system tools app
 @author: Letty
 '''
 import os
+import sys
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -13,6 +14,13 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+
+from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_download_LB_cal_data import DownloadLBCalDataScreen
+from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
+
+from asmcnc.production.database.calibration_database import CalibrationDatabase
 
 Builder.load_string("""
 
@@ -288,9 +296,9 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 4
+                        rows: 8
                         padding: 10
-                        spacing: 10
+                        spacing: 2
                         ToggleButton:
                             id: maintenance_reminder_toggle
                             text: 'Turn reminders off'
@@ -305,6 +313,18 @@ Builder.load_string("""
                         Button:
                             text: 'Final test'
                             on_press: root.final_test()
+                        Button:
+                            text: 'Retrieve LB cal data'
+                            on_press: root.enter_retrieve_screen()
+                        Button:
+                            text: 'SG & Load test'
+                            on_press: root.enter_calibration_test()
+                        Button:
+                            text: 'Overnight test'
+                            on_press: root.enter_overnight_test()
+                        Button:
+                            text: 'Current Adjustment'
+                            on_press: root.enter_current_adjustment()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -399,12 +419,15 @@ class FactorySettingsScreen(Screen):
 
     dev_mode = False
 
+    poll_for_creds_file = None
+
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.usb_stick = kwargs['usb_stick']
 
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -413,6 +436,9 @@ class FactorySettingsScreen(Screen):
 
         self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
+
+        #create calibration database
+        self.calibration_db = CalibrationDatabase()
 
         try: 
             serial_number_string = self.get_serial_number()
@@ -429,18 +455,40 @@ class FactorySettingsScreen(Screen):
             self.serial_number_input.text = '0000'
             self.product_number_input.text = '00'
 
+
+        # load in credentials and start db connection
+        self.usb_stick.usb_notifications = False
+        self.usb_stick.enable()
+        self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
+
+    def connect_to_db_when_creds_loaded(self, dt):
+
+        if "credentials.py" in os.listdir("/media/usb/"):
+
+            if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
+
+            print("Credentials file found on USB")
+            self.calibration_db.set_up_connection("console")
+
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
+        self.stop_usb_doing_stuff()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+        self.stop_usb_doing_stuff()
+
+    def stop_usb_doing_stuff(self):
+        self.usb_stick.usb_notifications = True
+        self.usb_stick.disable()
+        if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
     def on_enter(self):
+        self.usb_stick.usb_notifications = False
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
-
 
     def set_toggle_buttons(self):
 
@@ -658,9 +706,10 @@ class FactorySettingsScreen(Screen):
     def set_smartbench_model(self):
         self.update_product_code_with_model()
         print('Writing ' + self.smartbench_model.text)
-        file = open(self.smartbench_model_path, "w+")
-        file.write(str(self.smartbench_model.text))
-        file.close()
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            file = open(self.smartbench_model_path, "w+")
+            file.write(str(self.smartbench_model.text))
+            file.close()
 
     def get_smartbench_model(self):
         try:
@@ -755,3 +804,45 @@ class FactorySettingsScreen(Screen):
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
+    def enter_retrieve_screen(self):
+        if self.calibration_db.conn != None:
+            if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
+                retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, system_tools = self.systemtools_sm, calibration_db = self.calibration_db)
+                self.systemtools_sm.sm.add_widget(retrieve_lb_cal_data)
+        
+            self.systemtools_sm.sm.current = 'retrieve_lb_cal_data'
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+    def enter_calibration_test(self):
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('calibration_testing'):
+                    calibration_testing = CalibrationTesting(name='calibration_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm, l = self.l)
+                    self.systemtools_sm.sm.add_widget(calibration_testing)
+                
+                self.systemtools_sm.sm.current = 'calibration_testing'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+    def enter_overnight_test(self):
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('overnight_testing'):
+                    overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm, l = self.l)
+                    self.systemtools_sm.sm.add_widget(overnight_testing)
+                
+                self.systemtools_sm.sm.current = 'overnight_testing'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+    def enter_current_adjustment(self):
+        if not self.systemtools_sm.sm.has_screen('current_adjustment'):
+            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l)
+            self.systemtools_sm.sm.add_widget(current_adjustment)
+        
+        self.systemtools_sm.sm.current = 'current_adjustment'

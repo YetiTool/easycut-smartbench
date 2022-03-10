@@ -1095,3 +1095,4 @@ class PopupShutdown(Widget):
         cancel_button.bind(on_press=popup.dismiss)
 
         popup.open()
+

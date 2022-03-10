@@ -11,27 +11,51 @@ then
         mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
 fi
 
+# Run all apps from src folder
 cd /home/pi/easycut-smartbench/src/
 
-# execute python
-exec python main.py
-sleep 5
+if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
 
-# check if running
-echo "check main.py running"
-if ! ps ax | grep "[p]ython main.py"
-then
-        echo "no main instance found - trying git reset"
-        git reset --hard
-        exec python main.py
-        if ! ps ax | grep "[p]ython main.py"
+        if [ -f /home/pi/YETI_ZHEADQC_PROD_JIG.txt ]
         then
-                if [ -d  "/home/pi/easycut-smartbench-backup" ]
-                then
-                        echo "force copy of easycut-smartbench-backup back into easycut-smartbench"
-                        cp -RTf /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
-                        exec python main.py
-                fi
+                echo "Running Z Head QC app"
+                exec python z_head_qc_app.py
+
+
+        elif [ -f /home/pi/YETI_LBQC_PROD_JIG.txt ]
+        then
+                echo "Running LB QC app"
+                exec python lower_beam_qc_app.py
+
+
+        elif [ -f /home/pi/YETI_LBCAL_PROD_JIG.txt ]
+        then
+                echo "Running LB Calibration app"
+                exec python lb_calibration_app.py
+
         fi
 
+else
+        
+        # execute python
+        exec python main.py
+        sleep 5
+
+        # check if running
+        echo "check main.py running"
+        if ! ps ax | grep "[p]ython main.py"
+        then
+                echo "no main instance found - trying git reset"
+                git reset --hard
+                exec python main.py
+                if ! ps ax | grep "[p]ython main.py"
+                then
+                        if [ -d  "/home/pi/easycut-smartbench-backup" ]
+                        then
+                                echo "force copy of easycut-smartbench-backup back into easycut-smartbench"
+                                cp -RTf /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
+                                exec python main.py
+                        fi
+                fi
+        fi
 fi

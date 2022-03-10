@@ -50,6 +50,9 @@ class SerialConnection(object):
     
     write_command_buffer = []
     write_realtime_buffer = []
+    write_protocol_buffer = []
+
+    last_protocol_send_time = 0
     
     monitor_text_buffer = ""
     overload_state = 0
@@ -67,15 +70,22 @@ class SerialConnection(object):
         self.l = localization
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
+        self.FINAL_TEST = False
 
     def __del__(self):
+        self.s.close()
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
 
-        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
-            self.sm.current = 'serialScreen'
+        try:
+            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+                self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
+                self.sm.current = 'serialScreen'
+
+        except:
+            log("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
+            log("Serial error: " + str(serial_error))
 
 
     def is_port_SmartBench(self, available_port):
@@ -312,6 +322,11 @@ class SerialConnection(object):
 
             del self.write_realtime_buffer[0:(realtime_counter)]
 
+            if self.write_protocol_buffer and self.last_protocol_send_time + 0.05 < time.time():
+                protocol_command = self.write_protocol_buffer[0]
+                self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
+                del self.write_protocol_buffer[0]
+
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
                 # Read line in from serial buffer
@@ -393,6 +408,8 @@ class SerialConnection(object):
     stream_paused_accumulated_time = 0
 
     check_streaming_started = False
+
+    NOT_SKELETON_STUFF = True # do buffer stuffing in "skeleton mode" - no go/job screens/spindle moves etc. 
     
     def check_job(self, job_object):
         
@@ -435,16 +452,10 @@ class SerialConnection(object):
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)
-
-        def set_streaming_flags_to_true():
-            # self.m.set_pause(False) # moved to go screen for timing reasons
-            self.is_stream_lines_remaining = True
-            self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
-            log('Job running')           
+        ### (if not initialised - come back to this one later w/ pausing functionality)    
 
         if self.initialise_job() and self.jd.job_gcode_running:
-            Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
                                        
         elif not self.jd.job_gcode_running:
             log('Could not start job: File empty')
@@ -457,9 +468,28 @@ class SerialConnection(object):
             self.m.zUp()
   
         self.FLUSH_FLAG = True
+        self.NOT_SKELETON_STUFF = True
         time.sleep(0.1)
         self._reset_counters()
         return True
+
+
+    # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
+    def run_skeleton_buffer_stuffer(self, gcode_obj):
+        self.jd.job_gcode_running = gcode_obj
+
+        log('Skeleton buffer stuffing starting...')
+        # SET UP FOR BUFFER STUFFING ONLY: 
+        ### (if not initialised - come back to this one later w/ pausing functionality)    
+
+        self.FLUSH_FLAG = True
+        self.NOT_SKELETON_STUFF = False
+        time.sleep(0.1)
+        self._reset_counters()
+
+        if self.jd.job_gcode_running:
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
+
 
     def _reset_counters(self):
         
@@ -470,6 +500,12 @@ class SerialConnection(object):
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
+
+    def set_streaming_flags_to_true(self):
+        # self.m.set_pause(False) # moved to go screen for timing reasons
+        self.is_stream_lines_remaining = True
+        self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
+        log('Job running')
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -518,28 +554,36 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
+        log("Ending stream...")
+
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
 
-        if self.m_state != "Check":
+        if self.NOT_SKELETON_STUFF:
 
-            if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
-                self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
-                self.sm.current = 'spindle_cooldown'
+            if self.m_state != "Check":
+
+                if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
+                    Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
+                    self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
+                    self.sm.current = 'spindle_cooldown'
+                else:
+                    self.m.spindle_off()
+                    time.sleep(0.4)
+                    self.update_machine_runtime()
+                    self.sm.current = 'job_feedback'
+
             else:
-                self.m.spindle_off()
-                time.sleep(0.4)
-                self.update_machine_runtime()
-                self.sm.current = 'job_feedback'
+                self.check_streaming_started = False
+                self.m.disable_check_mode()
+                self.suppress_error_screens = False
+                self._reset_counters()
 
         else:
-            self.check_streaming_started = False
-            self.m.disable_check_mode()
-            self.suppress_error_screens = False
             self._reset_counters()
+            self.NOT_SKELETON_STUFF = True
 
         self.jd.job_gcode_running = []
         self.jd.percent_thru_job = 100
@@ -635,9 +679,17 @@ class SerialConnection(object):
     g28_z = '0.0'
 
     # Feeds and speeds
-    spindle_speed = '0.0'
-    feed_rate = '0.0'
-    spindle_load_voltage = 0.0
+    spindle_speed = 0
+    feed_rate = 0
+
+    # Analogue spindle feedback
+    spindle_load_voltage = None
+
+    # Digital spindle feedback
+    digital_spindle_ld_qdA = None
+    digital_spindle_temperature = None
+    digital_spindle_kill_time = None
+    digital_spindle_mains_voltage = None
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -659,6 +711,37 @@ class SerialConnection(object):
     fw_version = ''
     hw_version = ''
 
+    # TEMPERATURES
+    motor_driver_temp = None
+    pcb_temp = None
+    transistor_heatsink_temp = None
+
+    # VOLTAGES
+    microcontroller_mV = None
+    LED_mV = None
+    PSU_mV = None
+    spindle_speed_monitor_mV = None
+
+    # STALL GUARD
+    sg_z_motor_axis = None
+    sg_x_motor_axis = None
+    sg_y_axis = None
+    sg_y1_motor = None
+    sg_y2_motor = None
+
+    # FOR CALIBRATION TUNING
+    tuning_flag = False
+
+    # SPINDLE STATISTICS
+    spindle_serial_number = None
+    spindle_production_year = None
+    spindle_production_week = None
+    spindle_firmware_version = None
+    spindle_total_run_time_seconds = None
+    spindle_brush_run_time_seconds = None
+    spindle_mains_frequency_hertz = None
+
+    # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
 
@@ -808,45 +891,265 @@ class SerialConnection(object):
                             self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
-                    self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
 
-                    if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
-                    elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
-                    elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
-                    elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
-                    elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
-                    elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
-                    else: log("Overload value not recognised")
+                    spindle_feedback = part.split(':')[1]
 
-                    # update stuff if there's a change
-                    if overload_mV_equivalent_state != self.overload_state:  
-                        self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
-                        log("Load voltage: " + str(self.spindle_load_voltage))
-                    
-                        try:
-                            self.sm.get_screen('go').update_overload_label(self.overload_state)
+                    if ',' in spindle_feedback:
 
-                            # Only report as a peak if state stays elevated for longer than 1 second
-                            if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                                self.prev_overload_state = self.overload_state
-                                Clock.schedule_once(self.check_for_sustained_peak, 1)
+                        digital_spindle_feedback = spindle_feedback.split(',')
+
+                        try: 
+                            int(digital_spindle_feedback[0])
+                            int(digital_spindle_feedback[1])
+                            int(digital_spindle_feedback[2])
+                            int(digital_spindle_feedback[3])
 
                         except:
-                            log('Unable to update overload state on go screen')
-                    
-                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
-                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
+                            log("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            return
+
+                        self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
+                        self.digital_spindle_temperature = int(digital_spindle_feedback[1])
+                        self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
+                        self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                    else: 
+
+                        try:
+                            int(spindle_feedback)
+
+                        except:
+                            log("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            return
+
+                        self.spindle_load_voltage = int(spindle_feedback)
+
+                        # gather spindle overload analogue voltage, and evaluate to general state
+
+                        if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
+                        elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
+                        elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
+                        elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
+                        elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
+                        elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
+                        else: log("Overload value not recognised")
+
+                        # update stuff if there's a change
+                        if overload_mV_equivalent_state != self.overload_state:  
+                            self.overload_state = overload_mV_equivalent_state
+                            log("Overload state change: " + str(self.overload_state))
+                            log("Load voltage: " + str(self.spindle_load_voltage))
+                        
+                            try:
+                                self.sm.get_screen('go').update_overload_label(self.overload_state)
+
+                                # Only report as a peak if state stays elevated for longer than 1 second
+                                if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                                    self.prev_overload_state = self.overload_state
+                                    Clock.schedule_once(self.check_for_sustained_peak, 1)
+
+                            except:
+                                log('Unable to update overload state on go screen')
+                        
+                        # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                        if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                            self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                            Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
 
-                else:
-                    continue
+                # TEMPERATURES
+                elif part.startswith('TC:'):
+                    temps = part[3:].split(',')
+
+                    try: 
+                        float(temps[0])
+                        float(temps[1])
+                    except:
+                        log("ERROR status parse: Temperature invalid: " + message)
+                        return
+
+                    self.motor_driver_temp = float(temps[0])
+                    self.pcb_temp = float(temps[1])
+
+                    try:
+                        float(temps[2])
+                        self.transistor_heatsink_temp = float(temps[2])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: Temperature invalid: " + message)
+                        return
+
+                # VOLTAGES
+                elif part.startswith('V:'):
+                    voltages = part[2:].split(',')
+                    try: 
+                        float(voltages[0])
+                        float(voltages[1])
+                        float(voltages[2])
+                        float(voltages[3])
+
+                    except:
+                        log("ERROR status parse: Voltage invalid: " + message)
+                        return
+
+                    self.microcontroller_mV = float(voltages[0])
+                    self.LED_mV = float(voltages[1])
+                    self.PSU_mV = float(voltages[2])
+                    self.spindle_speed_monitor_mV = float(voltages[3])
+
+
+                # SG VALUES
+                elif part.startswith('SG:'):
+                    sg_values = part[3:].split(',')
+
+                    try:
+                        int(sg_values[0])
+                        int(sg_values[1])
+                        int(sg_values[2])
+                        int(sg_values[3])
+                        int(sg_values[4])
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    self.sg_z_motor_axis = int(sg_values[0])
+                    self.sg_x_motor_axis = int(sg_values[1])
+                    self.sg_y_axis = int(sg_values[2])
+                    self.sg_y1_motor = int(sg_values[3])
+                    self.sg_y2_motor = int(sg_values[4])
+
+                    if self.tuning_flag:
+
+                        self.m.temp_sg_array.append([
+                                                    self.sg_z_motor_axis,
+                                                    self.sg_x_motor_axis,
+                                                    self.sg_y_axis,
+                                                    self.sg_y1_motor,
+                                                    self.sg_y2_motor
+                                                ])
+
+                    if self.FINAL_TEST:
+                        if self.sm.has_screen('calibration_testing'):
+                            self.sm.get_screen('calibration_testing').measure()
+
+                        if self.sm.has_screen('overnight_testing'):
+                            self.sm.get_screen('overnight_testing').measure()
+
+                        if self.sm.has_screen('current_adjustment'):
+                            self.sm.get_screen('current_adjustment').measure()
+
+                elif part.startswith('Sp:'):
+
+                    spindle_statistics = part[3:].split(',')
+
+                    try: 
+                        int(spindle_statistics[0])
+                        int(spindle_statistics[1])
+                        int(spindle_statistics[2])
+                        int(spindle_statistics[3])
+                        int(spindle_statistics[4])
+                        int(spindle_statistics[5])
+                        int(spindle_statistics[6])
+
+                    except:
+                        log("ERROR status parse: Sp values invalid: " + message)
+                        return
+
+                    self.spindle_serial_number = int(spindle_statistics[0])
+                    self.spindle_production_year = int(spindle_statistics[1])
+                    self.spindle_production_week = int(spindle_statistics[2])
+                    self.spindle_firmware_version = int(spindle_statistics[3])
+                    self.spindle_total_run_time_seconds = int(spindle_statistics[4])
+                    self.spindle_brush_run_time_seconds = int(spindle_statistics[5])
+                    self.spindle_mains_frequency_hertz = int(spindle_statistics[6])
+
+                elif part.startswith('TREG:'):
+
+                    tmc_registers = part[5:].split(',')
+
+                    try: 
+                        int(tmc_registers[0])
+                        int(tmc_registers[1])
+                        int(tmc_registers[2])
+                        int(tmc_registers[3])
+                        int(tmc_registers[4])
+                        int(tmc_registers[5])
+                        int(tmc_registers[6])
+                        int(tmc_registers[7])
+                        int(tmc_registers[8])
+                        int(tmc_registers[9])
+                        int(tmc_registers[10])
+
+                    except:
+                        log("ERROR status parse: TMC registers invalid: " + message)
+                        return
+
+                    self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0] = int(tmc_registers[1])
+                    self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[1] = int(tmc_registers[2])
+                    self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[2] = int(tmc_registers[3])
+                    self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[3] = int(tmc_registers[4])
+                    self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[4] = int(tmc_registers[5])
+                    self.m.TMC_motor[int(tmc_registers[0])].ActiveCurrentScale = int(tmc_registers[6])
+                    self.m.TMC_motor[int(tmc_registers[0])].standStillCurrentScale = int(tmc_registers[7])
+                    self.m.TMC_motor[int(tmc_registers[0])].stallGuardAlarmThreshold = int(tmc_registers[8])
+                    self.m.TMC_motor[int(tmc_registers[0])].max_step_period_us_SG = int(tmc_registers[9])
+                    self.m.TMC_motor[int(tmc_registers[0])].temperatureCoefficient = int(tmc_registers[10])
+                    self.m.TMC_motor[int(tmc_registers[0])].got_registers = True
+
+                    try:
+                        self.m.print_tmc_registers(int(tmc_registers[0]))
+
+                    except:
+                        log("Could not print TMC registers")
+
+                elif part.startswith('TCAL:M'):
+
+                    [motor_index, all_cal_data] = part[6:].split(':')
+                    all_cal_data_list = all_cal_data.strip(',').split(',')
+
+                    try: 
+                        map(int, all_cal_data_list)
+
+                    except: 
+                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        return
+
+                    self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting = int(all_cal_data_list[128])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
+                    self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
+
+
+                    try: 
+
+                        calibration_report_string = (
+                        "-------------------------------------" + "\n" + \
+                        "MOTOR ID: " + str(int(motor_index)) + "\n" + \
+                        "Calibration coefficients: " + str(all_cal_data_list[0:128]) + "\n" + \
+                        "Current setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_current_setting) + "\n" + \
+                        "SGT setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting) + "\n" + \
+                        "TOFF setting: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting) + "\n" + \
+                        "Calibration temperature: " + str(self.m.TMC_motor[int(motor_index)].calibrated_at_temperature) + "\n" + \
+                        "-------------------------------------"
+                        )
+
+                        map(log, calibration_report_string.split("\n"))
+
+                    except:
+                        log("Could not print calibration output")
+
+                # else:
+                #     continue
+                # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
@@ -974,22 +1277,29 @@ class SerialConnection(object):
 
 
     def check_for_sustained_max_overload(self, dt):
-        
-        if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
-            
-            self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
-            self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
-            self.sm.current = 'spindle_shutdown'
 
-            try:
-                self.sm.get_screen('go').update_overload_peak(self.overload_state)
+        try:
 
-            except:
-                log('Unable to update overload peak on go screen')
+            if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+                
+                self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+                self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
+                self.sm.current = 'spindle_shutdown'
 
-        else: # must have just been a noisy blip
-            
-            self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+                try:
+                    self.sm.get_screen('go').update_overload_peak(self.overload_state)
+
+                except:
+                    log('Unable to update overload peak on go screen')
+
+            else: # must have just been a noisy blip
+                
+                self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+
+        except:
+
+            log("Could not display spindle overload - are you on diagnostics mode?")
+
         
     def check_for_sustained_peak(self, dt):
 
@@ -1047,7 +1357,7 @@ class SerialConnection(object):
 ## WRITE-----------------------------------------------------------------------------
 
 
-    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
+    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
@@ -1055,46 +1365,69 @@ class SerialConnection(object):
 
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
-            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-            #if show_in_sys and altDisplayText==None: print serialCommand
-            if not serialCommand.startswith('?'):
+
+            if not serialCommand.startswith('?') and not protocol:
                 log('> ' + serialCommand)
-            if altDisplayText != None: print altDisplayText
+
+            if altDisplayText != None: log('> ' + str(altDisplayText))
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
         except:
-            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-            # log('Console display error: ' + str(consoleDisplayError))
+            log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Finally issue the command        
         if self.s:
             try:
 
-                if realtime == False:
-                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-                    self.s.write(serialCommand + '\n')
-                
-                elif realtime == True:
+                if realtime == True:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
                     self.s.write(serialCommand)
 
-                # SmartBench maintenance monitoring 
-#                 self.maintenance_value_logging(serialCommand)
+                elif realtime == False and protocol == False:
+                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+                    self.s.write(serialCommand + '\n')
+
+                elif protocol == True:
+                        self.s.write(serialCommand)
+                        self.last_protocol_send_time = time.time()
 
             except:
-             # SerialException as serialError:
-                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                self.get_serial_screen('Could not write last command to serial buffer.')
-                # log('Serial Error: ' + str(serialError))
+
+                try:
+
+                    if not protocol:
+                        log("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
+
+                    else:
+                        log("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
+
+                except:
+                    log("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+
 
         else:
-            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")")
-            self.get_serial_screen('Could not write last command to serial buffer.')
+
+            try:
+                if not protocol:
+                    log("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+
+                else:
+                    log("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+            except:
+
+                log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                self.get_serial_screen('Could not write last command to serial buffer.')
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
@@ -1134,6 +1467,11 @@ class SerialConnection(object):
     def write_realtime(self, serialCommand, altDisplayText = None):
         
         self.write_realtime_buffer.append([serialCommand, altDisplayText])
+
+    def write_protocol(self, serialCommand, altDisplayText):
+        
+        self.write_protocol_buffer.append([serialCommand, altDisplayText])
+        return serialCommand
 
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
