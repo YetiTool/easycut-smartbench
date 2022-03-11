@@ -1163,7 +1163,7 @@ class SerialConnection(object):
 
         elif message.startswith(b'$'):
             log(message)
-            setting_and_value = message.split("=")
+            setting_and_value = message.split(b"=")
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
 
