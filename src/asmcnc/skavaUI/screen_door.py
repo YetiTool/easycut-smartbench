@@ -244,7 +244,7 @@ class DoorScreen(Screen):
 
     def on_enter(self):
 
-        if not str(self.m.state()).startswith('Door:0'):
+        if not str(self.m.state()).startswith(b'Door:0'):
             print((str(self.m.state())))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
@@ -269,13 +269,13 @@ class DoorScreen(Screen):
         self.anim_stop_img.start(self.stop_img)
 
     def start_spindle_label_animation(self, dt):
-        if not str(self.m.state()).startswith('Door:0'):
+        if not str(self.m.state()).startswith(b'Door:0'):
             self.anim_spindle_label.start(self.spindle_raise_label)
             self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
 
-        if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
+        if (str(self.m.state()).startswith(b'Door:0') or not (str(self.m.state()).startswith(b'Door'))):
 
             Clock.unschedule(self.poll_for_resume)
             self.anim_spindle_label.repeat = False
