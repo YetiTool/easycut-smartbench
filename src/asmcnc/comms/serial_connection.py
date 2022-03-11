@@ -121,7 +121,7 @@ class SerialConnection(object):
                     stripped_input = list(map(strip_and_log, self.s.readlines()))
 
                     # Is this device a SmartBench? 
-                    if any('SmartBench' in ele for ele in stripped_input):
+                    if any(b'SmartBench' in ele for ele in stripped_input):
                         # Found SmartBench! 
                         SmartBench_port = available_port
                         return SmartBench_port
