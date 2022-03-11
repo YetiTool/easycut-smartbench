@@ -1248,7 +1248,7 @@ class SerialConnection(object):
                 self.g54_z = pos[2]
 
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
-            elif self.expecting_probe_result and stripped_message.startswith('PRB'):
+            elif self.expecting_probe_result and stripped_message.startswith(b'PRB'):
 
                 log(stripped_message)
 
@@ -1263,7 +1263,7 @@ class SerialConnection(object):
 
                 self.expecting_probe_result = False # clear flag
                 
-            elif stripped_message.startswith('ASM CNC'):
+            elif stripped_message.startswith(b'ASM CNC'):
                 fw_hw_versions = stripped_message.split(b';')
                 try: 
                     self.fw_version = (fw_hw_versions[1]).split(':')[1]
