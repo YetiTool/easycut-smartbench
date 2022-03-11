@@ -71,8 +71,6 @@ class Gauge(Widget):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        self.m.s.write_command('M5')
-
         self.bind(r=self.redraw)
 
     def set_title(self, title):

@@ -28,3 +28,13 @@ class GaugeScreen(Screen):
     def add_gauge(self, gauge):
         self.add_widget(gauge)
     
+    # ddef jog_absolute_single_axis(self, axis, target, speed):
+
+    def run(self):
+        self.m.s.write_command('M5')
+        self.m.jog_absolute_single_axis('Z', '-25', '300')
+        self.m.jog_absolute_single_axis('Z', '-100', '300')
+        self.m.jog_absolute_single_axis('Z', '-25', '300')
+        self.m.jog_absolute_single_axis('Z', '-100', '300')
+        self.m.jog_absolute_single_axis('Z', '-25', '300')
+        self.m.jog_absolute_single_axis('Z', '-100', '300')
