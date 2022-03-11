@@ -926,6 +926,7 @@ class SerialConnection(object):
 
                         # gather spindle overload analogue voltage, and evaluate to general state
 
+
                         if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
                         elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
                         elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
@@ -933,6 +934,8 @@ class SerialConnection(object):
                         elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
                         elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
                         else: log("Overload value not recognised")
+
+                        self.sm.get_screen('x_load_gauge').set_value(overload_mV_equivalent_state)
 
                         # update stuff if there's a change
                         if overload_mV_equivalent_state != self.overload_state:  
