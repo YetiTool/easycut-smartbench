@@ -191,7 +191,7 @@ class SerialConnection(object):
 
             filesForDevice = listdir('/dev/') # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith(b'tty.usbmodem'): # look for... 
+                if line.startswith('tty.usbmodem'): # look for... 
 
                     print("Mac port to try: ") # for debugging
                     print(line)
@@ -346,9 +346,9 @@ class SerialConnection(object):
             if len(rec_temp):  
             
 
-                #if not rec_temp.startswith(b'<Alarm|MPos:') and not rec_temp.startswith(b'<Idle|MPos:'):
+                #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE: 
-                    if rec_temp.startswith(b'<'):
+                    if rec_temp.startswith('<'):
                         log(rec_temp)
                     else:
                         log('< ' + rec_temp)
@@ -759,10 +759,10 @@ class SerialConnection(object):
 
             if (status_parts[0] != b"Idle" and
                 status_parts[0] != b"Run" and
-                not  (status_parts[0]).startswith(b"Hold") and
+                not  (status_parts[0]).startswith("Hold") and
                 status_parts[0] != b"Jog" and
                 status_parts[0] != b"Alarm" and
-                not (status_parts[0]).startswith(b"Door") and
+                not (status_parts[0]).startswith("Door") and
                 status_parts[0] != b"Check" and
                 status_parts[0] != b"Home" and
                 status_parts[0] != b"Sleep"):
@@ -1248,7 +1248,7 @@ class SerialConnection(object):
                 self.g54_z = pos[2]
 
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
-            elif self.expecting_probe_result and stripped_message.startswith(b'PRB'):
+            elif self.expecting_probe_result and stripped_message.startswith('PRB'):
 
                 log(stripped_message)
 
@@ -1263,7 +1263,7 @@ class SerialConnection(object):
 
                 self.expecting_probe_result = False # clear flag
                 
-            elif stripped_message.startswith(b'ASM CNC'):
+            elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(b';')
                 try: 
                     self.fw_version = (fw_hw_versions[1]).split(':')[1]
@@ -1483,7 +1483,7 @@ class SerialConnection(object):
 #         try:
 #             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
 #             #if show_in_sys and altDisplayText==None: print serialCommand
-#             if not serialCommand.startswith(b'?'):
+#             if not serialCommand.startswith('?'):
 #                 log('> ' + serialCommand)
 #             if altDisplayText != None: print altDisplayText
 # 

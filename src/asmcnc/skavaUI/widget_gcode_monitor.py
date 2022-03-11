@@ -240,7 +240,7 @@ class GCodeMonitor(Widget):
         if isinstance(content, str):
             
             # Don't update if content is to be hidden
-            if content.startswith(b'<') and self.hide_received_status == 'down':
+            if content.startswith('<') and self.hide_received_status == 'down':
                 self.status_report_buffer.append(content)
                 return
             if content == 'ok' and self.hide_received_ok == 'down': return

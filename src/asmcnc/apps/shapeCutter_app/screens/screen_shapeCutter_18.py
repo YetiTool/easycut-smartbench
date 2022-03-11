@@ -314,7 +314,7 @@ class ShapeCutter18ScreenClass(Screen):
         
         # Clock function to check machine state
         def check_Zmove_finished():
-            if self.m.state().startswith(b'Idle'):
+            if self.m.state().startswith('Idle'):
                 Clock.unschedule(check_Zmove_status)
                 popup_Zmove.popup.dismiss()
                 

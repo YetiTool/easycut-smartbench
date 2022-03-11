@@ -121,8 +121,8 @@ class GCodeView(Widget):
 
                 if move == 'G0':
                     for bit in line.strip().split(' '):
-                        if bit.startswith(b'X'): target_x = float(bit[1:])
-                        elif bit.startswith(b'Y'):
+                        if bit.startswith('X'): target_x = float(bit[1:])
+                        elif bit.startswith('Y'):
                             target_y = float(bit[1:])
                             break
                     with self.gCodePreview.canvas:
@@ -134,8 +134,8 @@ class GCodeView(Widget):
 
                 elif move == 'G1':
                     for bit in line.strip().split(' '):
-                        if bit.startswith(b'X'): target_x = float(bit[1:])
-                        elif bit.startswith(b'Y'):
+                        if bit.startswith('X'): target_x = float(bit[1:])
+                        elif bit.startswith('Y'):
                             target_y = float(bit[1:])
                             break
                     with self.gCodePreview.canvas:
@@ -149,10 +149,10 @@ class GCodeView(Widget):
 
                     i, j = 0, 0 # resets each time'
                     for bit in line.strip().split(' '):
-                        if bit.startswith(b'X'): target_x = float(bit[1:])
-                        elif bit.startswith(b'Y'): target_y = float(bit[1:])
-                        elif bit.startswith(b'I'): i = float(bit[1:])
-                        elif bit.startswith(b'J'):
+                        if bit.startswith('X'): target_x = float(bit[1:])
+                        elif bit.startswith('Y'): target_y = float(bit[1:])
+                        elif bit.startswith('I'): i = float(bit[1:])
+                        elif bit.startswith('J'):
                             j = float(bit[1:])
                             break
 
@@ -225,9 +225,9 @@ class GCodeView(Widget):
         # find max values of X & Y to establish scale
 #        for line in gcode_list:
 #            for bit in line.strip().split(" "):
-#                if bit.startswith(b'X'):
+#                if bit.startswith('X'):
 #                    x.append(float(bit[1:]))
-#                elif bit.startswith(b'Y'):
+#                elif bit.startswith('Y'):
 #                    y.append(float(bit[1:]))
 #                    break
 
@@ -311,23 +311,23 @@ class GCodeView(Widget):
                 # centers reset each loop
                 i, j, k = '0', '0', '0'
     
-                if line.startswith(b'(') == True: continue   # skip any lines with comments
+                if line.startswith('(') == True: continue   # skip any lines with comments
                 elif len(line) <= 1: continue
                 
     ### -------------------------------------------------------------------------------------  
     ### ONLY WORKS IF G-CODE IS SPACED: 
     #          
-    #             elif line.startswith(b'G') == True:
+    #             elif line.startswith('G') == True:
     #                 # find self.move
-    #                 if line.startswith(b'G2 '): self.move = 'G2' # CW arc
-    #                 elif line.startswith(b'G3 '): self.move = 'G3' # CCW arc
-    #                 elif line.startswith(b'G0 '): self.move = 'G0' # Fast self.move, straight              
-    #                 elif line.startswith(b'G1 '): self.move = 'G1' # Feed self.move, straight
+    #                 if line.startswith('G2 '): self.move = 'G2' # CW arc
+    #                 elif line.startswith('G3 '): self.move = 'G3' # CCW arc
+    #                 elif line.startswith('G0 '): self.move = 'G0' # Fast self.move, straight              
+    #                 elif line.startswith('G1 '): self.move = 'G1' # Feed self.move, straight
     # 
     #                 # find self.plane
-    #                 elif line.startswith(b'G17'): self.plane = 'G17' # 'xy'
-    #                 elif line.startswith(b'G18'): self.plane = 'G18' # 'zx'
-    #                 elif line.startswith(b'G19'): self.plane = 'G19' # 'yz'
+    #                 elif line.startswith('G17'): self.plane = 'G17' # 'xy'
+    #                 elif line.startswith('G18'): self.plane = 'G18' # 'zx'
+    #                 elif line.startswith('G19'): self.plane = 'G19' # 'yz'
     
     #             # Check every position for position information
     #             for bit in line.split(' '): # This no longer works because spaces were stripped out. 

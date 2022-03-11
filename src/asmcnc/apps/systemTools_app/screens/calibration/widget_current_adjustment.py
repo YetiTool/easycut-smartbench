@@ -66,7 +66,7 @@ class CurrentAdjustmentWidget(Widget):
 
     def current_up(self):
 
-        if self.m.state().startswith(b'Idle'):
+        if self.m.state().startswith('Idle'):
             if self.current_current != 31:
                 self.current_current += 1
                 self.m.send_command_to_motor('SET ACTIVE CURRENT ' + self.motor_name_dict[self.motor] + ' ' + str(self.current_current), motor=self.motor, command=SET_ACTIVE_CURRENT, value=self.current_current)
@@ -77,7 +77,7 @@ class CurrentAdjustmentWidget(Widget):
 
     def current_down(self):
 
-        if self.m.state().startswith(b'Idle'):
+        if self.m.state().startswith('Idle'):
             if self.current_current != 0:
                 self.current_current -= 1
                 self.m.send_command_to_motor('SET ACTIVE CURRENT ' + self.motor_name_dict[self.motor] + ' ' + str(self.current_current), motor=self.motor, command=SET_ACTIVE_CURRENT, value=self.current_current)

@@ -950,7 +950,7 @@ class RouterMachine(object):
 
     def tmc_handshake(self):
 
-        if self.s.fw_version and self.state().startswith(b'Idle'):
+        if self.s.fw_version and self.state().startswith('Idle'):
 
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
@@ -1606,7 +1606,7 @@ class RouterMachine(object):
 
     def run_led_rainbow_ending_green(self):
         
-        if self.state().startswith(b'Idle'):
+        if self.state().startswith('Idle'):
             
             self.set_rainbow_cycle_led(self.led_rainbow_ending_green[self.rainbow_cycle_count])
             self.rainbow_cycle_count += 1
@@ -1889,7 +1889,7 @@ class RouterMachine(object):
             Clock.schedule_once(self.finish_tuning, 0.1)
 
         else: 
-            if self.state().startswith(b'Idle'):
+            if self.state().startswith('Idle'):
                 self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
                 self.tuning_jog_forwards_fast(X=X, Y=Y, Z=Z)
 
@@ -1920,7 +1920,7 @@ class RouterMachine(object):
     # NEED TO ADD IN WHAT HAPPENS IF TIME RUNS OUT ELSES HERE ALSO
     def is_machine_idle_for_tuning(self, X = False, Y = False, Z = False):
 
-        if self.state().startswith(b'Idle'):
+        if self.state().startswith('Idle'):
 
             log("Ready for tuning, start slow jog...")
             log("Start tuning...")
@@ -2099,7 +2099,7 @@ class RouterMachine(object):
                 while len(self.temp_sg_array) <= 15:
 
                     # Keep jogging!
-                    if self.state().startswith(b'Idle'):
+                    if self.state().startswith('Idle'):
                         log('Idle - restart jogs')
                         self.s.tuning_flag = False
                         self.temp_sg_array = []
@@ -2344,7 +2344,7 @@ class RouterMachine(object):
 
     def check_idle_and_buffer_then_start_calibration(self, axis): 
 
-        if self.state().startswith(b'Idle') and not self.s.write_protocol_buffer:
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
             if axis == 'X': 
                 calibrate_mode = 32
@@ -2395,7 +2395,7 @@ class RouterMachine(object):
 
     def post_calibration_file_stream(self, dt):
 
-        if self.state().startswith(b'Idle'):
+        if self.state().startswith('Idle'):
 
             if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
                 Clock.unschedule(self.poll_end_of_calibration_file_stream)
@@ -2457,7 +2457,7 @@ class RouterMachine(object):
 
     def initialise_calibration_upload(self, axis):
 
-        if self.state().startswith(b'Idle') and not self.s.write_protocol_buffer:
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
             if axis == 'X': 
                 calibrate_mode = 32

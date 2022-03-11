@@ -322,13 +322,13 @@ class ShapeCutter28ScreenClass(Screen):
         popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.previous_screen()
         else:
             pass
     
     def next_screen(self):
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.next_screen()
         else:
             pass
@@ -336,7 +336,7 @@ class ShapeCutter28ScreenClass(Screen):
 # Tab functions
 
     def prepare(self):
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.prepare_tab()
         else:
             pass  
@@ -344,7 +344,7 @@ class ShapeCutter28ScreenClass(Screen):
 
     def load(self):
 
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.load_tab()
         else:
             pass  
@@ -352,14 +352,14 @@ class ShapeCutter28ScreenClass(Screen):
     
     def define(self):
 
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.define_tab()
         else:
             pass  
     
     def position(self):
         
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.position_tab()
         else:
             pass  
@@ -367,7 +367,7 @@ class ShapeCutter28ScreenClass(Screen):
     
     def check(self):
         
-        if not self.m.state().startswith(b'Jog'):
+        if not self.m.state().startswith('Jog'):
             self.shapecutter_sm.check_tab()
         else:
             pass 

@@ -123,13 +123,13 @@ class WarningMState(Screen):
 
     def on_enter(self):
         
-        if self.machine.state().startswith(b'Alarm'):
+        if self.machine.state().startswith('Alarm'):
             self.user_instruction = self.localization.get_str("SmartBench is in an Alarm state. Please clear the machine, and then reset it.")
         
-        elif self.machine.state().startswith(b'Check'):
+        elif self.machine.state().startswith('Check'):
             self.user_instruction = ((self.localization.get_str("SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.")).replace(self.localization.get_str("Check"), self.localization.get_bold("Check"))).replace("$C", "[b]$C[/b]")
             
-        elif self.machine.state().startswith(b'Door') or self.machine.state().startswith(b'Hold'):
+        elif self.machine.state().startswith('Door') or self.machine.state().startswith('Hold'):
             self.user_instruction = self.localization.get_str("SmartBench is paused. Please resume by entering ~ into the G-code console.").replace("~", "[b]~[/b]")
             
         else:
