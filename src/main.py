@@ -251,8 +251,6 @@ class SkavaUI(App):
 
 		sm.add_widget(gauge_screen)
 
-		# sm.current = 'gauge'
-
 		gauge = Gauge(name = 'x_load_gauge', sm = sm, m = m)
 
 		gauge.set_size(300, 100)
