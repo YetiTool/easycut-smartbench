@@ -235,7 +235,7 @@ def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
 
-decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
+decode_and_encode = lambda x: (str(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 class USBFileChooser(Screen):
 
@@ -246,13 +246,14 @@ class USBFileChooser(Screen):
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
     is_filechooser_scrolling = False
 
+    screen_manager = ObjectProperty()
+    job = ObjectProperty()
+    localization = ObjectProperty()
+
 
     def __init__(self, **kwargs):
  
         super(USBFileChooser, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l=kwargs['localization']
 
     # MANAGING KIVY SCROLL BUG
 
@@ -301,22 +302,22 @@ class USBFileChooser(Screen):
 
         self.usb_path = usb_path
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+        if verbose: print(('Filechooser_usb path: ' + self.filechooser_usb.path))
 
     def on_enter(self):
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
         self.filename_selected_label_text = (
-            self.l.get_str("Press the icon to display the full filename here.")
+            self.localization.get_str("Press the icon to display the full filename here.")
         )
         self.update_usb_status()
         self.switch_view()
         
     def on_pre_leave(self):
-        self.sm.get_screen('local_filechooser').filechooser.sort_func = self.filechooser_usb.sort_func
-        self.sm.get_screen('local_filechooser').image_sort.source = self.image_sort.source
-        if self.sm.current != 'local_filechooser': self.usb_stick.disable()
+        self.screen_manager.get_screen('local_filechooser').filechooser.sort_func = self.filechooser_usb.sort_func
+        self.screen_manager.get_screen('local_filechooser').image_sort.source = self.image_sort.source
+        if self.screen_manager.current != 'local_filechooser': self.usb_stick.disable()
 
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
@@ -331,14 +332,14 @@ class USBFileChooser(Screen):
         try: 
             if self.usb_stick.is_available():
                 self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
+                self.usb_status_label.text = self.localization.get_str("USB connected: Please do not remove USB until file is loaded.")
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255., 175 / 255., 80 / 255., 1.)
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
             else:
-                self.usb_status_label.text = self.l.get_str("USB removed! Files will not load properly.")
+                self.usb_status_label.text = self.localization.get_str("USB removed! Files will not load properly.")
                 self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
@@ -360,27 +361,27 @@ class USBFileChooser(Screen):
 
     def switch_sort(self):
 
-        if self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date_reverse:
-            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date
+        if self.filechooser_usb.sort_func == self.screen_manager.get_screen('local_filechooser').sort_by_date_reverse:
+            self.filechooser_usb.sort_func = self.screen_manager.get_screen('local_filechooser').sort_by_date
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
 
-        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date:
-            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name
+        elif self.filechooser_usb.sort_func == self.screen_manager.get_screen('local_filechooser').sort_by_date:
+            self.filechooser_usb.sort_func = self.screen_manager.get_screen('local_filechooser').sort_by_name
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
 
-        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name:
-            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name_reverse
+        elif self.filechooser_usb.sort_func == self.screen_manager.get_screen('local_filechooser').sort_by_name:
+            self.filechooser_usb.sort_func = self.screen_manager.get_screen('local_filechooser').sort_by_name_reverse
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
 
-        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name_reverse:
-            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date_reverse
+        elif self.filechooser_usb.sort_func == self.screen_manager.get_screen('local_filechooser').sort_by_name_reverse:
+            self.filechooser_usb.sort_func = self.screen_manager.get_screen('local_filechooser').sort_by_date_reverse
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
 
         self.filechooser_usb._update_files()
 
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing filechooser'
+        if verbose: print ('Refreshing filechooser')
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 self.display_selected_file()
@@ -388,14 +389,14 @@ class USBFileChooser(Screen):
             else:
                 self.loadButton.disabled = True
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-                self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-                self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+                self.file_selected_label.text = self.localization.get_str("Press the icon to display the full filename here.")
+                self.metadata_preview.text = self.localization.get_str("Select a file to see metadata or gcode preview.")
 
         except:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            self.file_selected_label.text = self.localization.get_str("Press the icon to display the full filename here.")
+            self.metadata_preview.text = self.localization.get_str("Select a file to see metadata or gcode preview.")
 
         self.filechooser_usb._update_files()
 
@@ -422,7 +423,7 @@ class USBFileChooser(Screen):
 
         def format_metadata(y):
             mini_list = y.split(': ')
-            return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
+            return str(self.localization.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
 
         try:
             with open(self.filechooser_usb.selection[0]) as previewed_file:
@@ -430,20 +431,20 @@ class USBFileChooser(Screen):
                 try:
 
                     if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                        metadata_or_gcode_preview = list(map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ]))
 
                     else: 
                         # just get GCode preview if no metadata
                         previewed_file.seek(0)
-                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
+                        metadata_or_gcode_preview = [self.localization.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in range(20)]
 
                     self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
                 except:
-                    self.metadata_preview.text = self.l.get_bold("Could not preview file.")
+                    self.metadata_preview.text = self.localization.get_bold("Could not preview file.")
 
         except: 
-            self.metadata_preview.text = self.l.get_bold("Could not open file.")
+            self.metadata_preview.text = self.localization.get_bold("Could not open file.")
 
 
     def import_usb_file(self):
@@ -459,17 +460,17 @@ class USBFileChooser(Screen):
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination          
             file_name = os.path.basename(file_selection)
             new_file_path = job_cache_dir + file_name
-            print new_file_path
+            print (new_file_path)
             
             self.go_to_loading_screen(new_file_path)
         
 
     def quit_to_local(self):
         if not self.is_filechooser_scrolling:
-            self.sm.current = 'local_filechooser'
+            self.screen_manager.current = 'local_filechooser'
         
     def go_to_loading_screen(self, file_selection):
         if not self.is_filechooser_scrolling:
-            self.jd.reset_values()
-            self.jd.set_job_filename(file_selection)
+            self.job.reset_values()
+            self.job.set_job_filename(file_selection)
             self.manager.current = 'loading'

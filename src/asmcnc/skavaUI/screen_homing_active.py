@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -87,13 +88,13 @@ class HomingScreenActive(Screen):
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
    
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
 
         super(HomingScreenActive, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
         self.update_strings()
 
     
@@ -108,7 +109,7 @@ class HomingScreenActive(Screen):
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
-            self.m.reset_pre_homing()
+            self.machine.reset_pre_homing()
             Clock.schedule_once(lambda dt: self.start_homing(),0.4)
 
 
@@ -116,10 +117,10 @@ class HomingScreenActive(Screen):
 
         # Issue homing commands
         normal_homing_sequence = ['$H']
-        self.m.s.start_sequential_stream(normal_homing_sequence)
+        self.machine.s.start_sequential_stream(normal_homing_sequence)
 
         # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-        self.m.set_state('Home') 
+        self.machine.set_state('Home') 
 
         # Check for completion - since it's a sequential stream, need a poll loop
         self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
@@ -128,27 +129,27 @@ class HomingScreenActive(Screen):
     def check_for_successful_completion(self, dt):
 
         # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.m.state().startswith('Alarm'):
-            print "Poll for homing success unscheduled"
+        if self.machine.state().startswith('Alarm'):
+            print ("Poll for homing success unscheduled")
             if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
         # if sequential_stream completes successfully
-        elif self.m.s.is_sequential_streaming == False:
-            print "Homing detected as success!"
+        elif self.machine.s.is_sequential_streaming == False:
+            print ("Homing detected as success!")
             self.homing_detected_as_complete()
 
 
     def homing_detected_as_complete(self):
 
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-        self.m.is_machine_homed = True # clear this flag too
+        self.machine.is_machine_homed = True # clear this flag too
         
-        if self.m.is_squaring_XY_needed_after_homing:
-            self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
-            self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
-            self.sm.current = 'squaring_active'
+        if self.machine.is_squaring_XY_needed_after_homing:
+            self.screen_manager.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
+            self.screen_manager.get_screen('squaring_active').return_to_screen = self.return_to_screen
+            self.screen_manager.current = 'squaring_active'
         else: 
-            self.m.is_machine_completed_the_initial_squaring_decision = True
+            self.machine.is_machine_completed_the_initial_squaring_decision = True
 
             # Chosen to sync with grbl after homing. Ensures that no clash of threads on boot, and that grbl is in definte ready state. So user must home!
             # Enter any initial grbl settings into this list
@@ -161,7 +162,7 @@ class HomingScreenActive(Screen):
                         '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
                         '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
                         ]
-            self.m.s.start_sequential_stream(grbl_settings)
+            self.machine.s.start_sequential_stream(grbl_settings)
 
             Clock.schedule_once(lambda dt: self.post_homing_sequence(), 1)
 
@@ -169,20 +170,20 @@ class HomingScreenActive(Screen):
     def post_homing_sequence(self):
 
         # If laser is enabled, move by offset
-        if self.m.is_laser_enabled:
+        if self.machine.is_laser_enabled:
 
             tolerance = 5 # mm
 
-            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
-            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
+            print(("Jog absolute: " + str(float(self.machine.x_min_jog_abs_limit) + tolerance - self.machine.laser_offset_x_value)))
+            self.machine.jog_absolute_single_axis('X', float(self.machine.x_min_jog_abs_limit) + tolerance - self.machine.laser_offset_x_value, 3000)
 
         # allow breather for sequential stream to process
         Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
-        Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
+        Clock.schedule_once(lambda dt: self.machine.set_led_colour("GREEN"),1)
 
 
     def after_successful_completion_return_to_screen(self):
-        self.sm.current = self.return_to_screen
+        self.screen_manager.current = self.return_to_screen
 
 
     def cancel_homing(self):
@@ -191,15 +192,15 @@ class HomingScreenActive(Screen):
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
 
         # ... will trigger an alarm screen
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.reset_on_cancel_homing()
-        self.sm.current = self.cancel_to_screen
+        self.machine.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+        self.machine.reset_on_cancel_homing()
+        self.screen_manager.current = self.cancel_to_screen
 
     
     def on_leave(self):
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
-        self.homing_label.text = self.l.get_str('Homing') + '...'
+        self.homing_label.text = self.localization.get_str('Homing') + '...'
         
         

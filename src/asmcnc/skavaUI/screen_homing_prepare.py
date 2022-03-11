@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 
 Builder.load_string("""
@@ -112,6 +113,10 @@ class HomingScreenPrepare(Screen):
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'
     
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         
         super(HomingScreenPrepare, self).__init__(**kwargs)
@@ -121,23 +126,23 @@ class HomingScreenPrepare(Screen):
         self.update_strings()
 
     def on_enter(self):
-        self.m.set_led_colour('ORANGE')
-        if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
+        self.machine.set_led_colour('ORANGE')
+        if self.machine.is_squaring_XY_needed_after_homing == True:
+            self.instruction_label.text = self.localization.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
+            self.instruction_label.text = self.localization.get_str('Ensure SmartBench is clear.')
     
     def begin_homing(self):
-        self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
-        self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
-        self.sm.current = 'homing_active'
+        self.screen_manager.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
+        self.screen_manager.get_screen('homing_active').return_to_screen = self.return_to_screen
+        self.screen_manager.current = 'homing_active'
     
     def cancel(self):
-        self.sm.current = self.cancel_to_screen
+        self.screen_manager.current = self.cancel_to_screen
         
     def update_strings(self):
-        self.press_to_home_label.text = self.l.get_str('Then, press button to home.')
-        if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
+        self.press_to_home_label.text = self.localization.get_str('Then, press button to home.')
+        if self.machine.is_squaring_XY_needed_after_homing == True:
+            self.instruction_label.text = self.localization.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
+            self.instruction_label.text = self.localization.get_str('Ensure SmartBench is clear.')

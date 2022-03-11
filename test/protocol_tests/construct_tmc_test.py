@@ -39,13 +39,13 @@ class ConstructTMCCommandTest(unittest.TestCase):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print(list(self.p.constructTMCcommand(101,128, 1)))
+        print((list(self.p.constructTMCcommand(101,128, 1))))
 
     def testconstructTMCcommand2(self):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print(list(self.p.constructTMCcommand(109,67109336, 1)))
+        print((list(self.p.constructTMCcommand(109,67109336, 1))))
 
 
     def testconstructTMCcommand1(self):

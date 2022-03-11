@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
+from kivy.properties import ObjectProperty
 
 
 Builder.load_string("""
@@ -113,7 +114,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message)))
 
 
 class StopOrResumeDecisionScreen(Screen):
@@ -121,6 +122,12 @@ class StopOrResumeDecisionScreen(Screen):
     
     reason_for_pause = None
     return_screen = 'lobby'
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    job = ObjectProperty()
+    database = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         
@@ -134,13 +141,13 @@ class StopOrResumeDecisionScreen(Screen):
     def popup_help(self):
 
         info = (
-            self.l.get_bold('Cancel') + \
+            self.localization.get_bold('Cancel') + \
             "\n" + \
-            self.l.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
+            self.localization.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
             "\n\n" + \
-            self.l.get_bold('Resume') + \
+            self.localization.get_bold('Resume') + \
             "\n" + \
-            self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
+            self.localization.get_str("Pressing resume will continue the job from the point at which it was paused.")
         )
 
         popup_info.PopupInfo(self.sm, self.l, 500, info)
@@ -149,41 +156,41 @@ class StopOrResumeDecisionScreen(Screen):
     def on_enter(self):
 
         if self.reason_for_pause == 'spindle_overload':
-            self.pause_reason_label.text = self.l.get_str("Spindle motor was overloaded!").replace(self.l.get_str('overloaded'), self.l.get_bold('overloaded'))
+            self.pause_reason_label.text = self.localization.get_str("Spindle motor was overloaded!").replace(self.localization.get_str('overloaded'), self.localization.get_bold('overloaded'))
 
             self.pause_description_label.text = (
 
-                self.l.get_str('SmartBench has automatically stopped the job because it detected the spindle was starting to overload.') + \
+                self.localization.get_str('SmartBench has automatically stopped the job because it detected the spindle was starting to overload.') + \
                 "\n" + \
-                self.l.get_str(
+                self.localization.get_str(
                     'You may resume, but we recommend you allow the spindle to cool off first.'
-                    ).replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume')) + \
+                    ).replace(self.localization.get_str('You may resume'),self.localization.get_bold('You may resume')) + \
                 "\n" + \
-                self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
-                self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
+                self.localization.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
+                self.localization.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
                 )
         
         if self.reason_for_pause == 'job_pause':
-            self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
-            self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
+            self.pause_reason_label.text = self.localization.get_str("SmartBench is paused.")
+            self.pause_description_label.text = self.localization.get_str("You may resume, or cancel the job at any time.")
 
     
     def cancel_job(self):
         popup_info.PopupConfirmJobCancel(self.sm, self.l)
 
     def confirm_job_cancel(self):
-        self.m.stop_from_soft_stop_cancel()
-        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
+        self.machine.stop_from_soft_stop_cancel()
+        self.machine.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
-        self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
-        self.sm.current = 'job_incomplete'
+        self.screen_manager.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+        self.screen_manager.current = 'job_incomplete'
 
     def resume_job(self):
 
-        self.m.resume_after_a_stream_pause()
+        self.machine.resume_after_a_stream_pause()
 
         # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+        self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.job.job_name, 4)
 
-        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
-        self.sm.current = self.return_screen
+        self.machine.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
+        self.screen_manager.current = self.return_screen

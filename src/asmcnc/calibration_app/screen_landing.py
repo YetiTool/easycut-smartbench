@@ -120,6 +120,9 @@ class CalibrationLandingScreenClass(Screen):
     user_instruction = ObjectProperty()
     return_to_screen = StringProperty()
     
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(CalibrationLandingScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -131,24 +134,24 @@ class CalibrationLandingScreenClass(Screen):
                                 '- or if the ambient temperature is hotter or cooler than usual.[/color]'
 
     def skip_to_lobby(self):
-        self.sm.current = self.return_to_screen
+        self.screen_manager.current = self.return_to_screen
         
     def next_screen(self):
-        if not self.sm.has_screen('wait'):       
+        if not self.screen_manager.has_screen('wait'):       
             wait_screen = screen_wait.WaitScreenClass(name = 'wait', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(wait_screen)
-        if not self.sm.has_screen('tape_measure_alert'):
+            self.screen_manager.add_widget(wait_screen)
+        if not self.screen_manager.has_screen('tape_measure_alert'):
             tape_measure_screen = screen_tape_measure.TapeMeasureScreenClass(name = 'tape_measure_alert', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(tape_measure_screen)
-        if not self.sm.has_screen('calibration_complete'):
+            self.screen_manager.add_widget(tape_measure_screen)
+        if not self.screen_manager.has_screen('calibration_complete'):
             final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(final_screen)
-        if not self.sm.has_screen('prep'):
+            self.screen_manager.add_widget(final_screen)
+        if not self.screen_manager.has_screen('prep'):
             prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(prep_screen)
+            self.screen_manager.add_widget(prep_screen)
 
-        self.sm.current = 'prep'
+        self.screen_manager.current = 'prep'
 
     def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen':
-            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
+        if self.screen_manager.current != 'alarmScreen' and self.screen_manager.current != 'errorScreen':
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('calibration_landing'))

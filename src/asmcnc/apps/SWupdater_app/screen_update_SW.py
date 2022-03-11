@@ -15,6 +15,7 @@ import sys, os, socket
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -370,6 +371,10 @@ class SWUpdateScreen(Screen):
 
     poll_USB = None
     poll_wifi = None
+
+    screen_manager = ObjectProperty()
+    settings = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
@@ -381,7 +386,7 @@ class SWUpdateScreen(Screen):
         self.update_font_size(self.usb_update_button)
         self.update_font_size(self.wifi_update_button)
 
-        self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
+        self.usb_stick = usb_storage.USB_storage(self.screen_manager, self.localization)
         
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
         self.update_screen_with_latest_version()
@@ -403,11 +408,11 @@ class SWUpdateScreen(Screen):
         if self.poll_USB: Clock.unschedule(self.poll_USB)
         if self.poll_wifi: Clock.unschedule(self.poll_wifi)
         self.usb_stick.disable()
-        self.sm.remove_widget(self.sm.get_screen('update'))
+        self.screen_manager.remove_widget(self.screen_manager.get_screen('update'))
 
 
     def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.screen_manager.current = 'lobby'
 
 
     def refresh_latest_software_version(self):
@@ -415,9 +420,9 @@ class SWUpdateScreen(Screen):
         self.refresh_button.disabled = True
 
         self.latest_software_version_label.text = (
-            self.l.get_bold('Refreshing') + \
+            self.localization.get_bold('Refreshing') + \
             '...' + '\n\n' + \
-            self.l.get_bold('Please wait')
+            self.localization.get_bold('Please wait')
         )
 
         def do_refresh():
@@ -433,19 +438,19 @@ class SWUpdateScreen(Screen):
                         else:
                             if self.wifi_image.source != self.wifi_on:
                                 refresh_error_message = (
-                                    self.l.get_str('Could not refresh version!') + \
+                                    self.localization.get_str('Could not refresh version!') + \
                                     '\n\n' + \
-                                    self.l.get_str('Please check the file on your USB stick.')
+                                    self.localization.get_str('Please check the file on your USB stick.')
                                     )
-                                popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                                popup_info.PopupError(self.screen_manager, self.localization, refresh_error_message)
                     else:
                         if self.wifi_image.source != self.wifi_on:
                             refresh_error_message = (
-                                    self.l.get_str('Could not refresh version!') + \
+                                    self.localization.get_str('Could not refresh version!') + \
                                     '\n\n' + \
-                                    self.l.get_str('Please check the file on your USB stick.')
+                                    self.localization.get_str('Please check the file on your USB stick.')
                                     )
-                            popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                            popup_info.PopupError(self.screen_manager, self.localization, refresh_error_message)
 
                     try: self.set.clear_remote_repo(dir_path_name)
                     except: pass
@@ -455,18 +460,18 @@ class SWUpdateScreen(Screen):
 
                 if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
                     refresh_error_message = (
-                            self.l.get_str('Could not refresh version!') + \
+                            self.localization.get_str('Could not refresh version!') + \
                             '\n\n' + \
-                            self.l.get_str('Please check your connection.')
+                            self.localization.get_str('Please check your connection.')
                             )
-                    popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                    popup_info.PopupError(self.screen_manager, self.localization, refresh_error_message)
             except:
                 refresh_error_message = (
-                        self.l.get_str('Could not refresh version!') + \
+                        self.localization.get_str('Could not refresh version!') + \
                         '\n\n' + \
-                        self.l.get_str('Please check your connection.')
+                        self.localization.get_str('Please check your connection.')
                         )
-                popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                popup_info.PopupError(self.screen_manager, self.localization, refresh_error_message)
 
             self.update_screen_with_latest_version()
             self.refresh_button.disabled = False
@@ -479,30 +484,30 @@ class SWUpdateScreen(Screen):
         if self.set.latest_sw_version != '':
             if self.set.latest_sw_version != self.set.sw_version:
                 self.latest_software_version_label.text = (
-                    self.l.get_bold('New version available') + \
+                    self.localization.get_bold('New version available') + \
                     '[b]: ' + self.set.latest_sw_version + '[/b]'
                     )
             else: 
-                self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
+                self.latest_software_version_label.text = self.localization.get_bold('You are up to date!')
         else:
-            self.latest_software_version_label.text = self.l.get_bold('No WiFi or USB!')
+            self.latest_software_version_label.text = self.localization.get_bold('No WiFi or USB!')
 
 
     def prep_for_sw_update_over_wifi(self):
 
         self.set.usb_or_wifi = "WiFi"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        wait_popup = popup_info.PopupWait(self.screen_manager, self.localization)
 
         def check_connection_and_version():
             if self.wifi_image.source != self.wifi_on:
-                description = self.l.get_str("No WiFi connection!")
-                popup_info.PopupError(self.sm, self.l, description)
+                description = self.localization.get_str("No WiFi connection!")
+                popup_info.PopupError(self.screen_manager, self.localization, description)
                 wait_popup.popup.dismiss()
                 return
 
             if self.set.latest_sw_version.endswith('beta'):
                 wait_popup.popup.dismiss()
-                popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
+                popup_update_SW.PopupBetaUpdate(self.screen_manager, 'wifi')
                 return
 
             Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 0.2)
@@ -512,18 +517,18 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_usb(self):
         self.set.usb_or_wifi = "USB"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        wait_popup = popup_info.PopupWait(self.screen_manager, self.localization)
 
         def check_connection_and_version():
             if self.usb_image.source != self.usb_on:
-                description = self.l.get_str("No USB drive found!")
-                popup_info.PopupError(self.sm, self.l, description)
+                description = self.localization.get_str("No USB drive found!")
+                popup_info.PopupError(self.screen_manager, self.localization, description)
                 wait_popup.popup.dismiss()
                 return
 
             if self.set.latest_sw_version.endswith('beta'):
                 wait_popup.popup.dismiss()
-                popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
+                popup_update_SW.PopupBetaUpdate(self.screen_manager, 'usb')
                 return
 
             Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 0.2)
@@ -535,45 +540,45 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
-        popup_info.PopupWait(self.sm,  self.l)
+        popup_info.PopupWait(self.screen_manager,  self.localization)
 
         def do_sw_update():
 
             outcome = self.set.get_sw_update_via_wifi()
             
             if outcome == False: 
-                description = self.l.get_str("There was a problem updating your software.") + \
+                description = self.localization.get_str("There was a problem updating your software.") + \
                 " \n\n" + \
-                self.l.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
+                self.localization.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
                 "\n\n" + \
-                self.l.get_str("Would you like to repair your software now?")
-                popup_info.PopupSoftwareRepair(self.sm, self.l, self, description)
+                self.localization.get_str("Would you like to repair your software now?")
+                popup_info.PopupSoftwareRepair(self.screen_manager, self.localization, self, description)
 
             elif outcome == "Software already up to date!":
-                description = self.l.get_str("Software already up to date!")
-                popup_info.PopupError(self.sm, self.l, description)
+                description = self.localization.get_str("Software already up to date!")
+                popup_info.PopupError(self.screen_manager, self.localization, description)
 
             elif "Could not resolve host: github.com" in outcome:
-                description = self.l.get_str("Could not connect to github. Please check that your connection is stable, or try again later.")
-                popup_info.PopupError(self.sm, self.l, description)
+                description = self.localization.get_str("Could not connect to github. Please check that your connection is stable, or try again later.")
+                popup_info.PopupError(self.screen_manager, self.localization, description)
 
             else: 
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
+                popup_info.PopupSoftwareUpdateSuccess(self.screen_manager, self.localization, outcome)
                 self.set.ansible_service_run()
                 message = (
-                    self.l.get_str('Please wait') + \
+                    self.localization.get_str('Please wait') + \
                     '...\n\n' + \
-                    self.l.get_str('Console will reboot to finish update.')
+                    self.localization.get_str('Console will reboot to finish update.')
                     )
 
-                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
+                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.screen_manager, self.localization, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
     def repair_sw_over_wifi(self):
             
-        description = self.l.get_str("DO NOT restart your machine until you see instructions to do so on the screen.")
-        popup_info.PopupWarning(self.sm, self.l, description)
+        description = self.localization.get_str("DO NOT restart your machine until you see instructions to do so on the screen.")
+        popup_info.PopupWarning(self.screen_manager, self.localization, description)
                
         def delay_clone_to_update_screen():
 
@@ -584,84 +589,84 @@ class SWUpdateScreen(Screen):
                 if outcome == False:
 
                     description = (
-                        self.l.get_str("It was not possible to backup the software safely, please check your connection and try again later.") + \
+                        self.localization.get_str("It was not possible to backup the software safely, please check your connection and try again later.") + \
                         "\n\n" + \
-                        self.l.get_str("If this issue persists, please contact Yeti Tool Ltd for support.")
+                        self.localization.get_str("If this issue persists, please contact Yeti Tool Ltd for support.")
                         )
 
-                    popup_info.PopupError(self.sm, self.l, description)           
+                    popup_info.PopupError(self.screen_manager, self.localization, description)           
             else:
 
                 description = (
-                    self.l.get_str("No WiFi connection!") + \
+                    self.localization.get_str("No WiFi connection!") + \
                     "\n\n" + \
-                    self.l.get_str("You MUST have a stable wifi connection to repair your software.") + \
+                    self.localization.get_str("You MUST have a stable wifi connection to repair your software.") + \
                     "\n\n" + \
-                    self.l.get_str("Please try again later.")
+                    self.localization.get_str("Please try again later.")
                 )
 
-                popup_info.PopupError(self.sm, self.l, description)
+                popup_info.PopupError(self.screen_manager, self.localization, description)
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
 
-        popup_info.PopupWait(self.sm,  self.l)
+        popup_info.PopupWait(self.screen_manager,  self.localization)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
             
             if outcome == 2:
                 description = (
-                    self.l.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
-                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                    self.localization.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
+                        self.localization.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         ) + \
                     "\n\n" + \
-                    self.l.get_str("Please make sure that there is only one instance of easycut-smartbench on your USB drive, and try again.").replace(
-                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                    self.localization.get_str("Please make sure that there is only one instance of easycut-smartbench on your USB drive, and try again.").replace(
+                        self.localization.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         )
                     )
-                popup_info.PopupError(self.sm, self.l, description)
+                popup_info.PopupError(self.screen_manager, self.localization, description)
 
             elif outcome == 0:
                 description = (
-                    self.l.get_str("There was no folder or zipped folder called easycut-smartbench found on the USB drive.").replace(
-                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                    self.localization.get_str("There was no folder or zipped folder called easycut-smartbench found on the USB drive.").replace(
+                        self.localization.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         ) + \
                     "\n\n" + \
-                    self.l.get_str("Please make sure that the folder containing the software is called easycut-smartbench, and try again.").replace(
-                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                    self.localization.get_str("Please make sure that the folder containing the software is called easycut-smartbench, and try again.").replace(
+                        self.localization.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         )
                     )
-                popup_info.PopupError(self.sm, self.l, description)
+                popup_info.PopupError(self.screen_manager, self.localization, description)
 
             elif outcome == "update failed":
                 
                 description = (
-                    self.l.get_str("It was not possible to update your software from the USB drive.") + \
+                    self.localization.get_str("It was not possible to update your software from the USB drive.") + \
                     "\n\n" + \
-                    self.l.get_str("Please check your easycut-smartbench folder or try again later.").replace(
-                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                    self.localization.get_str("Please check your easycut-smartbench folder or try again later.").replace(
+                        self.localization.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         ) + \
                     " " + \
-                    self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.") + \
+                    self.localization.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.") + \
                     "\n\n"
                     )
 
-                popup_info.PopupError(self.sm, self.l, description)              
+                popup_info.PopupError(self.screen_manager, self.localization, description)              
             
             else:
                 self.usb_stick.disable()
                 update_success = outcome
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
+                popup_info.PopupSoftwareUpdateSuccess(self.screen_manager, self.localization, update_success)
                 self.set.ansible_service_run()
                 message = (
-                    self.l.get_str('Please wait') + \
+                    self.localization.get_str('Please wait') + \
                     '...\n\n' + \
-                    self.l.get_str('Console will reboot to finish update.')
+                    self.localization.get_str('Console will reboot to finish update.')
                     )
 
-                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
+                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.screen_manager, self.localization, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
                 
@@ -680,18 +685,18 @@ class SWUpdateScreen(Screen):
 
     def update_strings(self):
 
-        self.current_version_label.text = self.l.get_bold("Current Version")
-        self.find_release_notes_label.text = self.l.get_bold("Find release notes at yetitool.com")
-        self.update_using_wifi_label.text = self.l.get_bold("Update using WiFi")
-        self.update_using_wifi_instructions_label.text = self.l.get_str("Ensure connection is stable before attempting to update.")
-        self.wifi_update_button.text = self.l.get_str("Update")
-        self.update_using_usb_label.text = self.l.get_bold("Update using USB")
+        self.current_version_label.text = self.localization.get_bold("Current Version")
+        self.find_release_notes_label.text = self.localization.get_bold("Find release notes at yetitool.com")
+        self.update_using_wifi_label.text = self.localization.get_bold("Update using WiFi")
+        self.update_using_wifi_instructions_label.text = self.localization.get_str("Ensure connection is stable before attempting to update.")
+        self.wifi_update_button.text = self.localization.get_str("Update")
+        self.update_using_usb_label.text = self.localization.get_bold("Update using USB")
         self.update_using_usb_instructions_label.text = (
-            self.l.get_str("Insert a USB stick containing the latest software.") + \
+            self.localization.get_str("Insert a USB stick containing the latest software.") + \
             "\n" + 
-            self.l.get_str("Go to www.yetitool.com/support for help on how to do this.")
+            self.localization.get_str("Go to www.yetitool.com/support for help on how to do this.")
             )
-        self.usb_update_button.text = self.l.get_str("Update")
+        self.usb_update_button.text = self.localization.get_str("Update")
 
     def update_font_size(self, value):
         if len(value.text) < 9:

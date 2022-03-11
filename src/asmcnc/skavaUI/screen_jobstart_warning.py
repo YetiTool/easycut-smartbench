@@ -9,6 +9,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -205,30 +206,31 @@ class RoundedButton(Button):
 
 class JobstartWarningScreen(Screen):
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
 
         self.update_strings()
 
 
     def continue_to_go_screen(self):
-        self.sm.current = 'go'
+        self.screen_manager.current = 'go'
 
     def update_strings(self):
 
-        self.header_label.text = self.l.get_str("Safety Warning")
-        self.risk_of_fire.text = self.l.get_str("Risk of fire")
+        self.header_label.text = self.localization.get_str("Safety Warning")
+        self.risk_of_fire.text = self.localization.get_str("Risk of fire")
         self.causes_of_fire.text = (
-                self.l.get_str("Common causes of fire") + ":\n"
-                "- " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
-                "- " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
-                "- " + self.l.get_str("Variation in extraction") + "\n"
+                self.localization.get_str("Common causes of fire") + ":\n"
+                "- " + self.localization.get_str("Processing combustible materials, e.g. woods") + "\n"
+                "- " + self.localization.get_str("Using dull cutters which produce heat through friction") + "\n"
+                "- " + self.localization.get_str("Variation in extraction") + "\n"
             )
-        self.never_unattended.text = self.l.get_bold("Never leave CNC machines unattended")
-        self.scan_label.text = self.l.get_bold("SCAN ME")
-        self.confirm_button.text = self.l.get_str("I understand")
+        self.never_unattended.text = self.localization.get_bold("Never leave CNC machines unattended")
+        self.scan_label.text = self.localization.get_bold("SCAN ME")
+        self.confirm_button.text = self.localization.get_str("I understand")
 

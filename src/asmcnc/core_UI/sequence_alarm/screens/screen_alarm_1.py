@@ -5,6 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 
 # Kivy UI builder:
@@ -142,20 +143,21 @@ Builder.load_string("""
 
 class AlarmScreen1(Screen):
 
+	alarm_manager = ObjectProperty()
+
 	def __init__(self, **kwargs):
 		super(AlarmScreen1, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
+		self.alarm_title.text = self.alarm_manager.l.get_bold("Alarm: Unexpected event!")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.next_button.text = self.a.l.get_str("Next") + "..."
+		self.next_button.text = self.alarm_manager.l.get_str("Next") + "..."
 
 	def next_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_2'
+		if self.alarm_manager.support_sequence:
+			self.alarm_manager.sm.current = 'alarm_2'
 		else:
-			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-			self.a.sm.current = 'alarm_5'
+			self.alarm_manager.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
+			self.alarm_manager.sm.current = 'alarm_5'
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_1'
+		self.alarm_manager.sm.current = 'alarm_1'

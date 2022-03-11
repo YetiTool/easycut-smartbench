@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 import os, sys
 import socket
@@ -144,11 +145,11 @@ class StatusBar(Widget):
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
-    def __init__(self, **kwargs):
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
 
+    def __init__(self, **kwargs):
         super(StatusBar, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
 
@@ -157,27 +158,27 @@ class StatusBar(Widget):
 
 
     def refresh_grbl_label_values(self, dt):
-        if self.m.is_connected():
+        if self.machine.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
-            self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
-            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
-            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
-            self.grbl_xw_label.text = 'wX:\n' + str(round(self.m.wpos_x(), 2))
-            self.grbl_yw_label.text = 'wY:\n' + str(round(self.m.wpos_y(), 2))
-            self.grbl_zw_label.text = 'wZ:\n' + str(round(self.m.wpos_z(), 2))
+            self.grbl_status_label.text = self.machine.state()
+            self.grbl_xm_label.text = 'mX:\n' + str(round(self.machine.mpos_x(), 2))
+            self.grbl_ym_label.text = 'mY:\n' + str(round(self.machine.mpos_y(), 2))
+            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.machine.mpos_z(), 2))
+            self.grbl_xw_label.text = 'wX:\n' + str(round(self.machine.wpos_x(), 2))
+            self.grbl_yw_label.text = 'wY:\n' + str(round(self.machine.wpos_y(), 2))
+            self.grbl_zw_label.text = 'wZ:\n' + str(round(self.machine.wpos_z(), 2))
 
         else:
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
 
     def refresh_ip_label_value(self, dt):
 
-        self.ip_status_label.text = self.m.sett.ip_address
+        self.ip_status_label.text = self.machine.sett.ip_address
 
-        if self.m.sett.wifi_available: 
+        if self.machine.sett.wifi_available: 
             self.wifi_image.source = self.wifi_on
 
-        elif not self.m.sett.ip_address: 
+        elif not self.machine.sett.ip_address: 
             self.wifi_image.source = self.wifi_off
 
         else: 

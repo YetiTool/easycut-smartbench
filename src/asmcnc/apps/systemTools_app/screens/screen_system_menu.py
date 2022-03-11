@@ -14,6 +14,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -208,10 +209,12 @@ class SystemMenuScreen(Screen):
 
     default_font_size = 16
 
+    system_tools = ObjectProperty()
+    localization = ObjectProperty()
+    machine = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.l = kwargs['localization']
 
         self.id_list = [
         self.button_system_info,
@@ -230,13 +233,13 @@ class SystemMenuScreen(Screen):
         self.update_strings()
 
     def go_back(self):
-        self.systemtools_sm.exit_app()
+        self.system_tools.exit_app()
 
     def go_to_build_info(self):
-        self.systemtools_sm.open_build_info_screen()
+        self.system_tools.open_build_info_screen()
 
     def go_to_support(self):
-        self.systemtools_sm.open_support_menu_screen()
+        self.system_tools.open_support_menu_screen()
 
     def reboot(self):
         popup_system.RebootConsole(self.systemtools_sm, self.l)
@@ -245,7 +248,7 @@ class SystemMenuScreen(Screen):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
 
     def usb_first_aid(self):
-        self.systemtools_sm.do_usb_first_aid()
+        self.system_tools.do_usb_first_aid()
 
     def beta_testing(self):
         popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
@@ -263,17 +266,17 @@ class SystemMenuScreen(Screen):
         popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
 
     def update_strings(self):
-        self.button_system_info.text = self.l.get_str('System Info')
-        self.button_support_menu.text = self.l.get_str('Support')
-        self.button_reboot.text = self.l.get_str('Reboot')
-        self.button_exit_software.text = self.l.get_str('Exit Software')
-        self.button_usb_first_aid.text = self.l.get_str('USB First Aid')
-        self.button_beta_testing.text = self.l.get_str('Beta Testing')
-        self.button_grbl_settings.text = self.l.get_str('GRBL Settings')
-        self.button_factory.text = self.l.get_str('Factory')
-        # self.button_update_testing.text = self.l.get_str('Update Testing')
-        self.button_developer.text = self.l.get_str('Developer')
-        self.button_go_back.text = self.l.get_str('Go Back')
+        self.button_system_info.text = self.localization.get_str('System Info')
+        self.button_support_menu.text = self.localization.get_str('Support')
+        self.button_reboot.text = self.localization.get_str('Reboot')
+        self.button_exit_software.text = self.localization.get_str('Exit Software')
+        self.button_usb_first_aid.text = self.localization.get_str('USB First Aid')
+        self.button_beta_testing.text = self.localization.get_str('Beta Testing')
+        self.button_grbl_settings.text = self.localization.get_str('GRBL Settings')
+        self.button_factory.text = self.localization.get_str('Factory')
+        # self.button_update_testing.text = self.localization.get_str('Update Testing')
+        self.button_developer.text = self.localization.get_str('Developer')
+        self.button_go_back.text = self.localization.get_str('Go Back')
 
         for id_object in self.id_list:
             self.update_font_size(id_object)

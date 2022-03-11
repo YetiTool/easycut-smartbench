@@ -74,7 +74,7 @@ class LBCalibration4(Screen):
         except Exception as e:
             self.sm.get_screen('lbc6').set_serial_no(self.serial_no_input.text)
             self.sm.current = 'lbc6'
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def send_calibration_payload(self, motor_index):
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values

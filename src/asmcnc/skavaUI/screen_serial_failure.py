@@ -109,13 +109,14 @@ class SerialFailureClass(Screen):
     reboot_button = ObjectProperty()
     user_instruction = StringProperty()
 
-    
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+    win_port = ObjectProperty()
+
     def __init__(self, **kwargs):
 
         super(SerialFailureClass, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']  
-        self.l=kwargs['localization']
 
         self.update_strings()
 
@@ -127,26 +128,26 @@ class SerialFailureClass(Screen):
     
     def reboot_button_press(self):
 
-        self.sm.current = 'rebooting'
+        self.screen_manager.current = 'rebooting'
         
             
     def return_to_go_screen(self):
         
-        self.sm.current = 'go'
+        self.screen_manager.current = 'go'
 
         
     def quit_to_home(self):
 
-        self.sm.current = 'home'
+        self.screen_manager.current = 'home'
 
     def update_strings(self):
 
         self.title_string.text = (
-                self.l.get_bold('SERIAL CONNECTION ERROR') + \
+                self.localization.get_bold('SERIAL CONNECTION ERROR') + \
                 "\n" + \
-                self.l.get_str("There is a problem communicating with SmartBench.")
+                self.localization.get_str("There is a problem communicating with SmartBench.")
             )
 
-        self.user_instruction = self.l.get_str("Please check that Z head is connected, and then reboot the console.")
+        self.user_instruction = self.localization.get_str("Please check that Z head is connected, and then reboot the console.")
 
-        self.reboot_string.text = self.l.get_str("Reboot")
+        self.reboot_string.text = self.localization.get_str("Reboot")

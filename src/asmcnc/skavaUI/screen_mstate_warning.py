@@ -110,32 +110,33 @@ class WarningMState(Screen):
     # define error description to make kivy happy
     button_text = StringProperty()
     user_instruction = StringProperty()
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(WarningMState, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
 
         self.update_strings()
 
 
     def on_enter(self):
         
-        if self.m.state().startswith('Alarm'):
-            self.user_instruction = self.l.get_str("SmartBench is in an Alarm state. Please clear the machine, and then reset it.")
+        if self.machine.state().startswith('Alarm'):
+            self.user_instruction = self.localization.get_str("SmartBench is in an Alarm state. Please clear the machine, and then reset it.")
         
-        elif self.m.state().startswith('Check'):
-            self.user_instruction = ((self.l.get_str("SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.")).replace(self.l.get_str("Check"), self.l.get_bold("Check"))).replace("$C", "[b]$C[/b]")
+        elif self.machine.state().startswith('Check'):
+            self.user_instruction = ((self.localization.get_str("SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.")).replace(self.localization.get_str("Check"), self.localization.get_bold("Check"))).replace("$C", "[b]$C[/b]")
             
-        elif self.m.state().startswith('Door') or self.m.state().startswith('Hold'):
-            self.user_instruction = self.l.get_str("SmartBench is paused. Please resume by entering ~ into the G-code console.").replace("~", "[b]~[/b]")
+        elif self.machine.state().startswith('Door') or self.machine.state().startswith('Hold'):
+            self.user_instruction = self.localization.get_str("SmartBench is paused. Please resume by entering ~ into the G-code console.").replace("~", "[b]~[/b]")
             
         else:
             self.user_instruction = (
-                    self.l.get_str("SmartBench is still carrying out a command.") + \
+                    self.localization.get_str("SmartBench is still carrying out a command.") + \
                     " " + \
-                    self.l.get_str("Please wait for SmartBench to finish before attempting to start a job.")
+                    self.localization.get_str("Please wait for SmartBench to finish before attempting to start a job.")
                 )
             
         self.update_strings()
@@ -146,17 +147,17 @@ class WarningMState(Screen):
               
     
     def button_release(self):
-        self.sm.current = 'home' 
+        self.screen_manager.current = 'home' 
                       
     def update_strings(self):
 
         self.title_label.text = (
-                self.l.get_bold("WARNING") + \
+                self.localization.get_bold("WARNING") + \
                 "\n" + \
-                self.l.get_str("SmartBench is not in an idle state.")
+                self.localization.get_str("SmartBench is not in an idle state.")
             )
-        self.cannot_start_job.text = self.l.get_str("Cannot start job.")
+        self.cannot_start_job.text = self.localization.get_str("Cannot start job.")
 
-        self.return_label.text = self.l.get_str("Return")
+        self.return_label.text = self.localization.get_str("Return")
         
  

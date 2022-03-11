@@ -5,6 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 
 # Kivy UI builder:
@@ -181,19 +182,20 @@ class AlarmScreen5(Screen):
 	return_to_screen = 'alarm_1'
 	default_font_size = 30
 	
+	alarm_manager = ObjectProperty()
+
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
+		self.alarm_title.text = self.alarm_manager.l.get_bold("Alarm: Job cancelled.")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
-		self.next_button.text = self.a.l.get_str("More info")
+		self.description_label.text = self.alarm_manager.l.get_str("For safety reasons, SmartBench will now cancel the job.")
+		self.next_button.text = self.alarm_manager.l.get_str("More info")
 		self.update_font_size(self.next_button)
 
 	def on_pre_enter(self):
 
-		if self.a.support_sequence:
+		if self.alarm_manager.support_sequence:
 			self.next_button.opacity = 0
 			self.next_button.disabled = True
 		else:
@@ -205,17 +207,17 @@ class AlarmScreen5(Screen):
 				self.next_button.disabled = True	
 
 	def next_screen(self):
-		self.a.exit_sequence()
+		self.alarm_manager.exit_sequence()
 
 	def prev_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_4'
+		if self.alarm_manager.support_sequence:
+			self.alarm_manager.sm.current = 'alarm_4'
 		else:
-			self.a.sm.current = self.return_to_screen
+			self.alarm_manager.sm.current = self.return_to_screen
 
 	def more_info(self):
-		self.a.sm.get_screen('alarm_3').for_support = False
-		self.a.sm.current = 'alarm_3'
+		self.alarm_manager.sm.get_screen('alarm_3').for_support = False
+		self.alarm_manager.sm.current = 'alarm_3'
 
 
 	def update_font_size(self, value):

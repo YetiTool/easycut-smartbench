@@ -48,7 +48,7 @@ class MotorCommandsTest(unittest.TestCase):
 
     job_object = []
 
-    comparison_string = ''.join(map(str,range(max_count+1)))
+    comparison_string = ''.join(map(str,list(range(max_count+1))))
 
     def create_job_object(self, n_lines):
 
@@ -73,7 +73,7 @@ class MotorCommandsTest(unittest.TestCase):
                     return "ok"
                 if buffer_type == "run": 
                     outerSelf.run_buffer = outerSelf.run_buffer + str(counter)
-                    print(outerSelf.run_buffer)
+                    print((outerSelf.run_buffer))
                     return "ok"
                 if buffer_type == "realtime": outerSelf.realtime_buffer = outerSelf.realtime_buffer + str(counter)
                 if buffer_type == "protocol": outerSelf.protocol_buffer = outerSelf.protocol_buffer + str(counter)

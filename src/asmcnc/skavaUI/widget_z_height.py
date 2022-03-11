@@ -63,12 +63,13 @@ class VirtualZ(Widget):
 
     WIDGET_REFRESH_INTERVAL = 0.1
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    job = ObjectProperty()
+
     def __init__(self, **kwargs):
     
         super(VirtualZ, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
         Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):
@@ -78,13 +79,13 @@ class VirtualZ(Widget):
     
     def setZones(self):
  
-        z_max = self.sm.get_screen('home').job_box.range_z[1]
-        z_min = self.sm.get_screen('home').job_box.range_z[0]
-        z0_machine_coords = self.m.z_wco()
+        z_max = self.screen_manager.get_screen('home').job_box.range_z[1]
+        z_min = self.screen_manager.get_screen('home').job_box.range_z[0]
+        z0_machine_coords = self.machine.z_wco()
                   
-        self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
+        self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.machine.grbl_z_max_travel))  * self.z_clear.parent.size[1])
 
-        if self.jd.filename == '':
+        if self.job.filename == '':
             if self.z_clear.size[1] == 0: 
                 self.z_clear.size[1] = 4
 
@@ -92,8 +93,8 @@ class VirtualZ(Widget):
                 self.z_cut.size[1] = 4
 
         else:
-            self.z_clear.size[1] = ( z_max/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
-            self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
+            self.z_clear.size[1] = ( z_max/(self.machine.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
+            self.z_cut.size[1] = ( (-z_min)/(self.machine.grbl_z_max_travel) * self.z_clear.parent.size[1])
 
         self.z_cut.y = self.z_clear.y - self.z_cut.height
 
@@ -102,6 +103,6 @@ class VirtualZ(Widget):
     def setBitPos(self):
 
         self.z_bit.y = (self.z_bit.parent.y + self.z_bit.parent.size[1] 
-                        - (-(self.m.mpos_z()/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1]))
+                        - (-(self.machine.mpos_z()/(self.machine.grbl_z_max_travel))  * self.z_clear.parent.size[1]))
 
     

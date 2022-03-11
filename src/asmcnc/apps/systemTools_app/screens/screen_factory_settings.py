@@ -705,7 +705,7 @@ class FactorySettingsScreen(Screen):
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
-        print('Writing ' + self.smartbench_model.text)
+        print(('Writing ' + self.smartbench_model.text))
         if sys.platform != 'win32' and sys.platform != 'darwin': 
             file = open(self.smartbench_model_path, "w+")
             file.write(str(self.smartbench_model.text))
@@ -738,7 +738,7 @@ class FactorySettingsScreen(Screen):
         Activation_Code_13 = int(ActiveTempStartReduce[6])*53262890;
         Activation_Code_14 = int(ActiveTempStartReduce[6])*89201233;
         Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
-        print(str(Final_Activation_Code)+'\n')
+        print((str(Final_Activation_Code)+'\n'))
         return Final_Activation_Code
 
 
@@ -775,7 +775,7 @@ class FactorySettingsScreen(Screen):
             file.close()
 
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print ('Could not get serial number! Please contact YetiTool support!')
 
         return str(serial_number_from_file)
 

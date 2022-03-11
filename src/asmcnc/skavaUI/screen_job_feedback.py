@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.metrics import dp
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 <JobFeedbackScreen>
@@ -257,6 +258,12 @@ class JobFeedbackScreen(Screen):
         "Total time (with pauses): 0:45:41" + "\n"+ \
         "Parts completed: 8/24"
 
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+    job = ObjectProperty()
+    database = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(JobFeedbackScreen, self).__init__(**kwargs)
 
@@ -269,50 +276,50 @@ class JobFeedbackScreen(Screen):
     def on_pre_enter(self):
         self.update_strings()
         self.sending_label.text = ""
-        self.return_to_screen = self.jd.screen_to_return_to_after_job
+        self.return_to_screen = self.job.screen_to_return_to_after_job
 
     def on_enter(self):
-        self.sm.get_screen('go').is_job_started_already = False
-        self.db.send_job_end(True)
+        self.screen_manager.get_screen('go').is_job_started_already = False
+        self.database.send_job_end(True)
 
     def on_leave(self):
         self.sending_label.text = ""
 
     def confirm_job_successful(self):
-        if self.db.set.ip_address:
-            self.sending_label.text = self.l.get_str("Processing")
+        if self.database.set.ip_address:
+            self.sending_label.text = self.localization.get_str("Processing")
             self.set_post_production_notes()
             Clock.schedule_once(self.send_end_of_job_updates, 0.1)
 
         else: 
-            self.jd.post_job_data_update_pre_send(True)
+            self.job.post_job_data_update_pre_send(True)
             self.quit_to_return_screen()
 
     def send_end_of_job_updates(self, dt):
-        self.jd.post_job_data_update_pre_send(True)
-        self.db.send_job_summary(True)
+        self.job.post_job_data_update_pre_send(True)
+        self.database.send_job_summary(True)
         self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
         self.set_post_production_notes()
-        self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
-        self.sm.current = 'job_incomplete'
+        self.screen_manager.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
+        self.screen_manager.current = 'job_incomplete'
 
     def quit_to_return_screen(self):
-        self.sm.current = self.return_to_screen
+        self.screen_manager.current = self.return_to_screen
 
     def set_post_production_notes(self):
-        self.jd.post_production_notes = self.post_production_notes.text
-        self.jd.batch_number = self.batch_number_input.text
+        self.job.post_production_notes = self.post_production_notes.text
+        self.job.batch_number = self.batch_number_input.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
 
         # Get these strings properly translated
 
-        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+        self.job_completed_label.text = self.localization.get_str("Job completed").replace(self.localization.get_str("Job"), self.job.job_name) + "!"
 
-        internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
+        internal_order_code = self.job.metadata_dict.get('Internal Order Code', '')
 
         if len(internal_order_code) > 23:
             internal_order_code =  internal_order_code[:23] + "... | "
@@ -320,30 +327,30 @@ class JobFeedbackScreen(Screen):
             internal_order_code = internal_order_code + " | "
 
         self.metadata_label.text = (
-            internal_order_code + self.jd.metadata_dict.get('Process Step', '') + \
+            internal_order_code + self.job.metadata_dict.get('Process Step', '') + \
             "\n" + \
-            self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
+            self.localization.get_str("Job duration:") + " " + self.localization.get_localized_days(self.job.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
+            self.localization.get_str("Pause duration:") + " " + self.localization.get_localized_days(self.job.pause_duration)
             )
 
 
-        self.batch_number_label.text = self.l.get_str("Batch Number:") + " "
+        self.batch_number_label.text = self.localization.get_str("Batch Number:") + " "
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
         self.batch_number_input.text = ''
 
-        self.post_production_notes.text = self.jd.post_production_notes
-        self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
+        self.post_production_notes.text = self.job.post_production_notes
+        self.post_production_notes_label.text = self.localization.get_str("Post Production Notes:")
 
-        self.success_question.text = self.l.get_str("Did this complete successfully?")
+        self.success_question.text = self.localization.get_str("Did this complete successfully?")
 
         try:
-            parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.get('Parts Made Per Job', 1))
+            parts_completed_if_job_successful = int(self.job.metadata_dict.get('Parts Made So Far', 0)) + int(self.job.metadata_dict.get('Parts Made Per Job', 1))
 
             self.parts_completed_label.text = (
-                self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(int(self.jd.metadata_dict.get('Total Parts Required', 1)))
+                self.localization.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(int(self.job.metadata_dict.get('Total Parts Required', 1)))
                 )
 
         except: 
-            self.parts_completed_label.text = self.l.get_str("Parts completed:") + " 1/1"
+            self.parts_completed_label.text = self.localization.get_str("Parts completed:") + " 1/1"
 

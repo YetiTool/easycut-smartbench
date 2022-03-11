@@ -5,7 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-
+from kivy.properties import ObjectProperty
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -165,23 +165,23 @@ Builder.load_string("""
 
 class AlarmScreen2(Screen):
 	
+	alarm_manager = ObjectProperty()
+
 	def __init__(self, **kwargs):
 		super(AlarmScreen2, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
-
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Record details")
+		self.alarm_title.text = self.alarm_manager.l.get_bold("Alarm: Record details")
 		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
 		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
-		self.description_label.text = self.a.l.get_str("Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.")
-		self.next_button.text = self.a.l.get_str("Next") + "..."
+		self.description_label.text = self.alarm_manager.l.get_str("Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.")
+		self.next_button.text = self.alarm_manager.l.get_str("Next") + "..."
 
 	def next_screen(self):
-		self.a.sm.get_screen('alarm_3').for_support = True
-		self.a.sm.current = 'alarm_3'
+		self.alarm_manager.sm.get_screen('alarm_3').for_support = True
+		self.alarm_manager.sm.current = 'alarm_3'
 
 	def prev_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_1'
+		if self.alarm_manager.support_sequence:
+			self.alarm_manager.sm.current = 'alarm_1'
 		else:
-			self.a.sm.get_screen('alarm_3').for_support = False
-			self.a.sm.current = 'alarm_3'
+			self.alarm_manager.sm.get_screen('alarm_3').for_support = False
+			self.alarm_manager.sm.current = 'alarm_3'

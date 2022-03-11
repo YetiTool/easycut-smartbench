@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 from datetime import datetime
+from kivy.properties import ObjectProperty
 
 
 Builder.load_string("""
@@ -80,7 +81,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message)))
 
 
 class SpindleShutdownScreen(Screen):
@@ -97,35 +98,35 @@ class SpindleShutdownScreen(Screen):
     spindle_decel_poll = None
     z_rest_poll = None
 
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    job = ObjectProperty()
+    database = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         
         super(SpindleShutdownScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l=kwargs['localization']
-        self.label_wait.text = self.l.get_str('Please wait') + '.'
+        self.label_wait.text = self.localization.get_str('Please wait') + '.'
 
     def on_pre_enter(self):
-        if self.m.stylus_router_choice == 'router':
-            self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
+        if self.machine.stylus_router_choice == 'router':
+            self.pausing_label.text = self.localization.get_str('SmartBench is pausing the spindle motor.')
 
-        elif self.m.stylus_router_choice == 'stylus':
-            self.pausing_label.text = self.l.get_str('SmartBench is raising the Z axis.')
+        elif self.machine.stylus_router_choice == 'stylus':
+            self.pausing_label.text = self.localization.get_str('SmartBench is raising the Z axis.')
 
     def on_enter(self):
 
         log('Pausing job...')
-        self.m.stop_for_a_stream_pause()
+        self.machine.stop_for_a_stream_pause()
 
         if self.reason_for_pause == 'spindle_overload':
             # Job paused due to overload, send event
-            self.db.send_event(1, "Job paused", "Paused job (Spindle overload): " + self.jd.job_name, 3)
+            self.database.send_event(1, "Job paused", "Paused job (Spindle overload): " + self.job.job_name, 3)
         elif self.reason_for_pause == 'job_pause':
             # Job paused by user, send event
-            self.db.send_event(0, "Job paused", "Paused job (User): " + self.jd.job_name, 3)
+            self.database.send_event(0, "Job paused", "Paused job (User): " + self.job.job_name, 3)
 
         # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None
@@ -142,13 +143,13 @@ class SpindleShutdownScreen(Screen):
     def poll_for_z_rest(self, dt):
         
         # see if z_pos has changed since last check
-        current_z_pos = self.m.z_pos_str()
+        current_z_pos = self.machine.z_pos_str()
         
         if current_z_pos == self.last_z_pos:
             # machine has stopped
-            self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = self.reason_for_pause
-            self.sm.get_screen('stop_or_resume_job_decision').return_screen = self.return_screen
-            self.sm.current = 'stop_or_resume_job_decision'
+            self.screen_manager.get_screen('stop_or_resume_job_decision').reason_for_pause = self.reason_for_pause
+            self.screen_manager.get_screen('stop_or_resume_job_decision').return_screen = self.return_screen
+            self.screen_manager.current = 'stop_or_resume_job_decision'
             
         else:
             self.last_z_pos = current_z_pos

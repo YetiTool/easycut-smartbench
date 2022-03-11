@@ -161,12 +161,13 @@ class VirtualBedControl(Widget):
 
     # localize meeee
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
     
         super(VirtualBedControl, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
         
     def zoomStateCheck(self):
         if self.zoomToggleButton.state == 'down':
@@ -181,8 +182,8 @@ class VirtualBedControl(Widget):
 
         # 'Is this where you want to set your X-Y datum?'
         warning = self.format_command(
-            (self.l.get_str('Is this where you want to set your X-Y datum?'
-                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            (self.localization.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.localization.get_str('datum'), self.localization.get_bold('datum'))
             )
 
         popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
@@ -193,21 +194,21 @@ class VirtualBedControl(Widget):
         # Is this where you want to set your standby position?
 
         warning = self.format_command(
-            self.l.get_str('Is this where you want to set your standby position?')
+            self.localization.get_str('Is this where you want to set your standby position?')
             )
         popup_info.PopupPark(self.sm, self.m, self.l, warning)
         
     def go_to_jobstart_xy(self):
-        if self.m.is_machine_homed == False:
+        if self.machine.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
-            self.m.go_to_jobstart_xy()
+            self.machine.go_to_jobstart_xy()
 
     def go_to_standby(self):
-        if self.m.is_machine_homed == False:
+        if self.machine.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
-            self.m.go_to_standby()
+            self.machine.go_to_standby()
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

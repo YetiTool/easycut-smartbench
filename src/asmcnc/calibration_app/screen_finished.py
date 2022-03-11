@@ -54,6 +54,9 @@ class FinishedCalScreenClass(Screen):
     calibration_cancelled = True
     return_to_screen = StringProperty()
     
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(FinishedCalScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -65,30 +68,30 @@ class FinishedCalScreenClass(Screen):
         else: 
             self.screen_text.text = '[color=455A64]Calibration Complete![/color]'                   
 
-        if self.sm.has_screen('measurement'):
-            self.sm.remove_widget(self.sm.get_screen('measurement'))
-        if self.sm.has_screen('backlash'):
-            self.sm.remove_widget(self.sm.get_screen('backlash'))
-        if self.sm.has_screen('prep'):
-            self.sm.remove_widget(self.sm.get_screen('prep'))
-        if self.sm.has_screen('wait'):
-            self.sm.remove_widget(self.sm.get_screen('wait'))
-        if self.sm.has_screen('calibration_landing'):
-            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
-        if self.sm.has_screen('tape_measure_alert'):
-            self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
+        if self.screen_manager.has_screen('measurement'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('measurement'))
+        if self.screen_manager.has_screen('backlash'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('backlash'))
+        if self.screen_manager.has_screen('prep'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('prep'))
+        if self.screen_manager.has_screen('wait'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('wait'))
+        if self.screen_manager.has_screen('calibration_landing'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('calibration_landing'))
+        if self.screen_manager.has_screen('tape_measure_alert'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('tape_measure_alert'))
             
     def on_enter(self):
         if self.calibration_cancelled == False:
-            self.m.write_calibration_settings(0, float(320*3600))
+            self.machine.write_calibration_settings(0, float(320*3600))
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
  
     def exit_screen(self, dt):
-        if not self.sm.current == 'alarmScreen':
-            self.sm.current = self.return_to_screen
+        if not self.screen_manager.current == 'alarmScreen':
+            self.screen_manager.current = self.return_to_screen
         
     def on_leave(self):
-        if self.sm.has_screen('calibration_complete'):
-            self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
+        if self.screen_manager.has_screen('calibration_complete'):
+            self.screen_manager.remove_widget(self.screen_manager.get_screen('calibration_complete'))
             
         gc.collect()

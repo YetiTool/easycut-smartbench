@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -156,6 +157,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     return_to_screen = 'lobby'
     
     default_font_size = 30
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         
@@ -167,51 +172,51 @@ class SquaringScreenDecisionManualVsSquare(Screen):
 
     def on_pre_enter(self):
 
-        if self.m.is_machine_completed_the_initial_squaring_decision:
-            self.no_button.text = self.l.get_str("No, SmartBench is still square")
+        if self.machine.is_machine_completed_the_initial_squaring_decision:
+            self.no_button.text = self.localization.get_str("No, SmartBench is still square")
 
     def already_square(self):
-        self.m.is_squaring_XY_needed_after_homing = False
+        self.machine.is_squaring_XY_needed_after_homing = False
         self.proceed_to_next_screen()
 
     def needs_auto_squaring(self):
-        self.m.is_squaring_XY_needed_after_homing = True
+        self.machine.is_squaring_XY_needed_after_homing = True
         self.proceed_to_next_screen()
 
     def proceed_to_next_screen(self):
-        self.sm.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen
-        self.sm.get_screen('prepare_to_home').return_to_screen = self.return_to_screen
-        self.sm.current = 'prepare_to_home'
+        self.screen_manager.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen
+        self.screen_manager.get_screen('prepare_to_home').return_to_screen = self.return_to_screen
+        self.screen_manager.current = 'prepare_to_home'
 
     def popup_help(self):
         
-        info =  self.l.get_bold("Manual squaring") + "\n"  + \
-                self.l.get_str("Before power up, the user manually pushes the X beam up against the bench legs at the home end.") + " " + \
-                self.l.get_str("The power is then switched on.") + " " + \
-                self.l.get_str("The motor coils lock the lower beam into position with a high degree of reliability.") + " " + \
-                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated.") + "\n\n" + \
-                self.l.get_bold("Auto squaring") + "\n" + \
-                self.l.get_str("No special preparation from the user is needed.") + " " + \
-                self.l.get_str("When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs.") + " " + \
-                self.l.get_str("The stalling procedure can offer a general squareness.") + " " + \
-                self.l.get_str("But at the end of the movement, the motor coils can bounce into a different step position.") + " " + \
-                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring.")
+        info =  self.localization.get_bold("Manual squaring") + "\n"  + \
+                self.localization.get_str("Before power up, the user manually pushes the X beam up against the bench legs at the home end.") + " " + \
+                self.localization.get_str("The power is then switched on.") + " " + \
+                self.localization.get_str("The motor coils lock the lower beam into position with a high degree of reliability.") + " " + \
+                self.localization.get_str("Thus, mechanical adjustments to square the beam can be repeated.") + "\n\n" + \
+                self.localization.get_bold("Auto squaring") + "\n" + \
+                self.localization.get_str("No special preparation from the user is needed.") + " " + \
+                self.localization.get_str("When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs.") + " " + \
+                self.localization.get_str("The stalling procedure can offer a general squareness.") + " " + \
+                self.localization.get_str("But at the end of the movement, the motor coils can bounce into a different step position.") + " " + \
+                self.localization.get_str("Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring.")
 
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
 
     def cancel(self):
-        self.sm.current = self.cancel_to_screen
+        self.screen_manager.current = self.cancel_to_screen
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str("Does SmartBench need to auto-square the XY?").replace(self.l.get_str('auto-square'), self.l.get_bold('auto-square'))
-        self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
-        self.yes_button.text = self.l.get_str("Yes, enable auto-square")
+        self.header_label.text = self.localization.get_str("Does SmartBench need to auto-square the XY?").replace(self.localization.get_str('auto-square'), self.localization.get_bold('auto-square'))
+        self.subtitle_label.text = self.localization.get_str("Click on the question mark to learn more about this.")
+        self.yes_button.text = self.localization.get_str("Yes, enable auto-square")
 
-        if self.m.is_machine_completed_the_initial_squaring_decision:
-            self.no_button.text = self.l.get_str("No, SmartBench is still square")
+        if self.machine.is_machine_completed_the_initial_squaring_decision:
+            self.no_button.text = self.localization.get_str("No, SmartBench is still square")
         else:
-            self.no_button.text = self.l.get_str("No, I manually squared already")
+            self.no_button.text = self.localization.get_str("No, I manually squared already")
 
 
         self.update_font_size(self.no_button)

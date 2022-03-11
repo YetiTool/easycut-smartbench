@@ -107,7 +107,7 @@ class ZHeadQCHome(Screen):
 
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            print((pi.get_mode(17)))
             pi.stop()
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"

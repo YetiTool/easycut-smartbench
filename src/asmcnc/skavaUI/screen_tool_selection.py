@@ -8,6 +8,7 @@ Screen to select router or CNC stylus tool
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
@@ -89,6 +90,9 @@ Builder.load_string("""
 
 class ToolSelectionScreen(Screen):
 
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
 
     def __init__(self, **kwargs):
         
@@ -100,26 +104,26 @@ class ToolSelectionScreen(Screen):
         self.update_strings()
 
     def router_button_pressed(self):
-        self.m.stylus_router_choice = 'router'
+        self.machine.stylus_router_choice = 'router'
         self.exit_stylus_router_selection()
 
     def stylus_button_pressed(self):
-        self.m.stylus_router_choice = 'stylus'
+        self.machine.stylus_router_choice = 'stylus'
         self.exit_stylus_router_selection()
     
     def exit_stylus_router_selection(self):
         
         # is fw capable of auto Z lift?
-        if self.m.fw_can_operate_zUp_on_pause():
-            if self.m.stylus_router_choice == 'stylus':
-                self.sm.get_screen('go').lift_z_on_job_pause = True
-                self.sm.current = 'jobstart_warning'
+        if self.machine.fw_can_operate_zUp_on_pause():
+            if self.machine.stylus_router_choice == 'stylus':
+                self.screen_manager.get_screen('go').lift_z_on_job_pause = True
+                self.screen_manager.current = 'jobstart_warning'
             else:    
-                self.sm.current = 'lift_z_on_pause_or_not'
+                self.screen_manager.current = 'lift_z_on_pause_or_not'
         else:
-            self.sm.current = 'jobstart_warning'
+            self.screen_manager.current = 'jobstart_warning'
 
     def update_strings(self):
-        self.question_label.text = self.l.get_str("Which tool are you using?")
-        self.router_button.text = self.l.get_str("Router")
+        self.question_label.text = self.localization.get_str("Which tool are you using?")
+        self.router_button.text = self.localization.get_str("Router")
         self.stylus_button.text = "CNC Stylus"

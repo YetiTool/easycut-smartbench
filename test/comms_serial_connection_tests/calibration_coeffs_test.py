@@ -87,7 +87,7 @@ class SGTest(unittest.TestCase):
                             str(self.test_current_setting) + "," + str(self.test_sgt_setting) + "," \
                             + str(self.test_toff_setting) + "," + str(self.test_temp_at_cal) + ">"
 
-            print(self.status)
+            print((self.status))
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:

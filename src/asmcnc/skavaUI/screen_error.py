@@ -160,30 +160,32 @@ class ErrorScreenClass(Screen):
     getout_button = ObjectProperty()
     
     return_to_screen = 'home'
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    job = ObjectProperty()
+    database = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']  
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l=kwargs['localization']
+
 
         self.update_strings()
 
     def on_enter(self):
 
         self.getout_button.disabled = True
-        if self.m.s.is_job_streaming:
+        if self.machine.s.is_job_streaming:
             self.return_to_screen = 'job_incomplete'
         
         # use the message to get the error description
-        self.error_description = self.l.get_str(ERROR_CODES.get(self.message, ""))
+        self.error_description = self.localization.get_str(ERROR_CODES.get(self.message, ""))
 
-        self.m.stop_from_gcode_error()
+        self.machine.stop_from_gcode_error()
 
         if self.return_to_screen == 'job_incomplete':
-            self.sm.get_screen('job_incomplete').prep_this_screen('Error', event_number=self.message)
+            self.screen_manager.get_screen('job_incomplete').prep_this_screen('Error', event_number=self.message)
 
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
 
@@ -193,17 +195,17 @@ class ErrorScreenClass(Screen):
     
     def button_press(self):       
         
-        self.m.resume_from_gcode_error()
+        self.machine.resume_from_gcode_error()
 
-        if self.sm.has_screen(self.return_to_screen):
-            self.sm.current = self.return_to_screen
+        if self.screen_manager.has_screen(self.return_to_screen):
+            self.screen_manager.current = self.return_to_screen
 
         else: 
-            self.sm.current = 'lobby'
+            self.screen_manager.current = 'lobby'
 
     def update_strings(self):
-        self.error_header.text = self.l.get_bold('ERROR') + '\n' + self.l.get_str('SmartBench could not process a command') + ':'
-        self.user_instruction.text = self.l.get_str('The job will now be cancelled.') + ' ' + self.l.get_str('Check the gcode file before re-running it.')
+        self.error_header.text = self.localization.get_bold('ERROR') + '\n' + self.localization.get_str('SmartBench could not process a command') + ':'
+        self.user_instruction.text = self.localization.get_str('The job will now be cancelled.') + ' ' + self.localization.get_str('Check the gcode file before re-running it.')
         
          
   

@@ -2,7 +2,7 @@ from datetime import datetime
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message)))
 
 try:
     import pytds
@@ -45,7 +45,7 @@ class CalibrationDatabase(object):
             serial_number_from_file  = str(file.read())
             file.close()
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print ('Could not get serial number! Please contact YetiTool support!')
             
         return str(serial_number_from_file)
 

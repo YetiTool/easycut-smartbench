@@ -17,7 +17,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
-from __builtin__ import file, False
+from builtins import file, False
 from kivy.clock import Clock
 from functools import partial
 from kivy.graphics import Color, Rectangle

@@ -11,6 +11,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
+from kivy.properties import ObjectProperty
 
 
 # Kivy UI builder:
@@ -50,14 +51,17 @@ Builder.load_string("""
 
 class RebootingScreen(Screen):
     
+    screen_manager = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(RebootingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
-        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
+        self.reboot_label.text = self.localization.get_str('Rebooting') + '...'
     
     def on_pre_enter(self):
-        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
+        self.reboot_label.text = self.localization.get_str('Rebooting') + '...'
 
     def on_enter(self):
         Clock.schedule_once(self.reboot, 1)

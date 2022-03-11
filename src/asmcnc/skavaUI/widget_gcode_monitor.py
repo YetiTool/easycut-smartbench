@@ -221,12 +221,13 @@ class GCodeMonitor(Widget):
     monitor_text_buffer = []
     status_report_buffer = []
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
     
         super(GCodeMonitor, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)      # Poll for status
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status    
     
@@ -236,7 +237,7 @@ class GCodeMonitor(Widget):
     def update_monitor_text_buffer(self, input_or_output, content):
 
         # Try to chuck out any problem strings
-        if isinstance(content, basestring):
+        if isinstance(content, str):
             
             # Don't update if content is to be hidden
             if content.startswith('<') and self.hide_received_status == 'down':
@@ -259,8 +260,8 @@ class GCodeMonitor(Widget):
         
     def update_status_text(self, dt):
         # this needs fixing
-        if self.m.state() == 'Alarm' and not any('Alarm' in s for s in self.status_report_buffer):
-            self.status_report_buffer.append(self.l.get_str('Please reset for status update')) # this might work with RST can't be sure
+        if self.machine.state() == 'Alarm' and not any('Alarm' in s for s in self.status_report_buffer):
+            self.status_report_buffer.append(self.localization.get_str('Please reset for status update')) # this might work with RST can't be sure
         
         self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
         if len(self.status_report_buffer) > 4:
@@ -270,21 +271,21 @@ class GCodeMonitor(Widget):
         
         if self.popup_flag == True: 
             description = (
-                self.l.get_str("Sending commands directly to the machine can change how it operates.") + \
+                self.localization.get_str("Sending commands directly to the machine can change how it operates.") + \
                 "\n\n" + \
-                self.l.get_str("Please exercise caution when using this feature.") + "\n\n"
+                self.localization.get_str("Please exercise caution when using this feature.") + "\n\n"
                 )
 
             popup_info.PopupWarning(self.sm, self.l, description)
             self.popup_flag = False
         else:
             if self.validate_gcode_textinput(self.gCodeInput.text):
-                self.m.send_any_gcode_command(str(self.gCodeInput.text))
+                self.machine.send_any_gcode_command(str(self.gCodeInput.text))
             else:
                 message = (
-                    self.l.get_str("This command is forbidden because it will alter the fundamental settings of the machine.") + \
+                    self.localization.get_str("This command is forbidden because it will alter the fundamental settings of the machine.") + \
                     "\n\n" + \
-                    self.l.get_str("If you need to alter the fundamental settings of the machine please contact YetiTool support.")
+                    self.localization.get_str("If you need to alter the fundamental settings of the machine please contact YetiTool support.")
                 )
                 popup_info.PopupWarning(self.sm, self.l, message)
 
@@ -301,53 +302,53 @@ class GCodeMonitor(Widget):
     
     def send_gcode_preset(self, gcode_input):
         
-        self.m.send_any_gcode_command(gcode_input)
+        self.machine.send_any_gcode_command(gcode_input)
     
     def toggle_check_mode(self):
         
-        if self.m.s.m_state == "Check":
-            self.m.disable_check_mode()
-        elif self.m.s.m_state == "Idle":
-            self.m.enable_check_mode()
+        if self.machine.s.m_state == "Check":
+            self.machine.disable_check_mode()
+        elif self.machine.s.m_state == "Idle":
+            self.machine.enable_check_mode()
         else:
-            self.update_monitor_text_buffer('debug', self.l.get_str('Could not enable check mode; please check machine is Idle.'))
+            self.update_monitor_text_buffer('debug', self.localization.get_str('Could not enable check mode; please check machine is Idle.'))
 
     def clear_monitor(self): 
         
-        self.monitor_text_buffer = [self.l.get_str('Welcome to the GCode console') + '...']
+        self.monitor_text_buffer = [self.localization.get_str('Welcome to the GCode console') + '...']
 
 
 ######### START/STOP DEBUG
 
     def send_grbl_reset(self):
-        self.m._grbl_soft_reset()
+        self.machine._grbl_soft_reset()
         
     def send_grbl_door(self):    
-        self.m._grbl_door()
+        self.machine._grbl_door()
 
     def send_grbl_resume(self):
-        self.m._grbl_resume()
+        self.machine._grbl_resume()
 
     def send_grbl_unlock(self):
-        self.m._grbl_unlock()
+        self.machine._grbl_unlock()
 
     def send_led_red(self):
-        self.m.set_led_red()
+        self.machine.set_led_red()
 
     def send_led_restore(self):
-        self.m.led_restore()
+        self.machine.led_restore()
 
 ## Localization
     def update_strings(self):
-        self.enter_button.text = self.l.get_str('Enter')
-        self.hide_ok_button.text = self.l.get_str('Hide oks')
-        self.settings_button.text = self.l.get_str('Settings') 
-        self.params_button.text = self.l.get_str('Params') 
-        self.state_button.text = self.l.get_str('State') 
-        self.build_button.text = self.l.get_str('Build')
-        self.check_button.text = self.l.get_str('Check') + ' $C'
-        self.help_button.text = self.l.get_str('Help')
-        self.clear_button.text = self.l.get_str('Clear')
-        self.status_label.text = self.l.get_str('Status')
+        self.enter_button.text = self.localization.get_str('Enter')
+        self.hide_ok_button.text = self.localization.get_str('Hide oks')
+        self.settings_button.text = self.localization.get_str('Settings') 
+        self.params_button.text = self.localization.get_str('Params') 
+        self.state_button.text = self.localization.get_str('State') 
+        self.build_button.text = self.localization.get_str('Build')
+        self.check_button.text = self.localization.get_str('Check') + ' $C'
+        self.help_button.text = self.localization.get_str('Help')
+        self.clear_button.text = self.localization.get_str('Clear')
+        self.status_label.text = self.localization.get_str('Status')
 
 

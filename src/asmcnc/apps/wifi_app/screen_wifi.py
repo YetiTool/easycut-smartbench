@@ -413,6 +413,10 @@ class WifiScreen(Screen):
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
+    screen_manager = ObjectProperty()
+    settings_manager = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -445,19 +449,19 @@ class WifiScreen(Screen):
 
         if len(self.netname) < 1: 
 
-            message = self.l.get_str("Please enter a valid network name.")
+            message = self.localization.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
 
         elif (len(self.password) < 8 or len(self.password) > 63): 
 
-            message = self.l.get_str("Please enter a password between 8 and 63 characters.")
+            message = self.localization.get_str("Please enter a password between 8 and 63 characters.")
             popup_info.PopupWarning(self.sm, self.l, message)
 
         else: 
             self.connect_wifi()
 
     def connect_wifi(self):
-        message = self.l.get_str("Please wait") + "...\n\n" + self.l.get_str("Console will reboot to connect to network.")
+        message = self.localization.get_str("Please wait") + "...\n\n" + self.localization.get_str("Console will reboot to connect to network.")
         popup_info.PopupMiniInfo(self.sm, self.l, message)
 
         # pass credentials to wpa_supplicant file
@@ -504,17 +508,17 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        self.sm.current = 'rebooting'
+        self.screen_manager.current = 'rebooting'
 
     def refresh_ip_label_value(self, dt):
 
-        self.ip_status_label.text = self.set.ip_address
+        self.ip_status_label.text = self.settings_manager.ip_address
 
-        if self.set.wifi_available: 
+        if self.settings_manager.wifi_available: 
             self.wifi_image.source = self.wifi_on
             self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        elif not self.set.ip_address: 
+        elif not self.settings_manager.ip_address: 
             self.wifi_image.source = self.wifi_off
             self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -524,7 +528,7 @@ class WifiScreen(Screen):
             
 
     def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.screen_manager.current = 'lobby'
     
     def get_available_networks(self):
         raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
@@ -548,11 +552,11 @@ class WifiScreen(Screen):
     values = ['GB' , 'US' , 'AF' , 'AX' , 'AL' , 'DZ' , 'AS' , 'AD' , 'AO' , 'AI' , 'AQ' , 'AG' , 'AR' , 'AM' , 'AW' , 'AU' , 'AT' , 'AZ' , 'BH' , 'BS' , 'BD' , 'BB' , 'BY' , 'BE' , 'BZ' , 'BJ' , 'BM' , 'BT' , 'BO' , 'BQ' , 'BA' , 'BW' , 'BV' , 'BR' , 'IO' , 'BN' , 'BG' , 'BF' , 'BI' , 'KH' , 'CM' , 'CA' , 'CV' , 'KY' , 'CF' , 'TD' , 'CL' , 'CN' , 'CX' , 'CC' , 'CO' , 'KM' , 'CG' , 'CD' , 'CK' , 'CR' , 'CI' , 'HR' , 'CU' , 'CW' , 'CY' , 'CZ' , 'DK' , 'DJ' , 'DM' , 'DO' , 'EC' , 'EG' , 'SV' , 'GQ' , 'ER' , 'EE' , 'ET' , 'FK' , 'FO' , 'FJ' , 'FI' , 'FR' , 'GF' , 'PF' , 'TF' , 'GA' , 'GM' , 'GE' , 'DE' , 'GH' , 'GI' , 'GR' , 'GL' , 'GD' , 'GP' , 'GU' , 'GT' , 'GG' , 'GN' , 'GW' , 'GY' , 'HT' , 'HM' , 'VA' , 'HN' , 'HK' , 'HU' , 'IS' , 'IN' , 'ID' , 'IR' , 'IQ' , 'IE' , 'IM' , 'IL' , 'IT' , 'JM' , 'JP' , 'JE' , 'JO' , 'KZ' , 'KE' , 'KI' , 'KP' , 'KR' , 'KW' , 'KG' , 'LA' , 'LV' , 'LB' , 'LS' , 'LR' , 'LY' , 'LI' , 'LT' , 'LU' , 'MO' , 'MK' , 'MG' , 'MW' , 'MY' , 'MV' , 'ML' , 'MT' , 'MH' , 'MQ' , 'MR' , 'MU' , 'YT' , 'MX' , 'FM' , 'MD' , 'MC' , 'MN' , 'ME' , 'MS' , 'MA' , 'MZ' , 'MM' , 'NA' , 'NR' , 'NP' , 'NL' , 'NC' , 'NZ' , 'NI' , 'NE' , 'NG' , 'NU' , 'NF' , 'MP' , 'NO' , 'OM' , 'PK' , 'PW' , 'PS' , 'PA' , 'PG' , 'PY' , 'PE' , 'PH' , 'PN' , 'PL' , 'PT' , 'PR' , 'QA' , 'RE' , 'RO' , 'RU' , 'RW' , 'BL' , 'SH' , 'KN' , 'LC' , 'MF' , 'PM' , 'VC' , 'WS' , 'SM' , 'ST' , 'SA' , 'SN' , 'RS' , 'SC' , 'SL' , 'SG' , 'SX' , 'SK' , 'SI' , 'SB' , 'SO' , 'ZA' , 'GS' , 'SS' , 'ES' , 'LK' , 'SD' , 'SR' , 'SJ' , 'SZ' , 'SE' , 'CH' , 'SY' , 'TW' , 'TJ' , 'TZ' , 'TH' , 'TL' , 'TG' , 'TK' , 'TO' , 'TT' , 'TN' , 'TR' , 'TM' , 'TC' , 'TV' , 'UG' , 'UA' , 'AE' , 'UM' , 'UY' , 'UZ' , 'VU' , 'VE' , 'VN' , 'VG' , 'VI' , 'WF' , 'EH' , 'YE' , 'ZM' , 'ZW']
 
     def update_strings(self):
-        self.ip_address_label.text = self.l.get_str("IP address:")
-        self.network_name_label.text = self.l.get_bold("Network Name")
-        self.password_label.text = self.l.get_bold("Password")
-        self.country_label.text = self.l.get_bold("Country")
-        self.connect_button.text = self.l.get_str("Connect")
+        self.ip_address_label.text = self.localization.get_str("IP address:")
+        self.network_name_label.text = self.localization.get_bold("Network Name")
+        self.password_label.text = self.localization.get_bold("Password")
+        self.country_label.text = self.localization.get_bold("Country")
+        self.connect_button.text = self.localization.get_str("Connect")
 
     def update_font_size(self, value):
         if len(value.text) < 8:
@@ -562,7 +566,7 @@ class WifiScreen(Screen):
 
     def get_rst_source(self):
         try:
-            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.localization.lang + '.rst'
         except: 
-            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.localization.default_lang + '.rst'
 

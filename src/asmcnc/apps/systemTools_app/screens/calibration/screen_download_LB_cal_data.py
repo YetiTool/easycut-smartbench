@@ -95,7 +95,7 @@ class DownloadLBCalDataScreen(Screen):
 
         except:
             self.main_label.text = "Could not get data"
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def save_calibration_data_to_motor(self, motor_index, data):
 

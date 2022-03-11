@@ -17,7 +17,6 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
 from kivy.clock import Clock
 
 from asmcnc.geometry import job_envelope
@@ -214,7 +213,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message))
 
 class CheckingScreen(Screen):
     
@@ -239,6 +238,11 @@ class CheckingScreen(Screen):
     flag_spindle_off = True
 
     serial_function_called = False
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+    job = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -254,24 +258,24 @@ class CheckingScreen(Screen):
         
     def on_enter(self):
  
-        self.job_checking_checked = self.l.get_str('Getting ready') + '...'  
-        self.m.set_pause(False)
+        self.job_checking_checked = self.localization.get_str('Getting ready') + '...'  
+        self.machine.set_pause(False)
 
         # display file selected in the filename display label
-        self.filename_label.text = self.jd.job_name
-        self.exit_label = self.l.get_str('Unload job')
+        self.filename_label.text = self.job.job_name
+        self.exit_label = self.localization.get_str('Unload job')
         
         if self.entry_screen == 'file_loading':        
             try: self.boundary_check()
             except:
                 self.toggle_boundary_buttons(True)
-                self.job_checking_checked = self.l.get_str('Cannot Check Job')
+                self.job_checking_checked = self.localization.get_str('Cannot Check Job')
                 self.check_outcome = (
-                    self.l.get_str('Cannot check job') + ': ' + \
-                    self.l.get_str('Unable to run boundary check on file.') + ' ' + \
-                    self.l.get_str('Please make sure file is in recognisable format.')
+                    self.localization.get_str('Cannot check job') + ': ' + \
+                    self.localization.get_str('Unable to run boundary check on file.') + ' ' + \
+                    self.localization.get_str('Please make sure file is in recognisable format.')
                     )
-                self.jd.reset_values()
+                self.job.reset_values()
         
         else:
             self.try_gcode_check()
@@ -280,13 +284,13 @@ class CheckingScreen(Screen):
         try: self.check_gcode()
         except:
             self.toggle_boundary_buttons(True)
-            self.job_checking_checked = self.l.get_str('Cannot Check Job')
+            self.job_checking_checked = self.localization.get_str('Cannot Check Job')
             self.check_outcome = (
-                self.l.get_str('Cannot check job') + ': ' + \
-                self.l.get_str('Unable to run g-code check on file.') + ' ' + \
-                self.l.get_str('Please make sure file is in recognisable format.')
+                self.localization.get_str('Cannot check job') + ': ' + \
+                self.localization.get_str('Unable to run g-code check on file.') + ' ' + \
+                self.localization.get_str('Please make sure file is in recognisable format.')
                 )
-            self.jd.reset_values()
+            self.job.reset_values()
               
     def boundary_check(self):            
         
@@ -296,19 +300,19 @@ class CheckingScreen(Screen):
         if bounds_output == 'job is within bounds':
             log("In bounds...")
             # update screen
-            self.check_outcome = self.l.get_str('Job is within bounds.')
+            self.check_outcome = self.localization.get_str('Job is within bounds.')
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
 
         else:
             log("Out of bounds...")
-            self.job_checking_checked = self.l.get_str('Boundary issue!')
+            self.job_checking_checked = self.localization.get_str('Boundary issue!')
             self.toggle_boundary_buttons(False)
             self.check_outcome = (
-                self.l.get_str('The job would exceed the working volume of the machine in one or more axes.') + "\n\n" + \
-                self.l.get_str('See help notes (right).')
+                self.localization.get_str('The job would exceed the working volume of the machine in one or more axes.') + "\n\n" + \
+                self.localization.get_str('See help notes (right).')
                 )
-            self.jd.check_warning = self.l.get_str('The job would exceed the working volume of the machine in one or more axes.')
-            self.jd.checked = True
+            self.job.check_warning = self.localization.get_str('The job would exceed the working volume of the machine in one or more axes.')
+            self.job.checked = True
             self.write_boundary_output(bounds_output)
 
 
@@ -318,55 +322,55 @@ class CheckingScreen(Screen):
 
         errorfound = 0
         error_message = ''
-        job_box = self.sm.get_screen('home').job_box
+        job_box = self.screen_manager.get_screen('home').job_box
         
         # Mins
         
-        if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
+        if -(self.machine.x_wco()+job_box.range_x[0]) >= (self.machine.grbl_x_max_travel - self.machine.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X')
+                self.localization.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X')
                 )
             errorfound += 1
 
-        if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
+        if -(self.machine.y_wco()+job_box.range_y[0]) >= (self.machine.grbl_y_max_travel - self.machine.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y')
+                self.localization.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y')
                 )
             errorfound += 1 
 
-        if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
+        if -(self.machine.z_wco()+job_box.range_z[0]) >= (self.machine.grbl_z_max_travel - self.machine.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's Z datum higher up.")
+                self.localization.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's Z datum higher up.")
                 )
             errorfound += 1 
             
         # Maxs
 
-        if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
+        if self.machine.x_wco()+job_box.range_x[1] >= -self.machine.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X')
+                self.localization.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X')
                 )
             errorfound += 1 
-        if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
+        if self.machine.y_wco()+job_box.range_y[1] >= -self.machine.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y')
+                self.localization.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y')
                 )
             errorfound += 1 
-        if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
+        if self.machine.z_wco()+job_box.range_z[1] >= -self.machine.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n\n\t" + \
-                self.l.get_bold("Try positioning the machine's Z datum lower down.")
+                self.localization.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n\n\t" + \
+                self.localization.get_bold("Try positioning the machine's Z datum lower down.")
                 )
             errorfound += 1 
 
@@ -376,22 +380,22 @@ class CheckingScreen(Screen):
     def write_boundary_output(self, bounds_output):
         
         self.display_output = (
-            self.l.get_bold('BOUNDARY CONFLICT HELP') + '\n\n' + \
-            self.l.get_str('It looks like your job exceeds the bounds of the machine') + ':\n\n' + \
+            self.localization.get_bold('BOUNDARY CONFLICT HELP') + '\n\n' + \
+            self.localization.get_str('It looks like your job exceeds the bounds of the machine') + ':\n\n' + \
             bounds_output + '\n\n' + \
-            self.l.get_str("The job datum is set in the wrong place.") + " " + \
-            self.l.get_str("Press Adjust datums and then reposition the X, Y or Z datums as suggested above so that the job box is within the machine's boundaries.").replace(self.l.get_str('Adjust datums'), self.l.get_bold('Adjust datums')) + " " + \
-            self.l.get_str('Use the manual move controls and set datum buttons to achieve this.').replace(self.l.get_str('set datum'), self.l.get_bold('set datum')) + " " + \
-            self.l.get_str('You should then reload the job and re-run this check.') + \
+            self.localization.get_str("The job datum is set in the wrong place.") + " " + \
+            self.localization.get_str("Press Adjust datums and then reposition the X, Y or Z datums as suggested above so that the job box is within the machine's boundaries.").replace(self.localization.get_str('Adjust datums'), self.localization.get_bold('Adjust datums')) + " " + \
+            self.localization.get_str('Use the manual move controls and set datum buttons to achieve this.').replace(self.localization.get_str('set datum'), self.localization.get_bold('set datum')) + " " + \
+            self.localization.get_str('You should then reload the job and re-run this check.') + \
             '\n\n' + \
-            self.l.get_str('If you have already tried to reposition the datum, but cannot get the job to fit within the machine bounds, your job may simply be set up incorrectly in your CAD/CAM software.') + " " + \
-            self.l.get_str('Common causes include setting the CAD/CAM job datum far away from the actual design, or exporting the job from the CAM software in the wrong units.') + " " + \
-            self.l.get_str('Check your design and export settings.') + " " + \
-            self.l.get_str('You should then reload the job and re-run the check.') + \
+            self.localization.get_str('If you have already tried to reposition the datum, but cannot get the job to fit within the machine bounds, your job may simply be set up incorrectly in your CAD/CAM software.') + " " + \
+            self.localization.get_str('Common causes include setting the CAD/CAM job datum far away from the actual design, or exporting the job from the CAM software in the wrong units.') + " " + \
+            self.localization.get_str('Check your design and export settings.') + " " + \
+            self.localization.get_str('You should then reload the job and re-run the check.') + \
             '\n\n' + \
-            self.l.get_str('Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.') + " " + \
-            self.l.get_str('If this is the case, you many want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + "\n\n" + \
-            self.l.get_bold("WARNING") + "[b]:[/b] " + self.l.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n'
+            self.localization.get_str('Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.') + " " + \
+            self.localization.get_str('If this is the case, you many want to press Check G-code.').replace(self.localization.get_str('Check G-code'), self.localization.get_bold('Check G-code')) + "\n\n" + \
+            self.localization.get_bold("WARNING") + "[b]:[/b] " + self.localization.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n'
             )
 
     def toggle_boundary_buttons(self, hide_boundary_buttons):
@@ -415,7 +419,7 @@ class CheckingScreen(Screen):
             self.load_file_now_button.width = '0dp'
             
         else:
-            self.check_gcode_button.text = self.l.get_str('Check G-code')
+            self.check_gcode_button.text = self.localization.get_str('Check G-code')
             self.check_gcode_button.disabled = False
             self.check_gcode_button.opacity = 1
             self.check_gcode_button.size_hint_y = 1
@@ -424,7 +428,7 @@ class CheckingScreen(Screen):
             self.check_gcode_button.width = '0dp'
     
             
-            self.load_file_now_button.text = self.l.get_str('Adjust datums')
+            self.load_file_now_button.text = self.localization.get_str('Adjust datums')
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1 
@@ -439,26 +443,26 @@ class CheckingScreen(Screen):
         
         self.toggle_boundary_buttons(True)
         
-        if self.m.is_connected():
+        if self.machine.is_connected():
             
             self.display_output = ''
             
-            if self.m.state() == "Idle":
-                self.job_checking_checked = self.l.get_str('Starting Check') + '...'
-                self.check_outcome = self.l.get_str('Looking for gcode errors') + '...'
+            if self.machine.state() == "Idle":
+                self.job_checking_checked = self.localization.get_str('Starting Check') + '...'
+                self.check_outcome = self.localization.get_str('Looking for gcode errors') + '...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
-                Clock.schedule_once(partial(self.check_grbl_stream, self.jd.job_gcode), 0.1)
+                Clock.schedule_once(partial(self.check_grbl_stream, self.job.job_gcode), 0.1)
 
             else: 
-                self.job_checking_checked = self.l.get_str('Cannot check job')
-                self.check_outcome = self.l.get_str('Cannot check job') + ': ' + self.l.get_str('machine is not idle.') + ' ' + self.l.get_str('Please ensure machine is in idle state before attempting to reload the file.')
-                self.jd.reset_values()
+                self.job_checking_checked = self.localization.get_str('Cannot check job')
+                self.check_outcome = self.localization.get_str('Cannot check job') + ': ' + self.localization.get_str('machine is not idle.') + ' ' + self.localization.get_str('Please ensure machine is in idle state before attempting to reload the file.')
+                self.job.reset_values()
             
         else:
-            self.job_checking_checked = self.l.get_str('Cannot check job')
-            self.check_outcome = self.l.get_str('Cannot check job') + ': ' + self.l.get_str('no serial connection.') + ' ' + self.l.get_str('Please ensure your machine is connected, and reload the file.')
-            self.jd.reset_values()
+            self.job_checking_checked = self.localization.get_str('Cannot check job')
+            self.check_outcome = self.localization.get_str('Cannot check job') + ': ' + self.localization.get_str('no serial connection.') + ' ' + self.localization.get_str('Please ensure your machine is connected, and reload the file.')
+            self.job.reset_values()
 
     loop_for_job_progress = None
      
@@ -466,12 +470,12 @@ class CheckingScreen(Screen):
 
         # because this is called by a clock function,
         # so put this check in just in case the user exits the screen prior to this
-        if self.sm.current == 'check_job':
+        if self.screen_manager.current == 'check_job':
 
             self.serial_function_called = True
 
             # utilise check_job from serial_conn
-            self.m.s.check_job(objectifile)
+            self.machine.s.check_job(objectifile)
 
             # self.poll_for_gcode_check_progress(0)
             self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.6)
@@ -482,9 +486,9 @@ class CheckingScreen(Screen):
 
     def poll_for_gcode_check_progress(self, dt):
 
-        percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0)*100.0))
+        percent_thru_job = int(round((self.machine.s.g_count * 1.0 / (len(self.job.job_gcode) + 4) * 1.0)*100.0))
         if percent_thru_job > 100: percent_thru_job = 100
-        self.job_checking_checked = self.l.get_str("Checking job") +  ": " + str(percent_thru_job) + " %"
+        self.job_checking_checked = self.localization.get_str("Checking job") +  ": " + str(percent_thru_job) + " %"
 
     
     def get_error_log(self, dt):  
@@ -496,47 +500,47 @@ class CheckingScreen(Screen):
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = self.l.get_str('Errors found!')
+                self.job_checking_checked = self.localization.get_str('Errors found!')
                 if self.entry_screen == 'file_loading':
-                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review your job before attempting to reload it.')
-                    self.jd.check_warning = self.l.get_str('Errors found in G-code.')
-                    self.jd.checked = True
+                    self.check_outcome = self.localization.get_str('Errors found in G-code.') + '\n\n' + self.localization.get_str('Please review your job before attempting to reload it.')
+                    self.job.check_warning = self.localization.get_str('Errors found in G-code.')
+                    self.job.checked = True
 
                 elif self.entry_screen == 'home':
-                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and reload your job before attempting to run it.')
-                    self.jd.check_warning = self.l.get_str('Errors found in G-code.')
-                    self.jd.checked = True
+                    self.check_outcome = self.localization.get_str('Errors found in G-code.') + '\n\n' + self.localization.get_str('Please review and reload your job before attempting to run it.')
+                    self.job.check_warning = self.localization.get_str('Errors found in G-code.')
+                    self.job.checked = True
 
                 self.job_ok = False
 
             elif self.flag_min_feed_rate or self.flag_max_feed_rate or self.flag_spindle_off:
-                self.job_checking_checked = self.l.get_str('Advisories')
-                self.check_outcome = self.l.get_str('This file will run, but it might not run in the way you expect.') + '\n\n' + \
-                                    self.l.get_str('Please review your job before running it.')
-                self.jd.check_warning = self.l.get_str('This file will run, but it might not run in the way you expect.')
-                self.jd.checked = True
+                self.job_checking_checked = self.localization.get_str('Advisories')
+                self.check_outcome = self.localization.get_str('This file will run, but it might not run in the way you expect.') + '\n\n' + \
+                                    self.localization.get_str('Please review your job before running it.')
+                self.job.check_warning = self.localization.get_str('This file will run, but it might not run in the way you expect.')
+                self.job.checked = True
                 self.job_ok = True
                 
                 # add job checked already flag here
-                self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
+                self.screen_manager.get_screen('home').gcode_has_been_checked_and_its_ok = True
 
             else:
-                self.job_checking_checked = self.l.get_str('File is OK!')
-                self.check_outcome =  self.l.get_str("No errors found. You're good to go!")
-                self.jd.check_warning = self.l.get_str('File is OK!')
-                self.jd.checked = True
+                self.job_checking_checked = self.localization.get_str('File is OK!')
+                self.check_outcome =  self.localization.get_str("No errors found. You're good to go!")
+                self.job.check_warning = self.localization.get_str('File is OK!')
+                self.job.checked = True
                 self.job_ok = True
                 
                 # add job checked already flag here
-                self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
+                self.screen_manager.get_screen('home').gcode_has_been_checked_and_its_ok = True
     
             self.write_error_output(self.error_log)
             
             if self.job_ok == False:
-                self.jd.reset_values()
+                self.job.reset_values()
     
             log('File has been checked!')
-            self.exit_label = self.l.get_str('Finish')
+            self.exit_label = self.localization.get_str('Finish')
 
 
     def write_error_output(self, error_log):
@@ -546,45 +550,45 @@ class CheckingScreen(Screen):
         ## SPINDLE WARNING:
 
         if self.flag_spindle_off:
-            self.display_output = self.display_output + self.l.get_bold('SPINDLE WARNING') + '\n\n'
-            self.display_output = self.display_output + self.l.get_str('This file has no command to turn the spindle on.') + '\n\n' + \
-                                self.l.get_str('This may be intended behaviour, but if you are trying to do a cut you should review your file before trying to run it!') + \
+            self.display_output = self.display_output + self.localization.get_bold('SPINDLE WARNING') + '\n\n'
+            self.display_output = self.display_output + self.localization.get_str('This file has no command to turn the spindle on.') + '\n\n' + \
+                                self.localization.get_str('This may be intended behaviour, but if you are trying to do a cut you should review your file before trying to run it!') + \
                                 '\n\n'
 
 
         ## FEED/SPEED MIN/MAXES HERE: 
 
         if self.flag_max_feed_rate or self.flag_min_feed_rate:
-            self.display_output = self.display_output + self.l.get_bold('FEED RATE WARNING') + '\n\n'
+            self.display_output = self.display_output + self.localization.get_bold('FEED RATE WARNING') + '\n\n'
 
             if self.flag_min_feed_rate: 
                 self.display_output = self.display_output + (
-                    self.l.get_str('This file contains feed rate commands as low as N00 mm/min.').replace('N00', str(self.as_low_as)) + \
+                    self.localization.get_str('This file contains feed rate commands as low as N00 mm/min.').replace('N00', str(self.as_low_as)) + \
                     '\n\n' + \
-                    self.l.get_str('The recommended minimum feed rate is 100 mm/min.') + \
+                    self.localization.get_str('The recommended minimum feed rate is 100 mm/min.') + \
                     '\n\n'
                 )
 
             if self.flag_max_feed_rate:
                 self.display_output = self.display_output + (
-                    self.l.get_str('This file contains feed rate commands as high as N00 mm/min.').replace('N00', str(self.as_high_as)) + \
+                    self.localization.get_str('This file contains feed rate commands as high as N00 mm/min.').replace('N00', str(self.as_high_as)) + \
                     '\n\n' + \
-                    self.l.get_str('The recommended maximum feed rate is 5000 mm/min.') + \
+                    self.localization.get_str('The recommended maximum feed rate is 5000 mm/min.') + \
                     '\n\n'
                 )
         
         error_summary = []
         
         # Zip error log and GRBL commands together, and remove any lines with no gcode
-        no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.jd.job_gcode)))
+        no_empties = list([x for x in zip(error_log, self.job.job_gcode) if x != ('ok', '')])
 
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
-                error_description = self.l.get_str(ERROR_CODES.get(f[0], ""))
-                error_summary.append(self.l.get_bold('Line') + '[b] ' + str(idx) + ':[/b]')
+                error_description = self.localization.get_str(ERROR_CODES.get(f[0], ""))
+                error_summary.append(self.localization.get_bold('Line') + '[b] ' + str(idx) + ':[/b]')
                 error_summary.append(
-                    ((f[0].replace(':',' ')).replace('error', self.l.get_str('error'))).capitalize() + \
+                    ((f[0].replace(':',' ')).replace('error', self.localization.get_str('error'))).capitalize() + \
                     ': ' + error_description +'\n\n'
                     )
                 error_summary.append('G-code: "' + f[1] + '"\n\n')
@@ -593,7 +597,7 @@ class CheckingScreen(Screen):
             self.display_output = self.display_output + ''
         else:
             # Put everything into a giant string for the ReStructed Text object        
-            self.display_output = self.display_output + self.l.get_bold('ERROR SUMMARY') + '\n\n' + \
+            self.display_output = self.display_output + self.localization.get_bold('ERROR SUMMARY') + '\n\n' + \
             '\n\n'.join(map(str,error_summary))
         
 #        # If want to print all the lines of the file and oks:
@@ -611,28 +615,28 @@ class CheckingScreen(Screen):
         check_again = False
         pass_no += 1
 
-        if self.m.s.check_streaming_started:
-            if self.m.s.is_job_streaming: self.m.s.cancel_stream()
+        if self.machine.s.check_streaming_started:
+            if self.machine.s.is_job_streaming: self.machine.s.cancel_stream()
             else: check_again = True
 
-        elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again): self.m.disable_check_mode()
+        elif (pass_no > 2) and (self.machine.state() == "Check") and (not check_again): self.machine.disable_check_mode()
 
         if check_again or (pass_no < 3): Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 1)
 
     def quit_to_home(self): 
 
         if self.job_ok:
-            self.sm.get_screen('home').z_datum_reminder_flag = True
-            self.sm.current = 'home'
+            self.screen_manager.get_screen('home').z_datum_reminder_flag = True
+            self.screen_manager.current = 'home'
 
         else:
-            self.jd.reset_values()
-            self.sm.current = 'home'
+            self.job.reset_values()
+            self.screen_manager.current = 'home'
 
             
     def load_file_now(self):
-        self.sm.get_screen('home').z_datum_reminder_flag = True
-        self.sm.current = 'home'       
+        self.screen_manager.get_screen('home').z_datum_reminder_flag = True
+        self.screen_manager.current = 'home'       
     
     def on_pre_leave(self, *args):
         if self.serial_function_called: 
@@ -652,5 +656,5 @@ class CheckingScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
         # Update summary to show check info
-        self.jd.update_changeables_in_gcode_summary_string()
+        self.job.update_changeables_in_gcode_summary_string()
         self.toggle_boundary_buttons(True)

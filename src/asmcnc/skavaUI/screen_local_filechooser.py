@@ -319,7 +319,7 @@ def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
 
-decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
+decode_and_encode = lambda x: (str(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 class LocalFileChooser(Screen):
 
@@ -331,6 +331,10 @@ class LocalFileChooser(Screen):
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
 
+    screen_manager = ObjectProperty()
+    job = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
 
         super(LocalFileChooser, self).__init__(**kwargs)
@@ -341,7 +345,7 @@ class LocalFileChooser(Screen):
 
         self.check_for_job_cache_dir()
 
-        self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
+        self.usb_status_label.text = self.localization.get_str("USB connected: Please do not remove USB until file is loaded.")
 
     # MANAGING KIVY SCROLL BUG
 
@@ -405,10 +409,10 @@ class LocalFileChooser(Screen):
         self.switch_view()
     
     def on_pre_leave(self):
-        self.sm.get_screen('usb_filechooser').filechooser_usb.sort_func = self.filechooser.sort_func
-        self.sm.get_screen('usb_filechooser').image_sort.source = self.image_sort.source
+        self.screen_manager.get_screen('usb_filechooser').filechooser_usb.sort_func = self.filechooser.sort_func
+        self.screen_manager.get_screen('usb_filechooser').image_sort.source = self.image_sort.source
         Clock.unschedule(self.poll_USB)
-        if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
+        if self.screen_manager.current != 'usb_filechooser': self.usb_stick.disable()
 
     def on_leave(self):
         self.usb_status_label.size_hint_y = 0
@@ -419,7 +423,7 @@ class LocalFileChooser(Screen):
             if self.usb_stick.is_available():
                 self.button_usb.disabled = False
                 self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-                self.sm.get_screen('loading').usb_status_label.opacity = 1
+                self.screen_manager.get_screen('loading').usb_status_label.opacity = 1
                 self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
@@ -429,8 +433,8 @@ class LocalFileChooser(Screen):
                 self.button_usb.disabled = True
                 self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
                 self.usb_status_label.size_hint_y = 0
-                self.sm.get_screen('loading').usb_status = None
-                self.sm.get_screen('loading').usb_status_label.opacity = 0
+                self.screen_manager.get_screen('loading').usb_status = None
+                self.screen_manager.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -464,9 +468,9 @@ class LocalFileChooser(Screen):
 
     def open_USB(self):
         if not self.is_filechooser_scrolling:
-            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-            self.sm.current = 'usb_filechooser'
+            self.screen_manager.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
+            self.screen_manager.get_screen('usb_filechooser').usb_stick = self.usb_stick
+            self.screen_manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
 
@@ -484,19 +488,19 @@ class LocalFileChooser(Screen):
                 self.delete_selected_button.disabled = True
                 self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
-                self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-                self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+                self.file_selected_label.text = self.localization.get_str("Press the icon to display the full filename here.")
+                self.metadata_preview.text = self.localization.get_str("Select a file to see metadata or gcode preview.")
 
         except:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            self.file_selected_label.text = self.localization.get_str("Press the icon to display the full filename here.")
+            self.metadata_preview.text = self.localization.get_str("Select a file to see metadata or gcode preview.")
             
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            self.file_selected_label.text = self.localization.get_str("Press the icon to display the full filename here.")
+            self.metadata_preview.text = self.localization.get_str("Select a file to see metadata or gcode preview.")
 
         self.filechooser._update_files()
 
@@ -526,7 +530,7 @@ class LocalFileChooser(Screen):
 
         def format_metadata(y):
             mini_list = y.split(': ')
-            return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
+            return str(self.localization.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
 
         try:
 
@@ -536,20 +540,20 @@ class LocalFileChooser(Screen):
                 try:
 
                     if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                        metadata_or_gcode_preview = list(map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ]))
                     
                     else: 
                         # just get GCode preview if no metadata
                         previewed_file.seek(0)
-                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
+                        metadata_or_gcode_preview = [self.localization.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in range(20)]
                     
                     self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
                 except:
-                    self.metadata_preview.text = self.l.get_bold("Could not preview file.")
+                    self.metadata_preview.text = self.localization.get_bold("Could not preview file.")
 
         except: 
-            self.metadata_preview.text = self.l.get_bold("Could not open file.")
+            self.metadata_preview.text = self.localization.get_bold("Could not open file.")
 
     
     def get_FTP_files(self):
@@ -567,12 +571,12 @@ class LocalFileChooser(Screen):
         file_selection = self.filechooser.selection[0]
 
         if os.path.isfile(file_selection):
-            self.jd.reset_values()
-            self.jd.set_job_filename(file_selection)
+            self.job.reset_values()
+            self.job.set_job_filename(file_selection)
             self.manager.current = 'loading'
 
         else: 
-            error_message = self.l.get_str('File selected does not exist!')
+            error_message = self.localization.get_str('File selected does not exist!')
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def delete_popup(self, **kwargs):
@@ -591,7 +595,7 @@ class LocalFileChooser(Screen):
                 self.filechooser.selection = []
                 
             except: 
-                print "attempt to delete folder, or undeletable file"
+                print("attempt to delete folder, or undeletable file")
 
             self.refresh_filechooser()    
 
@@ -607,11 +611,11 @@ class LocalFileChooser(Screen):
                         self.refresh_filechooser()
 
                 except: 
-                    print "attempt to delete folder, or undeletable file"
+                    print ("attempt to delete folder, or undeletable file")
 
         self.filechooser.selection = []
         self.refresh_filechooser()
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
-            self.sm.current = 'home'
+            self.screen_manager.current = 'home'

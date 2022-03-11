@@ -196,19 +196,19 @@ class FinalTestScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def X_plus(self):
-    	self.m.send_any_gcode_command("G91 G0 X1150.3")
+        self.m.send_any_gcode_command("G91 G0 X1150.3")
         self.m.set_led_colour('BLUE')
 
     def X_minus(self):
-    	self.m.send_any_gcode_command("G91 G0 X-1150.3")
+        self.m.send_any_gcode_command("G91 G0 X-1150.3")
         self.m.set_led_colour('BLUE')
 
     def Y_plus(self):
-    	self.m.send_any_gcode_command("G91 G0 Y1636.6")
+        self.m.send_any_gcode_command("G91 G0 Y1636.6")
         self.m.set_led_colour('BLUE')
 
     def Y_minus(self):
-    	self.m.send_any_gcode_command("G91 G0 Y-1636.6")
+        self.m.send_any_gcode_command("G91 G0 Y-1636.6")
         self.m.set_led_colour('BLUE')
 
     def X_575(self):

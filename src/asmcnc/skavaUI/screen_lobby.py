@@ -423,92 +423,93 @@ class LobbyScreen(Screen):
     trigger_update_popup = False
     welcome_popup_description = ''
     update_message = ''
+
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    app_manager = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.am=kwargs['app_manager']
-        self.l=kwargs['localization']
 
         self.update_strings()
 
     def on_enter(self):
         if not sys.platform == "win32":
-            self.m.set_led_colour('GREEN')
+            self.machine.set_led_colour('GREEN')
 
         # Tell user to update if update is available
         if self.trigger_update_popup:
-            popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
+            popup_info.PopupInfo(self.screen_manager, self.localization, 450, self.update_message)
 
         # Trigger welcome popup is machine is being used for the first time
-        if self.m.trigger_setup: self.help_popup()
+        if self.machine.trigger_setup: self.help_popup()
 
     def help_popup(self):
-        popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
+        popup_info.PopupWelcome(self.screen_manager, self.machine, self.localization, self.welcome_popup_description)
  
     def pro_app(self):
-        self.am.start_pro_app()
-        self.sm.current = 'home'
+        self.app_manager.start_pro_app()
+        self.screen_manager.current = 'home'
     
     def shapecutter_app(self):
-        self.m.run_led_rainbow_ending_green()
-        self.am.start_shapecutter_app()
+        self.machine.run_led_rainbow_ending_green()
+        self.app_manager.start_shapecutter_app()
     
     def calibrate_smartbench(self):
-        self.am.start_calibration_app('lobby')
+        self.app_manager.start_calibration_app('lobby')
     
     def wifi_app(self):
-        self.am.start_wifi_app()
+        self.app_manager.start_wifi_app()
     
     def update_app(self):
-        self.am.start_update_app()    
+        self.app_manager.start_update_app()    
     
     def developer_app(self):
         # popup_info.PopupDeveloper(self.sm)
-        self.am.start_systemtools_app()
+        self.app_manager.start_systemtools_app()
 
     def maintenance_app(self):
-        self.am.start_maintenance_app('laser_tab') 
+        self.app_manager.start_maintenance_app('laser_tab') 
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
             os.system('sudo shutdown -h')
-        popup_info.PopupShutdown(self.sm, self.l)
+        popup_info.PopupShutdown(self.screen_manager, self.l)
 
     def update_strings(self):
-        self.pro_app_label.text = self.l.get_str('CAD / CAM')
-        self.shapecutter_app_label.text = self.l.get_str('Shape Cutter')
-        self.wifi_app_label.text = self.l.get_str('Wifi')
-        self.calibrate_app_label.text = self.l.get_str('Calibrate')
-        self.update_app_label.text = self.l.get_str('Update')
-        self.maintenance_app_label.text = self.l.get_str('Maintenance')
-        self.system_tools_app_label.text = self.l.get_str('System Tools')
+        self.pro_app_label.text = self.localization.get_str('CAD / CAM')
+        self.shapecutter_app_label.text = self.localization.get_str('Shape Cutter')
+        self.wifi_app_label.text = self.localization.get_str('Wifi')
+        self.calibrate_app_label.text = self.localization.get_str('Calibrate')
+        self.update_app_label.text = self.localization.get_str('Update')
+        self.maintenance_app_label.text = self.localization.get_str('Maintenance')
+        self.system_tools_app_label.text = self.localization.get_str('System Tools')
 
         self.welcome_popup_description = (
             self.format_command(
-                self.l.get_str('Use the arrows to go through the menu, and select an app to get started.')
+                self.localization.get_str('Use the arrows to go through the menu, and select an app to get started.')
                 ) + '\n\n' + \
 
             self.format_command(
-                ((self.l.get_str('If this is your first time, make sure you use the Wifi, Maintenance, ' + \
+                ((self.localization.get_str('If this is your first time, make sure you use the Wifi, Maintenance, ' + \
                     'and Calibrate apps to set up SmartBench.'
-                    ).replace(self.l.get_str('Wifi'), self.l.get_bold('Wifi'))
-                    ).replace(self.l.get_str('Maintenance'), self.l.get_bold('Maintenance'))
-                    ).replace(self.l.get_str('Calibrate'), self.l.get_bold('Calibrate')
+                    ).replace(self.localization.get_str('Wifi'), self.localization.get_bold('Wifi'))
+                    ).replace(self.localization.get_str('Maintenance'), self.localization.get_bold('Maintenance'))
+                    ).replace(self.localization.get_str('Calibrate'), self.localization.get_bold('Calibrate')
                 )
             ) + '\n\n' + \
             self.format_command(
-                self.l.get_str('For more help, please visit:')
+                self.localization.get_str('For more help, please visit:')
             ) + '\n' + \
             '[b]https://www.yetitool.com/support[/b]' + '\n'
             )
 
         self.update_message = (
-            self.l.get_str('New software update available for download!') + '\n\n' + \
-            self.l.get_str(
+            self.localization.get_str('New software update available for download!') + '\n\n' + \
+            self.localization.get_str(
                 'Please use the Update app to get the latest version.'
-                ).replace(self.l.get_str('Update'), self.l.get_bold('Update'))
+                ).replace(self.localization.get_str('Update'), self.localization.get_bold('Update'))
             )
 
     def format_command(self, cmd):

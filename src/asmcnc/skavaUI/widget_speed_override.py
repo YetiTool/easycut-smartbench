@@ -111,6 +111,10 @@ class SpeedOverride(Widget):
     enable_button_time = 0.3
     push = 0
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    database = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
@@ -118,7 +122,7 @@ class SpeedOverride(Widget):
         self.db=kwargs['database']   
 
     def update_spindle_speed_label(self):
-        self.spindle_rpm.text = str(self.m.spindle_speed())
+        self.spindle_rpm.text = str(self.machine.spindle_speed())
 
     def speed_up(self):
         self.push =+ 1 
@@ -126,19 +130,19 @@ class SpeedOverride(Widget):
             if self.disable_buttons():
                 self.speed_override_percentage += 5
                 self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.05) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.1) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.15) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.2)
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.25)
-                Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
+                Clock.schedule_once(lambda dt: self.machine.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.machine.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.database.send_spindle_speed_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
     def speed_norm(self):
         self.speed_override_percentage = 100
         self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
-        self.m.speed_override_reset()
-        Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
+        self.machine.speed_override_reset()
+        Clock.schedule_once(lambda dt: self.database.send_spindle_speed_info(), 1)
                 
     def speed_down(self):
         self.push =+ 1 
@@ -146,24 +150,24 @@ class SpeedOverride(Widget):
             if self.disable_buttons():
                 self.speed_override_percentage -= 5
                 self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.05) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.1) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.15) 
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.2)
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.25)
-                Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
+                Clock.schedule_once(lambda dt: self.machine.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.machine.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.machine.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.database.send_spindle_speed_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def disable_buttons(self):
         self.down_5.disabled = True
         self.up_5.disabled = True
-        self.sm.get_screen('go').feedOverride.down_5.disabled = True
-        self.sm.get_screen('go').feedOverride.up_5.disabled = True
+        self.screen_manager.get_screen('go').feedOverride.down_5.disabled = True
+        self.screen_manager.get_screen('go').feedOverride.up_5.disabled = True
         return True
 
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
-        self.sm.get_screen('go').feedOverride.down_5.disabled = False
-        self.sm.get_screen('go').feedOverride.up_5.disabled = False      
+        self.screen_manager.get_screen('go').feedOverride.down_5.disabled = False
+        self.screen_manager.get_screen('go').feedOverride.up_5.disabled = False      
         self.push = 0

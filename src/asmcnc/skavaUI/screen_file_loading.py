@@ -17,7 +17,6 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
-from __builtin__ import file, False
 from kivy.clock import Clock
 from functools import partial
 from kivy.graphics import Color, Rectangle
@@ -156,7 +155,7 @@ job_q_dir = './jobQ/'            # where file is copied if to be used next in jo
 def log(message):
     
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message))
 
 
 class LoadingScreen(Screen):  
@@ -176,45 +175,46 @@ class LoadingScreen(Screen):
     usb_status = None
 
     default_font_size = '30sp'
+
+    job = ObjectProperty()
+    localization = ObjectProperty()
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.jd=kwargs['job']
-        self.l=kwargs['localization']
 
 
     def on_enter(self):    
 
         # display file selected in the filename display label
-        self.filename_label.text = self.jd.job_name
+        self.filename_label.text = self.job.job_name
 
         self.update_usb_status()
-        self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
+        self.screen_manager.get_screen('home').gcode_has_been_checked_and_its_ok = False
         self.load_value = 0
         self.update_screen('Getting ready')
 
         # CAD file processing sequence
-        self.jd.job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.jd.filename),0.1)
+        self.job.job_gcode = []
+        Clock.schedule_once(partial(self.objectifiled, self.job.filename),0.1)
 
     def update_usb_status(self):
         if self.usb_status == 'connected':
-            self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
+            self.usb_status_label.text = self.localization.get_str("USB connected: Please do not remove USB until file is loaded.")
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
-            self.usb_status_label.text = self.l.get_str("Ejecting USB: please wait") + "..."
+            self.usb_status_label.text = self.localization.get_str("Ejecting USB: please wait") + "..."
             self.usb_status_label.opacity = 1
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(51 / 255., 51 / 255., 51 / 255. , 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
-            self.usb_status_label.text = self.l.get_str("Safe to remove USB.")
+            self.usb_status_label.text = self.localization.get_str("Safe to remove USB.")
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
@@ -222,18 +222,18 @@ class LoadingScreen(Screen):
             self.usb_status_label.opacity = 0
 
     def quit_to_home(self):
-        self.jd.checked = False
-        self.sm.get_screen('home').z_datum_reminder_flag = True
-        self.sm.current = 'home'
+        self.job.checked = False
+        self.screen_manager.get_screen('home').z_datum_reminder_flag = True
+        self.screen_manager.current = 'home'
         
     def return_to_filechooser(self):
-        self.jd.job_gcode = []
-        self.sm.current = 'local_filechooser'
+        self.job.job_gcode = []
+        self.screen_manager.current = 'local_filechooser'
         
     def go_to_check_job(self):
 
-        self.sm.get_screen('check_job').entry_screen = 'file_loading'
-        self.sm.current = 'check_job'
+        self.screen_manager.get_screen('check_job').entry_screen = 'file_loading'
+        self.screen_manager.current = 'check_job'
         
     def objectifiled(self, job_file_path, dt):
 
@@ -243,15 +243,15 @@ class LoadingScreen(Screen):
             self.job_file_as_list = f.readlines()
 
         if len(self.job_file_as_list) == 0:
-            file_empty_warning = (self.l.get_str('File is empty!') + '\n\n' + \
-            self.l.get_str('Please load a different file.'))
+            file_empty_warning = (self.localization.get_str('File is empty!') + '\n\n' + \
+            self.localization.get_str('Please load a different file.'))
 
             popup_info.PopupError(self.sm, self.l, file_empty_warning)
-            self.sm.current = 'local_filechooser'
+            self.screen_manager.current = 'local_filechooser'
             return
 
         # Raw job gcode given to job data module to generate information
-        self.jd.generate_job_data(self.job_file_as_list)
+        self.job.generate_job_data(self.job_file_as_list)
 
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
@@ -293,7 +293,7 @@ class LoadingScreen(Screen):
                         
                         # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
                         if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
-                            self.sm.get_screen('check_job').flag_spindle_off = False
+                            self.screen_manager.get_screen('check_job').flag_spindle_off = False
 
                             if l_block.find ('S') >= 0:
                                 
@@ -301,16 +301,16 @@ class LoadingScreen(Screen):
                                 rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
 
                                 # Use opportunity to add min/max spindle speeds for job data module
-                                if rpm > self.jd.spindle_speed_max or self.jd.spindle_speed_max == None:
-                                    self.jd.spindle_speed_max = rpm
-                                if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
-                                    self.jd.spindle_speed_min = rpm
+                                if rpm > self.job.spindle_speed_max or self.job.spindle_speed_max == None:
+                                    self.job.spindle_speed_max = rpm
+                                if rpm < self.job.spindle_speed_min or self.job.spindle_speed_min == None:
+                                    self.job.spindle_speed_min = rpm
 
                                 # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                                 # in order for the electronics to send the right voltage for the desired RPM
-                                if self.m.spindle_voltage == 110:
-                                    # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
-                                    rpm = self.m.convert_from_110_to_230(rpm)
+                                if self.machine.spindle_voltage == 110:
+                                    # if not self.machine.spindle_digital or not self.machine.fw_can_operate_digital_spindle(): # this is only relevant much later on
+                                    rpm = self.machine.convert_from_110_to_230(rpm)
                                     l_block = "M3S" + str(rpm)
 
                                 # Ensure all rpms are above the minimum (assuming a 230V spindle)
@@ -332,27 +332,27 @@ class LoadingScreen(Screen):
                                 feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
                                 # Use opportunity to add min/max feedrates for job data module
-                                if int(feed_rate) > self.jd.feedrate_max or self.jd.feedrate_max == None:
-                                    self.jd.feedrate_max = int(feed_rate)
-                                if int(feed_rate) < self.jd.feedrate_min or self.jd.feedrate_min == None:
-                                    self.jd.feedrate_min = int(feed_rate)
+                                if int(feed_rate) > self.job.feedrate_max or self.job.feedrate_max == None:
+                                    self.job.feedrate_max = int(feed_rate)
+                                if int(feed_rate) < self.job.feedrate_min or self.job.feedrate_min == None:
+                                    self.job.feedrate_min = int(feed_rate)
 
                                 if float(feed_rate) < self.minimum_feed_rate:
                                     
-                                    self.sm.get_screen('check_job').flag_min_feed_rate = True
+                                    self.screen_manager.get_screen('check_job').flag_min_feed_rate = True
 
-                                    if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
-                                        self.sm.get_screen('check_job').as_low_as = float(feed_rate)
+                                    if float(feed_rate) < self.screen_manager.get_screen('check_job').as_low_as:
+                                        self.screen_manager.get_screen('check_job').as_low_as = float(feed_rate)
 
 
                                 if float(feed_rate) > self.maximum_feed_rate:
 
-                                    self.sm.get_screen('check_job').flag_max_feed_rate = True
+                                    self.screen_manager.get_screen('check_job').flag_max_feed_rate = True
 
-                                    if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
-                                        self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+                                    if float(feed_rate) > self.screen_manager.get_screen('check_job').as_high_as:
+                                        self.screen_manager.get_screen('check_job').as_high_as = float(feed_rate)
 
-                            except: print 'Failed to extract feed rate. Probable G-code error!'
+                            except: print ('Failed to extract feed rate. Probable G-code error!')
 
 
                         self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
@@ -368,14 +368,14 @@ class LoadingScreen(Screen):
             else: 
 
                 log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
-                self.jd.job_gcode = self.preloaded_job_gcode
+                self.job.job_gcode = self.preloaded_job_gcode
                 # Generated info is displayed in summary
-                self.jd.create_gcode_summary_string()
+                self.job.create_gcode_summary_string()
                 self._get_gcode_preview_and_ranges()
 
         except:
             self.update_screen('Could not load')
-            self.jd.reset_values()
+            self.job.reset_values()
 
 
     def _get_gcode_preview_and_ranges(self):
@@ -384,10 +384,10 @@ class LoadingScreen(Screen):
         
         # This has to be the same widget that the home screen uses, otherwise
         # preview does not work
-        self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
+        self.gcode_preview_widget = self.screen_manager.get_screen('home').gcode_preview_widget
     
         log('> get_non_modal_gcode')
-        self.gcode_preview_widget.prep_for_non_modal_gcode(self.jd.job_gcode, False, self.sm, 0)
+        self.gcode_preview_widget.prep_for_non_modal_gcode(self.job.job_gcode, False, self.sm, 0)
 
 
     def update_screen(self, stage, percentage_progress=0):
@@ -397,28 +397,28 @@ class LoadingScreen(Screen):
             self.home_button.disabled = True
             self.check_button.opacity = 0
             self.home_button.opacity = 0
-            self.progress_value = self.l.get_str('Getting ready') + '...'
+            self.progress_value = self.localization.get_str('Getting ready') + '...'
             # self.warning_title_label.text = ''
             self.warning_body_label.text = ''
             self.check_button.text = ''
             self.home_button.text = ''
 
         if stage == 'Preparing':
-            self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %'
+            self.progress_value = self.localization.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %'
 
         if stage == 'Analysing':
-            self.progress_value = self.l.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
+            self.progress_value = self.localization.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
 
         if stage == 'Loaded':
-            self.progress_value = self.l.get_bold('Job loaded')
+            self.progress_value = self.localization.get_bold('Job loaded')
             self.warning_body_label.text = (
-                self.l.get_bold('WARNING') + '[b]:[/b]\n' + \
-                self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
+                self.localization.get_bold('WARNING') + '[b]:[/b]\n' + \
+                self.localization.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 "\n" + \
-                self.l.get_str('Would you like SmartBench to check your job now?')
+                self.localization.get_str('Would you like SmartBench to check your job now?')
                 )
-            self.check_button.text = self.l.get_str('Yes, check my job for errors')
-            self.home_button.text = self.l.get_str('No, quit to home')
+            self.check_button.text = self.localization.get_str('Yes, check my job for errors')
+            self.home_button.text = self.localization.get_str('No, quit to home')
             
             self.check_button.disabled = False
             self.home_button.disabled = False
@@ -427,17 +427,17 @@ class LoadingScreen(Screen):
             self.home_button.opacity = 1
 
         if stage == 'Could not load':
-            self.progress_value = self.l.get_str('Could not load job')
+            self.progress_value = self.localization.get_str('Could not load job')
             self.warning_body_label.text = (
-                self.l.get_bold('ERROR') + '[b]:[/b]\n' + \
-                self.l.get_str('It was not possible to load your job.') + \
+                self.localization.get_bold('ERROR') + '[b]:[/b]\n' + \
+                self.localization.get_str('It was not possible to load your job.') + \
                 "\n" + \
-                self.l.get_str('Please double check the file for errors before attempting to re-load it.')
+                self.localization.get_str('Please double check the file for errors before attempting to re-load it.')
                 )
             self.job_gcode = []
             self.loading_file_name = ''
-            self.check_button.text = self.l.get_str('Check job')
-            self.home_button.text = self.l.get_str('Quit to home')
+            self.check_button.text = self.localization.get_str('Check job')
+            self.home_button.text = self.localization.get_str('Quit to home')
 
             self.check_button.disabled = True
             self.home_button.disabled = False
@@ -463,10 +463,10 @@ class LoadingScreen(Screen):
             job_box.range_z[0] = self.gcode_preview_widget.min_z
             job_box.range_z[1] = self.gcode_preview_widget.max_z
 
-        self.sm.get_screen('home').job_box = job_box
+        self.screen_manager.get_screen('home').job_box = job_box
 
         # non_modal_gcode also used for file preview in home screen
-        self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
+        self.screen_manager.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         self.update_screen('Loaded')
         log('> END LOAD')
 

@@ -300,7 +300,7 @@ TIME_TO_RUN_Y = 239 #239
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message)))
 
 class CalibrationTesting(Screen):
 
@@ -361,7 +361,7 @@ class CalibrationTesting(Screen):
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except:
             self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def stop(self):
         self.x_running = False

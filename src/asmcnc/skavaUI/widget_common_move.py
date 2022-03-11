@@ -112,6 +112,9 @@ Builder.load_string("""
 
 class CommonMove(Widget):
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(CommonMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
@@ -137,16 +140,16 @@ class CommonMove(Widget):
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            self.m.vac_off()
+            self.machine.vac_off()
         else: 
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
-            self.m.vac_on()
+            self.machine.vac_on()
     
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
+            self.machine.spindle_off()
         else: 
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
+            self.machine.spindle_on()
 

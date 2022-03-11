@@ -216,17 +216,17 @@ class DoorScreen(Screen):
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
 
-    
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    job = ObjectProperty()
+    database = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
     
         super(DoorScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l=kwargs['localization']
 
-        self.header_label.text = self.l.get_bold('Interrupt bar pushed!')
+        self.header_label.text = self.localization.get_bold('Interrupt bar pushed!')
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
@@ -245,7 +245,7 @@ class DoorScreen(Screen):
     def on_enter(self):
 
         if not str(self.m.state()).startswith('Door:0'):
-            print(str(self.m.state()))
+            print((str(self.m.state())))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)
@@ -253,7 +253,7 @@ class DoorScreen(Screen):
 
         else: Clock.schedule_once(self.ready_to_resume, 0.2)
 
-        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
+        self.database.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
@@ -262,7 +262,7 @@ class DoorScreen(Screen):
         self.anim_stop_img.repeat = False
 
     def on_leave(self):
-        self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
+        self.spindle_raise_label.text = self.localization.get_str('Preparing to resume, please wait') + '...'
 
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
@@ -295,18 +295,18 @@ class DoorScreen(Screen):
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
-        self.spindle_raise_label.text = '...' + self.l.get_str('ready to resume')
+        self.spindle_raise_label.text = '...' + self.localization.get_str('ready to resume')
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):
         # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+        self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
         self.m.resume_after_a_hard_door()
         self.return_to_app()
 
     def cancel_stream(self):
         if self.return_to_screen == 'go':
-            self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+            self.screen_manager.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
             self.return_to_screen = 'job_incomplete'
 
         else:
@@ -316,7 +316,7 @@ class DoorScreen(Screen):
         self.return_to_app()
             
     def return_to_app(self):
-        if self.sm.has_screen(self.return_to_screen):
-            self.sm.current = self.return_to_screen
-        else: self.sm.current = 'lobby'
+        if self.screen_manager.has_screen(self.return_to_screen):
+            self.screen_manager.current = self.return_to_screen
+        else: self.screen_manager.current = 'lobby'
         

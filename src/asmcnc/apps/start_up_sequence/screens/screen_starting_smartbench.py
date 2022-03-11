@@ -55,12 +55,18 @@ Builder.load_string("""
 def log(message):
     
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message))
 
 
 class StartingSmartBenchScreen(Screen):
     
     start_in_warranty_mode = False
+    start_sequence = ObjectProperty()
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    settings = ObjectProperty()
+    database = ObjectProperty()
+    localization = ObjectProperty()
     
     def __init__(self, **kwargs):
         
@@ -75,21 +81,21 @@ class StartingSmartBenchScreen(Screen):
 
     def on_enter(self):
 
-        if self.m.s.is_connected():
+        if self.machine.s.is_connected():
 
-            try: self.start_seq.update_check_config_flag()
+            try: self.start_sequence.update_check_config_flag()
             except: pass
 
-            self.set.refresh_all()
+            self.settings.refresh_all()
     
             # RasPi boot timings
             if sys.platform != 'win32':
                 
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
-                Clock.schedule_once(self.m.s.start_services, 4)
+                Clock.schedule_once(self.machine.s.start_services, 4)
 
                 # Allow time for machine reset sequence
-                self.db.start_connection_to_database_thread()
+                self.database.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 6)
 
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
@@ -99,31 +105,31 @@ class StartingSmartBenchScreen(Screen):
             # PC boot timings
             else:
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
-                Clock.schedule_once(self.m.s.start_services, 1)
+                Clock.schedule_once(self.machine.s.start_services, 1)
 
                 # Allow time for machine reset sequence
-                self.db.start_connection_to_database_thread()
+                self.database.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 2)
 
 
         elif sys.platform == 'win32' or sys.platform == 'darwin':
-                self.db.start_connection_to_database_thread()
+                self.database.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 1)
 
     def next_screen(self, dt):
-        self.start_seq.next_in_sequence()
+        self.start_sequence.next_in_sequence()
         
     def set_machine_value_driven_user_settings(self, dt):
 
         # Laser settings
-        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
-        else: self.sm.get_screen('home').default_datum_choice = 'spindle'
+        if self.machine.is_laser_enabled == True: self.screen_manager.get_screen('home').default_datum_choice = 'laser'
+        else: self.screen_manager.get_screen('home').default_datum_choice = 'spindle'
 
 
         # SW Update available?
-        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
-            self.sm.get_screen('lobby').trigger_update_popup = True
+        if (self.settings.sw_version) != self.settings.latest_sw_version and not self.settings.latest_sw_version.endswith('beta') and not self.settings.sw_branch == 'master':
+            self.screen_manager.get_screen('lobby').trigger_update_popup = True
 
 
     def update_strings(self):
-        self.starting_label.text = self.l.get_str('Starting SmartBench') + '...'
+        self.starting_label.text = self.localization.get_str('Starting SmartBench') + '...'

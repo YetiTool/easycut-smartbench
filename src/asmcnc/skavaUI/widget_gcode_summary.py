@@ -8,7 +8,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
 
 Builder.load_string("""
 
@@ -42,13 +42,14 @@ class ScrollViewGCode(ScrollView):
 
 class GCodeSummary(Widget):
 
+    job = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(GCodeSummary, self).__init__(**kwargs)
-        self.jd = kwargs['job']
 
     def display_summary(self):
 
-        self.gcode_scrollview.text_container.text = self.jd.gcode_summary_string
+        self.gcode_scrollview.text_container.text = self.job.gcode_summary_string
 
     def hide_summary(self):
 

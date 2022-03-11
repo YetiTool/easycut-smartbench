@@ -12,7 +12,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTran
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from __builtin__ import file
 from kivy.clock import Clock
 
 import os, sys, threading
@@ -74,7 +73,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
-                        on_press: root.m.laser_off()
+                        on_press: root.machine.laser_off()
                         BoxLayout:
                             padding: 20
                             spacing: 20
@@ -93,7 +92,7 @@ Builder.load_string("""
                         id: move_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
-                        on_press: root.m.laser_on()
+                        on_press: root.machine.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -134,7 +133,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
-                        on_press: root.m.laser_on()
+                        on_press: root.machine.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -165,7 +164,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_job_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_job_up.png'
-                        on_press: root.m.laser_off()
+                        on_press: root.machine.laser_off()
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
@@ -245,7 +244,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message))
 
 class HomeScreen(Screen):
 
@@ -257,60 +256,61 @@ class HomeScreen(Screen):
     z_datum_reminder_flag = False
     has_datum_been_reset = False
 
+    machine = ObjectProperty()
+    screen_manager = ObjectProperty()
+    job = ObjectProperty()
+    settings = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
 
         super(HomeScreen, self).__init__(**kwargs)
         Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.home_tab))
 
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
-
         # Job tab
-        self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
+        self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.job)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
 
-        self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.jd)
+        self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.job)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
 
         # Position tab
-        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm))
+        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.machine, screen_manager=self.screen_manager))
 
         # Status bar
-        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.machine, screen_manager=self.screen_manager))
 
         # Bed tab
-        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm, localization=self.l), index=100)
+        vbc = widget_virtual_bed_control.VirtualBedControl(machine=self.machine, screen_manager=self.screen_manager, localization=self.localization)
+        self.virtual_bed_control_container.add_widget(vbc, index=100)
 
         # Move tab
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm, localization=self.l)
-        self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move.XYMove(machine=self.machine, screen_manager=self.screen_manager, localization=self.localization)
+        self.common_move_widget = widget_common_move.CommonMove(machine=self.machine, screen_manager=self.screen_manager)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
-        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd))
+        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.machine, screen_manager=self.screen_manager, job=self.job))
 
         # Settings tab
-        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.machine, screen_manager=self.screen_manager, localization=self.localization)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         
         # Quick commands
-        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
+        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.machine, screen_manager=self.screen_manager, job=self.job, localization=self.localization))
 
     def on_enter(self):
 
-        self.m.stylus_router_choice = 'router'
+        self.machine.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
-            Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
+            Clock.schedule_once(lambda dt: self.machine.laser_on(), 0.2)
         else: 
-            Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
+            Clock.schedule_once(lambda dt: self.machine.set_led_colour('GREEN'), 0.2)
     
         # File label at the top
-        if self.jd.job_gcode != []:
+        if self.job.job_gcode != []:
 
-            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
+            self.file_data_label.text = "[color=333333]" + self.job.job_name + "[/color]"    
             self.gcode_summary_widget.display_summary()
 
             # Preview file as drawing
@@ -321,10 +321,10 @@ class HomeScreen(Screen):
 
     def on_pre_enter(self):
 
-        if self.jd.job_gcode == []:
+        if self.job.job_gcode == []:
 
             self.file_data_label.text = ('[color=333333]' + \
-                self.l.get_str('Load a file') + '...' + '[/color]'
+                self.localization.get_str('Load a file') + '...' + '[/color]'
                 )
             self.job_filename = ''
   
@@ -340,7 +340,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print('No G-code loaded.')
 
             self.gcode_summary_widget.hide_summary()
 
@@ -353,10 +353,10 @@ class HomeScreen(Screen):
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print('Unable to draw gcode')
 
         log('DONE')
 
     def on_pre_leave(self):
-        self.m.laser_off()
+        self.machine.laser_off()
     

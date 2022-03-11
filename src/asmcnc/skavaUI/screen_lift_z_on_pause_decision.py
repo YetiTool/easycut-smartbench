@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
+from kivy.properties import ObjectProperty
 
 
 Builder.load_string("""
@@ -100,44 +101,45 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message)))
 
 class LiftZOnPauseDecisionScreen(Screen):
 
     default_font_size = '36sp'
 
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
 
         self.update_strings()
     
     def popup_help(self):
 
-        info =  self.l.get_bold("Automatic lifting during a pause (recommended for most tools)") + ":" + "\n" + \
-                self.l.get_str("When paused, SmartBench can automatically lift the Z axis and move the tool away from the job.") + "\n\n" + \
-                " - " + self.l.get_str("This can be used to inspect the work or clear blockages.") + "\n" + \
-                " - " + self.l.get_str("It allows the spindle to decelerate away from the job, avoiding burn marks.") + "\n\n" + \
-                self.l.get_str("SmartBench automatically returns the tool to the correct position before resuming.") + "\n\n" + \
-                self.l.get_bold("Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile).")
+        info =  self.localization.get_bold("Automatic lifting during a pause (recommended for most tools)") + ":" + "\n" + \
+                self.localization.get_str("When paused, SmartBench can automatically lift the Z axis and move the tool away from the job.") + "\n\n" + \
+                " - " + self.localization.get_str("This can be used to inspect the work or clear blockages.") + "\n" + \
+                " - " + self.localization.get_str("It allows the spindle to decelerate away from the job, avoiding burn marks.") + "\n\n" + \
+                self.localization.get_str("SmartBench automatically returns the tool to the correct position before resuming.") + "\n\n" + \
+                self.localization.get_bold("Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile).")
 
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
     
     def decision_no(self):
-        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
-            self.sm.get_screen('go').lift_z_on_job_pause = False
-        self.sm.current = 'jobstart_warning'
+        if self.machine.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
+            self.screen_manager.get_screen('go').lift_z_on_job_pause = False
+        self.screen_manager.current = 'jobstart_warning'
 
     def decision_yes(self):
-        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
-            self.sm.get_screen('go').lift_z_on_job_pause = True
-        self.sm.current = 'jobstart_warning'
+        if self.machine.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
+            self.screen_manager.get_screen('go').lift_z_on_job_pause = True
+        self.screen_manager.current = 'jobstart_warning'
 
     def update_strings(self):
-        self.yes_button.text = self.l.get_str("Yes")
-        self.no_button.text = self.l.get_str("No")
-        self.header_label.text = self.l.get_str("If the job pauses, should SmartBench automatically lift the Z axis away from the job?")
+        self.yes_button.text = self.localization.get_str("Yes")
+        self.no_button.text = self.localization.get_str("No")
+        self.header_label.text = self.localization.get_str("If the job pauses, should SmartBench automatically lift the Z axis away from the job?")

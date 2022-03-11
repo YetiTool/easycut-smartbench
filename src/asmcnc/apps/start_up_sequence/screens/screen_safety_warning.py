@@ -271,22 +271,22 @@ Builder.load_string("""
 def log(message):
     
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print((timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message))
 
 class SafetyScreen(Screen):
 
     user_has_confirmed = False
 
+    start_sequence = ObjectProperty()
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         
         super(SafetyScreen, self).__init__(**kwargs)
-        self.start_seq=kwargs['start_sequence']
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-        
         # Status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.machine, screen_manager=self.screen_manager)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
         self.update_strings()
@@ -296,20 +296,20 @@ class SafetyScreen(Screen):
         
     def next_screen(self):
         self.user_has_confirmed = True
-        self.sm.current = 'squaring_decision'
+        self.screen_manager.current = 'squaring_decision'
         
     def on_leave(self):
-        self.start_seq.exit_sequence(self.user_has_confirmed)
+        self.start_sequence.exit_sequence(self.user_has_confirmed)
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str("Safety Warning")
-        self.label_r1_c1.text = self.l.get_str("Improper use of SmartBench can cause serious injury")
-        self.label_r2_c1.text = self.l.get_str("Always wear ear defenders, eye protection and a dust mask")
-        self.label_r3_c1.text = self.l.get_str("Risk of injury from rotating tools and axis motion")
-        self.label_r4_c1.text = self.l.get_str("Never put hands into moving machinery")
-        self.label_r1_c2.text = self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker")
-        self.label_r2_c2.text = self.l.get_str("Ensure the machine is powered from an earthed supply")
-        self.label_r3_c2.text = self.l.get_str("Never leave the machine unattended while power is on")
-        self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
-        self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
+        self.header_label.text = self.localization.get_str("Safety Warning")
+        self.label_r1_c1.text = self.localization.get_str("Improper use of SmartBench can cause serious injury")
+        self.label_r2_c1.text = self.localization.get_str("Always wear ear defenders, eye protection and a dust mask")
+        self.label_r3_c1.text = self.localization.get_str("Risk of injury from rotating tools and axis motion")
+        self.label_r4_c1.text = self.localization.get_str("Never put hands into moving machinery")
+        self.label_r1_c2.text = self.localization.get_str("Danger to life by magnetic fields - do not use near a pacemaker")
+        self.label_r2_c2.text = self.localization.get_str("Ensure the machine is powered from an earthed supply")
+        self.label_r3_c2.text = self.localization.get_str("Never leave the machine unattended while power is on")
+        self.label_r4_c2.text = self.localization.get_str("Ensure all plugs are fully inserted and secured")
+        self.confirm_button.text = self.localization.get_str("I have read and understood the instruction manual")
 

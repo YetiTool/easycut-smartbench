@@ -113,7 +113,7 @@ class SpindleFeedbackTest(unittest.TestCase):
                 str(digital_spindle_kill_time) + "," + \
                 str(digital_spindle_mains_voltage) + ">"
 
-            print self.status
+            print(self.status)
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:

@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 from datetime import datetime
+from kivy.properties import ObjectProperty
 
 
 Builder.load_string("""
@@ -133,19 +134,23 @@ class SpindleCooldownScreen(Screen):
     seconds = '10'
     update_timer_event = None
 
+    screen_manager = ObjectProperty()
+    machine = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         
         super(SpindleCooldownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-        self.seconds = self.m.spindle_cooldown_time_seconds
+        self.seconds = self.machine.spindle_cooldown_time_seconds
 
-        self.cool_down_label.text = self.l.get_str('Cooling down spindle') + '...'
+        self.cool_down_label.text = self.localization.get_str('Cooling down spindle') + '...'
 
     def on_pre_enter(self):
-        self.m.cooldown_zUp_and_spindle_on()
-        self.seconds = self.m.spindle_cooldown_time_seconds
+        self.machine.cooldown_zUp_and_spindle_on()
+        self.seconds = self.machine.spindle_cooldown_time_seconds
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
@@ -153,7 +158,7 @@ class SpindleCooldownScreen(Screen):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
-        self.sm.current = self.return_screen
+        self.screen_manager.current = self.return_screen
 
     def update_timer(self, dt):
         if self.seconds >= 0:
@@ -161,9 +166,9 @@ class SpindleCooldownScreen(Screen):
             self.countdown.text = str(self.seconds)
 
     def on_leave(self):
-        self.m.spindle_off()
-        self.m.vac_off()
+        self.machine.spindle_off()
+        self.machine.vac_off()
         if self.update_timer_event != None: Clock.unschedule(self.update_timer_event)
-        self.seconds = self.m.spindle_cooldown_time_seconds
+        self.seconds = self.machine.spindle_cooldown_time_seconds
         self.countdown.text = str(self.seconds)
         

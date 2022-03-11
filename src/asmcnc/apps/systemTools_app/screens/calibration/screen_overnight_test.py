@@ -182,7 +182,7 @@ class OvernightTesting(Screen):
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except:
             self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def setup_arrays(self):
         #x loads with vector & pos

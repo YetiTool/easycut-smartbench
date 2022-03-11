@@ -32,8 +32,10 @@ class PopupBetaUpdate(Widget):
         "Do you want to continue?"
         
         def do_update(*args):
-			if wifi_or_usb == 'wifi': self.sm.get_screen('update').get_sw_update_over_wifi()
-			elif wifi_or_usb == 'usb': self.sm.get_screen('update').get_sw_update_over_usb()
+            if wifi_or_usb == 'wifi':
+                self.sm.get_screen('update').get_sw_update_over_wifi()
+            elif wifi_or_usb == 'usb':
+                self.sm.get_screen('update').get_sw_update_over_usb()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(620, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)

@@ -39,7 +39,7 @@ class ZHeadQCDB2(Screen):
             self.sm.current = 'qcDB3'
         except:
             self.sm.current = 'qcDB4'
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def set_serial_no(self, serial_number):
         self.serial_number = serial_number

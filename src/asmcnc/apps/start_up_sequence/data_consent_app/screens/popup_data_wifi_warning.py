@@ -23,7 +23,7 @@ from kivy.graphics import Color, Rectangle
 class PopupDataAndWiFiDisableWarning(Widget):   
     def __init__(self, consent_manager, localization):
 
-    	self.c = consent_manager
+        self.c = consent_manager
         self.l = localization
 
         def decline_confirmed(*args):
