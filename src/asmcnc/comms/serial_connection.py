@@ -896,7 +896,7 @@ class SerialConnection(object):
 
                     spindle_feedback = part.split(b':')[1]
 
-                    if ',' in spindle_feedback:
+                    if b',' in spindle_feedback:
 
                         digital_spindle_feedback = spindle_feedback.split(b',')
 
