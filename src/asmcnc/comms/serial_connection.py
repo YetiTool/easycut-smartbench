@@ -882,8 +882,8 @@ class SerialConnection(object):
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
                 
-                elif part.startswith("Door") and self.m.is_machine_paused == False:
-                    if part.startswith("Door:3"):
+                elif part.startswith(b"Door") and self.m.is_machine_paused == False:
+                    if part.startswith(b"Door:3"):
                         pass
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
