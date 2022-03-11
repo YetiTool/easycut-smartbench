@@ -229,7 +229,7 @@ class OvernightTesting(Screen):
 
     def stream_overnight_file(self, dt):
 
-        if self.m.state().startswith('Idle') and not self.overnight_running:
+        if self.m.state().startswith(b'Idle') and not self.overnight_running:
 
             self.overnight_running = True
 
@@ -252,7 +252,7 @@ class OvernightTesting(Screen):
 
     def post_overnight_file_stream(self, dt):
 
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith(b'Idle'):
 
             if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
                 Clock.unschedule(self.poll_end_of_overnight_file_stream)
