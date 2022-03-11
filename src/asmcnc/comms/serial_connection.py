@@ -755,7 +755,7 @@ class SerialConnection(object):
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
-            status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
+            status_parts = message.translate(bytes.maketrans("", "", ), '<>').split('|') # fastest strip method
 
             if (status_parts[0] != "Idle" and
                 status_parts[0] != "Run" and
@@ -1231,7 +1231,7 @@ class SerialConnection(object):
 
         elif message.startswith('['):
                       
-            stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
+            stripped_message = message.translate(bytes.maketrans("", "", ), '[]') # fastest strip method
 
             if stripped_message.startswith('G28:'):
 
