@@ -757,15 +757,15 @@ class SerialConnection(object):
 
             status_parts = message.translate(bytes.maketrans(b'', b''), b'<>').split(b'|') # fastest strip method
 
-            if (status_parts[0] != "Idle" and
-                status_parts[0] != "Run" and
+            if (status_parts[0] != b"Idle" and
+                status_parts[0] != b"Run" and
                 not  (status_parts[0]).startswith(b"Hold") and
-                status_parts[0] != "Jog" and
-                status_parts[0] != "Alarm" and
+                status_parts[0] != b"Jog" and
+                status_parts[0] != b"Alarm" and
                 not (status_parts[0]).startswith(b"Door") and
-                status_parts[0] != "Check" and
-                status_parts[0] != "Home" and
-                status_parts[0] != "Sleep"):
+                status_parts[0] != b"Check" and
+                status_parts[0] != b"Home" and
+                status_parts[0] != b"Sleep"):
                 log("ERROR status parse: Status invalid: " + str(message))
                 return
 
