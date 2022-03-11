@@ -759,10 +759,10 @@ class SerialConnection(object):
 
             if (status_parts[0] != "Idle" and
                 status_parts[0] != "Run" and
-                not  (status_parts[0]).startswith("Hold") and
+                not  (status_parts[0]).startswith(b"Hold") and
                 status_parts[0] != "Jog" and
                 status_parts[0] != "Alarm" and
-                not (status_parts[0]).startswith("Door") and
+                not (status_parts[0]).startswith(b"Door") and
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
