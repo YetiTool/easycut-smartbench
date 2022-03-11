@@ -251,19 +251,21 @@ class SkavaUI(App):
 
 		sm.add_widget(gauge_screen)
 
-		gauge = Gauge(name = 'x_load_gauge', sm = sm, m = m)
+		gauge = Gauge(name = 'load_gauge', sm = sm, m = m)
 
 		gauge.set_size(300, 100)
 		gauge.set_max_value(100)
 		gauge.set_boundaries(50, 75)
 		gauge.set_value(0)
 
+		gauge_screen.add_widget(gauge)
+
+		sm.current = 'gauge'
+
 		# def set_random_value(dt):
 		# 	gauge.set_value(min(randint(0, 300), randint(0, 300)))
 
 		# Clock.schedule_interval(set_random_value, 1)
-
-		gauge_screen.add_widget(gauge)
 
 		# circle_gauge = CircleGauge()
 
