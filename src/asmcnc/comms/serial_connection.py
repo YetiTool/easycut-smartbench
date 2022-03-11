@@ -191,7 +191,7 @@ class SerialConnection(object):
 
             filesForDevice = listdir('/dev/') # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'): # look for... 
+                if line.startswith(b'tty.usbmodem'): # look for... 
 
                     print("Mac port to try: ") # for debugging
                     print(line)
@@ -346,9 +346,9 @@ class SerialConnection(object):
             if len(rec_temp):  
             
 
-                #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
+                #if not rec_temp.startswith(b'<Alarm|MPos:') and not rec_temp.startswith(b'<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE: 
-                    if rec_temp.startswith('<'):
+                    if rec_temp.startswith(b'<'):
                         log(rec_temp)
                     else:
                         log('< ' + rec_temp)
@@ -532,8 +532,8 @@ class SerialConnection(object):
         if self.suppress_error_screens == True:
             self.response_log.append(message)
 
-        if message.startswith('error'):
-            log('ERROR from GRBL: ' + message)
+        if message.startswith(b'error'):
+            log('ERROR from GRBL: ' + str(message))
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
@@ -755,18 +755,18 @@ class SerialConnection(object):
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
-            status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
+            status_parts = message.translate(bytes.maketrans(b'', b''), b'<>').split(b'|') # fastest strip method
 
             if (status_parts[0] != "Idle" and
                 status_parts[0] != "Run" and
-                not  (status_parts[0]).startswith("Hold") and
+                not  (status_parts[0]).startswith(b"Hold") and
                 status_parts[0] != "Jog" and
                 status_parts[0] != "Alarm" and
-                not (status_parts[0]).startswith("Door") and
+                not (status_parts[0]).startswith(b"Door") and
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message)
+                log("ERROR status parse: Status invalid: " + str(message))
                 return
 
             # Get machine's status
@@ -775,14 +775,14 @@ class SerialConnection(object):
             for part in status_parts:
 
                 # Get machine's position (may not be displayed, depending on mask)
-                if part.startswith('MPos:'):
-                    pos = part[5:].split(',')
+                if part.startswith(b'MPos:'):
+                    pos = part[5:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
 
                     self.m_x = pos[0]
@@ -790,42 +790,42 @@ class SerialConnection(object):
                     self.m_z = pos[2]
 
                 # Get work's position (may not be displayed, depending on mask)
-                elif part.startswith('WPos:'):
-                    pos = part[5:].split(',')
+                elif part.startswith(b'WPos:'):
+                    pos = part[5:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
                     self.w_z = pos[2]
 
                 # Get Work Co-ordinate Offset
-                elif part.startswith('WCO:'):
-                    pos = part[4:].split(',')
+                elif part.startswith(b'WCO:'):
+                    pos = part[4:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
                     self.wco_z = pos[2]
 
                 # Get grbl's buffer status
-                elif part.startswith('Bf:'):
-                    buffer_info = part[3:].split(',')
+                elif part.startswith(b'Bf:'):
+                    buffer_info = part[3:].split(b',')
 
                     try:
                         int(buffer_info[0])
                         int(buffer_info[1])
                     except:
-                        log("ERROR status parse: Buffer status invalid: " + message)
+                        log("ERROR status parse: Buffer status invalid: " + str(message))
                         return
 
                     # if different from last check
@@ -844,9 +844,9 @@ class SerialConnection(object):
                         self.print_buffer_status = False
 
                 # Get limit switch states: Pn:PxXyYZ
-                elif part.startswith('Pn:'):
+                elif part.startswith(b'Pn:'):
                     
-                    pins_info = part.split(':')[1]
+                    pins_info = part.split(b':')[1]
                     
                     if 'x' in pins_info: self.limit_x = True
                     else: self.limit_x = False
@@ -892,13 +892,13 @@ class SerialConnection(object):
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
 
-                elif part.startswith('Ld:'):
+                elif part.startswith(b'Ld:'):
 
-                    spindle_feedback = part.split(':')[1]
+                    spindle_feedback = part.split(b':')[1]
 
                     if ',' in spindle_feedback:
 
-                        digital_spindle_feedback = spindle_feedback.split(',')
+                        digital_spindle_feedback = spindle_feedback.split(b',')
 
                         try: 
                             int(digital_spindle_feedback[0])
@@ -907,7 +907,7 @@ class SerialConnection(object):
                             int(digital_spindle_feedback[3])
 
                         except:
-                            log("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            log("ERROR status parse: Digital spindle feedback invalid: " + str(message))
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
@@ -921,7 +921,7 @@ class SerialConnection(object):
                             int(spindle_feedback)
 
                         except:
-                            log("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            log("ERROR status parse: Analogue spindle feedback invalid: " + str(message))
                             return
 
                         self.spindle_load_voltage = int(spindle_feedback)
@@ -958,20 +958,20 @@ class SerialConnection(object):
                             self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                             Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
-                elif part.startswith('FS:'):
-                    feed_speed = part[3:].split(',')
+                elif part.startswith(b'FS:'):
+                    feed_speed = part[3:].split(b',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
 
                 # TEMPERATURES
-                elif part.startswith('TC:'):
-                    temps = part[3:].split(',')
+                elif part.startswith(b'TC:'):
+                    temps = part[3:].split(b',')
 
                     try: 
                         float(temps[0])
                         float(temps[1])
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        log("ERROR status parse: Temperature invalid: " + str(message))
                         return
 
                     self.motor_driver_temp = float(temps[0])
@@ -985,12 +985,12 @@ class SerialConnection(object):
                         pass
 
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        log("ERROR status parse: Temperature invalid: " + str(message))
                         return
 
                 # VOLTAGES
-                elif part.startswith('V:'):
-                    voltages = part[2:].split(',')
+                elif part.startswith(b'V:'):
+                    voltages = part[2:].split(b',')
                     try: 
                         float(voltages[0])
                         float(voltages[1])
@@ -998,7 +998,7 @@ class SerialConnection(object):
                         float(voltages[3])
 
                     except:
-                        log("ERROR status parse: Voltage invalid: " + message)
+                        log("ERROR status parse: Voltage invalid: " + str(message))
                         return
 
                     self.microcontroller_mV = float(voltages[0])
@@ -1008,8 +1008,8 @@ class SerialConnection(object):
 
 
                 # SG VALUES
-                elif part.startswith('SG:'):
-                    sg_values = part[3:].split(',')
+                elif part.startswith(b'SG:'):
+                    sg_values = part[3:].split(b',')
 
                     try:
                         int(sg_values[0])
@@ -1019,7 +1019,7 @@ class SerialConnection(object):
                         int(sg_values[4])
 
                     except:
-                        log("ERROR status parse: SG values invalid: " + message)
+                        log("ERROR status parse: SG values invalid: " + str(message))
                         return
 
                     self.sg_z_motor_axis = int(sg_values[0])
@@ -1048,9 +1048,9 @@ class SerialConnection(object):
                         if self.sm.has_screen('current_adjustment'):
                             self.sm.get_screen('current_adjustment').measure()
 
-                elif part.startswith('Sp:'):
+                elif part.startswith(b'Sp:'):
 
-                    spindle_statistics = part[3:].split(',')
+                    spindle_statistics = part[3:].split(b',')
 
                     try: 
                         int(spindle_statistics[0])
@@ -1062,7 +1062,7 @@ class SerialConnection(object):
                         int(spindle_statistics[6])
 
                     except:
-                        log("ERROR status parse: Sp values invalid: " + message)
+                        log("ERROR status parse: Sp values invalid: " + str(message))
                         return
 
                     self.spindle_serial_number = int(spindle_statistics[0])
@@ -1073,9 +1073,9 @@ class SerialConnection(object):
                     self.spindle_brush_run_time_seconds = int(spindle_statistics[5])
                     self.spindle_mains_frequency_hertz = int(spindle_statistics[6])
 
-                elif part.startswith('TREG:'):
+                elif part.startswith(b'TREG:'):
 
-                    tmc_registers = part[5:].split(',')
+                    tmc_registers = part[5:].split(b',')
 
                     try: 
                         int(tmc_registers[0])
@@ -1091,7 +1091,7 @@ class SerialConnection(object):
                         int(tmc_registers[10])
 
                     except:
-                        log("ERROR status parse: TMC registers invalid: " + message)
+                        log("ERROR status parse: TMC registers invalid: " + str(message))
                         return
 
                     self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0] = int(tmc_registers[1])
@@ -1112,16 +1112,16 @@ class SerialConnection(object):
                     except:
                         log("Could not print TMC registers")
 
-                elif part.startswith('TCAL:M'):
+                elif part.startswith(b'TCAL:M'):
 
-                    [motor_index, all_cal_data] = part[6:].split(':')
-                    all_cal_data_list = all_cal_data.strip(',').split(',')
+                    [motor_index, all_cal_data] = part[6:].split(b':')
+                    all_cal_data_list = all_cal_data.strip(',').split(b',')
 
                     try: 
                         list(map(int, all_cal_data_list))
 
                     except: 
-                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        log("ERROR status parse: TCAL registers invalid: " + str(message))
                         return
 
                     self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
@@ -1157,11 +1157,11 @@ class SerialConnection(object):
                                            self.serial_blocks_available, self.serial_chars_available))
 
  
-        elif message.startswith('ALARM:'):
-            log('ALARM from GRBL: ' + message)
+        elif message.startswith(b'ALARM:'):
+            log('ALARM from GRBL: ' + str(message))
             self.alarm.alert_user(message)
 
-        elif message.startswith('$'):
+        elif message.startswith(b'$'):
             log(message)
             setting_and_value = message.split("=")
             setting = setting_and_value[0]
@@ -1229,50 +1229,50 @@ class SerialConnection(object):
         # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:],
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
 
-        elif message.startswith('['):
+        elif message.startswith(b'['):
                       
-            stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
+            stripped_message = message.translate(bytes.maketrans(b'', b'' ), b'[]') # fastest strip method
 
-            if stripped_message.startswith('G28:'):
+            if stripped_message.startswith(b'G28:'):
 
-                pos = stripped_message[4:].split(',')
+                pos = stripped_message[4:].split(b',')
                 self.g28_x = pos[0]
                 self.g28_y = pos[1]
                 self.g28_z = pos[2]
                 
-            elif stripped_message.startswith('G54:'):
+            elif stripped_message.startswith(b'G54:'):
                 
-                pos = stripped_message[4:].split(',')
+                pos = stripped_message[4:].split(b',')
                 self.g54_x = pos[0]
                 self.g54_y = pos[1]
                 self.g54_z = pos[2]
 
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
-            elif self.expecting_probe_result and stripped_message.startswith('PRB'):
+            elif self.expecting_probe_result and stripped_message.startswith(b'PRB'):
 
                 log(stripped_message)
 
-                successful_probe = stripped_message.split(':')[2]
+                successful_probe = stripped_message.split(b':')[2]
                 
                 if successful_probe:
 
-                    z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
+                    z_machine_coord_when_probed = stripped_message.split(b':')[1].split(b',')[2]
                     log('Probed at machine height: ' + z_machine_coord_when_probed)
                     self.m.probe_z_detection_event(z_machine_coord_when_probed)
 
 
                 self.expecting_probe_result = False # clear flag
                 
-            elif stripped_message.startswith('ASM CNC'):
-                fw_hw_versions = stripped_message.split(';')
+            elif stripped_message.startswith(b'ASM CNC'):
+                fw_hw_versions = stripped_message.split(b';')
                 try: 
-                    self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                    self.fw_version = (fw_hw_versions[1]).split(b':')[1]
                     log('FW version: ' + str(self.fw_version))
                 except: 
                     log("Could not retrieve FW version")
 
                 try: 
-                    self.hw_version = (fw_hw_versions[2]).split(':')[1]
+                    self.hw_version = (fw_hw_versions[2]).split(b':')[1]
                     log('HW version: ' + str(self.hw_version))
                 except: 
                     log("Could not retrieve HW version")
@@ -1368,7 +1368,7 @@ class SerialConnection(object):
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
 
-            if not serialCommand.startswith('?') and not protocol:
+            if not serialCommand.startswith(b'?') and not protocol:
                 log('> ' + serialCommand)
 
             if altDisplayText != None: log('> ' + str(altDisplayText))
@@ -1482,7 +1482,7 @@ class SerialConnection(object):
 #         try:
 #             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
 #             #if show_in_sys and altDisplayText==None: print serialCommand
-#             if not serialCommand.startswith('?'):
+#             if not serialCommand.startswith(b'?'):
 #                 log('> ' + serialCommand)
 #             if altDisplayText != None: print altDisplayText
 # 
