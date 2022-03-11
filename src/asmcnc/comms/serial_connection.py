@@ -965,7 +965,7 @@ class SerialConnection(object):
 
                 # TEMPERATURES
                 elif part.startswith(b'TC:'):
-                    temps = part[3:].split(b',')
+                    temps = part[3:].split(',')
 
                     try: 
                         float(temps[0])
@@ -990,7 +990,7 @@ class SerialConnection(object):
 
                 # VOLTAGES
                 elif part.startswith(b'V:'):
-                    voltages = part[2:].split(b',')
+                    voltages = part[2:].split(',')
                     try: 
                         float(voltages[0])
                         float(voltages[1])
@@ -1009,7 +1009,7 @@ class SerialConnection(object):
 
                 # SG VALUES
                 elif part.startswith(b'SG:'):
-                    sg_values = part[3:].split(b',')
+                    sg_values = part[3:].split(',')
 
                     try:
                         int(sg_values[0])
@@ -1115,7 +1115,7 @@ class SerialConnection(object):
                 elif part.startswith(b'TCAL:M'):
 
                     [motor_index, all_cal_data] = part[6:].split(b':')
-                    all_cal_data_list = all_cal_data.strip(',').split(b',')
+                    all_cal_data_list = all_cal_data.strip(',').split(',')
 
                     try: 
                         list(map(int, all_cal_data_list))
@@ -1256,7 +1256,7 @@ class SerialConnection(object):
                 
                 if successful_probe:
 
-                    z_machine_coord_when_probed = stripped_message.split(b':')[1].split(b',')[2]
+                    z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
                     log('Probed at machine height: ' + z_machine_coord_when_probed)
                     self.m.probe_z_detection_event(z_machine_coord_when_probed)
 
@@ -1266,13 +1266,13 @@ class SerialConnection(object):
             elif stripped_message.startswith(b'ASM CNC'):
                 fw_hw_versions = stripped_message.split(b';')
                 try: 
-                    self.fw_version = (fw_hw_versions[1]).split(b':')[1]
+                    self.fw_version = (fw_hw_versions[1]).split(':')[1]
                     log('FW version: ' + str(self.fw_version))
                 except: 
                     log("Could not retrieve FW version")
 
                 try: 
-                    self.hw_version = (fw_hw_versions[2]).split(b':')[1]
+                    self.hw_version = (fw_hw_versions[2]).split(':')[1]
                     log('HW version: ' + str(self.hw_version))
                 except: 
                     log("Could not retrieve HW version")
