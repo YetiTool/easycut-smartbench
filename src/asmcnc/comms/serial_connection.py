@@ -965,7 +965,7 @@ class SerialConnection(object):
 
                 # TEMPERATURES
                 elif part.startswith(b'TC:'):
-                    temps = part[3:].split(',')
+                    temps = part[3:].split(b',')
 
                     try: 
                         float(temps[0])
@@ -990,7 +990,7 @@ class SerialConnection(object):
 
                 # VOLTAGES
                 elif part.startswith(b'V:'):
-                    voltages = part[2:].split(',')
+                    voltages = part[2:].split(b',')
                     try: 
                         float(voltages[0])
                         float(voltages[1])
@@ -1009,7 +1009,7 @@ class SerialConnection(object):
 
                 # SG VALUES
                 elif part.startswith(b'SG:'):
-                    sg_values = part[3:].split(',')
+                    sg_values = part[3:].split(b',')
 
                     try:
                         int(sg_values[0])
