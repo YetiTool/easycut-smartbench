@@ -80,6 +80,11 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
+from asmcnc.tests.gauges.screen_gauges import GaugeScreen
+from asmcnc.tests.gauges.widget_gauge import Gauge
+from asmcnc.tests.gauges.widget_circle_gauge import CircleGauge
+from random import randint
+
 # developer testing
 Cmport = 'COM3'
 
@@ -242,7 +247,28 @@ class SkavaUI(App):
 
 		# Clock.schedule_interval(test_cycle, 5)
 
+		gauge_screen = GaugeScreen(name = 'gauge', sm = sm, m = m)
 
+		sm.add_widget(gauge_screen)
+
+		sm.current = 'gauge'
+
+		gauge = Gauge(name = 'x_load_gauge', sm = sm, m = m)
+
+		gauge.set_size(300, 100)
+		gauge.set_max_value(300)
+		gauge.set_value(290)
+
+		def set_random_value(dt):
+			gauge.set_value(min(randint(0, 300), randint(0, 300)))
+
+		Clock.schedule_interval(set_random_value, 1)
+
+		gauge_screen.add_widget(gauge)
+
+		# circle_gauge = CircleGauge()
+
+		# gauge_screen.add_gauge(circle_gauge)
 
 		# def test_run_through_sequence(dt):
 
