@@ -171,7 +171,7 @@ class SquaringScreenActive(Screen):
     def check_for_successful_completion(self, dt):
 
         # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.machine.state().startswith('Alarm'):
+        if self.machine.state().startswith(b'Alarm'):
             print ("Poll for homing success unscheduled")
             if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 

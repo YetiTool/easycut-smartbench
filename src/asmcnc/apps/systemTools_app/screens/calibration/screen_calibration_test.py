@@ -510,7 +510,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
 
                 if not self.z_running:
                     return
@@ -564,7 +564,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
 
                 if not self.z_running:
                     return
@@ -619,7 +619,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
 
                 if not self.y_running:
                     return
@@ -666,7 +666,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
 
                 if not self.y_running:
                     return
@@ -720,7 +720,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
     
                 if not self.x_running:
                     return
@@ -767,7 +767,7 @@ class CalibrationTesting(Screen):
 
         def run(dt):
 
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith(b'Idle'):
 
                 if not self.x_running:
                     return

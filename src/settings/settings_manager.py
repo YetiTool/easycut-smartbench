@@ -262,7 +262,7 @@ class Settings(object):
                 git_output = str(unformatted_git_output).split('\n')
                 git_output = list([x for x in git_output if x!= ''])
                      
-                if str(git_output[-1]).startswith('HEAD is now at'):
+                if str(git_output[-1]).startswith(b'HEAD is now at'):
                     self.update_config()
                     description = str(git_output[-1])
                     return description
@@ -382,7 +382,7 @@ class Settings(object):
         except: 
             pass
 
-        if dir_path_name.startswith('/home/pi/temp_repo/'):
+        if dir_path_name.startswith(b'/home/pi/temp_repo/'):
             rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
             os.system(rm_temp_repo)
 
