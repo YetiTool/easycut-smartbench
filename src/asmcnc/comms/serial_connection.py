@@ -533,7 +533,7 @@ class SerialConnection(object):
             self.response_log.append(message)
 
         if message.startswith(b'error'):
-            log('ERROR from GRBL: ' + message)
+            log('ERROR from GRBL: ' + str(message))
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
@@ -766,7 +766,7 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message)
+                log("ERROR status parse: Status invalid: " + str(message))
                 return
 
             # Get machine's status
@@ -782,7 +782,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
 
                     self.m_x = pos[0]
@@ -797,7 +797,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
@@ -811,7 +811,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        log("ERROR status parse: Position invalid: " + str(message))
                         return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
@@ -825,7 +825,7 @@ class SerialConnection(object):
                         int(buffer_info[0])
                         int(buffer_info[1])
                     except:
-                        log("ERROR status parse: Buffer status invalid: " + message)
+                        log("ERROR status parse: Buffer status invalid: " + str(message))
                         return
 
                     # if different from last check
@@ -907,7 +907,7 @@ class SerialConnection(object):
                             int(digital_spindle_feedback[3])
 
                         except:
-                            log("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            log("ERROR status parse: Digital spindle feedback invalid: " + str(message))
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
@@ -921,7 +921,7 @@ class SerialConnection(object):
                             int(spindle_feedback)
 
                         except:
-                            log("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            log("ERROR status parse: Analogue spindle feedback invalid: " + str(message))
                             return
 
                         self.spindle_load_voltage = int(spindle_feedback)
@@ -971,7 +971,7 @@ class SerialConnection(object):
                         float(temps[0])
                         float(temps[1])
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        log("ERROR status parse: Temperature invalid: " + str(message))
                         return
 
                     self.motor_driver_temp = float(temps[0])
@@ -985,7 +985,7 @@ class SerialConnection(object):
                         pass
 
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        log("ERROR status parse: Temperature invalid: " + str(message))
                         return
 
                 # VOLTAGES
@@ -998,7 +998,7 @@ class SerialConnection(object):
                         float(voltages[3])
 
                     except:
-                        log("ERROR status parse: Voltage invalid: " + message)
+                        log("ERROR status parse: Voltage invalid: " + str(message))
                         return
 
                     self.microcontroller_mV = float(voltages[0])
@@ -1019,7 +1019,7 @@ class SerialConnection(object):
                         int(sg_values[4])
 
                     except:
-                        log("ERROR status parse: SG values invalid: " + message)
+                        log("ERROR status parse: SG values invalid: " + str(message))
                         return
 
                     self.sg_z_motor_axis = int(sg_values[0])
@@ -1062,7 +1062,7 @@ class SerialConnection(object):
                         int(spindle_statistics[6])
 
                     except:
-                        log("ERROR status parse: Sp values invalid: " + message)
+                        log("ERROR status parse: Sp values invalid: " + str(message))
                         return
 
                     self.spindle_serial_number = int(spindle_statistics[0])
@@ -1091,7 +1091,7 @@ class SerialConnection(object):
                         int(tmc_registers[10])
 
                     except:
-                        log("ERROR status parse: TMC registers invalid: " + message)
+                        log("ERROR status parse: TMC registers invalid: " + str(message))
                         return
 
                     self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0] = int(tmc_registers[1])
@@ -1121,7 +1121,7 @@ class SerialConnection(object):
                         list(map(int, all_cal_data_list))
 
                     except: 
-                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        log("ERROR status parse: TCAL registers invalid: " + str(message))
                         return
 
                     self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
@@ -1158,7 +1158,7 @@ class SerialConnection(object):
 
  
         elif message.startswith(b'ALARM:'):
-            log('ALARM from GRBL: ' + message)
+            log('ALARM from GRBL: ' + str(message))
             self.alarm.alert_user(message)
 
         elif message.startswith(b'$'):
