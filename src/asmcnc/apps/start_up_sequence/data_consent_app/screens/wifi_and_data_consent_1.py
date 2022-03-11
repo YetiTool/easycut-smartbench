@@ -346,15 +346,13 @@ Builder.load_string("""
 
 class WiFiAndDataConsentScreen1(Screen):
 
-	start_seq = ObjectProperty()
+	start_sequence = ObjectProperty()
 	consent_manager = ObjectProperty()
 	localization = ObjectProperty()
 
 	def __init__(self, **kwargs):
-		print(kwargs)
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
 		self.update_strings()
-
 
 	def next_screen(self):
 
