@@ -848,31 +848,31 @@ class SerialConnection(object):
                     
                     pins_info = part.split(b':')[1]
                     
-                    if 'x' in pins_info: self.limit_x = True
+                    if b'x' in pins_info: self.limit_x = True
                     else: self.limit_x = False
                     
-                    if 'X' in pins_info: self.limit_X = True
+                    if b'X' in pins_info: self.limit_X = True
                     else: self.limit_X = False
                     
-                    if 'y' in pins_info: self.limit_y = True
+                    if b'y' in pins_info: self.limit_y = True
                     else: self.limit_y = False
                     
-                    if 'Y' in pins_info: self.limit_Y = True
+                    if b'Y' in pins_info: self.limit_Y = True
                     else: self.limit_Y = False
                     
-                    if 'Z' in pins_info: self.limit_z = True
+                    if b'Z' in pins_info: self.limit_z = True
                     else: self.limit_z = False
 
-                    if 'P' in pins_info: self.probe = True
+                    if b'P' in pins_info: self.probe = True
                     else: self.probe = False
 
-                    if 'g' in pins_info: self.spare_door = True
+                    if b'g' in pins_info: self.spare_door = True
                     else: self.spare_door = False
                     
-                    if 'G' in pins_info: self.dust_shoe_cover = True
+                    if b'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
+                    if b'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
                             self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi', 0)
