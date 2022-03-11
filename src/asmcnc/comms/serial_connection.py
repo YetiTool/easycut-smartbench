@@ -926,7 +926,6 @@ class SerialConnection(object):
 
                         # gather spindle overload analogue voltage, and evaluate to general state
 
-
                         if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
                         elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
                         elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40

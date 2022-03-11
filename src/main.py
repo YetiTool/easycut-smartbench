@@ -257,6 +257,7 @@ class SkavaUI(App):
 
 		gauge.set_size(300, 100)
 		gauge.set_max_value(100)
+		gauge.set_boundaries(50, 75)
 		gauge.set_value(0)
 
 		# def set_random_value(dt):

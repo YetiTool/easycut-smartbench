@@ -105,11 +105,11 @@ class Gauge(Widget):
 
         Clock.schedule_once(partial(self.set_text, value), 0.05)
 
-        if float(value) / float(self.max_value) > 0.75:
+        if float(value) / float(self.max_value) > self.error_bound:
             self.r = 1
             self.g = 0
             self.b = 0
-        elif float(value) / float(self.max_value) > 0.5:
+        elif float(value) / float(self.max_value) > self.warning_bound:
             self.r = 1
             self.g = 1
             self.b = 0
