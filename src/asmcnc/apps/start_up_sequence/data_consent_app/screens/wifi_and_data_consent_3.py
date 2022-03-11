@@ -2,7 +2,7 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty, DictProperty
+from kivy.properties import StringProperty, DictProperty, ObjectProperty
 
 from asmcnc.skavaUI import popup_info
 
@@ -210,6 +210,10 @@ class WiFiAndDataConsentScreen3(Screen):
 	checkbox_checked = False
 	privacy_notice_path = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
 
+	start_sequence = ObjectProperty()
+	consent_manager = ObjectProperty()
+	localization = ObjectProperty()
+
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
 		self.start_seq=kwargs['start_sequence']
@@ -218,7 +222,7 @@ class WiFiAndDataConsentScreen3(Screen):
 		self.update_strings()
 		self.set_checkbox_default()
 
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
+		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.localization.lang + '.rst'
 
 	def on_pre_leave(self):
 		self.set_checkbox_default()
@@ -226,25 +230,25 @@ class WiFiAndDataConsentScreen3(Screen):
 	def prev_screen(self):
 
 		try:
-			self.start_seq.prev_in_sequence()
+			self.start_sequence.prev_in_sequence()
 
 		except:
-			self.c.sm.current='consent_2'
+			self.consent_manager.sm.current='consent_2'
 
 	def update_strings(self):
-		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
-		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
-		self.decline_button.text = self.l.get_str("Decline")
-		self.accept_button.text = self.l.get_str("Accept")
+		self.header_label.text = self.localization.get_str("Wi-Fi and Data Consent")
+		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.localization.lang + '.rst'
+		self.user_info.text = self.localization.get_str("I have read and understood the privacy notice")
+		self.decline_button.text = self.localization.get_str("Decline")
+		self.accept_button.text = self.localization.get_str("Accept")
 
 	def accept_terms(self):
 		if self.terms_checkbox.active: 
-			self.c.accept_terms_and_enable_wifi()
+			self.consent_manager.accept_terms_and_enable_wifi()
 
 	def decline_terms(self):
 		if self.terms_checkbox.active: 
-			self.c.warn_user_before_accepting_decline()
+			self.consent_manager.warn_user_before_accepting_decline()
 
 	def on_checkbox_active(self):
 		if self.terms_checkbox.active: 

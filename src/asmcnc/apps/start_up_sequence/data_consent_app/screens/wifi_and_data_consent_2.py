@@ -3,6 +3,7 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 
 from asmcnc.skavaUI import popup_info
 
@@ -132,44 +133,45 @@ Builder.load_string("""
 
 class WiFiAndDataConsentScreen2(Screen):
 
+	localization = ObjectProperty()
+	consent_manager = ObjectProperty()
+	start_sequence = ObjectProperty()
+
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.c=kwargs['consent_manager']
-		self.l = kwargs['localization']
 		self.update_strings()
 
 	def next_screen(self):
 
 		try:
-			self.start_seq.next_in_sequence()
+			self.start_sequence.next_in_sequence()
 		except:
-			self.c.sm.current='consent_3'
+			self.consent_manager.sm.current='consent_3'
 
 	def prev_screen(self):
 
 		try:
-			self.start_seq.prev_in_sequence()
+			self.start_sequence.prev_in_sequence()
 
 		except:
-			self.c.sm.current='consent_1'
+			self.consent_manager.sm.current='consent_1'
 
 	def update_strings(self):
-		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+		self.header_label.text = self.localization.get_str("Wi-Fi and Data Consent")
 		self.user_info.text = (
-			self.l.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
+			self.localization.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
 			"\n\n" + \
-			self.l.get_bold("This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.") + \
+			self.localization.get_bold("This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.") + \
 			"\n\n" + \
-			self.l.get_str("You will need Wi-Fi to:") + \
+			self.localization.get_str("You will need Wi-Fi to:") + \
 			"\n\n" + \
-			"[b]•[/b] " + self.l.get_str("Automatically receive software updates") + \
+			"[b]•[/b] " + self.localization.get_str("Automatically receive software updates") + \
 			"\n" + \
-			"[b]•[/b] " + self.l.get_str("Remotely transfer files (e.g. with SmartTransfer)") + \
+			"[b]•[/b] " + self.localization.get_str("Remotely transfer files (e.g. with SmartTransfer)") + \
 			"\n" + \
-			"[b]•[/b] " + self.l.get_str("Remotely manage and monitor SmartBench (e.g. with SmartManager)") + \
+			"[b]•[/b] " + self.localization.get_str("Remotely manage and monitor SmartBench (e.g. with SmartManager)") + \
 			"\n\n" + \
-			self.l.get_str("You can come back to this data policy at any time, and enable or disable Wi-Fi.")
+			self.localization.get_str("You can come back to this data policy at any time, and enable or disable Wi-Fi.")
 
 		)
-		self.next_button.text = self.l.get_str("Next") + "..."
+		self.next_button.text = self.localization.get_str("Next") + "..."
