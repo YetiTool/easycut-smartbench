@@ -888,7 +888,7 @@ class SerialConnection(object):
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
-                            log("Hard " + self.m_state)
+                            log("Hard " + str(self.m_state))
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
 
