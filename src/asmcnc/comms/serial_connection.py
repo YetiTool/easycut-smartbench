@@ -24,6 +24,7 @@ from serial.serialutil import SerialException
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
+import traceback
 
 
 BAUD_RATE = 115200
@@ -131,6 +132,7 @@ class SerialConnection(object):
                     self.s.close()
 
             except:
+                log(traceback.format_exc())
                 log("Could not communicate with that port at all")
 
         except: 
