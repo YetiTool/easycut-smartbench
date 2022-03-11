@@ -1382,6 +1382,7 @@ class SerialConnection(object):
 
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+            print(traceback.format_exc())
 
         # Finally issue the command        
         if self.s:
