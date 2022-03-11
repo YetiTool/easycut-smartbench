@@ -1368,7 +1368,7 @@ class SerialConnection(object):
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
 
-            if not serialCommand.startswith(b'?') and not protocol:
+            if not serialCommand.startswith('?') and not protocol:
                 log('> ' + serialCommand)
 
             if altDisplayText != None: log('> ' + str(altDisplayText))
