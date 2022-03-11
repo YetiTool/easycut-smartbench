@@ -9,7 +9,7 @@ import kivy, os
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty, DictProperty
+from kivy.properties import StringProperty, DictProperty, ObjectProperty
 
 from datetime import datetime
 
@@ -138,6 +138,11 @@ class ReleaseNotesScreen(Screen):
     data_consent_app = None
     user_has_confirmed = False
 
+    start_sequence = ObjectProperty()
+    screen_manager = ObjectProperty()
+    version = ObjectProperty()
+    localization = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
         self.start_seq=kwargs['start_sequence']
@@ -155,14 +160,14 @@ class ReleaseNotesScreen(Screen):
 
     def update_strings(self):
 
-        self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
-        self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
-        self.url_label.text = self.l.get_str("For full release notes, go to:") + \
+        self.version_number_label.text = (self.localization.get_str("Software updated successfully to version")).replace(self.localization.get_str('version'), self.version)
+        self.please_read_label.text = self.localization.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
+        self.url_label.text = self.localization.get_str("For full release notes, go to:") + \
         "\n" + \
         "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
-        self.next_button.text = self.l.get_str("Next") + "..."
+        self.next_button.text = self.localization.get_str("Next") + "..."
 
     
     def next_screen(self):
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt')
-        self.start_seq.next_in_sequence()
+        self.start_sequence.next_in_sequence()
