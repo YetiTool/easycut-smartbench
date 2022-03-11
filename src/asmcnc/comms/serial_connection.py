@@ -207,8 +207,9 @@ class SerialConnection(object):
                 ACM_port = 'ttyACM'
                 USB_port = 'ttyUSB'
                 AMA_port = 'ttyAMA'
+                SERIAL_port = 'serial'
 
-                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+                port_list = [default_serial_port, ACM_port, USB_port, AMA_port, SERIAL_port]
 
                 filesForDevice = listdir('/dev/') # put all device files into list[]
 
