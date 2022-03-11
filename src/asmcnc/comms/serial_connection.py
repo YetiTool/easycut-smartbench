@@ -776,7 +776,7 @@ class SerialConnection(object):
 
                 # Get machine's position (may not be displayed, depending on mask)
                 if part.startswith(b'MPos:'):
-                    pos = part[5:].split(',')
+                    pos = part[5:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
@@ -791,7 +791,7 @@ class SerialConnection(object):
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith(b'WPos:'):
-                    pos = part[5:].split(',')
+                    pos = part[5:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
@@ -805,7 +805,7 @@ class SerialConnection(object):
 
                 # Get Work Co-ordinate Offset
                 elif part.startswith(b'WCO:'):
-                    pos = part[4:].split(',')
+                    pos = part[4:].split(b',')
                     try:
                         float(pos[0])
                         float(pos[1])
@@ -819,7 +819,7 @@ class SerialConnection(object):
 
                 # Get grbl's buffer status
                 elif part.startswith(b'Bf:'):
-                    buffer_info = part[3:].split(',')
+                    buffer_info = part[3:].split(b',')
 
                     try:
                         int(buffer_info[0])
@@ -846,7 +846,7 @@ class SerialConnection(object):
                 # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith(b'Pn:'):
                     
-                    pins_info = part.split(':')[1]
+                    pins_info = part.split(b':')[1]
                     
                     if 'x' in pins_info: self.limit_x = True
                     else: self.limit_x = False
@@ -894,11 +894,11 @@ class SerialConnection(object):
 
                 elif part.startswith(b'Ld:'):
 
-                    spindle_feedback = part.split(':')[1]
+                    spindle_feedback = part.split(b':')[1]
 
                     if ',' in spindle_feedback:
 
-                        digital_spindle_feedback = spindle_feedback.split(',')
+                        digital_spindle_feedback = spindle_feedback.split(b',')
 
                         try: 
                             int(digital_spindle_feedback[0])
@@ -959,13 +959,13 @@ class SerialConnection(object):
                             Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith(b'FS:'):
-                    feed_speed = part[3:].split(',')
+                    feed_speed = part[3:].split(b',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
 
                 # TEMPERATURES
                 elif part.startswith(b'TC:'):
-                    temps = part[3:].split(',')
+                    temps = part[3:].split(b',')
 
                     try: 
                         float(temps[0])
@@ -990,7 +990,7 @@ class SerialConnection(object):
 
                 # VOLTAGES
                 elif part.startswith(b'V:'):
-                    voltages = part[2:].split(',')
+                    voltages = part[2:].split(b',')
                     try: 
                         float(voltages[0])
                         float(voltages[1])
@@ -1009,7 +1009,7 @@ class SerialConnection(object):
 
                 # SG VALUES
                 elif part.startswith(b'SG:'):
-                    sg_values = part[3:].split(',')
+                    sg_values = part[3:].split(b',')
 
                     try:
                         int(sg_values[0])
@@ -1050,7 +1050,7 @@ class SerialConnection(object):
 
                 elif part.startswith(b'Sp:'):
 
-                    spindle_statistics = part[3:].split(',')
+                    spindle_statistics = part[3:].split(b',')
 
                     try: 
                         int(spindle_statistics[0])
@@ -1075,7 +1075,7 @@ class SerialConnection(object):
 
                 elif part.startswith(b'TREG:'):
 
-                    tmc_registers = part[5:].split(',')
+                    tmc_registers = part[5:].split(b',')
 
                     try: 
                         int(tmc_registers[0])
@@ -1114,8 +1114,8 @@ class SerialConnection(object):
 
                 elif part.startswith(b'TCAL:M'):
 
-                    [motor_index, all_cal_data] = part[6:].split(':')
-                    all_cal_data_list = all_cal_data.strip(',').split(',')
+                    [motor_index, all_cal_data] = part[6:].split(b':')
+                    all_cal_data_list = all_cal_data.strip(',').split(b',')
 
                     try: 
                         list(map(int, all_cal_data_list))
@@ -1235,14 +1235,14 @@ class SerialConnection(object):
 
             if stripped_message.startswith(b'G28:'):
 
-                pos = stripped_message[4:].split(',')
+                pos = stripped_message[4:].split(b',')
                 self.g28_x = pos[0]
                 self.g28_y = pos[1]
                 self.g28_z = pos[2]
                 
             elif stripped_message.startswith(b'G54:'):
                 
-                pos = stripped_message[4:].split(',')
+                pos = stripped_message[4:].split(b',')
                 self.g54_x = pos[0]
                 self.g54_y = pos[1]
                 self.g54_z = pos[2]
@@ -1252,11 +1252,11 @@ class SerialConnection(object):
 
                 log(stripped_message)
 
-                successful_probe = stripped_message.split(':')[2]
+                successful_probe = stripped_message.split(b':')[2]
                 
                 if successful_probe:
 
-                    z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
+                    z_machine_coord_when_probed = stripped_message.split(b':')[1].split(b',')[2]
                     log('Probed at machine height: ' + z_machine_coord_when_probed)
                     self.m.probe_z_detection_event(z_machine_coord_when_probed)
 
@@ -1264,15 +1264,15 @@ class SerialConnection(object):
                 self.expecting_probe_result = False # clear flag
                 
             elif stripped_message.startswith(b'ASM CNC'):
-                fw_hw_versions = stripped_message.split(';')
+                fw_hw_versions = stripped_message.split(b';')
                 try: 
-                    self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                    self.fw_version = (fw_hw_versions[1]).split(b':')[1]
                     log('FW version: ' + str(self.fw_version))
                 except: 
                     log("Could not retrieve FW version")
 
                 try: 
-                    self.hw_version = (fw_hw_versions[2]).split(':')[1]
+                    self.hw_version = (fw_hw_versions[2]).split(b':')[1]
                     log('HW version: ' + str(self.hw_version))
                 except: 
                     log("Could not retrieve HW version")
