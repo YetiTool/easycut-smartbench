@@ -103,7 +103,7 @@ class SerialConnection(object):
             try:
                 # flush input and soft-reset: this will trigger the GRBL welcome message
                 self.s.flushInput()
-                self.s.write("\x18")
+                self.s.write("\x18".encode())
                 # give it a second to reply
                 time.sleep(1)
                 first_bytes = self.s.inWaiting()
@@ -144,7 +144,7 @@ class SerialConnection(object):
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
             self.s.flushInput()
-            self.s.write("\x18")
+            self.s.write("\x18".encode())
             return available_port
         
         except:
@@ -361,7 +361,7 @@ class SerialConnection(object):
                 # NB: Sequential streaming is controlled through process_grbl_response
                 try:
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
-                    if rec_temp.startswith(('ok', 'error')):
+                    if rec_temp.startswith((b'ok', b'error')):
                         self.process_grbl_response(rec_temp)
                     # If PUSH message
                     else:
@@ -748,7 +748,7 @@ class SerialConnection(object):
         if self.VERBOSE_ALL_PUSH_MESSAGES: print(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
-        if message.startswith('<'):
+        if message.startswith(b'<'):
             # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
@@ -1387,14 +1387,14 @@ class SerialConnection(object):
 
                 if realtime == True:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
-                    self.s.write(serialCommand)
+                    self.s.write(serialCommand.encode())
 
                 elif realtime == False and protocol == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-                    self.s.write(serialCommand + '\n')
+                    self.s.write((serialCommand + '\n').encode())
 
                 elif protocol == True:
-                        self.s.write(serialCommand)
+                        self.s.write(serialCommand.encode())
                         self.last_protocol_send_time = time.time()
 
             except:
