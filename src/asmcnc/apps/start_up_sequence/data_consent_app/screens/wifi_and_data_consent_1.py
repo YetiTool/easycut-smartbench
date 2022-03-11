@@ -351,6 +351,7 @@ class WiFiAndDataConsentScreen1(Screen):
 	localization = ObjectProperty()
 
 	def __init__(self, **kwargs):
+		print(kwargs)
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
 		self.update_strings()
 
