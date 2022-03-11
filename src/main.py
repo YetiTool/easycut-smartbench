@@ -258,7 +258,7 @@ class SkavaUI(App):
 		gauge.set_boundaries(50, 75)
 		gauge.set_value(0)
 
-		gauge_screen.add_widget(gauge)
+		gauge_screen.add_gauge(gauge)
 
 		sm.current = 'gauge'
 
