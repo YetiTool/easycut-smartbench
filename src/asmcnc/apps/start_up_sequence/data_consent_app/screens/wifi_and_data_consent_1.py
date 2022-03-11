@@ -352,9 +352,6 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.c=kwargs['consent_manager']
-		self.l = kwargs['localization']
 		self.update_strings()
 
 
@@ -363,7 +360,7 @@ class WiFiAndDataConsentScreen1(Screen):
 		try:
 			self.start_sequence.next_in_sequence()
 		except:
-			self.consent_manager.sm.current='consent_2'
+			self.consent_manager.screen_manager.current='consent_2'
 
 	def prev_screen(self):
 
