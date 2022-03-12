@@ -925,7 +925,7 @@ class SerialConnection(object):
                             print(traceback.format_exc())
                             return
 
-                        self.spindle_load_voltage = int(spindle_feedback)
+                        self.spindle_load_voltage = int.from_bytes(bytes=spindle_feedback, byteorder='big')
 
                         # gather spindle overload analogue voltage, and evaluate to general state
 
