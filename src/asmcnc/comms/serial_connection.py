@@ -922,6 +922,7 @@ class SerialConnection(object):
 
                         except:
                             log("ERROR status parse: Analogue spindle feedback invalid: " + str(message))
+                            print(traceback.format_exc())
                             return
 
                         self.spindle_load_voltage = int(spindle_feedback)
