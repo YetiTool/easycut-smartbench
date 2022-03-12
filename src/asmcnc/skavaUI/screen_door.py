@@ -244,8 +244,8 @@ class DoorScreen(Screen):
 
     def on_enter(self):
 
-        if not str(self.m.state()).startswith('Door:0'):
-            print((str(self.m.state())))
+        if not str(self.machine.state()).startswith('Door:0'):
+            print((str(self.machine.state())))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)
@@ -269,13 +269,13 @@ class DoorScreen(Screen):
         self.anim_stop_img.start(self.stop_img)
 
     def start_spindle_label_animation(self, dt):
-        if not str(self.m.state()).startswith('Door:0'):
+        if not str(self.machine.state()).startswith('Door:0'):
             self.anim_spindle_label.start(self.spindle_raise_label)
             self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
 
-        if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
+        if (str(self.machine.state()).startswith('Door:0') or not (str(self.machine.state()).startswith('Door'))):
 
             Clock.unschedule(self.poll_for_resume)
             self.anim_spindle_label.repeat = False
@@ -301,7 +301,7 @@ class DoorScreen(Screen):
     def resume_stream(self):
         # Job resumed, send event
         self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
-        self.m.resume_after_a_hard_door()
+        self.machine.resume_after_a_hard_door()
         self.return_to_app()
 
     def cancel_stream(self):
@@ -310,9 +310,9 @@ class DoorScreen(Screen):
             self.return_to_screen = 'job_incomplete'
 
         else:
-            self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+            self.machine.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
 
-        self.m.cancel_after_a_hard_door()
+        self.machine.cancel_after_a_hard_door()
         self.return_to_app()
             
     def return_to_app(self):
