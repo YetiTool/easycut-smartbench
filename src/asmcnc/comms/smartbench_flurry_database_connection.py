@@ -156,7 +156,7 @@ class DatabaseEventManager():
 				if self.set.ip_address:
 
 					try:
-						if self.m.s.m_state == b"Idle":
+						if self.m.s.m_state == b'Idle':
 							self.send_alive()
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
