@@ -253,7 +253,7 @@ class DoorScreen(Screen):
 
         else: Clock.schedule_once(self.ready_to_resume, 0.2)
 
-        self.database.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
+        self.database.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.job.job_name, 3)
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
@@ -300,7 +300,7 @@ class DoorScreen(Screen):
 
     def resume_stream(self):
         # Job resumed, send event
-        self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+        self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.job.job_name, 4)
         self.machine.resume_after_a_hard_door()
         self.return_to_app()
 
