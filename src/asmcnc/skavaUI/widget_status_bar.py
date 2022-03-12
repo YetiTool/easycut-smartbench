@@ -160,8 +160,7 @@ class StatusBar(Widget):
     def refresh_grbl_label_values(self, dt):
         if self.machine.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
-            print(type(self.machine.state()))
-            self.grbl_status_label.text = self.machine.state()
+            self.grbl_status_label.text = str(self.machine.state())
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.machine.mpos_x(), 2))
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.machine.mpos_y(), 2))
             self.grbl_zm_label.text = 'mZ:\n' + str(round(self.machine.mpos_z(), 2))
