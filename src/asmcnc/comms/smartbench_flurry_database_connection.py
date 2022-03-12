@@ -302,8 +302,8 @@ class DatabaseEventManager():
 		# Human readable machine status:
 		status = self.m.state()
 
-		if 'Door' in status: 
-			if '3' in status:
+		if b'Door' in status: 
+			if b'3' in status:
 				status = "Resuming"
 			else: 
 				status = "Paused"
