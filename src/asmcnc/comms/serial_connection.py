@@ -755,17 +755,17 @@ class SerialConnection(object):
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
-            status_parts = message.translate(bytes.maketrans(b'', b''), b'<>').split(b'|') # fastest strip method
+            status_parts = message.translate(bytes.maketrans(b'', b'',), b'<>').split(b'|') # fastest strip method
 
-            if (status_parts[0] != b"Idle" and
-                status_parts[0] != b"Run" and
-                not  (status_parts[0]).startswith(b"Hold") and
-                status_parts[0] != b"Jog" and
-                status_parts[0] != b"Alarm" and
-                not (status_parts[0]).startswith(b"Door") and
-                status_parts[0] != b"Check" and
-                status_parts[0] != b"Home" and
-                status_parts[0] != b"Sleep"):
+            if (status_parts[0] != b'Idle' and
+                status_parts[0] != b'Run' and
+                not  (status_parts[0]).startswith(b'Hold') and
+                status_parts[0] != b'Jog' and
+                status_parts[0] != b'Alarm' and
+                not (status_parts[0]).startswith(b'Door') and
+                status_parts[0] != b'Check' and
+                status_parts[0] != b'Home' and
+                status_parts[0] != b'Sleep'):
                 log("ERROR status parse: Status invalid: " + str(message))
                 return
 
