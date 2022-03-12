@@ -163,6 +163,7 @@ class StatusBar(Widget):
 
             if type(self.machine.state()) == bytes:
                 self.grbl_status_label.text = str(self.machine.state().decode('UTF-8','ignore'))
+            
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.machine.mpos_x(), 2))
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.machine.mpos_y(), 2))
             self.grbl_zm_label.text = 'mZ:\n' + str(round(self.machine.mpos_z(), 2))

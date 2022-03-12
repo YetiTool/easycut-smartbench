@@ -163,7 +163,7 @@ class DatabaseEventManager():
 
 					except Exception as e:
 						log("Could not send routine update:")
-						log(str(e))
+						log(traceback.format_exc())
 
 
 				sleep(10)
