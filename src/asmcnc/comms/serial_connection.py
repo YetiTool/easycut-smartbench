@@ -918,7 +918,7 @@ class SerialConnection(object):
                     else: 
 
                         try:
-                            int.from_bytes(spindle_feedback)
+                            int.from_bytes(bytes=spindle_feedback, byteorder='big')
 
                         except:
                             log("ERROR status parse: Analogue spindle feedback invalid: " + str(message))
