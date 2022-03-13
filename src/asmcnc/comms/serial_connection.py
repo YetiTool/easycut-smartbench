@@ -104,7 +104,7 @@ class SerialConnection(object):
             try:
                 # flush input and soft-reset: this will trigger the GRBL welcome message
                 self.s.flushInput()
-                self.s.write("\x18")
+                self.s.write("\x18".encode())
                 # give it a second to reply
                 time.sleep(1)
                 first_bytes = self.s.inWaiting()
@@ -147,7 +147,7 @@ class SerialConnection(object):
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
             self.s.flushInput()
-            self.s.write("\x18")
+            self.s.write("\x18".encode())
             return available_port
         
         except:
