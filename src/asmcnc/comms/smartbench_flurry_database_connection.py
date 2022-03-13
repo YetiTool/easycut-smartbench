@@ -156,7 +156,7 @@ class DatabaseEventManager():
 				if self.set.ip_address:
 
 					try:
-						if self.m.s.m_state == b'Idle':
+						if self.m.s.m_state == 'Idle':
 							self.send_alive()
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
@@ -302,8 +302,8 @@ class DatabaseEventManager():
 		# Human readable machine status:
 		status = self.m.state()
 
-		if b'Door' in status: 
-			if b'3' in status:
+		if 'Door' in status: 
+			if '3' in status:
 				status = "Resuming"
 			else: 
 				status = "Paused"
