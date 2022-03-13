@@ -883,8 +883,8 @@ class SerialConnection(object):
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
                 
-                elif part.startswith(b"Door") and self.m.is_machine_paused == False:
-                    if part.startswith(b"Door:3"):
+                elif part.startswith("Door") and self.m.is_machine_paused == False:
+                    if part.startswith("Door:3"):
                         pass
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
@@ -1165,7 +1165,7 @@ class SerialConnection(object):
 
         elif message.startswith('$'):
             log(message)
-            setting_and_value = message.split(b"=")
+            setting_and_value = message.split("=")
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
 
