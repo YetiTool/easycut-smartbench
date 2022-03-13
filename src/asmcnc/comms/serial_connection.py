@@ -919,14 +919,14 @@ class SerialConnection(object):
                     else: 
 
                         try:
-                            int.from_bytes(bytes=spindle_feedback, byteorder='big')
+                            int(spindle_feedback)
 
                         except:
                             log("ERROR status parse: Analogue spindle feedback invalid: " + str(message))
                             print(traceback.format_exc())
                             return
 
-                        self.spindle_load_voltage = int.from_bytes(bytes=spindle_feedback, byteorder='big')
+                        self.spindle_load_voltage = int(spindle_feedback)
 
                         # gather spindle overload analogue voltage, and evaluate to general state
 
