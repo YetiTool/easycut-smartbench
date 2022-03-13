@@ -161,8 +161,7 @@ class StatusBar(Widget):
         if self.machine.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
 
-            if type(self.machine.state()) == bytes:
-                self.grbl_status_label.text = str(self.machine.state().decode('UTF-8','ignore'))
+            self.grbl_status_label.text = self.machine.state()
             
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.machine.mpos_x(), 2))
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.machine.mpos_y(), 2))
