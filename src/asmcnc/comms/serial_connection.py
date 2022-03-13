@@ -114,7 +114,8 @@ class SerialConnection(object):
 
                     # Read in first input and log it
                     def strip_and_log(input_string):
-                        new_string = input_string.strip()
+                        new_string = input_string.decode('UTF-8')
+                        new_string = new_string.strip()
                         log(new_string)
                         return new_string
 
