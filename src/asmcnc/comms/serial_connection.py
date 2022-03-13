@@ -1233,7 +1233,7 @@ class SerialConnection(object):
 
         elif message.startswith('['):
                       
-            stripped_message = message.translate(bytes.maketrans(b'', b'' ), b'[]') # fastest strip method
+            stripped_message = message.encode('UTF-8').translate(bytes.maketrans(b'', b'' ), b'[]').decode('UTF-8') # fastest strip method
 
             if stripped_message.startswith('G28:'):
 
