@@ -1,9 +1,15 @@
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
-import threading, queue
+import threading
 from time import sleep
 import traceback
+import sys
+
+if sys.version_info.major > 2:
+	import queue
+else:
+	import Queue as queue
 
 def log(message):
 	timestamp = datetime.datetime.now()
