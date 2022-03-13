@@ -1437,7 +1437,7 @@ class SerialConnection(object):
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
         
-        self.write_command_buffer.append([serialCommand, kwargs])        
+        self.write_command_buffer.append([serialCommand.encode(), kwargs])        
 ## OLD --------------------------------------------------------------------------------------------
 #         # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
 #         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
