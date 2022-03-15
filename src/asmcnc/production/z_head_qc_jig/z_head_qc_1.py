@@ -56,8 +56,50 @@ Builder.load_string("""
                 GridLayout:
                     cols: 2
 
+                    Button:
+                        text: '5. Test motor chips'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.test_motor_chips()
+
+                    Image:
+                        id: motor_chips_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                Button:
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'center'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    background_normal: ''
+                    on_press: root.stop()
+
+                # ROW 2
+
+                Label:
+                    id: fw_version_label
+                    text: 'FW Version: ...'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                GridLayout:
+                    cols: 2
+
                     Label:
-                        text: '5. X Motors'
+                        text: '6. X Motors'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -88,32 +130,40 @@ Builder.load_string("""
                             on_release: root.quit_jog()
 
                 Button:
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'center'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    text: 'STOP'
-                    background_color: [1,0,0,1]
-                    background_normal: ''
-                    on_press: root.stop()
-
-                # ROW 2
-
-                Label:
-                    id: fw_version_label
-                    text: 'FW Version: ...'
+                    text: '12. Disable alarms'
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
                     padding: [dp(10),0]
+                    on_press: root.disable_alarms()
+
+                # ROW 3
+
+                GridLayout:
+                    cols: 2
+
+                    Label:
+                        text: '1. Temp/power'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+
+                    Image:
+                        id: temp_voltage_power_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 BoxLayout:
                     orientation: "horizontal"
 
                     Label:
-                        text: '6. Z Motor'
+                        text: '7. Z Motor'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -153,70 +203,6 @@ Builder.load_string("""
                         on_press: root.mini_cycle()
                         size_hint_x: 1
 
-                Button:
-                    text: '12. Disable alarms'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.disable_alarms()
-
-                # ROW 3
-
-                GridLayout:
-                    cols: 2
-
-                    Button:
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        text: '1. Bake GRBL Settings'
-                        on_press: root.bake_grbl_settings()
-
-                    Image:
-                        id: bake_grbl_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                GridLayout:
-                    cols: 3
-
-                    ToggleButton: 
-                        id: spindle_toggle
-                        text: '7. Spindle'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        on_press: root.set_spindle()
-
-                    ToggleButton:
-                        id: laser_toggle
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        text: '8. Laser'
-                        on_press: root.set_laser()
-
-                    ToggleButton:
-                        id: vac_toggle
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        text: '9. Vac'
-                        on_press: root.set_vac()
-
                 GridLayout:
                     cols: 2
 
@@ -237,6 +223,80 @@ Builder.load_string("""
                         allow_stretch: True
 
                 # ROW 4
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        text: '2. Bake GRBL Settings'
+                        on_press: root.bake_grbl_settings()
+
+                    Image:
+                        id: bake_grbl_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 3
+
+                    ToggleButton: 
+                        id: spindle_toggle
+                        text: '8. Spindle'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.set_spindle()
+
+                    ToggleButton:
+                        id: laser_toggle
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        text: '9. Laser'
+                        on_press: root.set_laser()
+
+                    ToggleButton:
+                        id: vac_toggle
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        text: '10. Vac'
+                        on_press: root.set_vac()
+
+                GridLayout:
+                    cols: 2
+
+                    Label:
+                        text: '14. X Max'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+
+                    Image:
+                        id: x_max_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                # ROW 5
 
                 GridLayout:
                     cols: 2
@@ -265,7 +325,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label:
-                        text: '10. Dust shoe'
+                        text: '11. Dust shoe'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -294,66 +354,6 @@ Builder.load_string("""
                         Button:
                             text: 'B'
                             on_press: root.dust_shoe_blue()
-
-                GridLayout:
-                    cols: 2
-
-                    Label:
-                        text: '14. X Max'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-
-                    Image:
-                        id: x_max_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                # ROW 5
-                
-                GridLayout:
-                    cols: 2
-
-                    Button:
-                        text: '2. Test motor chips'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        on_press: root.test_motor_chips()
-
-                    Image:
-                        id: motor_chips_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                GridLayout:
-                    cols: 2
-
-                    Label:
-                        text: '11. Temp/power'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-
-                    Image:
-                        id: temp_voltage_power_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
 
                 Button:
                     text: '15. >>> Next screen'
