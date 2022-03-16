@@ -73,9 +73,6 @@ class Gauge(Widget):
 
         self.bind(r=self.redraw)
 
-    def set_id(self, id):
-        self.id = id
-
     def set_title(self, title):
         self.title = title
 

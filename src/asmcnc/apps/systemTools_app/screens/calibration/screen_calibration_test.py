@@ -305,19 +305,17 @@ class CalibrationTesting(Screen):
         self.y_running = False
         self.z_running = False
 
-        gauge = Gauge(name = 'x_real_time_load_gauge', sm = self.sm, m = self.m)
+        self.x_load_gauge = Gauge(name = 'x_real_time_load_gauge', sm = self.sm, m = self.m)
 
-        gauge.set_id('x_real_time_load_gauge')
+        self.x_load_gauge.set_size(300, 100)
 
-        gauge.set_size(300, 100)
+        self.x_load_gauge.set_max_value(300)
 
-        gauge.set_max_value(300)
+        self.x_load_gauge.set_boundaries(200, 250)
 
-        gauge.set_boundaries(200, 250)
+        self.x_load_gauge.set_value(0)
 
-        gauge.set_value(0)
-
-        self.real_time_load_grid.add_widget(gauge)
+        self.real_time_load_grid.add_widget(self.x_load_gauge)
 
     def setup_arrays(self):
         #x loads with vector & pos
