@@ -162,7 +162,8 @@ class CurrentAdjustment(Screen):
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         self.reset_currents()
-        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+        self.raw_sg_toggle_button.state = 'normal'
+        self.toggle_raw_sg_values()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
