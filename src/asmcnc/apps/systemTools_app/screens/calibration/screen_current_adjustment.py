@@ -162,7 +162,7 @@ class CurrentAdjustment(Screen):
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         self.reset_currents()
-        self.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -171,17 +171,17 @@ class CurrentAdjustment(Screen):
         if self.m.s.sg_x_motor_axis != -999:
             self.x_vals.append(self.m.s.sg_x_motor_axis)
             self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
-            self.peak_x_sg.text = str(max(self.x_vals))
+            self.peak_x_sg.text = str(max(self.x_vals, key=abs))
 
         if self.m.s.sg_y1_motor != -999:
             self.y1_vals.append(self.m.s.sg_y1_motor)
             self.rt_y1_sg.text = str(self.m.s.sg_y1_motor)
-            self.peak_y1_sg.text = str(max(self.y1_vals))
+            self.peak_y1_sg.text = str(max(self.y1_vals, key=abs))
 
         if self.m.s.sg_y2_motor != -999:
             self.y2_vals.append(self.m.s.sg_y2_motor)
             self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
-            self.peak_y2_sg.text = str(max(self.y2_vals))
+            self.peak_y2_sg.text = str(max(self.y2_vals, key=abs))
 
     def clear_sg_vals(self):
         self.x_vals = []
