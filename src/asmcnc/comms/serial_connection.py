@@ -1041,6 +1041,7 @@ class SerialConnection(object):
                     if self.FINAL_TEST:
                         if self.sm.has_screen('calibration_testing'):
                             self.sm.get_screen('calibration_testing').measure()
+                            self.sm.get_screen('calibration_testing').x_real_time_load_gauge.set_value(self.sg_x_motor_axis)
 
                         if self.sm.has_screen('overnight_testing'):
                             self.sm.get_screen('overnight_testing').measure()

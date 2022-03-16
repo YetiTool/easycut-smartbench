@@ -5,6 +5,8 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import traceback
 
+from asmcnc.tests.gauges.widget_gauge import Gauge
+
 Builder.load_string("""
 <CalibrationTesting>:
     y_rt_load:y_rt_load
@@ -47,6 +49,8 @@ Builder.load_string("""
     x0y0_jog_button : x0y0_jog_button
     x7y0_jog_button : x7y0_jog_button
     z0_jog_button : z0_jog_button
+
+    real_time_load_grid:real_time_load_grid
 
     BoxLayout:
         orientation: 'vertical'
@@ -183,29 +187,11 @@ Builder.load_string("""
 
             GridLayout:
                 rows: 6
+                id: real_time_load_grid
 
                 Label:
                     text: 'Real time load:'
 
-                Label:
-                    id: y_rt_load
-                    text: 'Y:'
-
-                Label:
-                    id: y1_rt_load
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_rt_load
-                    text: 'Y2:'
-
-                Label:
-                    id: x_rt_load
-                    text: 'X:'
-
-                Label:
-                    id: z_rt_load
-                    text: 'Z:'
 
             GridLayout:
                 rows: 6
@@ -324,6 +310,18 @@ class CalibrationTesting(Screen):
         self.x_running = False
         self.y_running = False
         self.z_running = False
+
+        gauge = Gauge(name = 'x_real_time_load_gauge', sm = self.sm, m = self.m)
+
+        gauge.set_size(300, 100)
+
+        gauge.set_max_value(300)
+
+        gauge.set_boundaries(200, 250)
+
+        gauge.set_value(0)
+
+        self.real_time_load_grid.add_widget(gauge)
 
     def setup_arrays(self):
         #x loads with vector & pos
