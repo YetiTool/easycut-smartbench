@@ -2040,11 +2040,11 @@ class RouterMachine(object):
         self.print_tmc_registers(3)
         self.print_tmc_registers(4)
 
-        tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
-
-        log("Sweep finished")
 
         try: 
+
+            tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
+            log("Sweep finished")
 
             if X: 
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
@@ -2155,6 +2155,7 @@ class RouterMachine(object):
             return tuning_array, avg_temperature
 
         except: 
+            self.calibration_tuning_fail_info = "Bad temps during tuning!"
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
