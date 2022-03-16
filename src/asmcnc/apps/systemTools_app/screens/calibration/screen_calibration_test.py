@@ -307,6 +307,8 @@ class CalibrationTesting(Screen):
 
         gauge = Gauge(name = 'x_real_time_load_gauge', sm = self.sm, m = self.m)
 
+        gauge.set_id('x_real_time_load_gauge')
+
         gauge.set_size(300, 100)
 
         gauge.set_max_value(300)
