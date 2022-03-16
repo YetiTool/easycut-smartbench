@@ -1,6 +1,24 @@
 '''
 Created on 3 Mar 2022
 @author: Dennis
+YetiTool's UI for SmartBench
+www.yetitool.com
+
+#######################################################
+Z HEAD QC APPLICATION
+
+Used in production to carry out quality control checks. 
+#######################################################
+
+#######################################################
+PLATFORM
+
+This app needs following platform changes to run
+as default application at startup: 
+
+touch /home/pi/YETI_ZHEADCYCLE_PROD_JIG.txt
+
+#######################################################
 '''
 
 from kivy.app import App
