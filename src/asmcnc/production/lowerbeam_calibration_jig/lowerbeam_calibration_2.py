@@ -24,6 +24,9 @@ Builder.load_string("""
             id: calibration_label
             text: 'Calibrating...'
             font_size: dp(50)
+            text_size: root.width, None
+            size: self.texture_size
+            halign: 'center'
 
     
 """)
