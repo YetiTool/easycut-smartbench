@@ -463,12 +463,16 @@ class FactorySettingsScreen(Screen):
 
     def connect_to_db_when_creds_loaded(self, dt):
 
-        if "credentials.py" in os.listdir("/media/usb/"):
+        try: 
+            if "credentials.py" in os.listdir("/media/usb/"):
 
-            if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
+                if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
-            print("Credentials file found on USB")
-            self.calibration_db.set_up_connection("console")
+                print("Credentials file found on USB")
+                self.calibration_db.set_up_connection("console")
+
+        except:
+            print("No /media/usb/ folder found")
 
     ## EXIT BUTTONS
     def go_back(self):
