@@ -203,7 +203,7 @@ class CurrentAdjustment(Screen):
     def toggle_raw_sg_values(self):
         
         if self.raw_sg_toggle_button.state == 'normal':
-            self.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+            self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
         
         else:
-            self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+            self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
