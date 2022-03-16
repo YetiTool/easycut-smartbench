@@ -450,4 +450,7 @@ class Settings(object):
     def ansible_service_run(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
 
+    def ansible_service_run_without_reboot(self):
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
+
             
