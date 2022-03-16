@@ -9,12 +9,6 @@ from asmcnc.tests.gauges.widget_gauge import Gauge
 
 Builder.load_string("""
 <CalibrationTesting>:
-    y_rt_load:y_rt_load
-    x_rt_load:x_rt_load
-    z_rt_load:z_rt_load
-    y1_rt_load:y1_rt_load
-    y2_rt_load:y2_rt_load
-
     y_axis_fw_range : y_axis_fw_range
     y1_fw_range : y1_fw_range
     y2_fw_range : y2_fw_range
@@ -816,7 +810,6 @@ class CalibrationTesting(Screen):
 
             self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
             self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals, key=abs))
-            self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
         elif self.x_running and self.m.feed_rate() < 1200:
             if self.m.s.sg_x_motor_axis == -999:
@@ -833,7 +826,6 @@ class CalibrationTesting(Screen):
 
             self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
             self.x_peak_load.text = "X: " + str(max(self.raw_x_vals, key=abs))
-            self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
 
         elif self.y_running and self.m.feed_rate() < 1200:
             if self.m.s.sg_y_axis == -999 or self.m.s.sg_y1_motor == -999 or self.m.s.sg_y2_motor == -999:
@@ -852,11 +844,8 @@ class CalibrationTesting(Screen):
             self.raw_y1_vals.append(self.m.s.sg_y1_motor)
             self.raw_y2_vals.append(self.m.s.sg_y2_motor)
             self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals, key=abs))
-            self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
             self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals, key=abs))
             self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals, key=abs))
-            self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
-            self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
 
 
     def show_expected_ranges(self, x_load, y_load, z_load):
