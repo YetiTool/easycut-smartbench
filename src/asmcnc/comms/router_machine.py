@@ -1793,6 +1793,12 @@ class RouterMachine(object):
         log("Calibrating Y...")
         self.initialise_calibration(X = False, Y = True, Z = False)
 
+    def calibrate_X_Y_and_Z(self):
+
+        self.run_calibration = True
+        log("Calibrating X, Y, and Z...")
+        self.initialise_calibration(X = True, Y = True, Z = True)
+
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
