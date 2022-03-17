@@ -34,7 +34,7 @@ class ScreenTest(App):
     def build(self):
 
         # Establish screens
-        sm = Mock()
+        sm = ScreenManager(transition=NoTransition())
 
         # Localization/language object
         l = localization.Localization()
@@ -56,9 +56,6 @@ class ScreenTest(App):
         sm.add_widget(z_head_qc_7)
 
         sm.current = 'qc7'
-
-        
-        Clock.schedule_once(m.s.start_services, 4)
 
         return sm
 
