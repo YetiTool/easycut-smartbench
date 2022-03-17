@@ -23,8 +23,7 @@ except:
 
 from asmcnc.comms import router_machine
 
-# from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_2 import LBCalibration2
-from asmcnc.production.z_head_qc_jig.z_head_qc_4 import ZHeadQC4
+from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
@@ -50,27 +49,13 @@ class ScreenTest(App):
         # Initialise 'm'achine object
         # m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
         m = Mock()
-        m.run_calibration = False
-        m.tuning_in_progress = False
 
+        sm = ScreenManager(transition=NoTransition())
 
-        # lb_calibration_2 = LBCalibration2(name = 'lbc2', sm = sm, m = m)
-        # sm.add_widget(lb_calibration_2)
+        z_head_qc_7 = ZHeadQC7(name='qc7', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_qc_7)
 
-        lb_calibration_2 = ZHeadQC4(name = 'lbc2', sm = sm, m = m)
-        sm.add_widget(lb_calibration_2)
-
-        sm.current = 'lbc2'
-
-        m.calibration_tuning_fail_info = "I am really really long. If your temps are bad, try again later on but it might be a problem with the PCB. And I am even longer!!"
-
-
-        def update_label(dt):
-            very_long = "I am really really long. If your temps are bad, try again later on but it might be a problem with the PCB"
-            sm.get_screen('lbc2').calibration_label.text = very_long
-
-        Clock.schedule_once(update_label, 4)
-        # Clock.schedule_once(m.s.start_services, 4)
+        sm.current = 'qc7'
 
         return sm
 
