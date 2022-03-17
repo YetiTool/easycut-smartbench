@@ -169,13 +169,14 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
-                Label: 
-                    text: '27. TAKE BELT OFF Z MOTOR'
+                Button:
+                    text: '27. CONFIRM COVER ON: START AUTO-CALIBRATE'
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
                     padding: [dp(10),0]
+                    on_press: root.enter_next_screen()
 
                 Button:
                     text: '19. Set spindle to digital'
@@ -195,14 +196,7 @@ Builder.load_string("""
                     padding: [dp(10),0]
                     on_press: root.set_spindle_analogue()
 
-                Button:
-                    text: '28. CONFIRM BELT OFF AND COVER ON: START AUTO-CALIBRATE'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.enter_next_screen()
+                Label
 
             ScrollableLabelStatus:
                 size_hint_y: 0.15 
