@@ -17,6 +17,8 @@ Builder.load_string("""
     peak_y1_sg:peak_y1_sg
     peak_y2_sg:peak_y2_sg
 
+    raw_sg_toggle_button : raw_sg_toggle_button
+
     GridLayout:
         cols: 2
 
@@ -113,12 +115,19 @@ Builder.load_string("""
                         text: '-'
 
                 BoxLayout:
+                    orientation: 'vertical'
                     size_hint_x: 0.3
-                    padding: [0, dp(75), 0, dp(75)]
+                    padding: [0, dp(25), 0, dp(25)]
 
                     Button:
                         text: 'Clear'
                         on_press: root.clear_sg_vals()
+
+                    ToggleButton:
+                        id: raw_sg_toggle_button
+                        text: 'Show raw'
+                        on_press: root.toggle_raw_sg_values()
+
 
 """)
 
@@ -153,6 +162,8 @@ class CurrentAdjustment(Screen):
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         self.reset_currents()
+        self.raw_sg_toggle_button.state = 'normal'
+        self.toggle_raw_sg_values()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -189,3 +200,11 @@ class CurrentAdjustment(Screen):
         self.x_current_adjustment_widget.reset_current()
         self.y1_current_adjustment_widget.reset_current()
         self.y2_current_adjustment_widget.reset_current()
+
+    def toggle_raw_sg_values(self):
+        
+        if self.raw_sg_toggle_button.state == 'normal':
+            self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+        
+        else:
+            self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
