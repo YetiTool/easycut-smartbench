@@ -23,7 +23,7 @@ except:
 
 from asmcnc.comms import router_machine
 
-from asmcnc.tests.screen_test import TestScreen
+from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
@@ -47,19 +47,20 @@ class ScreenTest(App):
         jd = Mock()
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        # m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m = Mock()
 
-        test_sm = ScreenManager(transition=NoTransition())
+        sm = ScreenManager(transition=NoTransition())
 
-        test_screen = TestScreen(name='st', screen_manager = test_sm, machine = m)
-        test_sm.add_widget(test_screen)
+        z_head_qc_7 = ZHeadQC7(name='qc7', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_qc_7)
 
-        test_sm.current = 'st'
+        sm.current = 'qc7'
 
         
         Clock.schedule_once(m.s.start_services, 4)
 
-        return test_sm
+        return sm
 
 ScreenTest().run()
 
