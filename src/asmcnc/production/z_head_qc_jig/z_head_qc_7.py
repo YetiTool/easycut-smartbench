@@ -62,4 +62,4 @@ class ZHeadQC7(Screen):
             os.system('sudo shutdown -h now')
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc2'
+        self.sm.current = 'qc6'
