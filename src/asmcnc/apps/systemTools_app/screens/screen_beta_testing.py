@@ -315,6 +315,13 @@ class BetaTestingScreen(Screen):
     def checkout_branch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
+            message = (
+                self.l.get_str('Please wait') + \
+                '...\n' + \
+                self.l.get_str('Console will reboot to finish update.')
+                )
+            wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
+
             # Update config as for any other SW release
             self.set.update_config() 
             
@@ -323,7 +330,8 @@ class BetaTestingScreen(Screen):
 
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
             os.system("git pull")
-            # self.set.ansible_service_run_without_reboot()
+            self.set.ansible_service_run_without_reboot()
+            wait_popup.popup.dismiss()
             self.systemtools_sm.sm.current = 'rebooting'
 
     def update_to_latest_beta(self):
