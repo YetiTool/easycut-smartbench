@@ -24,7 +24,6 @@ Builder.load_string("""
             font_size: dp(50)
             text_size: root.width, None
             size: self.texture_size
-            size: self.texture_size
             halign: 'center'
 
     
