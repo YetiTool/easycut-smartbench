@@ -34,77 +34,172 @@ Builder.load_string("""
     BoxLayout:
         orientation: 'vertical'
 
-        GridLayout:
-            cols: 2
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.5   
 
-            Button:
-                text: 'Back'
-                on_press: root.back_to_fac_settings()
+            BoxLayout: 
+                orientation: 'horizontal'
+                size_hint_y: 0.26
 
-            Button:
-                text: 'STOP'
-                background_color: [1,0,0,1]
-                on_press: root.stop()
-
-            Button:
-                text: 'Home'
-                on_press: root.home()
-
-            GridLayout:
-                cols: 2
                 Button:
-                    text: 'Run overnight test (6hr)'
+                    text: 'Back'
+                    on_press: root.back_to_fac_settings()
+
+                Button:
+                    text: 'Home'
+                    on_press: root.home()
+                    background_color: [0,0,1,1]
+
+                Button:
+                    text: 'START'
                     on_press: root.start_overnight_test()
                     id: overnight_test_button
-
-                Image:
-                    id: overnight_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 3
-
-                Label:
-                    text: '6 hour data: '
-                
-                Image:
-                    id: sent_first_data_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    background_color: [0,1,0,1]
 
                 Button:
-                    text: 'Retry'
-                    on_press: root.send_first_overnight_payload()
-                    id: retry_first_data_send
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    on_press: root.stop()
+                    background_normal: ''
 
-            GridLayout:
-                cols: 3
+            Label: 
+                text: "Overnight test stages"
+                markup: True
+                halign: "center"
+                size_hint_y: 0.11
 
-                Label:
-                    text: '1 hour data: '
-                
-                Image:
-                    id: sent_second_data_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+            BoxLayout: 
+                orientation: 'horizontal'
+                size_hint_y: 0.26
 
-                Button:
-                    text: 'Retry'
-                    on_press: root.send_overnight_post_recal_payload()
-                    id: retry_second_data_send
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        text: '6 hour wear-in'
+                        size_hint_x: 0.7
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            id: overnight_test_check
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        text: 're-calibration'
+                        size_hint_x: 0.7
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        text: 'post-calibration run'
+                        size_hint_x: 0.7
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+            Label: 
+                text: "Data sends"
+                markup: True
+                halign: "center"
+                size_hint_y: 0.11
+
+            BoxLayout: 
+                orientation: 'horizontal'
+                size_hint_y: 0.26
+
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        id: retry_first_data_send
+                        text: 'Retry'
+                        size_hint_x: 0.7
+                        on_press: root.send_first_overnight_payload()
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            id: sent_first_data_check
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        text: 'Retry'
+                        size_hint_x: 0.7
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+                BoxLayout: 
+                    orientation: 'horizontal'
+
+                    Button:
+                        id: retry_second_data_send
+                        text: 'Retry'
+                        size_hint_x: 0.7
+                        on_press: root.send_overnight_post_recal_payload()
+
+
+                    BoxLayout:
+                        size_hint_x: 0.3
+
+                        Image:
+                            id: sent_second_data_check
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
 
         GridLayout:
-            cols: 2
+            cols: 3
+            size_hint_y: 0.5
 
             GridLayout:
                 rows: 6
@@ -157,6 +252,47 @@ Builder.load_string("""
                 Label:
                     id: z_peak_load
                     text: 'Z:'
+
+            GridLayout:
+                rows: 6
+
+                Label:
+                    text: 'Pass?'
+
+                Image:
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Image:
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Image:
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Image:
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Image:
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 """)
 
