@@ -10,6 +10,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.comms import usb_storage
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.skavaUI import popup_info
 
 import os, sys
 
