@@ -862,6 +862,15 @@ class FactorySettingsScreen(Screen):
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
+    # def enter_overnight_test(self):
+    # # if self.calibration_db.conn != None:
+    #     # if self.get_serial_number():
+    #     if not self.systemtools_sm.sm.has_screen('overnight_testing'):
+    #         overnight_testing = OvernightTesting(name='overnight_testing', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, sm = self.systemtools_sm.sm, l = self.l)
+    #         self.systemtools_sm.sm.add_widget(overnight_testing)
+        
+    #     self.systemtools_sm.sm.current = 'overnight_testing'
+
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):
             current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l)

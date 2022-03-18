@@ -24,8 +24,10 @@ Builder.load_string("""
     y2_peak_load:y2_peak_load
 
     overnight_test_check:overnight_test_check
-    sent_data_check:sent_data_check
-    retry_data_send:retry_data_send
+    sent_first_data_check:sent_first_data_check
+    sent_second_data_check:sent_second_data_check
+    retry_first_data_send:retry_first_data_send
+    retry_second_data_send:retry_second_data_send
 
     overnight_test_button:overnight_test_button
 
@@ -64,23 +66,42 @@ Builder.load_string("""
                     allow_stretch: True
 
             GridLayout:
-                cols: 2
+                cols: 3
 
                 Label:
-                    text: 'Successfully sent data: '
+                    text: '6 hour data: '
                 
                 Image:
-                    id: sent_data_check
+                    id: sent_first_data_check
                     source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
-            Button:
-                text: 'Retry data send'
-                on_press: root.send_overnight_payload()
-                id: retry_data_send
+                Button:
+                    text: 'Retry'
+                    on_press: root.send_first_overnight_payload()
+                    id: retry_first_data_send
+
+            GridLayout:
+                cols: 3
+
+                Label:
+                    text: '1 hour data: '
+                
+                Image:
+                    id: sent_second_data_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Button:
+                    text: 'Retry'
+                    on_press: root.send_overnight_post_recal_payload()
+                    id: retry_second_data_send
 
         GridLayout:
             cols: 2
@@ -148,7 +169,11 @@ MAX_Y_DISTANCE = 2501
 
 class OvernightTesting(Screen):
 
-    poll_end_of_overnight_file_stream = None
+    poll_end_of_first_overnight_file_stream = None
+    poll_end_of_second_overnight_file_stream = None
+
+    first_overnight_run_data = []
+    second_overnight_run_data = []
 
     def __init__(self, **kwargs):
         super(OvernightTesting, self).__init__(**kwargs)
@@ -171,17 +196,29 @@ class OvernightTesting(Screen):
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.overnight_running = False
-        if self.poll_end_of_overnight_file_stream != None: Clock.unschedule(self.poll_end_of_overnight_file_stream)
+        if self.poll_end_of_first_overnight_file_stream != None: Clock.unschedule(self.poll_end_of_first_overnight_file_stream)
+        if self.poll_end_of_second_overnight_file_stream != None: Clock.unschedule(self.poll_end_of_second_overnight_file_stream)
         self.overnight_test_button.disabled = False
 
-    def send_overnight_payload(self):
+    def send_first_overnight_payload(self):
         serial = self.calibration_db.get_serial_number()
         
         try:
-            self.calibration_db.send_overnight_test_calibration(serial, self.x_vals, self.y_vals, self.z_vals)
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.calibration_db.send_overnight_test_calibration(serial, *self.first_overnight_run_data)
+            self.sent_first_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         except:
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            self.sent_first_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            print(traceback.format_exc())
+
+
+    def send_overnight_post_recal_payload(self):
+        serial = self.calibration_db.get_serial_number()
+        
+        try:
+            self.calibration_db.send_overnight_test_post_recalibration(serial, *self.second_overnight_run_data)
+            self.sent_second_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        except:
+            self.sent_second_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             print(traceback.format_exc())
 
     def setup_arrays(self):
@@ -244,24 +281,85 @@ class OvernightTesting(Screen):
             print("Running overnight test...")
 
             self.m.s.run_skeleton_buffer_stuffer(overnight_gcode)
-            self.poll_end_of_overnight_file_stream = Clock.schedule_interval(self.post_overnight_file_stream, 60)
+            self.poll_end_of_first_overnight_file_stream = Clock.schedule_interval(self.post_overnight_first_file_stream, 60)
 
         else:
             Clock.schedule_once(self.stream_overnight_file, 3)
 
 
-    def post_overnight_file_stream(self, dt):
+    def post_overnight_first_file_stream(self, dt):
 
         if self.m.state().startswith('Idle'):
 
             if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
-                Clock.unschedule(self.poll_end_of_overnight_file_stream)
+                Clock.unschedule(self.poll_end_of_first_overnight_file_stream)
+
+                self.overnight_running = False
+                self.first_overnight_run_data = self.store_overnight_run_measurements()
+                self.send_first_overnight_payload()
+                self.retry_first_data_send.disabled = False
+
+
+    def recalibrate_after_wear_in(self):
+        self.m.calibrate_X_Y_and_Z()
+        self.poll_for_recalibration_completion = Clock.schedule_interval(self.finish_recalibrating, 5)
+
+
+    def finish_recalibrating(self, dt):
+        if not self.m.run_calibration:
+            Clock.unschedule(self.poll_for_recalibration_completion)
+
+            if not self.m.calibration_tuning_fail_info:
+                self.stream_post_recal_file(0)
+
+            # else:
+            #     self.calibration_label.text = self.m.calibration_tuning_fail_info
+
+
+
+    def stream_post_recal_file(self, dt):
+
+        if self.m.state().startswith('Idle') and not self.overnight_running:
+
+            self.overnight_running = True
+
+            filename = './asmcnc/apps/systemTools_app/files/post_recal_test.gc'
+            # filename = './asmcnc/apps/systemTools_app/files/mini_run.gc'
+
+            with open(filename) as f:
+                post_recal_gcode_pre_scrubbed = f.readlines()
+
+            post_recal_gcode = [self.m.quick_scrub(line) for line in post_recal_gcode_pre_scrubbed]
+
+            print("Running overnight test...")
+
+            self.m.s.run_skeleton_buffer_stuffer(post_recal_gcode)
+            self.poll_end_of_second_overnight_file_stream = Clock.schedule_interval(self.post_overnight_second_file_stream, 60)
+
+        else:
+            Clock.schedule_once(self.stream_post_recal_file, 3)
+
+
+    def post_overnight_second_file_stream(self, dt):
+
+        if self.m.state().startswith('Idle'):
+
+            if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_second_overnight_file_stream)
 
                 self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
                 self.overnight_running = False
-                self.send_overnight_payload()
-                self.retry_data_send.disabled = False
+                self.second_overnight_run_data = self.store_overnight_run_measurements()
+                self.send_overnight_post_recal_payload()
+                self.retry_second_data_send.disabled = False
                 self.overnight_test_button.disabled = False
+
+    def store_overnight_run_measurements(self):
+
+        persistent_array = [self.x_vals, self.y_vals, self.z_vals]
+        self.setup_arrays()
+
+        return persistent_array
 
 
     def measure(self):
