@@ -468,11 +468,14 @@ class FactorySettingsScreen(Screen):
 
                 if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
+                os.system("cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py")
+
                 print("Credentials file found on USB")
-                self.calibration_db.set_up_connection("console")
+                self.calibration_db.set_up_connection()
 
         except:
             print("No /media/usb/ folder found")
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -597,10 +600,21 @@ class FactorySettingsScreen(Screen):
         else: 
             return True
 
+
+    def remove_creds_file(self):
+
+        try: 
+            os.system("rm ./asmcnc/production/database/credentials.py")
+            os.system("rm ./asmcnc/production/database/credentials.pyc")
+
+        except:
+            pass
+
     def factory_reset(self):
 
         def nested_factory_reset():
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
+                self.remove_creds_file()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -620,7 +634,7 @@ class FactorySettingsScreen(Screen):
             if nested_factory_reset():
 
                 print("doing factory reset...")
-                Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(self.close_sw, 5)
 
         else:
 
@@ -656,6 +670,8 @@ class FactorySettingsScreen(Screen):
                     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
 
+    def close_sw(self, dt):
+        sys.exit()
 
     def shutdown_console(self, dt):
         os.system('sudo shutdown -h now')
@@ -663,6 +679,8 @@ class FactorySettingsScreen(Screen):
     def full_console_update(self):
 
         self.console_update_button.text = "Doing update,\nplease wait..."
+
+        self.remove_creds_file()
 
         def nested_full_console_update(dt):
 
