@@ -190,6 +190,34 @@ class OvernightTesting(Screen):
         self.statuses = []
         self.stage = "Overnight6HR"
 
+    def setup_arrays(self):
+        #x loads with vector & pos
+        self.x_vals = []
+        #raw x loads
+        self.raw_x_vals = []
+
+        #z loads with vector & pos
+        self.z_vals = []
+        #raw z loads
+        self.raw_z_vals = []
+
+        #y_motor loads with vector & pos
+        self.y_vals = []
+        #raw y_motor loads
+        self.raw_y_vals = []
+
+        #y1_motor loads with vector & pos
+        self.y1_vals = []
+        #raw y1 loads
+        self.raw_y1_vals = []
+
+        #y2_motor loads with vector & pos
+        self.y2_vals = []
+        #raw y2 vals
+        self.raw_y2_vals = []
+
+        self.unweighted_data = []
+
     def on_enter(self):
         self.m.s.FINAL_TEST = True
 
@@ -359,6 +387,24 @@ class OvernightTesting(Screen):
         tmc_temp = self.m.s.motor_driver_temp
         pcb_temp = self.m.s.pcb_temp
         mot_temp = self.m.s.transistor_heatsink_temp
+
+        self.raw_x_vals.append(x_sg)
+        self.raw_y_vals.append(y_sg)
+        self.raw_y1_vals.append(y1_sg)
+        self.raw_y2_vals.append(y2_sg)
+        self.raw_z_vals.append(z_sg)
+
+        self.x_peak_load.text = "X: " + str(max(self.raw_x_vals, key=abs))
+        self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
+
+        self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals, key=abs))
+        self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
+        self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals, key=abs))
+        self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals, key=abs))
+        self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)            
+        self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
+        self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals, key=abs))
+        self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
 
         timestamp = datetime.now()
 
