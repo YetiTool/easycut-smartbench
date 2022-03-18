@@ -321,7 +321,7 @@ class BetaTestingScreen(Screen):
                 '...\n' + \
                 self.l.get_str('Console will reboot to finish update.')
                 )
-            wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
+            wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, description = message)
 
             # Update config as for any other SW release
             self.set.update_config() 
