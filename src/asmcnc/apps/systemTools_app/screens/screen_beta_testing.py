@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.comms import usb_storage
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.skavaUI import popup_info
+from kivy.clock import Clock
 
 import os, sys
 
@@ -323,17 +324,22 @@ class BetaTestingScreen(Screen):
                 )
             wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, description = message)
 
-            # Update config as for any other SW release
-            self.set.update_config() 
-            
-            # Strip whitespace
-            branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
 
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
-            os.system("git pull")
-            self.set.ansible_service_run_without_reboot()
-            wait_popup.popup.dismiss()
-            self.systemtools_sm.sm.current = 'rebooting'
+            def nested_branch_update(dt):
+
+                # Update config as for any other SW release
+                self.set.update_config() 
+                
+                # Strip whitespace
+                branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
+
+                os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
+                os.system("git pull")
+                self.set.ansible_service_run_without_reboot()
+                wait_popup.popup.dismiss()
+                self.systemtools_sm.sm.current = 'rebooting'
+
+            Clock.schedule_once(nested_branch_update, 0.5)
 
     def update_to_latest_beta(self):
         if self.wifi_toggle.state == 'down':
