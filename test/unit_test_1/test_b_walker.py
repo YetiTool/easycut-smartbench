@@ -37,6 +37,8 @@ from src.asmcnc.geometry import b_calculator
 #    W1    WHEN the b_calculator undertakes the check 
 #  
 #  >>> THEN:
+#          THEN any difficult shapes are identified (circles, arcs - others?)
+
 #    T1    THEN any difficult shapes are dealt with (especially circles)
 #    T2    THEN a BOUNDARY_array provides the boundary co-ordinates
 #    T3          and accounts for the datum (doesn't include datum)
@@ -64,7 +66,7 @@ class BWalkerTest(unittest.TestCase):
             # SHOULD at least print range_x and range_y
             self.b_setter.get_job_env()
             # print datums:
-            print("datums x: {} and y: {}".format(self.b_setter.datum_x, self.b_setter.datum_y))
+            print("22 03 20 datums x: {} and y: {}".format(self.b_setter.datum_x, self.b_setter.datum_y))
         
     def test_boundary_datum_is_not_blank(self):
         neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
