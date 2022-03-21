@@ -223,7 +223,7 @@ Builder.load_string("""
 
 
             GridLayout:
-                cols: 4
+                cols: 3
                 size_hint_y: 0.5
 
                 GridLayout:
@@ -259,31 +259,6 @@ Builder.load_string("""
                         halign: 'left'
                         markup: True
 
-                GridLayout:
-                    rows: 6
-
-                    Label:
-                        text: 'Real time load:'
-
-                    Label:
-                        id: y_rt_load
-                        text: 'Y:'
-
-                    Label:
-                        id: y1_rt_load
-                        text: 'Y1:'
-
-                    Label:
-                        id: y2_rt_load
-                        text: 'Y2:'
-
-                    Label:
-                        id: x_rt_load
-                        text: 'X:'
-
-                    Label:
-                        id: z_rt_load
-                        text: 'Z:'
 
                 GridLayout:
                     rows: 6
@@ -460,16 +435,10 @@ class OvernightTesting(Screen):
         self.raw_z_vals.append(z_sg)
 
         self.x_peak_load.text = str(max(self.raw_x_vals, key=abs))
-        self.x_rt_load.text = str(self.m.s.sg_x_motor_axis)
-
         self.y_peak_load.text = str(max(self.raw_y_vals, key=abs))
-        self.y_rt_load.text = str(self.m.s.sg_y_axis)
         self.y1_peak_load.text = str(max(self.raw_y1_vals, key=abs))
-        self.y2_peak_load.text = str(max(self.raw_y2_vals, key=abs))
-        self.y1_rt_load.text = str(self.m.s.sg_y1_motor)            
-        self.y2_rt_load.text = str(self.m.s.sg_y2_motor)
+        self.y2_peak_load.text = str(max(self.raw_y2_vals, key=abs))         
         self.z_peak_load.text = str(max(self.raw_z_vals, key=abs))
-        self.z_rt_load.text = str(self.m.s.sg_z_motor_axis)
 
         timestamp = datetime.now()
 
