@@ -1276,6 +1276,15 @@ class RouterMachine(object):
         except:
             return ''
 
+# LOAD GETTERS
+
+    # Stall guard loads - this is the relative load on a motor or axis, which is monitored to guard against a stall
+    def x_sg(self): return self.s.sg_x_motor_axis
+    def y_sg(self): return self.s.sg_y_axis
+    def y1_sg(self): return self.s.sg_y1_motor
+    def y2_sg(self): return self.s.sg_y2_motor
+    def z_sg(self): return self.s.sg_z_motor_axis
+
 # POSITIONAL SETTERS
 
     def set_workzone_to_pos_xy(self):
