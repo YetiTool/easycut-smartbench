@@ -50,12 +50,12 @@ class CalibrationDatabase(object):
 
     # use this function to insert the full payload
     # returns true/false depending on whether was successful
-    def insert_status_wrapper(self, statuses):
-        for status in statuses:
-            try:
-                self.insert_status(self.get_stored_machine_id(), *status)
-            except:
-                return False
+    def insert_status_wrapper(self, status):
+        
+        try:
+            self.insert_status(self.get_stored_machine_id(), *status)
+        except:
+            return False
 
         return True
 
