@@ -2380,17 +2380,17 @@ class RouterMachine(object):
 
             if axis == 'X': 
                 calibrate_mode = 32
-                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc'
                 altDisplayText = "CALIBRATE X AXIS"
 
             if axis == 'Y': 
                 calibrate_mode = 64
-                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc'
                 altDisplayText = "CALIBRATE Y AXIS"
 
             if axis == 'Z': 
                 calibrate_mode = 128
-                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc'
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
@@ -2585,5 +2585,47 @@ class RouterMachine(object):
         self.time_to_check_for_upload_prep = 0
         self.calibration_upload_in_progress = False
         log("Calibration upload complete")
+
+
+
+    ## CHECKING CALIBRATION FILE STREAMS
+
+    checking_calibration_in_progress = False
+    checking_calibration_fail_info = ''
+
+    def check_x_y_z_calibration(self):
+
+        self.checking_calibration_in_progress = True
+        self.stream_calibration_check_files(['X', 'Y', 'Z'])
+
+
+    def stream_calibration_check_files(self, axes):
+
+        check_calibration_gcode_pre_scrubbed = []
+
+        for axis in axes: 
+
+            with open(self.construct_calibration_file_path(axis)) as f:
+                check_calibration_gcode_pre_scrubbed.extend(f.readlines())
+
+        check_calibration_gcode = [self.quick_scrub(line) for line in check_calibration_gcode_pre_scrubbed]
+
+        log("Checking calibration...")
+
+        self.s.run_skeleton_buffer_stuffer(check_calibration_gcode)
+        self.poll_end_of_calibration_check = Clock.schedule_interval(self.post_calibration_check, 5)
+
+
+    def post_calibration_check(self):
+
+        if self.state().startswith('Idle'):
+
+            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_calibration_check)
+                self.checking_calibration_in_progress = False
+
+
+    def construct_calibration_file_path(axis):
+        return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
 
 

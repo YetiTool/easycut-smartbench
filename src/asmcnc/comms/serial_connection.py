@@ -629,6 +629,8 @@ class SerialConnection(object):
             self.FLUSH_FLAG = True
             self._reset_counters()
 
+        self.NOT_SKELETON_STUFF = True
+
         log("G-code streaming cancelled!")
 
 
