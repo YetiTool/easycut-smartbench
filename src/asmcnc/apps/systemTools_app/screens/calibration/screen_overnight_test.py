@@ -1044,8 +1044,7 @@ class OvernightTesting(Screen):
 
         if self.mini_run_dev_mode: filename_end = 'mini_run'
 
-        else:
-            filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
+        filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
