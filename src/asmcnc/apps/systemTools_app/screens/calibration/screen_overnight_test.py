@@ -1135,7 +1135,7 @@ class OvernightTesting(Screen):
 
     # ## CALIBRATION FUNCTIONS
 
-    def pass_or_fail_peak_loads():
+    def pass_or_fail_peak_loads(self):
  
         if self.stage == "Overnight6HR":
 
