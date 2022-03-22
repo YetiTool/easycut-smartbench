@@ -2323,9 +2323,9 @@ class RouterMachine(object):
 
         self.s.write_command('$20=0')
 
-        self.s.write_command('$J=G53 X0 F6000')
-        self.s.write_command('$J=G53 Y0 F6000')
-        self.s.write_command('$J=G53 Z0 F750')
+        self.s.write_command('$J=G53 X-1 F6000')
+        self.s.write_command('$J=G53 Y-1 F6000')
+        self.s.write_command('$J=G53 Z-1 F750')
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
