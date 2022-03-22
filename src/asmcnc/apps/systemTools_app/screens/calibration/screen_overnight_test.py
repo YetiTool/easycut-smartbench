@@ -723,10 +723,13 @@ class OvernightTesting(Screen):
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
+        self.stop_button.disabled = False
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         self.cancel_active_polls()
+        self.stop_button.disabled = False
+        self.buttons_disabled(False)
 
     def measure(self):
         if not self.overnight_running:
