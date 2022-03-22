@@ -23,7 +23,7 @@ Builder.load_string("""
 
         GridLayout:
             cols: 1
-            rows: 3
+            rows: 5
 
             spacing: 50
 
@@ -41,6 +41,21 @@ Builder.load_string("""
             Label:
                 text: '^ Enter ZH Serial number: ^'
                 font_size: dp(50)
+                
+            GridLayout:
+                cols: 1
+                rows: 1
+
+                padding: [200, 0]
+
+                TextInput:
+                    id: ambient_temp_input
+                    font_size: dp(50)
+                    multiline: False
+
+            Label:
+                text: '^ Enter ambient factory temperature: ^'
+                font_size: dp(50)
 
             Button:
                 on_press: root.enter_next_screen()
@@ -49,6 +64,7 @@ Builder.load_string("""
                 size_hint_y: 0.6
 
 """)
+
 
 class ZHeadQCDB1(Screen):
     def __init__(self, **kwargs):
@@ -64,4 +80,6 @@ class ZHeadQCDB1(Screen):
         self.sm.get_screen('qcDB3').set_serial_no(self.serial_no_input.text)
         self.sm.get_screen('qcDB4').set_serial_no(self.serial_no_input.text)
         self.sm.get_screen('qcDB2').set_serial_no(self.serial_no_input.text)
+
+        self.sm.get_screen('qcDB2').set_ambient_temperature(self.ambient_temp_input.text)
         self.sm.current = 'qcDB2'
