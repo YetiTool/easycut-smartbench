@@ -1173,8 +1173,12 @@ class OvernightTesting(Screen):
 
     def check_in_range(self, peak_id, range):
 
-        if (-1*range) < int(peak_id.text) < range: return True
-        else: return False
+        try: 
+            if (-1*range) < int(peak_id.text) < range: return True
+            else: return False
+
+        except:
+            return False
 
 
     def _unschedule_event(self, poll_to_unschedule):
