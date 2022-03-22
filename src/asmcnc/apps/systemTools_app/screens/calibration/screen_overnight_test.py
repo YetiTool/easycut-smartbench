@@ -1126,7 +1126,7 @@ class OvernightTesting(Screen):
 
     def is_step_ticked(self, checkbox_id):
 
-        if not checkbox_id.source == self.green_tick:
+        if checkbox_id.source == self.green_tick:
             return True
 
         else: 
