@@ -668,6 +668,7 @@ class OvernightTesting(Screen):
     start_recalibration_event = None
     start_fully_calibrated_final_run_event = None
     poll_for_completion_of_overnight_test = None
+    start_calibration_check_event = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -836,6 +837,7 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.start_six_hour_wear_in_event)
         self._unschedule_event(self.start_recalibration_event)
         self._unschedule_event(self.start_fully_calibrated_final_run_event)
+        self._unschedule_event(self.start_calibration_check_event)
 
 
         self.overnight_running = False
@@ -946,9 +948,9 @@ class OvernightTesting(Screen):
         self.set_stage("Calibrating")
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
-        self.poll_for_recalibration_completion = Clock.schedule_interval(self.test_recalibration, 5)
+        self.poll_for_recalibration_completion = Clock.schedule_interval(self.prepare_to_check_recalibration, 5)
 
-    def test_recalibration(self, dt):
+    def prepare_to_check_recalibration(self, dt):
 
         if self.m.run_calibration:
             return
@@ -960,11 +962,7 @@ class OvernightTesting(Screen):
         self.stop_button.disabled = False
 
         if not self.m.calibration_tuning_fail_info:
-            self.setup_arrays()
-            self.set_stage("CalibrationCheckOT")
-            self.overnight_running = True
-            self.m.check_x_y_z_calibration()
-            self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
+            self.start_calibration_check_event = Clock.schedule_once(self.do_calibration_check, 10)
 
         else:
 
@@ -972,6 +970,14 @@ class OvernightTesting(Screen):
             self.cancel_active_polls()
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.buttons_disabled(False)
+
+    def do_calibration_check(self, dt)
+
+        self.setup_arrays()
+        self.set_stage("CalibrationCheckOT")
+        self.overnight_running = True
+        self.m.check_x_y_z_calibration()
+        self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
 
 
     def post_recalibration(self, dt):

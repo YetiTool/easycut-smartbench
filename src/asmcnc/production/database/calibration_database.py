@@ -46,8 +46,12 @@ class CalibrationDatabase(object):
 
     # get stored machine id from sb_values folder
     def get_stored_machine_id(self):
-        with open('sb_values/smartbench_machine_id.txt', 'r') as file:
-            return file.readline()
+        # try:
+        #     with open('sb_values/smartbench_machine_id.txt', 'r') as file:
+        #         return file.readline()
+
+        # except: 
+        return 'test'
 
     # use this function to insert the full payload
     # returns true/false depending on whether was successful
