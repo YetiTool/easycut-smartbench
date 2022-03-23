@@ -2620,6 +2620,8 @@ class RouterMachine(object):
 
         # Toggle FW reset pin before starting 
         if not self.toggle_reset_pin():
+            self.checking_calibration_fail_info = "Pin toggle fail"
+            log(self.checking_calibration_fail_info)
             return
 
         check_calibration_gcode_pre_scrubbed = []
@@ -2648,7 +2650,6 @@ class RouterMachine(object):
 
     def construct_calibration_file_path(self, axis):
         return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
-
 
 
     ## FIRMWARE UPDATES

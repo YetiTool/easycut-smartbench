@@ -990,10 +990,17 @@ class OvernightTesting(Screen):
 
         if self.poll_for_recalibration_check_completion != None: Clock.unschedule(self.poll_for_recalibration_check_completion)
         self.overnight_running = False
-        self.pass_or_fail_peak_loads()
-        self.tick_checkbox(self.recalibration_checkbox, True)
-        self.send_recalibration_data()
-        self.setup_arrays()
+
+        if not self.m.checking_calibration_fail_info:
+
+            self.pass_or_fail_peak_loads()
+            self.tick_checkbox(self.recalibration_checkbox, True)
+            self.send_recalibration_data()
+            self.setup_arrays()
+
+        else: 
+            self.tick_checkbox(self.recalibration_checkbox, False)
+            self.setup_arrays()
 
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
