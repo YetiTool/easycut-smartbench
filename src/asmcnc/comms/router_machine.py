@@ -6,6 +6,11 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 import logging, threading, re
 
+try: 
+    import pigpio
+except:
+    pass
+
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -2613,6 +2618,10 @@ class RouterMachine(object):
 
     def stream_calibration_check_files(self, axes):
 
+        # Toggle FW reset pin before starting 
+        if not self.toggle_reset_pin():
+            return
+
         check_calibration_gcode_pre_scrubbed = []
 
         for axis in axes: 
@@ -2639,5 +2648,57 @@ class RouterMachine(object):
 
     def construct_calibration_file_path(self, axis):
         return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
+
+
+
+    ## FIRMWARE UPDATES
+    def toggle_reset_pin(self):
+
+        try: 
+            # Toggle reset pin
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            new_pin_setting = int(pi.get_mode(17))
+            pi.stop()
+
+            log("Toggled FW reset pin: mode " + str(new_pin_setting))
+
+            if new_pin_setting == 7:
+                return True
+
+            else:
+                return False
+
+        except: 
+            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            return False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -973,9 +973,12 @@ class OvernightTesting(Screen):
 
     def do_calibration_check(self, dt):
 
+        # set up arrays and stages
         self.setup_arrays()
         self.set_stage("CalibrationCheckOT")
         self.overnight_running = True
+
+        # start check
         self.m.check_x_y_z_calibration()
         self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
 
