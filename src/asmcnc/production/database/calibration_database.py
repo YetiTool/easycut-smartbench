@@ -1,4 +1,5 @@
 from datetime import datetime
+import traceback
 
 def log(message):
     timestamp = datetime.now()
@@ -55,6 +56,7 @@ class CalibrationDatabase(object):
         try:
             self.insert_status(self.get_stored_machine_id(), *status)
         except:
+            print(str(traceback.format_exc()))
             return False
 
         return True
@@ -65,6 +67,7 @@ class CalibrationDatabase(object):
         try:
             self.insert_statistics(self.get_stored_machine_id(), *statistics)
         except:
+            print(str(traceback.format_exc()))
             return False
         
         return True
@@ -76,6 +79,7 @@ class CalibrationDatabase(object):
             try:
                 self.insert_coefficients(self.get_stored_machine_id(), *coefficient)
             except:
+                print(str(traceback.format_exc()))
                 return False
         
         return True

@@ -942,30 +942,36 @@ class OvernightTesting(Screen):
             return
 
         self.setup_arrays()
+        self.overnight_running = False
         self.set_stage("Calibrating")
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
         self.poll_for_recalibration_completion = Clock.schedule_interval(self.test_recalibration, 5)
 
-
     def test_recalibration(self, dt):
 
-        if not self.m.run_calibration:
-            Clock.unschedule(self.poll_for_recalibration_completion)
-            self.stop_button.disabled = False
+        if self.m.run_calibration:
+            return
 
-            if not self.m.calibration_tuning_fail_info:
-                self.set_stage("CalibrationCheckOT")
-                self.overnight_running = True
-                self.m.check_x_y_z_calibration()
-                self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
+        if self._not_ready_to_stream():
+            return
 
-            else:
+        Clock.unschedule(self.poll_for_recalibration_completion)
+        self.stop_button.disabled = False
 
-                # Calibration has failed, so no point running future tests
-                self.cancel_active_polls()
-                self.tick_checkbox(self.recalibration_checkbox, False)
-                self.buttons_disabled(False)
+        if not self.m.calibration_tuning_fail_info:
+            self.setup_arrays()
+            self.set_stage("CalibrationCheckOT")
+            self.overnight_running = True
+            self.m.check_x_y_z_calibration()
+            self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
+
+        else:
+
+            # Calibration has failed, so no point running future tests
+            self.cancel_active_polls()
+            self.tick_checkbox(self.recalibration_checkbox, False)
+            self.buttons_disabled(False)
 
 
     def post_recalibration(self, dt):

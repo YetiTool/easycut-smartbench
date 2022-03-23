@@ -2586,9 +2586,17 @@ class RouterMachine(object):
 
 
     def complete_calibration_upload(self):
-        self.time_to_check_for_upload_prep = 0
-        self.calibration_upload_in_progress = False
-        log("Calibration upload complete")
+
+        # Ensure last commmands have actually been sent through buffer
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            self.time_to_check_for_upload_prep = 0
+            self.calibration_upload_in_progress = False
+            log("Calibration upload complete")
+
+        else: 
+            Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
+
 
 
 
