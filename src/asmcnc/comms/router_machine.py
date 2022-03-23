@@ -2617,10 +2617,10 @@ class RouterMachine(object):
         log("Checking calibration...")
 
         self.s.run_skeleton_buffer_stuffer(check_calibration_gcode)
-        self.poll_end_of_calibration_check = Clock.schedule_interval(self.post_calibration_check, 5)
+        self.poll_end_of_calibration_check = Clock.schedule_interval(self.post_calibration_check, 10)
 
 
-    def post_calibration_check(self):
+    def post_calibration_check(self, dt):
 
         if self.state().startswith('Idle'):
 
