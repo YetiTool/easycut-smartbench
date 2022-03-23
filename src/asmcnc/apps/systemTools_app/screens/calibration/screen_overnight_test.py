@@ -774,30 +774,39 @@ class OvernightTesting(Screen):
 
     def update_peaks(self):
 
+
         if self.stage == "Overnight6HR":
 
-            self.y_wear_in_peak.text = str(max(self.raw_x_vals, key=abs))
-            self.y1_wear_in_peak.text = str(max(self.raw_y_vals, key=abs))
-            self.y2_wear_in_peak.text = str(max(self.raw_y1_vals, key=abs))
-            self.x_wear_in_peak.text = str(max(self.raw_y2_vals, key=abs))
-            self.z_wear_in_peak.text = str(max(self.raw_z_vals, key=abs))
+            self.get_peak_as_string(self.y_wear_in_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.x_wear_in_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_wear_in_peak, self.raw_z_vals)
             return
 
         if self.stage == "CalibrationCheckOT":
 
-            self.y_recalibration_peak.text = str(max(self.raw_x_vals, key=abs))
-            self.y1_recalibration_peak.text = str(max(self.raw_y_vals, key=abs))
-            self.y2_recalibration_peak.text = str(max(self.raw_y1_vals, key=abs))
-            self.x_recalibration_peak.text = str(max(self.raw_y2_vals, key=abs))
-            self.z_recalibration_peak.text = str(max(self.raw_z_vals, key=abs))
+            self.get_peak_as_string(self.y_recalibration_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y1_recalibration_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y2_recalibration_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.x_recalibration_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_recalibration_peak, self.raw_z_vals)
             return 
 
         if self.stage == "FullyCalibrated1HR":
-            self.y_fully_calibrated_peak.text = str(max(self.raw_x_vals, key=abs))
-            self.y1_fully_calibrated_peak.text = str(max(self.raw_y_vals, key=abs))
-            self.y2_fully_calibrated_peak.text = str(max(self.raw_y1_vals, key=abs))
-            self.x_fully_calibrated_peak.text = str(max(self.raw_y2_vals, key=abs))
-            self.z_fully_calibrated_peak.text = str(max(self.raw_z_vals, key=abs))    
+
+            self.get_peak_as_string(self.y_fully_calibrated_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y1_fully_calibrated_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y2_fully_calibrated_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.x_fully_calibrated_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_fully_calibrated_peak, self.raw_z_vals)
+            return
+
+
+    def get_peak_as_string(self, label_id, raw_vals):
+
+        try: label_id.text = str(max(raw_vals, key=abs))
+        except: pass
 
 
     def back_to_fac_settings(self):
