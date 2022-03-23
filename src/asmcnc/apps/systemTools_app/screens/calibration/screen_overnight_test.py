@@ -756,11 +756,11 @@ class OvernightTesting(Screen):
         pcb_temp = self.m.s.pcb_temp
         mot_temp = self.m.s.transistor_heatsink_temp
 
-        self.raw_x_vals.append(x_sg)
-        self.raw_y_vals.append(y_sg)
-        self.raw_y1_vals.append(y1_sg)
-        self.raw_y2_vals.append(y2_sg)
-        self.raw_z_vals.append(z_sg)
+        if x_sg != -999: self.raw_x_vals.append(x_sg)
+        if y_sg != -999: self.raw_y_vals.append(y_sg)
+        if y1_sg != -999: self.raw_y1_vals.append(y1_sg)
+        if y2_sg != -999: self.raw_y2_vals.append(y2_sg)
+        if z_sg != -999: self.raw_z_vals.append(z_sg)
 
         timestamp = datetime.now()
 
@@ -867,6 +867,12 @@ class OvernightTesting(Screen):
     def start_six_hour_wear_in(self):
 
         self.buttons_disabled(True)
+        self.reset_checkbox(self.six_hour_wear_in_checkbox)
+        self.reset_checkbox(self.y_wear_in_checkbox)
+        self.reset_checkbox(self.y1_wear_in_checkbox)
+        self.reset_checkbox(self.y2_wear_in_checkbox)
+        self.reset_checkbox(self.x_wear_in_checkbox)
+        self.reset_checkbox(self.z_wear_in_checkbox)
 
         self.setup_arrays()
 
@@ -882,7 +888,7 @@ class OvernightTesting(Screen):
             self.start_six_hour_wear_in_event = Clock.schedule_once(self.run_six_hour_wear_in, 3)
             return
 
-        self.stage = "Overnight6HR"
+        self.set_stage("Overnight6HR")
         self._stream_overnight_file('six_hour_rectangle')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
@@ -894,9 +900,9 @@ class OvernightTesting(Screen):
         if self._not_finished_streaming(self.poll_end_of_six_hour_wear_in):
             return
 
+        self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.six_hour_wear_in_checkbox, True)
         self.send_six_hour_wear_in_data()
-        self.pass_or_fail_peak_loads()
         self.setup_arrays()
 
         if self.poll_for_completion_of_overnight_test is None:
@@ -915,13 +921,19 @@ class OvernightTesting(Screen):
     def start_recalibration(self):
 
         self.buttons_disabled(True)
+        self.reset_checkbox(self.recalibration_checkbox)
+        self.reset_checkbox(self.y_recalibration_checkbox)
+        self.reset_checkbox(self.y1_recalibration_checkbox)
+        self.reset_checkbox(self.y2_recalibration_checkbox)
+        self.reset_checkbox(self.x_recalibration_checkbox)
+        self.reset_checkbox(self.z_recalibration_checkbox)
 
         if self._not_ready_to_stream():
             self.start_recalibration_event = Clock.schedule_once(lambda dt: self.start_recalibration(), 3)
             return
 
         self.setup_arrays()
-        self.stage = "Calibrating"
+        self.set_stage("Calibrating")
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
         self.poll_for_recalibration_completion = Clock.schedule_interval(self.test_recalibration, 5)
@@ -934,7 +946,7 @@ class OvernightTesting(Screen):
             self.stop_button.disabled = False
 
             if not self.m.calibration_tuning_fail_info:
-                self.stage == "CalibrationCheckOT"
+                self.set_stage("CalibrationCheckOT")
                 self.overnight_running = True
                 self.m.check_x_y_z_calibration()
                 self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
@@ -954,9 +966,9 @@ class OvernightTesting(Screen):
 
         if self.poll_for_recalibration_check_completion != None: Clock.unschedule(self.poll_for_recalibration_check_completion)
         self.overnight_running = False
+        self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.recalibration_checkbox, True)
         self.send_recalibration_data()
-        self.pass_or_fail_peak_loads()
         self.setup_arrays()
 
         if self.poll_for_completion_of_overnight_test is None:
@@ -975,6 +987,12 @@ class OvernightTesting(Screen):
     def start_fully_calibrated_final_run(self):
 
         self.buttons_disabled(True)
+        self.reset_checkbox(self.fully_calibrated_run_checkbox)
+        self.reset_checkbox(self.y_fully_calibrated_checkbox)
+        self.reset_checkbox(self.y1_fully_calibrated_checkbox)
+        self.reset_checkbox(self.y2_fully_calibrated_checkbox)
+        self.reset_checkbox(self.x_fully_calibrated_checkbox)
+        self.reset_checkbox(self.z_fully_calibrated_checkbox)
 
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
@@ -989,7 +1007,7 @@ class OvernightTesting(Screen):
             return
 
         self.setup_arrays()
-        self.stage = "FullyCalibrated1HR"
+        self.set_stage("FullyCalibrated1HR")
         self._stream_overnight_file('one_hour_rectangle')
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
@@ -1001,9 +1019,9 @@ class OvernightTesting(Screen):
         if self._not_finished_streaming(self.poll_end_of_fully_calibrated_final_run):
             return
 
+        self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.fully_calibrated_run_checkbox, True)
         self.send_fully_calibrated_final_run_data()
-        self.pass_or_fail_peak_loads()
         self.setup_arrays()
 
         if self.poll_for_completion_of_overnight_test is None:
@@ -1027,7 +1045,7 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
         self.cancel_active_polls()
         self.setup_arrays()
-        self.stage = ""
+        self.set_stage("")
         self.buttons_disabled(False)
 
 
@@ -1136,6 +1154,12 @@ class OvernightTesting(Screen):
             return False
 
 
+    ## RESET CHECKBOXES WHEN RUNS RESTART
+    def reset_checkbox(self, checkbox_id):
+        checkbox_id.source = self.checkbox_inactive
+
+
+
     # ## CALIBRATION FUNCTIONS
 
     def pass_or_fail_peak_loads(self):
@@ -1189,6 +1213,10 @@ class OvernightTesting(Screen):
         if poll_to_unschedule != None: Clock.unschedule(poll_to_unschedule)
 
 
+    def set_stage(self, stage):
+
+        self.stage = stage
+        print("Overnight test, stage: " + str(self.stage)) 
 
 
 ## COMMENTED OUT OLD VERSION
