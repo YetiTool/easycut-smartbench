@@ -2629,7 +2629,7 @@ class RouterMachine(object):
                 self.checking_calibration_in_progress = False
 
 
-    def construct_calibration_file_path(axis):
+    def construct_calibration_file_path(self, axis):
         return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
 
 
