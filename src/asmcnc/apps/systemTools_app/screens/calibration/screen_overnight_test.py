@@ -971,7 +971,7 @@ class OvernightTesting(Screen):
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.buttons_disabled(False)
 
-    def do_calibration_check(self, dt)
+    def do_calibration_check(self, dt):
 
         self.setup_arrays()
         self.set_stage("CalibrationCheckOT")
