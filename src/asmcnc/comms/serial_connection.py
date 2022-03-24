@@ -1028,6 +1028,11 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
+                    try:
+                        self.sm.get_screen('calibration_testing').set_gauge_value(self.sg_z_motor_axis)
+                    except:
+                        pass
+
                     if self.tuning_flag:
 
                         self.m.temp_sg_array.append([

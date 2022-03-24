@@ -5,7 +5,7 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import traceback
 
-from asmcnc.tests.gauges.widget_gauge import Gauge
+from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
 
 Builder.load_string("""
 <CalibrationTesting>:
@@ -46,8 +46,11 @@ Builder.load_string("""
 
     real_time_load_grid:real_time_load_grid
 
+    layout_container:layout_container
+
     BoxLayout:
         orientation: 'vertical'
+        id: layout_container
 
         BoxLayout:
             orientation: "horizontal"
@@ -366,7 +369,19 @@ class CalibrationTesting(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.enable_run_buttons()
 
+    def set_gauge_value(self, value):
+        self.gauge.set_value(value)
+
     def on_enter(self):
+        self.gauge = LoadGauge(name = 'load_gauge', sm = self.sm, m = self.m)
+        self.gauge.set_size(300, 100)
+        self.gauge.set_max_value(300)
+        self.gauge.set_boundaries(0.50, 0.75)
+        self.gauge.set_value(0)
+        self.gauge.set_title('Z Load')
+
+        self.layout_container.add_widget(self.gauge)
+
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)

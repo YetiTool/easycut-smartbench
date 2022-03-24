@@ -21,6 +21,7 @@ Builder.load_string("""
         center: self.parent.center
 
         GridLayout:
+            size: self.parent.size
             cols: 2
 
             Label:
