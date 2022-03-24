@@ -1001,6 +1001,8 @@ class OvernightTesting(Screen):
         else: 
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.setup_arrays()
+            self.cancel_active_polls()
+            self.buttons_disabled(False)
 
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)

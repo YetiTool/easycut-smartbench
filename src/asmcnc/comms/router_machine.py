@@ -2673,33 +2673,3 @@ class RouterMachine(object):
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
