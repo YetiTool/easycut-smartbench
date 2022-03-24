@@ -535,7 +535,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
-        popup_info.PopupWait(self.sm,  self.l)
+        updating_wait_popup = popup_info.PopupWait(self.sm,  self.l)
 
         def do_sw_update():
 
@@ -567,6 +567,8 @@ class SWUpdateScreen(Screen):
                     )
 
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
+
+            Clock.schedule_once( lambda dt: updating_wait_popup.popup.dismiss(), 0.1)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
