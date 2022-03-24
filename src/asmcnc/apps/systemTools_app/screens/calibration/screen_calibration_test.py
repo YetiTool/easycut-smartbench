@@ -467,342 +467,10 @@ class CalibrationTesting(Screen):
         self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def confirm_z(self, dt):
-        self.enable_run_buttons()
-        self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-
-    def run_unweighted_test(self):
-
-        self.disable_run_buttons()
-
-        self.show_expected_ranges(0,0,0)
-
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-
-        self.run_unweighted_z()
-
-        self.unweighted_event_x = Clock.schedule_once(self.run_unweighted_x, TIME_TO_RUN_Z + 10)
-
-        self.unweighted_event_y = Clock.schedule_once(self.run_unweighted_y, TIME_TO_RUN_Z + TIME_TO_RUN_X + 20)
-
-        self.confirm_event = Clock.schedule_once(self.confirm_unweighted, TIME_TO_RUN_Z + TIME_TO_RUN_X + TIME_TO_RUN_Y)
-
-    def stop_all_procedures(self):
-        self.disable_x_measurement(None)
-        self.disable_y_measurement(None)
-        self.disable_z_measurement(None)
-        popup_info.PopupStop(self.m, self.sm, self.l)
-
-        if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
-
-        self.enable_run_buttons()
-
-    def run_unweighted_z(self):
-        self.z_vals = []
-        self.raw_z_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
-
-        self.z_distance_left = TOTAL_DISTANCE
-
-        self.z_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.z_running:
-                    return
-
-                if self.z_distance_left > MAX_Z_DISTANCE:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
-
-                    self.z_distance_left -= MAX_Z_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.z_distance_left = 0
-
-                    Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def run_z_procedure(self, dt):
-
-        self.disable_run_buttons()
-
-        self.show_expected_ranges(0,0,2)
-
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-
-        self.z_vals = []
-        self.raw_z_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
-
-        self.z_distance_left = TOTAL_DISTANCE
-
-        self.z_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.z_running:
-                    return
-
-                if self.z_distance_left > MAX_Z_DISTANCE:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
-
-                    self.z_distance_left -= MAX_Z_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.z_distance_left = 0
-
-                    Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_z, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    #change distances and speeds
-    def run_y_procedure(self, dt):
-
-        self.disable_run_buttons()
-
-        self.show_expected_ranges(0,7.5,0)
-
-        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
-
-        self.y_vals = []
-        self.raw_y_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
-
-        self.y_distance_left = TOTAL_DISTANCE
-
-        self.y_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.y_running:
-                    return
-
-                if self.y_distance_left > MAX_Y_DISTANCE:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
-
-                    self.y_distance_left -= MAX_Y_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.y_distance_left = 0
-
-                    Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_y, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def run_unweighted_y(self, dt):
-        self.y_vals = []
-        self.raw_y_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
-
-        self.y_distance_left = TOTAL_DISTANCE
-
-        self.y_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.y_running:
-                    return
-
-                if self.y_distance_left > MAX_Y_DISTANCE:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
-
-                    self.y_distance_left -= MAX_Y_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.y_distance_left = 0
-
-                    Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    #change distances and speeds
-    def run_x_procedure(self, dt):
-
-        self.disable_run_buttons()
-
-        self.show_expected_ranges(7.5,0,0)
-
-        self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
-
-        self.raw_x_vals = []
-        self.x_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
-
-        self.x_distance_left = TOTAL_DISTANCE
-
-        self.x_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-    
-                if not self.x_running:
-                    return
-                
-                if self.x_distance_left > MAX_X_DISTANCE:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
-
-                    self.x_distance_left -= MAX_X_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.x_distance_left = 0
-
-                    Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def run_unweighted_x(self, dt):
-        self.raw_x_vals = []
-        self.x_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
-
-        self.x_distance_left = TOTAL_DISTANCE
-
-        self.x_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.x_running:
-                    return
-                
-                if self.x_distance_left > MAX_X_DISTANCE:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
-
-                    self.x_distance_left -= MAX_X_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.x_distance_left = 0
-
-                    Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
+        if self.state().startswith('Idle'):
+            self.z_running = False
+            self.enable_run_buttons()
+            self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
     
     def measure(self):
         if (self.x_running and self.m.feed_rate() < 1200) or (self.y_running and self.m.feed_rate() < 1200) or (self.z_running and self.m.feed_rate() < 80):
@@ -913,3 +581,398 @@ class CalibrationTesting(Screen):
         self.y2_bw_range.text = y_bw_range_text
         self.x_bw_range.text = x_bw_range_text
         self.z_bw_range.text = z_bw_range_text
+
+
+    def run_z_procedure(self):
+
+        # start run, run all the way down and then all the way back up. 
+
+        self.disable_run_buttons()
+        self.show_expected_ranges(0,0,2)
+
+        self.z_vals = []
+        self.raw_z_vals = []
+
+        self.z_running = True
+
+        self.m.send_any_gcode_command('G91 G1 Z-149 F75')
+        self.m.send_any_gcode_command('G91 G1 Z149 F75')
+
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
+
+
+    def run_y_procedure(self):
+
+        # start run, run all the way down and then all the way back up. 
+
+        self.disable_run_buttons()
+        self.show_expected_ranges(0,0,2)
+
+        self.y_vals = []
+        self.raw_y_vals = []
+
+        self.y_running = True
+
+        self.m.send_any_gcode_command('G91 G1 Y2500 F1186')
+        self.m.send_any_gcode_command('G91 G1 Y-2500 F1186')
+
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
+
+    def run_x_procedure(self):
+
+        # start run, run all the way down and then all the way back up. 
+
+        self.disable_run_buttons()
+        self.show_expected_ranges(0,0,2)
+
+        self.x_vals = []
+        self.raw_x_vals = []
+
+        self.x_running = True
+
+        self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
+        self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
+
+
+    def run_unweighted_test(self):
+        pass
+
+
+
+    # def run_unweighted_test(self):
+
+    #     self.disable_run_buttons()
+
+    #     self.show_expected_ranges(0,0,0)
+
+    #     self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+    #     self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+
+    #     self.run_unweighted_z()
+
+    #     self.unweighted_event_x = Clock.schedule_once(self.run_unweighted_x, TIME_TO_RUN_Z + 10)
+
+    #     self.unweighted_event_y = Clock.schedule_once(self.run_unweighted_y, TIME_TO_RUN_Z + TIME_TO_RUN_X + 20)
+
+    #     self.confirm_event = Clock.schedule_once(self.confirm_unweighted, TIME_TO_RUN_Z + TIME_TO_RUN_X + TIME_TO_RUN_Y)
+
+    # def stop_all_procedures(self):
+    #     self.disable_x_measurement(None)
+    #     self.disable_y_measurement(None)
+    #     self.disable_z_measurement(None)
+    #     popup_info.PopupStop(self.m, self.sm, self.l)
+
+    #     if self.next_run_event != None: Clock.unschedule(self.next_run_event)
+    #     if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
+    #     if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
+    #     if self.confirm_event != None: Clock.unschedule(self.confirm_event)
+
+    #     self.enable_run_buttons()
+
+    # def run_unweighted_z(self):
+    #     self.z_vals = []
+    #     self.raw_z_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
+
+    #     self.z_distance_left = TOTAL_DISTANCE
+
+    #     self.z_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+
+    #             if not self.z_running:
+    #                 return
+
+    #             if self.z_distance_left > MAX_Z_DISTANCE:
+    #                 if self.m.mpos_z() > -30:
+    #                     self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
+
+    #                 self.z_distance_left -= MAX_Z_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_z() > -30:
+    #                     self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
+
+    #                 self.z_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
+
+    # def run_z_procedure(self, dt):
+
+    #     self.disable_run_buttons()
+
+    #     self.show_expected_ranges(0,0,2)
+
+    #     self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+
+    #     self.z_vals = []
+    #     self.raw_z_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
+
+    #     self.z_distance_left = TOTAL_DISTANCE
+
+    #     self.z_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+
+    #             if not self.z_running:
+    #                 return
+
+    #             if self.z_distance_left > MAX_Z_DISTANCE:
+    #                 if self.m.mpos_z() > -30:
+    #                     self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
+
+    #                 self.z_distance_left -= MAX_Z_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_z() > -30:
+    #                     self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
+
+    #                 self.z_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
+    #                 self.confirm_event = Clock.schedule_once(self.confirm_z, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
+
+    # #change distances and speeds
+    # def run_y_procedure(self, dt):
+
+    #     self.disable_run_buttons()
+
+    #     self.show_expected_ranges(0,7.5,0)
+
+    #     self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
+
+    #     self.y_vals = []
+    #     self.raw_y_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
+
+    #     self.y_distance_left = TOTAL_DISTANCE
+
+    #     self.y_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+
+    #             if not self.y_running:
+    #                 return
+
+    #             if self.y_distance_left > MAX_Y_DISTANCE:
+    #                 if self.m.mpos_y() < -2460:
+    #                     self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
+
+    #                 self.y_distance_left -= MAX_Y_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_y() < -2460:
+    #                     self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.y_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
+    #                 self.confirm_event = Clock.schedule_once(self.confirm_y, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
+
+    # def run_unweighted_y(self, dt):
+    #     self.y_vals = []
+    #     self.raw_y_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
+
+    #     self.y_distance_left = TOTAL_DISTANCE
+
+    #     self.y_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+
+    #             if not self.y_running:
+    #                 return
+
+    #             if self.y_distance_left > MAX_Y_DISTANCE:
+    #                 if self.m.mpos_y() < -2460:
+    #                     self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
+
+    #                 self.y_distance_left -= MAX_Y_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_y() < -2460:
+    #                     self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.y_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
+
+    # #change distances and speeds
+    # def run_x_procedure(self, dt):
+
+    #     self.disable_run_buttons()
+
+    #     self.show_expected_ranges(7.5,0,0)
+
+    #     self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
+
+    #     self.raw_x_vals = []
+    #     self.x_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
+
+    #     self.x_distance_left = TOTAL_DISTANCE
+
+    #     self.x_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+    
+    #             if not self.x_running:
+    #                 return
+                
+    #             if self.x_distance_left > MAX_X_DISTANCE:
+    #                 if self.m.mpos_x() < -1260:
+    #                     self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
+
+    #                 self.x_distance_left -= MAX_X_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_x() < -1260:
+    #                     self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.x_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
+    #                 self.confirm_event = Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
+
+    # def run_unweighted_x(self, dt):
+    #     self.raw_x_vals = []
+    #     self.x_vals = []
+
+    #     #total distance required
+    #     TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
+
+    #     self.x_distance_left = TOTAL_DISTANCE
+
+    #     self.x_running = True
+
+    #     def run(dt):
+
+    #         if self.m.state().startswith('Idle'):
+
+    #             if not self.x_running:
+    #                 return
+                
+    #             if self.x_distance_left > MAX_X_DISTANCE:
+    #                 if self.m.mpos_x() < -1260:
+    #                     self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
+
+    #                 self.x_distance_left -= MAX_X_DISTANCE 
+
+    #                 TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
+    #             else:
+    #                 if self.m.mpos_x() < -1260:
+    #                     self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
+    #                 else:
+    #                     self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
+
+    #                 TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
+
+    #                 self.x_distance_left = 0
+
+    #                 Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
+
+    #         else:
+    #             self.next_run_event = Clock.schedule_once(run, 2)
+
+    #     self.next_run_event = Clock.schedule_once(run, 0.5)
