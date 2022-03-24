@@ -59,7 +59,12 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint_x: 0.3
-                    padding: [0, dp(75), 0, dp(75)]
+                    padding: [0, dp(25), 0, dp(25)]
+                    orientation: 'vertical'
+
+                    Button:
+                        text: 'Home'
+                        on_press: root.home()
 
                     Button:
                         text: 'Reset'
@@ -167,6 +172,11 @@ class CurrentAdjustment(Screen):
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
+
+    def home(self):
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('current_adjustment','current_adjustment')
 
     def measure(self):
         if self.m.s.sg_x_motor_axis != -999:
