@@ -81,7 +81,7 @@ from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
 from asmcnc.tests.gauges.screen_gauges import GaugeScreen
-from asmcnc.tests.gauges.widget_gauge import Gauge
+from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
 from asmcnc.tests.gauges.widget_circle_gauge import CircleGauge
 from random import randint
 
@@ -247,23 +247,26 @@ class SkavaUI(App):
 
 		# Clock.schedule_interval(test_cycle, 5)
 
-		# gauge_screen = GaugeScreen(name = 'gauge', sm = sm, m = m)
+		gauge_screen = GaugeScreen(name = 'gauge', sm = sm, m = m)
 
-		# sm.add_widget(gauge_screen)
+		sm.add_widget(gauge_screen)
 
-		# gauge = Gauge(name = 'load_gauge', sm = sm, m = m)
+		gauge = LoadGauge(name = 'load_gauge', sm = sm, m = m)
 
-		# gauge.set_size(300, 100)
-		# gauge.set_max_value(100)
-		# gauge.set_boundaries(50, 75)
-		# gauge.set_value(0)
+		gauge.set_size(300, 100)
+		gauge.set_max_value(300)
+		gauge.set_boundaries(0.50, 0.75)
+		gauge.set_value(0)
+		gauge.set_title('X Load')
 
-		# gauge_screen.add_gauge(gauge)
+		gauge_screen.add_gauge(gauge)
 
-		# def set_random_value(dt):
-		# 	gauge.set_value(min(randint(0, 300), randint(0, 300)))
+		def set_random_value(dt):
+			gauge.set_value(randint(-300, 300))
 
-		# Clock.schedule_interval(set_random_value, 1)
+		Clock.schedule_interval(set_random_value, 0.1)
+
+		sm.current = 'gauge'
 
 		# circle_gauge = CircleGauge()
 

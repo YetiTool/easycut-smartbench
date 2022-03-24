@@ -1,41 +1,33 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
-from kivy.uix.popup import Popup
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.button import  Button
-from kivy.properties import NumericProperty
 from kivy.graphics import Color
+from kivy.properties import NumericProperty, ObjectProperty
 from kivy.animation import Animation
-from functools import partial
 
 Builder.load_string("""
-<Gauge>:
+<LoadGauge>:
+    wrapper:wrapper
     outer_box:outer_box
     inner_box:inner_box
-    wrapper:wrapper
-    value_label:value_label
     title_label:title_label
+    value_label:value_label
+    peak_line:peak_line
 
     GridLayout:
         id: wrapper
         size_hint: None, None
-        center: self.parent.center
         rows: 2
-        width: root.max_width
+        center: self.parent.center
 
         GridLayout:
             cols: 2
 
             Label:
                 id: title_label
-                halign: 'left'
 
             Label:
                 id: value_label
-                halign: 'right'
 
         BoxLayout:
             id: outer_box
@@ -49,55 +41,49 @@ Builder.load_string("""
                 Line:
                     width: 2
                     rectangle: self.x, self.y, self.width, self.height
-
+            
             BoxLayout:
                 id: inner_box
                 size_hint: None, None
 
                 canvas:
                     Color:
-                        rgba: root.r,root.g,root.b,1
+                        rgba: root.r, root.g, root.b, 1
 
                     Rectangle:
                         pos: [self.parent.center_x, self.parent.center_y - (0.5 * self.height)]
                         size: self.size
-                
+
                 BoxLayout:
                     id: peak_line
                     size_hint: None, None
                     pos: [self.parent.center_x, self.parent.center_y]
-
+                    
                     canvas:
                         Color:
                             rgba: 1, 1, 1, 1
 
                         Line:
                             points: self.parent.parent.center_x + root.peak_value, self.center_y - (0.5 * self.height), self.parent.parent.center_x + root.peak_value, self.center_y + (0.5 * self.height)
-
 """)
 
-class Gauge(Widget):
+class LoadGauge(Widget):
     r = NumericProperty(0)
     g = NumericProperty(0)
     b = NumericProperty(0)
 
     peak_value = 0
-    max_width = 0
+
+    sm = ObjectProperty()
+    m = ObjectProperty()
 
     def __init__(self, **kwargs):
-        super(Gauge, self).__init__(**kwargs)
-
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
+        super(LoadGauge, self).__init__(**kwargs)
 
         self.bind(r=self.redraw)
 
-        self.peak_values = []
-
-        Clock.schedule_interval(self.reset_values, 1)
-
-    def reset_values(self, dt):
-        self.peak_values = []
+        # max of 10 values
+        self.value_stack = []
 
     def set_title(self, title):
         self.title_label.text = title
@@ -105,62 +91,55 @@ class Gauge(Widget):
     def set_max_value(self, max_value):
         self.max_value = max_value
 
-    def set_boundaries(self, warning, error):
-        self.warning_bound = warning
-        self.error_bound = error
-
     def set_size(self, width, height):
         self.outer_box.width = width
         self.outer_box.height = height
+
         self.wrapper.height = height + 30
-        self.wrapper.width = width + 20
-        self.max_width = width
 
         self.inner_box.height = height - (0.05 * height)
 
-    def add_value(self, value):
-        required_width = ((self.outer_box.width / self.max_value) * value) * 0.5
-
-        self.peak_values.append(required_width)
-
-        peak_value_pos = max(self.peak_values)
-        peak_value_neg = max(self.peak_values, key=abs)
-
-        if peak_value_neg > peak_value_pos:
-            self.peak_value = -peak_value_neg
-        else:
-            self.peak_value = peak_value_pos
+    def set_boundaries(self, warning_percentage, error_percentage):
+        self.warning_percentage = warning_percentage
+        self.error_percentage = error_percentage
 
     def set_value(self, value):
-        required_width = ((self.outer_box.width / self.max_value) * value) * 0.5
+        width = ((self.outer_box.width / self.max_value) * value) / 2
+        
+        self.add_value_to_stack(width)
 
-        self.add_value(value)
-
-        anim = Animation(width=required_width, duration=0.03, t='in_quad')
-
-        anim.start(self.inner_box)
-
-        if required_width < 24 * len(str(value)):
-            required_width = 24 * len(str(value))
+        self.animate_width(self.inner_box, width)
 
         self.value_label.text = str(value)
 
-        if abs(float(value) / float(self.max_value)) > self.error_bound:
+        if abs(float(value) / float(self.max_value)) > self.error_percentage:
             self.r = 1
             self.g = 0
             self.b = 0
-        elif abs(float(value) / float(self.max_value)) > self.warning_bound:
+        elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
             self.r = 1
             self.g = 1
             self.b = 0
         else:
             self.r = 0
             self.g = 1
-            self.b = 0 
+            self.b = 0
 
-    def set_text(self, text, *largs):
-        self.value_label.text = str(text)
+    def animate_width(self, el, width):
+        anim = Animation(width=width, duration=0.03, t='in_quad')
+        anim.start(el)
 
     def redraw(self, *args):
         with self.inner_box.canvas:
             Color(self.r, self.g, self.b, 1)
+    
+    def add_value_to_stack(self, value):
+        if len(self.value_stack) == 10:
+            self.value_stack.pop(0)
+            self.value_stack.append(value)
+        else:
+            self.value_stack.append(value)
+        
+        peak_value = max(self.value_stack, key=abs)
+
+        self.peak_value = peak_value
