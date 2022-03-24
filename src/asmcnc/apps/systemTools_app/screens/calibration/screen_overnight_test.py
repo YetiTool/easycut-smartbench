@@ -961,7 +961,12 @@ class OvernightTesting(Screen):
         Clock.unschedule(self.poll_for_recalibration_completion)
         self.stop_button.disabled = False
 
+
+
         if not self.m.calibration_tuning_fail_info:
+
+            # self.calibration_db.insert_coefficients_wrapper() ## PLACEHOLDER
+
             self.start_calibration_check_event = Clock.schedule_once(self.do_calibration_check, 10)
 
         else:
