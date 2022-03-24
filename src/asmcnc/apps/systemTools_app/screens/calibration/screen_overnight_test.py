@@ -773,11 +773,11 @@ class OvernightTesting(Screen):
         pcb_temp = self.m.s.pcb_temp
         mot_temp = self.m.s.transistor_heatsink_temp
 
-        if x_sg != -999: self.raw_x_vals.append(x_sg)
-        if y_sg != -999: self.raw_y_vals.append(y_sg)
-        if y1_sg != -999: self.raw_y1_vals.append(y1_sg)
-        if y2_sg != -999: self.raw_y2_vals.append(y2_sg)
-        if z_sg != -999: self.raw_z_vals.append(z_sg)
+        if -999 < x_sg < 1023: self.raw_x_vals.append(x_sg)
+        if -999 < y_sg < 1023: self.raw_y_vals.append(y_sg)
+        if -999 < y1_sg < 1023: self.raw_y1_vals.append(y1_sg)
+        if -999 < y2_sg < 1023: self.raw_y2_vals.append(y2_sg)
+        if -999 < z_sg < 1023: self.raw_z_vals.append(z_sg)
 
         timestamp = datetime.now()
 
