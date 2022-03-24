@@ -126,8 +126,7 @@ class LoadGauge(Widget):
             self.b = 0
 
     def animate_width(self, el, width):
-        anim = Animation(width=width, duration=0.03, t='in_quad')
-        anim.start(el)
+        self.inner_box.width = width
 
     def redraw(self, *args):
         with self.inner_box.canvas:
