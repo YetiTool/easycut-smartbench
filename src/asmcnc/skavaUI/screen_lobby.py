@@ -434,6 +434,7 @@ class LobbyScreen(Screen):
         self.update_strings()
 
     def on_enter(self):
+        self.sm.current = 'gauge'
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 

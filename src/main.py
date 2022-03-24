@@ -266,8 +266,6 @@ class SkavaUI(App):
 
 		Clock.schedule_interval(set_random_value, 0.1)
 
-		sm.current = 'gauge'
-
 		# circle_gauge = CircleGauge()
 
 		# gauge_screen.add_gauge(circle_gauge)
