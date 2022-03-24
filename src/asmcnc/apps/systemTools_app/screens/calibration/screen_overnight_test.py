@@ -656,6 +656,10 @@ MAX_Z_DISTANCE = 149
 MAX_X_DISTANCE = 1299
 MAX_Y_DISTANCE = 2501
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 class OvernightTesting(Screen):
 
     poll_for_recalibration_stage = None
@@ -694,6 +698,8 @@ class OvernightTesting(Screen):
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
 
+    # Set up and clear/reset arrays for storing SG/measurement data
+
     def setup_arrays(self):
         #x loads with vector & pos
         self.x_vals = []
@@ -731,6 +737,16 @@ class OvernightTesting(Screen):
         self.cancel_active_polls()
         self.stop_button.disabled = False
         self.buttons_disabled(False)
+
+
+    # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
+    def set_stage(self, stage):
+
+        self.stage = stage
+        log("Overnight test, stage: " + str(self.stage)) 
+
+
+    # Function called from serial comms to record SG values
 
     def measure(self):
         if not self.overnight_running:
@@ -772,6 +788,7 @@ class OvernightTesting(Screen):
 
         self.update_peaks()
 
+    "Update screen with (absolute) peak load values"
 
     def update_peaks(self):
 
@@ -824,6 +841,9 @@ class OvernightTesting(Screen):
         PopupStopOvernightTest(self.m, self.sm, self.l, self)
 
 
+    # Poll/start events are scheduled to detect when one operation has finished and then start the next
+    # If STOP button is pressed, or a stage fails, any active polls need to be cancelled
+
     def cancel_active_polls(self):
 
         # put all of the polls here, and check if not none. call this on job cancel, and on_leave. 
@@ -839,9 +859,15 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.start_fully_calibrated_final_run_event)
         self._unschedule_event(self.start_calibration_check_event)
 
-
+        # also stop measurement running
         self.overnight_running = False
 
+
+    def _unschedule_event(self, poll_to_unschedule):
+
+        if poll_to_unschedule != None: Clock.unschedule(poll_to_unschedule)
+
+    # Disable any buttons other than STOP while other tests are running
 
     def buttons_disabled(self, status):
 
@@ -856,12 +882,13 @@ class OvernightTesting(Screen):
         self.retry_fully_calibrated_run_data_send.disabled = status
 
 
-
     ## OVERNIGHT TEST CONTROL
     def start_full_overnight_test(self):
 
         self.buttons_disabled(True)
         self.setup_arrays()
+
+        log("Start full overnight test")
 
         # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         self.poll_for_recalibration_stage = Clock.schedule_interval(self.ready_for_recalibration, 10)
@@ -870,9 +897,15 @@ class OvernightTesting(Screen):
         self.start_six_hour_wear_in()
 
 
-    ## RUNNING FUNCTIONS - THESE ARE ALL PARTS OF "OVERNIGHT TEST"
+    ## RUNNING FUNCTIONS - THESE ARE ALL PARTS OF "OVERNIGHT TEST" -------------------------------------------------------------------
 
-    # These functions also need to set the STAGE, so each bit of sent data knows what it's for
+    # These functions also set the Stage, so each bit of sent data knows what it's for
+
+    # Each function in each stage automatically calL the next one in sequence, so that each stage (six hour, recalibration, one-hour post recal) can also be run individually if needed.
+    # The start full overnight test function sets up polls for each stage to start after the next one.
+
+
+    ## SIX HOUR WEAR IN
 
     # This should start, stream the 6 hour wear-in file, and then do any post 6 hour wear-in
     def start_six_hour_wear_in(self):
@@ -886,6 +919,8 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.z_wear_in_checkbox)
 
         self.setup_arrays()
+
+        log("Start 6 hour wear-in")
 
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
@@ -903,13 +938,15 @@ class OvernightTesting(Screen):
         self._stream_overnight_file('six_hour_rectangle')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
-        print("Running six hour wear-in...")
+        log("Running six hour wear-in...")
 
 
     def post_six_hour_wear_in(self, dt): # This should also trigger the payload data send for any data that did not succeed in sending
 
         if self._not_finished_streaming(self.poll_end_of_six_hour_wear_in):
             return
+
+        log("Six hour wear-in completed")
 
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.six_hour_wear_in_checkbox, True)
@@ -920,6 +957,7 @@ class OvernightTesting(Screen):
             self.buttons_disabled(False)
 
 
+    ## RECALIBRATION
 
     def ready_for_recalibration(self, dt):
         
@@ -943,6 +981,8 @@ class OvernightTesting(Screen):
             self.start_recalibration_event = Clock.schedule_once(lambda dt: self.start_recalibration(), 3)
             return
 
+        log("Starting recalibration...")
+
         self.setup_arrays()
         self.overnight_running = False
         self.set_stage("Calibrating")
@@ -961,8 +1001,6 @@ class OvernightTesting(Screen):
         Clock.unschedule(self.poll_for_recalibration_completion)
         self.stop_button.disabled = False
 
-
-
         if not self.m.calibration_tuning_fail_info:
 
             # self.calibration_db.insert_coefficients_wrapper() ## PLACEHOLDER
@@ -978,6 +1016,8 @@ class OvernightTesting(Screen):
 
     def do_calibration_check(self, dt):
 
+        log("Recalibration complete, starting to stream files to check ranges...")
+
         # set up arrays and stages
         self.setup_arrays()
         self.set_stage("CalibrationCheckOT")
@@ -985,16 +1025,18 @@ class OvernightTesting(Screen):
 
         # start check
         self.m.check_x_y_z_calibration()
-        self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration, 5)
+        self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration_check, 5)
 
 
-    def post_recalibration(self, dt):
+    def post_recalibration_check(self, dt):
 
         if self.m.checking_calibration_in_progress:
             return
 
         if self.poll_for_recalibration_check_completion != None: Clock.unschedule(self.poll_for_recalibration_check_completion)
         self.overnight_running = False
+
+        
 
         if not self.m.checking_calibration_fail_info:
 
@@ -1003,14 +1045,21 @@ class OvernightTesting(Screen):
             self.send_recalibration_data()
             self.setup_arrays()
 
+            log("Recalibration check complete...")
+
         else: 
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.setup_arrays()
             self.cancel_active_polls()
             self.buttons_disabled(False)
 
+            log("Recalibration check did not complete, cancelling further tests")
+
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
+
+
+    ## ONE HOUR RUN (SAME RECTANGLE AS IS REPEATED FOR SIX HOUR), TO RUN AFTER SB HAS BEEN FULLY CALIBRATED
 
     # This should run the post-calibration 1 hour file to harvest SG values/run data when machine is fully calibrated. 
 
@@ -1032,6 +1081,8 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.x_fully_calibrated_checkbox)
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
 
+        log("SB fully calibrated, start final run - one hour")
+
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
@@ -1049,13 +1100,15 @@ class OvernightTesting(Screen):
         self._stream_overnight_file('one_hour_rectangle')
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
-        print("Running fully calibrated final run...")
+        log("Running fully calibrated final run...")
 
 
     def post_fully_calibrated_final_run(self, dt):
 
         if self._not_finished_streaming(self.poll_end_of_fully_calibrated_final_run):
             return
+
+        log("Fully calibrated final run complete")
 
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.fully_calibrated_run_checkbox, True)
@@ -1065,7 +1118,7 @@ class OvernightTesting(Screen):
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
-    ## This function only runs if full suite of overnight tests is completed
+    ## This function only runs if full suite of overnight tests is carried out together (i.e. by pressing START) and completed
     def overnight_test_completed(self, dt):
 
         if self._not_ready_to_stream():
@@ -1080,6 +1133,8 @@ class OvernightTesting(Screen):
         if not self.is_step_complete(self.fully_calibrated_run_checkbox):
             return
 
+        log("Overnight test completed")
+
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
         self.cancel_active_polls()
         self.setup_arrays()
@@ -1087,7 +1142,7 @@ class OvernightTesting(Screen):
         self.buttons_disabled(False)
 
 
-    # STREAMING FUNCTIONS
+    # FILE STREAMING FUNCTIONS
 
     def _not_ready_to_stream(self):
         if self.m.state().startswith('Idle') and not self.overnight_running:
@@ -1128,7 +1183,7 @@ class OvernightTesting(Screen):
         return True
 
 
-    ## DATA STREAMS
+    ## DATA SEND FUNCTIONS
 
     # These actually only need to send any data that hasn't already been sent - for completion, check when arrays are empty
 
@@ -1198,7 +1253,7 @@ class OvernightTesting(Screen):
 
 
 
-    # ## CALIBRATION FUNCTIONS
+    ## CHECK THAT SG VALUES ARE WITHIN EXPECTED RANGES
 
     def pass_or_fail_peak_loads(self):
  
@@ -1244,148 +1299,5 @@ class OvernightTesting(Screen):
 
         except:
             return False
-
-
-    def _unschedule_event(self, poll_to_unschedule):
-
-        if poll_to_unschedule != None: Clock.unschedule(poll_to_unschedule)
-
-
-    def set_stage(self, stage):
-
-        self.stage = stage
-        print("Overnight test, stage: " + str(self.stage)) 
-
-
-## COMMENTED OUT OLD VERSION
-
-    # def send_first_overnight_payload(self):
-    #     serial = self.calibration_db.get_serial_number()
-        
-    #     try:
-    #         self.calibration_db.send_overnight_test_calibration(serial, *self.first_overnight_run_data)
-    #         self.sent_first_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #     except:
-    #         self.sent_first_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-    #         print(traceback.format_exc())
-
-
-    # def send_overnight_post_recal_payload(self):
-    #     serial = self.calibration_db.get_serial_number()
-        
-    #     try:
-    #         self.calibration_db.send_overnight_test_post_recalibration(serial, *self.second_overnight_run_data)
-    #         self.sent_second_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #     except:
-    #         self.sent_second_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-    #         print(traceback.format_exc())
-
-
-
-    # def start_overnight_test(self):
-
-    #     self.overnight_test_button.disabled = True
-
-    #     self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
-    #     self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-
-    #     Clock.schedule_once(self.stream_overnight_file, 5)
-
-    # def stream_overnight_file(self, dt):
-
-    #     if self.m.state().startswith('Idle') and not self.overnight_running:
-
-    #         self.overnight_running = True
-
-    #         filename = './asmcnc/apps/systemTools_app/files/overnight_test.gc'
-    #         # filename = './asmcnc/apps/systemTools_app/files/mini_run.gc'
-
-    #         with open(filename) as f:
-    #             overnight_gcode_pre_scrubbed = f.readlines()
-
-    #         overnight_gcode = [self.m.quick_scrub(line) for line in overnight_gcode_pre_scrubbed]
-
-    #         print("Running overnight test...")
-
-    #         self.m.s.run_skeleton_buffer_stuffer(overnight_gcode)
-    #         self.poll_end_of_first_overnight_file_stream = Clock.schedule_interval(self.post_overnight_first_file_stream, 60)
-
-    #     else:
-    #         Clock.schedule_once(self.stream_overnight_file, 3)
-
-
-    # def post_overnight_first_file_stream(self, dt):
-
-    #     if self.m.state().startswith('Idle'):
-
-    #         if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
-    #             Clock.unschedule(self.poll_end_of_first_overnight_file_stream)
-
-    #             self.overnight_running = False
-    #             self.first_overnight_run_data = self.store_overnight_run_measurements()
-    #             self.send_first_overnight_payload()
-    #             self.retry_first_data_send.disabled = False
-
-
-    # def recalibrate_after_wear_in(self):
-    #     self.m.calibrate_X_Y_and_Z()
-    #     self.poll_for_recalibration_completion = Clock.schedule_interval(self.finish_recalibrating, 5)
-
-
-    # def finish_recalibrating(self, dt):
-    #     if not self.m.run_calibration:
-    #         Clock.unschedule(self.poll_for_recalibration_completion)
-
-    #         if not self.m.calibration_tuning_fail_info:
-    #             self.stream_post_recal_file(0)
-
-    #         # else:
-    #         #     self.calibration_label.text = self.m.calibration_tuning_fail_info
-
-
-
-    # def stream_post_recal_file(self, dt):
-
-    #     if self.m.state().startswith('Idle') and not self.overnight_running:
-
-    #         self.overnight_running = True
-
-    #         filename = './asmcnc/apps/systemTools_app/files/post_recal_test.gc'
-    #         # filename = './asmcnc/apps/systemTools_app/files/mini_run.gc'
-
-    #         with open(filename) as f:
-    #             post_recal_gcode_pre_scrubbed = f.readlines()
-
-    #         post_recal_gcode = [self.m.quick_scrub(line) for line in post_recal_gcode_pre_scrubbed]
-
-    #         print("Running overnight test...")
-
-    #         self.m.s.run_skeleton_buffer_stuffer(post_recal_gcode)
-    #         self.poll_end_of_second_overnight_file_stream = Clock.schedule_interval(self.post_overnight_second_file_stream, 60)
-
-    #     else:
-    #         Clock.schedule_once(self.stream_post_recal_file, 3)
-
-
-    # def post_overnight_second_file_stream(self, dt):
-
-    #     if self.m.state().startswith('Idle'):
-
-    #         if self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and not self.m.s.is_stream_lines_remaining and not self.m.is_machine_paused: 
-    #             Clock.unschedule(self.poll_end_of_second_overnight_file_stream)
-
-    #             self.overnight_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #             self.overnight_running = False
-    #             self.second_overnight_run_data = self.store_overnight_run_measurements()
-    #             self.send_overnight_post_recal_payload()
-    #             self.retry_second_data_send.disabled = False
-    #             self.overnight_test_button.disabled = False
-
-    # # def store_overnight_run_measurements(self):
-
-    # #     persistent_array = [self.x_vals, self.y_vals, self.z_vals]
-    # #     self.setup_arrays()
-
-    # #     return persistent_array
 
 
