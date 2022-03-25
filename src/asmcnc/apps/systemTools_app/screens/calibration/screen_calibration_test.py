@@ -9,11 +9,6 @@ from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
 Builder.load_string("""
 <CalibrationTesting>:
-    y_rt_load:y_rt_load
-    x_rt_load:x_rt_load
-    z_rt_load:z_rt_load
-    y1_rt_load:y1_rt_load
-    y2_rt_load:y2_rt_load
 
     y_axis_fw_range : y_axis_fw_range
     y1_fw_range : y1_fw_range
@@ -668,17 +663,11 @@ class CalibrationTesting(Screen):
         self.raw_y2_vals.append(y2_sg)
         self.raw_z_vals.append(z_sg)
 
-        self.x_peak_load.text = "X: " + str(max(self.raw_x_vals, key=abs))
-        self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
-
-        self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals, key=abs))
-        self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
-        self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals, key=abs))
-        self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals, key=abs))
-        self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)            
-        self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
-        self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals, key=abs))
-        self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
+        self.x_peak_load.text = str(max(self.raw_x_vals, key=abs))
+        self.y_peak_load.text = str(max(self.raw_y_vals, key=abs))
+        self.y1_peak_load.text = str(max(self.raw_y1_vals, key=abs))
+        self.y2_peak_load.text = str(max(self.raw_y2_vals, key=abs))
+        self.z_peak_load.text = str(max(self.raw_z_vals, key=abs))
 
         timestamp = datetime.now()
 
