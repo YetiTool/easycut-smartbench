@@ -258,11 +258,11 @@ Builder.load_string("""
                     text_size: self.size
 
                 Label:
-                    id: y1_axis_fw_range
+                    id: y1_fw_range
                     text: 'yyy - yyy'
 
                 Label:
-                    id: y1_axis_bw_range
+                    id: y1_bw_range
                     text: 'yyy - yyy'
 
                 Image:
@@ -291,11 +291,11 @@ Builder.load_string("""
                     text_size: self.size
 
                 Label:
-                    id: y2_axis_fw_range
+                    id: y2_fw_range
                     text: 'yyy - yyy'
 
                 Label:
-                    id: y2_axis_bw_range
+                    id: y2_bw_range
                     text: 'yyy - yyy'
 
                 Image:
@@ -324,11 +324,11 @@ Builder.load_string("""
                     text_size: self.size
 
                 Label:
-                    id: x_axis_fw_range
+                    id: x_fw_range
                     text: 'xxx - xxx'
 
                 Label:
-                    id: x_axis_bw_range
+                    id: x_bw_range
                     text: 'xxx - xxx'
 
                 Image:
@@ -358,11 +358,11 @@ Builder.load_string("""
                     text_size: self.size
 
                 Label:
-                    id: z_azis_fw_range
+                    id: z_fw_range
                     text: 'zzz - zzz'
 
                 Label:
-                    id: z_azis_bw_range
+                    id: z_bw_range
                     text: 'zzz - zzz'
 
                 Image:
