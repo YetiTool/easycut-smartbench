@@ -27,7 +27,7 @@ Builder.load_string("""
 
         GridLayout:
             cols: 1
-            rows: 3
+            rows: 4
 
             spacing: 50
 
