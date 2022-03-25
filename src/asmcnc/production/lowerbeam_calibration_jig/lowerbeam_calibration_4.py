@@ -89,10 +89,10 @@ class LBCalibration4(Screen):
         try:
             self.send_calibration_payload(TMC_Y1)
             self.send_calibration_payload(TMC_Y2)
-            self.sm.get_screen('lbc5').set_serial_no(self.serial_no_input.text)
+            self.sm.get_screen('lbc5').set_serial_no(serial_number)
             self.sm.current = 'lbc5'
         except Exception as e:
-            self.sm.get_screen('lbc6').set_serial_no(self.serial_no_input.text)
+            self.sm.get_screen('lbc6').set_serial_no(serial_number)
             self.sm.current = 'lbc6'
             print(traceback.format_exc())
 
