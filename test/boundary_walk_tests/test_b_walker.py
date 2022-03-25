@@ -54,10 +54,7 @@ class BWalkerTest(unittest.TestCase):
     
     def setUp(self):
         self.b_setter = b_calculator.BCalculator()
-        # optional - but in use for now:
-        # blank gcode file for now
-        self.gcode_file_path = "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"        
-        self.b_setter.set_gcode_file(self.gcode_file_path)
+        self.b_setter.sort_gcode_input("")
         # set the boundary_datum (mid-mid of job envelope)
         self.b_setter.set_boundary_datum_point()
 
@@ -66,13 +63,35 @@ class BWalkerTest(unittest.TestCase):
             # SHOULD at least print range_x and range_y
             self.b_setter.get_job_env()
             # print datums:
-            print("22 03 20 datums x: {} and y: {}".format(self.b_setter.datum_x, self.b_setter.datum_y))
+            print(" ___ datums x: {} and y: {}".format(self.b_setter.datum_x, self.b_setter.datum_y))
         
     def test_boundary_datum_is_not_blank(self):
         neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
-        self.assertFalse(neither_are_zero == 0, "missing datum data? or hopefully only DATUM FOUND")
+        self.assertFalse(neither_are_zero == 0, 
+                         "missing datum data? or hopefully only DATUM FOUND")
+        self.assertFalse(neither_are_zero == 2 * 495,
+                         "... DATUM FOUND but still manually set!")
+
+        print("... here")
         # ### FOCUS POINT <<>> !!! any datum point is already being excluded
 
+    def test_without_arcs_one(self):
+        without_string = "test/boundary_walk_test_files/w_n_w-out_arcs/without_1.gcode"
+        print("testing: WITHOUT:")
+        self.gcode_file_path = without_string
+        self.b_setter.sort_gcode_input(self.gcode_file_path)
+        self.b_setter.set_boundary_datum_point()
+        # run test on latest: 
+        self.test_boundary_datum_is_not_blank()
+        
+    def test_with_arcs_one(self):
+        with_string = "test/boundary_walk_test_files/w_n_w-out_arcs/with_1.gcode"
+        print("testing: WITH:")
+        self.gcode_file_path = with_string
+        self.b_setter.sort_gcode_input(self.gcode_file_path)
+        self.b_setter.set_boundary_datum_point()
+        # run test on latest:
+        self.test_boundary_datum_is_not_blank()
             
 if __name__ == "__main__": unittest.main()
 
@@ -80,12 +99,4 @@ def unit_test_b_walk_suite():
     suite = unittest.TestSuite()
     suite.addTest(BWalkerTest("test_boundary_datum_is_not_blank"))
     return suite
-    # or could use: suite = unittest.makeSuite(WidgetTestCase,'test')
-# ##
-# CAN define suite as follows, but looks complex
-#
-# class BoundaryWalkTestSuite(unittest.TestSuite):
-#     def __init__(self):
-#         unittest.TestSuite.__init__(self,map(UnitTestsBoundaryWalk,
-#                                               ("test_found_boundary_is_a_complete_polygon",
-#                                                "test_boundary_avoids_the_furthest_cut"))) 
+

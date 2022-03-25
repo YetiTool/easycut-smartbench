@@ -4,8 +4,6 @@ Created on 3 Feb 2018
 @author: hsth
 @author hugh.harford@yetitool.com
 @author hugh.harford@poscoconsulting.com
-TODO: This all looks a bit lonely. 
-Reintegrate back with the other UI widgets e.g. widget_virtual_bed?
 
 TODO (hsth):
 Deal with circles in set_job_envelope
@@ -59,14 +57,19 @@ class BoundingBox():
     range_z = [109, 1099]
     range_g = [109, 1099]
 
+    count_linear_gcodelines = 0
+    count_arc_gcodelines = 0
+
+
     def __init__(self):
         pass
+
 
     def check_circle_mode(self, input_line):
         isarc = 0
         if input_line.startswith(tuple(self.arc_line_type)): # then arc
             isarc = 1
-            # print(input_line) # don't this this anymore, useful to see what ARCs are found
+            # print(input_line) # don't use this anymore, useful to see what ARCs are found
         return isarc
 
     def check_other_type(self, input_line):
@@ -96,11 +99,11 @@ class BoundingBox():
         # g_values.append(sample_only_value+0.3)
 
         values_list_xyzg = [x_values, y_values, z_values, g_values]
-        includes_arcs = 0
+        self.includes_arcs = 0
         
-        
-        count_linear_gcodelines = 0
-        count_arc_gcodelines = 0
+        self.count_linear_gcodelines = 0
+        self.count_arc_gcodelines = 0
+
 
         gcode_file = open(gcode_file_path,'r')
         for line in gcode_file:
@@ -121,11 +124,11 @@ class BoundingBox():
                 gcode_linetype = self.determine_part_type(part)
                 if gcode_linetype == 'arc':
                     # arc fasion:
-                    count_arc_gcodelines += 1
+                    self.count_arc_gcodelines += 1
                     # values_list_xyzg = [0]
                 elif gcode_linetype.startswith(('linear')):
                     # linear fasion
-                    count_linear_gcodelines += 1 
+                    self.count_linear_gcodelines += 1
                     # values_list_xyzg = [0]
 
                 
@@ -199,7 +202,8 @@ class BoundingBox():
         except UnknownFileError:
             print(">>>>  Error: " + UnknownFileError)
 
-        print('arc fasion: {}, linear fasion: {}'.format(count_arc_gcodelines, count_linear_gcodelines))
+        print('arc fasion: {}, linear fasion: {}'.format(
+            self.count_arc_gcodelines, self.count_linear_gcodelines))
 
 
     def sort_arc_part(self, glinepart):
