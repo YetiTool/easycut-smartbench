@@ -570,7 +570,7 @@ class CalibrationTesting(Screen):
 
 
     def confirm_z(self, dt):
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
             self.z_running = False
             self.enable_run_buttons()
             self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -596,7 +596,7 @@ class CalibrationTesting(Screen):
 
 
     def confirm_y(self, dt):
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
             self.y_running = False
             self.enable_run_buttons()
             self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -622,7 +622,7 @@ class CalibrationTesting(Screen):
 
 
     def confirm_x(self, dt):
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
             self.x_running = False
             self.enable_run_buttons()
             self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -630,7 +630,7 @@ class CalibrationTesting(Screen):
 
     def run_unweighted_test(self):
         
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
 
             self.disable_run_buttons()
             self.x_vals = []
@@ -648,7 +648,7 @@ class CalibrationTesting(Screen):
 
     def part_1_unweighted_x(self, dt):
 
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
 
             self.x_running = True
             self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
@@ -660,7 +660,7 @@ class CalibrationTesting(Screen):
 
     def part_2_unweighted_y(self):
 
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
 
             self.x_running = False
             self.y_running = True
@@ -674,7 +674,7 @@ class CalibrationTesting(Screen):
 
     def part_3_unweighted_z(self):
 
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
 
             self.y_running = False
             self.z_running = True
@@ -689,7 +689,7 @@ class CalibrationTesting(Screen):
 
     def confirm_unweighted(self, dt):
 
-        if self.state().startswith('Idle'):
+        if self.m.state().startswith('Idle'):
 
             self.unweighted_data.append(self.x_vals)
             self.unweighted_data.append(self.y_vals)
