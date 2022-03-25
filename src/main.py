@@ -253,7 +253,7 @@ class SkavaUI(App):
 
 		# gauge = LoadGauge(name = 'load_gauge', sm = sm, m = m)
 
-		# gauge.set_size(300, 100)
+		# gauge.set_size(500, 100)
 		# gauge.set_max_value(300)
 		# gauge.set_boundaries(0.50, 0.75)
 		# gauge.set_value(0)
@@ -265,6 +265,8 @@ class SkavaUI(App):
 		# 	gauge.set_value(randint(-300, 300))
 
 		# Clock.schedule_interval(set_random_value, 0.1)
+
+		# sm.current = 'gauge'
 
 		# circle_gauge = CircleGauge()
 

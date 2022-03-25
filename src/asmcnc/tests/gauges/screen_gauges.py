@@ -27,7 +27,6 @@ class GaugeScreen(Screen):
 
     def add_gauge(self, gauge):
         self.add_widget(gauge)
-        self.start_overnight_test()
     
     def run_load_test(self):
         
