@@ -21,11 +21,11 @@ Builder.load_string("""
     x_bw_range : x_bw_range
     z_bw_range : z_bw_range
 
-    y_peak_load:y_peak_load
-    x_peak_load:x_peak_load
-    z_peak_load:z_peak_load
-    y1_peak_load:y1_peak_load
-    y2_peak_load:y2_peak_load
+    y_peak_load : y_peak_load
+    y1_peak_load : y1_peak_load
+    y2_peak_load : y2_peak_load
+    x_peak_load : x_peak_load
+    z_peak_load : z_peak_load
 
     x_test_check:x_test_check
     y_test_check:y_test_check
@@ -188,196 +188,460 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.1
+
+                Label:
+                    text: 'Unweighted'
+
+                Label:
+                    text: 'Weighted'
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 1
+
+                GridLayout: 
+                    cols: 5
+                    rows: 6
+
+
+                    Label:
+                        text: ''
+
+                    Label:
+                        text: 'Peak'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        text: 'Load up'
+
+                    Label:
+                        text: 'Load down'
+
+                    Label:
+                        text: ''
+
+                    ## Y axis
+
+                    Label:
+                        text: 'Y:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_axis_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_axis_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Image:
+                        id: y_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## Y1 axis
+
+                    Label:
+                        text: 'Y1:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Image:
+                        id: y1_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## Y2 axis
+
+                    Label:
+                        text: 'Y2:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Image:
+                        id: y2_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## X axis
+
+                    Label:
+                        text: 'X:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_load
+                        text: 'xxx'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_fw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_bw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Image:
+                        id: x_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+
+                    ## Z axis
+
+                    Label:
+                        text: 'Z:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_load
+                        text: 'zzz'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_fw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_bw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Image:
+                        id: z_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
 
             GridLayout: 
-                cols: 5
-                rows: 6
+                    cols: 5
+                    rows: 6
 
 
-                Label:
-                    text: ''
+                    Label:
+                        text: ''
 
-                Label:
-                    text: 'Peak'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'Peak'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    text: 'Load up'
+                    Label:
+                        text: 'Load up'
 
-                Label:
-                    text: 'Load down'
+                    Label:
+                        text: 'Load down'
 
-                Label:
-                    text: ''
+                    Label:
+                        text: ''
 
-                ## Y axis
+                    ## Y axis
 
-                Label:
-                    text: 'Y:'
-                    halign: 'right'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'Y:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y_peak_load
-                    text: 'yyy'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        id: y_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y_axis_fw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y_axis_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y_axis_bw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y_axis_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Image:
-                    id: y_peak_checkbox
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    Image:
+                        id: y_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-                ## Y1 axis
+                    ## Y1 axis
 
-                Label:
-                    text: 'Y1:'
-                    halign: 'right'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'Y1:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y1_peak_load
-                    text: 'yyy'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        id: y1_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y1_fw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y1_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y1_bw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y1_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Image:
-                    id: y1_peak_checkbox
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    Image:
+                        id: y1_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-                ## Y2 axis
+                    ## Y2 axis
 
-                Label:
-                    text: 'Y2:'
-                    halign: 'right'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'Y2:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y2_peak_load
-                    text: 'yyy'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        id: y2_peak_load
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y2_fw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y2_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y2_bw_range
-                    text: 'yyy - yyy'
+                    Label:
+                        id: y2_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Image:
-                    id: y2_peak_checkbox
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    Image:
+                        id: y2_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-                ## X axis
+                    ## X axis
 
-                Label:
-                    text: 'X:'
-                    halign: 'right'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'X:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: x_peak_load
-                    text: 'xxx'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        id: x_peak_load
+                        text: 'xxx'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: x_fw_range
-                    text: 'xxx - xxx'
+                    Label:
+                        id: x_fw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: x_bw_range
-                    text: 'xxx - xxx'
+                    Label:
+                        id: x_bw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Image:
-                    id: x_peak_checkbox
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    Image:
+                        id: x_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
 
-                ## Z axis
+                    ## Z axis
 
-                Label:
-                    text: 'Z:'
-                    halign: 'right'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        text: 'Z:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: z_peak_load
-                    text: 'zzz'
-                    halign: 'left'
-                    markup: True
-                    valign: 'middle'
-                    text_size: self.size
+                    Label:
+                        id: z_peak_load
+                        text: 'zzz'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: z_fw_range
-                    text: 'zzz - zzz'
+                    Label:
+                        id: z_fw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: z_bw_range
-                    text: 'zzz - zzz'
+                    Label:
+                        id: z_bw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Image:
-                    id: z_peak_checkbox
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                    Image:
+                        id: z_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
         BoxLayout:
             size_hint_y: 0.08
@@ -396,6 +660,10 @@ class CalibrationTesting(Screen):
 
     next_run_event = None
     confirm_event = None
+
+    checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
+    green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def __init__(self, **kwargs):
         super(CalibrationTesting, self).__init__(**kwargs)
@@ -798,3 +1066,34 @@ class CalibrationTesting(Screen):
 
         else: 
             self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
+
+
+    ## SET TICKS
+    def tick_checkbox(self, checkbox_id, tick):
+
+        if tick: 
+            checkbox_id.source = self.green_tick
+
+        else: 
+            checkbox_id.source = self.red_cross
+
+
+    def check_in_range(self, peak_id, range):
+
+        try: 
+            if (-1*range) < int(peak_id.text) < range: return True
+            else: return False
+
+        except:
+            return False
+
+
+    def pass_or_fail_peak_loads(self):
+
+        within_plus_minus = 400
+
+        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_load, within_plus_minus))
+        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_load, within_plus_minus))
+        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_load, within_plus_minus))
+        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_load, within_plus_minus))
+        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_load, within_plus_minus))
