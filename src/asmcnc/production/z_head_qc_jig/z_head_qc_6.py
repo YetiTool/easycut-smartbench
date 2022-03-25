@@ -26,10 +26,14 @@ Builder.load_string("""
 
         GridLayout:
             cols: 1
-            rows: 2
+            rows: 3
 
             Label:
-                text: 'PUT BELT ON Z MOTOR'
+                text: '28. Set wheels and leadscrew(s)'
+                font_size: dp(50)
+
+            Label:
+                text: '29. Install top plate'
                 font_size: dp(50)
             
             Button:
@@ -38,7 +42,7 @@ Builder.load_string("""
                 on_press: root.enter_next_screen()
                 text: 'OK'
                 font_size: dp(30)
-                size_hint_y: 0.2
+                size_hint_y: 0.4
                 size_hint_x: 0.3
 
 """)

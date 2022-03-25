@@ -54,6 +54,8 @@ class RouterMachine(object):
     TMC_motor = {}
 
 
+    starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
+
     # PERSISTENT MACHINE VALUES
 
 
@@ -135,6 +137,8 @@ class RouterMachine(object):
         self.jd = job
         self.set_jog_limits()
 
+        self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
+
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(win_serial_port)
@@ -152,6 +156,17 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+    # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
+    def reconnect_serial_connection(self):
+        if self.s.is_connected():
+            self.s.s.close()
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
+        self.s.establish_connection(self.win_serial_port)
+
+    def close_serial_connection(self, dt):
+        if self.s.is_connected():
+            self.s.s.close()
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -2025,11 +2040,11 @@ class RouterMachine(object):
         self.print_tmc_registers(3)
         self.print_tmc_registers(4)
 
-        tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
-
-        log("Sweep finished")
 
         try: 
+
+            tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
+            log("Sweep finished")
 
             if X: 
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
@@ -2140,6 +2155,7 @@ class RouterMachine(object):
             return tuning_array, avg_temperature
 
         except: 
+            self.calibration_tuning_fail_info = "Bad temps during tuning!"
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 

@@ -61,6 +61,10 @@ class SerialConnection(object):
 
     power_loss_detected = False
 
+    # Flag to kill grbl scanner (used in zhead cycle app)
+    # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
+    grbl_scanner_running = False
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -269,12 +273,15 @@ class SerialConnection(object):
         log('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
         self.next_poll_time = time.time()
+        self.grbl_scanner_running = True
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
         t.start()
         
         # Clear any hard switch presses that may have happened during boot
-        self.m.bootup_sequence() 
+        self.m.bootup_sequence()
+
+        self.m.starting_serial_connection = False
 
 # SCANNER: listens for responses from Grbl
 
@@ -293,7 +300,7 @@ class SerialConnection(object):
         
         log('Running grbl_scanner thread')
 
-        while True:
+        while self.grbl_scanner_running:
 
                          
             if self.FLUSH_FLAG == True:
@@ -383,6 +390,10 @@ class SerialConnection(object):
                     
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
+
+        # These lines should only be executed when grbl scanner is intentionally killed
+        log('Killed grbl_scanner')
+        self.m_state = 'Off'
 
 
 
