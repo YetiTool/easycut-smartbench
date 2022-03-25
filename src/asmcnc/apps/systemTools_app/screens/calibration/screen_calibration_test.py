@@ -444,7 +444,7 @@ Builder.load_string("""
                         allow_stretch: True
 
 
-            GridLayout: 
+                GridLayout: 
                     cols: 5
                     rows: 6
 
