@@ -304,10 +304,7 @@ def log(message):
 
 class CalibrationTesting(Screen):
 
-
     next_run_event = None
-    unweighted_event_x = None
-    unweighted_event_y = None
     confirm_event = None
 
     def __init__(self, **kwargs):
@@ -371,8 +368,6 @@ class CalibrationTesting(Screen):
         self.y_running = False
         self.z_running = False
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.enable_run_buttons()
@@ -380,16 +375,12 @@ class CalibrationTesting(Screen):
     def on_enter(self):
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
@@ -403,8 +394,6 @@ class CalibrationTesting(Screen):
 
     def reset(self):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
 
         self.m.resume_from_alarm()
@@ -449,28 +438,6 @@ class CalibrationTesting(Screen):
         self.x7y0_jog_button.disabled = True
         self.z0_jog_button.disabled = True
 
-    def confirm_unweighted(self, dt):
-        self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        self.unweighted_data.append(self.x_vals)
-        self.unweighted_data.append(self.y_vals)
-        self.unweighted_data.append(self.z_vals)
-
-        self.enable_run_buttons()
-        self.data_send_button.disabled = False
-
-    def confirm_x(self, dt):
-        self.enable_run_buttons()
-        self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-
-    def confirm_y(self, dt):
-        self.enable_run_buttons()
-        self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-
-    def confirm_z(self, dt):
-        if self.state().startswith('Idle'):
-            self.z_running = False
-            self.enable_run_buttons()
-            self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
     
     def measure(self):
         if (self.x_running and self.m.feed_rate() < 1200) or (self.y_running and self.m.feed_rate() < 1200) or (self.z_running and self.m.feed_rate() < 80):
@@ -588,7 +555,7 @@ class CalibrationTesting(Screen):
         # start run, run all the way down and then all the way back up. 
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,0,2)
+        self.show_expected_ranges(0,0,2) # check me
 
         self.z_vals = []
         self.raw_z_vals = []
@@ -602,12 +569,19 @@ class CalibrationTesting(Screen):
         self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
 
 
+    def confirm_z(self, dt):
+        if self.state().startswith('Idle'):
+            self.z_running = False
+            self.enable_run_buttons()
+            self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+
     def run_y_procedure(self):
 
         # start run, run all the way down and then all the way back up. 
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,0,2)
+        self.show_expected_ranges(0,0,2) # check me
 
         self.y_vals = []
         self.raw_y_vals = []
@@ -620,12 +594,20 @@ class CalibrationTesting(Screen):
         # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
 
+
+    def confirm_y(self, dt):
+        if self.state().startswith('Idle'):
+            self.y_running = False
+            self.enable_run_buttons()
+            self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+
     def run_x_procedure(self):
 
         # start run, run all the way down and then all the way back up. 
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,0,2)
+        self.show_expected_ranges(0,0,2) # check me
 
         self.x_vals = []
         self.raw_x_vals = []
@@ -639,9 +621,86 @@ class CalibrationTesting(Screen):
         self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
 
 
-    def run_unweighted_test(self):
-        pass
+    def confirm_x(self, dt):
+        if self.state().startswith('Idle'):
+            self.x_running = False
+            self.enable_run_buttons()
+            self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
+
+    def run_unweighted_test(self):
+        
+        if self.state().startswith('Idle'):
+
+            self.disable_run_buttons()
+            self.x_vals = []
+            self.raw_x_vals = []
+            self.y_vals = []
+            self.raw_y_vals = []
+            self.z_vals = []
+            self.raw_z_vals = []
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 1)
+
+        else:
+
+            pass # error popup
+
+
+    def part_1_unweighted_x(self, dt):
+
+        if self.state().startswith('Idle'):
+
+            self.x_running = True
+            self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
+            self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 20)
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
+
+    def part_2_unweighted_y(self):
+
+        if self.state().startswith('Idle'):
+
+            self.x_running = False
+            self.y_running = True
+            self.m.send_any_gcode_command('G91 G1 Y2500 F1186')
+            self.m.send_any_gcode_command('G91 G1 Y-2500 F1186')
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 20)
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 3)
+
+
+    def part_3_unweighted_z(self):
+
+        if self.state().startswith('Idle'):
+
+            self.y_running = False
+            self.z_running = True
+            self.m.send_any_gcode_command('G91 G1 Z-149 F75')
+            self.m.send_any_gcode_command('G91 G1 Z149 F75')
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 20)
+
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 3)
+
+
+    def confirm_unweighted(self, dt):
+
+        if self.state().startswith('Idle'):
+
+            self.unweighted_data.append(self.x_vals)
+            self.unweighted_data.append(self.y_vals)
+            self.unweighted_data.append(self.z_vals)
+            self.enable_run_buttons()
+            self.data_send_button.disabled = False
+            self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+
+        else: 
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
 
 
     # def run_unweighted_test(self):
