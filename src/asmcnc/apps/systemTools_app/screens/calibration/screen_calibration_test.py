@@ -658,7 +658,7 @@ class CalibrationTesting(Screen):
         else:
             self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
 
-    def part_2_unweighted_y(self):
+    def part_2_unweighted_y(self, dt):
 
         if self.m.state().startswith('Idle'):
 
@@ -672,7 +672,7 @@ class CalibrationTesting(Screen):
             self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 3)
 
 
-    def part_3_unweighted_z(self):
+    def part_3_unweighted_z(self, dt):
 
         if self.m.state().startswith('Idle'):
 
