@@ -639,7 +639,11 @@ class CalibrationTesting(Screen):
             self.raw_y_vals = []
             self.z_vals = []
             self.raw_z_vals = []
-            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 1)
+
+            self.zero_x_and_y()
+            self.zero_Z()
+
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
 
         else:
 
