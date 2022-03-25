@@ -198,7 +198,11 @@ Builder.load_string("""
                     text: ''
 
                 Label:
-                    text: 'Peak load'
+                    text: 'Peak'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     text: 'Load up'
