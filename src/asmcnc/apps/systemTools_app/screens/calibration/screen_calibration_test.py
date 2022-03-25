@@ -51,6 +51,8 @@ Builder.load_string("""
     x_peak_checkbox : x_peak_checkbox
     z_peak_checkbox : z_peak_checkbox
 
+    status_container : status_container
+
     BoxLayout:
         orientation: 'vertical'
 
