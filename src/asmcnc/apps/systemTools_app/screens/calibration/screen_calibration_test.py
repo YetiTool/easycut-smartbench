@@ -614,8 +614,8 @@ class CalibrationTesting(Screen):
 
         self.x_running = True
 
-        self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
         self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+        self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
 
         # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
@@ -651,8 +651,8 @@ class CalibrationTesting(Screen):
         if self.m.state().startswith('Idle'):
 
             self.x_running = True
-            self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
             self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+            self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
             self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 20)
 
         else:
