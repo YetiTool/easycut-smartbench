@@ -550,7 +550,7 @@ class CalibrationTesting(Screen):
         self.z_bw_range.text = z_bw_range_text
 
 
-    def run_z_procedure(self):
+    def run_z_procedure(self, dt):
 
         # start run, run all the way down and then all the way back up. 
 
@@ -576,7 +576,7 @@ class CalibrationTesting(Screen):
             self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
 
-    def run_y_procedure(self):
+    def run_y_procedure(self, dt):
 
         # start run, run all the way down and then all the way back up. 
 
@@ -602,7 +602,7 @@ class CalibrationTesting(Screen):
             self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
 
-    def run_x_procedure(self):
+    def run_x_procedure(self, dt):
 
         # start run, run all the way down and then all the way back up. 
 
