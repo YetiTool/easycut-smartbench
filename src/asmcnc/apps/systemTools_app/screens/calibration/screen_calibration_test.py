@@ -51,6 +51,27 @@ Builder.load_string("""
     x_peak_checkbox : x_peak_checkbox
     z_peak_checkbox : z_peak_checkbox
 
+    y_peak_load_weighted : y_peak_load_weighted
+    y_axis_fw_range_weighted : y_axis_fw_range_weighted
+    y_axis_bw_range_weighted : y_axis_bw_range_weighted
+    y_peak_checkbox_weighted : y_peak_checkbox_weighted
+    y1_peak_load_weighted : y1_peak_load_weighted
+    y1_fw_range_weighted : y1_fw_range_weighted
+    y1_bw_range_weighted : y1_bw_range_weighted
+    y1_peak_checkbox_weighted : y1_peak_checkbox_weighted
+    y2_peak_load_weighted : y2_peak_load_weighted
+    y2_fw_range_weighted : y2_fw_range_weighted
+    y2_bw_range_weighted : y2_bw_range_weighted
+    y2_peak_checkbox_weighted : y2_peak_checkbox_weighted
+    x_peak_load_weighted : x_peak_load_weighted
+    x_fw_range_weighted : x_fw_range_weighted
+    x_bw_range_weighted : x_bw_range_weighted
+    x_peak_checkbox_weighted : x_peak_checkbox_weighted
+    z_peak_load_weighted : z_peak_load_weighted
+    z_fw_range_weighted : z_fw_range_weighted
+    z_bw_range_weighted : z_bw_range_weighted
+    z_peak_checkbox_weighted : z_peak_checkbox_weighted
+
     status_container : status_container
 
     BoxLayout:
@@ -457,7 +478,7 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y_peak_load
+                        id: y_peak_load_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -465,21 +486,21 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y_axis_fw_range
+                        id: y_axis_fw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y_axis_bw_range
+                        id: y_axis_bw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Image:
-                        id: y_peak_checkbox
+                        id: y_peak_checkbox_weighted
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -496,7 +517,7 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y1_peak_load
+                        id: y1_peak_load_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -504,21 +525,21 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y1_fw_range
+                        id: y1_fw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y1_bw_range
+                        id: y1_bw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Image:
-                        id: y1_peak_checkbox
+                        id: y1_peak_checkbox_weighted
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -535,7 +556,7 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y2_peak_load
+                        id: y2_peak_load_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -543,21 +564,21 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: y2_fw_range
+                        id: y2_fw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y2_bw_range
+                        id: y2_bw_range_weighted
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Image:
-                        id: y2_peak_checkbox
+                        id: y2_peak_checkbox_weighted
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -574,7 +595,7 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: x_peak_load
+                        id: x_peak_load_weighted
                         text: 'xxx'
                         halign: 'center'
                         markup: True
@@ -582,21 +603,21 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: x_fw_range
+                        id: x_fw_range_weighted
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: x_bw_range
+                        id: x_bw_range_weighted
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Image:
-                        id: x_peak_checkbox
+                        id: x_peak_checkbox_weighted
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -614,7 +635,7 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: z_peak_load
+                        id: z_peak_load_weighted
                         text: 'zzz'
                         halign: 'center'
                         markup: True
@@ -622,21 +643,21 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        id: z_fw_range
+                        id: z_fw_range_weighted
                         text: 'zzz - zzz'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: z_bw_range
+                        id: z_bw_range_weighted
                         text: 'zzz - zzz'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Image:
-                        id: z_peak_checkbox
+                        id: z_peak_checkbox_weighted
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
