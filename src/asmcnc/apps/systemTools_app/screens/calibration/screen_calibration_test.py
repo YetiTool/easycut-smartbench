@@ -5,6 +5,8 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import traceback
 
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+
 Builder.load_string("""
 <CalibrationTesting>:
     y_rt_load:y_rt_load
@@ -48,243 +50,440 @@ Builder.load_string("""
     x7y0_jog_button : x7y0_jog_button
     z0_jog_button : z0_jog_button
 
+    y_peak_checkbox : y_peak_checkbox
+    y1_peak_checkbox : y1_peak_checkbox
+    y2_peak_checkbox : y2_peak_checkbox
+    x_peak_checkbox : x_peak_checkbox
+    z_peak_checkbox : z_peak_checkbox
+
     BoxLayout:
         orientation: 'vertical'
 
         BoxLayout:
-            orientation: "horizontal"
-            size_hint_y: 0.3
+            size_hint_y: 0.92
+            orientation: 'vertical'
+
 
             BoxLayout:
                 orientation: "horizontal"
-                size_hint_x: 0.7
+                size_hint_y: 0.3
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_x: 0.7
+
+                    Button:
+                        text: 'Back'
+                        on_press: root.back_to_fac_settings()
+
+                    Button:
+                        id: home_button
+                        text: 'Home'
+                        on_press: root.home()
+
+                    Button:
+                        id: x0y0_jog_button
+                        text: 'X0Y0'
+                        on_press: root.zero_x_and_y()
+
+                    Button:
+                        id: x7y0_jog_button
+                        text: 'X-700Y0'
+                        on_press: root.mid_x_and_zero_y()
+
+                    Button:
+                        id: z0_jog_button
+                        text: 'Z0'
+                        on_press: root.zero_Z()
 
                 Button:
-                    text: 'Back'
-                    on_press: root.back_to_fac_settings()
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    on_press: root.stop()
+                    size_hint_x: 0.3
+
+
+            GridLayout: 
+                cols: 3
+                size_hint_y: 0.6
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: unweighted_test_button
+                        text: 'Run XYZ 0kg'
+                        on_press: root.run_unweighted_test()
+
+                    Image:
+                        id: unweighted_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: x_load_button
+                        text: 'Run X (7.5kg)'
+                        on_press: root.run_x_procedure(None)
+
+                    Image:
+                        id: x_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: y_load_button
+                        text: 'Run Y (7.5kg)'
+                        on_press: root.run_y_procedure(None)
+                    
+                    Image:
+                        id: y_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: z_load_button
+                        text: 'Run Z (2kg)'
+                        on_press: root.run_z_procedure(None)
+
+                    Image:
+                        id: z_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 Button:
-                    id: home_button
-                    text: 'Home'
-                    on_press: root.home()
+                    id: data_send_button
+                    text: 'Send data to database'
+                    on_press: root.send_data()
+                    disabled: True
 
-                Button:
-                    id: x0y0_jog_button
-                    text: 'X0Y0'
-                    on_press: root.zero_x_and_y()
+                GridLayout:
+                    cols: 2
 
-                Button:
-                    id: x7y0_jog_button
-                    text: 'X-700Y0'
-                    on_press: root.mid_x_and_zero_y()
-
-                Button:
-                    id: z0_jog_button
-                    text: 'Z0'
-                    on_press: root.zero_Z()
-
-            Button:
-                text: 'STOP'
-                background_color: [1,0,0,1]
-                on_press: root.stop()
-                size_hint_x: 0.3
+                    Label:
+                        text: 'Sent data?'
+                    
+                    Image:
+                        id: sent_data_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
 
-        GridLayout: 
-            cols: 3
-            size_hint_y: 0.6
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: unweighted_test_button
-                    text: 'Run XYZ 0kg'
-                    on_press: root.run_unweighted_test()
-
-                Image:
-                    id: unweighted_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: x_load_button
-                    text: 'Run X (7.5kg)'
-                    on_press: root.run_x_procedure(None)
-
-                Image:
-                    id: x_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: y_load_button
-                    text: 'Run Y (7.5kg)'
-                    on_press: root.run_y_procedure(None)
-                
-                Image:
-                    id: y_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: z_load_button
-                    text: 'Run Z (2kg)'
-                    on_press: root.run_z_procedure(None)
-
-                Image:
-                    id: z_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            Button:
-                id: data_send_button
-                text: 'Send data to database'
-                on_press: root.send_data()
-                disabled: True
-
-            GridLayout:
-                cols: 2
-
-                Label:
-                    text: 'Sent data?'
-                
-                Image:
-                    id: sent_data_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-        GridLayout:
-            cols: 4
-
-            GridLayout:
+            GridLayout: 
+                cols: 5
                 rows: 6
 
-                Label:
-                    text: 'Real time load:'
 
                 Label:
-                    id: y_rt_load
+                    text: ''
+
+                Label:
+                    text: 'Peak load'
+
+                Label:
+                    text: 'Load up'
+
+                Label:
+                    text: 'Load down'
+
+                Label:
+                    text: ''
+
+                ## Y axis
+
+                Label:
                     text: 'Y:'
-
-                Label:
-                    id: y1_rt_load
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_rt_load
-                    text: 'Y2:'
-
-                Label:
-                    id: x_rt_load
-                    text: 'X:'
-
-                Label:
-                    id: z_rt_load
-                    text: 'Z:'
-
-            GridLayout:
-                rows: 6
-
-                Label:
-                    text: '<<--'
-
-                Label:
-                    id: y_axis_fw_range
-                    text: 'Y:'
-
-                Label:
-                    id: y1_fw_range
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_fw_range
-                    text: 'Y2:'
-
-                Label:
-                    id: x_fw_range
-                    text: 'X:'
-
-                Label:
-                    id: z_fw_range
-                    text: 'Z:'
-
-            GridLayout:
-                rows: 6
-
-                Label:
-                    text: '-->>'
-
-                Label:
-                    id: y_axis_bw_range
-                    text: 'Y:'
-
-                Label:
-                    id: y1_bw_range
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_bw_range
-                    text: 'Y2:'
-
-                Label:
-                    id: x_bw_range
-                    text: 'X:'
-
-                Label:
-                    id: z_bw_range
-                    text: 'Z:'
-
-
-            GridLayout:
-                rows: 6
-
-                Label:
-                    text: 'Peak load:'
+                    halign: 'right'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     id: y_peak_load
-                    text: 'Y:'
+                    text: 'yyy'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: y_axis_fw_range
+                    text: 'yyy - yyy'
+
+                Label:
+                    id: y_axis_bw_range
+                    text: 'yyy - yyy'
+
+                Image:
+                    id: y_peak_checkbox
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                ## Y1 axis
+
+                Label:
+                    text: 'Y1:'
+                    halign: 'right'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     id: y1_peak_load
-                    text: 'Y1:'
+                    text: 'yyy'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: y1_axis_fw_range
+                    text: 'yyy - yyy'
+
+                Label:
+                    id: y1_axis_bw_range
+                    text: 'yyy - yyy'
+
+                Image:
+                    id: y1_peak_checkbox
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                ## Y2 axis
+
+                Label:
+                    text: 'Y2:'
+                    halign: 'right'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     id: y2_peak_load
-                    text: 'Y2:'
+                    text: 'yyy'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: y2_axis_fw_range
+                    text: 'yyy - yyy'
+
+                Label:
+                    id: y2_axis_bw_range
+                    text: 'yyy - yyy'
+
+                Image:
+                    id: y2_peak_checkbox
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                ## X axis
+
+                Label:
+                    text: 'X:'
+                    halign: 'right'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     id: x_peak_load
-                    text: 'X:'
+                    text: 'xxx'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: x_axis_fw_range
+                    text: 'xxx - xxx'
+
+                Label:
+                    id: x_axis_bw_range
+                    text: 'xxx - xxx'
+
+                Image:
+                    id: x_peak_checkbox
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+
+                ## Z axis
+
+                Label:
+                    text: 'Z:'
+                    halign: 'right'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
 
                 Label:
                     id: z_peak_load
-                    text: 'Z:'
+                    text: 'zzz'
+                    halign: 'left'
+                    markup: True
+                    valign: 'middle'
+                    text_size: self.size
+
+                Label:
+                    id: z_azis_fw_range
+                    text: 'zzz - zzz'
+
+                Label:
+                    id: z_azis_bw_range
+                    text: 'zzz - zzz'
+
+                Image:
+                    id: z_peak_checkbox
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+
+
+            # GridLayout:
+            #     cols: 4
+
+            #     GridLayout:
+            #         rows: 6
+
+
+            #         Label:
+            #             text: 'Y:'
+
+            #         Label:
+            #             text: 'Y1:'
+
+            #         Label:
+            #             text: 'Y2:'
+
+            #         Label:
+            #             text: 'X:'
+
+            #         Label:
+            #             text: 'Z:'
+
+            #     GridLayout:
+            #         rows: 6
+
+
+            #         Label:
+            #             id: y_peak_load
+            #             text: 'yyy'
+
+            #         Label:
+            #             id: y1_peak_load
+            #             text: 'yyy'
+
+            #         Label:
+            #             id: y2_peak_load
+            #             text: 'yyy'
+
+            #         Label:
+            #             id: x_peak_load
+            #             text: 'xxx'
+
+            #         Label:
+            #             id: z_peak_load
+            #             text: 'zzz'
+
+            #     GridLayout:
+            #         rows: 6
+
+            #         Label:
+            #             text: 'Load up'
+
+            #         Label:
+            #             id: y_axis_fw_range
+            #             text: 'Y:'
+
+            #         Label:
+            #             id: y1_fw_range
+            #             text: 'Y1:'
+
+            #         Label:
+            #             id: y2_fw_range
+            #             text: 'Y2:'
+
+            #         Label:
+            #             id: x_fw_range
+            #             text: 'X:'
+
+            #         Label:
+            #             id: z_fw_range
+            #             text: 'Z:'
+
+            #     GridLayout:
+            #         rows: 6
+
+            #         Label:
+            #             text: 'Load down'
+
+            #         Label:
+            #             id: y_axis_bw_range
+            #             text: 'Y:'
+
+            #         Label:
+            #             id: y1_bw_range
+            #             text: 'Y1:'
+
+            #         Label:
+            #             id: y2_bw_range
+            #             text: 'Y2:'
+
+            #         Label:
+            #             id: x_bw_range
+            #             text: 'X:'
+
+            #         Label:
+            #             id: z_bw_range
+            #             text: 'Z:'
+
+
+
+
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container
 """)
 
 MAX_XY_SPEED = 1186.0
@@ -324,6 +523,8 @@ class CalibrationTesting(Screen):
 
         self.stage = 'Unweighted'
         self.statuses = []
+
+        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def setup_arrays(self):
         #x loads with vector & pos
@@ -695,6 +896,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
+            self.z_running = False
             self.unweighted_data.append(self.x_vals)
             self.unweighted_data.append(self.y_vals)
             self.unweighted_data.append(self.z_vals)
