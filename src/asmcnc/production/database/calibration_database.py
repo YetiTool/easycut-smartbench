@@ -31,133 +31,58 @@ class CalibrationDatabase(object):
     def is_connected(self):
         return self.conn.product_version != None
         
-    def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
-                            console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
-                            squareness):
-        date = datetime.now().strftime('%d/%m/%Y %H:%M')
+    def get_serial_number(self):
+        serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
+        serial_number_from_file = ''
+        
+        try:
+            file = open(serial_number_filepath, 'r')
+            serial_number_from_file  = str(file.read())
+            file.close()
+        except: 
+            print 'Could not get serial number! Please contact YetiTool support!'
+            
+        return str(serial_number_from_file)
 
+    def send_final_test_calibration(self, serial_number, unweighted_x, unweighted_y, unweighted_z, weighted_x, weighted_y, weighted_z):
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Machines (MachineSerialNumber, ZHeadSerialNumber, LowerBeamSerialNumber, " \
-                    "UpperBeamSerialNumber, ConsoleSerialNumber, YBenchSerialNumber, SpindleSerialNumber, " \
-                    "SoftwareVersion, FirmwareVersion, Squareness, DateProduced) VALUES ('%s', '%s', '%s', '%s', " \
-                    "'%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (machine_serial, z_head_serial, lower_beam_serial,
-                                                                   upper_beam_serial, console_serial, y_bench_serial,
-                                                                   spindle_serial, software_version, firmware_version,
-                                                                   squareness, date)
+            date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            query = "INSERT INTO FinalTest (SerialNumber, Date, UnweightedX, UnweightedY, UnweightedZ, WeightedX, WeightedY, WeightedZ) VALUES ('" + serial_number + "', '" + date + "', '" + str(unweighted_x) + "', '" + str(unweighted_y) + "', '" + str(unweighted_z) + "', '" + str(weighted_x) + "', '" + str(weighted_y) + "', '" + str(weighted_z) + "')"
+
+            cursor.execute(query)
+            self.conn.commit()
+
+    def send_overnight_test_calibration(self, serial_number, overnight_x, overnight_y, overnight_z):
+        with self.conn.cursor() as cursor:
+            query = "UPDATE FinalTest SET OvernightX = '" + str(overnight_x) + "', OvernightY = '" + str(overnight_y) + "', OvernightZ = '" + str(overnight_z) + "' WHERE SerialNumber = '" + serial_number + "'"
+            
+            cursor.execute(query)
+
+            self.conn.commit()
+
+    def send_z_head_calibration(self, serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature):
+        with self.conn.cursor() as cursor:
+            query = "INSERT INTO TMC (SerialNumber, MotorIndex, CS, SG, SGT, TOFF, Temperature) VALUES ('" + str(serial_number) + "', '" + str(motor_index) + "', '" + str(cs) + "', '" + str(sg_coefficients) + "', '" + str(sgt) + "', '" + str(toff) + "', '" + str(temperature) + "')"
+            cursor.execute(query)
+
+            self.conn.commit()
+
+    def send_lower_beam_calibration(self, serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature):
+        with self.conn.cursor() as cursor:
+            query = "INSERT INTO TMC (SerialNumber, MotorIndex, CS, SG, SGT, TOFF, Temperature) VALUES ('" + str(serial_number) + "', '" + str(motor_index) + "', '" + str(cs) + "', '" + str(sg_coefficients) + "', '" + str(sgt) + "', '" + str(toff) + "', '" + str(temperature) + "')"
+            cursor.execute(query)
+
+            self.conn.commit()
+
+    def get_lower_beam_parameters(self, serial_number, motor_index):
+        with self.conn.cursor() as cursor:
+            query = "SELECT * FROM TMC WHERE SerialNumber = '" + str(serial_number) + "' AND MotorIndex = '" + str(motor_index) + "' ORDER BY Id DESC"
 
             cursor.execute(query)
 
-        self.conn.commit()
+            data = cursor.fetchone()
 
-    def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
-        combined_id = zh_serial + str(motor_index) + str(calibration_stage_id)
+            return data
 
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
-                    "'%s', '%s', %s, %s)" % (combined_id, zh_serial, motor_index, calibration_stage_id)
 
-            cursor.execute(query)
-
-        self.conn.commit()
-
-    def insert_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id, coefficients):
-        combined_id = zh_serial + str(motor_index) + str(calibration_stage_id)
-
-        print(combined_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
-
-            for coefficient in coefficients:
-                print(len(combined_id))
-                cursor.execute(query % (combined_id, coefficient))
-
-        self.conn.commit()
-
-    def setup_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id):
-        combined_id = lb_serial + str(motor_index) + str(calibration_stage_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO LowerBeamCoefficients (Id, LowerBeamSerialNumber, MotorIndex, CalibrationStageId) " \
-                    "VALUES ('%s', '%s', %s, %s)" % (combined_id, lb_serial, motor_index, calibration_stage_id)
-
-            cursor.execute(query)
-
-        self.conn.commit()
-
-    def insert_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id, coefficients):
-        combined_id = lb_serial + str(motor_index) + str(calibration_stage_id)
-
-        print(combined_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
-
-            for coefficient in coefficients:
-                print(len(combined_id))
-                cursor.execute(query % (combined_id, coefficient))
-
-        self.conn.commit()
-
-    def insert_stage(self, description):
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO Stages (Description) VALUES ('%s')" % description
-
-            cursor.execute(query)
-
-        self.conn.commit()
-
-    def get_stage_id_by_description(self, description):
-        with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
-
-            return cursor.execute(query)
-
-    def insert_final_test_stage(self, machine_serial, qc_stage_id):
-        combined_id = machine_serial + str(qc_stage_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, QCStageId) VALUES ('%s', '%s', %s)" \
-                    "" % (combined_id, machine_serial, qc_stage_id)
-
-            cursor.execute(query)
-
-        self.conn.commit()
-
-    def insert_final_test_statistics(self, machine_serial, qc_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
-                                     y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
-                                     y1_backw_avg, y1_backw_peak, y2_forw_avg, y2_forw_peak, y2_backw_avg, y2_backw_peak,
-                                     z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak):
-        combined_id = machine_serial + str(qc_stage_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStatistics (FTID, XForwardAvg, XForwardPeak, XBackwardAvg, XBackwardPeak, " \
-                    "YForwardAvg, YForwardPeak, YBackwardAvg, YBackwardPeak, Y1ForwardAvg, Y1ForwardPeak, " \
-                    "Y1BackwardAvg, Y1BackwardPeak, Y2ForwardAvg, Y2ForwardPeak, Y2BackwardAvg, Y2BackwardPeak, " \
-                    "ZForwardAvg, ZForwardPeak, ZBackwardAvg, ZBackwardPeak) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, " \
-                    "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" % (combined_id, x_forw_avg, x_forw_peak,
-                                                                             x_backw_avg, x_backw_peak, y_forw_avg,
-                                                                             y_forw_peak, y_backw_avg, y_backw_peak,
-                                                                             y1_forw_avg, y1_forw_peak, y1_backw_avg,
-                                                                             y1_backw_peak, y2_forw_avg, y2_forw_peak,
-                                                                             y2_backw_avg, y2_backw_peak, z_forw_avg,
-                                                                             z_forw_peak, z_backw_avg, z_backw_peak)
-
-            cursor.execute(query)
-
-        self.conn.commit()
-
-    # @lettie please ensure data is input in the correct order according to below
-    def insert_final_test_statuses(self, machine_serial, qc_stage_id, statuses):
-        combined_id = machine_serial + str(qc_stage_id)
-
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
-                    "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
-                    "MOTTemperature, Timestamp, Feedrate) VALUES ('%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
-                    "%s, %s, %s, %s, %s)"
-
-            for status in statuses:
-                cursor.execute(query % (combined_id, status[0], status[1], status[2], status[3], status[4], status[5],
-                                        status[6], status[7], status[8], status[9], status[10], status[11], status[12],
-                                        status[13], status[14], status[15]))
+    
