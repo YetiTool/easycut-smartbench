@@ -795,35 +795,35 @@ class OvernightTesting(Screen):
 
         if self.stage == "Overnight6HR":
 
-            self.get_peak_as_string(self.y_wear_in_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y1_wear_in_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y2_wear_in_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.x_wear_in_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.x_wear_in_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y_wear_in_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak, self.raw_y2_vals)
             self.get_peak_as_string(self.z_wear_in_peak, self.raw_z_vals)
             return
 
         if self.stage == "CalibrationCheckOT":
 
-            self.get_peak_as_string(self.y_recalibration_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y1_recalibration_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y2_recalibration_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.x_recalibration_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.x_recalibration_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y_recalibration_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_recalibration_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_recalibration_peak, self.raw_y2_vals)
             self.get_peak_as_string(self.z_recalibration_peak, self.raw_z_vals)
             return 
 
         if self.stage == "FullyCalibrated1HR":
 
-            self.get_peak_as_string(self.y_fully_calibrated_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y1_fully_calibrated_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y2_fully_calibrated_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.x_fully_calibrated_peak, self.raw_y2_vals)
+            self.get_peak_as_string(self.x_fully_calibrated_peak, self.raw_x_vals)
+            self.get_peak_as_string(self.y_fully_calibrated_peak, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_fully_calibrated_peak, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_fully_calibrated_peak, self.raw_y2_vals)
             self.get_peak_as_string(self.z_fully_calibrated_peak, self.raw_z_vals)
             return
 
 
     def get_peak_as_string(self, label_id, raw_vals):
 
-        try: label_id.text = str(max(raw_vals, key=abs))
+        try: label_id.text = str(max(raw_vals))
         except: pass
 
 
@@ -917,6 +917,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.y2_wear_in_checkbox)
         self.reset_checkbox(self.x_wear_in_checkbox)
         self.reset_checkbox(self.z_wear_in_checkbox)
+        self.reset_checkbox(self.sent_six_hour_wear_in_data)
 
         self.setup_arrays()
 
@@ -976,6 +977,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.y2_recalibration_checkbox)
         self.reset_checkbox(self.x_recalibration_checkbox)
         self.reset_checkbox(self.z_recalibration_checkbox)
+        self.reset_checkbox(self.sent_recalibration_data)
 
         if self._not_ready_to_stream():
             self.start_recalibration_event = Clock.schedule_once(lambda dt: self.start_recalibration(), 3)
@@ -1080,6 +1082,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.y2_fully_calibrated_checkbox)
         self.reset_checkbox(self.x_fully_calibrated_checkbox)
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
+        self.reset_checkbox(self.sent_fully_recalibrated_run_data)
 
         log("SB fully calibrated, start final run - one hour")
 
