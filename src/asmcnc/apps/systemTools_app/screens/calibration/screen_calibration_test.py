@@ -226,6 +226,7 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
+                    cols_minimum: {0: 40, 1: 90, 2: 90, 3: 90, 4: 90}
 
 
                     Label:
@@ -467,7 +468,7 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
-
+                    cols_minimum: {0: 40, 1: 90, 2: 90, 3: 90, 4: 90}
 
                     Label:
                         text: ''
@@ -724,6 +725,15 @@ class CalibrationTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
+    X_SG_to_kg_scaling = 13.7
+    Y_SG_to_kg_scaling = 11.5
+    Z_SG_to_kg_scaling = 5.0
+
+    xy_friction = 5.0
+    z_friction = 3.0
+
+    tolerance = 0.8
+
     def __init__(self, **kwargs):
         super(CalibrationTesting, self).__init__(**kwargs)
         self.setup_arrays()
@@ -929,70 +939,6 @@ class CalibrationTesting(Screen):
             return
 
 
-    def show_expected_ranges(self, x_load, y_load, z_load):
-
-        X_SG_to_kg_scaling = 13.7
-        Y_SG_to_kg_scaling = 11.5
-        Z_SG_to_kg_scaling = 5.0
-
-        xy_friction = 5.0
-        z_friction = 3.0
-
-        tolerance = 0.8
-
-        y_fw_expected_min = (xy_friction + float(y_load))*(1.0 - tolerance)
-        y_fw_expected_max = (xy_friction + float(y_load))*(1.0 + tolerance)
-
-        y_bw_expected_min = (xy_friction - float(y_load))*(1.0 - tolerance)
-        y_bw_expected_max = (xy_friction - float(y_load))*(1.0 + tolerance)
-
-        x_fw_expected_min = (xy_friction + float(x_load))*(1.0 - tolerance)
-        x_fw_expected_max = (xy_friction + float(x_load))*(1.0 + tolerance)
-
-        x_bw_expected_min = (xy_friction - float(x_load))*(1.0 - tolerance)
-        x_bw_expected_max = (xy_friction - float(x_load))*(1.0 + tolerance)
-
-        z_fw_expected_min = (z_friction + float(z_load))*(1.0 - tolerance)
-        z_fw_expected_max = (z_friction + float(z_load))*(1.0 + tolerance)
-
-        z_bw_expected_min = (z_friction - float(z_load))*(1.0 - tolerance)
-        z_bw_expected_max = (z_friction - float(z_load))*(1.0 + tolerance)
-
-
-        print(y_fw_expected_min)
-        print(y_fw_expected_max)
-        print(y_bw_expected_min)
-        print(y_bw_expected_max)
-        print(x_fw_expected_min)
-        print(x_fw_expected_max)
-        print(x_bw_expected_min)
-        print(x_bw_expected_max)
-        print(z_fw_expected_min)
-        print(z_fw_expected_max)
-        print(z_bw_expected_min)
-        print(z_bw_expected_max)
-
-        y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_fw_expected_max*Y_SG_to_kg_scaling)
-        x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_fw_expected_max*X_SG_to_kg_scaling)
-        z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_fw_expected_max*Z_SG_to_kg_scaling)
-
-        y_bw_range_text = str(y_bw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_bw_expected_max*Y_SG_to_kg_scaling)
-        x_bw_range_text = str(x_bw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_bw_expected_max*X_SG_to_kg_scaling)
-        z_bw_range_text = str(z_bw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_bw_expected_max*Z_SG_to_kg_scaling)
-
-        self.y_axis_fw_range.text = y_fw_range_text
-        self.y1_fw_range.text = y_fw_range_text
-        self.y2_fw_range.text = y_fw_range_text
-        self.x_fw_range.text = x_fw_range_text
-        self.z_fw_range.text = z_fw_range_text
-
-        self.y_axis_bw_range.text = y_bw_range_text
-        self.y1_bw_range.text = y_bw_range_text
-        self.y2_bw_range.text = y_bw_range_text
-        self.x_bw_range.text = x_bw_range_text
-        self.z_bw_range.text = z_bw_range_text
-
-
     def run_z_procedure(self, dt):
 
         # start run, run all the way down and then all the way back up. 
@@ -1002,12 +948,12 @@ class CalibrationTesting(Screen):
             return
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,0,2)
 
         self.z_vals = []
         self.raw_z_vals = []
 
         self.stage = "Weighted"
+        self.set_weighted_z_range()
 
         self.z_running = True
 
@@ -1031,12 +977,12 @@ class CalibrationTesting(Screen):
         # start run, run all the way down and then all the way back up. 
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,7.5,) # check me
 
         self.y_vals = []
         self.raw_y_vals = []
 
         self.stage = "Weighted"
+        self.set_weighted_y_range()
 
         self.y_running = True
 
@@ -1062,12 +1008,12 @@ class CalibrationTesting(Screen):
         # start run, run all the way down and then all the way back up. 
 
         self.disable_run_buttons()
-        self.show_expected_ranges(7.5,0,0) # check me
 
         self.x_vals = []
         self.raw_x_vals = []
 
         self.stage = "Weighted"
+        self.set_weighted_x_range()
 
         self.x_running = True
 
@@ -1079,7 +1025,9 @@ class CalibrationTesting(Screen):
 
 
     def confirm_x(self, dt):
+
         if self.m.state().startswith('Idle'):
+
             self.x_running = False
             self.enable_run_buttons()
             self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -1098,7 +1046,6 @@ class CalibrationTesting(Screen):
             self.zero_x_and_y()
             self.zero_Z()
 
-            self.show_expected_ranges(0,0,0)
 
             self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
 
@@ -1111,6 +1058,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
+            self.set_unweighted_x_range()
             self.x_running = True
             self.m.send_any_gcode_command('G91 G1 x1298 F1186')
             self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
@@ -1123,6 +1071,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
+            self.set_unweighted_y_range()
             self.x_running = False
             self.y_running = True
             self.m.send_any_gcode_command('G91 G1 Y2500 F1186')
@@ -1137,6 +1086,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
+            self.set_unweighted_z_range()
             self.y_running = False
             self.z_running = True
             self.m.send_any_gcode_command('G91 G1 Z-149 F75')
@@ -1199,13 +1149,85 @@ class CalibrationTesting(Screen):
         self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_load))
 
 
+    def up_range(self, friction, load):
+
+        expected_min = (friction + float(load))*(1.0 - self.tolerance)
+        expected_max = (friction + float(load))*(1.0 + self.tolerance)
+
+        return expected_min, expected_max
+
+    def down_range(self, friction, load):
+
+        expected_min = (friction - float(load))*(1.0 - self.tolerance)
+        expected_max = (friction - float(load))*(1.0 + self.tolerance)
+
+        return expected_min, expected_max
 
 
+    def get_range_text(self, friction, load, scaling):
+
+        fw_expected_min, fw_expected_max = self.up_range(friction, load)
+        bw_expected_min, bw_expected_max = self.down_range(friction, load)
+
+        fw_range_text = str(fw_expected_min*scaling) + " - " + str(fw_expected_max*scaling)
+        bw_range_text = str(bw_expected_min*scaling) + " - " + str(bw_expected_max*scaling)
+
+        return fw_range_text, bw_range_text
 
 
+    def set_unweighted_x_range(self):
+
+        x_fw_range_text, x_bw_range_text = self.get_range_text(self.xy_friction, 0, self.X_SG_to_kg_scaling)
+
+        self.x_fw_range.text = x_fw_range_text
+        self.x_bw_range.text = x_bw_range_text
 
 
+    def set_weighted_x_range(self):
+
+        x_fw_range_text, x_bw_range_text = self.get_range_text(self.xy_friction, 7.5, self.X_SG_to_kg_scaling)
+
+        self.x_fw_range_weighted.text = x_fw_range_text
+        self.x_bw_range_weighted.text = x_bw_range_text
 
 
+    def set_unweighted_y_range(self):
 
+        y_fw_range_text, y_bw_range_text = self.get_range_text(self.xy_friction, 0, self.Y_SG_to_kg_scaling)
+
+        self.y_axis_fw_range.text = y_fw_range_text
+        self.y1_fw_range.text = y_fw_range_text
+        self.y2_fw_range.text = y_fw_range_text
+
+        self.y_axis_bw_range.text = y_bw_range_text
+        self.y1_bw_range.text = y_bw_range_text
+        self.y2_bw_range.text = y_bw_range_text
+
+
+    def set_weighted_y_range(self):
+
+        y_fw_range_text, y_bw_range_text = self.get_range_text(self.xy_friction, 7.5, self.Y_SG_to_kg_scaling)
+
+        self.y_axis_fw_range_weighted.text = y_fw_range_text
+        self.y1_fw_range_weighted.text = y_fw_range_text
+        self.y2_fw_range_weighted.text = y_fw_range_text
+
+        self.y_axis_bw_range_weighted.text = y_bw_range_text
+        self.y1_bw_range_weighted.text = y_bw_range_text
+        self.y2_bw_range_weighted.text = y_bw_range_text
+
+
+    def set_unweighted_z_range(self):
+
+        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 0, self.Z_SG_to_kg_scaling)
+
+        self.z_fw_range.text = z_fw_range_text
+        self.z_bw_range.text = z_bw_range_text
+
+    def set_weighted_z_range(self):
+
+        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
+
+        self.z_fw_range_weighted.text = z_fw_range_text
+        self.z_bw_range_weighted.text = z_bw_range_text
 
