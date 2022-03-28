@@ -226,7 +226,7 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
-                    cols_minimum: {0: 10, 1: 30, 2: 120, 3: 120, 4: 120}
+                    cols_minimum: {0: 15, 1: 40, 2: 115, 3: 115, 4: 115}
 
 
                     Label:
@@ -472,7 +472,7 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
-                    cols_minimum: {0: 10, 1: 30, 2: 120, 3: 120, 4: 120}
+                    cols_minimum: {0: 15, 1: 40, 2: 115, 3: 115, 4: 115}
 
                     Label:
                         text: ''
