@@ -226,7 +226,7 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
-                    cols_minimum: {0: 40, 1: 90, 2: 90, 3: 90, 4: 90}
+                    cols_minimum: {0: 10, 1: 30, 2: 120, 3: 120, 4: 120}
 
 
                     Label:
@@ -254,7 +254,11 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        text: ''
+                        text: '-400 < sg < 400'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     ## Y axis
 
@@ -468,14 +472,14 @@ Builder.load_string("""
                 GridLayout: 
                     cols: 5
                     rows: 6
-                    cols_minimum: {0: 40, 1: 90, 2: 90, 3: 90, 4: 90}
+                    cols_minimum: {0: 10, 1: 30, 2: 120, 3: 120, 4: 120}
 
                     Label:
                         text: ''
 
                     Label:
                         text: 'Peak'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -495,7 +499,11 @@ Builder.load_string("""
                         text_size: self.size
 
                     Label:
-                        text: ''
+                        text: '-400 < sg < 400'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     ## Y axis
 
