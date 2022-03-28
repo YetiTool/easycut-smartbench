@@ -890,7 +890,8 @@ class CalibrationTesting(Screen):
 
     
     def measure(self):
-        if (self.x_running and self.m.feed_rate() < 1200) or (self.y_running and self.m.feed_rate() < 1200) or (self.z_running and self.m.feed_rate() < 80):
+
+        if not (self.x_running and self.m.feed_rate() < 1200) and not (self.y_running and self.m.feed_rate() < 1200) and not (self.z_running and self.m.feed_rate() < 80):
             return
 
         cur_pos_x = self.m.mpos_x()
@@ -1053,7 +1054,6 @@ class CalibrationTesting(Screen):
         if self.m.state().startswith('Idle'):
 
             self.disable_run_buttons()
-            self.setup_arrays()
 
             self.stage = "Unweighted"
 
@@ -1072,6 +1072,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
+            self.setup_arrays()
             self.set_unweighted_x_range()
             self.x_running = True
             self.m.send_any_gcode_command('G91 G1 x1298 F1186')
