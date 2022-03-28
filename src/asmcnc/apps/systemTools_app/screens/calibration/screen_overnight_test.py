@@ -773,6 +773,8 @@ class OvernightTesting(Screen):
         pcb_temp = self.m.s.pcb_temp
         mot_temp = self.m.s.transistor_heatsink_temp
 
+        feed_rate = self.m.feed_rate()
+
         if -999 < x_sg < 1023: self.raw_x_vals.append(x_sg)
         if -999 < y_sg < 1023: self.raw_y_vals.append(y_sg)
         if -999 < y1_sg < 1023: self.raw_y1_vals.append(y1_sg)
@@ -988,6 +990,7 @@ class OvernightTesting(Screen):
         self.setup_arrays()
         self.overnight_running = False
         self.set_stage("Calibrating")
+        self.m.send_any_gcode_command('M3 S20000')
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
         self.poll_for_recalibration_completion = Clock.schedule_interval(self.prepare_to_check_recalibration, 5)
@@ -1037,8 +1040,7 @@ class OvernightTesting(Screen):
 
         if self.poll_for_recalibration_check_completion != None: Clock.unschedule(self.poll_for_recalibration_check_completion)
         self.overnight_running = False
-
-        
+        self.m.send_any_gcode_command('M5')
 
         if not self.m.checking_calibration_fail_info:
 
