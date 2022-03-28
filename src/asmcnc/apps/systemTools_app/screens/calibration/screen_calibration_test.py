@@ -964,8 +964,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.z_vals = []
-        self.raw_z_vals = []
+        self.setup_arrays()
 
         self.stage = "Weighted"
         self.set_weighted_z_range()
@@ -993,8 +992,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.y_vals = []
-        self.raw_y_vals = []
+        self.setup_arrays()
 
         self.stage = "Weighted"
         self.set_weighted_y_range()
@@ -1024,8 +1022,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.x_vals = []
-        self.raw_x_vals = []
+        self.setup_arrays()
 
         self.stage = "Weighted"
         self.set_weighted_x_range()
