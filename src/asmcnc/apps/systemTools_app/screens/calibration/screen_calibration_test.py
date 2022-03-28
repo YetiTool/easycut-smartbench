@@ -930,21 +930,27 @@ class CalibrationTesting(Screen):
 
         if self.stage == "Unweighted":
 
-            self.x_peak_load.text = str(max(self.raw_x_vals))
-            self.y_peak_load.text = str(max(self.raw_y_vals))
-            self.y1_peak_load.text = str(max(self.raw_y1_vals))
-            self.y2_peak_load.text = str(max(self.raw_y2_vals))
-            self.z_peak_load.text = str(max(self.raw_z_vals))
+            self.get_peak_as_string(self.x_peak_load, self.raw_x_vals)
+            self.get_peak_as_string(self.y_peak_load, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_peak_load, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_peak_load, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_peak_load, self.raw_z_vals)
             return
 
         if self.stage == "Weighted":
 
-            self.x_peak_load_weighted.text = str(max(self.raw_x_vals))
-            self.y_peak_load_weighted.text = str(max(self.raw_y_vals))
-            self.y1_peak_load_weighted.text = str(max(self.raw_y1_vals))
-            self.y2_peak_load_weighted.text = str(max(self.raw_y2_vals))
-            self.z_peak_load_weighted.text = str(max(self.raw_z_vals))
+            self.get_peak_as_string(self.x_peak_load_weighted, self.raw_x_vals)
+            self.get_peak_as_string(self.y_peak_load_weighted, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_peak_load_weighted, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_peak_load_weighted, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_peak_load_weighted, self.raw_z_vals)
             return
+
+
+    def get_peak_as_string(self, label_id, raw_vals):
+
+        try: label_id.text = str(max(raw_vals))
+        except: pass
 
 
     def run_z_procedure(self, dt):
