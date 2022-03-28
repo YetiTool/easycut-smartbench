@@ -240,9 +240,17 @@ Builder.load_string("""
 
                     Label:
                         text: 'Load up'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         text: 'Load down'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         text: ''
@@ -270,6 +278,8 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
+
 
                     Label:
                         id: y_axis_bw_range
@@ -277,6 +287,8 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
+
 
                     Image:
                         id: y_peak_checkbox
@@ -309,6 +321,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: y1_bw_range
@@ -316,6 +329,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: y1_peak_checkbox
@@ -348,6 +362,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: y2_bw_range
@@ -355,6 +370,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: y2_peak_checkbox
@@ -387,6 +403,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: x_bw_range
@@ -394,6 +411,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: x_peak_checkbox
@@ -427,6 +445,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: z_bw_range
@@ -434,6 +453,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: z_peak_checkbox
@@ -454,16 +474,24 @@ Builder.load_string("""
 
                     Label:
                         text: 'Peak'
-                        halign: 'left'
+                        halign: 'center'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
                         text: 'Load up'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         text: 'Load down'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         text: ''
@@ -491,6 +519,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: y_axis_bw_range_weighted
@@ -498,6 +527,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: y_peak_checkbox_weighted
@@ -530,6 +560,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: y1_bw_range_weighted
@@ -537,6 +568,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: y1_peak_checkbox_weighted
@@ -569,6 +601,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: y2_bw_range_weighted
@@ -576,6 +609,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: y2_peak_checkbox_weighted
@@ -608,6 +642,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: x_bw_range_weighted
@@ -615,6 +650,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: x_peak_checkbox_weighted
@@ -648,6 +684,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Label:
                         id: z_bw_range_weighted
@@ -655,6 +692,7 @@ Builder.load_string("""
                         markup: True
                         valign: 'middle'
                         text_size: self.size
+                        halign: 'center'
 
                     Image:
                         id: z_peak_checkbox_weighted
@@ -744,6 +782,7 @@ class CalibrationTesting(Screen):
             self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             print(traceback.format_exc())
 
+
     def stop(self):
         self.x_running = False
         self.y_running = False
@@ -753,11 +792,13 @@ class CalibrationTesting(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.enable_run_buttons()
 
+
     def on_enter(self):
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
+
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
@@ -765,13 +806,16 @@ class CalibrationTesting(Screen):
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
+
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
+
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('calibration_testing','calibration_testing')
+
 
     def reset(self):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
@@ -784,20 +828,26 @@ class CalibrationTesting(Screen):
     def zero_x_and_y(self):
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
 
+
     def mid_x_and_zero_y(self):
         self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
+
 
     def zero_Z(self):
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
+
     def disable_x_measurement(self, dt):
         self.x_running = False
+
 
     def disable_z_measurement(self, dt):
         self.z_running = False
 
+
     def disable_y_measurement(self, dt):
         self.y_running = False
+
 
     def enable_run_buttons(self):
         self.x_load_button.disabled = False
@@ -808,6 +858,7 @@ class CalibrationTesting(Screen):
         self.x0y0_jog_button.disabled = False
         self.x7y0_jog_button.disabled = False
         self.z0_jog_button.disabled = False        
+
 
     def disable_run_buttons(self):
         self.x_load_button.disabled = True
@@ -842,23 +893,40 @@ class CalibrationTesting(Screen):
         pcb_temp = self.m.s.pcb_temp
         mot_temp = self.m.s.transistor_heatsink_temp
 
-        self.raw_x_vals.append(x_sg)
-        self.raw_y_vals.append(y_sg)
-        self.raw_y1_vals.append(y1_sg)
-        self.raw_y2_vals.append(y2_sg)
-        self.raw_z_vals.append(z_sg)
+        if -999 < x_sg < 1023: self.raw_x_vals.append(x_sg)
+        if -999 < y_sg < 1023: self.raw_y_vals.append(y_sg)
+        if -999 < y1_sg < 1023: self.raw_y1_vals.append(y1_sg)
+        if -999 < y2_sg < 1023: self.raw_y2_vals.append(y2_sg)
+        if -999 < z_sg < 1023: self.raw_z_vals.append(z_sg)
 
-        self.x_peak_load.text = str(max(self.raw_x_vals, key=abs))
-        self.y_peak_load.text = str(max(self.raw_y_vals, key=abs))
-        self.y1_peak_load.text = str(max(self.raw_y1_vals, key=abs))
-        self.y2_peak_load.text = str(max(self.raw_y2_vals, key=abs))
-        self.z_peak_load.text = str(max(self.raw_z_vals, key=abs))
+        self.update_peaks()
 
         timestamp = datetime.now()
 
         status = [self.stage, cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp]
 
         self.statuses.append(status)
+
+
+    def update_peaks(self):
+
+        if self.stage == "Unweighted":
+
+            self.x_peak_load.text = str(max(self.raw_x_vals))
+            self.y_peak_load.text = str(max(self.raw_y_vals))
+            self.y1_peak_load.text = str(max(self.raw_y1_vals))
+            self.y2_peak_load.text = str(max(self.raw_y2_vals))
+            self.z_peak_load.text = str(max(self.raw_z_vals))
+            return
+
+        if self.stage == "Weighted":
+
+            self.x_peak_load_weighted.text = str(max(self.raw_x_vals))
+            self.y_peak_load_weighted.text = str(max(self.raw_y_vals))
+            self.y1_peak_load_weighted.text = str(max(self.raw_y1_vals))
+            self.y2_peak_load_weighted.text = str(max(self.raw_y2_vals))
+            self.z_peak_load_weighted.text = str(max(self.raw_z_vals))
+            return
 
 
     def show_expected_ranges(self, x_load, y_load, z_load):
@@ -934,10 +1002,12 @@ class CalibrationTesting(Screen):
             return
 
         self.disable_run_buttons()
-        self.show_expected_ranges(0,0,2) # check me
+        self.show_expected_ranges(0,0,2)
 
         self.z_vals = []
         self.raw_z_vals = []
+
+        self.stage = "Weighted"
 
         self.z_running = True
 
@@ -953,6 +1023,7 @@ class CalibrationTesting(Screen):
             self.z_running = False
             self.enable_run_buttons()
             self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_load_weighted))
 
 
     def run_y_procedure(self, dt):
@@ -964,6 +1035,8 @@ class CalibrationTesting(Screen):
 
         self.y_vals = []
         self.raw_y_vals = []
+
+        self.stage = "Weighted"
 
         self.y_running = True
 
@@ -979,6 +1052,9 @@ class CalibrationTesting(Screen):
             self.y_running = False
             self.enable_run_buttons()
             self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.y_peak_checkbox_weighted, self.check_in_range(self.y_peak_load_weighted))
+            self.tick_checkbox(self.y1_peak_checkbox_weighted, self.check_in_range(self.y1_peak_load_weighted))
+            self.tick_checkbox(self.y2_peak_checkbox_weighted, self.check_in_range(self.y2_peak_load_weighted))
 
 
     def run_x_procedure(self, dt):
@@ -990,6 +1066,8 @@ class CalibrationTesting(Screen):
 
         self.x_vals = []
         self.raw_x_vals = []
+
+        self.stage = "Weighted"
 
         self.x_running = True
 
@@ -1005,6 +1083,7 @@ class CalibrationTesting(Screen):
             self.x_running = False
             self.enable_run_buttons()
             self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.x_peak_checkbox_weighted, self.check_in_range(self.x_peak_load_weighted))
 
 
     def run_unweighted_test(self):
@@ -1012,12 +1091,9 @@ class CalibrationTesting(Screen):
         if self.m.state().startswith('Idle'):
 
             self.disable_run_buttons()
-            self.x_vals = []
-            self.raw_x_vals = []
-            self.y_vals = []
-            self.raw_y_vals = []
-            self.z_vals = []
-            self.raw_z_vals = []
+            self.setup_arrays()
+
+            self.stage = "Unweighted"
 
             self.zero_x_and_y()
             self.zero_Z()
@@ -1083,6 +1159,7 @@ class CalibrationTesting(Screen):
             self.enable_run_buttons()
             self.data_send_button.disabled = False
             self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.pass_or_fail_unweighted_peak_loads()
 
 
         else: 
@@ -1099,22 +1176,36 @@ class CalibrationTesting(Screen):
             checkbox_id.source = self.red_cross
 
 
-    def check_in_range(self, peak_id, range):
+    def check_in_range(self, peak_id):
+
+        within_plus_minus = 400
 
         try: 
-            if (-1*range) < int(peak_id.text) < range: return True
+            if (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return True
             else: return False
 
         except:
             return False
 
 
-    def pass_or_fail_peak_loads(self):
+    def pass_or_fail_unweighted_peak_loads(self):
 
         within_plus_minus = 400
 
-        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_load, within_plus_minus))
-        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_load, within_plus_minus))
-        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_load, within_plus_minus))
-        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_load, within_plus_minus))
-        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_load, within_plus_minus))
+        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_load))
+        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_load))
+        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_load))
+        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_load))
+        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_load))
+
+
+
+
+
+
+
+
+
+
+
+

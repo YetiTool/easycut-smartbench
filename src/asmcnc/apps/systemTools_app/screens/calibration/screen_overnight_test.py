@@ -1291,10 +1291,10 @@ class OvernightTesting(Screen):
             return
 
 
-    def check_in_range(self, peak_id, range):
+    def check_in_range(self, peak_id, within_plus_minus):
 
         try: 
-            if (-1*range) < int(peak_id.text) < range: return True
+            if (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return True
             else: return False
 
         except:
