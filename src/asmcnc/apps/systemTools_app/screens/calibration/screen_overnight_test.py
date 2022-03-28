@@ -678,7 +678,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = False
+    mini_run_dev_mode = True
 
     def __init__(self, **kwargs):
         super(OvernightTesting, self).__init__(**kwargs)
