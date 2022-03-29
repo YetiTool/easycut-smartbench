@@ -28,6 +28,7 @@ Builder.load_string("""
     spindle_brand: spindle_brand
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
+    rpm_label: rpm_label
     seconds_label : seconds_label
     stylus_switch: stylus_switch
 
@@ -80,6 +81,7 @@ Builder.load_string("""
                 multiline: False
 
             Label:
+                id: rpm_label
                 color: 0,0,0,1
                 font_size: dp(30)
                 markup: True
@@ -249,5 +251,6 @@ class SpindleSettingsWidget(Widget):
         self.rpm_override = False  
 
     def update_strings(self):
+        self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
 

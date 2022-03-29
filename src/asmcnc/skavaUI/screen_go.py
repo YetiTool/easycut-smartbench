@@ -54,6 +54,7 @@ Builder.load_string("""
     spindle_label : spindle_label
     job_time_label : job_time_label
     file_lines_streamed_label : file_lines_streamed_label
+    spindle_overload_label:spindle_overload_label
     
     BoxLayout:
         padding: 0
@@ -328,6 +329,7 @@ Builder.load_string("""
                         spacing: 10
  
                         Label:
+                            id: spindle_overload_label
                             halign: 'center'
                             font_size: '16px' 
                             text: '[color=808080]Spindle\\noverload:[/color]'
@@ -744,6 +746,7 @@ class GoScreen(Screen):
         self.spindle_label.text = self.l.get_str("Spindle") + '\n' + self.l.get_str("speed")
         self.job_time_label.text = self.l.get_str("Total job time") + ":"
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
+        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n') + "[/color]"
 
         self.update_font_size(self.feed_label)
         self.update_font_size(self.spindle_label)

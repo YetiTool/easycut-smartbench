@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on nov 2020
 @author: Letty
@@ -19,20 +20,20 @@ Builder.load_string("""
 	row_1_col_1 : row_1_col_1
 	row_1_col_2 : row_1_col_2
 	row_1_col_3 : row_1_col_3
-	# row_2_col_1 : row_2_col_1
-	# row_2_col_2 : row_2_col_2
-	# row_2_col_3 : row_2_col_3
-	# row_3_col_1 : row_3_col_1
+	row_2_col_1 : row_2_col_1
+	row_2_col_2 : row_2_col_2
+	row_2_col_3 : row_2_col_3
+	row_3_col_1 : row_3_col_1
 	# row_3_col_2 : row_3_col_2
 	# row_3_col_3 : row_3_col_3
 
 	row_1_col_1_image : row_1_col_1_image
 	row_1_col_2_image : row_1_col_2_image
 	row_1_col_3_image : row_1_col_3_image
-	# row_2_col_1_image : row_2_col_1_image
-	# row_2_col_2_image : row_2_col_2_image
-	# row_2_col_3_image : row_2_col_3_image
-	# row_3_col_1_image : row_3_col_1_image
+	row_2_col_1_image : row_2_col_1_image
+	row_2_col_2_image : row_2_col_2_image
+	row_2_col_3_image : row_2_col_3_image
+	row_3_col_1_image : row_3_col_1_image
 	# row_3_col_2_image : row_3_col_2_image
 	# row_3_col_3_image : row_3_col_3_image
 
@@ -151,105 +152,92 @@ Builder.load_string("""
 						halign: "left"
 						color: hex('#333333ff')
 
+
+					# ROW 2
+
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_2_col_1)
+						color: hex('#333333ff')
+
+	                Image: 
+	                	id: row_2_col_1_image
+	                	allow_stretch: True
+
+	                Label: 
+	                	id: row_2_col_1
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
+
+
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_2_col_2)
+						color: hex('#333333ff')
+
+	                Image: 
+	                	id: row_2_col_2_image
+	                	allow_stretch: True
+
+	                Label: 
+	                	id: row_2_col_2
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
+
+
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_2_col_3)
+						color: hex('#333333ff')
+
+	                Image: 
+	                	id: row_2_col_3_image
+	                	allow_stretch: True
+
+	                Label: 
+	                	id: row_2_col_3
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
+
+
+					# ROW 3
+
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_3_col_1)
+						color: hex('#333333ff')
+
+	                Image: 
+	                	id: row_3_col_1_image
+	                	allow_stretch: True
+
+	                Label: 
+	                	id: row_3_col_1
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
+
 					BoxLayout: 
 					BoxLayout: 
 					BoxLayout: 
 					BoxLayout: 
 					BoxLayout: 
 					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-
-
-					# # ROW 2
-
-					# CheckBox: 
-					# 	group: "language_radio_buttons" 
-					# 	on_press: root.select_language(self, row_2_col_1)
-					# 	color: hex('#333333ff')
-
-	    #             Image: 
-	    #             	id: row_2_col_1_image
-	    #             	allow_stretch: True
-
-	    #             Label: 
-	    #             	id: row_2_col_1
-	    #             	valign: "middle"
-					# 	font_size: '20sp'
-					# 	text_size: self.size
-					# 	markup: True
-					# 	halign: "left"
-					# 	color: hex('#333333ff')
-
-
-					# CheckBox: 
-					# 	group: "language_radio_buttons" 
-					# 	on_press: root.select_language(self, row_2_col_2)
-					# 	color: hex('#333333ff')
-
-	    #             Image: 
-	    #             	id: row_2_col_2_image
-	    #             	allow_stretch: True
-
-	    #             Label: 
-	    #             	id: row_2_col_2
-	    #             	valign: "middle"
-					# 	font_size: '20sp'
-					# 	text_size: self.size
-					# 	markup: True
-					# 	halign: "left"
-					# 	color: hex('#333333ff')
-
-
-					# CheckBox: 
-					# 	group: "language_radio_buttons" 
-					# 	on_press: root.select_language(self, row_2_col_3)
-					# 	color: hex('#333333ff')
-
-	    #             Image: 
-	    #             	id: row_2_col_3_image
-	    #             	allow_stretch: True
-
-	    #             Label: 
-	    #             	id: row_2_col_3
-	    #             	valign: "middle"
-					# 	font_size: '20sp'
-					# 	text_size: self.size
-					# 	markup: True
-					# 	halign: "left"
-					# 	color: hex('#333333ff')
-
-
-					# # ROW 3
-
-					# CheckBox: 
-					# 	group: "language_radio_buttons" 
-					# 	on_press: root.select_language(self, row_3_col_1)
-					# 	color: hex('#333333ff')
-
-	    #             Image: 
-	    #             	id: row_3_col_1_image
-	    #             	allow_stretch: True
-
-	    #             Label: 
-	    #             	id: row_3_col_1
-	    #             	valign: "middle"
-					# 	font_size: '20sp'
-					# 	text_size: self.size
-					# 	markup: True
-					# 	halign: "left"
-					# 	color: hex('#333333ff')
-
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
@@ -359,22 +347,28 @@ class LanguageSelectScreen(Screen):
 		self.row_1_col_1.text = self.l.approved_languages[0]
 		self.row_1_col_2.text = self.l.approved_languages[1]
 		self.row_1_col_3.text = self.l.approved_languages[2]
-		# self.row_2_col_1.text = self.l.approved_languages[3]
-		# self.row_2_col_2.text = self.l.approved_languages[4]
-		# self.row_2_col_3.text = self.l.approved_languages[5]
-		# self.row_3_col_1.text = self.l.approved_languages[6]
+		self.row_2_col_1.text = self.l.approved_languages[3]
+		self.row_2_col_2.text = self.l.approved_languages[4]
+		self.row_2_col_3.text = self.l.approved_languages[5]
+		self.row_3_col_1.text = self.l.approved_languages[6]
 		# self.row_3_col_2.text = self.l.approved_languages[7]
 		# self.row_3_col_3.text = self.l.approved_languages[8]
 
-		self.row_1_col_1_image.source = self.flag_img_path + self.row_1_col_1.text + ".png"
-		self.row_1_col_2_image.source = self.flag_img_path + self.row_1_col_2.text + ".png"
-		self.row_1_col_3_image.source = self.flag_img_path + self.row_1_col_3.text + ".png"
-		# self.row_2_col_1_image.source = self.flag_img_path + self.row_2_col_1.text + ".png"
-		# self.row_2_col_2_image.source = self.flag_img_path + self.row_2_col_2.text + ".png"
-		# self.row_2_col_3_image.source = self.flag_img_path + self.row_2_col_3.text + ".png"
-		# self.row_3_col_1_image.source = self.flag_img_path + self.row_3_col_1.text + ".png"
+		self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
+		self.row_1_col_2_image.source = self.get_image_filename(self.row_1_col_2)
+		self.row_1_col_3_image.source = self.get_image_filename(self.row_1_col_3)
+		self.row_2_col_1_image.source = self.get_image_filename(self.row_2_col_1)
+		self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
+		self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
+		self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
 		# self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
 		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
+
+	def get_image_filename(self, value):
+		# If french flag needs to be shown, then filename will not match language name due to special character
+		if value.text == "Français (FR)":
+			return self.flag_img_path + "Francais (FR)" + ".png"
+		return self.flag_img_path + value.text + ".png"
 
 	def on_enter(self):
 		self.update_welcome_header = Clock.schedule_interval(self.change_welcome_label, 1)
