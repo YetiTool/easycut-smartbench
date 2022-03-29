@@ -155,3 +155,5 @@ class CalibrationDatabase(object):
                 cursor.execute(query % (combined_id, status[0], status[1], status[2], status[3], status[4], status[5],
                                         status[6], status[7], status[8], status[9], status[10], status[11], status[12],
                                         status[13], status[14], status[15]))
+        
+        self.conn.commit()
