@@ -400,6 +400,8 @@ class LanguageSelectScreen(Screen):
 
 		else: 
 			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
+			self.next_button.opacity = 0
+			self.next_button.disabled = True
 
 	def next_screen(self):
 		self.start_seq.next_in_sequence()

@@ -89,7 +89,6 @@ Builder.load_string("""
                             orientation: "vertical"
                             Label:
                                 id: current_version_label
-                                size_hint_y: 1.5
                                 color: 0,0,0,1
                                 font_size: 20
                                 markup: True
@@ -105,10 +104,11 @@ Builder.load_string("""
 
                             Label:
                                 id: find_release_notes_label
+                                size_hint_y: 1.1
                                 color: 0,0,0,1
                                 font_size: 13
                                 markup: True
-                                valign: "top"
+                                valign: "middle"
                                 text_size: self.size
 
                     BoxLayout: 
@@ -378,8 +378,6 @@ class SWUpdateScreen(Screen):
         self.l=kwargs['localization']
         
         self.update_strings()
-        self.update_font_size(self.usb_update_button)
-        self.update_font_size(self.wifi_update_button)
 
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         
@@ -644,8 +642,7 @@ class SWUpdateScreen(Screen):
                         self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
                         ) + \
                     " " + \
-                    self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.") + \
-                    "\n\n"
+                    self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.")
                     )
 
                 popup_info.PopupError(self.sm, self.l, description)              
@@ -692,6 +689,9 @@ class SWUpdateScreen(Screen):
             self.l.get_str("Go to www.yetitool.com/support for help on how to do this.")
             )
         self.usb_update_button.text = self.l.get_str("Update")
+
+        self.update_font_size(self.usb_update_button)
+        self.update_font_size(self.wifi_update_button)
 
     def update_font_size(self, value):
         if len(value.text) < 9:

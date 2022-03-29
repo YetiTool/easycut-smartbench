@@ -226,3 +226,5 @@ class SquaringScreenDecisionManualVsSquare(Screen):
             value.font_size = self.default_font_size - 4
         if len(value.text) > 44: 
             value.font_size = self.default_font_size - 5
+        if len(value.text) > 50:
+            value.font_size = self.default_font_size - 7

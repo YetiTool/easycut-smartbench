@@ -145,6 +145,8 @@ class ZLubricationReminderWidget(Widget):
         self.time_since_srew_lubricated_label.text = self.l.get_bold("TIME SINCE LEAD SCREW LUBRICATED")
         self.hours_label = self.l.get_str("hours")
 
+        self.update_label_font_size(self.time_since_srew_lubricated_label)
+
     def update_font_size(self, value):
         if len(value.text) < (8 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 90
@@ -159,3 +161,10 @@ class ZLubricationReminderWidget(Widget):
         if len(value.text) > (11 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 50
 
+    def update_label_font_size(self, value):
+        if len(value.text) > 52:
+            value.font_size = 18
+        elif len(value.text) > 50:
+            value.font_size = 22
+        else:
+            value.font_size = 24

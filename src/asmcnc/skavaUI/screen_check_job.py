@@ -425,6 +425,15 @@ class CheckingScreen(Screen):
     
             
             self.load_file_now_button.text = self.l.get_str('Adjust datums')
+
+            # Adjust font size
+            if len(self.load_file_now_button.text) > 30:
+                self.load_file_now_button.font_size = '11sp'
+            elif len(self.load_file_now_button.text) > 25:
+                self.load_file_now_button.font_size = '14sp'
+            else:
+                self.load_file_now_button.font_size = '15sp'
+
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1 

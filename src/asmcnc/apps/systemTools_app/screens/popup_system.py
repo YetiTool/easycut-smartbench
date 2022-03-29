@@ -219,7 +219,7 @@ class PopupUSBFirstAid(Widget):
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,10,0,0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
@@ -287,7 +287,7 @@ class PopupBetaTesting(Widget):
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,10,0,0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
@@ -523,7 +523,7 @@ class PopupDeveloperPassword(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,10,40,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(textinput)

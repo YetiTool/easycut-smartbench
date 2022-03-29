@@ -26,7 +26,7 @@ Builder.load_string("""
         width: dp(580)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: 20
+        padding: 15
         spacing: 10      
 
         Label:

@@ -177,13 +177,13 @@ class MaintenanceZMove(Widget):
                 self.l.get_bold("To set, if laser hardware is fitted:") + \
                 "\n\n" + \
                 self.l.get_str("1. Enable laser crosshair (switch to on).").replace(self.l.get_str("on"), self.l.get_bold("on")) + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str("2. On a test piece, cut a mark using manual moves.") + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str("3. Lift Z Head and press the reset button in the bottom left.").replace(self.l.get_str("reset"), self.l.get_bold("reset")) + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str("4. Move the Z Head so that the cross hair lines up with the mark centre.") + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str("5. Press save.").replace(self.l.get_str("save"), self.l.get_bold("save"))
                 )
 

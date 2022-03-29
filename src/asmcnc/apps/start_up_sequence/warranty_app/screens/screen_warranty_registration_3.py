@@ -177,7 +177,7 @@ Builder.load_string("""
 						size_hint: (None,None)
 						width: dp(291)
 						height: dp(79)
-						on_press: root.next_screen()
+						on_press: root.next_screen(False)
 						text: 'Next...'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
@@ -209,7 +209,6 @@ class WarrantyScreen3(Screen):
 		self.l=kwargs['localization']
 
 		self.update_strings()
-		self.update_font_size(self.error_message_bottom)
 
 	def on_pre_enter(self):
 		self.read_in_activation_code()
@@ -301,6 +300,8 @@ class WarrantyScreen3(Screen):
 		self.error_message_bottom.text = self.l.get_str("Stuck on this screen? Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."
 
+		self.update_font_size(self.error_message_bottom)
+
 	def update_font_size(self, value):
-		if len(value.text) < 85: value.font_size = self.default_font_size
-		else: value.font_size = '18sp'
+		if len(value.text) < 100: value.font_size = self.default_font_size
+		else: value.font_size = '16sp'

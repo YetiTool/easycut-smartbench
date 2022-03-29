@@ -424,7 +424,6 @@ class WifiScreen(Screen):
             self.network_name.values = self.get_available_networks()
  
         self.update_strings()
-        self.update_font_size(self.country_label)
         self.get_rst_source()
 
     def on_enter(self):
@@ -554,15 +553,28 @@ class WifiScreen(Screen):
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
 
+        self.update_font_size(self.country_label)
+        self.update_button_font_size(self.connect_button)
+
     def update_font_size(self, value):
         if len(value.text) < 8:
             value.font_size = self.default_font_size
         elif len(value.text) > 7: 
             value.font_size = self.default_font_size - 2
 
+    def update_button_font_size(self, value):
+        value.font_size = 28
+        if len(value.text) > 10:
+            value.font_size = 19
+
     def get_rst_source(self):
         try:
             self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
         except: 
-            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
+            # Can't seem to use non english letters for file source so filename is different
+            try:
+                if self.l.lang == 'Français (FR)':
+                    self.connection_instructions_rst.source = self.wifi_documentation_path + 'Francais (FR).rst'
+            except:
+                self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 

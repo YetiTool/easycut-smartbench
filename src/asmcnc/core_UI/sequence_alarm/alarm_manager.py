@@ -21,7 +21,7 @@ ALARM_CODES_DICT = {
 	"ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
 	"ALARM:5" : "Probe fail. Tool did not contact the probe within the search distance.",
 	"ALARM:6" : "Homing fail: SmartBench was reset during active homing cycle.",
-	"ALARM:7" : "Homing fail: the interrupt bar was triggered during the homing cycle.",
+	"ALARM:7" : "Homing fail: the stop bar was triggered during the homing cycle.",
 	"ALARM:8" : "Homing fail: during the homing cycle, an axis failed to clear the limit switch when pulling off.",
 	"ALARM:9" : "Homing fail: could not find the limit switch within search distance.",
 	"ALARM:10": "Homing fail: on dual axis machines, could not find the second limit switch for self-squaring."

@@ -88,7 +88,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 60
+        padding: 40
         spacing: 30
         size_hint_x: 1
 
@@ -99,7 +99,7 @@ Builder.load_string("""
              
             Label:
                 id: error_header
-                size_hint_y: 0.8
+                size_hint_y: 0.6
                 text_size: self.size
                 font_size: '24sp'
                 markup: True
@@ -125,6 +125,7 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 padding: 130, 0
+                size_hint_y: 0.8
             
                 Button:
                     size_hint_y:0.9
@@ -204,6 +205,7 @@ class ErrorScreenClass(Screen):
     def update_strings(self):
         self.error_header.text = self.l.get_bold('ERROR') + '\n' + self.l.get_str('SmartBench could not process a command') + ':'
         self.user_instruction.text = self.l.get_str('The job will now be cancelled.') + ' ' + self.l.get_str('Check the gcode file before re-running it.')
+        self.return_label.text = self.l.get_str('Return')
         
          
   

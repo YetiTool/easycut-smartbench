@@ -685,6 +685,28 @@ class BuildInfoScreen(Screen):
             # str(self.set.ip_address)
             )
 
+        self.update_font_sizes()
+
+    def update_font_sizes(self): # Update everything together so it looks nicer
+        if len(self.firmware_header.text) < 20:
+            self.smartbench_model_header.font_size = 20
+            self.serial_number_header.font_size = 20
+            self.console_serial_number_header.font_size = 20
+            self.software_header.font_size = 20
+            self.platform_header.font_size = 20
+            self.firmware_header.font_size = 20
+            self.zhead_header.font_size = 20
+            self.hardware_header.font_size = 20
+        else:
+            self.smartbench_model_header.font_size = 18
+            self.serial_number_header.font_size = 18
+            self.console_serial_number_header.font_size = 18
+            self.software_header.font_size = 18
+            self.platform_header.font_size = 18
+            self.firmware_header.font_size = 18
+            self.zhead_header.font_size = 18
+            self.hardware_header.font_size = 18
+
     def restart_app(self):
         if self.reset_language == True: 
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
@@ -745,7 +767,7 @@ class BuildInfoScreen(Screen):
 
         else:
             warning_message = self.l.get_str('Problem saving nickname!')
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
     ## SMARTBENCH LOCATION NAMING
@@ -806,5 +828,5 @@ class BuildInfoScreen(Screen):
 
         else:
             warning_message = 'Problem saving location!!'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
