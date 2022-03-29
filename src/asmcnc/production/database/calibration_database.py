@@ -107,22 +107,22 @@ class CalibrationDatabase(object):
 
             return cursor.execute(query)
 
-    def insert_final_test_stage(self, machine_serial, qc_stage_id):
-        combined_id = machine_serial + str(qc_stage_id)
+    def insert_final_test_stage(self, machine_serial, ft_stage_id):
+        combined_id = machine_serial + str(ft_stage_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
-                    "" % (combined_id, machine_serial, qc_stage_id)
+                    "" % (combined_id, machine_serial, ft_stage_id)
 
             cursor.execute(query)
 
         self.conn.commit()
 
-    def insert_final_test_statistics(self, machine_serial, qc_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
+    def insert_final_test_statistics(self, machine_serial, ft_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
                                      y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
                                      y1_backw_avg, y1_backw_peak, y2_forw_avg, y2_forw_peak, y2_backw_avg, y2_backw_peak,
                                      z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak):
-        combined_id = machine_serial + str(qc_stage_id)
+        combined_id = machine_serial + str(ft_stage_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStatistics (FTID, XForwardAvg, XForwardPeak, XBackwardAvg, XBackwardPeak, " \
@@ -142,8 +142,8 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     # @lettie please ensure data is input in the correct order according to below
-    def insert_final_test_statuses(self, machine_serial, qc_stage_id, statuses):
-        combined_id = machine_serial + str(qc_stage_id)
+    def insert_final_test_statuses(self, machine_serial, ft_stage_id, statuses):
+        combined_id = machine_serial + str(ft_stage_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
