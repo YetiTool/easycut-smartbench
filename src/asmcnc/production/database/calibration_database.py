@@ -63,8 +63,6 @@ class CalibrationDatabase(object):
     def insert_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id, coefficients):
         combined_id = zh_serial + str(motor_index) + str(calibration_stage_id)
 
-        print(combined_id)
-
         with self.conn.cursor() as cursor:
             query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
 
@@ -86,8 +84,6 @@ class CalibrationDatabase(object):
 
     def insert_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id, coefficients):
         combined_id = lb_serial + str(motor_index) + str(calibration_stage_id)
-
-        print(combined_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
@@ -115,7 +111,7 @@ class CalibrationDatabase(object):
         combined_id = machine_serial + str(qc_stage_id)
 
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, QCStageId) VALUES ('%s', '%s', %s)" \
+            query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
                     "" % (combined_id, machine_serial, qc_stage_id)
 
             cursor.execute(query)
