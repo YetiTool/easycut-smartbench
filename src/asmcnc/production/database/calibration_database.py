@@ -93,7 +93,6 @@ class CalibrationDatabase(object):
             query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
 
             for coefficient in coefficients:
-                print(len(combined_id))
                 cursor.execute(query % (combined_id, coefficient))
 
         self.conn.commit()
