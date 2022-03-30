@@ -1002,6 +1002,13 @@ class OvernightTesting(Screen):
 
         self.stage = stage
         stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+
+        print("STAGE ID:")
+        print stage_id
+
+        print("FETCHONE")
+        print stage_id.fetchone()
+
         self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
         self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage)) 
