@@ -124,15 +124,20 @@ class CalibrationDatabase(object):
             return cursor.fetchone()[0]
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
-        combined_id = machine_serial + str(ft_stage_id)
 
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
-                    "" % (combined_id, machine_serial, ft_stage_id)
+        try: 
+            combined_id = machine_serial + str(ft_stage_id)
 
-            cursor.execute(query)
+            with self.conn.cursor() as cursor:
+                query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
+                        "" % (combined_id, machine_serial, ft_stage_id)
 
-        self.conn.commit()
+                cursor.execute(query)
+
+            self.conn.commit()
+
+        except pytds.tds_base.IntegrityError:
+            log("Final test stage already exists for this SN")
 
     def insert_final_test_statistics(self, machine_serial, ft_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
                                      y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
