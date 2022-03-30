@@ -1010,7 +1010,7 @@ class OvernightTesting(Screen):
 
 
         try: 
-            self.insert_final_test_statuses(self.sn_for_db, stage, self.data_dict(stage))
+            self.insert_final_test_statuses(self.sn_for_db, stage, self.data_dict[stage])
 
         except:
             return False
@@ -1073,18 +1073,18 @@ class OvernightTesting(Screen):
 
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
-        if len(self.data_dict(self.stage)) > 0:
+        if len(self.data_dict[self.stage]) > 0:
 
-            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][0] < self.m.mpos_x(): x_dir = -1
-            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][0] > self.m.mpos_x(): x_dir = 1
+            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
+            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
             else: x_dir = 0
 
-            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][1] < self.m.mpos_y(): y_dir = -1
-            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][1] > self.m.mpos_y(): y_dir = 1
+            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
+            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
             else: y_dir = 0
 
-            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][2] < self.m.mpos_z(): z_dir = 1
-            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][2] > self.m.mpos_z(): z_dir = -1
+            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
+            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
 
@@ -1123,7 +1123,7 @@ class OvernightTesting(Screen):
 
         timestamp = datetime.now()
 
-        self.data_dict(self.stage).append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
+        self.data_dict[self.stage].append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
         self.update_peaks()
 
     "Update screen with (absolute) peak load values"
