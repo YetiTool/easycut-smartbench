@@ -962,7 +962,7 @@ class OvernightTesting(Screen):
             self.sn_for_db = "YS6-test"
 
 
-        self.data_dict = {
+        self.status_data_dict = {
 
             "OvernightWearIn" : [],
             "CalibrationCheckOT" : [],
@@ -1001,57 +1001,56 @@ class OvernightTesting(Screen):
     def set_stage(self, stage):
 
         self.stage = stage
-        self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage)
-        self.data_dict[self.stage] = []
+        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+        self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage)) 
 
 
     def send_data(self, stage):
 
 
-        try: 
-            self.insert_final_test_statuses(self.sn_for_db, stage, self.data_dict[stage])
-
-        except:
-            return False
-
-        # Peaks are dependent on stages
-        # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-        peak_list = self.read_out_peaks(stage)
-
-        statistics = [
-                        self.sn_for_db,
-                        stage,
-                        sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
-                        peak_list[0],
-                        sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
-                        peak_list[1],
-                        sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
-                        peak_list[2],
-                        sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
-                        peak_list[3],
-                        sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
-                        peak_list[4],
-                        sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
-                        peak_list[5],
-                        sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
-                        peak_list[6],
-                        sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
-                        peak_list[7],
-                        sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
-                        peak_list[8],
-                        sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
-                        peak_list[9]
-
-        ]
-
         try:
+            stage_id = self.calibration_db.get_stage_id_by_description(stage)
+            self.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+
+            # Peaks are dependent on stages
+            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+            peak_list = self.read_out_peaks(stage)
+
+            statistics = [
+                            self.sn_for_db,
+                            stage_id,
+                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                            peak_list[0],
+                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                            peak_list[1],
+                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                            peak_list[2],
+                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                            peak_list[3],
+                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                            peak_list[4],
+                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                            peak_list[5],
+                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                            peak_list[6],
+                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                            peak_list[7],
+                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                            peak_list[8],
+                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                            peak_list[9]
+
+            ]
+
             self.insert_final_test_statistics(*statistics)
+            return True
 
         except:
             return False
 
-        return True
+
 
 
     # Function called from serial comms to record SG values
@@ -1073,18 +1072,18 @@ class OvernightTesting(Screen):
 
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
-        if len(self.data_dict[self.stage]) > 0:
+        if len(self.status_data_dict[self.stage]) > 0:
 
-            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
-            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
             else: x_dir = 0
 
-            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
-            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
             else: y_dir = 0
 
-            if self.data_dict[self.stage][len(self.data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
-            elif self.data_dict[self.stage][len(self.data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
 
@@ -1123,7 +1122,7 @@ class OvernightTesting(Screen):
 
         timestamp = datetime.now()
 
-        self.data_dict[self.stage].append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
+        self.status_data_dict[self.stage].append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
         self.update_peaks()
 
     "Update screen with (absolute) peak load values"
