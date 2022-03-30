@@ -1086,6 +1086,11 @@ class OvernightTesting(Screen):
             elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
+        else:
+            x_dir = 0
+            y_dir = 0
+            z_dir = 0
+
 
         x_sg = self.m.s.sg_x_motor_axis
         y_sg = self.m.s.sg_y_axis
@@ -1108,12 +1113,12 @@ class OvernightTesting(Screen):
             if y_dir < 0: self.raw_y_neg_vals.append(y_sg)
         
         if -999 < y1_sg < 1023:
-            if y1_dir > 0: self.raw_y1_pos_vals.append(y1_sg)
-            if y1_dir < 0: self.raw_y1_neg_vals.append(y1_sg)
+            if y_dir > 0: self.raw_y1_pos_vals.append(y1_sg)
+            if y_dir < 0: self.raw_y1_neg_vals.append(y1_sg)
         
         if -999 < y2_sg < 1023:
-            if y2_dir > 0: self.raw_y2_pos_vals.append(y2_sg)
-            if y2_dir < 0: self.raw_y2_neg_vals.append(y2_sg)
+            if y_dir > 0: self.raw_y2_pos_vals.append(y2_sg)
+            if y_dir < 0: self.raw_y2_neg_vals.append(y2_sg)
         
         if -999 < z_sg < 1023:
             if z_dir < 0: self.raw_z_pos_vals.append(z_sg)
