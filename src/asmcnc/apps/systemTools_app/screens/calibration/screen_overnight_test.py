@@ -1395,6 +1395,7 @@ class OvernightTesting(Screen):
 
         self.setup_arrays()
         self.overnight_running = False
+        self.stage = ""
         self.m.send_any_gcode_command('M3 S20000')
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
