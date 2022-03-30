@@ -10,8 +10,22 @@ except:
     log('Pytds not installed - pip install python-tds')
 
 class CalibrationDatabase(object):
+
     def __init__(self):
         self.conn = None
+
+
+    # AVAILABLE STAGES ARE: 
+
+    # "CalibrationQC"
+    # "CalibrationCheckQC"
+    # "UnweightedFT"
+    # "WeightedFT"
+    # "OvernightWearIn"
+    # "CalibrationOT"
+    # "CalibrationCheckOT"
+    # "FullyCalibratedTest"
+
 
     def set_up_connection(self):
 

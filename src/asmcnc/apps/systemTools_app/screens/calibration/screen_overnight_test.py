@@ -34,11 +34,17 @@ Builder.load_string("""
     retry_fully_calibrated_run_data_send : retry_fully_calibrated_run_data_send
     sent_fully_recalibrated_run_data : sent_fully_recalibrated_run_data
 
-    y_wear_in_peak : y_wear_in_peak
-    y1_wear_in_peak : y1_wear_in_peak
-    y2_wear_in_peak : y2_wear_in_peak
-    x_wear_in_peak : x_wear_in_peak
-    z_wear_in_peak : z_wear_in_peak
+    y_wear_in_peak_pos : y_wear_in_peak_pos
+    y1_wear_in_peak_pos : y1_wear_in_peak_pos
+    y2_wear_in_peak_pos : y2_wear_in_peak_pos
+    x_wear_in_peak_pos : x_wear_in_peak_pos
+    z_wear_in_peak_pos : z_wear_in_peak_pos
+
+    y_wear_in_peak_neg : y_wear_in_peak_neg
+    y1_wear_in_peak_neg : y1_wear_in_peak_neg
+    y2_wear_in_peak_neg : y2_wear_in_peak_neg
+    x_wear_in_peak_neg : x_wear_in_peak_neg
+    z_wear_in_peak_neg : z_wear_in_peak_neg
 
     y_wear_in_checkbox : y_wear_in_checkbox
     y1_wear_in_checkbox : y1_wear_in_checkbox
@@ -46,11 +52,17 @@ Builder.load_string("""
     x_wear_in_checkbox : x_wear_in_checkbox
     z_wear_in_checkbox : z_wear_in_checkbox
 
-    y_recalibration_peak : y_recalibration_peak
-    y1_recalibration_peak : y1_recalibration_peak
-    y2_recalibration_peak : y2_recalibration_peak
-    x_recalibration_peak : x_recalibration_peak
-    z_recalibration_peak : z_recalibration_peak
+    y_recalibration_peak_pos : y_recalibration_peak_pos
+    y1_recalibration_peak_pos : y1_recalibration_peak_pos
+    y2_recalibration_peak_pos : y2_recalibration_peak_pos
+    x_recalibration_peak_pos : x_recalibration_peak_pos
+    z_recalibration_peak_pos : z_recalibration_peak_pos
+
+    y_recalibration_peak_neg : y_recalibration_peak_neg
+    y1_recalibration_peak_neg : y1_recalibration_peak_neg
+    y2_recalibration_peak_neg : y2_recalibration_peak_neg
+    x_recalibration_peak_neg : x_recalibration_peak_neg
+    z_recalibration_peak_neg : z_recalibration_peak_neg
 
     y_recalibration_checkbox : y_recalibration_checkbox
     y1_recalibration_checkbox : y1_recalibration_checkbox
@@ -58,11 +70,17 @@ Builder.load_string("""
     x_recalibration_checkbox : x_recalibration_checkbox
     z_recalibration_checkbox : z_recalibration_checkbox
 
-    y_fully_calibrated_peak : y_fully_calibrated_peak
-    y1_fully_calibrated_peak : y1_fully_calibrated_peak
-    y2_fully_calibrated_peak : y2_fully_calibrated_peak
-    x_fully_calibrated_peak : x_fully_calibrated_peak
-    z_fully_calibrated_peak : z_fully_calibrated_peak
+    y_fully_calibrated_peak_pos : y_fully_calibrated_peak_pos
+    y1_fully_calibrated_peak_pos : y1_fully_calibrated_peak_pos
+    y2_fully_calibrated_peak_pos : y2_fully_calibrated_peak_pos
+    x_fully_calibrated_peak_pos : x_fully_calibrated_peak_pos
+    z_fully_calibrated_peak_pos : z_fully_calibrated_peak_pos
+
+    y_fully_calibrated_peak_neg : y_fully_calibrated_peak_neg
+    y1_fully_calibrated_peak_neg : y1_fully_calibrated_peak_neg
+    y2_fully_calibrated_peak_neg : y2_fully_calibrated_peak_neg
+    x_fully_calibrated_peak_neg : x_fully_calibrated_peak_neg
+    z_fully_calibrated_peak_neg : z_fully_calibrated_peak_neg
 
     y_fully_calibrated_checkbox : y_fully_calibrated_checkbox
     y1_fully_calibrated_checkbox : y1_fully_calibrated_checkbox
@@ -273,20 +291,35 @@ Builder.load_string("""
                     ## SIX HOUR WEAR IN PEAKS
 
                     GridLayout:
-                        cols: 3
+                        cols: 5
                         rows: 5
                         size_hint_y: 0.5
                         spacing: [5,0]
 
                         Label:
-                            text: 'Y:  '
+                            text: 'Y+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y_wear_in_peak
+                            id: y_wear_in_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y_wear_in_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -302,14 +335,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'Y1:  '
+                            text: 'Y1+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y1_wear_in_peak
+                            id: y1_wear_in_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y1-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y1_wear_in_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -326,14 +374,29 @@ Builder.load_string("""
 
 
                         Label:
-                            text: 'Y2:  '
+                            text: 'Y2+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y2_wear_in_peak
+                            id: y2_wear_in_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y2-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y2_wear_in_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -349,19 +412,35 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'X:  '
+                            text: 'X+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: x_wear_in_peak
+                            id: x_wear_in_peak_pos
                             text: 'xxx'
                             halign: 'left'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
+
+                        Label:
+                            text: 'X-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: x_wear_in_peak_neg
+                            text: 'xxx'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
 
                         Image:
                             id: x_wear_in_checkbox
@@ -372,14 +451,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'Z:  '
+                            text: 'Z-:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: z_wear_in_peak
+                            id: z_wear_in_peak_neg
+                            text: 'zzz'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Z+:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: z_wear_in_peak_pos
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -397,20 +491,35 @@ Builder.load_string("""
                     ## RECALIBRATION PEAKS
 
                     GridLayout:
-                        cols: 3
+                        cols: 5
                         rows: 5
                         size_hint_y: 0.5
                         spacing: [5,0]
 
                         Label:
-                            text: 'Y:  '
+                            text: 'Y+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y_recalibration_peak
+                            id: y_recalibration_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y_recalibration_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -427,14 +536,29 @@ Builder.load_string("""
 
 
                         Label:
-                            text: 'Y1:  '
+                            text: 'Y1+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y1_recalibration_peak
+                            id: y1_recalibration_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y1-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y1_recalibration_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -451,14 +575,29 @@ Builder.load_string("""
 
 
                         Label:
-                            text: 'Y2:  '
+                            text: 'Y2+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y2_recalibration_peak
+                            id: y2_recalibration_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y2-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y2_recalibration_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -474,14 +613,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'X:  '
+                            text: 'X+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: x_recalibration_peak
+                            id: x_recalibration_peak_pos
+                            text: 'xxx'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'X-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: x_recalibration_peak_neg
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -497,14 +651,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'Z:  '
+                            text: 'Z-:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: z_recalibration_peak
+                            id: z_recalibration_peak_neg
+                            text: 'zzz'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Z+:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: z_recalibration_peak_pos
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -522,20 +691,35 @@ Builder.load_string("""
                     ## FULLY CALIBRATED PEAKS
 
                     GridLayout:
-                        cols: 3
+                        cols: 5
                         rows: 5
                         size_hint_y: 0.5
                         spacing: [5,0]
 
                         Label:
-                            text: 'Y:  '
+                            text: 'Y+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y_fully_calibrated_peak
+                            id: y_fully_calibrated_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y_fully_calibrated_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -552,14 +736,30 @@ Builder.load_string("""
 
 
                         Label:
-                            text: 'Y1:  '
+                            text: 'Y1+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y1_fully_calibrated_peak
+                            id: y1_fully_calibrated_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+
+                        Label:
+                            text: 'Y1-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y1_fully_calibrated_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -576,14 +776,29 @@ Builder.load_string("""
 
 
                         Label:
-                            text: 'Y2:  '
+                            text: 'Y2+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: y2_fully_calibrated_peak
+                            id: y2_fully_calibrated_peak_pos
+                            text: 'yyy'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Y2-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: y2_fully_calibrated_peak_neg
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -599,14 +814,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'X:  '
+                            text: 'X+:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: x_fully_calibrated_peak
+                            id: x_fully_calibrated_peak_pos
+                            text: 'xxx'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'X-:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: x_fully_calibrated_peak_neg
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -622,14 +852,29 @@ Builder.load_string("""
                             allow_stretch: True
 
                         Label:
-                            text: 'Z:  '
+                            text: 'Z-:  '
                             halign: 'right'
                             markup: True
                             valign: 'middle'
                             text_size: self.size
 
                         Label:
-                            id: z_fully_calibrated_peak
+                            id: z_fully_calibrated_peak_neg
+                            text: 'zzz'
+                            halign: 'left'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            text: 'Z+:  '
+                            halign: 'right'
+                            markup: True
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: z_fully_calibrated_peak_pos
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -662,6 +907,18 @@ def log(message):
 
 class OvernightTesting(Screen):
 
+
+    # STAGES ARE: 
+    # "CalibrationQC"
+    # "CalibrationCheckQC"
+    # "UnweightedFT"
+    # "WeightedFT"
+    # "OvernightWearIn"
+    # "CalibrationOT"
+    # "CalibrationCheckOT"
+    # "FullyCalibratedTest"
+
+
     poll_for_recalibration_stage = None
     poll_for_fully_calibrated_final_run_stage = None
     poll_end_of_six_hour_wear_in = None
@@ -680,6 +937,10 @@ class OvernightTesting(Screen):
 
     mini_run_dev_mode = True
 
+    sn_for_db = ''
+
+
+
     def __init__(self, **kwargs):
         super(OvernightTesting, self).__init__(**kwargs)
 
@@ -697,36 +958,33 @@ class OvernightTesting(Screen):
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
+        if self.mini_run_dev_mode:
+            self.sn_for_db = "YS6-test"
+
+
+        self.data_dict = {
+
+            "OvernightWearIn" : [],
+            "CalibrationCheckOT" : [],
+            "FullyCalibratedTest" : []
+
+        }
+
 
     # Set up and clear/reset arrays for storing SG/measurement data
 
     def setup_arrays(self):
-        #x loads with vector & pos
-        self.x_vals = []
-        #raw x loads
-        self.raw_x_vals = []
 
-        #z loads with vector & pos
-        self.z_vals = []
-        #raw z loads
-        self.raw_z_vals = []
-
-        #y_motor loads with vector & pos
-        self.y_vals = []
-        #raw y_motor loads
-        self.raw_y_vals = []
-
-        #y1_motor loads with vector & pos
-        self.y1_vals = []
-        #raw y1 loads
-        self.raw_y1_vals = []
-
-        #y2_motor loads with vector & pos
-        self.y2_vals = []
-        #raw y2 vals
-        self.raw_y2_vals = []
-
-        self.unweighted_data = []
+        self.raw_x_pos_vals = []
+        self.raw_y_pos_vals = []
+        self.raw_y1_pos_vals = []
+        self.raw_y2_pos_vals = []
+        self.raw_z_pos_vals = []
+        self.raw_x_neg_vals = []
+        self.raw_y_neg_vals = []
+        self.raw_y1_neg_vals = []
+        self.raw_y2_neg_vals = []
+        self.raw_z_neg_vals = []
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
@@ -743,7 +1001,57 @@ class OvernightTesting(Screen):
     def set_stage(self, stage):
 
         self.stage = stage
+        self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage)
+        self.data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage)) 
+
+
+    def send_data(self, stage):
+
+
+        try: 
+            self.insert_final_test_statuses(self.sn_for_db, stage, self.data_dict(stage))
+
+        except:
+            return False
+
+        # Peaks are dependent on stages
+        # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+        peak_list = self.read_out_peaks(stage)
+
+        statistics = [
+                        self.sn_for_db,
+                        stage,
+                        sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                        peak_list[0],
+                        sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                        peak_list[1],
+                        sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                        peak_list[2],
+                        sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                        peak_list[3],
+                        sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                        peak_list[4],
+                        sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                        peak_list[5],
+                        sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                        peak_list[6],
+                        sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                        peak_list[7],
+                        sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                        peak_list[8],
+                        sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                        peak_list[9]
+
+        ]
+
+        try:
+            self.insert_final_test_statistics(*statistics)
+
+        except:
+            return False
+
+        return True
 
 
     # Function called from serial comms to record SG values
@@ -759,9 +1067,26 @@ class OvernightTesting(Screen):
         cur_pos_y = self.m.mpos_y()
         cur_pos_z = self.m.mpos_z()
 
-        x_dir = 0 if len(self.x_vals) > 0 and self.x_vals[len(self.x_vals - 1)][1] < cur_pos_x else 1
-        y_dir = 0 if len(self.y_vals) > 0 and self.y_vals[len(self.y_vals - 1)][1] < cur_pos_y else 1
-        z_dir = 1 if len(self.z_vals) > 0 and self.z_vals[len(self.z_vals - 1)][1] < cur_pos_z else 0
+        # -1    BACKWARDS/UP (TOWARDS HOME)
+        # 0     NOT MOVING
+        # 1     FORWARDS/DOWN (AWAY FROM HOME)
+
+        # NOTE Z LIFTS WEIGHT WHEN IT IS 
+
+        if len(self.data_dict(self.stage)) > 0:
+
+            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][0] < self.m.mpos_x(): x_dir = -1
+            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][0] > self.m.mpos_x(): x_dir = 1
+            else: x_dir = 0
+
+            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][1] < self.m.mpos_y(): y_dir = -1
+            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][1] > self.m.mpos_y(): y_dir = 1
+            else: y_dir = 0
+
+            if self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][2] < self.m.mpos_z(): z_dir = 1
+            elif self.data_dict(self.stage)[len(self.data_dict(self.stage))-1][2] > self.m.mpos_z(): z_dir = -1
+            else: z_dir = 0
+
 
         x_sg = self.m.s.sg_x_motor_axis
         y_sg = self.m.s.sg_y_axis
@@ -775,51 +1100,79 @@ class OvernightTesting(Screen):
 
         feed_rate = self.m.feed_rate()
 
-        if -999 < x_sg < 1023: self.raw_x_vals.append(x_sg)
-        if -999 < y_sg < 1023: self.raw_y_vals.append(y_sg)
-        if -999 < y1_sg < 1023: self.raw_y1_vals.append(y1_sg)
-        if -999 < y2_sg < 1023: self.raw_y2_vals.append(y2_sg)
-        if -999 < z_sg < 1023: self.raw_z_vals.append(z_sg)
+        if -999 < x_sg < 1023: 
+            if x_dir > 0: self.raw_x_pos_vals.append(x_sg)
+            if x_dir < 0: self.raw_x_neg_vals.append(x_sg)
+        
+        if -999 < y_sg < 1023:
+            if y_dir > 0: self.raw_y_pos_vals.append(y_sg)
+            if y_dir < 0: self.raw_y_neg_vals.append(y_sg)
+        
+        if -999 < y1_sg < 1023:
+            if y1_dir > 0: self.raw_y1_pos_vals.append(y1_sg)
+            if y1_dir < 0: self.raw_y1_neg_vals.append(y1_sg)
+        
+        if -999 < y2_sg < 1023:
+            if y2_dir > 0: self.raw_y2_pos_vals.append(y2_sg)
+            if y2_dir < 0: self.raw_y2_neg_vals.append(y2_sg)
+        
+        if -999 < z_sg < 1023:
+            if z_dir < 0: self.raw_z_pos_vals.append(z_sg)
+            if z_dir > 0: self.raw_z_neg_vals.append(z_sg)
+
 
         timestamp = datetime.now()
 
-        status = [self.stage, cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp]
-
-        if not self.calibration_db.insert_status_wrapper(status):
-            self.statuses.append(status)
-
+        self.data_dict(self.stage).append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
         self.update_peaks()
 
     "Update screen with (absolute) peak load values"
 
     def update_peaks(self):
 
+        if self.stage == "OvernightWearIn":
 
-        if self.stage == "Overnight6HR":
+            self.get_peak_as_string(self.x_wear_in_peak_pos, self.raw_x_pos_vals)
+            self.get_peak_as_string(self.y_wear_in_peak_pos, self.raw_y_pos_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak_pos, self.raw_y1_pos_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak_pos, self.raw_y2_pos_vals)
+            self.get_peak_as_string(self.z_wear_in_peak_pos, self.raw_z_pos_vals)
 
-            self.get_peak_as_string(self.x_wear_in_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y_wear_in_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y1_wear_in_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.y2_wear_in_peak, self.raw_y2_vals)
-            self.get_peak_as_string(self.z_wear_in_peak, self.raw_z_vals)
+            self.get_peak_as_string(self.x_wear_in_peak_neg, self.raw_x_neg_vals)
+            self.get_peak_as_string(self.y_wear_in_peak_neg, self.raw_y_neg_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak_neg, self.raw_y1_neg_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak_neg, self.raw_y2_neg_vals)
+            self.get_peak_as_string(self.z_wear_in_peak_neg, self.raw_z_neg_vals)
             return
 
         if self.stage == "CalibrationCheckOT":
 
-            self.get_peak_as_string(self.x_recalibration_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y_recalibration_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y1_recalibration_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.y2_recalibration_peak, self.raw_y2_vals)
-            self.get_peak_as_string(self.z_recalibration_peak, self.raw_z_vals)
+            self.get_peak_as_string(self.x_recalibration_peak_pos, self.raw_x_pos_vals)
+            self.get_peak_as_string(self.y_recalibration_peak_pos, self.raw_y_pos_vals)
+            self.get_peak_as_string(self.y1_recalibration_peak_pos, self.raw_y1_pos_vals)
+            self.get_peak_as_string(self.y2_recalibration_peak_pos, self.raw_y2_pos_vals)
+            self.get_peak_as_string(self.z_recalibration_peak_pos, self.raw_z_pos_vals)
+
+            self.get_peak_as_string(self.x_recalibration_peak_neg, self.raw_x_neg_vals)
+            self.get_peak_as_string(self.y_recalibration_peak_neg, self.raw_y_neg_vals)
+            self.get_peak_as_string(self.y1_recalibration_peak_neg, self.raw_y1_neg_vals)
+            self.get_peak_as_string(self.y2_recalibration_peak_neg, self.raw_y2_neg_vals)
+            self.get_peak_as_string(self.z_recalibration_peak_neg, self.raw_z_neg_vals)
             return 
 
-        if self.stage == "FullyCalibrated1HR":
+        if self.stage == "FullyCalibratedTest":
 
-            self.get_peak_as_string(self.x_fully_calibrated_peak, self.raw_x_vals)
-            self.get_peak_as_string(self.y_fully_calibrated_peak, self.raw_y_vals)
-            self.get_peak_as_string(self.y1_fully_calibrated_peak, self.raw_y1_vals)
-            self.get_peak_as_string(self.y2_fully_calibrated_peak, self.raw_y2_vals)
-            self.get_peak_as_string(self.z_fully_calibrated_peak, self.raw_z_vals)
+            self.get_peak_as_string(self.x_fully_calibrated_peak_pos, self.raw_x_pos_vals)
+            self.get_peak_as_string(self.y_fully_calibrated_peak_pos, self.raw_y_pos_vals)
+            self.get_peak_as_string(self.y1_fully_calibrated_peak_pos, self.raw_y1_pos_vals)
+            self.get_peak_as_string(self.y2_fully_calibrated_peak_pos, self.raw_y2_pos_vals)
+            self.get_peak_as_string(self.z_fully_calibrated_peak_pos, self.raw_z_pos_vals)
+
+            self.get_peak_as_string(self.x_fully_calibrated_peak_neg, self.raw_x_neg_vals)
+            self.get_peak_as_string(self.y_fully_calibrated_peak_neg, self.raw_y_neg_vals)
+            self.get_peak_as_string(self.y1_fully_calibrated_peak_neg, self.raw_y1_neg_vals)
+            self.get_peak_as_string(self.y2_fully_calibrated_peak_neg, self.raw_y2_neg_vals)
+            self.get_peak_as_string(self.z_fully_calibrated_peak_neg, self.raw_z_neg_vals)
             return
 
 
@@ -827,6 +1180,60 @@ class OvernightTesting(Screen):
 
         try: label_id.text = str(max(raw_vals))
         except: pass
+
+
+    def read_out_peaks(self, stage):
+
+        if stage == "OvernightWearIn":
+
+            peak_list = [
+                        self.x_wear_in_peak_pos,
+                        self.x_wear_in_peak_neg,
+                        self.y_wear_in_peak_pos,
+                        self.y_wear_in_peak_neg,
+                        self.y1_wear_in_peak_pos,
+                        self.y1_wear_in_peak_neg,
+                        self.y2_wear_in_peak_pos,
+                        self.y2_wear_in_peak_neg,
+                        self.z_wear_in_peak_neg,
+                        self.z_wear_in_peak_pos
+            ]
+
+            return peak_list
+
+        if stage == "CalibrationCheckOT":
+
+            peak_list = [
+                        self.x_recalibration_peak_pos,
+                        self.x_recalibration_peak_neg,
+                        self.y_recalibration_peak_pos,
+                        self.y_recalibration_peak_neg,
+                        self.y1_recalibration_peak_pos,
+                        self.y1_recalibration_peak_neg,
+                        self.y2_recalibration_peak_pos,
+                        self.y2_recalibration_peak_neg,
+                        self.z_recalibration_peak_neg,
+                        self.z_recalibration_peak_pos
+            ]
+
+            return peak_list
+
+        if stage == "FullyCalibratedTest":
+
+            peak_list = [
+                        self.x_fully_calibrated_peak_pos,
+                        self.x_fully_calibrated_peak_neg,
+                        self.y_fully_calibrated_peak_pos,
+                        self.y_fully_calibrated_peak_neg,
+                        self.y1_fully_calibrated_peak_pos,
+                        self.y1_fully_calibrated_peak_neg,
+                        self.y2_fully_calibrated_peak_pos,
+                        self.y2_fully_calibrated_peak_neg,
+                        self.z_fully_calibrated_peak_neg,
+                        self.z_fully_calibrated_peak_pos
+            ]
+
+            return peak_list
 
 
     def back_to_fac_settings(self):
@@ -937,7 +1344,7 @@ class OvernightTesting(Screen):
             self.start_six_hour_wear_in_event = Clock.schedule_once(self.run_six_hour_wear_in, 3)
             return
 
-        self.set_stage("Overnight6HR")
+        self.set_stage("OvernightWearIn")
         self._stream_overnight_file('six_hour_rectangle')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
@@ -989,7 +1396,6 @@ class OvernightTesting(Screen):
 
         self.setup_arrays()
         self.overnight_running = False
-        self.set_stage("Calibrating")
         self.m.send_any_gcode_command('M3 S20000')
         self.stop_button.disabled = True
         self.m.calibrate_X_Y_and_Z()
@@ -1101,7 +1507,7 @@ class OvernightTesting(Screen):
             return
 
         self.setup_arrays()
-        self.set_stage("FullyCalibrated1HR")
+        self.set_stage("FullyCalibratedTest")
         self._stream_overnight_file('one_hour_rectangle')
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
@@ -1195,7 +1601,7 @@ class OvernightTesting(Screen):
     # Add all statuses to same array - and then for each function/check, see if any of the stages are in the lists. 
 
     def send_six_hour_wear_in_data(self):
-        self._has_data_been_sent("Overnight6HR", self.sent_six_hour_wear_in_data)
+        self._has_data_been_sent("OvernightWearIn", self.sent_six_hour_wear_in_data)
 
 
     def send_recalibration_data(self):
@@ -1203,26 +1609,13 @@ class OvernightTesting(Screen):
 
 
     def send_fully_calibrated_final_run_data(self):
-        self._has_data_been_sent("FullyCalibrated1HR", self.sent_fully_recalibrated_run_data)
-
-
-    def _send_remaining_statuses(self):
-
-        self.statuses[:] = [status for status in self.statuses if not self.calibration_db.insert_status_wrapper(status)]
-
-        if not self.statuses:
-            return True
-
-        return False
+        self._has_data_been_sent("FullyCalibratedTest", self.sent_fully_recalibrated_run_data)
 
 
     def _has_data_been_sent(self, stage, checkbox_id):
 
-        if not self.statuses or self._send_remaining_statuses():
-            self.tick_checkbox(checkbox_id, True)
-        
-        elif any(stage in status for status in self.statuses):
-            self.tick_checkbox(checkbox_id, False)
+        if self.send_data(stage): self.tick_checkbox(checkbox_id, True)
+        else: self.tick_checkbox(checkbox_id, False)
 
 
     ## SET TICKS
@@ -1262,37 +1655,37 @@ class OvernightTesting(Screen):
 
     def pass_or_fail_peak_loads(self):
  
-        if self.stage == "Overnight6HR":
+        if self.stage == "OvernightWearIn":
 
             within_plus_minus = 400
 
-            self.tick_checkbox(self.y_wear_in_checkbox, self.check_in_range(self.y_wear_in_peak, within_plus_minus))
-            self.tick_checkbox(self.y1_wear_in_checkbox, self.check_in_range(self.y1_wear_in_peak, within_plus_minus))
-            self.tick_checkbox(self.y2_wear_in_checkbox, self.check_in_range(self.y2_wear_in_peak, within_plus_minus))
-            self.tick_checkbox(self.x_wear_in_checkbox, self.check_in_range(self.x_wear_in_peak, within_plus_minus))
-            self.tick_checkbox(self.z_wear_in_checkbox, self.check_in_range(self.z_wear_in_peak, within_plus_minus))
+            self.tick_checkbox(self.y_wear_in_checkbox, self.check_in_range(self.y_wear_in_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y1_wear_in_checkbox, self.check_in_range(self.y1_wear_in_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y2_wear_in_checkbox, self.check_in_range(self.y2_wear_in_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.x_wear_in_checkbox, self.check_in_range(self.x_wear_in_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.z_wear_in_checkbox, self.check_in_range(self.z_wear_in_peak_pos, within_plus_minus))
             return
 
         if self.stage == "CalibrationCheckOT":
 
             within_plus_minus = 100
 
-            self.tick_checkbox(self.y_recalibration_checkbox, self.check_in_range(self.y_recalibration_peak, within_plus_minus))
-            self.tick_checkbox(self.y1_recalibration_checkbox, self.check_in_range(self.y1_recalibration_peak, within_plus_minus))
-            self.tick_checkbox(self.y2_recalibration_checkbox, self.check_in_range(self.y2_recalibration_peak, within_plus_minus))
-            self.tick_checkbox(self.x_recalibration_checkbox, self.check_in_range(self.x_recalibration_peak, within_plus_minus))
-            self.tick_checkbox(self.z_recalibration_checkbox, self.check_in_range(self.z_recalibration_peak, within_plus_minus))
+            self.tick_checkbox(self.y_recalibration_checkbox, self.check_in_range(self.y_recalibration_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y1_recalibration_checkbox, self.check_in_range(self.y1_recalibration_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y2_recalibration_checkbox, self.check_in_range(self.y2_recalibration_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.x_recalibration_checkbox, self.check_in_range(self.x_recalibration_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.z_recalibration_checkbox, self.check_in_range(self.z_recalibration_peak_pos, within_plus_minus))
             return
 
-        if self.stage == "FullyCalibrated1HR":
+        if self.stage == "FullyCalibratedTest":
 
             within_plus_minus = 100
 
-            self.tick_checkbox(self.y_fully_calibrated_checkbox, self.check_in_range(self.y_fully_calibrated_peak, within_plus_minus))
-            self.tick_checkbox(self.y1_fully_calibrated_checkbox, self.check_in_range(self.y1_fully_calibrated_peak, within_plus_minus))
-            self.tick_checkbox(self.y2_fully_calibrated_checkbox, self.check_in_range(self.y2_fully_calibrated_peak, within_plus_minus))
-            self.tick_checkbox(self.x_fully_calibrated_checkbox, self.check_in_range(self.x_fully_calibrated_peak, within_plus_minus))
-            self.tick_checkbox(self.z_fully_calibrated_checkbox, self.check_in_range(self.z_fully_calibrated_peak, within_plus_minus))
+            self.tick_checkbox(self.y_fully_calibrated_checkbox, self.check_in_range(self.y_fully_calibrated_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y1_fully_calibrated_checkbox, self.check_in_range(self.y1_fully_calibrated_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y2_fully_calibrated_checkbox, self.check_in_range(self.y2_fully_calibrated_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.x_fully_calibrated_checkbox, self.check_in_range(self.x_fully_calibrated_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.z_fully_calibrated_checkbox, self.check_in_range(self.z_fully_calibrated_peak_pos, within_plus_minus))
             return
 
 
