@@ -1002,7 +1002,13 @@ class OvernightTesting(Screen):
 
         self.stage = stage
         stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
-        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        try: 
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        except pytds.tds_base.IntegrityError:
+            log("Final test stage already exists for this SN")
+
         self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage)) 
 
