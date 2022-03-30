@@ -119,7 +119,9 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
 
-            return cursor.execute(query)
+            cursor.execute(query)
+
+            return cursor.fetchone()[0]
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
         combined_id = machine_serial + str(ft_stage_id)
