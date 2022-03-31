@@ -1061,9 +1061,8 @@ class OvernightTesting(Screen):
         if self.m.is_machine_paused:
             return
 
-        cur_pos_x = self.m.mpos_x()
-        cur_pos_y = self.m.mpos_y()
-        cur_pos_z = self.m.mpos_z()
+
+        # GET DIRECTIONS
 
         # -1    BACKWARDS/UP (TOWARDS HOME)
         # 0     NOT MOVING
@@ -1089,44 +1088,52 @@ class OvernightTesting(Screen):
             x_dir = 0
             y_dir = 0
             z_dir = 0
-
-
-        x_sg = self.m.s.sg_x_motor_axis
-        y_sg = self.m.s.sg_y_axis
-        y1_sg = self.m.s.sg_y1_motor
-        y2_sg = self.m.s.sg_y2_motor
-        z_sg = self.m.s.sg_z_motor_axis
-
-        tmc_temp = self.m.s.motor_driver_temp
-        pcb_temp = self.m.s.pcb_temp
-        mot_temp = self.m.s.transistor_heatsink_temp
-
-        feed_rate = self.m.feed_rate()
-
-        if -999 < x_sg < 1023: 
-            if x_dir > 0: self.raw_x_pos_vals.append(x_sg)
-            if x_dir < 0: self.raw_x_neg_vals.append(x_sg)
         
-        if -999 < y_sg < 1023:
-            if y_dir > 0: self.raw_y_pos_vals.append(y_sg)
-            if y_dir < 0: self.raw_y_neg_vals.append(y_sg)
-        
-        if -999 < y1_sg < 1023:
-            if y_dir > 0: self.raw_y1_pos_vals.append(y1_sg)
-            if y_dir < 0: self.raw_y1_neg_vals.append(y1_sg)
-        
-        if -999 < y2_sg < 1023:
-            if y_dir > 0: self.raw_y2_pos_vals.append(y2_sg)
-            if y_dir < 0: self.raw_y2_neg_vals.append(y2_sg)
-        
-        if -999 < z_sg < 1023:
-            if z_dir < 0: self.raw_z_pos_vals.append(z_sg)
-            if z_dir > 0: self.raw_z_neg_vals.append(z_sg)
+        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
+        status = [
+                    self.m.mpos_x(),
+                    self.m.mpos_y(),
+                    self.m.mpos_z(),
+                    x_dir,
+                    y_dir,
+                    z_dir,
+                    self.m.s.sg_x_motor_axis,
+                    self.m.s.sg_y_axis,
+                    self.m.s.sg_y1_motor,
+                    self.m.s.sg_y2_motor,
+                    self.m.s.sg_z_motor_axis,
+                    self.m.s.motor_driver_temp,
+                    self.m.s.pcb_temp,
+                    self.m.s.transistor_heatsink_temp,
+                    datetime.now(),
+                    self.m.feed_rate()
+        ]
 
-        timestamp = datetime.now()
+        self.status_data_dict[self.stage].append(status)
 
-        self.status_data_dict[self.stage].append([cur_pos_x, cur_pos_y, cur_pos_z, x_dir, y_dir, z_dir, x_sg, y_sg, y1_sg, y2_sg, z_sg, tmc_temp, pcb_temp, mot_temp, timestamp])
+        # Record raw values for statistics calculations
+
+        if -999 < self.m.s.sg_x_motor_axis < 1023: 
+            if x_dir > 0: self.raw_x_pos_vals.append(self.m.s.sg_x_motor_axis)
+            if x_dir < 0: self.raw_x_neg_vals.append(self.m.s.sg_x_motor_axis)
+        
+        if -999 < self.m.s.sg_y_axis < 1023:
+            if y_dir > 0: self.raw_y_pos_vals.append(self.m.s.sg_y_axis)
+            if y_dir < 0: self.raw_y_neg_vals.append(self.m.s.sg_y_axis)
+        
+        if -999 < self.m.s.sg_y1_motor < 1023:
+            if y_dir > 0: self.raw_y1_pos_vals.append(self.m.s.sg_y1_motor)
+            if y_dir < 0: self.raw_y1_neg_vals.append(self.m.s.sg_y1_motor)
+        
+        if -999 < self.m.s.sg_y2_motor < 1023:
+            if y_dir > 0: self.raw_y2_pos_vals.append(self.m.s.sg_y2_motor)
+            if y_dir < 0: self.raw_y2_neg_vals.append(self.m.s.sg_y2_motor)
+        
+        if -999 < self.m.s.sg_z_motor_axis < 1023:
+            if z_dir < 0: self.raw_z_pos_vals.append(self.m.s.sg_z_motor_axis)
+            if z_dir > 0: self.raw_z_neg_vals.append(self.m.s.sg_z_motor_axis)
+
         self.update_peaks()
 
     "Update screen with (absolute) peak load values"
