@@ -960,6 +960,8 @@ class OvernightTesting(Screen):
 
         if self.mini_run_dev_mode:
             self.sn_for_db = "YS6-test"
+            self.zh_serial = "zh-test"
+            self.xl_serial = "xl-test"
 
 
         self.status_data_dict = {
@@ -1573,7 +1575,8 @@ class OvernightTesting(Screen):
 
 
     def send_recalibration_data(self):
-        self._has_data_been_sent("CalibrationCheckOT", self.sent_recalibration_data)
+        if self.send_all_calibration_coefficients():
+            self._has_data_been_sent("CalibrationCheckOT", self.sent_recalibration_data)
 
 
     def send_fully_calibrated_final_run_data(self):
@@ -1630,9 +1633,28 @@ class OvernightTesting(Screen):
             print(traceback.format_exc())
             return False
 
-    def send_calibration_coefficients(self, sub_serial, motor_index):
 
-        all_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
+    def send_all_calibration_coefficients(self):
+
+        try:
+
+            self.send_calibration_coefficients_for_one_motor(self.zh_serial, 0)
+            self.send_calibration_coefficients_for_one_motor(self.zh_serial, 1)
+            self.send_calibration_coefficients_for_one_motor(self.xl_serial, 2)
+            self.send_calibration_coefficients_for_one_motor(self.xl_serial, 3)
+            self.send_calibration_coefficients_for_one_motor(self.zh_serial, 4)
+            return True
+
+        except: 
+
+            self.tick_checkbox(self.sent_recalibration_data, False)
+            return False
+
+
+    def send_calibration_coefficients_for_one_motor(self, sub_serial, motor_index):
+
+        all_coefficients = []
+        all_coefficients.extend(self.m.TMC_motor[motor_index].calibration_dataset_SG_values)
         all_coefficients.extend([
 
                 self.m.TMC_motor[motor_index].calibrated_at_current_setting,
@@ -1641,8 +1663,6 @@ class OvernightTesting(Screen):
                 self.m.TMC_motor[motor_index].calibrated_at_temperature
 
             ])
-
-        serial_number = self.serial_number
 
         if sub_serial.startswith("zh"): self.calibration_db.setup_z_head_coefficients(sub_serial, motor_index, self.calibration_stage_id)
         if sub_serial.startswith("xl"): self.calibration_db.setup_lower_beam_coefficients(sub_serial, motor_index, self.calibration_stage_id)
