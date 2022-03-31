@@ -1646,7 +1646,7 @@ class OvernightTesting(Screen):
             return True
 
         except: 
-
+            print(traceback.format_exc())
             self.tick_checkbox(self.sent_recalibration_data, False)
             return False
 
