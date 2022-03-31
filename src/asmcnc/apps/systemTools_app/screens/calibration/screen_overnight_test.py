@@ -970,6 +970,8 @@ class OvernightTesting(Screen):
 
         }
 
+        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("CalibrationOT")
+
 
     # Set up and clear/reset arrays for storing SG/measurement data
 
@@ -1047,22 +1049,22 @@ class OvernightTesting(Screen):
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
         status = [
-                    str(self.m.mpos_x()),
-                    str(self.m.mpos_y()),
-                    str(self.m.mpos_z()),
-                    str(x_dir),
-                    str(y_dir),
-                    str(z_dir),
-                    str(self.m.s.sg_x_motor_axis),
-                    str(self.m.s.sg_y_axis),
-                    str(self.m.s.sg_y1_motor),
-                    str(self.m.s.sg_y2_motor),
-                    str(self.m.s.sg_z_motor_axis),
-                    str(self.m.s.motor_driver_temp),
-                    str(self.m.s.pcb_temp),
-                    str(self.m.s.transistor_heatsink_temp),
+                    self.m.mpos_x(),
+                    self.m.mpos_y(),
+                    self.m.mpos_z(),
+                    x_dir,
+                    y_dir,
+                    z_dir,
+                    int(self.m.s.sg_x_motor_axis),
+                    int(self.m.s.sg_y_axis),
+                    int(self.m.s.sg_y1_motor),
+                    int(self.m.s.sg_y2_motor),
+                    int(self.m.s.sg_z_motor_axis),
+                    int(self.m.s.motor_driver_temp),
+                    int(self.m.s.pcb_temp),
+                    int(self.m.s.transistor_heatsink_temp),
                     str(datetime.now()),
-                    str(self.m.feed_rate())
+                    self.m.feed_rate()
         ]
 
         self.status_data_dict[self.stage].append(status)
@@ -1628,12 +1630,29 @@ class OvernightTesting(Screen):
             print(traceback.format_exc())
             return False
 
-    def send_calibration_coefficients(self):
+    def send_calibration_coefficients(self, motor_index):
 
-        self.calibration_db.setup_z_head_coefficients(zh_serial, motor_index, calibration_stage_id)
-        self.calibration_db.insert_z_head_coefficients(zh_serial, motor_index, calibration_stage_id, coefficients)
-        self.calibration_db.setup_lower_beam_coefficients(lb_serial, motor_index, calibration_stage_id)
-        self.calibration_db.insert_lower_beam_coefficients(lb_serial, motor_index, calibration_stage_id, coefficients)
+        all_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
+        all_coefficients.extend([
+
+                self.m.TMC_motor[motor_index].calibrated_at_current_setting
+                self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
+                self.m.TMC_motor[motor_index].calibrated_at_toff_setting
+                self.m.TMC_motor[motor_index].calibrated_at_temperature
+
+            ])
+
+        sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
+        cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
+        sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
+        toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
+        temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
+        serial_number = self.serial_number
+
+        self.calibration_db.setup_z_head_coefficients(zh_serial, motor_index, self.calibration_stage_id)
+        self.calibration_db.insert_z_head_coefficients(zh_serial, motor_index, self.calibration_stage_id, coefficients)
+        self.calibration_db.setup_lower_beam_coefficients(lb_serial, motor_index, self.calibration_stage_id)
+        self.calibration_db.insert_lower_beam_coefficients(lb_serial, motor_index, self.calibration_stage_id, coefficients)
 
 
     ## SET TICKS
