@@ -1077,7 +1077,7 @@ class OvernightTesting(Screen):
                     int(self.m.s.pcb_temp),
                     int(self.m.s.transistor_heatsink_temp),
                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    self.m.feed_rate()
+                    self.m.feed_rate(),
                     0,
                     0,
                     2
