@@ -1065,7 +1065,7 @@ class OvernightTesting(Screen):
                     int(self.m.s.motor_driver_temp),
                     int(self.m.s.pcb_temp),
                     int(self.m.s.transistor_heatsink_temp),
-                    str(datetime.now()).strftime('%Y-%m-%d %H:%M:%S'),
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     self.m.feed_rate()
         ]
 
@@ -1094,8 +1094,6 @@ class OvernightTesting(Screen):
             if z_dir > 0: self.raw_z_neg_vals.append(self.m.s.sg_z_motor_axis)
 
         self.update_peaks()
-
-    "Update screen with (absolute) peak load values"
 
     def update_peaks(self):
 
