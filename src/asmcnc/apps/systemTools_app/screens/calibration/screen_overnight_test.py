@@ -960,8 +960,8 @@ class OvernightTesting(Screen):
 
         if self.mini_run_dev_mode:
             self.sn_for_db = "YS6-test"
-            self.zh_serial = "zh-test"
-            self.xl_serial = "xl-test"
+            self.zh_serial = "zh-test-a"
+            self.xl_serial = "xl-test-a"
 
 
         self.status_data_dict = {
