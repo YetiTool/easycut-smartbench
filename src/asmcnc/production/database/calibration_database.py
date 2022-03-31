@@ -171,3 +171,43 @@ class CalibrationDatabase(object):
         
         self.conn.commit()
 
+
+    def get_serials_by_machine_serial(self, machine_serial):
+        with self.conn.cursor() as cursor:
+            query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = '%s'" % machine_serial
+
+            cursor.execute(query)
+
+            data = cursor.fetchone()
+
+            return [data[0], data[1]]
+
+    def get_lower_beam_parameters(self, lb_serial, motor_index, stage_id):
+        combined_id = lb_serial + str(motor_index) + str(stage_id)
+
+        with self.conn.cursor() as cursor:
+            query = "SELECT Coefficient FROM Coefficients WHERE SubAssemblyId = '%s'" % combined_id
+
+            cursor.execute(query)
+
+            data = cursor.fetchall()
+
+            parameters = {}
+
+            try:
+                parameters = {
+                    "cs": data[128][0],
+                    "sgt": data[129][0],
+                    "toff": data[130][0],
+                    "temp": data[131][0],
+                }
+            except:
+                log('Database is empty or incomplete for ' + combined_id)
+            
+            return parameters
+        
+
+
+database = CalibrationDatabase()
+
+database.set_up_connection()
