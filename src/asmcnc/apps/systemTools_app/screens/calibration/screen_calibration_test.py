@@ -1084,7 +1084,7 @@ class CalibrationTesting(Screen):
 
     def update_peaks(self):
 
-        if self.stage == "Unweighted":
+        if self.stage == "UnweightedFT":
 
             self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals)
             self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals)
@@ -1099,7 +1099,7 @@ class CalibrationTesting(Screen):
             self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals)
             return
 
-        if self.stage == "Weighted":
+        if self.stage == "WeightedFT":
 
             self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals)
             self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals)
