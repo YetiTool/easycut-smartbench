@@ -960,8 +960,8 @@ class OvernightTesting(Screen):
 
         if self.mini_run_dev_mode:
             self.sn_for_db = "YS6-test"
-            self.zh_serial = "zh-test-a"
-            self.xl_serial = "xl-test-a"
+            self.zh_serial = "zh-test-b"
+            self.xl_serial = "xl-test-b"
 
 
         self.status_data_dict = {
@@ -1666,7 +1666,7 @@ class OvernightTesting(Screen):
 
         if sub_serial.startswith("zh"): self.calibration_db.setup_z_head_coefficients(sub_serial, motor_index, self.calibration_stage_id)
         if sub_serial.startswith("xl"): self.calibration_db.setup_lower_beam_coefficients(sub_serial, motor_index, self.calibration_stage_id)
-        self.calibration_db.insert_calibration_coefficients(sub_serial, motor_index, self.calibration_stage_id, coefficients)
+        self.calibration_db.insert_calibration_coefficients(sub_serial, motor_index, self.calibration_stage_id, all_coefficients)
 
 
     ## SET TICKS
