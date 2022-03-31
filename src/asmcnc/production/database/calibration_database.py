@@ -16,6 +16,7 @@ class CalibrationDatabase(object):
     def set_up_connection(self):
 
         try:
+            import credentials
             from asmcnc.production.database import credentials
 
         except ImportError:
@@ -157,3 +158,27 @@ class CalibrationDatabase(object):
                                         status[13], status[14], status[15], status[16], status[17], status[18]))
         
         self.conn.commit()
+
+    def get_lower_beam_parameters(self, lb_serial, motor_index, stage_id):
+        combined_id = lb_serial + str(motor_index) + str(stage_id)
+
+        with self.conn.cursor() as cursor:
+            query = "SELECT Coefficient FROM Coefficients WHERE SubAssemblyId = '%s'" % combined_id
+
+            cursor.execute(query)
+
+            data = cursor.fetchall()
+
+            parameters = {}
+
+            try:
+                parameters = {
+                    "cs": data[128][0],
+                    "sgt": data[129][0],
+                    "toff": data[130][0],
+                    "temp": data[131][0],
+                }
+            except:
+                log('Database is empty or incomplete for ' + combined_id)
+            
+            return parameters
