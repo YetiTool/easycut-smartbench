@@ -1642,7 +1642,8 @@ class OvernightTesting(Screen):
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             # self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
-            statistics = [self.sn_for_db, stage_id].extend(self.statistics_data_dict[stage])
+            statistics = [self.sn_for_db, stage_id]
+            statistics.extend(self.statistics_data_dict[stage])
 
             print("TRYING TO SEND STATS")
             print statistics
