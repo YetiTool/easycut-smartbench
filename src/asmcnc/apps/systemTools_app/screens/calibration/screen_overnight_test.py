@@ -1007,51 +1007,6 @@ class OvernightTesting(Screen):
         log("Overnight test, stage: " + str(self.stage)) 
 
 
-    def send_data(self, stage):
-
-        try:
-
-            stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
-
-            # Peaks are dependent on stages
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-            peak_list = self.read_out_peaks(stage)
-
-            statistics = [
-                            self.sn_for_db,
-                            stage_id,
-                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
-                            peak_list[0],
-                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
-                            peak_list[1],
-                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
-                            peak_list[2],
-                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
-                            peak_list[3],
-                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
-                            peak_list[4],
-                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
-                            peak_list[5],
-                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
-                            peak_list[6],
-                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
-                            peak_list[7],
-                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
-                            peak_list[8],
-                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
-                            peak_list[9]
-
-            ]
-
-            self.calibration_db.insert_final_test_statistics(*statistics)
-            return True
-
-        except:
-            print(traceback.format_exc())
-            return False
-
-
     # Function called from serial comms to record SG values
 
     def measure(self):
@@ -1092,22 +1047,22 @@ class OvernightTesting(Screen):
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
         status = [
-                    self.m.mpos_x(),
-                    self.m.mpos_y(),
-                    self.m.mpos_z(),
-                    x_dir,
-                    y_dir,
-                    z_dir,
-                    self.m.s.sg_x_motor_axis,
-                    self.m.s.sg_y_axis,
-                    self.m.s.sg_y1_motor,
-                    self.m.s.sg_y2_motor,
-                    self.m.s.sg_z_motor_axis,
-                    self.m.s.motor_driver_temp,
-                    self.m.s.pcb_temp,
-                    self.m.s.transistor_heatsink_temp,
-                    datetime.now(),
-                    self.m.feed_rate()
+                    str(self.m.mpos_x()),
+                    str(self.m.mpos_y()),
+                    str(self.m.mpos_z()),
+                    str(x_dir),
+                    str(y_dir),
+                    str(z_dir),
+                    str(self.m.s.sg_x_motor_axis),
+                    str(self.m.s.sg_y_axis),
+                    str(self.m.s.sg_y1_motor),
+                    str(self.m.s.sg_y2_motor),
+                    str(self.m.s.sg_z_motor_axis),
+                    str(self.m.s.motor_driver_temp),
+                    str(self.m.s.pcb_temp),
+                    str(self.m.s.transistor_heatsink_temp),
+                    str(datetime.now()),
+                    str(self.m.feed_rate())
         ]
 
         self.status_data_dict[self.stage].append(status)
@@ -1627,6 +1582,55 @@ class OvernightTesting(Screen):
 
         if self.send_data(stage): self.tick_checkbox(checkbox_id, True)
         else: self.tick_checkbox(checkbox_id, False)
+
+
+    def send_data(self, stage):
+
+        try:
+
+            stage_id = self.calibration_db.get_stage_id_by_description(stage)
+            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+
+            # Peaks are dependent on stages
+            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+            peak_list = self.read_out_peaks(stage)
+
+            statistics = [
+                            self.sn_for_db,
+                            stage_id,
+                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                            peak_list[0],
+                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                            peak_list[1],
+                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                            peak_list[2],
+                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                            peak_list[3],
+                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                            peak_list[4],
+                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                            peak_list[5],
+                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                            peak_list[6],
+                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                            peak_list[7],
+                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                            peak_list[8],
+                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                            peak_list[9]
+
+            ]
+
+            self.calibration_db.insert_final_test_statistics(*statistics)
+            return True
+
+        except:
+            print(traceback.format_exc())
+            return False
+
+    def send_calibration_coefficients(self):
+
+        self.calibration_db.setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id)
 
 
     ## SET TICKS
