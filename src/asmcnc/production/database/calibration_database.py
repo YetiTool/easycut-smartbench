@@ -159,7 +159,7 @@ class CalibrationDatabase(object):
             query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
                     "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
                     "MOTTemperature, Timestamp, Feedrate) VALUES ('%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
-                    "%s, %s, %s, %s, %s)"
+                    "'%s', %s, %s, %s, %s)"
 
             for status in statuses:
 
