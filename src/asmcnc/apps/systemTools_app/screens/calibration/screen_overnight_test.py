@@ -1248,11 +1248,6 @@ class OvernightTesting(Screen):
 
             ]
 
-            print("GOT STATISTICS")
-            print(self.stage)
-            print(self.statistics_data_dict[self.stage])
-
-
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
 
@@ -1645,11 +1640,10 @@ class OvernightTesting(Screen):
         try:
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            # self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
 
-            print("TRYING TO SEND STATS")
             print statistics
 
             self.calibration_db.insert_final_test_statistics(*statistics)
