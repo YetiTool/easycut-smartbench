@@ -1630,29 +1630,23 @@ class OvernightTesting(Screen):
             print(traceback.format_exc())
             return False
 
-    def send_calibration_coefficients(self, motor_index):
+    def send_calibration_coefficients(self, sub_serial, motor_index):
 
         all_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
         all_coefficients.extend([
 
-                self.m.TMC_motor[motor_index].calibrated_at_current_setting
-                self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
-                self.m.TMC_motor[motor_index].calibrated_at_toff_setting
+                self.m.TMC_motor[motor_index].calibrated_at_current_setting,
+                self.m.TMC_motor[motor_index].calibrated_at_sgt_setting,
+                self.m.TMC_motor[motor_index].calibrated_at_toff_setting,
                 self.m.TMC_motor[motor_index].calibrated_at_temperature
 
             ])
 
-        sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
-        cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
-        sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
-        toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
-        temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         serial_number = self.serial_number
 
-        self.calibration_db.setup_z_head_coefficients(zh_serial, motor_index, self.calibration_stage_id)
-        self.calibration_db.insert_z_head_coefficients(zh_serial, motor_index, self.calibration_stage_id, coefficients)
-        self.calibration_db.setup_lower_beam_coefficients(lb_serial, motor_index, self.calibration_stage_id)
-        self.calibration_db.insert_lower_beam_coefficients(lb_serial, motor_index, self.calibration_stage_id, coefficients)
+        if sub_serial.startswith("zh"): self.calibration_db.setup_z_head_coefficients(sub_serial, motor_index, self.calibration_stage_id)
+        if sub_serial.startswith("xl"): self.calibration_db.setup_lower_beam_coefficients(sub_serial, motor_index, self.calibration_stage_id)
+        self.calibration_db.insert_calibration_coefficients(sub_serial, motor_index, self.calibration_stage_id, coefficients)
 
 
     ## SET TICKS
