@@ -97,11 +97,19 @@ class LBCalibration4(Screen):
             print(traceback.format_exc())
 
     def send_calibration_payload(self, motor_index):
+        stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
+
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
         cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
         sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
+
+        coefficients = sg_coefficients + cs + sgt + toff + temperature
+
         serial_number = self.serial_no_input.text.replace(" ", "").lower()
+
+        self.calibration_db.setup_lower_beam_coefficients(serial_number, motor_index, stage)
+
+        self.calibration_db.insert_lower_beam_coefficients(serial_number, motor_index, stage, coefficients)
         
-        self.calibration_db.send_lower_beam_calibration(serial_number, motor_index, sg_coefficients, cs, sgt, toff, temperature)
