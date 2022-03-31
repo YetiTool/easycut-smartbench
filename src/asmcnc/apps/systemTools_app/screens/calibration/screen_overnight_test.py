@@ -972,6 +972,14 @@ class OvernightTesting(Screen):
 
         }
 
+        self.statistics_data_dict = {
+
+            "OvernightWearIn" : [],
+            "CalibrationCheckOT" : [],
+            "FullyCalibratedTest" : []
+
+        }
+
         self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("CalibrationOT")
 
 
@@ -989,6 +997,9 @@ class OvernightTesting(Screen):
         self.raw_y1_neg_vals = []
         self.raw_y2_neg_vals = []
         self.raw_z_neg_vals = []
+
+
+
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
@@ -1154,16 +1165,16 @@ class OvernightTesting(Screen):
         if stage == "OvernightWearIn":
 
             peak_list = [
-                        self.x_wear_in_peak_pos,
-                        self.x_wear_in_peak_neg,
-                        self.y_wear_in_peak_pos,
-                        self.y_wear_in_peak_neg,
-                        self.y1_wear_in_peak_pos,
-                        self.y1_wear_in_peak_neg,
-                        self.y2_wear_in_peak_pos,
-                        self.y2_wear_in_peak_neg,
-                        self.z_wear_in_peak_neg,
-                        self.z_wear_in_peak_pos
+                        int(self.x_wear_in_peak_pos.text),
+                        int(self.x_wear_in_peak_neg.text),
+                        int(self.y_wear_in_peak_pos.text),
+                        int(self.y_wear_in_peak_neg.text),
+                        int(self.y1_wear_in_peak_pos.text),
+                        int(self.y1_wear_in_peak_neg.text),
+                        int(self.y2_wear_in_peak_pos.text),
+                        int(self.y2_wear_in_peak_neg.text),
+                        int(self.z_wear_in_peak_neg.text),
+                        int(self.z_wear_in_peak_pos.text)
             ]
 
             return peak_list
@@ -1171,16 +1182,16 @@ class OvernightTesting(Screen):
         if stage == "CalibrationCheckOT":
 
             peak_list = [
-                        self.x_recalibration_peak_pos,
-                        self.x_recalibration_peak_neg,
-                        self.y_recalibration_peak_pos,
-                        self.y_recalibration_peak_neg,
-                        self.y1_recalibration_peak_pos,
-                        self.y1_recalibration_peak_neg,
-                        self.y2_recalibration_peak_pos,
-                        self.y2_recalibration_peak_neg,
-                        self.z_recalibration_peak_neg,
-                        self.z_recalibration_peak_pos
+                        int(self.x_recalibration_peak_pos.text),
+                        int(self.x_recalibration_peak_neg.text),
+                        int(self.y_recalibration_peak_pos.text),
+                        int(self.y_recalibration_peak_neg.text),
+                        int(self.y1_recalibration_peak_pos.text),
+                        int(self.y1_recalibration_peak_neg.text),
+                        int(self.y2_recalibration_peak_pos.text),
+                        int(self.y2_recalibration_peak_neg.text),
+                        int(self.z_recalibration_peak_neg.text),
+                        int(self.z_recalibration_peak_pos.text)
             ]
 
             return peak_list
@@ -1188,19 +1199,50 @@ class OvernightTesting(Screen):
         if stage == "FullyCalibratedTest":
 
             peak_list = [
-                        self.x_fully_calibrated_peak_pos,
-                        self.x_fully_calibrated_peak_neg,
-                        self.y_fully_calibrated_peak_pos,
-                        self.y_fully_calibrated_peak_neg,
-                        self.y1_fully_calibrated_peak_pos,
-                        self.y1_fully_calibrated_peak_neg,
-                        self.y2_fully_calibrated_peak_pos,
-                        self.y2_fully_calibrated_peak_neg,
-                        self.z_fully_calibrated_peak_neg,
-                        self.z_fully_calibrated_peak_pos
+                        int(self.x_fully_calibrated_peak_pos.text),
+                        int(self.x_fully_calibrated_peak_neg.text),
+                        int(self.y_fully_calibrated_peak_pos.text),
+                        int(self.y_fully_calibrated_peak_neg.text),
+                        int(self.y1_fully_calibrated_peak_pos.text),
+                        int(self.y1_fully_calibrated_peak_neg.text),
+                        int(self.y2_fully_calibrated_peak_pos.text),
+                        int(self.y2_fully_calibrated_peak_neg.text),
+                        int(self.z_fully_calibrated_peak_neg.text),
+                        int(self.z_fully_calibrated_peak_pos.text)
             ]
 
             return peak_list
+
+
+    def get_statistics(self):
+
+            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+            peak_list = self.read_out_peaks(self.stage)
+
+            self.statistics_data_dict[self.stage] = [
+
+                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                            peak_list[0],
+                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                            peak_list[1],
+                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                            peak_list[2],
+                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                            peak_list[3],
+                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                            peak_list[4],
+                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                            peak_list[5],
+                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                            peak_list[6],
+                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                            peak_list[7],
+                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                            peak_list[8],
+                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                            peak_list[9]
+
+            ]
 
 
     def back_to_fac_settings(self):
@@ -1327,6 +1369,7 @@ class OvernightTesting(Screen):
 
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.six_hour_wear_in_checkbox, True)
+        self.get_statistics()
         self.send_six_hour_wear_in_data()
         self.setup_arrays()
 
@@ -1420,6 +1463,7 @@ class OvernightTesting(Screen):
 
             self.pass_or_fail_peak_loads()
             self.tick_checkbox(self.recalibration_checkbox, True)
+            self.get_statistics()
             self.send_recalibration_data()
             self.setup_arrays()
 
@@ -1491,6 +1535,7 @@ class OvernightTesting(Screen):
 
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.fully_calibrated_run_checkbox, True)
+        self.get_statistics()
         self.send_fully_calibrated_final_run_data()
         self.setup_arrays()
 
@@ -1593,37 +1638,7 @@ class OvernightTesting(Screen):
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
-
-            # Peaks are dependent on stages
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-            peak_list = self.read_out_peaks(stage)
-
-            statistics = [
-                            self.sn_for_db,
-                            stage_id,
-                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
-                            peak_list[0],
-                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
-                            peak_list[1],
-                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
-                            peak_list[2],
-                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
-                            peak_list[3],
-                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
-                            peak_list[4],
-                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
-                            peak_list[5],
-                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
-                            peak_list[6],
-                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
-                            peak_list[7],
-                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
-                            peak_list[8],
-                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
-                            peak_list[9]
-
-            ]
-
+            statistics = [self.sn_for_db, stage_id].extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             return True
 
