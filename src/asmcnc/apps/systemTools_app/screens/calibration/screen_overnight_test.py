@@ -1012,7 +1012,7 @@ class OvernightTesting(Screen):
         try:
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
 
             # Peaks are dependent on stages
             # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
@@ -1044,7 +1044,7 @@ class OvernightTesting(Screen):
 
             ]
 
-            self.insert_final_test_statistics(*statistics)
+            self.calibration_db.insert_final_test_statistics(*statistics)
             return True
 
         except:
