@@ -1078,6 +1078,10 @@ class OvernightTesting(Screen):
                     int(self.m.s.transistor_heatsink_temp),
                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     self.m.feed_rate()
+                    0,
+                    0,
+                    2
+
         ]
 
         self.status_data_dict[self.stage].append(status)

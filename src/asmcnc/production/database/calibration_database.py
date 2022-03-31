@@ -138,7 +138,7 @@ class CalibrationDatabase(object):
             query = "INSERT INTO FinalTestStatistics (FTID, XForwardAvg, XForwardPeak, XBackwardAvg, XBackwardPeak, " \
                     "YForwardAvg, YForwardPeak, YBackwardAvg, YBackwardPeak, Y1ForwardAvg, Y1ForwardPeak, " \
                     "Y1BackwardAvg, Y1BackwardPeak, Y2ForwardAvg, Y2ForwardPeak, Y2BackwardAvg, Y2BackwardPeak, " \
-                    "ZForwardAvg, ZForwardPeak, ZBackwardAvg, ZBackwardPeak) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, " \
+                    "ZForwardAvg, ZForwardPeak, ZBackwardAvg, ZBackwardPeak) VALUES ('%s', %s, %s, %s, %s, %s, %s, %s, " \
                     "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" % (combined_id, x_forw_avg, x_forw_peak,
                                                                              x_backw_avg, x_backw_peak, y_forw_avg,
                                                                              y_forw_peak, y_backw_avg, y_backw_peak,
@@ -167,7 +167,7 @@ class CalibrationDatabase(object):
 
                 cursor.execute(query % (combined_id, status[0], status[1], status[2], status[3], status[4], status[5],
                                         status[6], status[7], status[8], status[9], status[10], status[11], status[12],
-                                        status[13], status[14], status[15], 0, 0, 0)) # TEMP!!
+                                        status[13], status[14], status[15], status[16], status[17], status[18]))
         
         self.conn.commit()
 

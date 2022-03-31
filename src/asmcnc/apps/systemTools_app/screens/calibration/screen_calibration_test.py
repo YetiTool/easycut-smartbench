@@ -862,6 +862,9 @@ class CalibrationTesting(Screen):
         self.stage = ''
         self.statuses = []
 
+        self.x_weight = 0
+        self.y_weight = 0
+        self.z_weight = 0
 
         self.status_data_dict = {
 
@@ -1046,7 +1049,10 @@ class CalibrationTesting(Screen):
                     int(self.m.s.pcb_temp),
                     int(self.m.s.transistor_heatsink_temp),
                     datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    self.m.feed_rate()
+                    self.m.feed_rate(),
+                    self.x_weight,
+                    self.y_weight,
+                    self.z_weight
         ]
 
         self.status_data_dict[self.stage].append(status)
@@ -1196,6 +1202,10 @@ class CalibrationTesting(Screen):
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
+        
+        self.x_weight = 0
+        self.y_weight = 0
+        self.z_weight = 2
 
         self.set_weighted_z_range()
 
@@ -1227,6 +1237,10 @@ class CalibrationTesting(Screen):
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
+
+        self.x_weight = 0
+        self.y_weight = 7.5
+        self.z_weight = 0
 
         self.set_weighted_y_range()
 
@@ -1261,6 +1275,10 @@ class CalibrationTesting(Screen):
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
 
+        self.x_weight = 7.5
+        self.y_weight = 0
+        self.z_weight = 0
+
         self.set_weighted_x_range()
 
         self.x_running = True
@@ -1290,9 +1308,12 @@ class CalibrationTesting(Screen):
 
             self.set_stage("UnweightedFT")
 
+            self.x_weight = 0
+            self.y_weight = 0
+            self.z_weight = 0
+
             self.zero_x_and_y()
             self.zero_Z()
-
 
             self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
 
