@@ -885,7 +885,7 @@ class CalibrationTesting(Screen):
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
         if self.mini_run_dev_mode:
-            self.sn_for_db = "YS6-test"
+            self.sn_for_db = "YS6test"
 
     def setup_arrays(self):
 
@@ -1100,6 +1100,8 @@ class CalibrationTesting(Screen):
             return
 
         if self.stage == "WeightedFT":
+
+            log("updating weighted peaks")
 
             self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals)
             self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals)
