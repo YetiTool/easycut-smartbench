@@ -1065,7 +1065,7 @@ class OvernightTesting(Screen):
                     int(self.m.s.motor_driver_temp),
                     int(self.m.s.pcb_temp),
                     int(self.m.s.transistor_heatsink_temp),
-                    str(datetime.now()),
+                    str(datetime.now()).strftime('%Y-%m-%d %H:%M:%S'),
                     self.m.feed_rate()
         ]
 

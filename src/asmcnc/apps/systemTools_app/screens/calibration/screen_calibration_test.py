@@ -253,7 +253,7 @@ Builder.load_string("""
                     Label:
                         id: y_peak_posve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -276,7 +276,7 @@ Builder.load_string("""
                     Label:
                         id: y_peak_negve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -311,7 +311,7 @@ Builder.load_string("""
                     Label:
                         id: y1_peak_posve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -334,7 +334,7 @@ Builder.load_string("""
                     Label:
                         id: y1_peak_negve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -367,7 +367,7 @@ Builder.load_string("""
                     Label:
                         id: y2_peak_posve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -390,7 +390,7 @@ Builder.load_string("""
                     Label:
                         id: y2_peak_negve
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -423,7 +423,7 @@ Builder.load_string("""
                     Label:
                         id: x_peak_posve
                         text: 'xxx'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -446,7 +446,7 @@ Builder.load_string("""
                     Label:
                         id: x_peak_negve
                         text: 'xxx'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -480,7 +480,7 @@ Builder.load_string("""
                     Label:
                         id: z_peak_negve
                         text: 'zzz'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -503,7 +503,7 @@ Builder.load_string("""
                     Label:
                         id: z_peak_posve
                         text: 'zzz'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -542,7 +542,7 @@ Builder.load_string("""
                     Label:
                         id: y_peak_posve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -565,7 +565,7 @@ Builder.load_string("""
                     Label:
                         id: y_peak_negve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -598,7 +598,7 @@ Builder.load_string("""
                     Label:
                         id: y1_peak_posve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -621,7 +621,7 @@ Builder.load_string("""
                     Label:
                         id: y1_peak_negve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -654,7 +654,7 @@ Builder.load_string("""
                     Label:
                         id: y2_peak_posve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -677,7 +677,7 @@ Builder.load_string("""
                     Label:
                         id: y2_peak_negve_weighted
                         text: 'yyy'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -710,7 +710,7 @@ Builder.load_string("""
                     Label:
                         id: x_peak_posve_weighted
                         text: 'xxx'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -733,7 +733,7 @@ Builder.load_string("""
                     Label:
                         id: x_peak_negve_weighted
                         text: 'xxx'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -767,7 +767,7 @@ Builder.load_string("""
                     Label:
                         id: z_peak_negve_weighted
                         text: 'zzz'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -790,7 +790,7 @@ Builder.load_string("""
                     Label:
                         id: z_peak_posve_weighted
                         text: 'zzz'
-                        halign: 'center'
+                        halign: 'left'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
@@ -857,7 +857,7 @@ class CalibrationTesting(Screen):
         self.y_running = False
         self.z_running = False
 
-        self.stage = 'Unweighted'
+        self.stage = ''
         self.statuses = []
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
@@ -890,15 +890,26 @@ class CalibrationTesting(Screen):
 
         self.unweighted_data = []
 
+    # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
+    def set_stage(self, stage):
+
+        self.stage = stage
+        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+        self.status_data_dict[self.stage] = []
+        log("Overnight test, stage: " + str(self.stage))
+
+
     def send_data(self):
 
-        try:
-            serial = self.calibration_db.get_serial_number()
-            self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        except:
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            print(traceback.format_exc())
+        pass
+        # try:
+        #     serial = self.calibration_db.get_serial_number()
+        #     self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
+        #     self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        # except:
+        #     self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+        #     print(traceback.format_exc())
 
 
     def stop(self):
@@ -1066,7 +1077,9 @@ class CalibrationTesting(Screen):
 
         self.setup_arrays()
 
-        self.stage = "Weighted"
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
+
         self.set_weighted_z_range()
 
         self.z_running = True
@@ -1094,7 +1107,9 @@ class CalibrationTesting(Screen):
 
         self.setup_arrays()
 
-        self.stage = "Weighted"
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
+
         self.set_weighted_y_range()
 
         self.y_running = True
@@ -1124,7 +1139,9 @@ class CalibrationTesting(Screen):
 
         self.setup_arrays()
 
-        self.stage = "Weighted"
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
+
         self.set_weighted_x_range()
 
         self.x_running = True
@@ -1152,7 +1169,7 @@ class CalibrationTesting(Screen):
 
             self.disable_run_buttons()
 
-            self.stage = "Unweighted"
+            self.set_stage("UnweightedFT")
 
             self.zero_x_and_y()
             self.zero_Z()
