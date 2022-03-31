@@ -1009,8 +1009,8 @@ class OvernightTesting(Screen):
 
     def send_data(self, stage):
 
-
         try:
+
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
 
@@ -1048,9 +1048,8 @@ class OvernightTesting(Screen):
             return True
 
         except:
+            print(traceback.format_exc())
             return False
-
-
 
 
     # Function called from serial comms to record SG values
