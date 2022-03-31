@@ -526,9 +526,9 @@ Builder.load_string("""
 
 
                 GridLayout: 
-                    cols: 5
+                    cols: 7
                     rows: 5
-                    cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
+                    # cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
 
                     ## Y axis
 
