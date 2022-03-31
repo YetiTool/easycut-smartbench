@@ -21,11 +21,17 @@ Builder.load_string("""
     x_bw_range : x_bw_range
     z_bw_range : z_bw_range
 
-    y_peak_load : y_peak_load
-    y1_peak_load : y1_peak_load
-    y2_peak_load : y2_peak_load
-    x_peak_load : x_peak_load
-    z_peak_load : z_peak_load
+    y_peak_posve : y_peak_posve
+    y1_peak_posve : y1_peak_posve
+    y2_peak_posve : y2_peak_posve
+    x_peak_posve : x_peak_posve
+    z_peak_posve : z_peak_posve
+
+    y_peak_negve : y_peak_negve
+    y1_peak_negve : y1_peak_negve
+    y2_peak_negve : y2_peak_negve
+    x_peak_negve : x_peak_negve
+    z_peak_negve : z_peak_negve
 
     x_test_check:x_test_check
     y_test_check:y_test_check
@@ -51,23 +57,30 @@ Builder.load_string("""
     x_peak_checkbox : x_peak_checkbox
     z_peak_checkbox : z_peak_checkbox
 
-    y_peak_load_weighted : y_peak_load_weighted
+    y_peak_posve_weighted : y_peak_posve_weighted
+    y1_peak_posve_weighted : y1_peak_posve_weighted
+    y2_peak_posve_weighted : y2_peak_posve_weighted
+    x_peak_posve_weighted : x_peak_posve_weighted
+    z_peak_posve_weighted : z_peak_posve_weighted
+
+    y_peak_negve_weighted : y_peak_negve_weighted
+    y1_peak_negve_weighted : y1_peak_negve_weighted
+    y2_peak_negve_weighted : y2_peak_negve_weighted
+    x_peak_negve_weighted : x_peak_negve_weighted
+    z_peak_negve_weighted : z_peak_negve_weighted
+
     y_axis_fw_range_weighted : y_axis_fw_range_weighted
     y_axis_bw_range_weighted : y_axis_bw_range_weighted
     y_peak_checkbox_weighted : y_peak_checkbox_weighted
-    y1_peak_load_weighted : y1_peak_load_weighted
     y1_fw_range_weighted : y1_fw_range_weighted
     y1_bw_range_weighted : y1_bw_range_weighted
     y1_peak_checkbox_weighted : y1_peak_checkbox_weighted
-    y2_peak_load_weighted : y2_peak_load_weighted
     y2_fw_range_weighted : y2_fw_range_weighted
     y2_bw_range_weighted : y2_bw_range_weighted
     y2_peak_checkbox_weighted : y2_peak_checkbox_weighted
-    x_peak_load_weighted : x_peak_load_weighted
     x_fw_range_weighted : x_fw_range_weighted
     x_bw_range_weighted : x_bw_range_weighted
     x_peak_checkbox_weighted : x_peak_checkbox_weighted
-    z_peak_load_weighted : z_peak_load_weighted
     z_fw_range_weighted : z_fw_range_weighted
     z_bw_range_weighted : z_bw_range_weighted
     z_peak_checkbox_weighted : z_peak_checkbox_weighted
@@ -224,53 +237,21 @@ Builder.load_string("""
                 size_hint_y: 1
 
                 GridLayout: 
-                    cols: 5
-                    rows: 6
-                    cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
-
-
-                    Label:
-                        text: ''
-
-                    Label:
-                        text: 'Peak'
-                        halign: 'left'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: 'Load up'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: 'Load down'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: '-400 < sg < 400'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    cols: 7
+                    rows: 5
+                    # cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
 
                     ## Y axis
 
                     Label:
-                        text: 'Y:'
+                        text: 'Y+: '
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y_peak_load
+                        id: y_peak_posve
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -284,6 +265,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y-: '
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_peak_negve
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
 
                     Label:
@@ -306,14 +302,14 @@ Builder.load_string("""
                     ## Y1 axis
 
                     Label:
-                        text: 'Y1:'
+                        text: 'Y1+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y1_peak_load
+                        id: y1_peak_posve
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -327,6 +323,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y1-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_negve
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: y1_bw_range
@@ -347,14 +358,14 @@ Builder.load_string("""
                     ## Y2 axis
 
                     Label:
-                        text: 'Y2:'
+                        text: 'Y2+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y2_peak_load
+                        id: y2_peak_posve
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -368,6 +379,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y2-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_negve
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: y2_bw_range
@@ -388,14 +414,14 @@ Builder.load_string("""
                     ## X axis
 
                     Label:
-                        text: 'X:'
+                        text: 'X+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: x_peak_load
+                        id: x_peak_posve
                         text: 'xxx'
                         halign: 'center'
                         markup: True
@@ -409,6 +435,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'X-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_negve
+                        text: 'xxx'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: x_bw_range
@@ -430,14 +471,14 @@ Builder.load_string("""
                     ## Z axis
 
                     Label:
-                        text: 'Z:'
+                        text: 'Z-:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: z_peak_load
+                        id: z_peak_negve
                         text: 'zzz'
                         halign: 'center'
                         markup: True
@@ -451,6 +492,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Z+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_posve
+                        text: 'zzz'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: z_bw_range
@@ -471,51 +527,20 @@ Builder.load_string("""
 
                 GridLayout: 
                     cols: 5
-                    rows: 6
+                    rows: 5
                     cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
-
-                    Label:
-                        text: ''
-
-                    Label:
-                        text: 'Peak'
-                        halign: 'left'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: 'Load up'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: 'Load down'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-
-                    Label:
-                        text: '-400 < sg < 400'
-                        halign: 'center'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
 
                     ## Y axis
 
                     Label:
-                        text: 'Y:'
+                        text: 'Y+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y_peak_load_weighted
+                        id: y_peak_posve_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -529,6 +554,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: y_axis_bw_range_weighted
@@ -549,14 +589,14 @@ Builder.load_string("""
                     ## Y1 axis
 
                     Label:
-                        text: 'Y1:'
+                        text: 'Y1+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y1_peak_load_weighted
+                        id: y1_peak_posve_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -570,6 +610,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y1-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: y1_bw_range_weighted
@@ -590,14 +645,14 @@ Builder.load_string("""
                     ## Y2 axis
 
                     Label:
-                        text: 'Y2:'
+                        text: 'Y2+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: y2_peak_load_weighted
+                        id: y2_peak_posve_weighted
                         text: 'yyy'
                         halign: 'center'
                         markup: True
@@ -611,6 +666,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Y2-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: y2_bw_range_weighted
@@ -631,14 +701,14 @@ Builder.load_string("""
                     ## X axis
 
                     Label:
-                        text: 'X:'
+                        text: 'X+:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: x_peak_load_weighted
+                        id: x_peak_posve_weighted
                         text: 'xxx'
                         halign: 'center'
                         markup: True
@@ -652,6 +722,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'X-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_negve_weighted
+                        text: 'xxx'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: x_bw_range_weighted
@@ -673,14 +758,14 @@ Builder.load_string("""
                     ## Z axis
 
                     Label:
-                        text: 'Z:'
+                        text: 'Z-:'
                         halign: 'right'
                         markup: True
                         valign: 'middle'
                         text_size: self.size
 
                     Label:
-                        id: z_peak_load_weighted
+                        id: z_peak_negve_weighted
                         text: 'zzz'
                         halign: 'center'
                         markup: True
@@ -694,6 +779,21 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.size
                         halign: 'center'
+
+                    Label:
+                        text: 'Z+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_posve_weighted
+                        text: 'zzz'
+                        halign: 'center'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
                     Label:
                         id: z_bw_range_weighted
@@ -931,20 +1031,20 @@ class CalibrationTesting(Screen):
 
         if self.stage == "Unweighted":
 
-            self.get_peak_as_string(self.x_peak_load, self.raw_x_vals)
-            self.get_peak_as_string(self.y_peak_load, self.raw_y_vals)
-            self.get_peak_as_string(self.y1_peak_load, self.raw_y1_vals)
-            self.get_peak_as_string(self.y2_peak_load, self.raw_y2_vals)
-            self.get_peak_as_string(self.z_peak_load, self.raw_z_vals)
+            self.get_peak_as_string(self.x_peak_posve, self.raw_x_vals)
+            self.get_peak_as_string(self.y_peak_posve, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_peak_posve, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_peak_posve, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_peak_posve, self.raw_z_vals)
             return
 
         if self.stage == "Weighted":
 
-            self.get_peak_as_string(self.x_peak_load_weighted, self.raw_x_vals)
-            self.get_peak_as_string(self.y_peak_load_weighted, self.raw_y_vals)
-            self.get_peak_as_string(self.y1_peak_load_weighted, self.raw_y1_vals)
-            self.get_peak_as_string(self.y2_peak_load_weighted, self.raw_y2_vals)
-            self.get_peak_as_string(self.z_peak_load_weighted, self.raw_z_vals)
+            self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_vals)
+            self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_vals)
+            self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_vals)
+            self.get_peak_as_string(self.y2_peak_posve_weighted, self.raw_y2_vals)
+            self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_vals)
             return
 
 
@@ -983,7 +1083,7 @@ class CalibrationTesting(Screen):
             self.z_running = False
             self.enable_run_buttons()
             self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-            self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_load_weighted))
+            self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
 
 
     def run_y_procedure(self, dt):
@@ -1011,9 +1111,9 @@ class CalibrationTesting(Screen):
             self.y_running = False
             self.enable_run_buttons()
             self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-            self.tick_checkbox(self.y_peak_checkbox_weighted, self.check_in_range(self.y_peak_load_weighted))
-            self.tick_checkbox(self.y1_peak_checkbox_weighted, self.check_in_range(self.y1_peak_load_weighted))
-            self.tick_checkbox(self.y2_peak_checkbox_weighted, self.check_in_range(self.y2_peak_load_weighted))
+            self.tick_checkbox(self.y_peak_checkbox_weighted, self.check_in_range(self.y_peak_posve_weighted))
+            self.tick_checkbox(self.y1_peak_checkbox_weighted, self.check_in_range(self.y1_peak_posve_weighted))
+            self.tick_checkbox(self.y2_peak_checkbox_weighted, self.check_in_range(self.y2_peak_posve_weighted))
 
 
     def run_x_procedure(self, dt):
@@ -1043,7 +1143,7 @@ class CalibrationTesting(Screen):
             self.x_running = False
             self.enable_run_buttons()
             self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-            self.tick_checkbox(self.x_peak_checkbox_weighted, self.check_in_range(self.x_peak_load_weighted))
+            self.tick_checkbox(self.x_peak_checkbox_weighted, self.check_in_range(self.x_peak_posve_weighted))
 
 
     def run_unweighted_test(self):
@@ -1154,11 +1254,11 @@ class CalibrationTesting(Screen):
 
         within_plus_minus = 400
 
-        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_load))
-        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_load))
-        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_load))
-        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_load))
-        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_load))
+        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_posve))
+        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_posve))
+        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_posve))
+        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_posve))
+        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_posve))
 
 
     def up_range(self, friction, load):
