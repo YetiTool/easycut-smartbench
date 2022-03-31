@@ -1630,7 +1630,10 @@ class OvernightTesting(Screen):
 
     def send_calibration_coefficients(self):
 
-        self.calibration_db.setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id)
+        self.calibration_db.setup_z_head_coefficients(zh_serial, motor_index, calibration_stage_id)
+        self.calibration_db.insert_z_head_coefficients(zh_serial, motor_index, calibration_stage_id, coefficients)
+        self.calibration_db.setup_lower_beam_coefficients(lb_serial, motor_index, calibration_stage_id)
+        self.calibration_db.insert_lower_beam_coefficients(lb_serial, motor_index, calibration_stage_id, coefficients)
 
 
     ## SET TICKS
