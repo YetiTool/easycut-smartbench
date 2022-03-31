@@ -959,7 +959,7 @@ class OvernightTesting(Screen):
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
         if self.mini_run_dev_mode:
-            self.sn_for_db = "YS6-test"
+            self.sn_for_db = "YS6test"
             self.zh_serial = "zh-test-b"
             self.xl_serial = "xl-test-b"
 
