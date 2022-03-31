@@ -16,7 +16,6 @@ class CalibrationDatabase(object):
     def set_up_connection(self):
 
         try:
-            import credentials
             from asmcnc.production.database import credentials
 
         except ImportError:
@@ -159,6 +158,16 @@ class CalibrationDatabase(object):
         
         self.conn.commit()
 
+    def get_serials_by_machine_serial(self, machine_serial):
+        with self.conn.cursor() as cursor:
+            query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = '%s'" % machine_serial
+
+            cursor.execute(query)
+
+            data = cursor.fetchone()
+
+            return [data[0], data[1]]
+
     def get_lower_beam_parameters(self, lb_serial, motor_index, stage_id):
         combined_id = lb_serial + str(motor_index) + str(stage_id)
 
@@ -182,3 +191,9 @@ class CalibrationDatabase(object):
                 log('Database is empty or incomplete for ' + combined_id)
             
             return parameters
+        
+
+
+database = CalibrationDatabase()
+
+database.set_up_connection()
