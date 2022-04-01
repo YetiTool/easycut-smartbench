@@ -1161,8 +1161,6 @@ class CalibrationTesting(Screen):
 
         if self.stage == "WeightedFT":
 
-            log("updating weighted peaks")
-
             self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals[self.stage])
             self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals[self.stage])
             self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_pos_vals[self.stage])
