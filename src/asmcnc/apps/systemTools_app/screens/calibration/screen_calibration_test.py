@@ -975,6 +975,7 @@ class CalibrationTesting(Screen):
 
 
     def on_enter(self):
+        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)

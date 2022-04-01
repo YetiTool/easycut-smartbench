@@ -999,9 +999,11 @@ class OvernightTesting(Screen):
         self.raw_z_neg_vals = []
 
 
-
-
     def on_enter(self):
+
+        # Get serial numbers
+        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
+        [self.zh_serial, self.xl_serial] =self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
         self.m.s.FINAL_TEST = True
         self.stop_button.disabled = False
 
