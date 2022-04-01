@@ -880,6 +880,57 @@ class CalibrationTesting(Screen):
 
         }
 
+        self.raw_x_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y1_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y2_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_z_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_x_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y1_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y2_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_z_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+
         self.setup_arrays()
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
@@ -889,17 +940,27 @@ class CalibrationTesting(Screen):
 
     def setup_arrays(self):
 
-        self.raw_x_pos_vals = []
-        self.raw_y_pos_vals = []
-        self.raw_y1_pos_vals = []
-        self.raw_y2_pos_vals = []
-        self.raw_z_pos_vals = []
-        self.raw_x_neg_vals = []
-        self.raw_y_neg_vals = []
-        self.raw_y1_neg_vals = []
-        self.raw_y2_neg_vals = []
-        self.raw_z_neg_vals = []
+        self.raw_x_pos_vals["UnweightedFT"] = []
+        self.raw_y_pos_vals["UnweightedFT"] = []
+        self.raw_y1_pos_vals["UnweightedFT"] = []
+        self.raw_y2_pos_vals["UnweightedFT"] = []
+        self.raw_z_pos_vals["UnweightedFT"] = []
+        self.raw_x_neg_vals["UnweightedFT"] = []
+        self.raw_y_neg_vals["UnweightedFT"] = []
+        self.raw_y1_neg_vals["UnweightedFT"] = []
+        self.raw_y2_neg_vals["UnweightedFT"] = []
+        self.raw_z_neg_vals["UnweightedFT"] = []
 
+        self.raw_x_pos_vals["WeightedFT"] = []
+        self.raw_y_pos_vals["WeightedFT"] = []
+        self.raw_y1_pos_vals["WeightedFT"] = []
+        self.raw_y2_pos_vals["WeightedFT"] = []
+        self.raw_z_pos_vals["WeightedFT"] = []
+        self.raw_x_neg_vals["WeightedFT"] = []
+        self.raw_y_neg_vals["WeightedFT"] = []
+        self.raw_y1_neg_vals["WeightedFT"] = []
+        self.raw_y2_neg_vals["WeightedFT"] = []
+        self.raw_z_neg_vals["WeightedFT"] = []
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
     def set_stage(self, stage):
@@ -1060,24 +1121,24 @@ class CalibrationTesting(Screen):
         # Record raw values for statistics calculations
 
         if -999 < self.m.s.sg_x_motor_axis < 1023: 
-            if x_dir > 0: self.raw_x_pos_vals.append(self.m.s.sg_x_motor_axis)
-            if x_dir < 0: self.raw_x_neg_vals.append(self.m.s.sg_x_motor_axis)
+            if x_dir > 0: self.raw_x_pos_vals[self.stage].append(self.m.s.sg_x_motor_axis)
+            if x_dir < 0: self.raw_x_neg_vals[self.stage].append(self.m.s.sg_x_motor_axis)
         
         if -999 < self.m.s.sg_y_axis < 1023:
-            if y_dir > 0: self.raw_y_pos_vals.append(self.m.s.sg_y_axis)
-            if y_dir < 0: self.raw_y_neg_vals.append(self.m.s.sg_y_axis)
+            if y_dir > 0: self.raw_y_pos_vals[self.stage].append(self.m.s.sg_y_axis)
+            if y_dir < 0: self.raw_y_neg_vals[self.stage].append(self.m.s.sg_y_axis)
         
         if -999 < self.m.s.sg_y1_motor < 1023:
-            if y_dir > 0: self.raw_y1_pos_vals.append(self.m.s.sg_y1_motor)
-            if y_dir < 0: self.raw_y1_neg_vals.append(self.m.s.sg_y1_motor)
+            if y_dir > 0: self.raw_y1_pos_vals[self.stage].append(self.m.s.sg_y1_motor)
+            if y_dir < 0: self.raw_y1_neg_vals[self.stage].append(self.m.s.sg_y1_motor)
         
         if -999 < self.m.s.sg_y2_motor < 1023:
-            if y_dir > 0: self.raw_y2_pos_vals.append(self.m.s.sg_y2_motor)
-            if y_dir < 0: self.raw_y2_neg_vals.append(self.m.s.sg_y2_motor)
+            if y_dir > 0: self.raw_y2_pos_vals[self.stage].append(self.m.s.sg_y2_motor)
+            if y_dir < 0: self.raw_y2_neg_vals[self.stage].append(self.m.s.sg_y2_motor)
         
         if -999 < self.m.s.sg_z_motor_axis < 1023:
-            if z_dir < 0: self.raw_z_pos_vals.append(self.m.s.sg_z_motor_axis)
-            if z_dir > 0: self.raw_z_neg_vals.append(self.m.s.sg_z_motor_axis)
+            if z_dir < 0: self.raw_z_pos_vals[self.stage].append(self.m.s.sg_z_motor_axis)
+            if z_dir > 0: self.raw_z_neg_vals[self.stage].append(self.m.s.sg_z_motor_axis)
 
         self.update_peaks()
 
@@ -1086,34 +1147,34 @@ class CalibrationTesting(Screen):
 
         if self.stage == "UnweightedFT":
 
-            self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals)
-            self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals)
-            self.get_peak_as_string(self.y1_peak_posve, self.raw_y1_pos_vals)
-            self.get_peak_as_string(self.y2_peak_posve, self.raw_y2_pos_vals)
-            self.get_peak_as_string(self.z_peak_posve, self.raw_z_pos_vals)
+            self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_posve, self.raw_y1_pos_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_posve, self.raw_y2_pos_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_posve, self.raw_z_pos_vals[self.stage])
 
-            self.get_peak_as_string(self.x_peak_negve, self.raw_x_neg_vals)
-            self.get_peak_as_string(self.y_peak_negve, self.raw_y_neg_vals)
-            self.get_peak_as_string(self.y1_peak_negve, self.raw_y1_neg_vals)
-            self.get_peak_as_string(self.y2_peak_negve, self.raw_y2_neg_vals)
-            self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals)
+            self.get_peak_as_string(self.x_peak_negve, self.raw_x_neg_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_negve, self.raw_y_neg_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_negve, self.raw_y1_neg_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_negve, self.raw_y2_neg_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals[self.stage])
             return
 
         if self.stage == "WeightedFT":
 
             log("updating weighted peaks")
 
-            self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals)
-            self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals)
-            self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_pos_vals)
-            self.get_peak_as_string(self.y2_peak_posve_weighted, self.raw_y2_pos_vals)
-            self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_pos_vals)
+            self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_pos_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_posve_weighted, self.raw_y2_pos_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_pos_vals[self.stage])
 
-            self.get_peak_as_string(self.x_peak_negve_weighted, self.raw_x_neg_vals)
-            self.get_peak_as_string(self.y_peak_negve_weighted, self.raw_y_neg_vals)
-            self.get_peak_as_string(self.y1_peak_negve_weighted, self.raw_y1_neg_vals)
-            self.get_peak_as_string(self.y2_peak_negve_weighted, self.raw_y2_neg_vals)
-            self.get_peak_as_string(self.z_peak_negve_weighted, self.raw_z_neg_vals)
+            self.get_peak_as_string(self.x_peak_negve_weighted, self.raw_x_neg_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_negve_weighted, self.raw_y_neg_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_negve_weighted, self.raw_y1_neg_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_negve_weighted, self.raw_y2_neg_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_negve_weighted, self.raw_z_neg_vals[self.stage])
             return
 
     def get_peak_as_string(self, label_id, raw_vals):
@@ -1166,25 +1227,25 @@ class CalibrationTesting(Screen):
 
             self.statistics_data_dict[self.stage] = [
 
-                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                            sum(self.raw_x_pos_vals[self.stage])/len(self.raw_x_pos_vals[self.stage]),
                             peak_list[0],
-                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                            sum(self.raw_x_neg_vals[self.stage])/len(self.raw_x_neg_vals[self.stage]),
                             peak_list[1],
-                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                            sum(self.raw_y_pos_vals[self.stage])/len(self.raw_y_pos_vals[self.stage]),
                             peak_list[2],
-                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                            sum(self.raw_y_neg_vals[self.stage])/len(self.raw_y_neg_vals[self.stage]),
                             peak_list[3],
-                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                            sum(self.raw_y1_pos_vals[self.stage])/len(self.raw_y1_pos_vals[self.stage]),
                             peak_list[4],
-                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                            sum(self.raw_y1_neg_vals[self.stage])/len(self.raw_y1_neg_vals[self.stage]),
                             peak_list[5],
-                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                            sum(self.raw_y2_pos_vals[self.stage])/len(self.raw_y2_pos_vals[self.stage]),
                             peak_list[6],
-                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                            sum(self.raw_y2_neg_vals[self.stage])/len(self.raw_y2_neg_vals[self.stage]),
                             peak_list[7],
-                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                            sum(self.raw_z_pos_vals[self.stage])/len(self.raw_z_pos_vals[self.stage]),
                             peak_list[8],
-                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                            sum(self.raw_z_neg_vals[self.stage])/len(self.raw_z_neg_vals[self.stage]),
                             peak_list[9]
 
             ]
@@ -1223,7 +1284,6 @@ class CalibrationTesting(Screen):
     def confirm_z(self, dt):
         if self.m.state().startswith('Idle'):
             self.z_running = False
-            self.get_statistics()
             self.enable_run_buttons()
             self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
@@ -1258,7 +1318,6 @@ class CalibrationTesting(Screen):
     def confirm_y(self, dt):
         if self.m.state().startswith('Idle'):
             self.y_running = False
-            self.get_statistics()
             self.enable_run_buttons()
             self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.tick_checkbox(self.y_peak_checkbox_weighted, self.check_in_range(self.y_peak_posve_weighted))
@@ -1296,7 +1355,6 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
             self.x_running = False
-            self.get_statistics()
             self.enable_run_buttons()
             self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.tick_checkbox(self.x_peak_checkbox_weighted, self.check_in_range(self.x_peak_posve_weighted))
@@ -1374,7 +1432,6 @@ class CalibrationTesting(Screen):
         if self.m.state().startswith('Idle'):
 
             self.z_running = False
-            self.get_statistics()
             self.enable_run_buttons()
             self.data_send_button.disabled = False
             self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -1513,14 +1570,15 @@ class CalibrationTesting(Screen):
 
         try:
 
-            if self.is_step_ticked(self.unweighted_test_check): self.send_data_for_each_stage("UnweightedFT")
+            if self.is_step_ticked(self.unweighted_test_check): 
+                self.get_statistics("UnweightedFT")
+                self.send_data_for_each_stage("UnweightedFT")
             
-            if all(
-                self.is_step_ticked(self.x_test_check),
-                self.is_step_ticked(self.y_test_check),
-                self.is_step_ticked(self.z_test_check),
-                ):
+            if all( self.is_step_ticked(self.x_test_check),
+                    self.is_step_ticked(self.y_test_check),
+                    self.is_step_ticked(self.z_test_check)):
 
+                self.get_statistics("WeightedFT")
                 self.send_data_for_each_stage("WeightedFT")
 
             self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
