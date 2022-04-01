@@ -7,15 +7,12 @@ import re
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
 
-    machine_serial_input:machine_serial_input
     zhead_serial_input:zhead_serial_input
     lb_serial_input:lb_serial_input
     ub_serial_input:ub_serial_input
     console_serial_input:console_serial_input
     ybench_serial_input:ybench_serial_input
     spindle_serial_input:spindle_serial_input
-    software_version_input:software_version_input
-    firmware_version_input:firmware_version_input
     squareness_input:squareness_input
     main_button:main_button
     error_label:error_label
@@ -24,34 +21,44 @@ Builder.load_string("""
         orientation: 'vertical'
         size_hint_y: 1.00
 
-        Button:
-            text: '<<< BACK'
-            on_press: root.go_back()
-            text_size: self.size
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            padding: [dp(10),0]
-            size_hint_y: 0.2
-            size_hint_x: 0.5
-            font_size: dp(20)
+        BoxLayout:
+            size_hint_y: 0.1
+            orientation: 'horizontal'
 
-        GridLayout:
-            cols: 3
-            rows: 4
+            Button:
+                text: '<<< BACK'
+                on_press: root.go_back()
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
+                size_hint_x: 0.5
+                font_size: dp(20)
 
-            GridLayout:
-                cols: 1
-                rows: 2
+            BoxLayout:
+                padding: [dp(10),0]
+                size_hint_x: 0.5
+                orientation: 'horizontal'
 
-                Label: 
-                    text: 'Machine Serial'
+                Label:
+                    text: 'Squareness'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
                     font_size: dp(25)
 
                 TextInput:
-                    id: machine_serial_input
+                    id: squareness_input
                     font_size: dp(30)
                     multiline: False
+
+        GridLayout:
+            cols: 3
+            rows: 2
+            size_hint_y: 0.4
+
             
             GridLayout:
                 cols: 1
@@ -131,50 +138,13 @@ Builder.load_string("""
                     font_size: dp(30)
                     multiline: False
 
-            GridLayout:
-                cols: 1
-                rows: 2
 
-                Label:
-                    text: 'Software Version'
-                    font_size: dp(25)
-
-                TextInput:
-                    id: software_version_input
-                    font_size: dp(30)
-                    multiline: False
-
-            GridLayout:
-                cols: 1
-                rows: 2
-
-                Label:
-                    text: 'Firmware Version'
-                    font_size: dp(25)
-
-                TextInput:
-                    id: firmware_version_input
-                    font_size: dp(30)
-                    multiline: False
-
-            GridLayout:
-                cols: 1
-                rows: 2
-
-                Label:
-                    text: 'Squareness'
-                    font_size: dp(25)
-
-                TextInput:
-                    id: squareness_input
-                    font_size: dp(30)
-                    multiline: False
                     
         Label:
             id: error_label
             text: 'Ensure all fields are entered accurately'
             font_size: dp(30)
-            size_hint_y: 0.2
+            size_hint_y: 0.3
 
         Button:
             id: main_button
@@ -188,22 +158,48 @@ Builder.load_string("""
 
 class UploadSerialNumbersScreen(Screen):
 
-    system_tools = ObjectProperty()
-    m = ObjectProperty()
-    calibration_db = ObjectProperty()
+    machine_serial_number = ''
+    fw_version = ''
+    sw_version = ''
+
 
     def __init__(self, **kwargs):
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
+        self.systemtools_sm = kwargs['systemtools']
+        self.m = kwargs['m']
+        self.calibration_db = kwargs['calibration_db']
+        self.set = kwargs['settings']
+
+
+    def on_enter(self):
+        self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
+        self.get_software_version_before_release()
+        self.fw_version = str(self.m.firmware_version)
+
+    
+    def go_back(self):
+        self.systemtools_sm.open_factory_settings_screen()
+
+
+    def get_software_version_before_release(self):
+
+        if self.set.sw_branch == 'ft': self.sw_version = self.set.latest_sw_version
+        else: self.sw_version = self.set.sw_version
+
 
     def validate_and_download(self):
         regex_check = self.check_valid_inputs_regex()
         valid_check = self.check_valid_inputs()
+        version_check = self.check_versions_valid_regex()
 
-        if not regex_check or not valid_check:
+        if not regex_check or not valid_check or not version_check:
             return
 
-        # @lettie may be worth you doing this part as i'm not sure what happens after the download
-        # download logic here
+        ## LINK SERIAL NUMBERS IN DATABASE
+        ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
+
+        log("EVERYTHING CHECKED OUT!")
+        self.error_label.text = "EVERYTHING CHECKED OUT!"
 
     def check_valid_inputs(self):
         validated = True
@@ -216,14 +212,25 @@ class UploadSerialNumbersScreen(Screen):
             self.error_label.text = 'Squareness invalid'
             validated = False
 
-        if len(self.software_version_input.text) < 1:
-            self.error_label.text = 'Software version invalid'
+        return validated
+
+    def check_versions_valid_regex(self):
+
+        version_pattern = re.compile('\d[.]\d[.]\d')
+
+        fw_match = bool(version_pattern.match(self.fw_version))
+        sw_match = bool(version_pattern.match(self.sw_version))
+
+        validated = True
+
+        if not fw_match:
+            self.error_label.text = "fw version invalid" 
             validated = False
 
-        if len(self.firmware_version_input.text) < 1:
-            self.error_label.text = 'Firmware version invalid'
+        if not sw_match:
+            self.error_label.text = "sw version invalid"  
             validated = False
-        
+
         return validated
 
     def check_valid_inputs_regex(self):
@@ -243,7 +250,7 @@ class UploadSerialNumbersScreen(Screen):
         console_pattern = re.compile(console_expression)
         ybench_pattern = re.compile(ybench_expression)
 
-        machine_match = bool(machine_pattern.match(self.machine_serial_input.text))
+        machine_match = bool(machine_pattern.match(self.machine_serial_number))
         zhead_match = bool(zhead_pattern.match(self.zhead_serial_input.text))
         lb_match = bool(lb_pattern.match(self.lb_serial_input.text))
         ub_match = bool(ub_pattern.match(self.ub_serial_input.text))

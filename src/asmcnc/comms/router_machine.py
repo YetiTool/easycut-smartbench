@@ -80,6 +80,7 @@ class RouterMachine(object):
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
+
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
 
@@ -1234,6 +1235,11 @@ class RouterMachine(object):
         try: self.s.setting_50
         except: return 0
         else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+
+    def firmware_version(self):
+        try: self.s.fw_version
+        except: return 0
+        else: return self.s.fw_version
 
 # POSITONAL GETTERS            
         

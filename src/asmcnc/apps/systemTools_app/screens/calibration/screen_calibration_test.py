@@ -206,7 +206,7 @@ Builder.load_string("""
                     id: data_send_button
                     text: 'Send data to database'
                     on_press: root.send_all_data()
-                    disabled: True
+                    # disabled: True
 
                 GridLayout:
                     cols: 2
@@ -1430,7 +1430,7 @@ class CalibrationTesting(Screen):
 
             self.z_running = False
             self.enable_run_buttons()
-            self.data_send_button.disabled = False
+            # self.data_send_button.disabled = False
             self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.pass_or_fail_unweighted_peak_loads()
 
@@ -1585,7 +1585,7 @@ class CalibrationTesting(Screen):
             print(traceback.format_exc())            
 
 
-    def send_data(self, stage):
+    def send_data_for_each_stage(self, stage):
 
         try:
 

@@ -830,7 +830,7 @@ class FactorySettingsScreen(Screen):
     def enter_serial_number_screen(self):
         # if self.calibration_db.conn != None:
         if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
-            serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db)
+            serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set)
             self.systemtools_sm.sm.add_widget(serial_input_screen)
         
         self.systemtools_sm.sm.current = 'serial_input_screen'
