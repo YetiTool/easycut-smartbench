@@ -182,7 +182,7 @@ class CalibrationDatabase(object):
 
             return [data[0], data[1]]
 
-    def get_lower_beam_parameters(self, lb_serial, motor_index, stage_id):
+    def get_lower_beam_coefficents(self, lb_serial, motor_index, stage_id):
         combined_id = lb_serial + str(motor_index) + str(stage_id)
 
         with self.conn.cursor() as cursor:
@@ -196,6 +196,7 @@ class CalibrationDatabase(object):
 
             try:
                 parameters = {
+                    "coefficients": [int(i[0]) for i in data],
                     "cs": data[128][0],
                     "sgt": data[129][0],
                     "toff": data[130][0],

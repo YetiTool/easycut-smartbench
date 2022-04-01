@@ -214,7 +214,7 @@ class UploadSerialNumbersScreen(Screen):
         self.calibration_db.insert_serial_numbers(*all_serial_numbers)
 
         ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
-
+        # self.download_and_upload_LB_cal_data()
 
         log("EVERYTHING CHECKED OUT!")
         self.error_label.text = "EVERYTHING CHECKED OUT!"
@@ -331,25 +331,25 @@ class UploadSerialNumbersScreen(Screen):
 
     def save_calibration_data_to_motor(self, motor_index, data):
 
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = [int(i) for i in data[3].strip('[]').split(',')]
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = int(data[4])
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = int(data[5])
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = int(data[6])
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = int(data[7])
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data["coefficints"]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data["cs"]
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data["sgt"]
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data["toff"]
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = data["temp"]
 
-    # def report_info_back_to_user_and_return(self, dt):
+    def report_info_back_to_user_and_return(self, dt):
 
-    #     if not self.m.calibration_upload_in_progress:
+        if not self.m.calibration_upload_in_progress:
 
-    #         Clock.unschedule(self.poll_for_end_of_upload)
+            Clock.unschedule(self.poll_for_end_of_upload)
             
-    #         if self.m.calibration_upload_fail_info:
-    #             self.main_label.text = self.m.calibration_upload_fail_info
+            if self.m.calibration_upload_fail_info:
+                self.main_label.text = self.m.calibration_upload_fail_info
 
-    #         else:
-    #             self.main_label.text = "Success!!"
+            else:
+                self.main_label.text = "Success!!"
 
-    # def on_leave(self):
-    #     if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
+    def on_leave(self):
+        if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
 
         

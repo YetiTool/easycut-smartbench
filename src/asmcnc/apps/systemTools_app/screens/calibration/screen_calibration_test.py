@@ -939,29 +939,19 @@ class CalibrationTesting(Screen):
         if self.mini_run_dev_mode:
             self.sn_for_db = "YS6test"
 
-    def setup_arrays(self):
+    def setup_arrays(self, stage):
 
-        self.raw_x_pos_vals["UnweightedFT"] = []
-        self.raw_y_pos_vals["UnweightedFT"] = []
-        self.raw_y1_pos_vals["UnweightedFT"] = []
-        self.raw_y2_pos_vals["UnweightedFT"] = []
-        self.raw_z_pos_vals["UnweightedFT"] = []
-        self.raw_x_neg_vals["UnweightedFT"] = []
-        self.raw_y_neg_vals["UnweightedFT"] = []
-        self.raw_y1_neg_vals["UnweightedFT"] = []
-        self.raw_y2_neg_vals["UnweightedFT"] = []
-        self.raw_z_neg_vals["UnweightedFT"] = []
+        self.raw_x_pos_vals[stage] = []
+        self.raw_y_pos_vals[stage] = []
+        self.raw_y1_pos_vals[stage] = []
+        self.raw_y2_pos_vals[stage] = []
+        self.raw_z_pos_vals[stage] = []
+        self.raw_x_neg_vals[stage] = []
+        self.raw_y_neg_vals[stage] = []
+        self.raw_y1_neg_vals[stage] = []
+        self.raw_y2_neg_vals[stage] = []
+        self.raw_z_neg_vals[stage] = []
 
-        self.raw_x_pos_vals["WeightedFT"] = []
-        self.raw_y_pos_vals["WeightedFT"] = []
-        self.raw_y1_pos_vals["WeightedFT"] = []
-        self.raw_y2_pos_vals["WeightedFT"] = []
-        self.raw_z_pos_vals["WeightedFT"] = []
-        self.raw_x_neg_vals["WeightedFT"] = []
-        self.raw_y_neg_vals["WeightedFT"] = []
-        self.raw_y1_neg_vals["WeightedFT"] = []
-        self.raw_y2_neg_vals["WeightedFT"] = []
-        self.raw_z_neg_vals["WeightedFT"] = []
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
     def set_stage(self, stage):
@@ -1260,7 +1250,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays()
+        self.setup_arrays("WeightedFT")
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
@@ -1294,7 +1284,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays()
+        self.setup_arrays("WeightedFT")
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
@@ -1330,7 +1320,7 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays()
+        self.setup_arrays("WeightedFT")
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
@@ -1385,7 +1375,7 @@ class CalibrationTesting(Screen):
 
         if self.m.state().startswith('Idle'):
 
-            self.setup_arrays()
+            self.setup_arrays("UnweightedFT")
             self.set_unweighted_x_range()
             self.x_running = True
             self.m.send_any_gcode_command('G91 G1 x1298 F1186')
@@ -1569,6 +1559,11 @@ class CalibrationTesting(Screen):
 
         self.data_send_button.disabled = True
         self.data_send_label.text = "Sending..."
+
+        Clock.schedule_once(self.do_data_send, 0.2)
+
+
+    def do_data_send(self, dt):
 
         try:
 
