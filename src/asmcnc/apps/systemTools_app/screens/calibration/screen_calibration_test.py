@@ -1255,7 +1255,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays("WeightedFT")
+        self.raw_z_pos_vals["WeightedFT"] = []
+        self.raw_z_neg_vals["WeightedFT"] = []
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
@@ -1289,7 +1290,12 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays("WeightedFT")
+        self.raw_y_pos_vals["WeightedFT"] = []
+        self.raw_y_neg_vals["WeightedFT"] = []
+        self.raw_y1_pos_vals["WeightedFT"] = []
+        self.raw_y1_neg_vals["WeightedFT"] = []
+        self.raw_y2_pos_vals["WeightedFT"] = []
+        self.raw_y2_neg_vals["WeightedFT"] = []
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
@@ -1325,7 +1331,8 @@ class CalibrationTesting(Screen):
 
         self.disable_run_buttons()
 
-        self.setup_arrays("WeightedFT")
+        self.raw_x_pos_vals["WeightedFT"] = []
+        self.raw_x_neg_vals["WeightedFT"] = []
 
         if self.stage != "WeightedFT":
             self.set_stage("WeightedFT")
