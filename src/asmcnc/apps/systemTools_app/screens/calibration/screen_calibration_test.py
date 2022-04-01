@@ -932,7 +932,8 @@ class CalibrationTesting(Screen):
             "WeightedFT": []
         }
 
-        self.setup_arrays()
+        self.setup_arrays("UnweightedFT")
+        self.setup_arrays("WeightedFT")
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
