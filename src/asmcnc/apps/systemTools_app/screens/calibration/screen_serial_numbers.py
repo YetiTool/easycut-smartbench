@@ -214,7 +214,7 @@ class UploadSerialNumbersScreen(Screen):
         self.calibration_db.insert_serial_numbers(*all_serial_numbers)
 
         ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
-        # self.download_and_upload_LB_cal_data()
+        self.download_and_upload_LB_cal_data()
 
         log("EVERYTHING CHECKED OUT!")
         self.error_label.text = "EVERYTHING CHECKED OUT!"
