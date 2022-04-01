@@ -33,8 +33,7 @@ class ZHeadQCDB2(Screen):
         coefficients = sg_coefficients + cs + sgt + toff + temperature
 
         self.calibration_db.setup_z_head_coefficients(self.serial_number, motor_index, stage)
-
-        self.calibration_db.insert_z_head_coefficients(self.serial_number, motor_index, stage, coefficients)
+        self.calibration_db.insert_calibration_coefficients(self.serial_number, motor_index, stage, coefficients)
 
     def on_enter(self):
         try:
