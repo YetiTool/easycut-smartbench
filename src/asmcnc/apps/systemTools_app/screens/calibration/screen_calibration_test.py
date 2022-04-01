@@ -1038,7 +1038,14 @@ class CalibrationTesting(Screen):
         self.home_button.disabled = False
         self.x0y0_jog_button.disabled = False
         self.x7y0_jog_button.disabled = False
-        self.z0_jog_button.disabled = False        
+        self.z0_jog_button.disabled = False
+
+        if all([self.is_step_ticked(self.unweighted_test_check),
+                self.is_step_ticked(self.x_test_check),
+                self.is_step_ticked(self.y_test_check),
+                self.is_step_ticked(self.z_test_check)]):
+
+            self.data_send_button.disabled = False
 
 
     def disable_run_buttons(self):
@@ -1240,10 +1247,6 @@ class CalibrationTesting(Screen):
 
             ]
 
-            print("GOT STATISTICS ")
-            print(self.statistics_data_dict[stage])
-
-
 
     def run_z_procedure(self, dt):
 
@@ -1435,7 +1438,7 @@ class CalibrationTesting(Screen):
             self.z_running = False
             self.enable_run_buttons()
             # self.data_send_button.disabled = False
-            self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.unweighted_test_check.source = self.green_tick
             self.pass_or_fail_unweighted_peak_loads()
 
 
@@ -1571,6 +1574,7 @@ class CalibrationTesting(Screen):
 
         self.data_send_button.disabled = True
         self.data_send_label.text = "Sending..."
+        self.sent_data_check.source = self.checkbox_inactive
 
         Clock.schedule_once(self.do_data_send, 0.2)
 
@@ -1590,10 +1594,10 @@ class CalibrationTesting(Screen):
                 self.get_statistics("WeightedFT")
                 self.send_data_for_each_stage("WeightedFT")
 
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.sent_data_check.source = self.green_tick
 
         except:
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            self.sent_data_check.source = self.red_cross
             print(traceback.format_exc())
 
         self.data_send_label.text = "Sent data?"
