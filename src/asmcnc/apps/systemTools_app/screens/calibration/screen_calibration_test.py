@@ -846,7 +846,6 @@ class CalibrationTesting(Screen):
 
     def __init__(self, **kwargs):
         super(CalibrationTesting, self).__init__(**kwargs)
-        self.setup_arrays()
 
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
