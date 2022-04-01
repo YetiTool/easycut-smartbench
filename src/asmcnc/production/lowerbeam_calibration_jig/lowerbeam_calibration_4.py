@@ -110,5 +110,6 @@ class LBCalibration4(Screen):
         serial_number = self.serial_no_input.text.replace(" ", "").lower()
 
         self.calibration_db.setup_lower_beam_coefficients(serial_number, motor_index, stage)
+
         self.calibration_db.insert_calibration_coefficients(serial_number, motor_index, stage, coefficients)
         
