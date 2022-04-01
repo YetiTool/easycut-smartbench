@@ -1219,32 +1219,32 @@ class CalibrationTesting(Screen):
             return peak_list
 
 
-    def get_statistics(self):
+    def get_statistics(self, stage):
 
             # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-            peak_list = self.read_out_peaks(self.stage)
+            peak_list = self.read_out_peaks(stage)
 
-            self.statistics_data_dict[self.stage] = [
+            self.statistics_data_dict[stage] = [
 
-                            sum(self.raw_x_pos_vals[self.stage])/len(self.raw_x_pos_vals[self.stage]),
+                            sum(self.raw_x_pos_vals[stage])/len(self.raw_x_pos_vals[stage]),
                             peak_list[0],
-                            sum(self.raw_x_neg_vals[self.stage])/len(self.raw_x_neg_vals[self.stage]),
+                            sum(self.raw_x_neg_vals[stage])/len(self.raw_x_neg_vals[stage]),
                             peak_list[1],
-                            sum(self.raw_y_pos_vals[self.stage])/len(self.raw_y_pos_vals[self.stage]),
+                            sum(self.raw_y_pos_vals[stage])/len(self.raw_y_pos_vals[stage]),
                             peak_list[2],
-                            sum(self.raw_y_neg_vals[self.stage])/len(self.raw_y_neg_vals[self.stage]),
+                            sum(self.raw_y_neg_vals[stage])/len(self.raw_y_neg_vals[stage]),
                             peak_list[3],
-                            sum(self.raw_y1_pos_vals[self.stage])/len(self.raw_y1_pos_vals[self.stage]),
+                            sum(self.raw_y1_pos_vals[stage])/len(self.raw_y1_pos_vals[stage]),
                             peak_list[4],
-                            sum(self.raw_y1_neg_vals[self.stage])/len(self.raw_y1_neg_vals[self.stage]),
+                            sum(self.raw_y1_neg_vals[stage])/len(self.raw_y1_neg_vals[stage]),
                             peak_list[5],
-                            sum(self.raw_y2_pos_vals[self.stage])/len(self.raw_y2_pos_vals[self.stage]),
+                            sum(self.raw_y2_pos_vals[stage])/len(self.raw_y2_pos_vals[stage]),
                             peak_list[6],
-                            sum(self.raw_y2_neg_vals[self.stage])/len(self.raw_y2_neg_vals[self.stage]),
+                            sum(self.raw_y2_neg_vals[stage])/len(self.raw_y2_neg_vals[stage]),
                             peak_list[7],
-                            sum(self.raw_z_pos_vals[self.stage])/len(self.raw_z_pos_vals[self.stage]),
+                            sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
                             peak_list[8],
-                            sum(self.raw_z_neg_vals[self.stage])/len(self.raw_z_neg_vals[self.stage]),
+                            sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
                             peak_list[9]
 
             ]
