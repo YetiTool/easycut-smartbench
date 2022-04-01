@@ -30,7 +30,7 @@ class ZHeadQCDB2(Screen):
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
 
-        coefficients = sg_coefficients + cs + sgt + toff + temperature
+        coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
 
         self.calibration_db.setup_z_head_coefficients(self.serial_number, motor_index, stage)
         self.calibration_db.insert_calibration_coefficients(self.serial_number, motor_index, stage, coefficients)

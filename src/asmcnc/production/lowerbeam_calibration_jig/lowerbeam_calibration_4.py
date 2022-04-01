@@ -105,7 +105,7 @@ class LBCalibration4(Screen):
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
 
-        coefficients = sg_coefficients + cs + sgt + toff + temperature
+        coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
 
         serial_number = self.serial_no_input.text.replace(" ", "").lower()
 
