@@ -196,7 +196,25 @@ class UploadSerialNumbersScreen(Screen):
             return
 
         ## LINK SERIAL NUMBERS IN DATABASE
+
+
+        all_serial_numbers = [
+                                self.machine_serial_number,
+                                self.zhead_serial_input.text,
+                                self.lb_serial_input.text,
+                                self.ub_serial_input.text,
+                                self.console_serial_input.text,
+                                self.ybench_serial_input.text,
+                                self.spindle_serial_input.text,
+                                self.sw_version,
+                                self.fw_version,
+                                self.squareness_input.text
+            ]
+
+        self.calibration_db.insert_serial_numbers(*all_serial_numbers)
+
         ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
+
 
         log("EVERYTHING CHECKED OUT!")
         self.error_label.text = "EVERYTHING CHECKED OUT!"
@@ -284,5 +302,54 @@ class UploadSerialNumbersScreen(Screen):
             validated = False
 
         return validated
+
+
+    # CALIBRATION DATA DOWNLOAD & UPLOAD
+
+    def download_and_upload_LB_cal_data(self):
+
+        self.error_label.text = "Getting LB data..."
+
+        stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
+
+        try: 
+            Y1_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text.replace(" ", "").lower(), TMC_Y1, stage_id)
+            Y2_data = self.calibration_db.get_lower_beam_parameters(self.serial_no_input.text.replace(" ", "").lower(), TMC_Y2, stage_id)
+
+            self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
+            self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
+
+            self.error_label.text = "Uploading to ZH..."
+
+            Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
+
+            self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 5)
+
+        except:
+            self.error_label.text = "Could not get data"
+            print(traceback.format_exc())
+
+    def save_calibration_data_to_motor(self, motor_index, data):
+
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = [int(i) for i in data[3].strip('[]').split(',')]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = int(data[4])
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = int(data[5])
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = int(data[6])
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = int(data[7])
+
+    # def report_info_back_to_user_and_return(self, dt):
+
+    #     if not self.m.calibration_upload_in_progress:
+
+    #         Clock.unschedule(self.poll_for_end_of_upload)
+            
+    #         if self.m.calibration_upload_fail_info:
+    #             self.main_label.text = self.m.calibration_upload_fail_info
+
+    #         else:
+    #             self.main_label.text = "Success!!"
+
+    # def on_leave(self):
+    #     if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
 
         

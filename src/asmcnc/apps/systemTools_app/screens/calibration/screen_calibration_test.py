@@ -45,6 +45,7 @@ Builder.load_string("""
     z_load_button : z_load_button
 
     data_send_button : data_send_button
+    data_send_label : data_send_label
 
     home_button : home_button
     x0y0_jog_button : x0y0_jog_button
@@ -212,6 +213,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label:
+                        id: data_send_label
                         text: 'Sent data?'
                     
                     Image:
@@ -1565,15 +1567,18 @@ class CalibrationTesting(Screen):
 
     def send_all_data(self):
 
+        self.data_send_button.disabled = True
+        self.data_send_label.text = "Sending..."
+
         try:
 
             if self.is_step_ticked(self.unweighted_test_check): 
                 self.get_statistics("UnweightedFT")
                 self.send_data_for_each_stage("UnweightedFT")
             
-            if all( self.is_step_ticked(self.x_test_check),
+            if all([self.is_step_ticked(self.x_test_check),
                     self.is_step_ticked(self.y_test_check),
-                    self.is_step_ticked(self.z_test_check)):
+                    self.is_step_ticked(self.z_test_check)]):
 
                 self.get_statistics("WeightedFT")
                 self.send_data_for_each_stage("WeightedFT")
@@ -1582,7 +1587,10 @@ class CalibrationTesting(Screen):
 
         except:
             self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            print(traceback.format_exc())            
+            print(traceback.format_exc())
+
+        self.data_send_label.text = "Sent data?"
+        self.data_send_button.disabled = False
 
 
     def send_data_for_each_stage(self, stage):
