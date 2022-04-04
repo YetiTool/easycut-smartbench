@@ -375,10 +375,10 @@ class UploadSerialNumbersScreen(Screen):
             Clock.unschedule(self.poll_for_end_of_upload)
             
             if self.m.calibration_upload_fail_info:
-                self.main_label.text = self.m.calibration_upload_fail_info
+                self.error_label.text = self.m.calibration_upload_fail_info
 
             else:
-                self.main_label.text = "Success!!"
+                self.error_label.text = "Success!!"
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
