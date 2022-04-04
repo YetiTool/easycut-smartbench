@@ -178,7 +178,7 @@ class UploadSerialNumbersScreen(Screen):
     def on_enter(self):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.get_software_version_before_release()
-        self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version))
+        self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
 
         print(self.fw_version)
 
