@@ -196,7 +196,7 @@ class CalibrationDatabase(object):
 
             try:
                 parameters = {
-                    "coefficients": [int(i[0]) for i in data],
+                    "coefficients": [int(i[0]) for i in data][0:128],
                     "cs": data[128][0],
                     "sgt": data[129][0],
                     "toff": data[130][0],
