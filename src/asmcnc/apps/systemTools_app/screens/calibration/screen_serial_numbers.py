@@ -191,6 +191,8 @@ class UploadSerialNumbersScreen(Screen):
         else: self.sw_version = self.set.sw_version
 
 
+        print(self.sw_version)
+
     def validate_and_download(self):
         regex_check = self.check_valid_inputs_regex()
         valid_check = self.check_valid_inputs()
