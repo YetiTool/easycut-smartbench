@@ -157,6 +157,10 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 class UploadSerialNumbersScreen(Screen):
 
     machine_serial_number = ''
@@ -174,6 +178,19 @@ class UploadSerialNumbersScreen(Screen):
         self.m = kwargs['m']
         self.calibration_db = kwargs['calibration_db']
         self.set = kwargs['settings']
+
+        if self.dev_mode:
+            self.auto_generate_sns()
+
+    def auto_generate_sns(self):
+
+        self.zhead_serial_input.text = "zh0000"
+        self.lb_serial_input.text = "xl0000"
+        self.ub_serial_input.text = "xu0000"
+        self.console_serial_input.text = "cs0000"
+        self.ybench_serial_input.text = "yb0000"
+        self.spindle_serial_input.text = "123456Y"
+        self.squareness_input.text = "0.0"
 
 
     def on_enter(self):
