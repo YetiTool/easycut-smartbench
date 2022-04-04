@@ -91,22 +91,21 @@ class LBCalibration4(Screen):
         self.ok_button.disabled = True
         self.ok_button.text = "Updating..."
 
-        serial_number = self.serial_no_input.text.replace(' ', '').lower()
+        Clock.schedule_once(self.do_data_send, 0.2)
 
+
+    def do_data_send(self, dt):
+
+        serial_number = self.serial_no_input.text.replace(' ', '').lower()
         validated = self.validate_serial_number(serial_number)
 
         if not validated:
             self.error_label.text = 'Serial number invalid'
             return
 
-        Clock.schedule_once(self.do_data_send, 0.2)
-
-
-    def do_data_send(self, dt):
-
         try:
-            self.send_calibration_payload(TMC_Y1)
-            self.send_calibration_payload(TMC_Y2)
+            self.send_calibration_payload(TMC_Y1, serial_number)
+            self.send_calibration_payload(TMC_Y2, serial_number)
             next_screen_name = 'lbc5'
 
         except Exception as e:
@@ -118,7 +117,7 @@ class LBCalibration4(Screen):
         self.ok_button.text = "OK"
         self.sm.current = next_screen_name
 
-    def send_calibration_payload(self, motor_index):
+    def send_calibration_payload(self, motor_index, serial_number):
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
 
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
@@ -128,8 +127,6 @@ class LBCalibration4(Screen):
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
 
         coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
-
-        serial_number = self.serial_no_input.text.replace(" ", "").lower()
 
         self.calibration_db.setup_lower_beam_coefficients(serial_number, motor_index, stage)
 
