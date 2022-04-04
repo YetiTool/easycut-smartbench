@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from kivy.properties import ObjectProperty
 import re
+import traceback
 
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
