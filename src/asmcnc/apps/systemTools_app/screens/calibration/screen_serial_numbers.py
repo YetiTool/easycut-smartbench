@@ -361,7 +361,7 @@ class UploadSerialNumbersScreen(Screen):
 
     def save_calibration_data_to_motor(self, motor_index, data):
 
-        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data["coefficints"]
+        self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data["coefficients"]
         self.m.TMC_motor[motor_index].calibrated_at_current_setting = data["cs"]
         self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data["sgt"]
         self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data["toff"]
