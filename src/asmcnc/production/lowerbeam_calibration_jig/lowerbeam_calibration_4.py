@@ -89,6 +89,7 @@ class LBCalibration4(Screen):
     def enter_next_screen(self):
 
         self.ok_button.disabled = True
+        self.ok_button.text = "Updating..."
 
         serial_number = self.serial_no_input.text.replace(' ', '').lower()
 
@@ -112,8 +113,9 @@ class LBCalibration4(Screen):
             next_screen_name = 'lbc6'
             print(traceback.format_exc())
 
-        self.ok_button.disabled = False
         self.sm.get_screen(next_screen_name).set_serial_no(serial_number)
+        self.ok_button.disabled = False
+        self.ok_button.text = "OK"
         self.sm.current = next_screen_name
 
     def send_calibration_payload(self, motor_index):
