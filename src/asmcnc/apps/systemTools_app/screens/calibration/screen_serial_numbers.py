@@ -178,7 +178,7 @@ class UploadSerialNumbersScreen(Screen):
     def on_enter(self):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.get_software_version_before_release()
-        self.fw_version = str(self.m.firmware_version)
+        self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version))
 
     
     def go_back(self):
@@ -236,18 +236,21 @@ class UploadSerialNumbersScreen(Screen):
             self.error_label.text = 'Squareness invalid'
             validated = False
 
-        if len(self.fw_version) < 5:
-            self.error_label.text = "fw version invalid" 
-            validated = False
-
         return validated
 
     def check_versions_valid_regex(self):
 
+        fw_version_pattern = re.compile('\d[.]\d[.]\d')
         sw_version_pattern = re.compile('v\d[.]\d[.]\d')
+
+        fw_match = bool(fw_version_pattern.match(self.fw_version))
         sw_match = bool(sw_version_pattern.match(self.sw_version))
+
         validated = True
 
+        if not fw_match:
+            self.error_label.text = "fw version invalid" 
+            validated = False
 
         if not sw_match:
             self.error_label.text = "sw version invalid"  
@@ -307,6 +310,11 @@ class UploadSerialNumbersScreen(Screen):
 
         return validated
 
+    def get_truncated_fw_version(self, version):
+
+        ver_lst = version.split('.')
+        truncated_fw_version = ver_lst[0] + '.' + ver_lst[1] + '.' + ver_lst[2]
+        return truncated_fw_version
 
     # CALIBRATION DATA DOWNLOAD & UPLOAD
 
