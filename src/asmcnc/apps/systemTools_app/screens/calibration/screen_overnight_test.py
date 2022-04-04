@@ -1578,7 +1578,7 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
         self.cancel_active_polls()
         self.setup_arrays()
-        self.set_stage("")
+        self.stage = ""
         self.buttons_disabled(False)
 
 
