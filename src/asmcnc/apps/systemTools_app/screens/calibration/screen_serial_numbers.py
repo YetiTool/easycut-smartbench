@@ -164,6 +164,8 @@ class UploadSerialNumbersScreen(Screen):
 
     poll_for_end_of_upload = None
 
+    dev_mode = True
+
 
     def __init__(self, **kwargs):
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
@@ -185,7 +187,7 @@ class UploadSerialNumbersScreen(Screen):
 
     def get_software_version_before_release(self):
 
-        if self.set.sw_branch == 'ft': self.sw_version = self.set.latest_sw_version
+        if self.set.sw_branch == 'ft' or self.dev_mode: self.sw_version = self.set.latest_sw_version
         else: self.sw_version = self.set.sw_version
 
 
