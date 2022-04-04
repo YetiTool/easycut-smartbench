@@ -162,6 +162,8 @@ class UploadSerialNumbersScreen(Screen):
     fw_version = ''
     sw_version = ''
 
+    poll_for_end_of_upload = None
+
 
     def __init__(self, **kwargs):
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
