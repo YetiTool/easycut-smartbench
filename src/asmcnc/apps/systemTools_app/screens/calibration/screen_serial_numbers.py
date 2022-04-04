@@ -4,6 +4,7 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from kivy.properties import ObjectProperty
 import re
 import traceback
+from datetime import datetime
 
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
