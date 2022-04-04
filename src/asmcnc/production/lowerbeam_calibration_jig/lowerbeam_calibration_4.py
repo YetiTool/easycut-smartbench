@@ -3,11 +3,13 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 import re
+from kivy.clock import Clock
 
 Builder.load_string("""
 <LBCalibration4>:
     serial_no_input:serial_no_input
     error_label:error_label
+    ok_button : ok_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -52,10 +54,12 @@ Builder.load_string("""
                 font_size: dp(30)
 
             Button:
+                id: ok_button
                 on_press: root.enter_next_screen()
                 text: 'OK'
                 font_size: dp(30)
                 size_hint_y: 0.6
+                disabled: False
 
 """)
 
@@ -70,6 +74,11 @@ class LBCalibration4(Screen):
     def enter_prev_screen(self):
         self.sm.current = 'lbc2'
 
+
+    def on_enter(self):
+        self.ok_button.disabled = False
+
+
     def validate_serial_number(self, serial):
         expression = '(xl)\d{4}'
         pattern = re.compile(expression)
@@ -78,6 +87,9 @@ class LBCalibration4(Screen):
         return match
 
     def enter_next_screen(self):
+
+        self.ok_button.disabled = True
+
         serial_number = self.serial_no_input.text.replace(' ', '').lower()
 
         validated = self.validate_serial_number(serial_number)
@@ -86,15 +98,23 @@ class LBCalibration4(Screen):
             self.error_label.text = 'Serial number invalid'
             return
 
+        Clock.schedule_once(self.do_data_send, 0.2)
+
+
+    def do_data_send(self, dt):
+
         try:
             self.send_calibration_payload(TMC_Y1)
             self.send_calibration_payload(TMC_Y2)
-            self.sm.get_screen('lbc5').set_serial_no(serial_number)
-            self.sm.current = 'lbc5'
+            next_screen_name = 'lbc5'
+
         except Exception as e:
-            self.sm.get_screen('lbc6').set_serial_no(serial_number)
-            self.sm.current = 'lbc6'
+            next_screen_name = 'lbc6'
             print(traceback.format_exc())
+
+        self.ok_button.disabled = False
+        self.sm.get_screen(next_screen_name).set_serial_no(serial_number)
+        self.sm.current = next_screen_name
 
     def send_calibration_payload(self, motor_index):
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
