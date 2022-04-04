@@ -243,7 +243,7 @@ class UploadSerialNumbersScreen(Screen):
         fw_version_pattern = re.compile('\d[.]\d[.]\d')
         sw_version_pattern = re.compile('v\d[.]\d[.]\d')
 
-        fw_match = bool(version_pattern.match(self.fw_version))
+        fw_match = bool(fw_version_pattern.match(self.fw_version))
         sw_match = bool(sw_version_pattern.match(self.sw_version))
 
         validated = True
