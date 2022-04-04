@@ -180,6 +180,8 @@ class UploadSerialNumbersScreen(Screen):
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version))
 
+        print(self.fw_version)
+
     
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -189,9 +191,6 @@ class UploadSerialNumbersScreen(Screen):
 
         if self.set.sw_branch == 'ft' or self.dev_mode: self.sw_version = self.set.latest_sw_version
         else: self.sw_version = self.set.sw_version
-
-
-        print(self.sw_version)
 
     def validate_and_download(self):
         regex_check = self.check_valid_inputs_regex()
