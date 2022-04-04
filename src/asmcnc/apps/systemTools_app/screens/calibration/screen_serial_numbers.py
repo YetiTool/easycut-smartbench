@@ -198,8 +198,8 @@ class UploadSerialNumbersScreen(Screen):
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
 
-        print(self.fw_version)
-
+        if self.dev_mode:
+            self.auto_generate_sns()
     
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
