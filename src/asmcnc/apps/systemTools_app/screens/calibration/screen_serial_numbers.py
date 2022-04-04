@@ -5,6 +5,7 @@ from kivy.properties import ObjectProperty
 import re
 import traceback
 from datetime import datetime
+from kivy.clock import Clock
 
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
