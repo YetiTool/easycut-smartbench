@@ -36,11 +36,17 @@ class ZHeadQCDB2(Screen):
         self.calibration_db.insert_calibration_coefficients(self.serial_number, motor_index, stage, coefficients)
 
     def on_enter(self):
+
+        Clock.schedule_once(self.do_data_send, 0.2)
+
+    def do_data_send(self, dt):
+
         try:
             self.send_calibration_payload(TMC_Z)
             self.send_calibration_payload(TMC_X1)
             self.send_calibration_payload(TMC_X2)
             self.sm.current = 'qcDB3'
+
         except:
             self.sm.current = 'qcDB4'
             print(traceback.format_exc())

@@ -181,9 +181,6 @@ class UploadSerialNumbersScreen(Screen):
         self.calibration_db = kwargs['calibration_db']
         self.set = kwargs['settings']
 
-        if self.dev_mode:
-            self.auto_generate_sns()
-
     def auto_generate_sns(self):
 
         self.zhead_serial_input.text = "zh0000"
@@ -205,6 +202,18 @@ class UploadSerialNumbersScreen(Screen):
     
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
+
+
+    def check_for_duplicates(self):
+
+        try:
+            # Get serial numbers
+            [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.machine_serial_number)
+            message = "This serial number is already in the database! Continuing will create duplicates!!"
+            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+
+        except: 
+            pass
 
 
     def get_software_version_before_release(self):
@@ -239,15 +248,14 @@ class UploadSerialNumbersScreen(Screen):
         self.calibration_db.insert_serial_numbers(*all_serial_numbers)
 
         ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
-        self.download_and_upload_LB_cal_data()
+        self.error_label.text = "Getting LB data..."
+        Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data(), 0.2)
 
-        log("EVERYTHING CHECKED OUT!")
-        self.error_label.text = "EVERYTHING CHECKED OUT!"
 
     def check_valid_inputs(self):
         validated = True
 
-        if len(self.spindle_serial_input.text) < 7:
+        if not (7 < len(self.spindle_serial_input.text) < 10):
             self.error_label.text = 'Spindle serial invalid'
             validated = False
 
@@ -338,8 +346,6 @@ class UploadSerialNumbersScreen(Screen):
     # CALIBRATION DATA DOWNLOAD & UPLOAD
 
     def download_and_upload_LB_cal_data(self):
-
-        self.error_label.text = "Getting LB data..."
 
         stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
 

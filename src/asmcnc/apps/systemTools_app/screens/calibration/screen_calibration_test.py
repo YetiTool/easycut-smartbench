@@ -207,7 +207,7 @@ Builder.load_string("""
                     id: data_send_button
                     text: 'Send data to database'
                     on_press: root.send_all_data()
-                    # disabled: True
+                    disabled: True
 
                 GridLayout:
                     cols: 2
@@ -1041,12 +1041,16 @@ class CalibrationTesting(Screen):
         self.x7y0_jog_button.disabled = False
         self.z0_jog_button.disabled = False
 
+
         if all([self.is_step_ticked(self.unweighted_test_check),
                 self.is_step_ticked(self.x_test_check),
                 self.is_step_ticked(self.y_test_check),
                 self.is_step_ticked(self.z_test_check)]):
 
             self.data_send_button.disabled = False
+
+        else:
+            self.data_send_button.disabled = True
 
 
     def disable_run_buttons(self):
@@ -1058,6 +1062,7 @@ class CalibrationTesting(Screen):
         self.x0y0_jog_button.disabled = True
         self.x7y0_jog_button.disabled = True
         self.z0_jog_button.disabled = True
+        self.data_send_button.disabled = True
 
     
     def measure(self):

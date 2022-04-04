@@ -12,6 +12,7 @@ from datetime import datetime
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopOvernightTest
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -1000,10 +1001,7 @@ class OvernightTesting(Screen):
 
 
     def on_enter(self):
-
-        # Get serial numbers
-        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
-        [self.zh_serial, self.xl_serial] =self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
+        self.get_sub_serials_from_database()
         self.m.s.FINAL_TEST = True
         self.stop_button.disabled = False
 
@@ -1012,6 +1010,19 @@ class OvernightTesting(Screen):
         self.cancel_active_polls()
         self.stop_button.disabled = False
         self.buttons_disabled(False)
+
+
+    def get_sub_serials_from_database(self):
+
+        try:
+            # Get serial numbers
+            self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
+            [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
+
+        except: 
+            message = "Can't get subassembly serials from database, have you entered serial numbers yet?"
+            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+            self.back_to_fac_settings()
 
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
