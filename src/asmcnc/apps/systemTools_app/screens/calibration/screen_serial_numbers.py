@@ -343,8 +343,8 @@ class UploadSerialNumbersScreen(Screen):
         stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
 
         try: 
-            Y1_data = self.calibration_db.get_lower_beam_coefficents(self.serial_no_input.text.replace(" ", "").lower(), TMC_Y1, stage_id)
-            Y2_data = self.calibration_db.get_lower_beam_coefficents(self.serial_no_input.text.replace(" ", "").lower(), TMC_Y2, stage_id)
+            Y1_data = self.calibration_db.get_lower_beam_coefficents(self.machine_serial_number.replace(" ", "").lower(), TMC_Y1, stage_id)
+            Y2_data = self.calibration_db.get_lower_beam_coefficents(self.machine_serial_number.replace(" ", "").lower(), TMC_Y2, stage_id)
 
             self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
             self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
