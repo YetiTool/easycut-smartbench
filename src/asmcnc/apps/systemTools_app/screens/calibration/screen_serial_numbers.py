@@ -196,6 +196,7 @@ class UploadSerialNumbersScreen(Screen):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
+        self.check_for_duplicates()
 
         if self.dev_mode:
             self.auto_generate_sns()
