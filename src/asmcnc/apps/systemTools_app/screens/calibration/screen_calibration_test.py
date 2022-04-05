@@ -844,7 +844,7 @@ class CalibrationTesting(Screen):
 
     tolerance = 0.8
 
-    mini_run_dev_mode = True
+    mini_run_dev_mode = False
 
     def __init__(self, **kwargs):
         super(CalibrationTesting, self).__init__(**kwargs)
