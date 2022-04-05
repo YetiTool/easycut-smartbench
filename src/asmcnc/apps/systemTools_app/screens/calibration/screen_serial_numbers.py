@@ -7,6 +7,8 @@ import traceback
 from datetime import datetime
 from kivy.clock import Clock
 
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
 
