@@ -209,15 +209,15 @@ class UploadSerialNumbersScreen(Screen):
 
     def check_for_duplicates(self):
 
-        try:
-            # Get serial numbers
-            [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.machine_serial_number)
-            message = "This serial number is already in the database! Continuing will create duplicates!!"
-            log(message)
-            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+        # try:
+        # Get serial numbers
+        [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.machine_serial_number)
+        message = "This serial number is already in the database! Continuing will create duplicates!!"
+        log(message)
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
 
-        except: 
-            pass
+        # except: 
+        #     pass
 
 
     def get_software_version_before_release(self):
