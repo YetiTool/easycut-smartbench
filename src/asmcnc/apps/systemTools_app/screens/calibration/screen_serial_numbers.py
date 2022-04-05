@@ -255,7 +255,7 @@ class UploadSerialNumbersScreen(Screen):
     def check_valid_inputs(self):
         validated = True
 
-        if not (7 < len(self.spindle_serial_input.text) < 10):
+        if not (6 < len(self.spindle_serial_input.text) < 10):
             self.error_label.text = 'Spindle serial invalid'
             validated = False
 
