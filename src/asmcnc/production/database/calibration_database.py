@@ -48,9 +48,6 @@ class CalibrationDatabase(object):
             log("Connected to InfluxDB")
         except:
             log("Unable to connect to InfluxDB")
-
-    def is_connected(self):
-        return self.conn.product_version != None
         
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                             console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
