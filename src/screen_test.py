@@ -23,7 +23,7 @@ except:
 
 from asmcnc.comms import router_machine
 
-from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
@@ -36,6 +36,9 @@ class ScreenTest(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+        systemtools_sm = Mock()
+        systemtools_sm.sm = sm
+
         # Localization/language object
         l = localization.Localization()
 
@@ -46,16 +49,18 @@ class ScreenTest(App):
         # Initialise 'j'ob 'd'ata object
         jd = Mock()
 
+        calibration_db = Mock()
+
         # Initialise 'm'achine object
         # m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
         m = Mock()
 
-        sm = ScreenManager(transition=NoTransition())
+        test_screen = OvernightTesting(name='overnight_testing', m = m, systemtools = systemtools_sm, calibration_db = calibration_db, sm = systemtools_sm.sm, l = l)
+        sm.add_widget(test_screen)
 
-        z_head_qc_7 = ZHeadQC7(name='qc7', sm = sm, m = m, l = l)
-        sm.add_widget(z_head_qc_7)
-
-        sm.current = 'qc7'
+        sm.current = 'overnight_testing'
+        
+        # Clock.schedule_once(m.s.start_services, 4)
 
         return sm
 

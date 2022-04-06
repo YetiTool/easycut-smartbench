@@ -5,13 +5,10 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import traceback
 
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+
 Builder.load_string("""
 <CalibrationTesting>:
-    y_rt_load:y_rt_load
-    x_rt_load:x_rt_load
-    z_rt_load:z_rt_load
-    y1_rt_load:y1_rt_load
-    y2_rt_load:y2_rt_load
 
     y_axis_fw_range : y_axis_fw_range
     y1_fw_range : y1_fw_range
@@ -24,11 +21,17 @@ Builder.load_string("""
     x_bw_range : x_bw_range
     z_bw_range : z_bw_range
 
-    y_peak_load:y_peak_load
-    x_peak_load:x_peak_load
-    z_peak_load:z_peak_load
-    y1_peak_load:y1_peak_load
-    y2_peak_load:y2_peak_load
+    y_peak_posve : y_peak_posve
+    y1_peak_posve : y1_peak_posve
+    y2_peak_posve : y2_peak_posve
+    x_peak_posve : x_peak_posve
+    z_peak_posve : z_peak_posve
+
+    y_peak_negve : y_peak_negve
+    y1_peak_negve : y1_peak_negve
+    y2_peak_negve : y2_peak_negve
+    x_peak_negve : x_peak_negve
+    z_peak_negve : z_peak_negve
 
     x_test_check:x_test_check
     y_test_check:y_test_check
@@ -42,261 +45,782 @@ Builder.load_string("""
     z_load_button : z_load_button
 
     data_send_button : data_send_button
+    data_send_label : data_send_label
 
     home_button : home_button
     x0y0_jog_button : x0y0_jog_button
     x7y0_jog_button : x7y0_jog_button
     z0_jog_button : z0_jog_button
 
+    y_peak_checkbox : y_peak_checkbox
+    y1_peak_checkbox : y1_peak_checkbox
+    y2_peak_checkbox : y2_peak_checkbox
+    x_peak_checkbox : x_peak_checkbox
+    z_peak_checkbox : z_peak_checkbox
+
+    y_peak_posve_weighted : y_peak_posve_weighted
+    y1_peak_posve_weighted : y1_peak_posve_weighted
+    y2_peak_posve_weighted : y2_peak_posve_weighted
+    x_peak_posve_weighted : x_peak_posve_weighted
+    z_peak_posve_weighted : z_peak_posve_weighted
+
+    y_peak_negve_weighted : y_peak_negve_weighted
+    y1_peak_negve_weighted : y1_peak_negve_weighted
+    y2_peak_negve_weighted : y2_peak_negve_weighted
+    x_peak_negve_weighted : x_peak_negve_weighted
+    z_peak_negve_weighted : z_peak_negve_weighted
+
+    y_axis_fw_range_weighted : y_axis_fw_range_weighted
+    y_axis_bw_range_weighted : y_axis_bw_range_weighted
+    y_peak_checkbox_weighted : y_peak_checkbox_weighted
+    y1_fw_range_weighted : y1_fw_range_weighted
+    y1_bw_range_weighted : y1_bw_range_weighted
+    y1_peak_checkbox_weighted : y1_peak_checkbox_weighted
+    y2_fw_range_weighted : y2_fw_range_weighted
+    y2_bw_range_weighted : y2_bw_range_weighted
+    y2_peak_checkbox_weighted : y2_peak_checkbox_weighted
+    x_fw_range_weighted : x_fw_range_weighted
+    x_bw_range_weighted : x_bw_range_weighted
+    x_peak_checkbox_weighted : x_peak_checkbox_weighted
+    z_fw_range_weighted : z_fw_range_weighted
+    z_bw_range_weighted : z_bw_range_weighted
+    z_peak_checkbox_weighted : z_peak_checkbox_weighted
+
+    status_container : status_container
+
     BoxLayout:
         orientation: 'vertical'
 
         BoxLayout:
-            orientation: "horizontal"
-            size_hint_y: 0.3
+            size_hint_y: 0.92
+            orientation: 'vertical'
+
 
             BoxLayout:
                 orientation: "horizontal"
-                size_hint_x: 0.7
+                size_hint_y: 0.3
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_x: 0.7
+
+                    Button:
+                        text: 'Back'
+                        on_press: root.back_to_fac_settings()
+
+                    Button:
+                        id: home_button
+                        text: 'Home'
+                        on_press: root.home()
+
+                    Button:
+                        id: x0y0_jog_button
+                        text: 'X0Y0'
+                        on_press: root.zero_x_and_y()
+
+                    Button:
+                        id: x7y0_jog_button
+                        text: 'X-700Y0'
+                        on_press: root.mid_x_and_zero_y()
+
+                    Button:
+                        id: z0_jog_button
+                        text: 'Z0'
+                        on_press: root.zero_Z()
 
                 Button:
-                    text: 'Back'
-                    on_press: root.back_to_fac_settings()
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    on_press: root.stop()
+                    size_hint_x: 0.3
+
+
+            GridLayout: 
+                cols: 3
+                size_hint_y: 0.6
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: unweighted_test_button
+                        text: 'Run XYZ 0kg'
+                        on_press: root.run_unweighted_test()
+
+                    Image:
+                        id: unweighted_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: x_load_button
+                        text: 'Run X (7.5kg)'
+                        on_press: root.run_x_procedure(None)
+
+                    Image:
+                        id: x_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: y_load_button
+                        text: 'Run Y (7.5kg)'
+                        on_press: root.run_y_procedure(None)
+                    
+                    Image:
+                        id: y_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        id: z_load_button
+                        text: 'Run Z (2kg)'
+                        on_press: root.run_z_procedure(None)
+
+                    Image:
+                        id: z_test_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 Button:
-                    id: home_button
-                    text: 'Home'
-                    on_press: root.home()
+                    id: data_send_button
+                    text: 'Send data to database'
+                    on_press: root.send_all_data()
+                    disabled: True
 
-                Button:
-                    id: x0y0_jog_button
-                    text: 'X0Y0'
-                    on_press: root.zero_x_and_y()
+                GridLayout:
+                    cols: 2
 
-                Button:
-                    id: x7y0_jog_button
-                    text: 'X-700Y0'
-                    on_press: root.mid_x_and_zero_y()
+                    Label:
+                        id: data_send_label
+                        text: 'Sent data?'
+                    
+                    Image:
+                        id: sent_data_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-                Button:
-                    id: z0_jog_button
-                    text: 'Z0'
-                    on_press: root.zero_Z()
-
-            Button:
-                text: 'STOP'
-                background_color: [1,0,0,1]
-                on_press: root.stop()
-                size_hint_x: 0.3
-
-
-        GridLayout: 
-            cols: 3
-            size_hint_y: 0.6
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: unweighted_test_button
-                    text: 'Run XYZ 0kg'
-                    on_press: root.run_unweighted_test()
-
-                Image:
-                    id: unweighted_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: x_load_button
-                    text: 'Run X (7.5kg)'
-                    on_press: root.run_x_procedure(None)
-
-                Image:
-                    id: x_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: y_load_button
-                    text: 'Run Y (7.5kg)'
-                    on_press: root.run_y_procedure(None)
-                
-                Image:
-                    id: y_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    id: z_load_button
-                    text: 'Run Z (2kg)'
-                    on_press: root.run_z_procedure(None)
-
-                Image:
-                    id: z_test_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            Button:
-                id: data_send_button
-                text: 'Send data to database'
-                on_press: root.send_data()
-                disabled: True
-
-            GridLayout:
-                cols: 2
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.1
 
                 Label:
-                    text: 'Sent data?'
-                
-                Image:
-                    id: sent_data_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-        GridLayout:
-            cols: 4
-
-            GridLayout:
-                rows: 6
+                    text: 'Unweighted'
 
                 Label:
-                    text: 'Real time load:'
+                    text: 'Weighted'
 
-                Label:
-                    id: y_rt_load
-                    text: 'Y:'
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 1
 
-                Label:
-                    id: y1_rt_load
-                    text: 'Y1:'
+                GridLayout: 
+                    cols: 7
+                    rows: 5
+                    # cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
 
-                Label:
-                    id: y2_rt_load
-                    text: 'Y2:'
+                    ## Y axis
 
-                Label:
-                    id: x_rt_load
-                    text: 'X:'
+                    Label:
+                        text: 'Y+: '
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: z_rt_load
-                    text: 'Z:'
+                    Label:
+                        id: y_peak_posve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-            GridLayout:
-                rows: 6
+                    Label:
+                        id: y_axis_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
 
-                Label:
-                    text: '<<--'
+                    Label:
+                        text: 'Y-: '
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: y_axis_fw_range
-                    text: 'Y:'
-
-                Label:
-                    id: y1_fw_range
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_fw_range
-                    text: 'Y2:'
-
-                Label:
-                    id: x_fw_range
-                    text: 'X:'
-
-                Label:
-                    id: z_fw_range
-                    text: 'Z:'
-
-            GridLayout:
-                rows: 6
-
-                Label:
-                    text: '-->>'
-
-                Label:
-                    id: y_axis_bw_range
-                    text: 'Y:'
-
-                Label:
-                    id: y1_bw_range
-                    text: 'Y1:'
-
-                Label:
-                    id: y2_bw_range
-                    text: 'Y2:'
-
-                Label:
-                    id: x_bw_range
-                    text: 'X:'
-
-                Label:
-                    id: z_bw_range
-                    text: 'Z:'
+                    Label:
+                        id: y_peak_negve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
 
-            GridLayout:
-                rows: 6
+                    Label:
+                        id: y_axis_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
 
-                Label:
-                    text: 'Peak load:'
 
-                Label:
-                    id: y_peak_load
-                    text: 'Y:'
+                    Image:
+                        id: y_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-                Label:
-                    id: y1_peak_load
-                    text: 'Y1:'
+                    ## Y1 axis
 
-                Label:
-                    id: y2_peak_load
-                    text: 'Y2:'
+                    Label:
+                        text: 'Y1+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: x_peak_load
-                    text: 'X:'
+                    Label:
+                        id: y1_peak_posve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: z_peak_load
-                    text: 'Z:'
+                    Label:
+                        id: y1_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Y1-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_negve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: y1_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## Y2 axis
+
+                    Label:
+                        text: 'Y2+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_posve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_fw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Y2-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_negve
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_bw_range
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: y2_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## X axis
+
+                    Label:
+                        text: 'X+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_posve
+                        text: 'xxx'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_fw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'X-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_negve
+                        text: 'xxx'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_bw_range
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: x_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+
+                    ## Z axis
+
+                    Label:
+                        text: 'Z-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_negve
+                        text: 'zzz'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_fw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Z+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_posve
+                        text: 'zzz'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_bw_range
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: z_peak_checkbox
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+
+                GridLayout: 
+                    cols: 7
+                    rows: 5
+                    # cols_minimum: {0: 30, 1: 40, 2: 110, 3: 110, 4: 110}
+
+                    ## Y axis
+
+                    Label:
+                        text: 'Y+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_peak_posve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_axis_fw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Y-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y_axis_bw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: y_peak_checkbox_weighted
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## Y1 axis
+
+                    Label:
+                        text: 'Y1+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_posve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_fw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Y1-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y1_bw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: y1_peak_checkbox_weighted
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## Y2 axis
+
+                    Label:
+                        text: 'Y2+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_posve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_fw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Y2-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_peak_negve_weighted
+                        text: 'yyy'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: y2_bw_range_weighted
+                        text: 'yyy - yyy'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: y2_peak_checkbox_weighted
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                    ## X axis
+
+                    Label:
+                        text: 'X+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_posve_weighted
+                        text: 'xxx'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_fw_range_weighted
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'X-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_peak_negve_weighted
+                        text: 'xxx'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: x_bw_range_weighted
+                        text: 'xxx - xxx'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: x_peak_checkbox_weighted
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+
+                    ## Z axis
+
+                    Label:
+                        text: 'Z-:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_negve_weighted
+                        text: 'zzz'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_fw_range_weighted
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Label:
+                        text: 'Z+:'
+                        halign: 'right'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_peak_posve_weighted
+                        text: 'zzz'
+                        halign: 'left'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+
+                    Label:
+                        id: z_bw_range_weighted
+                        text: 'zzz - zzz'
+                        markup: True
+                        valign: 'middle'
+                        text_size: self.size
+                        halign: 'center'
+
+                    Image:
+                        id: z_peak_checkbox_weighted
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container
 """)
 
 MAX_XY_SPEED = 1186.0
 MAX_Z_SPEED = 75.0
 
-MAX_Z_DISTANCE = 115
-MAX_X_DISTANCE = 1135
-MAX_Y_DISTANCE = 2275
-
-TIME_TO_RUN_Z = 241 #241
-TIME_TO_RUN_X = 120 #120
-TIME_TO_RUN_Y = 239 #239
 
 def log(message):
     timestamp = datetime.now()
@@ -304,15 +828,26 @@ def log(message):
 
 class CalibrationTesting(Screen):
 
-
     next_run_event = None
-    unweighted_event_x = None
-    unweighted_event_y = None
     confirm_event = None
+
+    checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
+    green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    X_SG_to_kg_scaling = 13.7
+    Y_SG_to_kg_scaling = 11.5
+    Z_SG_to_kg_scaling = 5.0
+
+    xy_friction = 5.0
+    z_friction = 3.0
+
+    tolerance = 0.8
+
+    mini_run_dev_mode = False
 
     def __init__(self, **kwargs):
         super(CalibrationTesting, self).__init__(**kwargs)
-        self.setup_arrays()
 
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
@@ -325,83 +860,147 @@ class CalibrationTesting(Screen):
         self.y_running = False
         self.z_running = False
 
-    def setup_arrays(self):
-        #x loads with vector & pos
-        self.x_vals = []
-        #raw x loads
-        self.raw_x_vals = []
+        self.stage = ''
+        self.statuses = []
 
-        #z loads with vector & pos
-        self.z_vals = []
-        #raw z loads
-        self.raw_z_vals = []
+        self.x_weight = 0
+        self.y_weight = 0
+        self.z_weight = 0
 
-        #y_motor loads with vector & pos
-        self.y_vals = []
-        #raw y_motor loads
-        self.raw_y_vals = []
+        self.status_data_dict = {
 
-        #y1_motor loads with vector & pos
-        self.y1_vals = []
-        #raw y1 loads
-        self.raw_y1_vals = []
+            "UnweightedFT" : [],
+            "WeightedFT" : []
 
-        #y2_motor loads with vector & pos
-        self.y2_vals = []
-        #raw y2 vals
-        self.raw_y2_vals = []
+        }
 
-        self.unweighted_data = []
+        self.statistics_data_dict = {
 
-    def send_data(self):
+            "UnweightedFT" : [],
+            "WeightedFT" : []
 
-        try:
-            serial = self.calibration_db.get_serial_number()
-            self.calibration_db.send_final_test_calibration(serial, self.unweighted_data[0], self.unweighted_data[1], self.unweighted_data[2], self.x_vals, self.y_vals, self.z_vals)
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        except:
-            self.sent_data_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            print(traceback.format_exc())
+        }
+
+        self.raw_x_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y1_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y2_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_z_pos_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_x_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y1_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_y2_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+        self.raw_z_neg_vals = {
+
+            "UnweightedFT" : [],
+            "WeightedFT": []
+        }
+
+        self.setup_arrays("UnweightedFT")
+        self.setup_arrays("WeightedFT")
+
+        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
+
+        if self.mini_run_dev_mode:
+            self.sn_for_db = "YS6test"
+
+    def setup_arrays(self, stage):
+
+        self.raw_x_pos_vals[stage] = []
+        self.raw_y_pos_vals[stage] = []
+        self.raw_y1_pos_vals[stage] = []
+        self.raw_y2_pos_vals[stage] = []
+        self.raw_z_pos_vals[stage] = []
+        self.raw_x_neg_vals[stage] = []
+        self.raw_y_neg_vals[stage] = []
+        self.raw_y1_neg_vals[stage] = []
+        self.raw_y2_neg_vals[stage] = []
+        self.raw_z_neg_vals[stage] = []
+
+
+    # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
+    def set_stage(self, stage):
+
+        self.stage = stage
+        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+        self.status_data_dict[self.stage] = []
+        log("Overnight test, stage: " + str(self.stage))
+
 
     def stop(self):
         self.x_running = False
         self.y_running = False
         self.z_running = False
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         popup_info.PopupStop(self.m, self.sm, self.l)
         self.enable_run_buttons()
 
+
     def on_enter(self):
+        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
+
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
         self.enable_run_buttons()
 
+
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
+
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('calibration_testing','calibration_testing')
 
+
     def reset(self):
         if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
         if self.confirm_event != None: Clock.unschedule(self.confirm_event)
 
         self.m.resume_from_alarm()
@@ -411,20 +1010,26 @@ class CalibrationTesting(Screen):
     def zero_x_and_y(self):
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
 
+
     def mid_x_and_zero_y(self):
         self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
+
 
     def zero_Z(self):
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
+
     def disable_x_measurement(self, dt):
         self.x_running = False
+
 
     def disable_z_measurement(self, dt):
         self.z_running = False
 
+
     def disable_y_measurement(self, dt):
         self.y_running = False
+
 
     def enable_run_buttons(self):
         self.x_load_button.disabled = False
@@ -434,7 +1039,19 @@ class CalibrationTesting(Screen):
         self.home_button.disabled = False
         self.x0y0_jog_button.disabled = False
         self.x7y0_jog_button.disabled = False
-        self.z0_jog_button.disabled = False        
+        self.z0_jog_button.disabled = False
+
+
+        if all([self.is_step_ticked(self.unweighted_test_check),
+                self.is_step_ticked(self.x_test_check),
+                self.is_step_ticked(self.y_test_check),
+                self.is_step_ticked(self.z_test_check)]):
+
+            self.data_send_button.disabled = False
+
+        else:
+            self.data_send_button.disabled = True
+
 
     def disable_run_buttons(self):
         self.x_load_button.disabled = True
@@ -445,481 +1062,566 @@ class CalibrationTesting(Screen):
         self.x0y0_jog_button.disabled = True
         self.x7y0_jog_button.disabled = True
         self.z0_jog_button.disabled = True
+        self.data_send_button.disabled = True
 
-    def confirm_unweighted(self, dt):
-        self.unweighted_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        self.unweighted_data.append(self.x_vals)
-        self.unweighted_data.append(self.y_vals)
-        self.unweighted_data.append(self.z_vals)
+    
+    def measure(self):
 
-        self.enable_run_buttons()
-        self.data_send_button.disabled = False
+        if not (self.x_running and self.m.feed_rate() < 1200) and not (self.y_running and self.m.feed_rate() < 1200) and not (self.z_running and self.m.feed_rate() < 80):
+            return
 
-    def confirm_x(self, dt):
-        self.enable_run_buttons()
-        self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        # GET DIRECTIONS
 
-    def confirm_y(self, dt):
-        self.enable_run_buttons()
-        self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        # -1    BACKWARDS/UP (TOWARDS HOME)
+        # 0     NOT MOVING
+        # 1     FORWARDS/DOWN (AWAY FROM HOME)
 
-    def confirm_z(self, dt):
-        self.enable_run_buttons()
-        self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
-    def run_unweighted_test(self):
+        if len(self.status_data_dict[self.stage]) > 0:
 
-        self.disable_run_buttons()
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
+            else: x_dir = 0
 
-        self.show_expected_ranges(0,0,0)
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
+            else: y_dir = 0
 
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
+            else: z_dir = 0
 
-        self.run_unweighted_z()
+        else:
+            x_dir = 0
+            y_dir = 0
+            z_dir = 0
+        
+        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        self.unweighted_event_x = Clock.schedule_once(self.run_unweighted_x, TIME_TO_RUN_Z + 10)
+        status = [
+                    self.m.mpos_x(),
+                    self.m.mpos_y(),
+                    self.m.mpos_z(),
+                    x_dir,
+                    y_dir,
+                    z_dir,
+                    int(self.m.s.sg_x_motor_axis),
+                    int(self.m.s.sg_y_axis),
+                    int(self.m.s.sg_y1_motor),
+                    int(self.m.s.sg_y2_motor),
+                    int(self.m.s.sg_z_motor_axis),
+                    int(self.m.s.motor_driver_temp),
+                    int(self.m.s.pcb_temp),
+                    int(self.m.s.transistor_heatsink_temp),
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    self.m.feed_rate(),
+                    self.x_weight,
+                    self.y_weight,
+                    self.z_weight
+        ]
 
-        self.unweighted_event_y = Clock.schedule_once(self.run_unweighted_y, TIME_TO_RUN_Z + TIME_TO_RUN_X + 20)
+        self.status_data_dict[self.stage].append(status)
 
-        self.confirm_event = Clock.schedule_once(self.confirm_unweighted, TIME_TO_RUN_Z + TIME_TO_RUN_X + TIME_TO_RUN_Y)
+        # Record raw values for statistics calculations
 
-    def stop_all_procedures(self):
-        self.disable_x_measurement(None)
-        self.disable_y_measurement(None)
-        self.disable_z_measurement(None)
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        if -999 < self.m.s.sg_x_motor_axis < 1023: 
+            if x_dir > 0: self.raw_x_pos_vals[self.stage].append(self.m.s.sg_x_motor_axis)
+            if x_dir < 0: self.raw_x_neg_vals[self.stage].append(self.m.s.sg_x_motor_axis)
+        
+        if -999 < self.m.s.sg_y_axis < 1023:
+            if y_dir > 0: self.raw_y_pos_vals[self.stage].append(self.m.s.sg_y_axis)
+            if y_dir < 0: self.raw_y_neg_vals[self.stage].append(self.m.s.sg_y_axis)
+        
+        if -999 < self.m.s.sg_y1_motor < 1023:
+            if y_dir > 0: self.raw_y1_pos_vals[self.stage].append(self.m.s.sg_y1_motor)
+            if y_dir < 0: self.raw_y1_neg_vals[self.stage].append(self.m.s.sg_y1_motor)
+        
+        if -999 < self.m.s.sg_y2_motor < 1023:
+            if y_dir > 0: self.raw_y2_pos_vals[self.stage].append(self.m.s.sg_y2_motor)
+            if y_dir < 0: self.raw_y2_neg_vals[self.stage].append(self.m.s.sg_y2_motor)
+        
+        if -999 < self.m.s.sg_z_motor_axis < 1023:
+            if z_dir < 0: self.raw_z_pos_vals[self.stage].append(self.m.s.sg_z_motor_axis)
+            if z_dir > 0: self.raw_z_neg_vals[self.stage].append(self.m.s.sg_z_motor_axis)
 
-        if self.next_run_event != None: Clock.unschedule(self.next_run_event)
-        if self.unweighted_event_x != None: Clock.unschedule(self.unweighted_event_x)
-        if self.unweighted_event_y != None: Clock.unschedule(self.unweighted_event_y)
-        if self.confirm_event != None: Clock.unschedule(self.confirm_event)
-
-        self.enable_run_buttons()
-
-    def run_unweighted_z(self):
-        self.z_vals = []
-        self.raw_z_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
-
-        self.z_distance_left = TOTAL_DISTANCE
-
-        self.z_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.z_running:
-                    return
-
-                if self.z_distance_left > MAX_Z_DISTANCE:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
-
-                    self.z_distance_left -= MAX_Z_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.z_distance_left = 0
-
-                    Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
+        self.update_peaks()
 
 
-        self.next_run_event = Clock.schedule_once(run, 0.5)
+    def update_peaks(self):
+
+        if self.stage == "UnweightedFT":
+
+            self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_posve, self.raw_y1_pos_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_posve, self.raw_y2_pos_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_posve, self.raw_z_pos_vals[self.stage])
+
+            self.get_peak_as_string(self.x_peak_negve, self.raw_x_neg_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_negve, self.raw_y_neg_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_negve, self.raw_y1_neg_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_negve, self.raw_y2_neg_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals[self.stage])
+            return
+
+        if self.stage == "WeightedFT":
+
+            self.get_peak_as_string(self.x_peak_posve_weighted, self.raw_x_pos_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_pos_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_posve_weighted, self.raw_y2_pos_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_pos_vals[self.stage])
+
+            self.get_peak_as_string(self.x_peak_negve_weighted, self.raw_x_neg_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_negve_weighted, self.raw_y_neg_vals[self.stage])
+            self.get_peak_as_string(self.y1_peak_negve_weighted, self.raw_y1_neg_vals[self.stage])
+            self.get_peak_as_string(self.y2_peak_negve_weighted, self.raw_y2_neg_vals[self.stage])
+            self.get_peak_as_string(self.z_peak_negve_weighted, self.raw_z_neg_vals[self.stage])
+            return
+
+    def get_peak_as_string(self, label_id, raw_vals):
+
+        try: label_id.text = str(max(raw_vals))
+        except: pass
+
+
+    def read_out_peaks(self, stage):
+
+        if stage == "UnweightedFT":
+
+            peak_list = [
+                        int(self.x_peak_posve.text),
+                        int(self.x_peak_negve.text),
+                        int(self.y_peak_posve.text),
+                        int(self.y_peak_negve.text),
+                        int(self.y1_peak_posve.text),
+                        int(self.y1_peak_negve.text),
+                        int(self.y2_peak_posve.text),
+                        int(self.y2_peak_negve.text),
+                        int(self.z_peak_negve.text),
+                        int(self.z_peak_posve.text)
+            ]
+
+            return peak_list
+
+        if stage == "WeightedFT":
+
+            peak_list = [
+                        int(self.x_peak_posve_weighted.text),
+                        int(self.x_peak_negve_weighted.text),
+                        int(self.y_peak_posve_weighted.text),
+                        int(self.y_peak_negve_weighted.text),
+                        int(self.y1_peak_posve_weighted.text),
+                        int(self.y1_peak_negve_weighted.text),
+                        int(self.y2_peak_posve_weighted.text),
+                        int(self.y2_peak_negve_weighted.text),
+                        int(self.z_peak_negve_weighted.text),
+                        int(self.z_peak_posve_weighted.text)
+            ]
+
+            return peak_list
+
+
+    def get_statistics(self, stage):
+
+            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+            peak_list = self.read_out_peaks(stage)
+
+            self.statistics_data_dict[stage] = [
+
+                            sum(self.raw_x_pos_vals[stage])/len(self.raw_x_pos_vals[stage]),
+                            peak_list[0],
+                            sum(self.raw_x_neg_vals[stage])/len(self.raw_x_neg_vals[stage]),
+                            peak_list[1],
+                            sum(self.raw_y_pos_vals[stage])/len(self.raw_y_pos_vals[stage]),
+                            peak_list[2],
+                            sum(self.raw_y_neg_vals[stage])/len(self.raw_y_neg_vals[stage]),
+                            peak_list[3],
+                            sum(self.raw_y1_pos_vals[stage])/len(self.raw_y1_pos_vals[stage]),
+                            peak_list[4],
+                            sum(self.raw_y1_neg_vals[stage])/len(self.raw_y1_neg_vals[stage]),
+                            peak_list[5],
+                            sum(self.raw_y2_pos_vals[stage])/len(self.raw_y2_pos_vals[stage]),
+                            peak_list[6],
+                            sum(self.raw_y2_neg_vals[stage])/len(self.raw_y2_neg_vals[stage]),
+                            peak_list[7],
+                            sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
+                            peak_list[8],
+                            sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
+                            peak_list[9]
+
+            ]
+
 
     def run_z_procedure(self, dt):
 
+        # start run, run all the way down and then all the way back up. 
+
+        if self.m.mpos_z() != self.m.z_max_jog_abs_limit:
+            popup_info.PopupError(self.sm, self.l, "Move Z to Z0 first!")
+            return
+
         self.disable_run_buttons()
 
-        self.show_expected_ranges(0,0,2)
+        self.raw_z_pos_vals["WeightedFT"] = []
+        self.raw_z_neg_vals["WeightedFT"] = []
 
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
+        
+        self.x_weight = 0
+        self.y_weight = 0
+        self.z_weight = 2
 
-        self.z_vals = []
-        self.raw_z_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Z / 60) * MAX_Z_SPEED
-
-        self.z_distance_left = TOTAL_DISTANCE
+        self.set_weighted_z_range()
 
         self.z_running = True
 
-        def run(dt):
+        self.m.send_any_gcode_command('G91 G1 Z-149 F75')
+        self.m.send_any_gcode_command('G91 G1 Z149 F75')
 
-            if self.m.state().startswith('Idle'):
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
 
-                if not self.z_running:
-                    return
 
-                if self.z_distance_left > MAX_Z_DISTANCE:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -MAX_Z_DISTANCE, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', MAX_Z_DISTANCE, MAX_Z_SPEED)
+    def confirm_z(self, dt):
+        if self.m.state().startswith('Idle'):
+            self.z_running = False
+            self.enable_run_buttons()
+            self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
 
-                    self.z_distance_left -= MAX_Z_DISTANCE 
 
-                    TIME_FOR_MOVEMENT = float((float(MAX_Z_DISTANCE) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_z() > -30:
-                        self.m.jog_relative('Z', -self.z_distance_left, MAX_Z_SPEED)
-                    else:
-                        self.m.jog_relative('Z', self.z_distance_left, MAX_Z_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.z_distance_left) / float(MAX_Z_SPEED)) * 60) + 2
-
-                    self.z_distance_left = 0
-
-                    Clock.schedule_once(self.disable_z_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_z, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    #change distances and speeds
     def run_y_procedure(self, dt):
 
+        # start run, run all the way down and then all the way back up. 
+
         self.disable_run_buttons()
 
-        self.show_expected_ranges(0,7.5,0)
+        self.raw_y_pos_vals["WeightedFT"] = []
+        self.raw_y_neg_vals["WeightedFT"] = []
+        self.raw_y1_pos_vals["WeightedFT"] = []
+        self.raw_y1_neg_vals["WeightedFT"] = []
+        self.raw_y2_pos_vals["WeightedFT"] = []
+        self.raw_y2_neg_vals["WeightedFT"] = []
 
-        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
 
-        self.y_vals = []
-        self.raw_y_vals = []
+        self.x_weight = 0
+        self.y_weight = 7.5
+        self.z_weight = 0
 
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
-
-        self.y_distance_left = TOTAL_DISTANCE
-
-        self.y_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-
-                if not self.y_running:
-                    return
-
-                if self.y_distance_left > MAX_Y_DISTANCE:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
-
-                    self.y_distance_left -= MAX_Y_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.y_distance_left = 0
-
-                    Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_y, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def run_unweighted_y(self, dt):
-        self.y_vals = []
-        self.raw_y_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_Y / 60) * MAX_XY_SPEED
-
-        self.y_distance_left = TOTAL_DISTANCE
+        self.set_weighted_y_range()
 
         self.y_running = True
 
-        def run(dt):
+        self.m.send_any_gcode_command('G91 G1 Y2500 F1186')
+        self.m.send_any_gcode_command('G91 G1 Y-2500 F1186')
 
-            if self.m.state().startswith('Idle'):
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
 
-                if not self.y_running:
-                    return
 
-                if self.y_distance_left > MAX_Y_DISTANCE:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', MAX_Y_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -MAX_Y_DISTANCE, MAX_XY_SPEED)
+    def confirm_y(self, dt):
+        if self.m.state().startswith('Idle'):
+            self.y_running = False
+            self.enable_run_buttons()
+            self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.y_peak_checkbox_weighted, self.check_in_range(self.y_peak_posve_weighted))
+            self.tick_checkbox(self.y1_peak_checkbox_weighted, self.check_in_range(self.y1_peak_posve_weighted))
+            self.tick_checkbox(self.y2_peak_checkbox_weighted, self.check_in_range(self.y2_peak_posve_weighted))
 
-                    self.y_distance_left -= MAX_Y_DISTANCE 
 
-                    TIME_FOR_MOVEMENT = float((float(MAX_Y_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_y() < -2460:
-                        self.m.jog_relative('Y', self.y_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('Y', -self.y_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.y_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.y_distance_left = 0
-
-                    Clock.schedule_once(self.disable_y_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    #change distances and speeds
     def run_x_procedure(self, dt):
 
+        # start run, run all the way down and then all the way back up. 
+
         self.disable_run_buttons()
 
-        self.show_expected_ranges(7.5,0,0)
+        self.raw_x_pos_vals["WeightedFT"] = []
+        self.raw_x_neg_vals["WeightedFT"] = []
 
-        self.m.jog_absolute_single_axis('X', self.m.x_min_jog_abs_limit, 6000)
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
 
-        self.raw_x_vals = []
-        self.x_vals = []
+        self.x_weight = 7.5
+        self.y_weight = 0
+        self.z_weight = 0
 
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
-
-        self.x_distance_left = TOTAL_DISTANCE
-
-        self.x_running = True
-
-        def run(dt):
-
-            if self.m.state().startswith('Idle'):
-    
-                if not self.x_running:
-                    return
-                
-                if self.x_distance_left > MAX_X_DISTANCE:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
-
-                    self.x_distance_left -= MAX_X_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.x_distance_left = 0
-
-                    Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
-                    self.confirm_event = Clock.schedule_once(self.confirm_x, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def run_unweighted_x(self, dt):
-        self.raw_x_vals = []
-        self.x_vals = []
-
-        #total distance required
-        TOTAL_DISTANCE = float(TIME_TO_RUN_X / 60) * MAX_XY_SPEED
-
-        self.x_distance_left = TOTAL_DISTANCE
+        self.set_weighted_x_range()
 
         self.x_running = True
 
-        def run(dt):
+        self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+        self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
 
-            if self.m.state().startswith('Idle'):
-
-                if not self.x_running:
-                    return
-                
-                if self.x_distance_left > MAX_X_DISTANCE:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', MAX_X_DISTANCE, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -MAX_X_DISTANCE, MAX_XY_SPEED)
-
-                    self.x_distance_left -= MAX_X_DISTANCE 
-
-                    TIME_FOR_MOVEMENT = float((float(MAX_X_DISTANCE) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.next_run_event = Clock.schedule_once(run, TIME_FOR_MOVEMENT)
-                else:
-                    if self.m.mpos_x() < -1260:
-                        self.m.jog_relative('X', self.x_distance_left, MAX_XY_SPEED)
-                    else:
-                        self.m.jog_relative('X', -self.x_distance_left, MAX_XY_SPEED)
-
-                    TIME_FOR_MOVEMENT = float((float(self.x_distance_left) / float(MAX_XY_SPEED)) * 60) + 2
-
-                    self.x_distance_left = 0
-
-                    Clock.schedule_once(self.disable_x_measurement, TIME_FOR_MOVEMENT)
-
-            else:
-                self.next_run_event = Clock.schedule_once(run, 2)
-
-        self.next_run_event = Clock.schedule_once(run, 0.5)
-
-    def measure(self):
-
-        if self.z_running and self.m.feed_rate() < 80:
-
-            if self.m.s.sg_z_motor_axis == -999:
-                return
-
-            if len(self.z_vals) > 0:
-                cur_pos = self.m.mpos_z()
-                if self.z_vals[len(self.z_vals)-1][1] <  cur_pos:
-                    self.z_vals.append([1, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-                else:
-                    self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-            else:
-                self.z_vals.append([0, float(self.m.mpos_z()), self.m.s.sg_z_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-
-            self.raw_z_vals.append(self.m.s.sg_z_motor_axis)
-            self.z_peak_load.text = "Z: " + str(max(self.raw_z_vals, key=abs))
-            self.z_rt_load.text = "Z: " + str(self.m.s.sg_z_motor_axis)
-
-        elif self.x_running and self.m.feed_rate() < 1200:
-            if self.m.s.sg_x_motor_axis == -999:
-                return
-
-            if len(self.x_vals) > 0:
-                cur_pos = self.m.mpos_x()
-                if self.x_vals[len(self.x_vals)-1][1] <  cur_pos:
-                    self.x_vals.append([1, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-                else:
-                    self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-            else:
-                self.x_vals.append([0, float(self.m.mpos_x()), self.m.s.sg_x_motor_axis, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-
-            self.raw_x_vals.append(self.m.s.sg_x_motor_axis)
-            self.x_peak_load.text = "X: " + str(max(self.raw_x_vals, key=abs))
-            self.x_rt_load.text = "X: " + str(self.m.s.sg_x_motor_axis)
-
-        elif self.y_running and self.m.feed_rate() < 1200:
-            if self.m.s.sg_y_axis == -999 or self.m.s.sg_y1_motor == -999 or self.m.s.sg_y2_motor == -999:
-                return
-
-            if len(self.y_vals) > 0:
-                cur_pos = self.m.mpos_y()
-                if self.y_vals[len(self.y_vals)-1][1] <  cur_pos:
-                    self.y_vals.append([1, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-                else:
-                    self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-            else:
-                self.y_vals.append([0, float(self.m.mpos_y()), self.m.s.sg_y_axis, self.m.s.sg_y1_motor, self.m.s.sg_y2_motor, self.m.s.motor_driver_temp, self.m.s.pcb_temp, self.m.s.transistor_heatsink_temp, datetime.now()])
-
-            self.raw_y_vals.append(self.m.s.sg_y_axis)
-            self.raw_y1_vals.append(self.m.s.sg_y1_motor)
-            self.raw_y2_vals.append(self.m.s.sg_y2_motor)
-            self.y_peak_load.text = "Y ax: " + str(max(self.raw_y_vals, key=abs))
-            self.y_rt_load.text = "Y ax: " + str(self.m.s.sg_y_axis)
-            self.y1_peak_load.text = "Y1: " + str(max(self.raw_y1_vals, key=abs))
-            self.y2_peak_load.text = "Y2: " + str(max(self.raw_y2_vals, key=abs))
-            self.y1_rt_load.text = "Y1: " + str(self.m.s.sg_y1_motor)
-            self.y2_rt_load.text = "Y2: " + str(self.m.s.sg_y2_motor)
+        # poll to see when run is done
+        self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
 
 
-    def show_expected_ranges(self, x_load, y_load, z_load):
+    def confirm_x(self, dt):
 
-        X_SG_to_kg_scaling = 13.7
-        Y_SG_to_kg_scaling = 11.5
-        Z_SG_to_kg_scaling = 5.0
-
-        xy_friction = 5.0
-        z_friction = 3.0
-
-        tolerance = 0.8
-
-        y_fw_expected_min = (xy_friction + float(y_load))*(1.0 - tolerance)
-        y_fw_expected_max = (xy_friction + float(y_load))*(1.0 + tolerance)
-
-        y_bw_expected_min = (xy_friction - float(y_load))*(1.0 - tolerance)
-        y_bw_expected_max = (xy_friction - float(y_load))*(1.0 + tolerance)
-
-        x_fw_expected_min = (xy_friction + float(x_load))*(1.0 - tolerance)
-        x_fw_expected_max = (xy_friction + float(x_load))*(1.0 + tolerance)
-
-        x_bw_expected_min = (xy_friction - float(x_load))*(1.0 - tolerance)
-        x_bw_expected_max = (xy_friction - float(x_load))*(1.0 + tolerance)
-
-        z_fw_expected_min = (z_friction + float(z_load))*(1.0 - tolerance)
-        z_fw_expected_max = (z_friction + float(z_load))*(1.0 + tolerance)
-
-        z_bw_expected_min = (z_friction - float(z_load))*(1.0 - tolerance)
-        z_bw_expected_max = (z_friction - float(z_load))*(1.0 + tolerance)
+        if self.m.state().startswith('Idle'):
+            self.x_running = False
+            self.enable_run_buttons()
+            self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(self.x_peak_checkbox_weighted, self.check_in_range(self.x_peak_posve_weighted))
 
 
-        print(y_fw_expected_min)
-        print(y_fw_expected_max)
-        print(y_bw_expected_min)
-        print(y_bw_expected_max)
-        print(x_fw_expected_min)
-        print(x_fw_expected_max)
-        print(x_bw_expected_min)
-        print(x_bw_expected_max)
-        print(z_fw_expected_min)
-        print(z_fw_expected_max)
-        print(z_bw_expected_min)
-        print(z_bw_expected_max)
+    def run_unweighted_test(self):
+        
+        if self.m.state().startswith('Idle'):
 
-        y_fw_range_text = str(y_fw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_fw_expected_max*Y_SG_to_kg_scaling)
-        x_fw_range_text = str(x_fw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_fw_expected_max*X_SG_to_kg_scaling)
-        z_fw_range_text = str(z_fw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_fw_expected_max*Z_SG_to_kg_scaling)
+            self.disable_run_buttons()
 
-        y_bw_range_text = str(y_bw_expected_min*Y_SG_to_kg_scaling) + "-" + str(y_bw_expected_max*Y_SG_to_kg_scaling)
-        x_bw_range_text = str(x_bw_expected_min*X_SG_to_kg_scaling) + "-" + str(x_bw_expected_max*X_SG_to_kg_scaling)
-        z_bw_range_text = str(z_bw_expected_min*Z_SG_to_kg_scaling) + "-" + str(z_bw_expected_max*Z_SG_to_kg_scaling)
+            self.set_stage("UnweightedFT")
+
+            self.x_weight = 0
+            self.y_weight = 0
+            self.z_weight = 0
+
+            self.zero_x_and_y()
+            self.zero_Z()
+
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
+
+        else:
+
+            popup_info.PopupError(self.sm, self.l, "SB not Idle! Check status")
+
+
+    def part_1_unweighted_x(self, dt):
+
+        if self.m.state().startswith('Idle'):
+
+            self.setup_arrays("UnweightedFT")
+            self.set_unweighted_x_range()
+            self.x_running = True
+            self.m.send_any_gcode_command('G91 G1 x1298 F1186')
+            self.m.send_any_gcode_command('G91 G1 x-1298 F1186')
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 20)
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
+
+    def part_2_unweighted_y(self, dt):
+
+        if self.m.state().startswith('Idle'):
+
+            self.set_unweighted_y_range()
+            self.x_running = False
+            self.y_running = True
+            self.m.send_any_gcode_command('G91 G1 Y2500 F1186')
+            self.m.send_any_gcode_command('G91 G1 Y-2500 F1186')
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 20)
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 3)
+
+
+    def part_3_unweighted_z(self, dt):
+
+        if self.m.state().startswith('Idle'):
+
+            self.set_unweighted_z_range()
+            self.y_running = False
+            self.z_running = True
+            self.m.send_any_gcode_command('G91 G1 Z-149 F75')
+            self.m.send_any_gcode_command('G91 G1 Z149 F75')
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 20)
+
+
+        else:
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 3)
+
+
+    def confirm_unweighted(self, dt):
+
+        if self.m.state().startswith('Idle'):
+
+            self.z_running = False
+            self.enable_run_buttons()
+            # self.data_send_button.disabled = False
+            self.unweighted_test_check.source = self.green_tick
+            self.pass_or_fail_unweighted_peak_loads()
+
+
+        else: 
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
+
+
+    ## SET TICKS
+    def tick_checkbox(self, checkbox_id, tick):
+
+        if tick: 
+            checkbox_id.source = self.green_tick
+
+        else: 
+            checkbox_id.source = self.red_cross
+
+    def is_step_ticked(self, checkbox_id):
+
+        if checkbox_id.source == self.green_tick:
+            return True
+
+        else: 
+            return False
+
+
+    def check_in_range(self, peak_id):
+
+        within_plus_minus = 400
+
+        try: 
+            if (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return True
+            else: return False
+
+        except:
+            return False
+
+
+    def pass_or_fail_unweighted_peak_loads(self):
+
+        within_plus_minus = 400
+
+        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_posve))
+        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.y1_peak_posve))
+        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.y2_peak_posve))
+        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_posve))
+        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_posve))
+
+
+    def up_range(self, friction, load):
+
+        expected_min = (friction + float(load))*(1.0 - self.tolerance)
+        expected_max = (friction + float(load))*(1.0 + self.tolerance)
+
+        return expected_min, expected_max
+
+    def down_range(self, friction, load):
+
+        expected_min = (friction - float(load))*(1.0 - self.tolerance)
+        expected_max = (friction - float(load))*(1.0 + self.tolerance)
+
+        return expected_min, expected_max
+
+
+    def get_range_text(self, friction, load, scaling):
+
+        fw_expected_min, fw_expected_max = self.up_range(friction, load)
+        bw_expected_min, bw_expected_max = self.down_range(friction, load)
+
+        fw_range_text = str(fw_expected_min*scaling) + " - " + str(fw_expected_max*scaling)
+        bw_range_text = str(bw_expected_min*scaling) + " - " + str(bw_expected_max*scaling)
+
+        return fw_range_text, bw_range_text
+
+
+    def set_unweighted_x_range(self):
+
+        x_fw_range_text, x_bw_range_text = self.get_range_text(self.xy_friction, 0, self.X_SG_to_kg_scaling)
+
+        self.x_fw_range.text = x_fw_range_text
+        self.x_bw_range.text = x_bw_range_text
+
+
+    def set_weighted_x_range(self):
+
+        x_fw_range_text, x_bw_range_text = self.get_range_text(self.xy_friction, 7.5, self.X_SG_to_kg_scaling)
+
+        self.x_fw_range_weighted.text = x_fw_range_text
+        self.x_bw_range_weighted.text = x_bw_range_text
+
+
+    def set_unweighted_y_range(self):
+
+        y_fw_range_text, y_bw_range_text = self.get_range_text(self.xy_friction, 0, self.Y_SG_to_kg_scaling)
 
         self.y_axis_fw_range.text = y_fw_range_text
         self.y1_fw_range.text = y_fw_range_text
         self.y2_fw_range.text = y_fw_range_text
-        self.x_fw_range.text = x_fw_range_text
-        self.z_fw_range.text = z_fw_range_text
 
         self.y_axis_bw_range.text = y_bw_range_text
         self.y1_bw_range.text = y_bw_range_text
         self.y2_bw_range.text = y_bw_range_text
-        self.x_bw_range.text = x_bw_range_text
+
+
+    def set_weighted_y_range(self):
+
+        y_fw_range_text, y_bw_range_text = self.get_range_text(self.xy_friction, 7.5, self.Y_SG_to_kg_scaling)
+
+        self.y_axis_fw_range_weighted.text = y_fw_range_text
+        self.y1_fw_range_weighted.text = y_fw_range_text
+        self.y2_fw_range_weighted.text = y_fw_range_text
+
+        self.y_axis_bw_range_weighted.text = y_bw_range_text
+        self.y1_bw_range_weighted.text = y_bw_range_text
+        self.y2_bw_range_weighted.text = y_bw_range_text
+
+
+    def set_unweighted_z_range(self):
+
+        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 0, self.Z_SG_to_kg_scaling)
+
+        self.z_fw_range.text = z_fw_range_text
         self.z_bw_range.text = z_bw_range_text
+
+    def set_weighted_z_range(self):
+
+        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
+
+        self.z_fw_range_weighted.text = z_fw_range_text
+        self.z_bw_range_weighted.text = z_bw_range_text
+
+
+    def send_all_data(self):
+
+        self.data_send_button.disabled = True
+        self.data_send_label.text = "Sending..."
+        self.sent_data_check.source = self.checkbox_inactive
+
+        Clock.schedule_once(self.do_data_send, 0.2)
+
+
+    def do_data_send(self, dt):
+
+        try:
+
+            if self.is_step_ticked(self.unweighted_test_check): 
+                self.get_statistics("UnweightedFT")
+                self.send_data_for_each_stage("UnweightedFT")
+            
+            if all([self.is_step_ticked(self.x_test_check),
+                    self.is_step_ticked(self.y_test_check),
+                    self.is_step_ticked(self.z_test_check)]):
+
+                self.get_statistics("WeightedFT")
+                self.send_data_for_each_stage("WeightedFT")
+
+            self.sent_data_check.source = self.green_tick
+
+        except:
+            self.sent_data_check.source = self.red_cross
+            print(traceback.format_exc())
+
+        self.data_send_label.text = "Sent data?"
+        self.data_send_button.disabled = False
+
+
+    def send_data_for_each_stage(self, stage):
+
+        try:
+
+            stage_id = self.calibration_db.get_stage_id_by_description(stage)
+            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            statistics = [self.sn_for_db, stage_id]
+            statistics.extend(self.statistics_data_dict[stage])
+            self.calibration_db.insert_final_test_statistics(*statistics)
+            return True
+
+        except:
+            print(traceback.format_exc())
+            return False
+
