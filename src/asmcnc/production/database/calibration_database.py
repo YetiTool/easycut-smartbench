@@ -1,4 +1,5 @@
 from datetime import datetime
+from influxdb import InfluxDBClient
 
 def log(message):
     timestamp = datetime.now()
@@ -41,6 +42,12 @@ class CalibrationDatabase(object):
 
         except: 
             log('Unable to connect to database')
+
+        try:
+            self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port, credentials.influx_username, credentials.influx_password, credentials.influx_database)
+            log("Connected to InfluxDB")
+        except:
+            log("Unable to connect to InfluxDB")
 
     def is_connected(self):
         return self.conn.product_version != None
@@ -206,8 +213,12 @@ class CalibrationDatabase(object):
                 log('Database is empty or incomplete for ' + combined_id)
             
             return parameters
-        
+    
+    def get_ambient_temperature(self):
+        query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE ("device_ID" = \'“eDGE-2”\') ORDER ' \
+        u'BY DESC LIMIT 1 '
 
+        return self.influx_client.query(query).raw['series'][0]['values'][0][1]
 
 database = CalibrationDatabase()
 
