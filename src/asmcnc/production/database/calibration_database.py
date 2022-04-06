@@ -217,6 +217,4 @@ class CalibrationDatabase(object):
 
         return self.influx_client.query(query).raw['series'][0]['values'][0][1]
 
-database = CalibrationDatabase()
 
-database.set_up_connection()
