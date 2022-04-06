@@ -827,6 +827,6 @@ class BuildInfoScreen(Screen):
             return True
 
         else:
-            warning_message = 'Problem saving location!!'
+            warning_message = self.l.get_str('Problem saving location!')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False

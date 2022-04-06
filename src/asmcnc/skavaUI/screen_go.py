@@ -746,7 +746,7 @@ class GoScreen(Screen):
         self.spindle_label.text = self.l.get_str("Spindle") + '\n' + self.l.get_str("speed")
         self.job_time_label.text = self.l.get_str("Total job time") + ":"
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
-        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n') + "[/color]"
+        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n', 1) + "[/color]"
 
         self.update_font_size(self.feed_label)
         self.update_font_size(self.spindle_label)

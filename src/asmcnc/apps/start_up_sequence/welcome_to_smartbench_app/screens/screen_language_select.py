@@ -331,8 +331,12 @@ class LanguageSelectScreen(Screen):
 
 	welcome_to_smartbench_labels = [
 		"Welcome to SmartBench",
+		"Willkommen bei SmartBench",
+		"Benvenuto in Smartbench",
 		"Benvenuti in Smartbench",
-		"Tervetuloa Smartbenchiin"
+		"Tervetuloa Smartbenchiin",
+		"Witamy w SmartBench",
+		"Velkommen til SmartBench"
 	]
 
 	welcome_i = 0
@@ -377,7 +381,7 @@ class LanguageSelectScreen(Screen):
 
 		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
 
-		if self.welcome_i < 2:
+		if self.welcome_i < 6:
 			self.welcome_i += 1
 
 		else:

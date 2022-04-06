@@ -226,7 +226,7 @@ class SkavaUI(App):
         log('Screen manager activated: ' + str(sm.current))
 
 
-        test_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Polskie (PL)", "Dansk (DK)"]
+        test_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polskie (PL)", "Dansk (DK)"]
 
         def test_cycle(dt):
             if self.test_no < len(test_languages):
