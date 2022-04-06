@@ -173,7 +173,7 @@ class UploadSerialNumbersScreen(Screen):
 
     poll_for_end_of_upload = None
 
-    dev_mode = True
+    dev_mode = False
 
 
     def __init__(self, **kwargs):
