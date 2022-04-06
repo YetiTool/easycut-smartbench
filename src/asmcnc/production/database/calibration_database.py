@@ -208,7 +208,3 @@ class CalibrationDatabase(object):
             return parameters
         
 
-
-database = CalibrationDatabase()
-
-database.set_up_connection()
