@@ -6,6 +6,11 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 import logging, threading, re
 
+try: 
+    import pigpio
+except:
+    pass
+
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -54,6 +59,8 @@ class RouterMachine(object):
     TMC_motor = {}
 
 
+    starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
+
     # PERSISTENT MACHINE VALUES
 
 
@@ -72,6 +79,7 @@ class RouterMachine(object):
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
+
 
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
@@ -135,6 +143,8 @@ class RouterMachine(object):
         self.jd = job
         self.set_jog_limits()
 
+        self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
+
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(win_serial_port)
@@ -152,6 +162,17 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+    # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
+    def reconnect_serial_connection(self):
+        if self.s.is_connected():
+            self.s.s.close()
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
+        self.s.establish_connection(self.win_serial_port)
+
+    def close_serial_connection(self, dt):
+        if self.s.is_connected():
+            self.s.s.close()
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -1215,6 +1236,11 @@ class RouterMachine(object):
         except: return 0
         else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
 
+    def firmware_version(self):
+        try: self.s.fw_version
+        except: return 0
+        else: return self.s.fw_version
+
 # POSITONAL GETTERS            
         
     def x_pos_str(self): return self.s.m_x
@@ -1260,6 +1286,15 @@ class RouterMachine(object):
             return int(self.s.spindle_load_voltage)
         except:
             return ''
+
+# LOAD GETTERS
+
+    # Stall guard loads - this is the relative load on a motor or axis, which is monitored to guard against a stall
+    def x_sg(self): return self.s.sg_x_motor_axis
+    def y_sg(self): return self.s.sg_y_axis
+    def y1_sg(self): return self.s.sg_y1_motor
+    def y2_sg(self): return self.s.sg_y2_motor
+    def z_sg(self): return self.s.sg_z_motor_axis
 
 # POSITIONAL SETTERS
 
@@ -1778,6 +1813,12 @@ class RouterMachine(object):
         log("Calibrating Y...")
         self.initialise_calibration(X = False, Y = True, Z = False)
 
+    def calibrate_X_Y_and_Z(self):
+
+        self.run_calibration = True
+        log("Calibrating X, Y, and Z...")
+        self.initialise_calibration(X = True, Y = True, Z = True)
+
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -2025,11 +2066,11 @@ class RouterMachine(object):
         self.print_tmc_registers(3)
         self.print_tmc_registers(4)
 
-        tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
-
-        log("Sweep finished")
 
         try: 
+
+            tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
+            log("Sweep finished")
 
             if X: 
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
@@ -2140,6 +2181,7 @@ class RouterMachine(object):
             return tuning_array, avg_temperature
 
         except: 
+            self.calibration_tuning_fail_info = "Bad temps during tuning!"
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
@@ -2292,9 +2334,13 @@ class RouterMachine(object):
 
         self.s.write_command('$20=0')
 
-        self.s.write_command('$J=G53 X0 F6000')
-        self.s.write_command('$J=G53 Y0 F6000')
-        self.s.write_command('$J=G53 Z0 F750')
+        # self.s.write_command('$J=G53 X0 F6000')
+        # self.s.write_command('$J=G53 Y0 F6000')
+        # self.s.write_command('$J=G53 Z0 F750')
+
+        log("Zero position")
+        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
@@ -2349,17 +2395,17 @@ class RouterMachine(object):
 
             if axis == 'X': 
                 calibrate_mode = 32
-                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc'
                 altDisplayText = "CALIBRATE X AXIS"
 
             if axis == 'Y': 
                 calibrate_mode = 64
-                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc'
                 altDisplayText = "CALIBRATE Y AXIS"
 
             if axis == 'Z': 
                 calibrate_mode = 128
-                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
+                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc'
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
@@ -2551,8 +2597,85 @@ class RouterMachine(object):
 
 
     def complete_calibration_upload(self):
-        self.time_to_check_for_upload_prep = 0
-        self.calibration_upload_in_progress = False
-        log("Calibration upload complete")
+
+        # Ensure last commmands have actually been sent through buffer
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            self.time_to_check_for_upload_prep = 0
+            self.calibration_upload_in_progress = False
+            log("Calibration upload complete")
+
+        else: 
+            Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
 
 
+
+
+    ## CHECKING CALIBRATION FILE STREAMS
+
+    checking_calibration_in_progress = False
+    checking_calibration_fail_info = ''
+
+    def check_x_y_z_calibration(self):
+
+        self.checking_calibration_in_progress = True
+        self.stream_calibration_check_files(['X', 'Y', 'Z'])
+
+
+    def stream_calibration_check_files(self, axes):
+
+        # Toggle FW reset pin before starting 
+        if not self.toggle_reset_pin():
+            self.checking_calibration_fail_info = "Pin toggle fail"
+            log(self.checking_calibration_fail_info)
+            return
+
+        check_calibration_gcode_pre_scrubbed = []
+
+        for axis in axes: 
+
+            with open(self.construct_calibration_file_path(axis)) as f:
+                check_calibration_gcode_pre_scrubbed.extend(f.readlines())
+
+        check_calibration_gcode = [self.quick_scrub(line) for line in check_calibration_gcode_pre_scrubbed]
+
+        log("Checking calibration...")
+
+        self.s.run_skeleton_buffer_stuffer(check_calibration_gcode)
+        self.poll_end_of_calibration_check = Clock.schedule_interval(self.post_calibration_check, 10)
+
+
+    def post_calibration_check(self, dt):
+
+        if self.state().startswith('Idle'):
+
+            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+                Clock.unschedule(self.poll_end_of_calibration_check)
+                self.checking_calibration_in_progress = False
+
+
+    def construct_calibration_file_path(self, axis):
+        return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
+
+
+    ## FIRMWARE UPDATES
+    def toggle_reset_pin(self):
+
+        try: 
+            # Toggle reset pin
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            new_pin_setting = int(pi.get_mode(17))
+            pi.stop()
+
+            log("Toggled FW reset pin: mode " + str(new_pin_setting))
+
+            if new_pin_setting == 7:
+                return True
+
+            else:
+                return False
+
+        except: 
+            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            return False

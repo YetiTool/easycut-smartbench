@@ -19,6 +19,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_download_LB_cal_data import DownloadLBCalDataScreen
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
+from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -315,7 +316,7 @@ Builder.load_string("""
                             on_press: root.final_test()
                         Button:
                             text: 'Retrieve LB cal data'
-                            on_press: root.enter_retrieve_screen()
+                            on_press: root.enter_serial_number_screen()
                         Button:
                             text: 'SG & Load test'
                             on_press: root.enter_calibration_test()
@@ -463,12 +464,19 @@ class FactorySettingsScreen(Screen):
 
     def connect_to_db_when_creds_loaded(self, dt):
 
-        if "credentials.py" in os.listdir("/media/usb/"):
+        try: 
+            if "credentials.py" in os.listdir("/media/usb/"):
 
-            if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
+                if self.poll_for_creds_file != None: Clock.unschedule(self.poll_for_creds_file)
 
-            print("Credentials file found on USB")
-            self.calibration_db.set_up_connection("console")
+                os.system("cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py")
+
+                print("Credentials file found on USB")
+                self.calibration_db.set_up_connection()
+
+        except:
+            print("No /media/usb/ folder found")
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -593,10 +601,21 @@ class FactorySettingsScreen(Screen):
         else: 
             return True
 
+
+    def remove_creds_file(self):
+
+        try: 
+            os.system("rm ./asmcnc/production/database/credentials.py")
+            os.system("rm ./asmcnc/production/database/credentials.pyc")
+
+        except:
+            pass
+
     def factory_reset(self):
 
         def nested_factory_reset():
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
+                self.remove_creds_file()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -616,7 +635,7 @@ class FactorySettingsScreen(Screen):
             if nested_factory_reset():
 
                 print("doing factory reset...")
-                Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(self.close_sw, 5)
 
         else:
 
@@ -652,6 +671,8 @@ class FactorySettingsScreen(Screen):
                     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
 
+    def close_sw(self, dt):
+        sys.exit()
 
     def shutdown_console(self, dt):
         os.system('sudo shutdown -h now')
@@ -659,6 +680,8 @@ class FactorySettingsScreen(Screen):
     def full_console_update(self):
 
         self.console_update_button.text = "Doing update,\nplease wait..."
+
+        self.remove_creds_file()
 
         def nested_full_console_update(dt):
 
@@ -804,6 +827,16 @@ class FactorySettingsScreen(Screen):
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
+    def enter_serial_number_screen(self):
+        if self.calibration_db.conn != None:
+            if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
+                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l)
+                self.systemtools_sm.sm.add_widget(serial_input_screen)
+            
+            self.systemtools_sm.sm.current = 'serial_input_screen'
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
     def enter_retrieve_screen(self):
         if self.calibration_db.conn != None:
             if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
@@ -827,6 +860,7 @@ class FactorySettingsScreen(Screen):
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
+
     def enter_overnight_test(self):
         if self.calibration_db.conn != None:
             if self.get_serial_number():
@@ -839,6 +873,7 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
 
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):

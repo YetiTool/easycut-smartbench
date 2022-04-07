@@ -23,7 +23,7 @@ except:
 
 from asmcnc.comms import router_machine
 
-from asmcnc.tests.screen_test import TestScreen
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
@@ -34,7 +34,10 @@ class ScreenTest(App):
     def build(self):
 
         # Establish screens
-        sm = Mock()
+        sm = ScreenManager(transition=NoTransition())
+
+        systemtools_sm = Mock()
+        systemtools_sm.sm = sm
 
         # Localization/language object
         l = localization.Localization()
@@ -46,20 +49,20 @@ class ScreenTest(App):
         # Initialise 'j'ob 'd'ata object
         jd = Mock()
 
+        calibration_db = Mock()
+
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        # m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m = Mock()
 
-        test_sm = ScreenManager(transition=NoTransition())
+        test_screen = OvernightTesting(name='overnight_testing', m = m, systemtools = systemtools_sm, calibration_db = calibration_db, sm = systemtools_sm.sm, l = l)
+        sm.add_widget(test_screen)
 
-        test_screen = TestScreen(name='st', screen_manager = test_sm, machine = m)
-        test_sm.add_widget(test_screen)
-
-        test_sm.current = 'st'
-
+        sm.current = 'overnight_testing'
         
-        Clock.schedule_once(m.s.start_services, 4)
+        # Clock.schedule_once(m.s.start_services, 4)
 
-        return test_sm
+        return sm
 
 ScreenTest().run()
 
