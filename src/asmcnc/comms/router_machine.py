@@ -2143,7 +2143,7 @@ class RouterMachine(object):
                     # Keep jogging!
                     if self.state().startswith('Idle'):
                         log('Idle - restart jogs')
-                        self.s.tuning_flag = False
+                        self.s.record_sg_values_flag = False
                         self.temp_sg_array = []
                         self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
@@ -2152,16 +2152,16 @@ class RouterMachine(object):
                     # But don't measure the backwards fast jogs!
                     elif self.feed_rate() > 303:
                         log('Feed rate too high, skipping')
-                        self.s.tuning_flag = False
+                        self.s.record_sg_values_flag = False
                         self.temp_sg_array = []
                         time.sleep(1)
 
                     # Record if conditions are good :)
                     else:
-                        self.s.tuning_flag = True
+                        self.s.record_sg_values_flag = True
                         time.sleep(0.01)
 
-                self.s.tuning_flag = False
+                self.s.record_sg_values_flag = False
 
                 tuning_array[self.temp_toff][self.temp_sgt] = self.temp_sg_array[8:16]
                 self.temp_sg_array = []
@@ -2621,6 +2621,16 @@ class RouterMachine(object):
         self.checking_calibration_in_progress = True
         self.stream_calibration_check_files(['X', 'Y', 'Z'])
 
+    def check_x_z_calibration(self):
+
+        self.checking_calibration_in_progress = True
+        self.stream_calibration_check_files(['X', 'Z'])
+
+    def check_y_calibration(self):
+
+        self.checking_calibration_in_progress = True
+        self.stream_calibration_check_files(['Y'])
+
 
     def stream_calibration_check_files(self, axes):
 
@@ -2641,21 +2651,61 @@ class RouterMachine(object):
 
         log("Checking calibration...")
 
+        self.temp_sg_array = []
+        self.s.record_sg_values_flag = True
+
         self.s.run_skeleton_buffer_stuffer(check_calibration_gcode)
-        self.poll_end_of_calibration_check = Clock.schedule_interval(self.post_calibration_check, 10)
+        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 10)
 
 
-    def post_calibration_check(self, dt):
+    def post_calibration_check(self, axes):
 
         if self.state().startswith('Idle'):
 
             if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
                 Clock.unschedule(self.poll_end_of_calibration_check)
+                self.s.record_sg_values_flag = False
+                self.are_sg_values_in_range_after_calibration(axes)
+                self.temp_sg_array = []
+                if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
                 self.checking_calibration_in_progress = False
 
 
     def construct_calibration_file_path(self, axis):
         return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
+
+
+    def are_sg_values_in_range_after_calibration(self, axes):
+
+        try:
+
+            if 'X' in axes:
+                if not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1) < 100):
+                    self.checking_calibration_fail_info = "X SG values out of expected range"
+
+            if 'Y' in axes:
+
+                if (not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2) < 100) or
+                    not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3) < 100) or
+                    not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4) < 100)):
+
+                    self.checking_calibration_fail_info = "Y SG values out of expected range"
+
+
+            if 'Z' in axes:
+                if not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0) < 100):
+                    self.checking_calibration_fail_info = "Z SG values out of expected range"
+
+        except:
+            if not self.checking_calibration_fail_info: self.checking_calibration_fail_info = "Unexpected error"
+
+
+    def get_abs_maximums_from_sg_array(self, sub_array, index):
+
+        just_idx_sgs = [sg_arr[index] for sg_arr in sub_array if sg_arr[index] != -999]
+        try: abs_max_idx = max(just_idx_sgs, key=abs)
+        except: self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
+        return abs_max_idx
 
 
     ## FIRMWARE UPDATES
