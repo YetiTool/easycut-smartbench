@@ -303,5 +303,9 @@ class WarrantyScreen3(Screen):
 		self.update_font_size(self.error_message_bottom)
 
 	def update_font_size(self, value):
-		if len(value.text) < 100: value.font_size = self.default_font_size
-		else: value.font_size = '16sp'
+		if len(value.text) < 85:
+			value.font_size = self.default_font_size
+		elif len(value.text) < 100:
+			value.font_size = '18sp'
+		else:
+			value.font_size = '16sp'

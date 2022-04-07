@@ -218,12 +218,6 @@ class WiFiAndDataConsentScreen3(Screen):
 		self.update_strings()
 		self.set_checkbox_default()
 
-		# Can't seem to use non english letters for file source so filename is different
-		if self.l.lang == 'Français (FR)':
-			self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + 'Francais (FR).rst'
-		else:
-			self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
-
 	def on_pre_leave(self):
 		self.set_checkbox_default()
 

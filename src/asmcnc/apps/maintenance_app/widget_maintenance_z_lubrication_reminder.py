@@ -18,7 +18,7 @@ Builder.load_string("""
     
     hours_since_lubrication:hours_since_lubrication
 
-    time_since_srew_lubricated_label : time_since_srew_lubricated_label
+    time_since_screw_lubricated_label : time_since_screw_lubricated_label
 
     BoxLayout:
         size_hint: (None, None)
@@ -30,7 +30,7 @@ Builder.load_string("""
         spacing: 10      
 
         Label:
-            id: time_since_srew_lubricated_label
+            id: time_since_screw_lubricated_label
             color: 0,0,0,1
             font_size: dp(24)
             markup: True
@@ -142,10 +142,10 @@ class ZLubricationReminderWidget(Widget):
         self.update_font_size(self.hours_since_lubrication)
 
     def update_strings(self):
-        self.time_since_srew_lubricated_label.text = self.l.get_bold("TIME SINCE LEAD SCREW LUBRICATED")
+        self.time_since_screw_lubricated_label.text = self.l.get_bold("TIME SINCE LEAD SCREW LUBRICATED")
         self.hours_label = self.l.get_str("hours")
 
-        self.update_label_font_size(self.time_since_srew_lubricated_label)
+        self.update_label_font_size(self.time_since_screw_lubricated_label)
 
     def update_font_size(self, value):
         if len(value.text) < (8 + len('[color=4caf50ff]') + len('[/color]')):
