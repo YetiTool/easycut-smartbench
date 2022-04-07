@@ -390,7 +390,7 @@ class CheckingScreen(Screen):
             self.l.get_str('You should then reload the job and re-run the check.') + \
             '\n\n' + \
             self.l.get_str('Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.') + " " + \
-            self.l.get_str('If this is the case, you many want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + "\n\n" + \
+            self.l.get_str('If this is the case, you may want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + "\n\n" + \
             self.l.get_bold("WARNING") + "[b]:[/b] " + self.l.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n'
             )
 
