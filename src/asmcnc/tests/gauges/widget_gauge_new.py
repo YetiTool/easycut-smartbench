@@ -16,9 +16,7 @@ Builder.load_string("""
     GridLayout:
         id: wrapper
         size_hint: None, None
-        center: self.parent.center
-        width: self.parent.width
-        height: self.parent.height
+        pos: self.parent.pos
         rows: 2
 
         GridLayout:
@@ -27,15 +25,17 @@ Builder.load_string("""
 
             Label:
                 id: title_label
+                color: 0, 0, 0, 1
 
             Label:
                 id: value_label
+                color: 0, 0, 0, 1
 
         BoxLayout:
             id: outer_box
             orientation: 'vertical'
             size_hint: None, None
-            height: self.parent.height
+            # height: self.parent.height
 
             canvas:
                 Color:
@@ -97,9 +97,12 @@ class LoadGauge(Widget):
 
     def set_size(self, width, height):
         self.size_hint = None, None
+
+        self.outer_box.width = width
+
         self.height = height
         self.outer_box.height = height
-        self.wrapper.height = height
+        self.wrapper.height = height + 50
         self.inner_box.height = height - (0.05 * height)
 
     def set_boundaries(self, warning_percentage, error_percentage):
@@ -107,8 +110,6 @@ class LoadGauge(Widget):
         self.error_percentage = error_percentage
 
     def set_value(self, value):
-        print('Value (' + str(value) + ') set for: ' + self.title_label.text)
-
         if value == -999:
             return
 
@@ -116,9 +117,9 @@ class LoadGauge(Widget):
         
         self.add_value_to_stack(width)
 
-        self.animate_width(self.inner_box, width)
-
         self.value_label.text = str(value)
+
+        self.inner_box.width = width
 
         if abs(float(value) / float(self.max_value)) > self.error_percentage:
             self.r = 1
