@@ -26,6 +26,7 @@ from serial.serialutil import SerialException
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
+import traceback
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -1042,7 +1043,8 @@ class SerialConnection(object):
                         self.sm.get_screen('go').y_load_gauge.set_value(self.sg_y_axis)
                         self.sm.get_screen('go').z_load_gauge.set_value(self.sg_z_motor_axis)
                     except:
-                        pass
+                        log('Failed to set value')
+                        print(traceback.format_exc())
 
                     if self.tuning_flag:
 

@@ -110,6 +110,9 @@ class LoadGauge(Widget):
         self.error_percentage = error_percentage
 
     def set_value(self, value):
+        if value == -999:
+            return
+
         width = ((self.outer_box.width / self.max_value) * value) / 2
         
         self.add_value_to_stack(width)
