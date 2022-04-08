@@ -212,11 +212,11 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "SELECT + \
                     ZHeadSerialNumber, + \
-                    LowerBeamSerialNumber + \
-                    UpperBeamSerialNumber + \
-                    ConsoleSerialNumber + \
-                    YBenchSerialNumber + \
-                    SpindleSerialNumber + \
+                    LowerBeamSerialNumber, + \
+                    UpperBeamSerialNumber, + \
+                    ConsoleSerialNumber, + \
+                    YBenchSerialNumber, + \
+                    SpindleSerialNumber, + \
                     Squareness + \
                     FROM Machines WHERE MachineSerialNumber = '%s'" % machine_serial
 
