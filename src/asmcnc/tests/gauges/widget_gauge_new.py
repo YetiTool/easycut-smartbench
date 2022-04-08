@@ -18,6 +18,7 @@ Builder.load_string("""
         size_hint: None, None
         center: self.parent.center
         width: self.parent.width
+        height: self.parent.height
         rows: 2
 
         GridLayout:
@@ -34,6 +35,7 @@ Builder.load_string("""
             id: outer_box
             orientation: 'vertical'
             size_hint: None, None
+            height: self.parent.height
 
             canvas:
                 Color:
@@ -46,6 +48,7 @@ Builder.load_string("""
             BoxLayout:
                 id: inner_box
                 size_hint: None, None
+                height: self.parent.height
 
                 canvas:
                     Color:
