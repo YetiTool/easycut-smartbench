@@ -104,6 +104,8 @@ class LoadGauge(Widget):
         self.error_percentage = error_percentage
 
     def set_value(self, value):
+        print('Value set for: ' + self.title_label.text)
+
         if value == -999:
             return
 
