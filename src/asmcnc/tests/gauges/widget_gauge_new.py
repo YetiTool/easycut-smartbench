@@ -17,10 +17,12 @@ Builder.load_string("""
         id: wrapper
         size_hint: None, None
         center: self.parent.center
+        width: self.parent.width
         rows: 2
 
         GridLayout:
             size: self.parent.size
+            width: self.parent.width
             cols: 2
 
             Label:
@@ -32,6 +34,7 @@ Builder.load_string("""
         BoxLayout:
             id: outer_box
             orientation: 'vertical'
+            width: self.parent.width
             size_hint: None, None
 
             canvas:
@@ -94,10 +97,8 @@ class LoadGauge(Widget):
     def set_size(self, width, height):
         self.size_hint = None, None
 
-        self.width = width
         self.height = height
 
-        self.outer_box.width = width
         self.outer_box.height = height
 
         self.wrapper.height = height
