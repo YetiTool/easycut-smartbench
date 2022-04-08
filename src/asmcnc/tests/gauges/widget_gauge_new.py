@@ -22,7 +22,6 @@ Builder.load_string("""
 
         GridLayout:
             size: self.parent.size
-            width: self.parent.width
             cols: 2
 
             Label:
@@ -34,7 +33,6 @@ Builder.load_string("""
         BoxLayout:
             id: outer_box
             orientation: 'vertical'
-            width: self.parent.width
             size_hint: None, None
 
             canvas:
