@@ -211,13 +211,13 @@ class CalibrationDatabase(object):
     def get_all_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
             query = "SELECT + \
-                    ZHeadSerialNumber, + \
-                    LowerBeamSerialNumber, + \
-                    UpperBeamSerialNumber, + \
-                    ConsoleSerialNumber, + \
-                    YBenchSerialNumber, + \
-                    SpindleSerialNumber, + \
-                    Squareness + \
+                    ZHeadSerialNumber, \
+                    LowerBeamSerialNumber, \
+                    UpperBeamSerialNumber, \
+                    ConsoleSerialNumber, \
+                    YBenchSerialNumber, \
+                    SpindleSerialNumber, \
+                    Squareness \
                     FROM Machines WHERE MachineSerialNumber = '%s'" % machine_serial
 
             cursor.execute(query)
