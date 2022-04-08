@@ -120,7 +120,7 @@ class LoadGauge(Widget):
 
         width = ((self.outer_box.width / self.max_value) * value) / 2
 
-        psutil.virtual_memory()
+        print(psutil.virtual_memory())
         
         self.add_value_to_stack(width)
 
