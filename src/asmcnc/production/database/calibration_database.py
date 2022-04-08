@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 
 def log(message):
@@ -95,10 +96,10 @@ class CalibrationDatabase(object):
         combined_id = sub_serial + str(motor_index) + str(calibration_stage_id)
 
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
+            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES ('%s', %s, %s)"
 
             for coefficient in coefficients:
-                cursor.execute(query % (combined_id, coefficient))
+                cursor.execute(query % (combined_id, coefficient, self.get_ambient_temperature()))
 
         self.conn.commit()
 
@@ -214,6 +215,7 @@ class CalibrationDatabase(object):
             return parameters
     
     def get_ambient_temperature(self):
+
         query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE ("device_ID" = \'“eDGE-2”\') ORDER ' \
         u'BY DESC LIMIT 1 '
 
