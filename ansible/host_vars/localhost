@@ -5,6 +5,7 @@ pkgs:
 - pigpio
 - python-pigpio
 - git-repair
+- influxdb
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
