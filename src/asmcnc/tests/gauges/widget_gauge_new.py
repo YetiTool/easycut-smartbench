@@ -98,7 +98,7 @@ class LoadGauge(Widget):
     def set_size(self, width, height):
         self.size_hint = None, None
 
-        self.outer_box.width = width
+        self.outer_box.width = 150
 
         self.height = height
         self.outer_box.height = height
