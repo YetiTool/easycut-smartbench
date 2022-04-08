@@ -60,7 +60,7 @@ class ZHeadQC4(Screen):
 
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_X_and_Z()
-                self.poll_for_calibration_check = Clock.schedule_interval(self.finish_calibrating, 5)
+                self.poll_for_calibration_check = Clock.schedule_interval(self.check_calibration, 5)
 
             else:
                 self.calibration_label.text = self.m.calibration_tuning_fail_info
