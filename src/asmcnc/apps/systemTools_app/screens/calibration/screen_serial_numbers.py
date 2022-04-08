@@ -212,23 +212,23 @@ class UploadSerialNumbersScreen(Screen):
 
     def check_for_duplicates_and_autofill(self):
 
-        try:
-            # Get serial numbers
-            self.zhead_serial_input.text, \
-            self.lb_serial_input.text, \
-            self.ub_serial_input.text, \
-            self.console_serial_input.text, \
-            self.ybench_serial_input.text, \
-            self.spindle_serial_input.text, \
-            self.squareness_input.text = self.calibration_db.get_all_serials_by_machine_serial(self.machine_serial_number)
+        # try:
+        # Get serial numbers
+        self.zhead_serial_input.text, \
+        self.lb_serial_input.text, \
+        self.ub_serial_input.text, \
+        self.console_serial_input.text, \
+        self.ybench_serial_input.text, \
+        self.spindle_serial_input.text, \
+        self.squareness_input.text = self.calibration_db.get_all_serials_by_machine_serial(self.machine_serial_number)
 
-            message = "This serial number is already in the database! You cannot overwrite."
-            log(message)
-            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
-            return True
+        message = "This serial number is already in the database! You cannot overwrite."
+        log(message)
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+        return True
 
-        except: 
-            return False
+        # except: 
+        #     return False
 
 
     def get_software_version_before_release(self):
