@@ -453,7 +453,7 @@ class GoScreen(Screen):
         self.x_load_gauge.set_size(300, 100)
         self.x_load_gauge.set_max_value(300)
         self.x_load_gauge.set_boundaries(0.50, 0.75)
-        self.x_load_gauge.set_value(0)
+        self.x_load_gauge.set_value(-50)
 
         self.gauge_container.add_widget(self.x_load_gauge)
 
@@ -462,7 +462,7 @@ class GoScreen(Screen):
         self.y_load_gauge.set_size(300, 100)
         self.y_load_gauge.set_max_value(300)
         self.y_load_gauge.set_boundaries(0.50, 0.75)
-        self.y_load_gauge.set_value(0)
+        self.y_load_gauge.set_value(-50)
 
         self.gauge_container.add_widget(self.y_load_gauge)
 
@@ -471,7 +471,7 @@ class GoScreen(Screen):
         self.z_load_gauge.set_size(300, 100)
         self.z_load_gauge.set_max_value(300)
         self.z_load_gauge.set_boundaries(0.50, 0.75)
-        self.z_load_gauge.set_value(0)
+        self.z_load_gauge.set_value(-50)
 
         self.gauge_container.add_widget(self.z_load_gauge)
 
