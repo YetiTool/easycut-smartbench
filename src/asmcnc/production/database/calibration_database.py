@@ -1,5 +1,4 @@
 from datetime import datetime
-from influxdb import InfluxDBClient
 
 def log(message):
     timestamp = datetime.now()
@@ -7,8 +6,10 @@ def log(message):
 
 try:
     import pytds
+    from influxdb import InfluxDBClient
+
 except:
-    log('Pytds not installed - pip install python-tds')
+    log('Pytds or influxdb not installed')
 
 class CalibrationDatabase(object):
 
@@ -46,6 +47,7 @@ class CalibrationDatabase(object):
         try:
             self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port, credentials.influx_username, credentials.influx_password, credentials.influx_database)
             log("Connected to InfluxDB")
+
         except:
             log("Unable to connect to InfluxDB")
         
