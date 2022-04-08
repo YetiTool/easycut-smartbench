@@ -94,12 +94,19 @@ class CalibrationDatabase(object):
 
     def insert_calibration_coefficients(self, sub_serial, motor_index, calibration_stage_id, coefficients):
         combined_id = sub_serial + str(motor_index) + str(calibration_stage_id)
+        temp = self.get_ambient_temperature()
 
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES ('%s', %s, %s)"
 
-            for coefficient in coefficients:
-                cursor.execute(query % (combined_id, coefficient, self.get_ambient_temperature()))
+            if temp is not None:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES ('%s', %s, %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient, temp))
+
+            else:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient))
 
         self.conn.commit()
 
@@ -216,9 +223,14 @@ class CalibrationDatabase(object):
     
     def get_ambient_temperature(self):
 
-        query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE ("device_ID" = \'“eDGE-2”\') ORDER ' \
-        u'BY DESC LIMIT 1 '
+        try:
 
-        return self.influx_client.query(query).raw['series'][0]['values'][0][1]
+            query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE \
+            ("device_ID" = \'“eDGE-2”\') AND time > now() - 2m ORDER ' \
+            u'BY DESC LIMIT 1 '
 
+            return self.influx_client.query(query).raw['series'][0]['values'][0][1]
+
+        except: 
+            return None
 
