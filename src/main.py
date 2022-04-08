@@ -260,13 +260,13 @@ class SkavaUI(App):
 		# gauge.set_title('X Load')
 
 		# gauge_screen.add_gauge(gauge)
-
-		def set_random_value(dt):
-			sm.get_screen('go').x_load_gauge.set_value(randint(-300, 300))
-			print(sm.get_screen('go').x_load_gauge.inner_box.height)
-			print(sm.get_screen('go').x_load_gauge.inner_box.width)
-
-		Clock.schedule_interval(set_random_value, 0.1)
+		#
+		# def set_random_value(dt):
+		# 	sm.get_screen('go').x_load_gauge.set_value(randint(-300, 300))
+		# 	print(sm.get_screen('go').x_load_gauge.inner_box.height)
+		# 	print(sm.get_screen('go').x_load_gauge.inner_box.width)
+		#
+		# Clock.schedule_interval(set_random_value, 0.1)
 
 		# sm.current = 'gauge'
 
