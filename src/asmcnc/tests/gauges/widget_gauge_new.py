@@ -3,7 +3,6 @@ from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from kivy.properties import NumericProperty, ObjectProperty
-from kivy.animation import Animation
 
 Builder.load_string("""
 <LoadGauge>:
@@ -17,8 +16,8 @@ Builder.load_string("""
     GridLayout:
         id: wrapper
         size_hint: None, None
-        rows: 2
         center: self.parent.center
+        rows: 2
 
         GridLayout:
             size: self.parent.size
@@ -37,7 +36,7 @@ Builder.load_string("""
 
             canvas:
                 Color:
-                    rgba: 1, 1, 1, 1
+                    rgba: 0, 0, 0, 1
 
                 Line:
                     width: 2
@@ -93,10 +92,15 @@ class LoadGauge(Widget):
         self.max_value = max_value
 
     def set_size(self, width, height):
+        self.size_hint = None, None
+
+        self.width = width
+        self.height = height
+
         self.outer_box.width = width
         self.outer_box.height = height
 
-        self.wrapper.height = height + 30
+        self.wrapper.height = height
 
         self.inner_box.height = height - (0.05 * height)
 

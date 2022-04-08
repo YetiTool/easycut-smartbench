@@ -26,6 +26,8 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
+from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -56,6 +58,8 @@ Builder.load_string("""
     speed_label : speed_label
     job_time_label : job_time_label
     file_lines_streamed_label : file_lines_streamed_label
+    
+    gauge_container:gauge_container
     
     BoxLayout:
         padding: 0
@@ -270,7 +274,7 @@ Builder.load_string("""
 
                         BoxLayout:
                             id: job_progress_container
-                            size_hint_x: 0.8
+                            size_hint_x: 0.4
                             orientation: 'vertical'
                             padding: 20
                             spacing: 00
@@ -324,6 +328,20 @@ Builder.load_string("""
                                 size:self.texture_size
                                 text_size: self.size
                                 color: hex('#333333ff')
+                                    
+                        GridLayout:
+                            id: gauge_container
+                            size_hint_x: 0.4
+                            padding: 20
+                            spacing: 00
+                            rows: 3
+
+                            canvas:
+                                Color:
+                                    rgba: hex('#FFFFFFFF')
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
 
                 BoxLayout:
                     id: spindle_widgets
@@ -427,6 +445,35 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         self.update_strings()
+        self.add_gauges()
+
+    def add_gauges(self):
+        self.x_load_gauge = LoadGauge(sm=self.sm, m=self.m)
+
+        self.x_load_gauge.set_size(300, 100)
+        self.x_load_gauge.set_max_value(300)
+        self.x_load_gauge.set_boundaries(0.50, 0.75)
+        self.x_load_gauge.set_value(0)
+
+        self.gauge_container.add_widget(self.x_load_gauge)
+
+        self.y_load_gauge = LoadGauge(sm=self.sm, m=self.m)
+
+        self.y_load_gauge.set_size(300, 100)
+        self.y_load_gauge.set_max_value(300)
+        self.y_load_gauge.set_boundaries(0.50, 0.75)
+        self.y_load_gauge.set_max_value(0)
+
+        self.gauge_container.add_widget(self.y_load_gauge)
+
+        self.z_load_gauge = LoadGauge(sm=self.sm, m=self.m)
+
+        self.z_load_gauge.set_size(300, 100)
+        self.z_load_gauge.set_max_value(300)
+        self.z_load_gauge.set_boundaries(0.50, 0.75)
+        self.z_load_gauge.set_value(0)
+
+        self.gauge_container.add_widget(self.z_load_gauge)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 

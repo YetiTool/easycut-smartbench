@@ -945,8 +945,6 @@ class SerialConnection(object):
                         elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
                         else: log("Overload value not recognised")
 
-                        self.sm.get_screen('gauge').load_gauge.set_value(overload_mV_equivalent_state)
-
                         # update stuff if there's a change
                         if overload_mV_equivalent_state != self.overload_state:  
                             self.overload_state = overload_mV_equivalent_state
@@ -1040,7 +1038,9 @@ class SerialConnection(object):
                     self.sg_y2_motor = int(sg_values[4])
 
                     try:
-                        self.sm.get_screen('calibration_testing').set_gauge_value(self.sg_z_motor_axis)
+                        self.sm.get_screen('go').x_load_gauge.set_value(self.sg_x_motor_axis)
+                        self.sm.get_screen('go').y_load_gauge.set_value(self.sg_y_axis)
+                        self.sm.get_screen('go').z_load_gauge.set_value(self.sg_z_motor_axis)
                     except:
                         pass
 
