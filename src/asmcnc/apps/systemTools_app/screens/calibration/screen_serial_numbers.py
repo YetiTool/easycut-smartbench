@@ -233,7 +233,7 @@ class UploadSerialNumbersScreen(Screen):
 
     def get_software_version_before_release(self):
 
-        if self.set.sw_branch.startswith('ft') or self.dev_mode: 
+        if self.set.sw_branch.endswith('fix') or self.dev_mode: 
             self.sw_version = self.set.latest_sw_version
         else: self.sw_version = self.set.sw_version
 
