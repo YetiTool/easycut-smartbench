@@ -1517,8 +1517,8 @@ class OvernightTesting(Screen):
 
         log("SB fully calibrated, start final run - one hour")
 
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit + 1, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 1, 750)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
         self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_fully_calibrated_final_run, 5)
 
