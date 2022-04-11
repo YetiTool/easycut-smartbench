@@ -205,7 +205,7 @@ Builder.load_string("""
                 Label:
                     id: job_cancelled_label
                     size_hint: (None,None)
-                    height: dp(30)
+                    height: dp(60)
                     width: dp(800)
                     # color: hex('#f9f9f9ff')
                     color: hex('#333333ff') #grey
@@ -217,7 +217,7 @@ Builder.load_string("""
                 # Event details
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(240)
+                    height: dp(210)
                     width: dp(800)
                     orientation: 'vertical'
                     spacing: 0
@@ -237,20 +237,20 @@ Builder.load_string("""
                     BoxLayout: 
                         padding: [10,0,10,10]
                         size_hint: (None, None)
-                        height: dp(142)
+                        height: dp(89)
                         width: dp(800)
                         orientation: 'horizontal'
                         BoxLayout: 
                             size_hint: (None, None)
-                            height: dp(132)
+                            height: dp(79)
                             width: dp(244.5)
                             padding: [0, 0, 184.5, 0]
 
                         BoxLayout: 
                             size_hint: (None, None)
-                            height: dp(132)
+                            height: dp(79)
                             width: dp(291)
-                            padding: [0,0,0,dp(52)]
+                            # padding: [0,0,0,dp(52)]
                             Button:
                                 id: next_button
                                 background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -263,14 +263,14 @@ Builder.load_string("""
                                 height: dp(79)
                                 on_press: root.press_ok()
                                 text: 'OK'
-                                font_size: '30sp'
+                                font_size: '27sp'
                                 color: hex('#f9f9f9ff')
                                 markup: True
                                 center: self.parent.center
                                 pos: self.parent.pos
                         BoxLayout: 
                             size_hint: (None, None)
-                            height: dp(132)
+                            height: dp(79)
                             width: dp(244.5)
                             padding: [193.5, 0, 0, 0]
  
@@ -413,7 +413,7 @@ class JobIncompleteScreen(Screen):
 
         else:
             self.job_cancelled_label.text = (
-                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str(self.event_type) + \
+                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str((self.event_type).lower()) + \
                 ": " + self.specific_event)
                 )
 

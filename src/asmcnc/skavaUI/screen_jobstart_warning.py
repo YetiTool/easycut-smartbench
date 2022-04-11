@@ -179,7 +179,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(80)
-                padding: [dp(250),dp(0), dp(250), dp(20)]
+                padding: [dp(250),dp(0), dp(250), dp(10)]
                 orientation: 'horizontal'
 
                 Button:
@@ -232,3 +232,10 @@ class JobstartWarningScreen(Screen):
         self.scan_label.text = self.l.get_bold("SCAN ME")
         self.confirm_button.text = self.l.get_str("I understand")
 
+        self.update_font_size(self.scan_label)
+
+    def update_font_size(self, value):
+        if len(value.text) > 20:
+            value.font_size = 19
+        else: 
+            value.font_size = 22

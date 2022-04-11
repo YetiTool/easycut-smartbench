@@ -140,9 +140,9 @@ class BrushSaveWidget(Widget):
 
         else:
             warning_message = (
-                    "There was a problem saving your settings." + \
+                    self.l.get_str("There was a problem saving your settings.") + \
                     "\n\n" + \
-                    "Please check your settings and try again, or if the probem persists please contact the YetiTool support team."
+                    self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
                 )
             popup_info.PopupError(self.sm, self.l, warning_message)
 
