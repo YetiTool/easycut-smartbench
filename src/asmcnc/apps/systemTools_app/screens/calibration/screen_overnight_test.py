@@ -936,7 +936,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = False
+    mini_run_dev_mode = True
 
     sn_for_db = ''
 
@@ -958,11 +958,6 @@ class OvernightTesting(Screen):
         self.stage = ""
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
-
-        if self.mini_run_dev_mode:
-            self.sn_for_db = "YS6test"
-            self.zh_serial = "zhtestc"
-            self.xl_serial = "xltestc"
 
 
         self.status_data_dict = {
@@ -1522,8 +1517,8 @@ class OvernightTesting(Screen):
 
         log("SB fully calibrated, start final run - one hour")
 
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit + 1, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 1, 750)
 
         self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_fully_calibrated_final_run, 5)
 
@@ -1535,8 +1530,9 @@ class OvernightTesting(Screen):
             return
 
         self.setup_arrays()
+        self.m.set_workzone_to_pos_xy()
         self.set_stage("FullyCalibratedTest")
-        self._stream_overnight_file('one_hour_rectangle')
+        self._stream_overnight_file('spiral_file')
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
         log("Running fully calibrated final run...")
@@ -1596,7 +1592,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        if self.mini_run_dev_mode: filename_end = 'mini_run'
+        if self.mini_run_dev_mode and not filename_end.startswith('sprial_file'): filename_end = 'mini_run'
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
