@@ -1,7 +1,5 @@
 from __future__ import division
 
-import psutil
-
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
@@ -119,8 +117,6 @@ class LoadGauge(Widget):
             return
 
         width = ((self.outer_box.width / self.max_value) * value) / 2
-
-        print(psutil.virtual_memory())
         
         self.add_value_to_stack(width)
 
