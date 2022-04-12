@@ -794,7 +794,19 @@ class PopupFSCKInfo(Widget):
         self.l = localization
         popup_width = 600
         label_width = popup_width - 40
+
+        dangling_text = "\
+                    dangling blob c923ce37b90be5d85530df1986f3ad5048231e81\n \
+                    dangling blob ec30dad33d8be9bc45a6e24d33c3ff0789ad8350\n \
+                    dangling blob 4f7d9a39fee89a6e04cdce99fbfb46e7eeb61573\n \
+                    dangling tree ff15f366de6dcc3049afb66551d8ccfc28abde3d\n \
+                    dangling blob 7b34b14e123d9a9332ca979727e823966166ff00\n \
+                    dangling blob 6e76ddf08612b292a1271c5f829da79c8d5ccd7e\n \
+                    dangling blob d2ca2faf7ef19c1652179370039e0fd5ed23e222\n \
+                    dangling blob 2fe889c4a45f51caef5704cb4eec4f8acb68021d"
         
+        description = dangling_text
+
         title_string = self.l.get_str('Information')
         ok_string = self.l.get_bold('Ok')
 

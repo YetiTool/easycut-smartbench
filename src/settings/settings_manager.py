@@ -470,7 +470,8 @@ class Settings(object):
             log("END OF GIT FSCK DETAILS")
             return False
 
-        return True
+        # return True
+        return False
 
 
             
