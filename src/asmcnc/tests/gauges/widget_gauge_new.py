@@ -21,6 +21,7 @@ Builder.load_string("""
         size_hint: None, None
         pos: self.parent.pos
         rows: 2
+        padding: 20
 
         GridLayout:
             size: self.parent.size
