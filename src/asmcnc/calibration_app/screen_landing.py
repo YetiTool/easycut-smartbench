@@ -30,89 +30,114 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 90,50
-        spacing: 0
-        size_hint_x: 1
 
         BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 0.8
-            # spacing: 10
-             
-            Label:
-                size_hint_y: 1
-                font_size: '35sp'
-                text: '[color=263238]Do you want to calibrate SmartBench?[/color]'
-                markup: True
+            orientation: 'horizontal'
+            padding: [dp(90), dp(50), dp(30), dp(50)]
+            spacing: 0
+            size_hint_x: 1
 
-            Label:
-                id: user_instruction
-                size_hint_y: 2
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                markup: True
-
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                text: '[color=546E7A]Calibration can take 10 minutes. You will need an accurate tape measure.[/color]'
-                markup: True
-                
             BoxLayout:
-                orientation: 'horizontal'
-                padding: 0, 0
-                spacing: 20
-            
-                Button:
-                    size_hint_y:0.9
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_color: hex('#FFCDD2')
-                    on_press: 
-                        root.skip_to_lobby()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: '[color=455A64]No, skip[/color]'
-                            markup: True
+                orientation: 'vertical'
+                size_hint_x: 0.8
+                # spacing: 10
+                
+                Label:
+                    size_hint_y: 1
+                    font_size: '35sp'
+                    text: '[color=263238]Do you want to calibrate SmartBench?[/color]'
+                    markup: True
 
-                Button:
-                    size_hint_y:0.9
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
+                Label:
+                    id: user_instruction
+                    size_hint_y: 2
+                    text_size: self.size
+                    font_size: '18sp'
                     halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_color: hex('#C5E1A5')
-                    on_press: 
-                        root.next_screen()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: '[color=455A64]Yes, calibrate[/color]'
-                            markup: True
-            
+                    valign: 'middle'
+                    markup: True
+
+                Label:
+                    text_size: self.size
+                    font_size: '18sp'
+                    halign: 'center'
+                    valign: 'middle'
+                    text: '[color=546E7A]Calibration can take 10 minutes. You will need an accurate tape measure.[/color]'
+                    markup: True
+                    
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: 0, 0
+                    spacing: 20
+                
+                    Button:
+                        size_hint_y:0.9
+                        id: getout_button
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        background_normal: ''
+                        background_color: hex('#FFCDD2')
+                        on_press: 
+                            root.skip_to_lobby()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                #size_hint_y: 1
+                                font_size: '20sp'
+                                text: '[color=455A64]No, skip[/color]'
+                                markup: True
+
+                    Button:
+                        size_hint_y:0.9
+                        id: getout_button
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        background_normal: ''
+                        background_color: hex('#C5E1A5')
+                        on_press: 
+                            root.next_screen()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                #size_hint_y: 1
+                                font_size: '20sp'
+                                text: '[color=455A64]Yes, calibrate[/color]'
+                                markup: True
+
+        BoxLayout:
+            size_hint_x: 0.1
+            padding: [0, 0, 0, dp(400)]
+
+            Button:
+                id: exit_button
+                size_hint: (None,None)
+                height: dp(40)
+                width: dp(40)
+                background_color: hex('#F4433600')
+                opacity: 1
+                on_press: root.skip_to_lobby()
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/apps/shapeCutter_app/img/exit_icon.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 """)
 
 class CalibrationLandingScreenClass(Screen):

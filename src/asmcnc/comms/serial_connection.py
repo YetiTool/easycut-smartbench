@@ -1293,7 +1293,7 @@ class SerialConnection(object):
 
         try:
 
-            if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+            if self.overload_state == 100 and sys.platform != 'win32':  # if still at max overload, begin the spindle pause procedure
                 
                 self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
                 self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)

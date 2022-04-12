@@ -152,3 +152,11 @@ class ApplySettingsScreen(Screen):
 		self.title_label.text = self.l.get_str("Reboot!")
 		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
 		self.next_button.text = self.l.get_str("Reboot!")
+
+		self.update_font_size(self.next_button)
+
+	def update_font_size(self, value):
+		if len(value.text) > 20:
+			value.font_size = 25
+		else:
+			value.font_size = 30

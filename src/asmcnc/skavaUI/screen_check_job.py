@@ -45,7 +45,7 @@ ERROR_CODES = {
     "error:10" : "Soft limits cannot be enabled without homing also enabled.",
     "error:11" : "Max characters per line exceeded. Line was not processed and executed.",
     "error:12" : "Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
-    "error:13" : "Stop bar detected as pressed. Check all four contacts at the stop bar ends are not pressed. Pressing each switch a few times may clear the contact.",
+    "error:13" : "Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.",
     "error:14" : "Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
     "error:15" : "Have you homed the machine yet? If not, please do so now. Jog target exceeds machine travel. Command ignored.",
     "error:16" : "Jog command with no '=' or contains prohibited g-code.",
@@ -390,7 +390,7 @@ class CheckingScreen(Screen):
             self.l.get_str('You should then reload the job and re-run the check.') + \
             '\n\n' + \
             self.l.get_str('Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.') + " " + \
-            self.l.get_str('If this is the case, you many want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + "\n\n" + \
+            self.l.get_str('If this is the case, you may want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + "\n\n" + \
             self.l.get_bold("WARNING") + "[b]:[/b] " + self.l.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n'
             )
 
@@ -425,6 +425,15 @@ class CheckingScreen(Screen):
     
             
             self.load_file_now_button.text = self.l.get_str('Adjust datums')
+
+            # Adjust font size
+            if len(self.load_file_now_button.text) > 30:
+                self.load_file_now_button.font_size = '11sp'
+            elif len(self.load_file_now_button.text) > 25:
+                self.load_file_now_button.font_size = '14sp'
+            else:
+                self.load_file_now_button.font_size = '15sp'
+
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1 

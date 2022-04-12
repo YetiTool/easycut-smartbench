@@ -35,7 +35,6 @@ Builder.load_string("""
         BoxLayout: 
             orientation: 'vertical'
             spacing: dp(5)
-            padding: [dp(0), 10, 0, 0]
             size_hint: (None, None)
             height: dp(100)
             width: dp(280)         
@@ -43,7 +42,7 @@ Builder.load_string("""
             Label:
                 id: brush_use_label
                 color: 0,0,0,1
-                font_size: dp(24)
+                font_size: root.default_font_size
                 markup: True
                 halign: "left"
                 valign: "middle"
@@ -138,6 +137,8 @@ Builder.load_string("""
 
 class BrushUseWidget(Widget):
 
+    default_font_size = 24
+
     def __init__(self, **kwargs):
     
         super(BrushUseWidget, self).__init__(**kwargs)
@@ -146,7 +147,6 @@ class BrushUseWidget(Widget):
         self.l=kwargs['localization']
 
         self.update_strings()
-        self.update_font_size(self.brush_use_label)
         
     def restore(self):
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
@@ -158,11 +158,18 @@ class BrushUseWidget(Widget):
         self.brush_use_label.text = self.l.get_bold("BRUSH USE")
         self.hours_label.text = self.l.get_str("hours")
 
+        self.update_font_size(self.brush_use_label)
+
     def update_font_size(self, value):
-        if len(value.text) < 18:
-            value.font_size = 24
-        if len(value.text) > 17:
-            value.font_size = 20
+        if len(value.text) <= 27:
+            value.font_size = self.default_font_size
+        if len(value.text) > 27:
+            value.font_size = self.default_font_size - 3
+        if len(value.text) > 30:
+            value.font_size = self.default_font_size - 6
+        if len(value.text) > 35:
+            value.font_size = self.default_font_size - 7
+
 
 
 

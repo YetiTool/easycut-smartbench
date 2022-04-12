@@ -148,7 +148,7 @@ class PopupDatum(Widget):
 
 
       if self.m.is_laser_enabled == True:
-        chk_label = Label(size_hint_y=1, size_hint_x=0.8, halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[0,20], markup = True)
+        chk_label = Label(size_hint_y=1, size_hint_x=0.8, halign='center', valign='middle', text=chk_message, text_size=[200,100], color=[0,0,0,1], padding=[0,20], markup = True)
         checkbox = CheckBox(size_hint_x=0.2, background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=0, padding=[5,0,5,0])
         chk_layout.add_widget(chk_label)
@@ -643,7 +643,7 @@ class PopupError(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,20,0,0])
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
@@ -686,7 +686,7 @@ class PopupWarning(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,10,20,0])
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])

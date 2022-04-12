@@ -267,6 +267,16 @@ class WarrantyScreen1(Screen):
 		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."
 
+		self.update_contact_us_font_sizes()
+
+	def update_contact_us_font_sizes(self): # Update both labels together to make it look nicer
+		if len(self.contact_us_at_support.text) > 70:
+			self.cant_use_web_label.font_size = 17
+			self.contact_us_at_support.font_size = 17
+		else:
+			self.cant_use_web_label.font_size = 20
+			self.contact_us_at_support.font_size = 20
+
 	def go_to_factory_settings(self):
 		popup_warranty.PopupFactorySettingsPassword(self.start_seq.am)
 

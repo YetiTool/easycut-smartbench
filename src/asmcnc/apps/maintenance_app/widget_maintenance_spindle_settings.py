@@ -28,6 +28,7 @@ Builder.load_string("""
     spindle_brand: spindle_brand
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
+    rpm_label: rpm_label
     seconds_label : seconds_label
     stylus_switch: stylus_switch
 
@@ -38,7 +39,7 @@ Builder.load_string("""
         size_hint: (None, None)
         height: dp(280)
         width: dp(580)
-        cols_minimum: {0: dp(160), 1: dp(400)}
+        cols_minimum: {0: dp(150), 1: dp(410)}
         rows_minimum: {0: dp(40), 1: dp(40), 2: dp(40), 3: dp(40)}
         spacing: [dp(0), dp(5)]
 
@@ -49,8 +50,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(60)
-            width: dp(160)
-            padding: [dp(65), dp(3), dp(41), dp(3)]
+            width: dp(150)
+            padding: [dp(55), dp(3), dp(41), dp(3)]
 
             Image:
                 id: spindle_image
@@ -64,8 +65,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(50)
-            width: dp(400)
-            padding: [dp(0), dp(5), dp(20), dp(5)]
+            width: dp(410)
+            padding: [dp(0), dp(5), dp(10), dp(5)]
             spacing: dp(10)
 	        TextInput:
 	            id: spindle_cooldown_speed
@@ -80,6 +81,7 @@ Builder.load_string("""
                 multiline: False
 
             Label:
+                id: rpm_label
                 color: 0,0,0,1
                 font_size: dp(30)
                 markup: True
@@ -96,8 +98,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(60)
-            width: dp(160)
-            padding: [dp(65), dp(3), dp(41), dp(3)]
+            width: dp(150)
+            padding: [dp(55), dp(3), dp(41), dp(3)]
 
             Image:
                 id: countdown_image
@@ -111,8 +113,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(50)
-            width: dp(400)
-            padding: [dp(0), dp(5), dp(20), dp(5)]
+            width: dp(410)
+            padding: [dp(0), dp(5), dp(10), dp(5)]
             spacing: dp(10)
             TextInput:
                 id: spindle_cooldown_time
@@ -142,8 +144,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(60)
-            width: dp(160)
-            padding: [dp(56), dp(5), dp(40), dp(5)] # 15 padding
+            width: dp(150)
+            padding: [dp(46), dp(5), dp(40), dp(5)] # 15 padding
 
             Image:
                 id: spindle_image
@@ -157,8 +159,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(50)
-            width: dp(400)
-            padding: [dp(0), dp(5), dp(20), dp(5)]
+            width: dp(410)
+            padding: [dp(0), dp(5), dp(10), dp(5)]
             Spinner:
                 id: spindle_brand
                 halign: 'left'
@@ -183,8 +185,8 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(60)
-            width: dp(160)
-            padding: [dp(56), dp(3), dp(40), dp(3)]
+            width: dp(150)
+            padding: [dp(46), dp(3), dp(40), dp(3)]
 
             Image:
                 id: stylus_image
@@ -249,5 +251,6 @@ class SpindleSettingsWidget(Widget):
         self.rpm_override = False  
 
     def update_strings(self):
+        self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
 
