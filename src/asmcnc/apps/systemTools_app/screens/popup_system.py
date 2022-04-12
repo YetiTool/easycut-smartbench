@@ -19,6 +19,7 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.rst import RstDocument
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
@@ -812,19 +813,19 @@ class PopupFSCKInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        info_label = Label(markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], size_hint_y=None, always_overscroll=True)
+        info_label = RstDocument(text=description, background_color = [1,1,1,1], base_font_size = 26, underline_color = '000000')
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0], size_hint_y=0.5)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0], size_hint_y=0.6)
         btn_layout.add_widget(ok_button)
 
-        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'])
+        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], always_overscroll=True, size_hint_y=1.2)
         scroll_layout.add_widget(info_label)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,10,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,10,10,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(scroll_layout)
         layout_plan.add_widget(btn_layout)
