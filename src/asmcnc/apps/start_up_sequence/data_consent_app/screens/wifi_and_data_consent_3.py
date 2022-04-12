@@ -218,8 +218,6 @@ class WiFiAndDataConsentScreen3(Screen):
 		self.update_strings()
 		self.set_checkbox_default()
 
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
-
 	def on_pre_leave(self):
 		self.set_checkbox_default()
 
@@ -233,7 +231,13 @@ class WiFiAndDataConsentScreen3(Screen):
 
 	def update_strings(self):
 		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
+
+		# Can't seem to use non english letters for file source so filename is different
+		if self.l.lang == 'Français (FR)':
+			self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + 'Francais (FR).rst'
+		else:
+			self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
+
 		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
 		self.decline_button.text = self.l.get_str("Decline")
 		self.accept_button.text = self.l.get_str("Accept")

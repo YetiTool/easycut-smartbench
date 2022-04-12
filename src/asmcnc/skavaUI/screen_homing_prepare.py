@@ -67,7 +67,7 @@ Builder.load_string("""
             id: instruction_label
             size_hint_y: 2.3
             markup: True
-            font_size: '30' 
+            font_size: root.default_font_size
             valign: 'bottom'
             halign: 'center'
             size:self.texture_size
@@ -78,7 +78,7 @@ Builder.load_string("""
             id: press_to_home_label
             size_hint_y: 2.3
             markup: True
-            font_size: '30' 
+            font_size: root.default_font_size
             valign: 'top'
             halign: 'center'
             size:self.texture_size
@@ -111,7 +111,9 @@ class HomingScreenPrepare(Screen):
 
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'
-    
+
+    default_font_size = 30
+
     def __init__(self, **kwargs):
         
         super(HomingScreenPrepare, self).__init__(**kwargs)
@@ -141,3 +143,14 @@ class HomingScreenPrepare(Screen):
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
+
+        self.update_font_size(self.press_to_home_label, self.instruction_label)
+
+    # Update both labels together because they should have the same font size
+    def update_font_size(self, value1, value2):
+        if len(value1.text) > 100:
+            value1.font_size = self.default_font_size
+            value2.font_size = self.default_font_size
+        else:
+            value1.font_size = self.default_font_size - 2
+            value2.font_size = self.default_font_size - 2

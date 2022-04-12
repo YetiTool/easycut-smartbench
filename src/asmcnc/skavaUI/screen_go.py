@@ -51,11 +51,10 @@ Builder.load_string("""
     override_and_progress_container: override_and_progress_container
 
     feed_label : feed_label
-    rate_label : rate_label
     spindle_label : spindle_label
-    speed_label : speed_label
     job_time_label : job_time_label
     file_lines_streamed_label : file_lines_streamed_label
+    spindle_overload_label:spindle_overload_label
     
     BoxLayout:
         padding: 0
@@ -157,7 +156,7 @@ Builder.load_string("""
 
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 10
+                            padding: [0, 0, 0, dp(5)]
                             spacing: 10
                             size_hint_x: 0.2
                             canvas:
@@ -168,7 +167,7 @@ Builder.load_string("""
                                     pos: self.pos
 
                             BoxLayout:
-                                size_hint_y: 1.5
+                                size_hint_y: 1.8
                                 orientation: 'vertical'
                                 padding: 00
                                 spacing: 00
@@ -180,17 +179,6 @@ Builder.load_string("""
                                         pos: self.pos
                                 Label:
                                     id: feed_label
-                                    # text: '[color=808080]Feed[/color]'
-                                    markup: True
-                                    font_size: '16px' 
-                                    valign: 'middle'
-                                    halign: 'center'
-                                    size:self.texture_size
-                                    text_size: self.size
-                                    color: hex('#808080ff')
-                                Label:
-                                    id: rate_label
-                                    # text: '[color=808080]rate[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -214,7 +202,7 @@ Builder.load_string("""
                         BoxLayout:
                             id: speed_override_container
                             orientation: 'vertical'
-                            padding: 10
+                            padding: [0, 0, 0, dp(5)]
                             spacing: 10
                             size_hint_x: 0.2
                             canvas:
@@ -225,7 +213,7 @@ Builder.load_string("""
                                     pos: self.pos
 
                             BoxLayout:
-                                size_hint_y: 1.5
+                                size_hint_y: 1.8
                                 orientation: 'vertical'
                                 padding: 00
                                 spacing: 00
@@ -237,17 +225,6 @@ Builder.load_string("""
                                         pos: self.pos
                                 Label:
                                     id: spindle_label
-                                    # text: '[color=808080]Spindle[/color]'
-                                    markup: True
-                                    font_size: '16px' 
-                                    valign: 'middle'
-                                    halign: 'center'
-                                    size:self.texture_size
-                                    text_size: self.size
-                                    color: hex('#808080ff')
-                                Label:
-                                    id: speed_label
-                                    # text: '[color=808080]speed[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -352,6 +329,7 @@ Builder.load_string("""
                         spacing: 10
  
                         Label:
+                            id: spindle_overload_label
                             halign: 'center'
                             font_size: '16px' 
                             text: '[color=808080]Spindle\\noverload:[/color]'
@@ -764,24 +742,22 @@ class GoScreen(Screen):
             log("New overload peak: " + str(self.overload_peak))
 
     def update_strings(self):
-        self.feed_label.text = self.l.get_str("Feed")
-        self.update_font_size(self.feed_label)
-        self.rate_label.text = self.l.get_str("rate")
-        self.update_font_size(self.rate_label)
-        self.spindle_label.text = self.l.get_str("Spindle")
-        self.update_font_size(self.spindle_label)
-        self.speed_label.text = self.l.get_str("speed")
-        self.update_font_size(self.speed_label)
+        self.feed_label.text = self.l.get_str("Feed") + '\n' + self.l.get_str("rate")
+        self.spindle_label.text = self.l.get_str("Spindle") + '\n' + self.l.get_str("speed")
         self.job_time_label.text = self.l.get_str("Total job time") + ":"
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
+        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n', 1) + "[/color]"
+
+        self.update_font_size(self.feed_label)
+        self.update_font_size(self.spindle_label)
 
     def update_font_size(self, value):
 
-        if len(value.text) < 11:
+        if len(value.text) < 20:
             value.font_size = '16px'
 
-        if len(value.text) > 10:
-            value.font_size = '13px'
+        if len(value.text) >= 20:
+            value.font_size = '12px'
 
-        if len(value.text) > 12:
+        if len(value.text) >= 25:
             value.font_size = '11px'

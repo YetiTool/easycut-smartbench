@@ -27,14 +27,16 @@ class PopupMachineError(Widget):
         
         self.sm = screen_manager
         
-        description = "Machine is not Idle.\n\n" \
-                    "Please check that SmartBench is clear," \
-                    " and then use the Pro app to RESET SmartBench before using Shape Cutter."
+        description = self.sm.l.get_str("Machine is not Idle.") + "\n\n" \
+                    + self.sm.l.get_str("Please check that SmartBench is clear, and then use the Pro app to RESET SmartBench before using Shape Cutter.")
+        
+        title_string = self.sm.l.get_str('Warning!')
+        ok_string = self.sm.l.get_bold('Ok')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
         
@@ -46,7 +48,7 @@ class PopupMachineError(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

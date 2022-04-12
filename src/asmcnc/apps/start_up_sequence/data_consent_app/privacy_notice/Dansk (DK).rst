@@ -23,11 +23,11 @@ Vores politik er i overensstemmelse med den tilsvarende implementerede britiske 
 
 Loven kræver, at vi informerer dig om dine rettigheder og vores forpligtelser over for dig i forbindelse med behandling og kontrol af dine personoplysninger. Det gør vi nu ved at anmode dig om at læse oplysningerne på http://www.knowyourprivacyrights.org
 
-Med undtagelse af nedenstående deler, sælger eller videregiver vi ikke oplysninger, der er indsamlet via konsollen på SmartBench, til tredjepart, eller videregiver dem til tredjepart.
+Med undtagelse af nedenstående deler, sælger eller videregiver vi ikke oplysninger, der er indsamlet via konsollen på SmartBench eller videregiver dem til tredjepart.
 
 
 1. Databeskyttelsesrådgiver
-++++++++++++++++++++++++++++
++++++++++++++++++++++++++++
 
 Vi har udpeget en databeskyttelsesansvarlig (DPO), som er ansvarlig for at sikre, at vores politik følges.
 
@@ -58,18 +58,18 @@ Dette er maskindata vedrørende jobkritiske SmartBench-hændelser, herunder GRBL
 Vedligeholdelsesdata
 ~~~~~~~~~~~~~~~~~~~~
 
-Dette er data, der kan vedrøre vedligeholdelsesplaner og drift af SmartBench. Disse data kan omfatte køretid og oppetid, vedligeholdelsesstatistik (f.eks. hvor ofte børsterne udskiftes), fremføring og hastigheder og andre anonyme brugsdata. 
+Dette er data, der kan vedrøre vedligeholdelsesplaner og drift af SmartBench. Disse data kan omfatte køretid og oppetid, vedligeholdelsesstatistik (f.eks. hvor ofte kullet udskiftes), fremføring og hastigheder og andre anonyme brugsdata. 
 
 Værtsnavn på konsollen
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Dette er en unik identifikator for din konsol, som bruges til at forbinde din SmartBench med Yeti Tool-tjenester, herunder SmartManager. Konsolens værtsnavn registreres ikke sammen med eller aggregeres med andre identificerbare data, f.eks. serienumre eller kundekontaktoplysninger.
+Dette er en unik identifikator for din konsol, som bruges til at forbinde din SmartBench med Yeti Tool-tjenester, herunder SmartManager. Konsollens værtsnavn registreres ikke sammen med eller aggregeres med andre identificerbare data, f.eks. serienumre eller kundekontaktoplysninger.
 
 
 De grundlag, som vi behandler oplysninger om dig på
 ----------------------------------------------------
 
-Loven kræver, at vi skal fastslå, på hvilket af seks definerede grundlag vi behandler forskellige kategorier af dine personlige oplysninger, og at vi skal oplyse dig om grundlaget for hver kategori.
+Loven kræver, at vi skal fastslå på hvilket af seks definerede grundlag, vi behandler forskellige kategorier af dine personlige oplysninger, og at vi skal oplyse dig om grundlaget for hver kategori.
 
 Hvis et grundlag, som vi behandler dine personoplysninger på, ikke længere er relevant, skal vi straks ophøre med at behandle dine oplysninger.
 
@@ -112,11 +112,11 @@ Når vi behandler dine oplysninger på dette grundlag, gør vi det efter at have
 
 	- om det samme mål kan nås med andre midler
 	- om behandling (eller manglende behandling) kan forårsage dig skade
-	- om du forventer, at vi behandler dine oplysninger, og om du i sidste ende ville finde det rimeligt at gøre det
+	- om du forventer, at vi behandler dine oplysninger, og om du i sidste ende ville finde det rimeligt at gøre det.
 
 Vi kan f.eks. behandle dine oplysninger på dette grundlag med henblik på:
 
-	- Din kundesupport
+	- din kundesupport
 	- at svare på uopfordret kommunikation fra dig, som vi tror, at du forventer et svar på
 	- beskyttelse og håndhævelse af enhver parts juridiske rettigheder
 	- at forsikre sig mod eller indhente professionel rådgivning, der er nødvendig for at styre Yeti Tool Ltd's risiko
@@ -144,7 +144,7 @@ Når vi modtager en klage, registrerer vi alle de oplysninger, som du har givet 
 
 Vi bruger disse oplysninger til at løse din klage.
 
-Hvis din klage med rimelighed kræver, at vi kontakter en anden person, kan vi beslutte at give denne anden person nogle af de oplysninger, der er indeholdt i din klage. Vi gør dette så sjældent som muligt, men det er op til os selv at afgøre, om vi giver oplysninger, og hvis vi gør det, hvilke oplysninger der er tale om.
+Hvis din klage med rimelighed kræver, at vi kontakter en anden person, kan vi beslutte at give denne anden person nogle af de oplysninger, der er indeholdt i din klage. Vi gør dette så sjældent som muligt, men det er op til os selv at afgøre, om vi videregiver oplysninger, og hvis vi gør det, hvilke oplysninger der er tale om.
 
 Vi kan også udarbejde statistikker med oplysninger fra denne kilde for at vurdere niveauet af den service, vi leverer, men ikke på en måde, der kan identificere dig eller andre personer.
 
@@ -157,7 +157,7 @@ Andre spørgsmål
 
 Hvis du ikke er tilfreds med vores privatlivspolitik, eller hvis du har en klage, skal du fortælle os det.
 
-Hvis en tvist ikke kan løses, håber vi, at du vil acceptere at forsøge at løse den ved at indgå i god tro med os i en mæglings- eller voldgiftsproces. 
+Hvis en uoverensstemmelse ikke kan løses, håber vi, at du vil acceptere at forsøge at løse den ved at indgå i god tro med os i en mæglingsproces. 
 
 Hvis du på nogen måde er utilfreds med den måde, vi behandler dine personlige oplysninger på, har du ret til at indgive en klage til Information Commissioner's Office (ICO). Dette kan gøres på https://ico.org.uk/make-a-complaint/. Vi vil dog sætte pris på at få mulighed for at tale med dig om dit problem, før du henvender dig til ICO.
 
