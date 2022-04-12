@@ -460,7 +460,7 @@ class Settings(object):
 
     def do_git_fsck(self):
 
-        bad_repo_signs = ["error", "loose", "fatal", "dangling"]
+        bad_repo_signs = ["error", "loose", "fatal"]
         self.details_of_fsck = str(os.popen("git fsck").read())
 
         if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
