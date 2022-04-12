@@ -453,4 +453,20 @@ class Settings(object):
     def ansible_service_run_without_reboot(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
 
+
+## REPOSITORY HEALTHCARE
+
+    details_of_fsck = ""
+
+    def do_git_fsck(self):
+
+        bad_repo_signs = ["error", "loose", "fatal", "dangling"]
+        self.details_of_fsck = str(os.popen("git fsck").read())
+
+        if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
+            return False
+
+        return True
+
+
             
