@@ -71,7 +71,7 @@ Builder.load_string("""
                             rgba: 0, 0, 0, 1
 
                         Line:
-                            points: self.parent.parent.center_x + root.peak_value, self.center_y - (0.5 * self.height), self.parent.parent.center_x + root.peak_value, self.center_y + (0.5 * self.height)
+                            points: self.parent.parent.center_x + root.peak_value, self.center_y - (0.5 * self.parent.height), self.parent.parent.center_x + root.peak_value, self.center_y + (0.5 * self.parent.height)
 """)
 
 class LoadGauge(Widget):
