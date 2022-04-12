@@ -21,7 +21,6 @@ Builder.load_string("""
         size_hint: None, None
         pos: self.parent.pos
         rows: 2
-        padding: 20
 
         GridLayout:
             size: self.parent.size
@@ -106,7 +105,7 @@ class LoadGauge(Widget):
 
         self.height = height
         self.outer_box.height = height
-        self.wrapper.height = height + 50
+        self.wrapper.height = height + 100
         self.inner_box.height = height - (0.05 * height)
 
     def set_boundaries(self, warning_percentage, error_percentage):
