@@ -229,14 +229,14 @@ class ScreenManagerSystemTools(object):
 
         if self.set.do_git_fsck():
             message = self.l.get_str("No errors found. You're good to go!")
-            popup_system.PopupFSCKGood(self.sm, self.l, 300, message, self.set.details_of_fsck)
+            popup_system.PopupFSCKGood(self.sm, self.l, message, self.set.details_of_fsck)
             print("No Errors found")
 
         else: 
             message =   self.l.get_str("Errors found!") + "\n" + \
                         self.l.get_str("Contact us at https://www.yetitool.com/support")
 
-            popup_system.PopupFSCKErrors(self.sm, self.l, 500, message, self.set.details_of_fsck)
+            popup_system.PopupFSCKErrors(self.sm, self.l, message, self.set.details_of_fsck)
             print("Errors found")
 
 

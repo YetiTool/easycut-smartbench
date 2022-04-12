@@ -675,10 +675,11 @@ class PopupStopOvernightTest(Widget):
 
 class PopupFSCKGood(Widget):
 
-    def __init__(self, screen_manager, localization, popup_width, description, more_info):
+    def __init__(self, screen_manager, localization, description, more_info):
         
         self.sm = screen_manager
         self.l = localization
+        popup_width = 500
         label_width = popup_width - 40
 
         def open_more_info(*args):
@@ -731,10 +732,11 @@ class PopupFSCKGood(Widget):
 
 class PopupFSCKErrors(Widget):
 
-    def __init__(self, screen_manager, localization, popup_width, description, more_info):
+    def __init__(self, screen_manager, localization, description, more_info):
         
         self.sm = screen_manager
         self.l = localization
+        popup_width = 500
         label_width = popup_width - 40
 
         def open_more_info(*args):
@@ -770,7 +772,7 @@ class PopupFSCKErrors(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 440),
+                      size=(popup_width, 300),
                       auto_dismiss= False
                       )
 
