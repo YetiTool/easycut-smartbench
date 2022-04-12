@@ -772,7 +772,7 @@ class PopupFSCKErrors(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 300),
+                      size=(popup_width, 440),
                       auto_dismiss= False
                       )
 
@@ -793,17 +793,18 @@ class PopupFSCKInfo(Widget):
         self.sm = screen_manager
         self.l = localization
         popup_width = 600
-        label_width = popup_width - 40
 
-        dangling_text = "\
-                    dangling blob c923ce37b90be5d85530df1986f3ad5048231e81\n \
-                    dangling blob ec30dad33d8be9bc45a6e24d33c3ff0789ad8350\n \
-                    dangling blob 4f7d9a39fee89a6e04cdce99fbfb46e7eeb61573\n \
-                    dangling tree ff15f366de6dcc3049afb66551d8ccfc28abde3d\n \
-                    dangling blob 7b34b14e123d9a9332ca979727e823966166ff00\n \
-                    dangling blob 6e76ddf08612b292a1271c5f829da79c8d5ccd7e\n \
-                    dangling blob d2ca2faf7ef19c1652179370039e0fd5ed23e222\n \
-                    dangling blob 2fe889c4a45f51caef5704cb4eec4f8acb68021d"
+        dangling_text = "dangling blob c923ce37b90be5d85530df1986f3ad5048231e81\n" + \
+                    "dangling blob ec30dad33d8be9bc45a6e24d33c3ff0789ad8350\n" + \
+                    "dangling blob 4f7d9a39fee89a6e04cdce99fbfb46e7eeb61573\n" + \
+                    "dangling tree ff15f366de6dcc3049afb66551d8ccfc28abde3d\n" + \
+                    "dangling blob 7b34b14e123d9a9332ca979727e823966166ff00\n" + \
+                    "dangling blob 6e76ddf08612b292a1271c5f829da79c8d5ccd7e\n" + \
+                    "dangling blob d2ca2faf7ef19c1652179370039e0fd5ed23e222\n" + \
+                    "dangling blob 7b34b14e123d9a9332ca979727e823966166ff00\n" + \
+                    "dangling blob 6e76ddf08612b292a1271c5f829da79c8d5ccd7e\n" + \
+                    "dangling blob d2ca2faf7ef19c1652179370039e0fd5ed23e222\n" + \
+                    "dangling blob 2fe889c4a45f51caef5704cb4eec4f8acb68021d"
         
         description = dangling_text
 
@@ -811,7 +812,7 @@ class PopupFSCKInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        info_label = Label(markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1])
+        info_label = Label(markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], size_hint_y=None, padding = [10,0])
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -820,10 +821,10 @@ class PopupFSCKInfo(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0])
         btn_layout.add_widget(ok_button)
 
-        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], size_hint_y = 0.8)
+        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], size_hint_y = 1)
         scroll_layout.add_widget(info_label)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,10,10,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(scroll_layout)
         layout_plan.add_widget(btn_layout)
