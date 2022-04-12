@@ -2616,6 +2616,15 @@ class RouterMachine(object):
     checking_calibration_in_progress = False
     checking_calibration_fail_info = ''
 
+    cal_check_threshold_x_min = -101
+    cal_check_threshold_x_max = 101
+
+    cal_check_threshold_y_min = -101
+    cal_check_threshold_y_max = 101
+
+    cal_check_threshold_z_min = -101
+    cal_check_threshold_z_max = 101
+
     def check_x_y_z_calibration(self):
 
         self.checking_calibration_in_progress = True
@@ -2624,6 +2633,7 @@ class RouterMachine(object):
     def check_x_z_calibration(self):
 
         self.checking_calibration_in_progress = True
+        self.cal_check_threshold_z_max = 151
         self.stream_calibration_check_files(['X', 'Z'])
 
     def check_y_calibration(self):
@@ -2632,12 +2642,23 @@ class RouterMachine(object):
         self.stream_calibration_check_files(['Y'])
 
 
+    def reset_cal_check_pass_thresholds(self):
+        self.cal_check_threshold_x_min = -101
+        self.cal_check_threshold_x_max = 101
+
+        self.cal_check_threshold_y_min = -101
+        self.cal_check_threshold_y_max = 101
+
+        self.cal_check_threshold_z_min = -101
+        self.cal_check_threshold_z_max = 101
+
+
     def stream_calibration_check_files(self, axes):
 
         # Toggle FW reset pin before starting 
         if not self.toggle_reset_pin():
             self.checking_calibration_fail_info = "Pin toggle fail"
-            log(self.checking_calibration_fail_info)
+            self.post_calibration_check(axes)
             return
 
         check_calibration_gcode_pre_scrubbed = []
@@ -2667,6 +2688,7 @@ class RouterMachine(object):
                 self.s.record_sg_values_flag = False
                 self.are_sg_values_in_range_after_calibration(axes)
                 self.temp_sg_array = []
+                self.reset_cal_check_pass_thresholds()
                 if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
                 self.checking_calibration_in_progress = False
 
@@ -2680,20 +2702,20 @@ class RouterMachine(object):
         try:
 
             if 'X' in axes:
-                if not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1) < 100):
+                if not (self.cal_check_threshold_x_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1) < self.cal_check_threshold_x_max):
                     self.checking_calibration_fail_info = "X SG values out of expected range"
 
             if 'Y' in axes:
 
-                if (not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2) < 100) or
-                    not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3) < 100) or
-                    not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4) < 100)):
+                if (not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2) < self.cal_check_threshold_y_max) or
+                    not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3) < self.cal_check_threshold_y_max) or
+                    not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4) < self.cal_check_threshold_y_max)):
 
                     self.checking_calibration_fail_info = "Y SG values out of expected range"
 
 
             if 'Z' in axes:
-                if not (-100 < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0) < 100):
+                if not (self.cal_check_threshold_z_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0) < self.cal_check_threshold_z_max):
                     self.checking_calibration_fail_info = "Z SG values out of expected range"
 
         except:
