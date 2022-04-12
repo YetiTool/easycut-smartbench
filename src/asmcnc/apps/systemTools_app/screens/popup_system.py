@@ -812,7 +812,7 @@ class PopupFSCKInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        info_label = Label(markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], size_hint_y=None, padding = [10,0])
+        info_label = Label(markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], size_hint_y=None, height = self.texture_size[1])
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -821,7 +821,7 @@ class PopupFSCKInfo(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0])
         btn_layout.add_widget(ok_button)
 
-        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], size_hint_y = 1)
+        scroll_layout = ScrollView(do_scroll_x = False, do_scroll_y = True, scroll_type = ['content'], size_hint_y = 1.1)
         scroll_layout.add_widget(info_label)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,10,10,10])
