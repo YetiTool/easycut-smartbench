@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 
 def log(message):
@@ -6,8 +7,10 @@ def log(message):
 
 try:
     import pytds
+    from influxdb import InfluxDBClient
+
 except:
-    log('Pytds not installed - pip install python-tds')
+    log('Pytds or influxdb not installed')
 
 class CalibrationDatabase(object):
 
@@ -42,8 +45,12 @@ class CalibrationDatabase(object):
         except: 
             log('Unable to connect to database')
 
-    def is_connected(self):
-        return self.conn.product_version != None
+        try:
+            self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port, credentials.influx_username, credentials.influx_password, credentials.influx_database)
+            log("Connected to InfluxDB")
+
+        except:
+            log("Unable to connect to InfluxDB")
         
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                             console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
@@ -87,12 +94,19 @@ class CalibrationDatabase(object):
 
     def insert_calibration_coefficients(self, sub_serial, motor_index, calibration_stage_id, coefficients):
         combined_id = sub_serial + str(motor_index) + str(calibration_stage_id)
+        temp = self.get_ambient_temperature()
 
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
 
-            for coefficient in coefficients:
-                cursor.execute(query % (combined_id, coefficient))
+            if temp is not None:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES ('%s', %s, %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient, temp))
+
+            else:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient))
 
         self.conn.commit()
 
@@ -207,6 +221,20 @@ class CalibrationDatabase(object):
             
             return parameters
 
+    
+    def get_ambient_temperature(self):
+
+        try:
+
+            query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE \
+            ("device_ID" = \'“eDGE-2”\') AND time > now() - 2m ORDER ' \
+            u'BY DESC LIMIT 1 '
+
+            return self.influx_client.query(query).raw['series'][0]['values'][0][1]
+
+        except: 
+            return None
+
 
     def get_all_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
@@ -225,5 +253,4 @@ class CalibrationDatabase(object):
             data = cursor.fetchone()
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
-        
 
