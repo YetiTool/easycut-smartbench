@@ -103,7 +103,7 @@ class LoadGauge(Widget):
 
         self.outer_box.width = 150
 
-        self.height = height + 100
+        self.height = height + 50
         self.outer_box.height = height
         self.wrapper.height = height + 50
         self.inner_box.height = height - (0.05 * height)
