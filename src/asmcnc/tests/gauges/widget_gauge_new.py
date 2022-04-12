@@ -114,7 +114,7 @@ class LoadGauge(Widget):
 
     def set_value(self, value):
         if value == -999:
-            return
+            value = 0
 
         width = ((self.outer_box.width / self.max_value) * value) / 2
         
