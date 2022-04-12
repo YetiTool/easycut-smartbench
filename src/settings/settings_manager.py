@@ -464,6 +464,10 @@ class Settings(object):
         self.details_of_fsck = str(os.popen("git fsck").read())
 
         if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
+
+            log("GIT FSCK ERRORS FOUND: ")
+            log(self.details_of_fsck)
+            log("END OF GIT FSCK DETAILS")
             return False
 
         return True
