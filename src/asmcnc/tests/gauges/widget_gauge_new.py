@@ -94,8 +94,9 @@ class LoadGauge(Widget):
         self.value_stack = []
 
     def redraw_peak(self, *args):
+        peak_value = self.peak_value
         with self.peak_line.canvas:
-            Line(points=(self.outer_box.center_x + self.peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + self.peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
+            Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
 
     def set_title(self, title):
         self.title_label.text = title
