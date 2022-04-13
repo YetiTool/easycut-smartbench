@@ -151,7 +151,7 @@ Builder.load_string("""
                                     valign: 'top'
                                     halign: 'center'
                                     markup: True                           
-                                    font_size: '20px' 
+                                    font_size: '30px' 
                                     size:self.texture_size
                                     text_size: self.size 
                                     
