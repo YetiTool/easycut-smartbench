@@ -139,8 +139,6 @@ Builder.load_string("""
                                     # text: '[color=808080]File lines streamed:[/color]'
                                     markup: True                           
                                     font_size: '16px'
-                                    valign: 'middle'
-                                    halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#808080ff')    
@@ -152,8 +150,6 @@ Builder.load_string("""
                                     text: '0 %'
                                     markup: True                           
                                     font_size: '20px' 
-                                    valign: 'middle'
-                                    halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size 
                                     
@@ -165,8 +161,6 @@ Builder.load_string("""
                                     size_hint_y: 0.9
                                     markup: True                           
                                     font_size: '16px' 
-                                    valign: 'middle'
-                                    halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#808080ff')
@@ -175,8 +169,6 @@ Builder.load_string("""
                                     id: run_time_label
                                     markup: True                           
                                     font_size: '20px'
-                                    valign: 'middle'
-                                    halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#333333ff')
