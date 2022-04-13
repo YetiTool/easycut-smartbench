@@ -95,6 +95,7 @@ class LoadGauge(Widget):
 
     def redraw_peak(self, *args):
         peak_value = self.peak_value
+        self.peak_line.canvas.clear()
         with self.peak_line.canvas:
             Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
 
