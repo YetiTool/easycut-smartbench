@@ -1350,7 +1350,7 @@ class SerialConnection(object):
     # stall guard tests
 
     def check_sg_values(self):
-        if abs(self.sg_x_motor_axis) > 125 or abs(self.sg_y_axis) > 125 or abs(self.sg_z_motor_axis):
+        if 125 < abs(self.sg_x_motor_axis) < 999 or 125 < abs(self.sg_y_axis) < 999 or 125 < abs(self.sg_z_motor_axis) < 999:
             self.m.stop_from_soft_stop_cancel()
 
 
