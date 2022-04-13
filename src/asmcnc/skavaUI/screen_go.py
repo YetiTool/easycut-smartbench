@@ -60,6 +60,7 @@ Builder.load_string("""
     file_lines_streamed_label : file_lines_streamed_label
     
     gauge_container:gauge_container
+    gauge_container_spindle:gauge_container_spindle
     
     BoxLayout:
         padding: 0
@@ -172,7 +173,7 @@ Builder.load_string("""
                                     markup: True                     
                                     valign: 'top'
                                     halign: 'center'      
-                                    font_size: '20px'
+                                    font_size: '30px'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#333333ff')
@@ -319,7 +320,7 @@ Builder.load_string("""
     
 
                         BoxLayout:
-                            id: job_progress_container
+                            id: gauge_container_spindle
                             size_hint_x: 0.4
                             orientation: 'vertical'
                             padding: 20
@@ -462,6 +463,7 @@ class GoScreen(Screen):
         self.x_load_gauge.set_title('X Load')
 
         self.gauge_container.add_widget(self.x_load_gauge)
+        self.gauge_container_spindle.add_widget(self.x_load_gauge)
 
         self.y_load_gauge = LoadGauge(sm=self.sm, m=self.m)
 
@@ -472,6 +474,7 @@ class GoScreen(Screen):
         self.y_load_gauge.set_title('Y Load')
 
         self.gauge_container.add_widget(self.y_load_gauge)
+        self.gauge_container_spindle.add_widget(self.y_load_gauge)
 
         self.z_load_gauge = LoadGauge(sm=self.sm, m=self.m)
 
@@ -482,6 +485,7 @@ class GoScreen(Screen):
         self.z_load_gauge.set_title('Z Load')
 
         self.gauge_container.add_widget(self.z_load_gauge)
+        self.gauge_container_spindle.add_widget(self.z_load_gauge)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
