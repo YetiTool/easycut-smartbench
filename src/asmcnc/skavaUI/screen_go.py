@@ -318,12 +318,12 @@ Builder.load_string("""
                                         pos: self.pos
     
 
-                        BoxLayout:
+                        GridLayout:
                             id: gauge_container_spindle
                             size_hint_x: 0.4
-                            orientation: 'vertical'
                             padding: 20
                             spacing: 00
+                            rows: 3
 
                             canvas:
                                 Color:
@@ -331,8 +331,6 @@ Builder.load_string("""
                                 RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
-
-
                                     
                         GridLayout:
                             id: gauge_container
