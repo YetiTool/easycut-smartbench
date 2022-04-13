@@ -87,6 +87,7 @@ class ZHeadQC8(Screen):
         if self.m.s.is_connected():
             Clock.unschedule(self.poll_for_reconnection)
             Clock.schedule_once(self.m.s.start_services, 1)
+            # hopefully 1 second should always be enough to start services
             Clock.schedule_once(self.back_to_start, 2)
 
     def back_to_start(self, dt):
