@@ -151,7 +151,7 @@ Builder.load_string("""
                                     color: hex('#333333ff')
                                     text: '0 %'
                                     markup: True                           
-                                    font_size: '100px' 
+                                    font_size: '20px' 
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
@@ -174,7 +174,7 @@ Builder.load_string("""
                                     size_hint_y: 1.1
                                     id: run_time_label
                                     markup: True                           
-                                    font_size: '18px'
+                                    font_size: '20px'
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
