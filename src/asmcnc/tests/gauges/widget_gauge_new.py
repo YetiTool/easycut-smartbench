@@ -3,9 +3,8 @@ from __future__ import division
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
-from kivy.graphics import Color
+from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
-
 
 Builder.load_string("""
 <LoadGauge>:
@@ -74,6 +73,7 @@ Builder.load_string("""
                             points: self.parent.parent.center_x + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.center_x + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
 """)
 
+
 class LoadGauge(Widget):
     r = NumericProperty(0)
     g = NumericProperty(0)
@@ -88,9 +88,14 @@ class LoadGauge(Widget):
         super(LoadGauge, self).__init__(**kwargs)
 
         self.bind(r=self.redraw)
+        self.bind(peak_value=self.redraw_peak)
 
         # max of 10 values
         self.value_stack = []
+
+    def redraw_peak(self, *args):
+        with self.peak_line.canvas:
+            Line(points=(self.outer_box.center_x + self.peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + self.peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
 
     def set_title(self, title):
         self.title_label.text = title
@@ -117,7 +122,7 @@ class LoadGauge(Widget):
             value = 0
 
         width = ((self.outer_box.width / self.max_value) * value) / 2
-        
+
         self.add_value_to_stack(width)
 
         self.value_label.text = str(value)
@@ -143,12 +148,8 @@ class LoadGauge(Widget):
     def redraw(self, *args):
         with self.inner_box.canvas:
             Color(self.r, self.g, self.b, 1)
-    
-    def add_value_to_stack(self, value):
-        print(self.title_label.text)
-        print(value)
-        print(self.peak_value)
 
+    def add_value_to_stack(self, value):
         if value == 0:
             return
 
@@ -157,7 +158,7 @@ class LoadGauge(Widget):
             self.value_stack.append(value)
         else:
             self.value_stack.append(value)
-        
+
         peak_value = max(self.value_stack, key=abs)
 
         self.peak_value = peak_value
