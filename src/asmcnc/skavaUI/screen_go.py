@@ -135,7 +135,6 @@ Builder.load_string("""
                             
                                 Label:
                                     id: file_lines_streamed_label
-                                    size_hint_y: 1
                                     # text: '[color=808080]% streamed:[/color]'
                                     markup: True                           
                                     font_size: '16px'
@@ -146,7 +145,6 @@ Builder.load_string("""
                                     color: hex('#808080ff')    
                                 
                                 Label:
-                                    size_hint_y: 3
                                     id: progress_percentage_label
                                     color: hex('#333333ff')
                                     text: '0 %'
@@ -162,7 +160,6 @@ Builder.load_string("""
                                 
                                 Label:
                                     id: job_time_label
-                                    size_hint_y: 0.9
                                     markup: True                           
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -171,7 +168,6 @@ Builder.load_string("""
                                     text_size: self.size
                                     color: hex('#808080ff')
                                 Label:
-                                    size_hint_y: 1.1
                                     id: run_time_label
                                     markup: True                     
                                     valign: 'middle'
