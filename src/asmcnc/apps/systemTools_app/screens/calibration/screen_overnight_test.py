@@ -1531,6 +1531,7 @@ class OvernightTesting(Screen):
 
         self.setup_arrays()
         self.m.set_workzone_to_pos_xy()
+        self.m.set_jobstart_z()
         self.set_stage("FullyCalibratedTest")
         self._stream_overnight_file('spiral_file')
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
