@@ -79,7 +79,7 @@ class LoadGauge(Widget):
     g = NumericProperty(0)
     b = NumericProperty(0)
 
-    peak_value = 0
+    peak_value = NumericProperty(0)
 
     sm = ObjectProperty()
     m = ObjectProperty()
