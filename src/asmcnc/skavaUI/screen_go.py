@@ -139,6 +139,8 @@ Builder.load_string("""
                                     # text: '[color=808080]% streamed:[/color]'
                                     markup: True                           
                                     font_size: '16px'
+                                    valign: 'middle'
+                                    halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#808080ff')    
@@ -148,6 +150,8 @@ Builder.load_string("""
                                     id: progress_percentage_label
                                     color: hex('#333333ff')
                                     text: '0 %'
+                                    valign: 'middle'
+                                    halign: 'center'
                                     markup: True                           
                                     font_size: '20px' 
                                     size:self.texture_size
@@ -161,13 +165,17 @@ Builder.load_string("""
                                     size_hint_y: 0.9
                                     markup: True                           
                                     font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
                                     color: hex('#808080ff')
                                 Label:
                                     size_hint_y: 1.1
                                     id: run_time_label
-                                    markup: True                           
+                                    markup: True                     
+                                    valign: 'middle'
+                                    halign: 'center'      
                                     font_size: '20px'
                                     size:self.texture_size
                                     text_size: self.size
