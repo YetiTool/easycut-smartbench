@@ -145,6 +145,10 @@ class LoadGauge(Widget):
             Color(self.r, self.g, self.b, 1)
     
     def add_value_to_stack(self, value):
+        print(self.title_label.text)
+        print(value)
+        print(self.peak_value)
+
         if value == 0:
             return
 
@@ -157,5 +161,3 @@ class LoadGauge(Widget):
         peak_value = max(self.value_stack, key=abs)
 
         self.peak_value = peak_value
-
-        print(self.peak_value)
