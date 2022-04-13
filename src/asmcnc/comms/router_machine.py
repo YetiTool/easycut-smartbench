@@ -2625,6 +2625,8 @@ class RouterMachine(object):
     cal_check_threshold_z_min = -101
     cal_check_threshold_z_max = 101
 
+    poll_end_of_calibration_check = None
+
     def check_x_y_z_calibration(self):
 
         self.checking_calibration_in_progress = True
@@ -2684,7 +2686,7 @@ class RouterMachine(object):
         if self.state().startswith('Idle'):
 
             if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-                Clock.unschedule(self.poll_end_of_calibration_check)
+                if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
                 self.s.record_sg_values_flag = False
                 self.are_sg_values_in_range_after_calibration(axes)
                 self.temp_sg_array = []
