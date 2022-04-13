@@ -97,6 +97,7 @@ class LoadGauge(Widget):
         peak_value = self.peak_value
         self.peak_line.canvas.clear()
         with self.peak_line.canvas:
+            Color(0, 0, 0, 1)
             Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
 
     def set_title(self, title):
