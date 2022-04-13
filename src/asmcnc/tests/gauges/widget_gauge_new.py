@@ -66,7 +66,7 @@ Builder.load_string("""
                     
                     canvas:
                         Color: 
-                            rgba: 0, 0, 0, 1
+                            rgba: 0.5, 0.5, 0.5, 1
                             
                         Line:
                             points: self.parent.parent.center_x, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.center_x, self.parent.parent.center_y + (0.5 * self.parent.height)
