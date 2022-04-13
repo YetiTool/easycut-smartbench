@@ -92,7 +92,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         size_hint_y: 0.3
-                        padding: 20
+                        padding: 10
                         canvas:
                             Color:
                                 rgba: hex('#FFFFFFFF')
@@ -136,7 +136,7 @@ Builder.load_string("""
                                 Label:
                                     id: file_lines_streamed_label
                                     size_hint_y: 1
-                                    # text: '[color=808080]File lines streamed:[/color]'
+                                    # text: '[color=808080]% streamed:[/color]'
                                     markup: True                           
                                     font_size: '16px'
                                     size:self.texture_size
