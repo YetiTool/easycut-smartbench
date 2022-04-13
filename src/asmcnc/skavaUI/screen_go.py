@@ -122,7 +122,6 @@ Builder.load_string("""
                                         allow_stretch: True
                             
                             Label:
-                                size_hint_x: 5
                                 text_size: self.size
                                 font_size: '20sp'
                                 markup: True
@@ -130,6 +129,57 @@ Builder.load_string("""
                                 valign: 'middle'
                                 id: file_data_label
                                 color: hex('#333333ff')
+                            
+                            BoxLayout:
+                                orientation: 'vertical'
+                            
+                                Label:
+                                    id: file_lines_streamed_label
+                                    size_hint_y: 1
+                                    # text: '[color=808080]File lines streamed:[/color]'
+                                    markup: True                           
+                                    font_size: '16px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')    
+                                
+                                Label:
+                                    size_hint_y: 3
+                                    id: progress_percentage_label
+                                    color: hex('#333333ff')
+                                    text: '0 %'
+                                    markup: True                           
+                                    font_size: '100px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size 
+                                    
+                            BoxLayout:
+                                orientation: 'vertical'
+                                
+                                Label:
+                                    id: job_time_label
+                                    size_hint_y: 0.9
+                                    markup: True                           
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    size_hint_y: 1.1
+                                    id: run_time_label
+                                    markup: True                           
+                                    font_size: '18px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#333333ff')
                                 
                             Button:
                                 id: stop_start
@@ -286,48 +336,7 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Label:
-                                id: file_lines_streamed_label
-                                size_hint_y: 1
-                                # text: '[color=808080]File lines streamed:[/color]'
-                                markup: True                           
-                                font_size: '16px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 3
-                                id: progress_percentage_label
-                                color: hex('#333333ff')
-                                text: '0 %'
-                                markup: True                           
-                                font_size: '100px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size 
-                            Label:
-                                id: job_time_label
-                                size_hint_y: 0.9
-                                markup: True                           
-                                font_size: '16px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 1.1
-                                id: run_time_label
-                                markup: True                           
-                                font_size: '18px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#333333ff')
+
                                     
                         GridLayout:
                             id: gauge_container
