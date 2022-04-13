@@ -61,6 +61,17 @@ Builder.load_string("""
                         size: self.size
 
                 BoxLayout:
+                    size_hint: None, None
+                    pos: [self.parent.center_x, self.parent.center_y]
+                    
+                    canvas:
+                        Color: 
+                            rgba: 0, 0, 0, 1
+                            
+                        Line:
+                            points: self.parent.parent.center_x, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.center_x, self.parent.parent.center_y + (0.5 * self.parent.height)
+                        
+                BoxLayout:
                     id: peak_line
                     size_hint: None, None
                     pos: [self.parent.center_x, self.parent.center_y]
