@@ -1045,6 +1045,13 @@ class SerialConnection(object):
                             partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis))
                         Clock.schedule_once(
                             partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis))
+
+                        Clock.schedule_once(
+                            partial(self.sm.get_screen('go').spindle_x_load_gauge.set_value, self.sg_x_motor_axis))
+                        Clock.schedule_once(
+                            partial(self.sm.get_screen('go').spindle_y_load_gauge.set_value, self.sg_y_axis))
+                        Clock.schedule_once(
+                            partial(self.sm.get_screen('go').spindle_z_load_gauge.set_value, self.sg_z_motor_axis))
                     except:
                         log('Failed to set value')
                         print(traceback.format_exc())
