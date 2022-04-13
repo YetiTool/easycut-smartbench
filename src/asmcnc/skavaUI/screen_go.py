@@ -36,7 +36,6 @@ Builder.load_string("""
 
     status_container:status_container
     z_height_container:z_height_container
-    job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_widget_container:speed_override_widget_container
     start_or_pause_button_image:start_or_pause_button_image
