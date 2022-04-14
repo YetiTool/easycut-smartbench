@@ -1008,7 +1008,7 @@ class SerialConnection(object):
 
                     try:
                         Clock.schedule_once(partial(self.sm.get_screen('go').spindle_speed_gauge.set_value,
-                                                    int(self.spindle_speed)))
+                                                    float(self.spindle_speed)))
                     except:
                         pass
 
