@@ -461,14 +461,14 @@ class GoScreen(Screen):
 
         self.gauge_container.add_widget(self.x_load_gauge)
 
-        self.spindle_x_load_gauge = LoadGauge(sm=self.sm, m=self.m)
-        self.spindle_x_load_gauge.set_size(300, 50)
-        self.spindle_x_load_gauge.set_max_value(200)
-        self.spindle_x_load_gauge.set_boundaries(0.25, 0.625)
-        self.spindle_x_load_gauge.set_value(0, None)
-        self.spindle_x_load_gauge.set_title('Placeholder')
+        self.spindle_load_gauge = LoadGauge(sm=self.sm, m=self.m)
+        self.spindle_load_gauge.set_size(300, 50)
+        self.spindle_load_gauge.set_max_value(200)
+        self.spindle_load_gauge.set_boundaries(0.25, 0.625)
+        self.spindle_load_gauge.set_value(0, None)
+        self.spindle_load_gauge.set_title('Spindle load')
 
-        self.gauge_container_spindle.add_widget(self.spindle_x_load_gauge)
+        self.gauge_container_spindle.add_widget(self.spindle_load_gauge)
 
         self.y_load_gauge = LoadGauge(sm=self.sm, m=self.m)
 
@@ -480,14 +480,14 @@ class GoScreen(Screen):
 
         self.gauge_container.add_widget(self.y_load_gauge)
 
-        self.spindle_y_load_gauge = LoadGauge(sm=self.sm, m=self.m)
-        self.spindle_y_load_gauge.set_size(300, 50)
-        self.spindle_y_load_gauge.set_max_value(200)
-        self.spindle_y_load_gauge.set_boundaries(0.25, 0.625)
-        self.spindle_y_load_gauge.set_value(0, None)
-        self.spindle_y_load_gauge.set_title('Placeholder')
+        self.spindle_temp_gauge = LoadGauge(sm=self.sm, m=self.m)
+        self.spindle_temp_gauge.set_size(300, 50)
+        self.spindle_temp_gauge.set_max_value(200)
+        self.spindle_temp_gauge.set_boundaries(0.25, 0.625)
+        self.spindle_temp_gauge.set_value(0, None)
+        self.spindle_temp_gauge.set_title('Spindle Temp')
 
-        self.gauge_container_spindle.add_widget(self.spindle_y_load_gauge)
+        self.gauge_container_spindle.add_widget(self.spindle_temp_gauge)
 
         self.z_load_gauge = LoadGauge(sm=self.sm, m=self.m)
 
@@ -499,12 +499,12 @@ class GoScreen(Screen):
 
         self.gauge_container.add_widget(self.z_load_gauge)
 
-        self.spindle_z_load_gauge = LoadGauge(sm=self.sm, m=self.m)
-        self.spindle_z_load_gauge.set_size(300, 50)
-        self.spindle_z_load_gauge.set_max_value(200)
-        self.spindle_z_load_gauge.set_boundaries(0.25, 0.625)
-        self.spindle_z_load_gauge.set_value(0, None)
-        self.spindle_z_load_gauge.set_title('Placeholder')
+        self.spindle_speed_gauge = LoadGauge(sm=self.sm, m=self.m)
+        self.spindle_speed_gauge.set_size(300, 50)
+        self.spindle_speed_gauge.set_max_value(200)
+        self.spindle_speed_gauge.set_boundaries(0.25, 0.625)
+        self.spindle_speed_gauge.set_value(0, None)
+        self.spindle_speed_gauge.set_title('Spindle Speed')
 
         self.gauge_container_spindle.add_widget(self.spindle_z_load_gauge)
 

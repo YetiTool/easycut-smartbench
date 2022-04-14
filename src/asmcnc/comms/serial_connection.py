@@ -925,6 +925,16 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        try:
+                            Clock.schedule_once(
+                                self.sm.get_screen('go').spindle_load_gauge.set_value, self.digital_spindle_ld_qdA)
+                            Clock.schedule_once(
+                                self.sm.get_screen('go').spindle_temp_gauge.set_value, self.digital_spindle_temperature)
+                            Clock.schedule_once(
+                                self.sm.get_screen('go').spindle_speed_gauge.set_value, 0)
+                        except:
+                            pass
+
                     else: 
 
                         try:
@@ -1045,16 +1055,8 @@ class SerialConnection(object):
                             partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis))
                         Clock.schedule_once(
                             partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis))
-
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').spindle_x_load_gauge.set_value, self.sg_x_motor_axis))
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').spindle_y_load_gauge.set_value, self.sg_y_axis))
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').spindle_z_load_gauge.set_value, self.sg_z_motor_axis))
                     except:
-                        log('Failed to set value')
-                        print(traceback.format_exc())
+                        pass
 
                     if self.tuning_flag:
 
