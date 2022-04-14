@@ -87,9 +87,23 @@ class BrushSaveWidget(Widget):
 
         # TIME FOR DATA VALIDATION
 
-        # Read from screen and convert hours into seconds
-        use = float(self.sm.get_screen('maintenance').brush_use_widget.brush_use.text)*3600
-        lifetime = float(self.sm.get_screen('maintenance').brush_life_widget.brush_life.text)*3600 
+        # Read from screen
+        use_str = self.sm.get_screen('maintenance').brush_use_widget.brush_use.text
+        lifetime_str = self.sm.get_screen('maintenance').brush_life_widget.brush_life.text
+
+        if use_str == '' or lifetime_str == '':
+            # throw popup, return without saving
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
+                )
+            popup_info.PopupError(self.sm, self.l, warning_message)
+            return
+
+        #  Convert hours into seconds
+        use = float(use_str) * 3600
+        lifetime = float(lifetime_str) * 3600
 
         # Brush use
         if use >= 0 and use <= 999*3600: pass # all good, carry on
