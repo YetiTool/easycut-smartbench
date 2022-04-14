@@ -930,7 +930,8 @@ class SerialConnection(object):
 
                         try:
                             Clock.schedule_once(self.sm.get_screen('go').spindle_load_gauge.set_value,
-                                                self.qda_to_watts(self.digital_spindle_ld_qdA))
+                                                self.qda_to_watts(self.digital_spindle_mains_voltage,
+                                                                  self.digital_spindle_ld_qdA))
                             Clock.schedule_once(self.sm.get_screen('go').spindle_temp_gauge.set_value,
                                                 self.digital_spindle_temperature)
                             Clock.schedule_once(self.sm.get_screen('go').spindle_speed_gauge.set_value,
