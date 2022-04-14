@@ -940,15 +940,12 @@ class SerialConnection(object):
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
                         try:
-                            print(self.digital_spindle_ld_qdA)
-                            print(self.digital_spindle_temperature)
-
-                            Clock.schedule_once(self.sm.get_screen('go').spindle_load_gauge.set_value,
-                                                self.digital_spindle_ld_qdA)
-                            Clock.schedule_once(self.sm.get_screen('go').spindle_temp_gauge.set_value,
-                                                self.digital_spindle_temperature)
-                            Clock.schedule_once(self.sm.get_screen('go').spindle_speed_gauge.set_value,
-                                                0)
+                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_load_gauge.set_value,
+                                                self.digital_spindle_ld_qdA))
+                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
+                                                self.digital_spindle_temperature))
+                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_speed_gauge.set_value,
+                                                0))
                         except:
                             log("Can't set spindle value gauges")
                             log(traceback.format_exc())
