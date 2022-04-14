@@ -2655,8 +2655,7 @@ class RouterMachine(object):
 
     # not persistent
     def set_sg_threshold(self, motor, threshold):
-        self.send_command_to_motor(motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
-        log("Set SG threshold of " + motor + " to " + threshold)
+        self.send_command_to_motor("SET SG THRESHOLD", motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
 
 
     def construct_calibration_file_path(self, axis):
