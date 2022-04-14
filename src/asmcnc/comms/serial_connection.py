@@ -936,7 +936,8 @@ class SerialConnection(object):
                             Clock.schedule_once(self.sm.get_screen('go').spindle_speed_gauge.set_value,
                                                 0)
                         except:
-                            pass
+                            log("Can't set spindle value gauges")
+                            log(traceback.format_exc())
 
                     else: 
 
