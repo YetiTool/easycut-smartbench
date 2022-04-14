@@ -19,6 +19,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_download_LB_cal_data import DownloadLBCalDataScreen
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
+from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -315,7 +316,7 @@ Builder.load_string("""
                             on_press: root.final_test()
                         Button:
                             text: 'Retrieve LB cal data'
-                            on_press: root.enter_retrieve_screen()
+                            on_press: root.enter_serial_number_screen()
                         Button:
                             text: 'SG & Load test'
                             on_press: root.enter_calibration_test()
@@ -826,6 +827,16 @@ class FactorySettingsScreen(Screen):
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             
+    def enter_serial_number_screen(self):
+        if self.calibration_db.conn != None:
+            if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
+                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l)
+                self.systemtools_sm.sm.add_widget(serial_input_screen)
+            
+            self.systemtools_sm.sm.current = 'serial_input_screen'
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
     def enter_retrieve_screen(self):
         if self.calibration_db.conn != None:
             if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
@@ -849,6 +860,7 @@ class FactorySettingsScreen(Screen):
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
+
     def enter_overnight_test(self):
         if self.calibration_db.conn != None:
             if self.get_serial_number():
@@ -861,6 +873,7 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
 
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):

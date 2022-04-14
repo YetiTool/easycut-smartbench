@@ -111,11 +111,11 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - name: Remove bluetooth line if it exists to use ttyS0 port
+  - name: Add bluetooth line if it does not exist to use ttyAMA0 port
     lineinfile:
       name: /boot/config.txt
-      state: absent
-      # insertafter: 'enable_uart=1'
+      state: present
+      insertafter: 'enable_uart=1'
       line: 'dtoverlay=pi3-disable-bt'
   - name: Update GPU memory
     lineinfile: 
