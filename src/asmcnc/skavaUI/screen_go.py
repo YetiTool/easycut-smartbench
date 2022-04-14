@@ -506,7 +506,7 @@ class GoScreen(Screen):
         self.spindle_speed_gauge.set_value(0, None)
         self.spindle_speed_gauge.set_title('Spindle Speed')
 
-        self.gauge_container_spindle.add_widget(self.spindle_z_load_gauge)
+        self.gauge_container_spindle.add_widget(self.spindle_speed_gauge)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
