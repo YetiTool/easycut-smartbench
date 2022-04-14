@@ -2571,4 +2571,9 @@ class RouterMachine(object):
         self.calibration_upload_in_progress = False
         log("Calibration upload complete")
 
+    # not persistent
+    def set_sg_threshold(self, motor, threshold):
+        self.send_command_to_motor(motor, SET_SG_ALARM_TRSHLD, threshold)
+        log("Set SG threshold of " + motor + " to " + threshold)
+
 

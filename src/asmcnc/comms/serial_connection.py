@@ -5,6 +5,7 @@ Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino 
 
 THIS LOOKS FOR PORT ttyAMA not ttyS - incompatible with older platforms.
 '''
+import math
 
 from kivy.config import Config
 from __builtin__ import True
@@ -926,12 +927,12 @@ class SerialConnection(object):
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
                         try:
-                            Clock.schedule_once(
-                                self.sm.get_screen('go').spindle_load_gauge.set_value, self.digital_spindle_ld_qdA)
-                            Clock.schedule_once(
-                                self.sm.get_screen('go').spindle_temp_gauge.set_value, self.digital_spindle_temperature)
-                            Clock.schedule_once(
-                                self.sm.get_screen('go').spindle_speed_gauge.set_value, 0)
+                            Clock.schedule_once(self.sm.get_screen('go').spindle_load_gauge.set_value,
+                                                self.qda_to_watts(self.digital_spindle_ld_qdA))
+                            Clock.schedule_once(self.sm.get_screen('go').spindle_temp_gauge.set_value,
+                                                self.digital_spindle_temperature)
+                            Clock.schedule_once(self.sm.get_screen('go').spindle_speed_gauge.set_value,
+                                                0)
                         except:
                             pass
 
@@ -1308,6 +1309,8 @@ class SerialConnection(object):
                 except: 
                     log("Could not retrieve HW version")
 
+    def qda_to_watts(self, v_mains, qda):
+        return v_mains * 0.1 * math.sqrt(qda)
 
     def check_for_sustained_max_overload(self, dt):
 

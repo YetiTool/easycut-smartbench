@@ -27,6 +27,7 @@ from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
 from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Builder.load_string("""
 
@@ -449,6 +450,9 @@ class GoScreen(Screen):
 
         self.update_strings()
         self.add_gauges()
+
+        self.m.set_sg_threshold(TMC_X1, 150)
+        self.m.set_sg_threshold(TMC_X2, 150)
 
     def add_gauges(self):
         self.x_load_gauge = LoadGauge(sm=self.sm, m=self.m)
