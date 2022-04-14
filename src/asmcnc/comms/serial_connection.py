@@ -1056,10 +1056,6 @@ class SerialConnection(object):
                         log('Failed to set value')
                         print(traceback.format_exc())
 
-                    # check sg values
-
-                    self.check_sg_values()
-
                     if self.tuning_flag:
 
                         self.m.temp_sg_array.append([
@@ -1345,13 +1341,6 @@ class SerialConnection(object):
 
             except:
                 log('Unable to update overload peak on go screen')
-
-
-    # stall guard tests
-
-    def check_sg_values(self):
-        if 125 < abs(self.sg_x_motor_axis) < 999 or 125 < abs(self.sg_y_axis) < 999 or 125 < abs(self.sg_z_motor_axis) < 999:
-            self.m.stop_from_soft_stop_cancel()
 
 
 ## SEQUENTIAL STREAMING
