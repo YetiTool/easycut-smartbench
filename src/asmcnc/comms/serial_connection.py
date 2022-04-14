@@ -939,8 +939,8 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
-                        digital_spindle_ld_watts = self.qda_to_watts(self.digital_spindle_mains_voltage,
-                                                                     self.digital_spindle_ld_qdA)
+                        digital_spindle_ld_watts = round(self.qda_to_watts(self.digital_spindle_mains_voltage,
+                                                                     self.digital_spindle_ld_qdA))
 
                         try:
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_load_gauge.set_value,

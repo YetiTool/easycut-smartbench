@@ -467,7 +467,7 @@ class GoScreen(Screen):
 
         self.spindle_load_gauge = LoadGauge(sm=self.sm, m=self.m)
         self.spindle_load_gauge.set_size(300, 50)
-        self.spindle_load_gauge.set_max_value(300)
+        self.spindle_load_gauge.set_max_value(500)
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
         self.spindle_load_gauge.set_value(0, None)
         self.spindle_load_gauge.set_title('Spindle load')
@@ -506,7 +506,7 @@ class GoScreen(Screen):
         self.spindle_speed_gauge = LoadGauge(sm=self.sm, m=self.m)
         self.spindle_speed_gauge.set_size(300, 50)
         self.spindle_speed_gauge.set_max_value(30000)
-        self.spindle_speed_gauge.set_boundaries(0.25, 0.625)
+        self.spindle_speed_gauge.set_boundaries(0.25, 1.5)
         self.spindle_speed_gauge.set_value(0, None)
         self.spindle_speed_gauge.set_title('Spindle Speed')
 
