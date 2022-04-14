@@ -131,7 +131,7 @@ class LoadGauge(Widget):
         self.warning_percentage = warning_percentage
         self.error_percentage = error_percentage
 
-    def set_value(self, value, dt):
+    def set_value(self, value, dt=None):
         if value == -999:
             value = 0
 
