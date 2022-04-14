@@ -227,16 +227,25 @@ class ScreenManagerSystemTools(object):
 
     def check_git_repository(self):
 
-        if self.set.do_git_fsck():
-            message = self.l.get_str("No errors found. You're good to go!")
-            popup_system.PopupFSCKGood(self.sm, self.l, message, self.set.details_of_fsck)
+        message = self.l.get_str("Please wait")
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
-        else: 
-            message =   self.l.get_str("Errors found!") + "\n" + \
-                        self.l.get_str("Contact us at https://www.yetitool.com/support")
 
-            popup_system.PopupFSCKErrors(self.sm, self.l, message, self.set.details_of_fsck)
+        def nested_check_git_repository(dt):
 
+            if self.set.do_git_fsck():
+                message = self.l.get_str("No errors found. You're good to go!")
+                popup_system.PopupFSCKGood(self.sm, self.l, message, self.set.details_of_fsck)
+
+            else: 
+                message =   self.l.get_str("Errors found!") + "\n" + \
+                            self.l.get_str("Contact us at https://www.yetitool.com/support")
+
+                popup_system.PopupFSCKErrors(self.sm, self.l, message, self.set.details_of_fsck)
+
+            wait_popup.popup.dismiss()
+
+        Clock.schedule_once(nested_check_git_repository, 0.1)
 
 
 

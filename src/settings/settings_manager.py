@@ -461,17 +461,18 @@ class Settings(object):
     def do_git_fsck(self):
 
         bad_repo_signs = ["error", "loose", "fatal"]
-        self.details_of_fsck = str(os.popen("git fsck").read())
+        process = subprocess.Popen("git fsck", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        self.details_of_fsck = str(process.communicate()[0])
 
-        if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
-
+        if self.details_of_fsck:
             log("GIT FSCK ERRORS FOUND: ")
             log(self.details_of_fsck)
             log("END OF GIT FSCK DETAILS")
+
+        if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
             return False
 
-        # return True
-        return False
+        return True
 
 
             
