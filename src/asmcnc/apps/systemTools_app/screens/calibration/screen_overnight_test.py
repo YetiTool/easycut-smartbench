@@ -933,6 +933,7 @@ class OvernightTesting(Screen):
     start_calibration_check_event = None
     poll_end_of_spiral = None
     start_last_rectangle = None
+    run_event_after_datum_set = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -1290,7 +1291,8 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.start_fully_calibrated_final_run_event)
         self._unschedule_event(self.start_calibration_check_event)
         self._unschedule_event(self.poll_end_of_spiral)
-        self._unschedule_event(self.start_last_rectangle)        
+        self._unschedule_event(self.start_last_rectangle)      
+        self._unschedule_event(self.run_event_after_datum_set)  
 
         # also stop measurement running
         self.overnight_running = False
@@ -1537,7 +1539,7 @@ class OvernightTesting(Screen):
         self.m.set_workzone_to_pos_xy()
         self.m.set_jobstart_z()
         self.set_stage("FullyCalibratedTest")
-        self._stream_overnight_file('spiral_file')
+        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('spiral_file'), 3)
         log("Running fully calibrated final run...")
         log("Running spiral file...")
 
@@ -1563,7 +1565,7 @@ class OvernightTesting(Screen):
 
         self.m.set_workzone_to_pos_xy()
         self.m.set_jobstart_z()
-        self._stream_overnight_file('mini_run')
+        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('mini_run'), 3)
         log("Running last rectangle")
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
