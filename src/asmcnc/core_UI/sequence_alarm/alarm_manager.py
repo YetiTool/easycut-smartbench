@@ -247,7 +247,7 @@ class AlarmSequenceManager(object):
 				self.write_report_to_file()
 				wait_popup.popup.dismiss()
 				self.usb_stick.disable()
-				message = 'Report downloaded'
+				message = self.l.get_str('Report downloaded')
 				popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
 			elif count > 30:

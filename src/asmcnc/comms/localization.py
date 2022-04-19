@@ -11,7 +11,7 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
-    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)"]
+    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsche (DE)",  "Français (FR)", "Polskie (PL)", "Dansk (DK)"]
     supported_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)", "Dansk (DK)"]
 
     # use this for just getting user language, and if it's empty just assume english

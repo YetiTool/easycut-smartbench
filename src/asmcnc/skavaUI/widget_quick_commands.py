@@ -222,10 +222,8 @@ class QuickCommands(Widget):
 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
                 '\n\n'
                 )

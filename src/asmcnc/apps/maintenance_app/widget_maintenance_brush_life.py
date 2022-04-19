@@ -35,7 +35,6 @@ Builder.load_string("""
         BoxLayout: 
             orientation: 'vertical'
             spacing: dp(5)
-            padding: [dp(0), 10, 0, 0]
             size_hint: (None, None)
             height: dp(100)
             width: dp(280)         
@@ -43,7 +42,7 @@ Builder.load_string("""
             Label:
                 id: brush_reminder_label
                 color: 0,0,0,1
-                font_size: dp(24)
+                font_size: root.default_font_size
                 markup: True
                 halign: "left"
                 valign: "middle"
@@ -138,6 +137,8 @@ Builder.load_string("""
 
 class BrushLifeWidget(Widget):
 
+    default_font_size = 24
+
     def __init__(self, **kwargs):
     
         super(BrushLifeWidget, self).__init__(**kwargs)
@@ -146,7 +147,6 @@ class BrushLifeWidget(Widget):
         self.l=kwargs['localization']
 
         self.update_strings()
-        self.update_font_size(self.brush_reminder_label)
 
     def restore(self):
         self.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
@@ -158,11 +158,17 @@ class BrushLifeWidget(Widget):
         self.brush_reminder_label.text = self.l.get_bold("BRUSH REMINDER")
         self.hours_label.text = self.l.get_str("hours")
 
+        self.update_font_size(self.brush_reminder_label)
+
     def update_font_size(self, value):
-        if len(value.text) < 18:
-            value.font_size = 24
-        if len(value.text) > 17:
-            value.font_size = 20
+        if len(value.text) <= 27:
+            value.font_size = self.default_font_size
+        if len(value.text) > 27:
+            value.font_size = self.default_font_size - 3
+        if len(value.text) > 30:
+            value.font_size = self.default_font_size - 6
+        if len(value.text) > 35:
+            value.font_size = self.default_font_size - 7
 
 
 

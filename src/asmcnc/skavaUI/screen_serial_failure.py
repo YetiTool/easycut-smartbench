@@ -35,7 +35,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 60
+        padding: 50
         spacing: 30
         size_hint_x: 1
 
@@ -48,7 +48,7 @@ Builder.load_string("""
                 id: title_string
                 size_hint_y: 1.2
                 text_size: self.size
-                font_size: '26sp'
+                font_size: '24sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -150,3 +150,11 @@ class SerialFailureClass(Screen):
         self.user_instruction = self.l.get_str("Please check that Z head is connected, and then reboot the console.")
 
         self.reboot_string.text = self.l.get_str("Reboot")
+
+        self.update_font_size(self.reboot_string)
+
+    def update_font_size(self, value):
+        if len(value.text) >= 20:
+            value.font_size = '25sp'
+        else:
+            value.font_size = '30sp'
