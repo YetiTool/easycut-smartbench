@@ -1175,6 +1175,57 @@ class OvernightTesting(Screen):
         except: pass
 
 
+    def record_min_peaks(self):
+
+        if self.stage == "OvernightWearIn":
+
+            self.get_min_peak(self.x_wear_in_min_pos, self.raw_x_pos_vals)
+            self.get_min_peak(self.y_wear_in_min_pos, self.raw_y_pos_vals)
+            self.get_min_peak(self.y1_wear_in_min_pos, self.raw_y1_pos_vals)
+            self.get_min_peak(self.y2_wear_in_min_pos, self.raw_y2_pos_vals)
+            self.get_min_peak(self.z_wear_in_min_pos, self.raw_z_pos_vals)
+
+            self.get_min_peak(self.x_wear_in_min_neg, self.raw_x_neg_vals)
+            self.get_min_peak(self.y_wear_in_min_neg, self.raw_y_neg_vals)
+            self.get_min_peak(self.y1_wear_in_min_neg, self.raw_y1_neg_vals)
+            self.get_min_peak(self.y2_wear_in_min_neg, self.raw_y2_neg_vals)
+            self.get_min_peak(self.z_wear_in_min_neg, self.raw_z_neg_vals)
+            return
+
+        if self.stage == "CalibrationCheckOT":
+
+            self.get_min_peak(self.x_recalibration_min_pos, self.raw_x_pos_vals)
+            self.get_min_peak(self.y_recalibration_min_pos, self.raw_y_pos_vals)
+            self.get_min_peak(self.y1_recalibration_min_pos, self.raw_y1_pos_vals)
+            self.get_min_peak(self.y2_recalibration_min_pos, self.raw_y2_pos_vals)
+            self.get_min_peak(self.z_recalibration_min_pos, self.raw_z_pos_vals)
+
+            self.get_min_peak(self.x_recalibration_min_neg, self.raw_x_neg_vals)
+            self.get_min_peak(self.y_recalibration_min_neg, self.raw_y_neg_vals)
+            self.get_min_peak(self.y1_recalibration_min_neg, self.raw_y1_neg_vals)
+            self.get_min_peak(self.y2_recalibration_min_neg, self.raw_y2_neg_vals)
+            self.get_min_peak(self.z_recalibration_min_neg, self.raw_z_neg_vals)
+            return 
+
+        if self.stage == "FullyCalibratedTest":
+
+            self.get_min_peak(self.x_fully_calibrated_min_pos, self.raw_x_pos_vals)
+            self.get_min_peak(self.y_fully_calibrated_min_pos, self.raw_y_pos_vals)
+            self.get_min_peak(self.y1_fully_calibrated_min_pos, self.raw_y1_pos_vals)
+            self.get_min_peak(self.y2_fully_calibrated_min_pos, self.raw_y2_pos_vals)
+            self.get_min_peak(self.z_fully_calibrated_min_pos, self.raw_z_pos_vals)
+
+            self.get_min_peak(self.x_fully_calibrated_min_neg, self.raw_x_neg_vals)
+            self.get_min_peak(self.y_fully_calibrated_min_neg, self.raw_y_neg_vals)
+            self.get_min_peak(self.y1_fully_calibrated_min_neg, self.raw_y1_neg_vals)
+            self.get_min_peak(self.y2_fully_calibrated_min_neg, self.raw_y2_neg_vals)
+            self.get_min_peak(self.z_fully_calibrated_min_neg, self.raw_z_neg_vals)
+            return
+
+    def get_min_peak(self, min_var, raw_vals):
+        try: min_var = (min(raw_vals))
+        except: pass
+
     def read_out_peaks(self, stage):
 
         if stage == "OvernightWearIn":
@@ -1258,6 +1309,7 @@ class OvernightTesting(Screen):
                             peak_list[9]
 
             ]
+            self.record_min_peaks()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1771,41 +1823,74 @@ class OvernightTesting(Screen):
 
             within_plus_minus = 400
 
-            self.tick_checkbox(self.y_wear_in_checkbox, self.check_in_range(self.y_wear_in_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y1_wear_in_checkbox, self.check_in_range(self.y1_wear_in_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y2_wear_in_checkbox, self.check_in_range(self.y2_wear_in_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.x_wear_in_checkbox, self.check_in_range(self.x_wear_in_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.z_wear_in_checkbox, self.check_in_range(self.z_wear_in_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y_wear_in_checkbox, \
+             self.check_in_range(self.y_wear_in_peak_pos, self.y_wear_in_peak_neg, self.y_wear_in_min_pos, self.y_wear_in_min_neg, within_plus_minus)\
+             )
+            self.tick_checkbox(self.y1_wear_in_checkbox, \
+             self.check_in_range(self.y1_wear_in_peak_pos, self.y1_wear_in_peak_neg, self.y1_wear_in_min_pos, self.y1_wear_in_min_neg, within_plus_minus)\
+             )
+            self.tick_checkbox(self.y2_wear_in_checkbox, \
+             self.check_in_range(self.y2_wear_in_peak_pos, self.y2_wear_in_peak_neg, self.y2_wear_in_min_pos, self.y2_wear_in_min_neg, within_plus_minus)\
+             )
+            self.tick_checkbox(self.x_wear_in_checkbox, \
+             self.check_in_range(self.x_wear_in_peak_pos, self.x_wear_in_peak_neg, self.x_wear_in_min_pos, self.x_wear_in_min_neg, within_plus_minus)\
+             )
+            self.tick_checkbox(self.z_wear_in_checkbox, \
+             self.check_in_range(self.z_wear_in_peak_pos, self.z_wear_in_peak_neg, self.z_wear_in_min_pos, self.z_wear_in_min_neg, within_plus_minus)\
+             )
             return
 
         if self.stage == "CalibrationCheckOT":
 
             within_plus_minus = 100
 
-            self.tick_checkbox(self.y_recalibration_checkbox, self.check_in_range(self.y_recalibration_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y1_recalibration_checkbox, self.check_in_range(self.y1_recalibration_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y2_recalibration_checkbox, self.check_in_range(self.y2_recalibration_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.x_recalibration_checkbox, self.check_in_range(self.x_recalibration_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.z_recalibration_checkbox, self.check_in_range(self.z_recalibration_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y_recalibration_checkbox, \
+                self.check_in_range(self.y_recalibration_peak_pos, self.y_recalibration_peak_neg, self.y_recalibration_min_pos, self.y_recalibration_min_neg, within_plus_minus)
+                )
+            self.tick_checkbox(self.y1_recalibration_checkbox, \
+                self.check_in_range(self.y1_recalibration_peak_pos, self.y1_recalibration_peak_neg, self.y1_recalibration_min_pos, self.y1_recalibration_min_neg, within_plus_minus)
+                )
+            self.tick_checkbox(self.y2_recalibration_checkbox, \
+                self.check_in_range(self.y2_recalibration_peak_pos, self.y2_recalibration_peak_neg, self.y2_recalibration_min_pos, self.y2_recalibration_min_neg, within_plus_minus)
+                )
+            self.tick_checkbox(self.x_recalibration_checkbox, \
+                self.check_in_range(self.x_recalibration_peak_pos, self.x_recalibration_peak_neg, self.x_recalibration_min_pos, self.x_recalibration_min_neg, within_plus_minus)
+                )
+            self.tick_checkbox(self.z_recalibration_checkbox, \
+                self.check_in_range(self.z_recalibration_peak_pos, self.z_recalibration_peak_neg, self.z_recalibration_min_pos, self.z_recalibration_min_neg, within_plus_minus)
+                )
             return
 
         if self.stage == "FullyCalibratedTest":
 
             within_plus_minus = 100
 
-            self.tick_checkbox(self.y_fully_calibrated_checkbox, self.check_in_range(self.y_fully_calibrated_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y1_fully_calibrated_checkbox, self.check_in_range(self.y1_fully_calibrated_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.y2_fully_calibrated_checkbox, self.check_in_range(self.y2_fully_calibrated_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.x_fully_calibrated_checkbox, self.check_in_range(self.x_fully_calibrated_peak_pos, within_plus_minus))
-            self.tick_checkbox(self.z_fully_calibrated_checkbox, self.check_in_range(self.z_fully_calibrated_peak_pos, within_plus_minus))
+            self.tick_checkbox(self.y_fully_calibrated_checkbox, \
+                self.check_in_range(self.y_fully_calibrated_peak_pos, self.y_fully_calibrated_peak_neg, self.y_fully_calibrated_min_pos, self.y_fully_calibrated_min_neg,  within_plus_minus)
+                )
+            self.tick_checkbox(self.y1_fully_calibrated_checkbox, \
+                self.check_in_range(self.y1_fully_calibrated_peak_pos, self.y1_fully_calibrated_peak_neg, self.y1_fully_calibrated_min_pos, self.y1_fully_calibrated_min_neg,  within_plus_minus)
+                )
+            self.tick_checkbox(self.y2_fully_calibrated_checkbox, \
+                self.check_in_range(self.y2_fully_calibrated_peak_pos, self.y2_fully_calibrated_peak_neg, self.y2_fully_calibrated_min_pos, self.y2_fully_calibrated_min_neg,  within_plus_minus)
+                )
+            self.tick_checkbox(self.x_fully_calibrated_checkbox, \
+                self.check_in_range(self.x_fully_calibrated_peak_pos, self.x_fully_calibrated_peak_neg, self.x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,  within_plus_minus)
+                )
+            self.tick_checkbox(self.z_fully_calibrated_checkbox, \
+                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  within_plus_minus)
+                )
             return
 
 
-    def check_in_range(self, peak_id, within_plus_minus):
+    def check_in_range(self, peak_id_pos, peak_id_neg, min_pos, min_neg, within_plus_minus):
 
         try: 
-            if (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return True
-            else: return False
+            if not (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return False
+            if not (-1*within_plus_minus) < int(peak_id_neg.text) < within_plus_minus: return False
+            if not (-1*within_plus_minus) < int(min_pos) < within_plus_minus: return False
+            if not (-1*within_plus_minus) < int(min_neg) < within_plus_minus: return False
+            return True
 
         except:
             return False
