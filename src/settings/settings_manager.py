@@ -460,7 +460,7 @@ class Settings(object):
 
     def do_git_fsck(self):
 
-        bad_repo_signs = ["error", "loose", "fatal"]
+        bad_repo_signs = ["error", "loose", "fatal", "broken", "missing"]
         process = subprocess.Popen("git fsck", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         self.details_of_fsck = str(process.communicate()[0])
 
