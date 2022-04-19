@@ -931,6 +931,8 @@ class OvernightTesting(Screen):
     start_fully_calibrated_final_run_event = None
     poll_for_completion_of_overnight_test = None
     start_calibration_check_event = None
+    poll_end_of_spiral = None
+    start_last_rectangle = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
