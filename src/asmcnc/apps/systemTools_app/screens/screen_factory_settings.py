@@ -619,7 +619,7 @@ class FactorySettingsScreen(Screen):
             # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
-                popup_system.PopupFSCKErrors(self.sm, self.l, message, self.set.details_of_fsck)
+                popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck)
                 return False
 
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
