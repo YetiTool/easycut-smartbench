@@ -149,10 +149,10 @@ class CalibrationDatabase(object):
 
     def does_final_test_stage_already_exist(self, combined_id):
 
-        query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id
-        cursor.execute(query)
-
-        data = cursor.fetchone()
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id
+            cursor.execute(query)
+            data = cursor.fetchone()
 
         return data
 
