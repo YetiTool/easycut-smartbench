@@ -943,6 +943,37 @@ class OvernightTesting(Screen):
 
     sn_for_db = ''
 
+    x_wear_in_min_pos = None
+    y_wear_in_min_pos = None
+    y1_wear_in_min_pos = None
+    y2_wear_in_min_pos = None
+    z_wear_in_min_pos = None
+    x_wear_in_min_neg = None
+    y_wear_in_min_neg = None
+    y1_wear_in_min_neg = None
+    y2_wear_in_min_neg = None
+    z_wear_in_min_neg = None
+    x_recalibration_min_pos = None
+    y_recalibration_min_pos = None
+    y1_recalibration_min_pos = None
+    y2_recalibration_min_pos = None
+    z_recalibration_min_pos = None
+    x_recalibration_min_neg = None
+    y_recalibration_min_neg = None
+    y1_recalibration_min_neg = None
+    y2_recalibration_min_neg = None
+    z_recalibration_min_neg = None
+    x_fully_calibrated_min_pos = None
+    y_fully_calibrated_min_pos = None
+    y1_fully_calibrated_min_pos = None
+    y2_fully_calibrated_min_pos = None
+    z_fully_calibrated_min_pos = None
+    x_fully_calibrated_min_neg = None
+    y_fully_calibrated_min_neg = None
+    y1_fully_calibrated_min_neg = None
+    y2_fully_calibrated_min_neg = None
+    z_fully_calibrated_min_neg = None
+
 
 
     def __init__(self, **kwargs):
