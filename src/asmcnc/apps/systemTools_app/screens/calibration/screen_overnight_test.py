@@ -1519,7 +1519,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
         self.reset_checkbox(self.sent_fully_recalibrated_run_data)
 
-        log("SB fully calibrated, start final run - one hour")
+        log("SB fully calibrated, start final run")
 
         self.m.jog_absolute_xy(-1298, -2500, 6000)
         self.m.jog_absolute_single_axis('Z', -32, 750)
