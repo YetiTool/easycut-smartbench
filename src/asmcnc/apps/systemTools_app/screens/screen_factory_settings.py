@@ -693,6 +693,12 @@ class FactorySettingsScreen(Screen):
 
         def nested_full_console_update(dt):
 
+            # Ensure git repo is good before anything else happens
+            if not self.set.do_git_fsck():
+                message = "git FSCK errors found! repo corrupt."
+                popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck)
+                return False
+
             if self.set.get_sw_update_via_wifi():
                 self.set.fetch_platform_tags()
                 self.set.update_platform()
