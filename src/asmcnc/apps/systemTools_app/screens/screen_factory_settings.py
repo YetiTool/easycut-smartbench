@@ -697,6 +697,7 @@ class FactorySettingsScreen(Screen):
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
                 popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck)
+                self.console_update_button.text = 'Full Console Update (wifi)'
                 return False
 
             if self.set.get_sw_update_via_wifi():
@@ -705,6 +706,7 @@ class FactorySettingsScreen(Screen):
             else: 
                 message = "Could not get software update, please check connection."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
+                self.console_update_button.text = 'Full Console Update (wifi)'
 
         Clock.schedule_once(nested_full_console_update, 1)
 
