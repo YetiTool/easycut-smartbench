@@ -451,8 +451,11 @@ class GoScreen(Screen):
         self.update_strings()
         self.add_gauges()
 
-        self.m.set_sg_threshold(TMC_X1, 150)
-        self.m.set_sg_threshold(TMC_X2, 150)
+        self.m.set_sg_threshold(TMC_X1, 250)
+        self.m.set_sg_threshold(TMC_X2, 250)
+        self.m.set_sg_threshold(TMC_Y1, 250)
+        self.m.set_sg_threshold(TMC_Y2, 250)
+        self.m.set_sg_threshold(TMC_Z, 225)
 
     def add_gauges(self):
         self.x_load_gauge = LoadGauge(sm=self.sm, m=self.m)
@@ -470,7 +473,7 @@ class GoScreen(Screen):
         self.spindle_load_gauge.set_max_value(500)
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
         self.spindle_load_gauge.set_value(0, None)
-        self.spindle_load_gauge.set_title('Spindle load')
+        self.spindle_load_gauge.set_title('Spindle Load')
 
         self.gauge_container_spindle.add_widget(self.spindle_load_gauge)
 
