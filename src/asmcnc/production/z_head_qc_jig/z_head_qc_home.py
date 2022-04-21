@@ -81,9 +81,6 @@ class ZHeadQCHome(Screen):
     def enter_qc(self):
         self.sm.current = 'qc1'
 
-    def on_leave(self):
-        self.usb.disable()
-
     def load_usb_stick_with_hex_file(self):
 
         if not self.usb.stick_enabled:

@@ -21,18 +21,6 @@ Builder.load_string("""
         orientation: 'vertical'
         size_hint_y: 1.00
 
-        Button:
-            text: '<<< Back'
-            on_press: root.enter_prev_screen()
-            text_size: self.size
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            padding: [dp(10),0]
-            size_hint_y: 0.2
-            size_hint_x: 0.5
-            font_size: dp(20)
-
         GridLayout:
             cols: 1
             rows: 2
@@ -60,9 +48,6 @@ class ZHeadQCDBSuccess(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
-
-    def enter_prev_screen(self):
-        self.sm.current = 'qc2'
 
     def enter_next_screen(self):
         self.sm.current = 'qc6'
