@@ -14,6 +14,7 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import popup_system
 
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
@@ -614,6 +615,13 @@ class FactorySettingsScreen(Screen):
     def factory_reset(self):
 
         def nested_factory_reset():
+
+            # Ensure git repo is good before anything else happens
+            if not self.set.do_git_fsck():
+                message = "git FSCK errors found! repo corrupt."
+                popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck)
+                return False
+
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
                 lifetime = float(120*3600)
@@ -685,12 +693,20 @@ class FactorySettingsScreen(Screen):
 
         def nested_full_console_update(dt):
 
+            # Ensure git repo is good before anything else happens
+            if not self.set.do_git_fsck():
+                message = "git FSCK errors found! repo corrupt."
+                popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck)
+                self.console_update_button.text = 'Full Console Update (wifi)'
+                return False
+
             if self.set.get_sw_update_via_wifi():
                 self.set.fetch_platform_tags()
                 self.set.update_platform()
             else: 
                 message = "Could not get software update, please check connection."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
+                self.console_update_button.text = 'Full Console Update (wifi)'
 
         Clock.schedule_once(nested_full_console_update, 1)
 
