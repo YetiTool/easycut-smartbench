@@ -319,7 +319,7 @@ Builder.load_string("""
                                 text: 'FT B1'
                                 background_normal: ''
                                 background_color: [1,0.94,0,1]
-                                on_press: root.final_test("yellow)
+                                on_press: root.final_test("yellow")
                             Button:
                                 text: 'FT B2'
                                 background_normal: ''
