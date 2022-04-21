@@ -215,7 +215,7 @@ class FinalTestScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
-    def set_board_up(board):
+    def set_board_up(self, board):
 
         self.board_type = board
 
