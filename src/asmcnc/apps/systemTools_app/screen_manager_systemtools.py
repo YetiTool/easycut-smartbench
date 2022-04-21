@@ -166,10 +166,13 @@ class ScreenManagerSystemTools(object):
           self.sm.add_widget(diagnostics_screen)
       self.sm.current = 'diagnostics'
 
-    def open_final_test_screen(self):
+    def open_final_test_screen(self, board):
       if not self.sm.has_screen('final_test'):
         final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self, localization = self.l)
         self.sm.add_widget(final_test_screen)
+
+    # SET VALUES FOR BOARD
+      self.sm.get_screen('final_test').set_board_up(board)
       self.sm.current = 'final_test'
 
     def open_update_testing_screen(self):

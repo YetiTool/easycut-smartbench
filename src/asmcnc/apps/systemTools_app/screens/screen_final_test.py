@@ -26,6 +26,11 @@ Builder.load_string("""
     y_over_count : y_over_count
     x_over_count : x_over_count
 
+    y_pos_label : y_pos_label
+    y_neg_label : y_neg_label
+    x_pos_label : x_pos_label
+    x_neg_label : x_neg_label
+
     BoxLayout:
         padding: 0
         spacing: 0
@@ -77,10 +82,12 @@ Builder.load_string("""
                         on_press: root.set_y_steps()
 
                 Button:
+                    id: y_pos_label
                     text: "G91 G0 Y1636.6"
                     on_press: root.Y_plus()
 
                 Button:
+                    id: y_neg_label
                     text: "G91 G0 Y-1636.6"
                     on_press: root.Y_minus()
 
@@ -105,10 +112,12 @@ Builder.load_string("""
 
 
                     Button:
+                        id: x_pos_label
                         text: "G91 G0 X1150.3"
                         on_press: root.X_plus()
 
                     Button:
+                        id: x_neg_label
                         text: "G91 G0 X-1150.3"
                         on_press: root.X_minus()
 
@@ -171,6 +180,17 @@ class FinalTestScreen(Screen):
     y_calibration_scale_factor = 0.0036
     x_calibration_scale_factor = 0.0048
 
+    y_board = 1234.5
+    x_board = 1234.5
+
+    board_type = "yellow"
+
+    y_pos_command = ""
+    y_neg_command = ""
+
+    x_pos_command = ""
+    x_neg_command = ""
+
     def __init__(self, **kwargs):
         super(FinalTestScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -195,20 +215,43 @@ class FinalTestScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+    def set_board_up(board):
+
+        self.board_type = board
+
+        if self.board_type == "yellow":
+            self.y_board = 1637.9
+            self.x_board = 1149.2
+
+        elif self.board_type == "blue":
+            self.y_board = 1636.6
+            self.x_board = 1150.3
+
+        self.y_pos_command = "G91 G0 Y" + self.y_board
+        self.y_neg_command = "G91 G0 Y-" + self.y_board
+        self.x_pos_command = "G91 G0 X" + self.x_board
+        self.x_neg_command = "G91 G0 X-" + self.x_board
+
+        self.y_pos_label.text = self.y_pos_command
+        self.y_neg_label.text = self.y_neg_command
+        self.x_pos_label.text = self.x_pos_command
+        self.x_neg_label.text = self.x_neg_command
+
+
     def X_plus(self):
-    	self.m.send_any_gcode_command("G91 G0 X1150.3")
+    	self.m.send_any_gcode_command(self.x_pos_command)
         self.m.set_led_colour('BLUE')
 
     def X_minus(self):
-    	self.m.send_any_gcode_command("G91 G0 X-1150.3")
+    	self.m.send_any_gcode_command(self.x_neg_command)
         self.m.set_led_colour('BLUE')
 
     def Y_plus(self):
-    	self.m.send_any_gcode_command("G91 G0 Y1636.6")
+    	self.m.send_any_gcode_command(self.y_pos_command)
         self.m.set_led_colour('BLUE')
 
     def Y_minus(self):
-    	self.m.send_any_gcode_command("G91 G0 Y-1636.6")
+    	self.m.send_any_gcode_command(self.y_neg_command)
         self.m.set_led_colour('BLUE')
 
     def X_575(self):
