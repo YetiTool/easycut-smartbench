@@ -220,17 +220,17 @@ class FinalTestScreen(Screen):
         self.board_type = board
 
         if self.board_type == "yellow":
-            self.y_board = 1637.9
-            self.x_board = 1149.2
-
-        elif self.board_type == "blue":
             self.y_board = 1636.6
             self.x_board = 1150.3
 
-        self.y_pos_command = "G91 G0 Y" + self.y_board
-        self.y_neg_command = "G91 G0 Y-" + self.y_board
-        self.x_pos_command = "G91 G0 X" + self.x_board
-        self.x_neg_command = "G91 G0 X-" + self.x_board
+        elif self.board_type == "blue":
+            self.y_board = 1637.9
+            self.x_board = 1149.2
+
+        self.y_pos_command = "G91 G0 Y" + str(self.y_board)
+        self.y_neg_command = "G91 G0 Y-" + str(self.y_board)
+        self.x_pos_command = "G91 G0 X" + str(self.x_board)
+        self.x_neg_command = "G91 G0 X-" + str(self.x_board)
 
         self.y_pos_label.text = self.y_pos_command
         self.y_neg_label.text = self.y_neg_command
