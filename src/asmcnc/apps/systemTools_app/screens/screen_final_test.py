@@ -183,7 +183,7 @@ class FinalTestScreen(Screen):
     y_board = 1234.5
     x_board = 1234.5
 
-    board_type = "yellow"
+    board_type = "pink"
 
     y_pos_command = ""
     y_neg_command = ""
@@ -219,7 +219,7 @@ class FinalTestScreen(Screen):
 
         self.board_type = board
 
-        if self.board_type == "yellow":
+        if self.board_type == "pink":
             self.y_board = 1636.6
             self.x_board = 1150.3
 

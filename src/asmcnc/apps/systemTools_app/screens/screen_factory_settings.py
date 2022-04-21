@@ -318,12 +318,12 @@ Builder.load_string("""
                             Button:
                                 text: 'FT B1'
                                 background_normal: ''
-                                background_color: [1,0.94,0,1]
-                                on_press: root.final_test("yellow")
+                                background_color: [0.75,0.34,0.51,1]
+                                on_press: root.final_test("pink")
                             Button:
                                 text: 'FT B2'
                                 background_normal: ''
-                                background_color: [0,0,1,1]
+                                background_color: [0.28,0.44,0.97,1]
                                 on_press: root.final_test("blue")
                         Button:
                             text: 'Retrieve LB cal data'
