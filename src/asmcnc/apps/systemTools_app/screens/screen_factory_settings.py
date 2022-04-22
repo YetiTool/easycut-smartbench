@@ -312,9 +312,19 @@ Builder.load_string("""
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
-                        Button:
-                            text: 'Final test'
-                            on_press: root.final_test()
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+                            Button:
+                                text: 'FT B1'
+                                background_normal: ''
+                                background_color: [0.75,0.34,0.51,1]
+                                on_press: root.final_test("pink")
+                            Button:
+                                text: 'FT B2'
+                                background_normal: ''
+                                background_color: [0.28,0.44,0.97,1]
+                                on_press: root.final_test("blue")
                         Button:
                             text: 'Retrieve LB cal data'
                             on_press: root.enter_serial_number_screen()
@@ -819,8 +829,8 @@ class FactorySettingsScreen(Screen):
         return str(serial_number_from_file)
 
 
-    def final_test(self):
-        self.systemtools_sm.open_final_test_screen()
+    def final_test(self, board):
+        self.systemtools_sm.open_final_test_screen(board)
 
     def set_user_to_view_privacy_notice(self):
         user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
