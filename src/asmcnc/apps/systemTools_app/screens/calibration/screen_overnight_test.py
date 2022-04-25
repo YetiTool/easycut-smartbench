@@ -1916,14 +1916,22 @@ class OvernightTesting(Screen):
 
     def check_in_range(self, peak_id_pos, peak_id_neg, min_pos, min_neg, within_plus_minus):
 
+        print("Lower bound: " + str((-1*within_plus_minus)))
+        print("Upper bound: " + str(within_plus_minus))
+        print ("Peak pos: " + str(int(peak_id_pos.text)))
+        print ("Peak neg: " + str(int(peak_id_neg.text)))
+        print ("Min pos: " + str(int(min_pos.text)))
+        print ("Min neg: " + str(int(min_neg.text)))
+
         try: 
-            if not (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return False
+            if not (-1*within_plus_minus) < int(peak_id_pos.text) < within_plus_minus: return False
             if not (-1*within_plus_minus) < int(peak_id_neg.text) < within_plus_minus: return False
             if not (-1*within_plus_minus) < int(min_pos) < within_plus_minus: return False
             if not (-1*within_plus_minus) < int(min_neg) < within_plus_minus: return False
             return True
 
         except:
+            print(traceback.format_exc())
             return False
 
 
