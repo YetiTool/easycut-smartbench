@@ -103,12 +103,14 @@ class ZMiscSaveWidget(Widget):
 
     def save(self):
 
+        self.show_popup = True
+
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
 
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
         
-        else:
+        elif self.show_popup:
             warning_message = (
                     self.l.get_str("There was a problem saving your settings.") + \
                     "\n\n" + \
@@ -129,6 +131,7 @@ class ZMiscSaveWidget(Widget):
                         self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
                     )
                 popup_info.PopupError(self.sm, self.l, warning_message)
+                self.show_popup = False
                 return False
             else:
                 if self.m.write_z_touch_plate_thickness(touchplate_offset): return True

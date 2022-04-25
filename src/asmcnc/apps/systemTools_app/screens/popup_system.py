@@ -18,6 +18,8 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.rst import RstDocument
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
@@ -671,3 +673,163 @@ class PopupStopOvernightTest(Widget):
       resume_button.bind(on_press=popup.dismiss)
       
       popup.open()
+
+class PopupFSCKGood(Widget):
+
+    def __init__(self, screen_manager, localization, description, more_info):
+        
+        self.sm = screen_manager
+        self.l = localization
+        popup_width = 500
+        label_width = popup_width - 40
+
+        def open_more_info(*args):
+            PopupFSCKInfo(self.sm, self.l, more_info)            
+        
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+        more_info_string = self.l.get_bold('More info')
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        more_info_button = Button(text=more_info_string, markup = True)
+        more_info_button.background_normal = ''
+        more_info_button.background_color = [33 / 255., 150 / 255., 243 / 255., 98 / 100.]
+        
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0])
+        if more_info: btn_layout.add_widget(more_info_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+        if more_info: 
+            more_info_button.bind(on_press=open_more_info)
+            more_info_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+class PopupFSCKErrors(Widget):
+
+    def __init__(self, screen_manager, localization, description, more_info):
+        
+        self.sm = screen_manager
+        self.l = localization
+        popup_width = 500
+        label_width = popup_width - 40
+
+        def open_more_info(*args):
+            PopupFSCKInfo(self.sm, self.l, more_info)
+        
+        title_string = self.l.get_str('Error!')
+        ok_string = self.l.get_bold('Ok')
+        more_info_string = self.l.get_bold('More info')
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        more_info_button = Button(text=more_info_string, markup = True)
+        more_info_button.background_normal = ''
+        more_info_button.background_color = [33 / 255., 150 / 255., 243 / 255., 98 / 100.]
+        
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0])
+        btn_layout.add_widget(more_info_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+        more_info_button.bind(on_press=open_more_info)
+        more_info_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+class PopupFSCKInfo(Widget):
+
+    def __init__(self, screen_manager, localization, description):
+        
+        self.sm = screen_manager
+        self.l = localization
+        popup_width = 600
+
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        info_label = RstDocument(text=description, background_color = [1,1,1,1], base_font_size = 26, underline_color = '000000')
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10,20,10,0], size_hint_y=0.6)
+        btn_layout.add_widget(ok_button)
+
+        scroll_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], always_overscroll=True, size_hint_y=1.2)
+        scroll_layout.add_widget(info_label)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,10,10,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(scroll_layout)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()

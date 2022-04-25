@@ -1487,6 +1487,7 @@ class OvernightTesting(Screen):
         if self.is_step_ticked(self.six_hour_wear_in_checkbox) and self.is_step_complete(self.sent_six_hour_wear_in_data):
 
             if self.poll_for_recalibration_stage != None: Clock.unschedule(self.poll_for_recalibration_stage)
+            log("Start recalibration...")
             self.start_recalibration()
 
 
@@ -1593,6 +1594,7 @@ class OvernightTesting(Screen):
         if self.is_step_ticked(self.recalibration_checkbox) and self.is_step_complete(self.sent_recalibration_data):
 
             if self.poll_for_fully_calibrated_final_run_stage != None: Clock.unschedule(self.poll_for_fully_calibrated_final_run_stage)
+            log("Start fully calibrated final run...")
             self.start_fully_calibrated_final_run()
 
 
