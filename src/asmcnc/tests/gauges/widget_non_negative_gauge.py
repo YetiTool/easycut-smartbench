@@ -90,7 +90,6 @@ class PositiveLoadGauge(Widget):
         self.bind(r=self.redraw)
         self.bind(peak_value=self.redraw_peak)
 
-        # max of 10 values
         self.value_stack = []
 
     def redraw_peak(self, *args):
