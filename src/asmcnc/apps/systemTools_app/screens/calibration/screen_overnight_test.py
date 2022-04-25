@@ -1216,68 +1216,68 @@ class OvernightTesting(Screen):
 
             print("Mins for overnight wear in")
 
-            self.get_min_peak(self.x_wear_in_min_pos, self.raw_x_pos_vals)
+            self.x_wear_in_min_pos = self.get_min_peak(self.raw_x_pos_vals)
             print(self.x_wear_in_min_pos)
-            self.get_min_peak(self.y_wear_in_min_pos, self.raw_y_pos_vals)
+            self.y_wear_in_min_pos = self.get_min_peak(self.raw_y_pos_vals)
             print(self.y_wear_in_min_pos)
-            self.get_min_peak(self.y1_wear_in_min_pos, self.raw_y1_pos_vals)
+            self.y1_wear_in_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
             print(self.y1_wear_in_min_pos)
-            self.get_min_peak(self.y2_wear_in_min_pos, self.raw_y2_pos_vals)
+            self.y2_wear_in_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
             print(self.y2_wear_in_min_pos)
-            self.get_min_peak(self.z_wear_in_min_pos, self.raw_z_pos_vals)
+            self.z_wear_in_min_pos = self.get_min_peak(self.raw_z_pos_vals)
             print(self.z_wear_in_min_pos)
 
-            self.get_min_peak(self.x_wear_in_min_neg, self.raw_x_neg_vals)
+            self.x_wear_in_min_neg = self.get_min_peak(self.raw_x_neg_vals)
             print(self.x_wear_in_min_neg)
-            self.get_min_peak(self.y_wear_in_min_neg, self.raw_y_neg_vals)
+            self.y_wear_in_min_neg = self.get_min_peak(self.raw_y_neg_vals)
             print(self.y_wear_in_min_neg)
-            self.get_min_peak(self.y1_wear_in_min_neg, self.raw_y1_neg_vals)
+            self.y1_wear_in_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
             print(self.y1_wear_in_min_neg)
-            self.get_min_peak(self.y2_wear_in_min_neg, self.raw_y2_neg_vals)
+            self.y2_wear_in_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
             print(self.y2_wear_in_min_neg)
-            self.get_min_peak(self.z_wear_in_min_neg, self.raw_z_neg_vals)
+            self.z_wear_in_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             print(self.z_wear_in_min_neg)
             return
 
         if self.stage == "CalibrationCheckOT":
 
-            self.get_min_peak(self.x_recalibration_min_pos, self.raw_x_pos_vals)
-            self.get_min_peak(self.y_recalibration_min_pos, self.raw_y_pos_vals)
-            self.get_min_peak(self.y1_recalibration_min_pos, self.raw_y1_pos_vals)
-            self.get_min_peak(self.y2_recalibration_min_pos, self.raw_y2_pos_vals)
-            self.get_min_peak(self.z_recalibration_min_pos, self.raw_z_pos_vals)
+            self.x_recalibration_min_pos = self.get_min_peak(self.raw_x_pos_vals)
+            self.y_recalibration_min_pos = self.get_min_peak(self.raw_y_pos_vals)
+            self.y1_recalibration_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
+            self.y2_recalibration_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
+            self.z_recalibration_min_pos = self.get_min_peak(self.raw_z_pos_vals)
 
-            self.get_min_peak(self.x_recalibration_min_neg, self.raw_x_neg_vals)
-            self.get_min_peak(self.y_recalibration_min_neg, self.raw_y_neg_vals)
-            self.get_min_peak(self.y1_recalibration_min_neg, self.raw_y1_neg_vals)
-            self.get_min_peak(self.y2_recalibration_min_neg, self.raw_y2_neg_vals)
-            self.get_min_peak(self.z_recalibration_min_neg, self.raw_z_neg_vals)
+            self.x_recalibration_min_neg = self.get_min_peak(self.raw_x_neg_vals)
+            self.y_recalibration_min_neg = self.get_min_peak(self.raw_y_neg_vals)
+            self.y1_recalibration_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
+            self.y2_recalibration_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
+            self.z_recalibration_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return 
 
         if self.stage == "FullyCalibratedTest":
 
-            self.get_min_peak(self.x_fully_calibrated_min_pos, self.raw_x_pos_vals)
-            self.get_min_peak(self.y_fully_calibrated_min_pos, self.raw_y_pos_vals)
-            self.get_min_peak(self.y1_fully_calibrated_min_pos, self.raw_y1_pos_vals)
-            self.get_min_peak(self.y2_fully_calibrated_min_pos, self.raw_y2_pos_vals)
-            self.get_min_peak(self.z_fully_calibrated_min_pos, self.raw_z_pos_vals)
+            self.x_fully_calibrated_min_pos = self.get_min_peak(self.raw_x_pos_vals)
+            self.y_fully_calibrated_min_pos = self.get_min_peak(self.raw_y_pos_vals)
+            self.y1_fully_calibrated_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
+            self.y2_fully_calibrated_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
+            self.z_fully_calibrated_min_pos = self.get_min_peak(self.raw_z_pos_vals)
 
-            self.get_min_peak(self.x_fully_calibrated_min_neg, self.raw_x_neg_vals)
-            self.get_min_peak(self.y_fully_calibrated_min_neg, self.raw_y_neg_vals)
-            self.get_min_peak(self.y1_fully_calibrated_min_neg, self.raw_y1_neg_vals)
-            self.get_min_peak(self.y2_fully_calibrated_min_neg, self.raw_y2_neg_vals)
-            self.get_min_peak(self.z_fully_calibrated_min_neg, self.raw_z_neg_vals)
+            self.x_fully_calibrated_min_neg = self.get_min_peak(self.raw_x_neg_vals)
+            self.y_fully_calibrated_min_neg = self.get_min_peak(self.raw_y_neg_vals)
+            self.y1_fully_calibrated_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
+            self.y2_fully_calibrated_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
+            self.z_fully_calibrated_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return
 
         print("No min peaks completed!")
 
     def get_min_peak(self, min_var, raw_vals):
         try: 
-            min_var = (min(raw_vals))
+            return (min(raw_vals))
         except: 
             print("Min peak error:")
             print(traceback.format_exc())
-            pass
+            return None
 
     def read_out_peaks(self, stage):
 
