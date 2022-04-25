@@ -129,7 +129,7 @@ class PositiveLoadGauge(Widget):
 
         self.add_value_to_stack(width)
 
-        print('Width: ' + width)
+        print('Width: ' + str(width))
 
         self.value_label.text = str(value)
 
@@ -166,4 +166,4 @@ class PositiveLoadGauge(Widget):
 
         self.peak_value = peak_value
 
-        print('Peak: ' + peak_value)
+        print('Peak: ' + str(peak_value))
