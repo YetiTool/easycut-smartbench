@@ -8,6 +8,6 @@ The core apps include PRO, Wi-Fi, Maintenance, Update, and System Tools.
 
 To change your language settings go to System Tools > System Information, and choose your preferred language from the menu. 
 
-**Find full release notes on our website, by scanning the QR code on the right.**
+**Find full release notes on our website, or by scanning the QR code on the right.**
 
 .. _bottom:
