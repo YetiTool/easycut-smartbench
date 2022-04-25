@@ -514,7 +514,7 @@ class GoScreen(Screen):
         self.spindle_killtime_gauge.set_value(0, None)
         self.spindle_killtime_gauge.set_title('Spindle Kill Time')
 
-        self.gauge_container_spindle.add_widget(self.spindle_speed_gauge)
+        self.gauge_container_spindle.add_widget(self.spindle_killtime_gauge)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
