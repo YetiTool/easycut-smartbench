@@ -131,6 +131,10 @@ class CalibrationDatabase(object):
         try: 
             combined_id = machine_serial + str(ft_stage_id)
 
+            if self.does_final_test_stage_already_exist(combined_id):
+                log("Final test stage already exists for this SN")
+                return
+
             with self.conn.cursor() as cursor:
                 query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
                         "" % (combined_id, machine_serial, ft_stage_id)
@@ -141,6 +145,19 @@ class CalibrationDatabase(object):
 
         except pytds.tds_base.IntegrityError:
             log("Final test stage already exists for this SN")
+
+
+    def does_final_test_stage_already_exist(self, combined_id):
+
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id
+            cursor.execute(query)
+            data = cursor.fetchone()
+
+        return data
+
+        ### check whether tuple is empty
+
 
     def insert_final_test_statistics(self, machine_serial, ft_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
                                      y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
