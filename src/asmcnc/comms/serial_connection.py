@@ -947,7 +947,7 @@ class SerialConnection(object):
                                                 digital_spindle_ld_watts))
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
                                                 self.digital_spindle_temperature))
-                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge,
+                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge.set_value,
                                                 self.digital_spindle_kill_time))
                         except:
                             log("Can't set spindle value gauges")

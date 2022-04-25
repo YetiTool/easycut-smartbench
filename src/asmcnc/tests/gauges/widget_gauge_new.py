@@ -164,9 +164,6 @@ class LoadGauge(Widget):
             Color(self.r, self.g, self.b, 1)
 
     def add_value_to_stack(self, value):
-        if value == 0:
-            return
-
         if len(self.value_stack) == 10:
             self.value_stack.pop(0)
             self.value_stack.append(value)
