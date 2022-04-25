@@ -27,6 +27,7 @@ from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
 from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
+from asmcnc.tests.gauges.widget_non_negative_gauge import PositiveLoadGauge
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Builder.load_string("""
@@ -451,11 +452,11 @@ class GoScreen(Screen):
         self.update_strings()
         self.add_gauges()
 
-        self.m.set_sg_threshold(TMC_X1, 250)
-        self.m.set_sg_threshold(TMC_X2, 250)
-        self.m.set_sg_threshold(TMC_Y1, 250)
-        self.m.set_sg_threshold(TMC_Y2, 250)
-        self.m.set_sg_threshold(TMC_Z, 225)
+        # self.m.set_sg_threshold(TMC_X1, 250)
+        # self.m.set_sg_threshold(TMC_X2, 250)
+        # self.m.set_sg_threshold(TMC_Y1, 250)
+        # self.m.set_sg_threshold(TMC_Y2, 250)
+        # self.m.set_sg_threshold(TMC_Z, 225)
 
     def add_gauges(self):
         self.x_load_gauge = LoadGauge(sm=self.sm, m=self.m)
@@ -468,7 +469,7 @@ class GoScreen(Screen):
 
         self.gauge_container.add_widget(self.x_load_gauge)
 
-        self.spindle_load_gauge = LoadGauge(sm=self.sm, m=self.m)
+        self.spindle_load_gauge = PositiveLoadGauge(sm=self.sm, m=self.m)
         self.spindle_load_gauge.set_size(300, 50)
         self.spindle_load_gauge.set_max_value(500)
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
@@ -487,11 +488,11 @@ class GoScreen(Screen):
 
         self.gauge_container.add_widget(self.y_load_gauge)
 
-        self.spindle_temp_gauge = LoadGauge(sm=self.sm, m=self.m)
+        self.spindle_temp_gauge = PositiveLoadGauge(sm=self.sm, m=self.m)
         self.spindle_temp_gauge.set_size(300, 50)
         self.spindle_temp_gauge.set_max_value(100)
         self.spindle_temp_gauge.set_boundaries(0.25, 0.625)
-        self.spindle_temp_gauge.set_value(0, None)
+        self.spindle_temp_gauge.set_value(30, None)
         self.spindle_temp_gauge.set_title('Spindle Temp')
 
         self.gauge_container_spindle.add_widget(self.spindle_temp_gauge)

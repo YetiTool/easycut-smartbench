@@ -1,0 +1,180 @@
+from __future__ import division
+
+from kivy.lang import Builder
+from kivy.clock import Clock
+from kivy.uix.widget import Widget
+from kivy.graphics import Color, Line
+from kivy.properties import NumericProperty, ObjectProperty
+
+Builder.load_string("""
+<PositiveLoadGauge>:
+    wrapper:wrapper
+    outer_box:outer_box
+    inner_box:inner_box
+    title_label:title_label
+    value_label:value_label
+    peak_line:peak_line
+
+    GridLayout:
+        id: wrapper
+        size_hint: None, None
+        pos: self.parent.pos
+        rows: 2
+
+        GridLayout:
+            size: self.parent.size
+            cols: 2
+
+            Label:
+                id: title_label
+                color: 0, 0, 0, 1
+
+            Label:
+                id: value_label
+                color: 0, 0, 0, 1
+
+        BoxLayout:
+            id: outer_box
+            orientation: 'vertical'
+            size_hint: None, None
+            # height: self.parent.height
+
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, 1
+
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+
+            BoxLayout:
+                id: inner_box
+                size_hint: None, None
+                height: self.parent.height
+
+                canvas:
+                    Color:
+                        rgba: root.r, root.g, root.b, 1
+
+                    Rectangle:
+                        pos: [self.pos[0], self.parent.center_y - (0.5 * self.height)]
+                        size: self.size
+
+                BoxLayout:
+                    size_hint: None, None
+                    pos: [self.parent.center_x, self.parent.center_y]
+
+                    canvas:
+                        Color: 
+                            rgba: 0.5, 0.5, 0.5, 1
+
+                        Line:
+                            points: 0, self.parent.parent.center_y - (0.5 * self.parent.height), 0, self.parent.parent.center_y + (0.5 * self.parent.height)
+
+                BoxLayout:
+                    id: peak_line
+                    size_hint: None, None
+                    pos: [self.parent.center_x, self.parent.center_y]
+
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+                        Line:
+                            points: self.parent.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
+""")
+
+
+class PositiveLoadGauge(Widget):
+    r = NumericProperty(0)
+    g = NumericProperty(0)
+    b = NumericProperty(0)
+
+    peak_value = NumericProperty(0)
+
+    sm = ObjectProperty()
+    m = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super(PositiveLoadGauge, self).__init__(**kwargs)
+
+        self.bind(r=self.redraw)
+        self.bind(peak_value=self.redraw_peak)
+
+        # max of 10 values
+        self.value_stack = []
+
+    def redraw_peak(self, *args):
+        peak_value = self.peak_value
+        self.peak_line.canvas.clear()
+        with self.peak_line.canvas:
+            Color(0, 0, 0, 1)
+            Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height),
+                         self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)),
+                 close=True)
+
+    def set_title(self, title):
+        self.title_label.text = title
+
+    def set_max_value(self, max_value):
+        self.max_value = max_value
+
+    def set_size(self, width, height):
+        self.size_hint = None, None
+
+        self.outer_box.width = 150
+
+        self.height = height + 25
+        self.outer_box.height = height
+        self.wrapper.height = height + 25
+        self.inner_box.height = height - (0.05 * height)
+
+    def set_boundaries(self, warning_percentage, error_percentage):
+        self.warning_percentage = warning_percentage
+        self.error_percentage = error_percentage
+
+    def set_value(self, value, dt=None):
+        if value == -999:
+            value = 0
+
+        width = ((self.outer_box.width / self.max_value) * value)
+
+        self.add_value_to_stack(width)
+
+        self.value_label.text = str(value)
+
+        self.inner_box.width = width
+
+        if abs(float(value) / float(self.max_value)) > self.error_percentage:
+            self.r = 1
+            self.g = 0
+            self.b = 0
+        elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
+            self.r = 1
+            self.g = 1
+            self.b = 0
+        else:
+            self.r = 0
+            self.g = 1
+            self.b = 0
+
+    def animate_width(self, el, width):
+        self.inner_box.width = width
+
+    def redraw(self, *args):
+        with self.inner_box.canvas:
+            Color(self.r, self.g, self.b, 1)
+
+    def add_value_to_stack(self, value):
+        if value == 0:
+            return
+
+        if len(self.value_stack) == 10:
+            self.value_stack.pop(0)
+            self.value_stack.append(value)
+        else:
+            self.value_stack.append(value)
+
+        peak_value = max(self.value_stack, key=abs)
+
+        self.peak_value = peak_value
