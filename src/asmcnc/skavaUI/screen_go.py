@@ -471,7 +471,7 @@ class GoScreen(Screen):
 
         self.spindle_load_gauge = PositiveLoadGauge(sm=self.sm, m=self.m)
         self.spindle_load_gauge.set_size(300, 50)
-        self.spindle_load_gauge.set_max_value(500)
+        self.spindle_load_gauge.set_max_value(1000)
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
         self.spindle_load_gauge.set_value(0, None)
         self.spindle_load_gauge.set_title('Spindle Load')
