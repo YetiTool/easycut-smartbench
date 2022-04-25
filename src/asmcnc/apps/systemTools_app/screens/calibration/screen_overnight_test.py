@@ -1208,35 +1208,19 @@ class OvernightTesting(Screen):
 
     def record_min_peaks(self):
 
-        print("Get min peaks")
-
-        print("Stage is: " + str(self.stage))
-
         if self.stage == "OvernightWearIn":
 
-            print("Mins for overnight wear in")
-
             self.x_wear_in_min_pos = self.get_min_peak(self.raw_x_pos_vals)
-            print(self.x_wear_in_min_pos)
             self.y_wear_in_min_pos = self.get_min_peak(self.raw_y_pos_vals)
-            print(self.y_wear_in_min_pos)
             self.y1_wear_in_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
-            print(self.y1_wear_in_min_pos)
             self.y2_wear_in_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
-            print(self.y2_wear_in_min_pos)
             self.z_wear_in_min_pos = self.get_min_peak(self.raw_z_pos_vals)
-            print(self.z_wear_in_min_pos)
 
             self.x_wear_in_min_neg = self.get_min_peak(self.raw_x_neg_vals)
-            print(self.x_wear_in_min_neg)
             self.y_wear_in_min_neg = self.get_min_peak(self.raw_y_neg_vals)
-            print(self.y_wear_in_min_neg)
             self.y1_wear_in_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
-            print(self.y1_wear_in_min_neg)
             self.y2_wear_in_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
-            print(self.y2_wear_in_min_neg)
             self.z_wear_in_min_neg = self.get_min_peak(self.raw_z_neg_vals)
-            print(self.z_wear_in_min_neg)
             return
 
         if self.stage == "CalibrationCheckOT":
@@ -1268,8 +1252,6 @@ class OvernightTesting(Screen):
             self.y2_fully_calibrated_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
             self.z_fully_calibrated_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return
-
-        print("No min peaks completed!")
 
     def get_min_peak(self, raw_vals):
         try: 
