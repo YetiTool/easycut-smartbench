@@ -18,10 +18,6 @@ as default application at startup:
 
 touch /home/pi/YETI_LBCAL_PROD_JIG.txt
 
-# Exit and save file
-
-sudo reboot
-
 #######################################################
 '''
 

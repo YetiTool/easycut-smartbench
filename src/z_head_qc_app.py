@@ -16,28 +16,10 @@ PLATFORM
 This app needs following platform changes to run
 as default application at startup: 
 
-sudo systemctl disable ansible.service
-
 touch /home/pi/YETI_ZHEADQC_PROD_JIG.txt
-
-sudo nano /boot/config.txt
-
-# Copy and paste to end of file: 
-
-        dtoverlay=pi3-disable-bt
-
-# Exit and save file
-
-sudo reboot
 
 #######################################################
 '''
-
-# try:
-#   from hanging_threads import start_monitoring
-#   monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
-# except:
-#   print("Could not import hanging_threads")
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
