@@ -947,6 +947,8 @@ class SerialConnection(object):
                                                 digital_spindle_ld_watts))
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
                                                 self.digital_spindle_temperature))
+                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge,
+                                                self.digital_spindle_kill_time))
                         except:
                             log("Can't set spindle value gauges")
                             log(traceback.format_exc())
@@ -1005,12 +1007,6 @@ class SerialConnection(object):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
-
-                    try:
-                        Clock.schedule_once(partial(self.sm.get_screen('go').spindle_speed_gauge.set_value,
-                                                    float(self.spindle_speed)))
-                    except:
-                        pass
 
                 # TEMPERATURES
                 elif part.startswith('TC:'):

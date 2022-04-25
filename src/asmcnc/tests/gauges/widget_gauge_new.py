@@ -125,7 +125,7 @@ class LoadGauge(Widget):
         self.height = height + 25
         self.outer_box.height = height
         self.wrapper.height = height + 25
-        self.inner_box.height = height - (0.05 * height)
+        self.inner_box.height = height - (0.08 * height)
 
     def set_boundaries(self, warning_percentage, error_percentage):
         self.warning_percentage = warning_percentage
