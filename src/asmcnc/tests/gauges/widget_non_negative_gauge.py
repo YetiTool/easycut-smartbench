@@ -57,20 +57,9 @@ Builder.load_string("""
                         rgba: root.r, root.g, root.b, 1
 
                     Rectangle:
-                        pos: [self.pos[0], self.parent.center_y - (0.5 * self.height)]
+                        pos: [self.pos[0] + 10, self.parent.center_y - (0.5 * self.height)]
                         size: self.size
-
-                BoxLayout:
-                    size_hint: None, None
-                    pos: [self.parent.center_x, self.parent.center_y]
-
-                    canvas:
-                        Color: 
-                            rgba: 0.5, 0.5, 0.5, 1
-
-                        Line:
-                            points: 5, self.parent.parent.center_y - (0.5 * self.parent.height), 5, self.parent.parent.center_y + (0.5 * self.parent.height)
-
+                        
                 BoxLayout:
                     id: peak_line
                     size_hint: None, None
