@@ -1208,6 +1208,10 @@ class OvernightTesting(Screen):
 
     def record_min_peaks(self):
 
+        print("Get min peaks")
+
+        print("Stage is: " + str(self.stage))
+
         if self.stage == "OvernightWearIn":
 
             self.get_min_peak(self.x_wear_in_min_pos, self.raw_x_pos_vals)
@@ -1252,6 +1256,8 @@ class OvernightTesting(Screen):
             self.get_min_peak(self.y2_fully_calibrated_min_neg, self.raw_y2_neg_vals)
             self.get_min_peak(self.z_fully_calibrated_min_neg, self.raw_z_neg_vals)
             return
+
+        print("No min peaks completed!")
 
     def get_min_peak(self, min_var, raw_vals):
         try: 
