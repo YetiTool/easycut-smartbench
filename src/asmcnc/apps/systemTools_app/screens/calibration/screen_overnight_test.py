@@ -1214,17 +1214,29 @@ class OvernightTesting(Screen):
 
         if self.stage == "OvernightWearIn":
 
+            print("Mins for overnight wear in")
+
             self.get_min_peak(self.x_wear_in_min_pos, self.raw_x_pos_vals)
+            print(self.x_wear_in_min_pos)
             self.get_min_peak(self.y_wear_in_min_pos, self.raw_y_pos_vals)
+            print(self.y_wear_in_min_pos)
             self.get_min_peak(self.y1_wear_in_min_pos, self.raw_y1_pos_vals)
+            print(self.y1_wear_in_min_pos)
             self.get_min_peak(self.y2_wear_in_min_pos, self.raw_y2_pos_vals)
+            print(self.y2_wear_in_min_pos)
             self.get_min_peak(self.z_wear_in_min_pos, self.raw_z_pos_vals)
+            print(self.z_wear_in_min_pos)
 
             self.get_min_peak(self.x_wear_in_min_neg, self.raw_x_neg_vals)
+            print(self.x_wear_in_min_neg)
             self.get_min_peak(self.y_wear_in_min_neg, self.raw_y_neg_vals)
+            print(self.y_wear_in_min_neg)
             self.get_min_peak(self.y1_wear_in_min_neg, self.raw_y1_neg_vals)
+            print(self.y1_wear_in_min_neg)
             self.get_min_peak(self.y2_wear_in_min_neg, self.raw_y2_neg_vals)
+            print(self.y2_wear_in_min_neg)
             self.get_min_peak(self.z_wear_in_min_neg, self.raw_z_neg_vals)
+            print(self.z_wear_in_min_neg)
             return
 
         if self.stage == "CalibrationCheckOT":
