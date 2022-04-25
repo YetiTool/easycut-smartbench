@@ -69,7 +69,7 @@ Builder.load_string("""
                             rgba: 0.5, 0.5, 0.5, 1
 
                         Line:
-                            points: 0, self.parent.parent.center_y - (0.5 * self.parent.height), 0, self.parent.parent.center_y + (0.5 * self.parent.height)
+                            points: 5, self.parent.parent.center_y - (0.5 * self.parent.height), 5, self.parent.parent.center_y + (0.5 * self.parent.height)
 
                 BoxLayout:
                     id: peak_line
