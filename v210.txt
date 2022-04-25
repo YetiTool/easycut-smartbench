@@ -1,0 +1,13 @@
+.. _top:
+
+New languages! 
+=============
+Core apps in the console software can now be used in Deutsche (DE), Français (FR), Polskie (PL) and Dansk (DK).
+
+The core apps include PRO, Wi-Fi, Maintenance, Update, and System Tools. 
+
+To change your language settings go to System Tools > System Information, and choose your preferred language from the menu. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
