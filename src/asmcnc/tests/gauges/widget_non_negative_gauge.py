@@ -57,7 +57,7 @@ Builder.load_string("""
                         rgba: root.r, root.g, root.b, 1
 
                     Rectangle:
-                        pos: [self.pos[0] + 10, self.parent.center_y - (0.5 * self.height)]
+                        pos: [self.pos[0] + 2, self.parent.center_y - (0.5 * self.height)]
                         size: self.size
                         
                 BoxLayout:
