@@ -164,6 +164,6 @@ class PositiveLoadGauge(Widget):
 
         peak_value = max(self.value_stack, key=abs)
 
-        self.peak_value = peak_value
+        self.peak_value = peak_value / 2
 
         print('Peak: ' + str(peak_value))
