@@ -1254,8 +1254,12 @@ class OvernightTesting(Screen):
             return
 
     def get_min_peak(self, min_var, raw_vals):
-        try: min_var = (min(raw_vals))
-        except: pass
+        try: 
+            min_var = (min(raw_vals))
+        except: 
+            print("Min peak error:")
+            print(traceback.format_exc())
+            pass
 
     def read_out_peaks(self, stage):
 
@@ -1340,7 +1344,6 @@ class OvernightTesting(Screen):
                             peak_list[9]
 
             ]
-            self.record_min_peaks()
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1849,6 +1852,8 @@ class OvernightTesting(Screen):
     ## CHECK THAT SG VALUES ARE WITHIN EXPECTED RANGES
 
     def pass_or_fail_peak_loads(self):
+
+        self.record_min_peaks()
  
         if self.stage == "OvernightWearIn":
 
