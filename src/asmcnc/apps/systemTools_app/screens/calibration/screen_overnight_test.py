@@ -1920,8 +1920,8 @@ class OvernightTesting(Screen):
         print("Upper bound: " + str(within_plus_minus))
         print ("Peak pos: " + str(int(peak_id_pos.text)))
         print ("Peak neg: " + str(int(peak_id_neg.text)))
-        print ("Min pos: " + str(int(min_pos.text)))
-        print ("Min neg: " + str(int(min_neg.text)))
+        print ("Min pos: " + str(int(min_pos)))
+        print ("Min neg: " + str(int(min_neg)))
 
         try: 
             if not (-1*within_plus_minus) < int(peak_id_pos.text) < within_plus_minus: return False
