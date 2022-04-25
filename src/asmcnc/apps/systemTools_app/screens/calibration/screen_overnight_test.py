@@ -1030,7 +1030,7 @@ class OvernightTesting(Screen):
 
 
     def on_enter(self):
-        # self.get_sub_serials_from_database()
+        self.get_sub_serials_from_database()
         self.m.s.FINAL_TEST = True
         self.stop_button.disabled = False
 
