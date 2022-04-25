@@ -183,7 +183,7 @@ class CalibrationDatabase(object):
                                         status[6], status[7], status[8], status[9], status[10], status[11], status[12],
                                         status[13], status[14], status[15], status[16], status[17], status[18]))
         
-        self.conn.commit()
+                self.conn.commit()
 
 
     def get_serials_by_machine_serial(self, machine_serial):
