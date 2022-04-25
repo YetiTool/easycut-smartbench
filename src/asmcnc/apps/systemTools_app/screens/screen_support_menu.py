@@ -21,6 +21,7 @@ Builder.load_string("""
 
     button_download_logs: button_download_logs
     button_reinstall_pika : button_reinstall_pika
+    button_git_fsck : button_git_fsck
     button_go_back: button_go_back
 
     canvas.before:
@@ -71,6 +72,33 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
+            id: button_git_fsck
+            text: 'Git FSCK'
+            on_press: root.check_easycut_repo()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
+            border: [dp(25)]*4
+            padding_y: 5
+
+        BoxLayout:
+            padding: 0
+
+
+        BoxLayout:
+            padding: 0
+        BoxLayout:
+            padding: 0
+        BoxLayout:
+            padding: 0
+        BoxLayout:
+            padding: 0
+
+        Button:
             id: button_go_back
             text: 'Go Back'
             on_press: root.go_back()
@@ -83,23 +111,6 @@ Builder.load_string("""
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             border: [dp(25)]*4
             padding_y: 5
-
-
-        BoxLayout:
-            padding: 0
-
-        BoxLayout:
-            padding: 0
-        BoxLayout:
-            padding: 0
-
-        BoxLayout:
-            padding: 0
-        BoxLayout:
-            padding: 0
-        BoxLayout:
-            padding: 0
-
 """)
 
 class SupportMenuScreen(Screen):
@@ -114,6 +125,7 @@ class SupportMenuScreen(Screen):
         self.id_list = [
         self.button_download_logs,
         self.button_reinstall_pika,
+        self.button_git_fsck,
         self.button_go_back
         ]
 
@@ -128,6 +140,9 @@ class SupportMenuScreen(Screen):
     def get_pika(self):
         self.systemtools_sm.reinstall_pika()
 
+    def check_easycut_repo(self):
+        self.systemtools_sm.check_git_repository()
+
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
 
@@ -137,6 +152,7 @@ class SupportMenuScreen(Screen):
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
         self.button_reinstall_pika.text = self.l.get_str('Get Pika')
+        self.button_git_fsck.txt = self.l.get_str("Git FSCK")
         self.button_go_back.text = self.l.get_str('Go Back')
 
         for id_object in self.id_list:
@@ -148,8 +164,4 @@ class SupportMenuScreen(Screen):
         elif len(value.text) > 15: 
             value.font_size = self.default_font_size - 2
         if len(value.text) > 19: 
-            value.font_size = self.default_font_size - 4
-        if len(value.text) > 22: 
-            value.font_size = self.default_font_size - 5
-        if len(value.text) > 25: 
-            value.font_size = self.default_font_size - 6
+            value.font_size = self.default_font_size - 3

@@ -931,6 +931,9 @@ class OvernightTesting(Screen):
     start_fully_calibrated_final_run_event = None
     poll_for_completion_of_overnight_test = None
     start_calibration_check_event = None
+    poll_end_of_spiral = None
+    start_last_rectangle = None
+    run_event_after_datum_set = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -958,11 +961,6 @@ class OvernightTesting(Screen):
         self.stage = ""
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
-
-        if self.mini_run_dev_mode:
-            self.sn_for_db = "YS6test"
-            self.zh_serial = "zhtestc"
-            self.xl_serial = "xltestc"
 
 
         self.status_data_dict = {
@@ -1292,6 +1290,9 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.start_recalibration_event)
         self._unschedule_event(self.start_fully_calibrated_final_run_event)
         self._unschedule_event(self.start_calibration_check_event)
+        self._unschedule_event(self.poll_end_of_spiral)
+        self._unschedule_event(self.start_last_rectangle)      
+        self._unschedule_event(self.run_event_after_datum_set)  
 
         # also stop measurement running
         self.overnight_running = False
@@ -1400,6 +1401,7 @@ class OvernightTesting(Screen):
         if self.is_step_ticked(self.six_hour_wear_in_checkbox) and self.is_step_complete(self.sent_six_hour_wear_in_data):
 
             if self.poll_for_recalibration_stage != None: Clock.unschedule(self.poll_for_recalibration_stage)
+            log("Start recalibration...")
             self.start_recalibration()
 
 
@@ -1506,6 +1508,7 @@ class OvernightTesting(Screen):
         if self.is_step_ticked(self.recalibration_checkbox) and self.is_step_complete(self.sent_recalibration_data):
 
             if self.poll_for_fully_calibrated_final_run_stage != None: Clock.unschedule(self.poll_for_fully_calibrated_final_run_stage)
+            log("Start fully calibrated final run...")
             self.start_fully_calibrated_final_run()
 
 
@@ -1520,26 +1523,53 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
         self.reset_checkbox(self.sent_fully_recalibrated_run_data)
 
-        log("SB fully calibrated, start final run - one hour")
+        log("SB fully calibrated, start final run")
+
+        self.m.jog_absolute_xy(-1298, -2500, 6000)
+        self.m.jog_absolute_single_axis('Z', -32, 750)
+
+        self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_spiral_file, 5)
+
+
+    def run_spiral_file(self, dt):
+
+        if self._not_ready_to_stream():
+            self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_spiral_file, 3)
+            return
+
+        self.setup_arrays()
+        self.m.set_workzone_to_pos_xy()
+        self.m.set_jobstart_z()
+        self.set_stage("FullyCalibratedTest")
+        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('spiral_file'), 3)
+        log("Running fully calibrated final run...")
+        log("Running spiral file...")
+
+        self.poll_end_of_spiral = Clock.schedule_interval(self.finish_spiral_file_reset_for_rectangle, 60)
+
+
+    def finish_spiral_file_reset_for_rectangle(self, dt):
+
+        if self._not_finished_streaming(self.poll_end_of_spiral):
+            return 
 
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
 
-        self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_fully_calibrated_final_run, 5)
+        self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 5)
 
 
-    def run_fully_calibrated_final_run(self, dt):
+    def run_last_rectangle(self, dt):
 
         if self._not_ready_to_stream():
-            self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_fully_calibrated_final_run, 3)
+            self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 3)
             return
 
-        self.setup_arrays()
-        self.set_stage("FullyCalibratedTest")
-        self._stream_overnight_file('one_hour_rectangle')
+        self.m.set_workzone_to_pos_xy()
+        self.m.set_jobstart_z()
+        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('mini_run'), 3)
+        log("Running last rectangle")
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
-
-        log("Running fully calibrated final run...")
 
 
     def post_fully_calibrated_final_run(self, dt):
@@ -1596,7 +1626,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        if self.mini_run_dev_mode: filename_end = 'mini_run'
+        if self.mini_run_dev_mode and not filename_end.startswith('spiral_file'): filename_end = 'mini_run'
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 

@@ -87,67 +87,81 @@ class BrushSaveWidget(Widget):
 
         # TIME FOR DATA VALIDATION
 
-        # Read from screen and convert hours into seconds
-        use = float(self.sm.get_screen('maintenance').brush_use_widget.brush_use.text)*3600
-        lifetime = float(self.sm.get_screen('maintenance').brush_life_widget.brush_life.text)*3600 
+        # Read from screen
+        use_str = self.sm.get_screen('maintenance').brush_use_widget.brush_use.text
+        lifetime_str = self.sm.get_screen('maintenance').brush_life_widget.brush_life.text
 
-        # Brush use
-        if use >= 0 and use <= 999*3600: pass # all good, carry on
-        else: 
+        try:
+            #  Convert hours into seconds
+            use = float(use_str) * 3600
+            lifetime = float(lifetime_str) * 3600
+
+            # Brush use
+            if use >= 0 and use <= 999*3600: pass # all good, carry on
+            else: 
+                # throw popup, return without saving
+                brush_use_validation_error = (
+                        self.l.get_str("The number of hours the brushes have been used for should be between 0 and 999.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please enter a new value.")
+                    )
+
+                popup_info.PopupError(self.sm, self.l, brush_use_validation_error)
+                return
+
+
+            # Brush life
+            if lifetime >= 100*3600 and lifetime <= 999*3600: pass # all good, carry on
+            else: 
+                # throw popup, return without saving
+                brush_life_validation_error = (
+                        self.l.get_str("The maximum brush lifetime should be between 100 and 999 hours.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please enter a new value.")
+                    )
+
+                popup_info.PopupError(self.sm, self.l, brush_life_validation_error)
+                return
+
+            # Check use <= lifetime
+            if use <= lifetime: pass # all good, carry on
+            else: 
+                # throw popup, return without saving
+                brush_both_validation_error = (
+                        self.l.get_str("The brush use hours should be less than or equal to the lifetime!") + \
+                        "\n\n" + \
+                        self.l.get_str("Please check your values.")
+                    )
+
+                popup_info.PopupError(self.sm, self.l, brush_both_validation_error)
+                return
+
+
+            # write new values to file
+            if self.m.write_spindle_brush_values(use, lifetime):
+
+                saved_success = self.l.get_str("Settings saved!")
+                popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+
+            else:
+                warning_message = (
+                        self.l.get_str("There was a problem saving your settings.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
+                    )
+                popup_info.PopupError(self.sm, self.l, warning_message)
+
+
+            # Update the monitor :)
+            value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+            self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
+
+        except:
             # throw popup, return without saving
-            brush_use_validation_error = (
-                    self.l.get_str("The number of hours the brushes have been used for should be between 0 and 999.") + \
-                    "\n\n" + \
-                    self.l.get_str("Please enter a new value.")
-                )
-
-            popup_info.PopupError(self.sm, self.l, brush_use_validation_error)
-            return
-
-
-        # Brush life
-        if lifetime >= 100*3600 and lifetime <= 999*3600: pass # all good, carry on
-        else: 
-            # throw popup, return without saving
-            brush_life_validation_error = (
-                    self.l.get_str("The maximum brush lifetime should be between 100 and 999 hours.") + \
-                    "\n\n" + \
-                    self.l.get_str("Please enter a new value.")
-                )
-
-            popup_info.PopupError(self.sm, self.l, brush_life_validation_error)
-            return
-
-        # Check use <= lifetime
-        if use <= lifetime: pass # all good, carry on
-        else: 
-            # throw popup, return without saving
-            brush_both_validation_error = (
-                    self.l.get_str("The brush use hours should be less than or equal to the lifetime!") + \
-                    "\n\n" + \
-                    self.l.get_str("Please check your values.")
-                )
-
-            popup_info.PopupError(self.sm, self.l, brush_both_validation_error)
-            return
-
-
-        # write new values to file
-        if self.m.write_spindle_brush_values(use, lifetime):
-
-            saved_success = self.l.get_str("Settings saved!")
-            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
-
-        else:
             warning_message = (
-                    "There was a problem saving your settings." + \
+                    self.l.get_str("There was a problem saving your settings.") + \
                     "\n\n" + \
-                    "Please check your settings and try again, or if the probem persists please contact the YetiTool support team."
+                    self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
                 )
             popup_info.PopupError(self.sm, self.l, warning_message)
-
-
-        # Update the monitor :)
-        value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
-        self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
-
+            return

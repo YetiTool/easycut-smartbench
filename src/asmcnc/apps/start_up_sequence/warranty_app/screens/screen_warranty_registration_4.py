@@ -158,5 +158,5 @@ class WarrantyScreen4(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.success_label.text = self.l.get_str("You have sucessfully completed your warranty registration.")
+		self.success_label.text = self.l.get_str("You have successfully completed your warranty registration.")
 		self.next_button.text = self.l.get_str("Next") + "..."

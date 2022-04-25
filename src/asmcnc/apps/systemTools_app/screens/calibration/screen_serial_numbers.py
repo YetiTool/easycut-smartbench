@@ -175,6 +175,8 @@ class UploadSerialNumbersScreen(Screen):
 
     dev_mode = False
 
+    already_in_database = False
+
 
     def __init__(self, **kwargs):
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
@@ -199,7 +201,7 @@ class UploadSerialNumbersScreen(Screen):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
-        self.check_for_duplicates()
+        self.already_in_database = self.check_for_duplicates_and_autofill()
 
         if self.dev_mode:
             self.auto_generate_sns()
@@ -208,23 +210,33 @@ class UploadSerialNumbersScreen(Screen):
         self.systemtools_sm.open_factory_settings_screen()
 
 
-    def check_for_duplicates(self):
+    def check_for_duplicates_and_autofill(self):
 
         try:
             # Get serial numbers
-            [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.machine_serial_number)
-            message = "This serial number is already in the database! Continuing will create duplicates!!"
+            self.zhead_serial_input.text, \
+            self.lb_serial_input.text, \
+            self.ub_serial_input.text, \
+            self.console_serial_input.text, \
+            self.ybench_serial_input.text, \
+            self.spindle_serial_input.text, \
+            self.squareness_input.text = self.calibration_db.get_all_serials_by_machine_serial(self.machine_serial_number)
+
+            message = "This serial number is already in the database! You cannot overwrite."
             log(message)
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+            return True
 
         except: 
-            pass
+            return False
 
 
     def get_software_version_before_release(self):
 
-        if self.set.sw_branch == 'ft' or self.dev_mode: self.sw_version = self.set.latest_sw_version
+        if self.set.sw_branch.endswith('ft') or self.dev_mode: 
+            self.sw_version = self.set.latest_sw_version
         else: self.sw_version = self.set.sw_version
+
 
     def validate_and_download(self):
         regex_check = self.check_valid_inputs_regex()
@@ -235,22 +247,22 @@ class UploadSerialNumbersScreen(Screen):
             return
 
         ## LINK SERIAL NUMBERS IN DATABASE
+        if not self.already_in_database:
 
+            all_serial_numbers = [
+                                    self.machine_serial_number,
+                                    self.zhead_serial_input.text,
+                                    self.lb_serial_input.text,
+                                    self.ub_serial_input.text,
+                                    self.console_serial_input.text,
+                                    self.ybench_serial_input.text,
+                                    self.spindle_serial_input.text,
+                                    self.sw_version,
+                                    self.fw_version,
+                                    self.squareness_input.text
+                ]
 
-        all_serial_numbers = [
-                                self.machine_serial_number,
-                                self.zhead_serial_input.text,
-                                self.lb_serial_input.text,
-                                self.ub_serial_input.text,
-                                self.console_serial_input.text,
-                                self.ybench_serial_input.text,
-                                self.spindle_serial_input.text,
-                                self.sw_version,
-                                self.fw_version,
-                                self.squareness_input.text
-            ]
-
-        self.calibration_db.insert_serial_numbers(*all_serial_numbers)
+            self.calibration_db.insert_serial_numbers(*all_serial_numbers)
 
         ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
         self.error_label.text = "Getting LB data..."

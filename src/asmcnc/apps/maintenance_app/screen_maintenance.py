@@ -614,7 +614,19 @@ class MaintenanceScreenClass(Screen):
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
+        self.brush_use_widget.update_strings()
+        self.brush_life_widget.update_strings()
+        self.spindle_settings_widget.update_strings()
+        self.z_lubrication_reminder_widget.update_strings()
+        self.touchplate_offset_widget.update_strings()
 
+        self.update_font_size(self.brush_monitor_label)
+
+    def update_font_size(self, value):
+        if len(value.text) > 25:
+            value.font_size = 19
+        else: 
+            value.font_size = 22
 
     def on_tab_switch(self):
         # Save button disabled upon switching tabs

@@ -34,7 +34,10 @@ class PopupResetOffset(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text=yes_string, markup = True)
+        yes_font_size = 14
+        if len(yes_string) > 40:
+            yes_font_size = 13
+        ok_button = Button(text=yes_string, markup = True, font_size = yes_font_size)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button = Button(text=no_string, markup = True)
@@ -219,7 +222,7 @@ class PopupBrushInfo(Widget):
         use_layout.add_widget(label_cheat)
         use_layout.add_widget(examples_layout)
 
-        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.1, size_hint_x = None, width=760)
+        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.5, size_hint_x = None, width=760)
         reminder_layout.add_widget(label_bottom)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[0,0,0,0], width=780)
