@@ -1271,7 +1271,7 @@ class OvernightTesting(Screen):
 
         print("No min peaks completed!")
 
-    def get_min_peak(self, min_var, raw_vals):
+    def get_min_peak(self, raw_vals):
         try: 
             return (min(raw_vals))
         except: 
