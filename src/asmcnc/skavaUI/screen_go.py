@@ -521,7 +521,7 @@ class GoScreen(Screen):
         def set_random_value(dt):
             self.spindle_load_gauge.set_value(random.randint(0, 1000))
 
-        Clock.schedule_interval(set_random_value, 0.1)
+        Clock.schedule_interval(set_random_value, 1)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
