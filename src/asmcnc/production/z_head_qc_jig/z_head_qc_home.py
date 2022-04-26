@@ -81,9 +81,6 @@ class ZHeadQCHome(Screen):
     def enter_qc(self):
         self.sm.current = 'qc1'
 
-    def on_leave(self):
-        self.usb.disable()
-
     def load_usb_stick_with_hex_file(self):
 
         if not self.usb.stick_enabled:
@@ -102,9 +99,12 @@ class ZHeadQCHome(Screen):
 
         self.test_fw_update_button.text = "  Updating..."
 
-        def nested_do_fw_update(dt):
-            self.m.s.__del__()
+        def disconnect_and_update():
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            Clock.schedule_once(nested_do_fw_update, 1)
 
+        def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
             print(pi.get_mode(17))
@@ -112,18 +112,43 @@ class ZHeadQCHome(Screen):
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            stdout, stderr = proc.communicate()
-            exit_code = int(proc.returncode)
+            self.stdout, stderr = proc.communicate()
+            self.exit_code = int(proc.returncode)
 
-            if exit_code == 0: 
-                did_fw_update_succeed = "Success! Disconnect or reboot to reconnect to Z head."
+            connect()
+
+        def connect():
+            self.m.starting_serial_connection = True
+            # Have to delete these screens manually, as they are created again upon serial comms startup, causing errors
+            self.sm.remove_widget(self.sm.get_screen('alarm_1'))
+            self.sm.remove_widget(self.sm.get_screen('alarm_2'))
+            self.sm.remove_widget(self.sm.get_screen('alarm_3'))
+            self.sm.remove_widget(self.sm.get_screen('alarm_4'))
+            self.sm.remove_widget(self.sm.get_screen('alarm_5'))
+            Clock.schedule_once(do_connection, 0.1)
+
+        def do_connection(dt):
+            self.m.reconnect_serial_connection()
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+
+        def try_start_services(dt):
+            if self.m.s.is_connected():
+                Clock.unschedule(self.poll_for_reconnection)
+                Clock.schedule_once(self.m.s.start_services, 1)
+                # hopefully 1 second should always be enough to start services
+                Clock.schedule_once(update_complete, 2)
+
+        def update_complete(dt):
+            if self.exit_code == 0: 
+                did_fw_update_succeed = "Success!"
 
             else: 
-                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
+                did_fw_update_succeed = "Update failed."
 
-            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
+            self.test_fw_update_button.text = "NO - Update FW now! (For v1.3)"
 
-        Clock.schedule_once(nested_do_fw_update, 1)
+        disconnect_and_update()
 
 
     def secret_option_c(self):

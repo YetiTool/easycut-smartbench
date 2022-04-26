@@ -398,9 +398,6 @@ class ZHeadQC1(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-        # Status monitor widget
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-
 
     # If polling starts while screens are being initialised, risks causing an instant fail! 
     # (as machine comms won't have started properly, causing nonsense value reads!)
@@ -410,6 +407,7 @@ class ZHeadQC1(Screen):
         self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
         self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
 
     def on_leave(self):
         Clock.unschedule(self.poll_for_status)
