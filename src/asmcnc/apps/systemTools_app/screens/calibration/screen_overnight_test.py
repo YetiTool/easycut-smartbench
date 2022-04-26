@@ -939,7 +939,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = True
+    mini_run_dev_mode = False
 
     sn_for_db = ''
 
@@ -1631,7 +1631,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        if self.mini_run_dev_mode: filename_end = 'mini_run'
+        if self.mini_run_dev_mode and not filename_end.startswith('spiral_file'): filename_end = 'mini_run'
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
