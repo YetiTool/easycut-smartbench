@@ -1865,10 +1865,10 @@ class OvernightTesting(Screen):
              self.check_in_range(self.y_wear_in_peak_pos, self.y_wear_in_peak_neg, self.y_wear_in_min_pos, self.y_wear_in_min_neg, within_plus_minus)\
              )
             self.tick_checkbox(self.y1_wear_in_checkbox, \
-             self.check_in_range(self.y1_wear_in_peak_pos, self.y1_wear_in_peak_neg, self.y1_wear_in_min_pos, self.y1_wear_in_min_neg, within_plus_minus)\
+             self.check_in_range(self.y1_wear_in_peak_pos, self.y1_wear_in_peak_neg, self.y1_wear_in_min_pos, self.y1_wear_in_min_neg, 500)\
              )
             self.tick_checkbox(self.y2_wear_in_checkbox, \
-             self.check_in_range(self.y2_wear_in_peak_pos, self.y2_wear_in_peak_neg, self.y2_wear_in_min_pos, self.y2_wear_in_min_neg, within_plus_minus)\
+             self.check_in_range(self.y2_wear_in_peak_pos, self.y2_wear_in_peak_neg, self.y2_wear_in_min_pos, self.y2_wear_in_min_neg, 500)\
              )
             self.tick_checkbox(self.x_wear_in_checkbox, \
              self.check_in_range(self.x_wear_in_peak_pos, self.x_wear_in_peak_neg, self.x_wear_in_min_pos, self.x_wear_in_min_neg, within_plus_minus)\
@@ -1880,22 +1880,20 @@ class OvernightTesting(Screen):
 
         if self.stage == "CalibrationCheckOT":
 
-            within_plus_minus = 100
-
             self.tick_checkbox(self.y_recalibration_checkbox, \
-                self.check_in_range(self.y_recalibration_peak_pos, self.y_recalibration_peak_neg, self.y_recalibration_min_pos, self.y_recalibration_min_neg, within_plus_minus)
+                self.check_in_range(self.y_recalibration_peak_pos, self.y_recalibration_peak_neg, self.y_recalibration_min_pos, self.y_recalibration_min_neg, 150)
                 )
             self.tick_checkbox(self.y1_recalibration_checkbox, \
-                self.check_in_range(self.y1_recalibration_peak_pos, self.y1_recalibration_peak_neg, self.y1_recalibration_min_pos, self.y1_recalibration_min_neg, within_plus_minus)
+                self.check_in_range(self.y1_recalibration_peak_pos, self.y1_recalibration_peak_neg, self.y1_recalibration_min_pos, self.y1_recalibration_min_neg, 500)
                 )
             self.tick_checkbox(self.y2_recalibration_checkbox, \
-                self.check_in_range(self.y2_recalibration_peak_pos, self.y2_recalibration_peak_neg, self.y2_recalibration_min_pos, self.y2_recalibration_min_neg, within_plus_minus)
+                self.check_in_range(self.y2_recalibration_peak_pos, self.y2_recalibration_peak_neg, self.y2_recalibration_min_pos, self.y2_recalibration_min_neg, 500)
                 )
             self.tick_checkbox(self.x_recalibration_checkbox, \
-                self.check_in_range(self.x_recalibration_peak_pos, self.x_recalibration_peak_neg, self.x_recalibration_min_pos, self.x_recalibration_min_neg, within_plus_minus)
+                self.check_in_range(self.x_recalibration_peak_pos, self.x_recalibration_peak_neg, self.x_recalibration_min_pos, self.x_recalibration_min_neg, 200)
                 )
             self.tick_checkbox(self.z_recalibration_checkbox, \
-                self.check_in_range(self.z_recalibration_peak_pos, self.z_recalibration_peak_neg, self.z_recalibration_min_pos, self.z_recalibration_min_neg, within_plus_minus)
+                self.check_in_range(self.z_recalibration_peak_pos, self.z_recalibration_peak_neg, self.z_recalibration_min_pos, self.z_recalibration_min_neg, 100)
                 )
             return
 
@@ -1904,19 +1902,19 @@ class OvernightTesting(Screen):
             within_plus_minus = 100
 
             self.tick_checkbox(self.y_fully_calibrated_checkbox, \
-                self.check_in_range(self.y_fully_calibrated_peak_pos, self.y_fully_calibrated_peak_neg, self.y_fully_calibrated_min_pos, self.y_fully_calibrated_min_neg,  within_plus_minus)
+                self.check_in_range(self.y_fully_calibrated_peak_pos, self.y_fully_calibrated_peak_neg, self.y_fully_calibrated_min_pos, self.y_fully_calibrated_min_neg,  150)
                 )
             self.tick_checkbox(self.y1_fully_calibrated_checkbox, \
-                self.check_in_range(self.y1_fully_calibrated_peak_pos, self.y1_fully_calibrated_peak_neg, self.y1_fully_calibrated_min_pos, self.y1_fully_calibrated_min_neg,  within_plus_minus)
+                self.check_in_range(self.y1_fully_calibrated_peak_pos, self.y1_fully_calibrated_peak_neg, self.y1_fully_calibrated_min_pos, self.y1_fully_calibrated_min_neg,  500)
                 )
             self.tick_checkbox(self.y2_fully_calibrated_checkbox, \
-                self.check_in_range(self.y2_fully_calibrated_peak_pos, self.y2_fully_calibrated_peak_neg, self.y2_fully_calibrated_min_pos, self.y2_fully_calibrated_min_neg,  within_plus_minus)
+                self.check_in_range(self.y2_fully_calibrated_peak_pos, self.y2_fully_calibrated_peak_neg, self.y2_fully_calibrated_min_pos, self.y2_fully_calibrated_min_neg,  500)
                 )
             self.tick_checkbox(self.x_fully_calibrated_checkbox, \
-                self.check_in_range(self.x_fully_calibrated_peak_pos, self.x_fully_calibrated_peak_neg, self.x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,  within_plus_minus)
+                self.check_in_range(self.x_fully_calibrated_peak_pos, self.x_fully_calibrated_peak_neg, self.x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,  200)
                 )
             self.tick_checkbox(self.z_fully_calibrated_checkbox, \
-                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  within_plus_minus)
+                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  100)
                 )
             return
 
