@@ -1631,7 +1631,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        if self.mini_run_dev_mode and not filename_end.startswith('spiral_file'): filename_end = 'mini_run'
+        if self.mini_run_dev_mode: filename_end = 'mini_run'
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
