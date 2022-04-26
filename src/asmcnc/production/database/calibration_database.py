@@ -14,6 +14,18 @@ except:
 
 class CalibrationDatabase(object):
 
+    # THIS WILL NEED EDITING IF DB CHANGES AS IDS WILL LIKELY CHANGE TOO!!
+    stage_id_dict = {
+        "CalibrationQC" : 4,
+        "CalibrationCheckQC" : 5,
+        "UnweightedFT" : 6,
+        "WeightedFT" : 7,
+        "OvernightWearIn" : 8,
+        "CalibrationOT" : 9,
+        "CalibrationCheckOT" : 10,
+        "FullyCalibratedTest" : 11
+    }
+
     def __init__(self):
         self.conn = None
 
@@ -119,12 +131,24 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
-        with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
 
-            cursor.execute(query)
+        try: 
+            with self.conn.cursor() as cursor:
+                query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
 
-            return cursor.fetchone()[0]
+                cursor.execute(query)
+
+                return cursor.fetchone()[0]
+
+        except: 
+            log("Could not get stage ID from DB!!")
+            print(traceback.format_exc())
+
+            # assign from list instead - this is a backup! 
+            # BUT if anything in db changes, it may be wrong!! 
+            return self.stage_id_dict.get(description)
+
+
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 

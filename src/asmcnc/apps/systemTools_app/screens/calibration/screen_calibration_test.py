@@ -959,7 +959,15 @@ class CalibrationTesting(Screen):
 
         self.stage = stage
         stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
-        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+        try: 
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        except: 
+            log("Could not insert final test stage into DB!!")
+            print(traceback.format_exc())
+            message = "Issue contacting database - if you continue data send may fail!"
+            popup_info.PopupError(self.sm, self.l, message)
+
         self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage))
 
