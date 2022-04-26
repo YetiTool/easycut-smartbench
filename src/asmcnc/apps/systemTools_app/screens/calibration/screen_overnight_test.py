@@ -979,7 +979,7 @@ class OvernightTesting(Screen):
 
         }
 
-        self.calibration_stage_id = self.get_stage_id("CalibrationOT")
+        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("CalibrationOT")
 
 
     # Set up and clear/reset arrays for storing SG/measurement data
