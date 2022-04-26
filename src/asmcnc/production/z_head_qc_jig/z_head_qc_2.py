@@ -11,7 +11,6 @@ Builder.load_string("""
 <ZHeadQC2>:
     
     probe_check : probe_check
-    z_home_check : z_home_check
     spindle_speed_check:spindle_speed_check
     digital_spindle_check:digital_spindle_check
 
@@ -39,13 +38,25 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
-                Label:
-                    text: '20. Plug in digital spindle'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        text: '20. Test digital spindle (up to 45s)'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.run_digital_spindle_test()
+
+                    Image:
+                        id: digital_spindle_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 Button:
                     text_size: self.size
@@ -77,31 +88,81 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 
+                Label: 
+                    text: '21. Remove digital spindle'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Label:
+                    text: '25. Remove USB "spindle"'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '17. Enable alarms'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    on_press: root.enable_alarms()
+
+                Label: 
+                    text: '22. Plug in USB "spindle"'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '26. CONFIRM COVER ON: START AUTO-CALIBRATE'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    on_press: root.enter_next_screen()
+
+                Button:
+                    text: '18. Set spindle to digital'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    on_press: root.set_spindle_digital()
+
+                Button:
+                    text: '23. Set spindle to analogue'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    on_press: root.set_spindle_analogue()
+
+                Label
+
+                Label:
+                    text: '19. Plug in digital spindle'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
                 GridLayout:
                     cols: 2
 
                     Button:
-                        text: '21. Test digital spindle (up to 45s)'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        on_press: root.run_digital_spindle_test()
-
-                    Image:
-                        id: digital_spindle_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                GridLayout:
-                    cols: 2
-
-                    Button:
-                        text: '25. Test USB "spindle" (wait 45s)'
+                        text: '24. Test USB "spindle" (wait 45s)'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -116,85 +177,6 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
-
-                GridLayout:
-                    cols: 2
-
-                    Label:
-                        text: '17. Z Home'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-
-                    Image:
-                        id: z_home_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                Label: 
-                    text: '22. Remove digital spindle'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-
-                Label:
-                    text: '26. Remove USB "spindle"'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-
-                Button:
-                    text: '18. Enable alarms'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.enable_alarms()
-
-                Label: 
-                    text: '23. Plug in USB "spindle"'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-
-                Button:
-                    text: '27. CONFIRM COVER ON: START AUTO-CALIBRATE'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.enter_next_screen()
-
-                Button:
-                    text: '19. Set spindle to digital'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.set_spindle_digital()
-
-                Button:
-                    text: '24. Set spindle to analogue'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    on_press: root.set_spindle_analogue()
 
                 Label
 
@@ -252,19 +234,12 @@ class ZHeadQC2(Screen):
 
     def update_checkboxes(self, dt):
         self.probe()
-        self.z_home_switch()
 
     def probe(self):
         if self.m.s.probe:
             self.probe_check.source = self.test_successful_image
         else:
             self.probe_check.source = self.test_unsuccessful_image
-
-    def z_home_switch(self):
-        if self.m.s.limit_z:
-            self.z_home_check.source = self.test_successful_image
-        else:
-            self.z_home_check.source = self.test_unsuccessful_image
 
     def enable_alarms(self):
         self.m.s.write_command('$20 = 1')

@@ -116,25 +116,18 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
 
     def __init__(self, screen_manager, outcome, message):
 
-        def do_reboot(*args):
-          os.system("sudo reboot")
-
         self.sm = screen_manager
         label1 = Label(size_hint_y=0.92, text_size=(None, None), markup=True, halign='left', valign='top', text=message, font_size = '11sp', color=[0,0,0,1])
 
-        ok_button = Button(text='[b]Reboot[/b]', markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]Go back[/b]', markup = True)
+        back_button = Button(text='[b]Ok[/b]', markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=20, padding=[100,0,100,0], size_hint_y = 0.08)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=20, padding=[100,0,100,0], size_hint_y = 0.2)
         btn_layout.add_widget(back_button)
-        btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,0,10,0])
         # layout_plan.add_widget(img)
@@ -155,8 +148,6 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=do_reboot)
         back_button.bind(on_press=popup.dismiss)
 
         popup.open()

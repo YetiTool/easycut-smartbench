@@ -1049,9 +1049,11 @@ class OvernightTesting(Screen):
             [self.zh_serial, self.xl_serial] = self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
 
         except: 
-            message = "Can't get subassembly serials from database, have you entered serial numbers yet?"
+            message = "Can't get subassembly serials from database, have you entered serial numbers yet?" + \
+            "\n" + \
+            "Check connection and serial number entry, and don't continue unless absolutely necessary."
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
-            self.back_to_fac_settings()
+            # self.back_to_fac_settings() # uncommented bc if database down, may block final test.
 
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
@@ -1059,13 +1061,19 @@ class OvernightTesting(Screen):
 
         self.stage = stage
         stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
-        self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        try:
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        except: 
+            log("Could not insert final test stage into DB!!")
+            print(traceback.format_exc())
+        
         self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage)) 
 
 
     # Function called from serial comms to record SG values
-
     def measure(self):
         if not self.overnight_running:
             return
@@ -1528,9 +1536,6 @@ class OvernightTesting(Screen):
         self.stop_button.disabled = False
 
         if not self.m.calibration_tuning_fail_info:
-
-            # self.calibration_db.insert_coefficients_wrapper() ## PLACEHOLDER
-
             self.start_calibration_check_event = Clock.schedule_once(self.do_calibration_check, 10)
 
         else:
@@ -1772,13 +1777,11 @@ class OvernightTesting(Screen):
             self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
-
-            print statistics
-
             self.calibration_db.insert_final_test_statistics(*statistics)
             return True
 
         except:
+            log("Failed to send data to DB!!")
             print(traceback.format_exc())
             return False
 
@@ -1795,6 +1798,7 @@ class OvernightTesting(Screen):
             return True
 
         except: 
+            log("Failed to send calibration coefficients to DB!!")
             print(traceback.format_exc())
             self.tick_checkbox(self.sent_recalibration_data, False)
             return False

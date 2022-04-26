@@ -11,17 +11,8 @@ Builder.load_string("""
         orientation: 'vertical'
         size_hint_y: 1.00
 
-        Button:
-            text: '<<< Back'
-            on_press: root.enter_prev_screen()
-            text_size: self.size
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            padding: [dp(10),0]
+        Label:
             size_hint_y: 0.2
-            size_hint_x: 0.5
-            font_size: dp(20)
 
         GridLayout:
             cols: 1
@@ -62,9 +53,6 @@ class ZHeadQCDB1(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
-
-    def enter_prev_screen(self):
-        self.sm.current = 'qc2'
 
     def validate_serial_number(self, serial):
         expression = '(zh)\d{4}'
