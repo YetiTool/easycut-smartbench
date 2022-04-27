@@ -18,7 +18,6 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
-from asmcnc.apps.systemTools_app.screens.calibration.screen_download_LB_cal_data import DownloadLBCalDataScreen
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 
@@ -860,16 +859,6 @@ class FactorySettingsScreen(Screen):
                 self.systemtools_sm.sm.add_widget(serial_input_screen)
             
             self.systemtools_sm.sm.current = 'serial_input_screen'
-        else:
-            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
-
-    def enter_retrieve_screen(self):
-        if self.calibration_db.conn != None:
-            if not self.systemtools_sm.sm.has_screen('retrieve_lb_cal_data'):
-                retrieve_lb_cal_data = DownloadLBCalDataScreen(name='retrieve_lb_cal_data', m = self.m, system_tools = self.systemtools_sm, calibration_db = self.calibration_db)
-                self.systemtools_sm.sm.add_widget(retrieve_lb_cal_data)
-        
-            self.systemtools_sm.sm.current = 'retrieve_lb_cal_data'
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
