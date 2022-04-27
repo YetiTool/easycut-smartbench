@@ -83,7 +83,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
-        combined_id = zh_serial + str(motor_index) + str(calibration_stage_id)
+        combined_id = (zh_serial + str(motor_index) + str(calibration_stage_id))[2:]
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
@@ -94,7 +94,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def setup_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id):
-        combined_id = lb_serial + str(motor_index) + str(calibration_stage_id)
+        combined_id = (lb_serial + str(motor_index) + str(calibration_stage_id))[2:]
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO LowerBeamCoefficients (Id, LowerBeamSerialNumber, MotorIndex, CalibrationStageId) " \
@@ -105,7 +105,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def insert_calibration_coefficients(self, sub_serial, motor_index, calibration_stage_id, coefficients):
-        combined_id = sub_serial + str(motor_index) + str(calibration_stage_id)
+        combined_id = (sub_serial + str(motor_index) + str(calibration_stage_id))[2:]
         temp = self.get_ambient_temperature()
 
         with self.conn.cursor() as cursor:
@@ -153,7 +153,7 @@ class CalibrationDatabase(object):
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 
         try: 
-            combined_id = machine_serial + str(ft_stage_id)
+            combined_id = (machine_serial + str(ft_stage_id))[2:]
 
             if self.does_final_test_stage_already_exist(combined_id):
                 log("Final test stage already exists for this SN")
@@ -174,7 +174,7 @@ class CalibrationDatabase(object):
     def does_final_test_stage_already_exist(self, combined_id):
 
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id
+            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id[2:]
             cursor.execute(query)
             data = cursor.fetchone()
 
@@ -187,7 +187,7 @@ class CalibrationDatabase(object):
                                      y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
                                      y1_backw_avg, y1_backw_peak, y2_forw_avg, y2_forw_peak, y2_backw_avg, y2_backw_peak,
                                      z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak):
-        combined_id = machine_serial + str(ft_stage_id)
+        combined_id = (machine_serial + str(ft_stage_id))[2:]
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStatistics (FTID, XForwardAvg, XForwardPeak, XBackwardAvg, XBackwardPeak, " \
@@ -208,7 +208,7 @@ class CalibrationDatabase(object):
 
     # @lettie please ensure data is input in the correct order according to below
     def insert_final_test_statuses(self, machine_serial, ft_stage_id, statuses):
-        combined_id = machine_serial + str(ft_stage_id)
+        combined_id = (machine_serial + str(ft_stage_id))[2:]
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
@@ -238,7 +238,7 @@ class CalibrationDatabase(object):
             return [data[0], data[1]]
 
     def get_lower_beam_coefficents(self, lb_serial, motor_index, stage_id):
-        combined_id = lb_serial + str(motor_index) + str(stage_id)
+        combined_id = (lb_serial + str(motor_index) + str(stage_id))[2:]
 
         with self.conn.cursor() as cursor:
             query = "SELECT Coefficient FROM Coefficients WHERE SubAssemblyId = '%s'" % combined_id
