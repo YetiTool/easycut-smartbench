@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import traceback
 
 
 def log(message):
@@ -18,14 +19,14 @@ except:
 class CalibrationDatabase(object):
     # THIS WILL NEED EDITING IF DB CHANGES AS IDS WILL LIKELY CHANGE TOO!!
     stage_id_dict = {
-        "CalibrationQC": 4,
-        "CalibrationCheckQC": 5,
-        "UnweightedFT": 6,
-        "WeightedFT": 7,
-        "OvernightWearIn": 8,
-        "CalibrationOT": 9,
-        "CalibrationCheckOT": 10,
-        "FullyCalibratedTest": 11
+        "CalibrationQC" : 1,
+        "CalibrationCheckQC" : 2,
+        "UnweightedFT" : 3,
+        "WeightedFT" : 4,
+        "OvernightWearIn" : 5,
+        "CalibrationOT" : 6,
+        "CalibrationCheckOT" : 7,
+        "FullyCalibratedTest" : 8
     }
 
     def __init__(self):
@@ -52,11 +53,12 @@ class CalibrationDatabase(object):
 
         try:
             self.conn = pytds.connect(credentials.server, credentials.database, credentials.username,
-                                      credentials.password)
+                                      credentials.password, port=credentials.port)
             log("Connected to database")
 
         except:
             log('Unable to connect to database')
+            print(traceback.format_exc())
 
         try:
             self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port,
