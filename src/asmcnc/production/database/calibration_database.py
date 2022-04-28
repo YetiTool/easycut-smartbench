@@ -173,10 +173,10 @@ class CalibrationDatabase(object):
         except pytds.tds_base.IntegrityError:
             log("Final test stage already exists for this SN")
 
-    def does_final_test_stage_already_exist(self, combined_id):
+    def does_final_test_stage_already_exist(self, combined_id_only_ints):
 
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id[2:]
+            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id_only_ints
             cursor.execute(query)
             data = cursor.fetchone()
 
