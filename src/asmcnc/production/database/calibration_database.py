@@ -13,7 +13,7 @@ try:
     from influxdb import InfluxDBClient
 
 except:
-    log('Pytds or influxdb not installed')
+    log('Pyodbc or influxdb not installed')
 
 
 class CalibrationDatabase(object):
