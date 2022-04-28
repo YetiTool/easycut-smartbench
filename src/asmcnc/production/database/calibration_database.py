@@ -241,7 +241,6 @@ class CalibrationDatabase(object):
             query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = ?"
 
             params = machine_serial
-
             cursor.execute(query, params)
 
             data = cursor.fetchone()
