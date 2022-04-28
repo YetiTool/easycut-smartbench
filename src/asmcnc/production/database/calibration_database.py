@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 
 def log(message):
@@ -6,10 +7,24 @@ def log(message):
 
 try:
     import pytds
+    from influxdb import InfluxDBClient
+
 except:
-    log('Pytds not installed - pip install python-tds')
+    log('Pytds or influxdb not installed')
 
 class CalibrationDatabase(object):
+
+    # THIS WILL NEED EDITING IF DB CHANGES AS IDS WILL LIKELY CHANGE TOO!!
+    stage_id_dict = {
+        "CalibrationQC" : 4,
+        "CalibrationCheckQC" : 5,
+        "UnweightedFT" : 6,
+        "WeightedFT" : 7,
+        "OvernightWearIn" : 8,
+        "CalibrationOT" : 9,
+        "CalibrationCheckOT" : 10,
+        "FullyCalibratedTest" : 11
+    }
 
     def __init__(self):
         self.conn = None
@@ -42,8 +57,12 @@ class CalibrationDatabase(object):
         except: 
             log('Unable to connect to database')
 
-    def is_connected(self):
-        return self.conn.product_version != None
+        try:
+            self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port, credentials.influx_username, credentials.influx_password, credentials.influx_database)
+            log("Connected to InfluxDB")
+
+        except:
+            log("Unable to connect to InfluxDB")
         
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                             console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
@@ -87,12 +106,19 @@ class CalibrationDatabase(object):
 
     def insert_calibration_coefficients(self, sub_serial, motor_index, calibration_stage_id, coefficients):
         combined_id = sub_serial + str(motor_index) + str(calibration_stage_id)
+        temp = self.get_ambient_temperature()
 
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
 
-            for coefficient in coefficients:
-                cursor.execute(query % (combined_id, coefficient))
+            if temp is not None:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES ('%s', %s, %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient, temp))
+
+            else:
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES ('%s', %s)"
+                for coefficient in coefficients:
+                    cursor.execute(query % (combined_id, coefficient))
 
         self.conn.commit()
 
@@ -105,17 +131,33 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
-        with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
 
-            cursor.execute(query)
+        try: 
+            with self.conn.cursor() as cursor:
+                query = "SELECT Id FROM Stages WHERE Description = '%s'" % description
 
-            return cursor.fetchone()[0]
+                cursor.execute(query)
+
+                return cursor.fetchone()[0]
+
+        except: 
+            log("Could not get stage ID from DB!!")
+            print(traceback.format_exc())
+
+            # assign from list instead - this is a backup! 
+            # BUT if anything in db changes, it may be wrong!! 
+            return self.stage_id_dict.get(description)
+
+
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 
         try: 
             combined_id = machine_serial + str(ft_stage_id)
+
+            if self.does_final_test_stage_already_exist(combined_id):
+                log("Final test stage already exists for this SN")
+                return
 
             with self.conn.cursor() as cursor:
                 query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES ('%s', '%s', %s)" \
@@ -127,6 +169,19 @@ class CalibrationDatabase(object):
 
         except pytds.tds_base.IntegrityError:
             log("Final test stage already exists for this SN")
+
+
+    def does_final_test_stage_already_exist(self, combined_id):
+
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM FinalTestStage WHERE Id = '%s'" % combined_id
+            cursor.execute(query)
+            data = cursor.fetchone()
+
+        return data
+
+        ### check whether tuple is empty
+
 
     def insert_final_test_statistics(self, machine_serial, ft_stage_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak,
                                      y_forw_avg, y_forw_peak, y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak,
@@ -169,7 +224,7 @@ class CalibrationDatabase(object):
                                         status[6], status[7], status[8], status[9], status[10], status[11], status[12],
                                         status[13], status[14], status[15], status[16], status[17], status[18]))
         
-        self.conn.commit()
+                self.conn.commit()
 
 
     def get_serials_by_machine_serial(self, machine_serial):
@@ -207,6 +262,20 @@ class CalibrationDatabase(object):
             
             return parameters
 
+    
+    def get_ambient_temperature(self):
+
+        try:
+
+            query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE \
+            ("device_ID" = \'“eDGE-2”\') AND time > now() - 2m ORDER ' \
+            u'BY DESC LIMIT 1 '
+
+            return self.influx_client.query(query).raw['series'][0]['values'][0][1]
+
+        except: 
+            return None
+
 
     def get_all_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
@@ -225,5 +294,4 @@ class CalibrationDatabase(object):
             data = cursor.fetchone()
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
-        
 

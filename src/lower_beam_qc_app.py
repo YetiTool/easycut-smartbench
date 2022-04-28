@@ -1,7 +1,8 @@
 '''
 Created on 8 Feb 2022
 @author: Dennis
-
+YetiTool's UI for SmartBench
+www.yetitool.com
 
 #######################################################
 LOWER BEAM QC APPLICATION
@@ -15,11 +16,7 @@ PLATFORM
 This app needs following platform changes to run
 as default application at startup: 
 
-/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh
-
 touch /home/pi/YETI_LBQC_PROD_JIG.txt
-
-sudo reboot
 
 ########
 '''

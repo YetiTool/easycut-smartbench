@@ -16,28 +16,10 @@ PLATFORM
 This app needs following platform changes to run
 as default application at startup: 
 
-sudo systemctl disable ansible.service
-
 touch /home/pi/YETI_ZHEADQC_PROD_JIG.txt
-
-sudo nano /boot/config.txt
-
-# Copy and paste to end of file: 
-
-        dtoverlay=pi3-disable-bt
-
-# Exit and save file
-
-sudo reboot
 
 #######################################################
 '''
-
-# try:
-#   from hanging_threads import start_monitoring
-#   monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
-# except:
-#   print("Could not import hanging_threads")
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
@@ -72,6 +54,7 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_4 import ZHeadQC4
 from asmcnc.production.z_head_qc_jig.z_head_qc_5 import ZHeadQC5
 from asmcnc.production.z_head_qc_jig.z_head_qc_6 import ZHeadQC6
 from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
+from asmcnc.production.z_head_qc_jig.z_head_qc_8 import ZHeadQC8
 from asmcnc.production.z_head_qc_jig.z_head_qc_aftr_apr_21 import ZHeadQCWarrantyAfterApr21
 from asmcnc.production.z_head_qc_jig.z_head_qc_b4_apr_21 import ZHeadQCWarrantyBeforeApr21
 from asmcnc.production.z_head_qc_jig.z_head_qc_db1 import ZHeadQCDB1
@@ -156,6 +139,9 @@ class ZHeadQC(App):
 
         z_head_qc_7 = ZHeadQC7(name='qc7', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_7)
+
+        z_head_qc_8 = ZHeadQC8(name='qc8', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_qc_8)
 
         z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm, m = m, usb = usb_stick)
         sm.add_widget(z_head_qc_home)

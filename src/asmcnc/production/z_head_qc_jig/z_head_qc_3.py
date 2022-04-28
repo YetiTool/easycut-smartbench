@@ -30,7 +30,7 @@ Builder.load_string("""
             spacing: dp(10)
 
             Label:
-                text: 'ENSURE COVER ON AND BELT OFF'
+                text: 'ENSURE COVER ON'
                 font_size: dp(50)
 
             Label:
