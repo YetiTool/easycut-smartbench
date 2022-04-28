@@ -1080,28 +1080,28 @@ class OvernightTesting(Screen):
         
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        status = [
-                    self.m.mpos_x(),
-                    self.m.mpos_y(),
-                    self.m.mpos_z(),
-                    x_dir,
-                    y_dir,
-                    z_dir,
-                    int(self.m.s.sg_x_motor_axis),
-                    int(self.m.s.sg_y_axis),
-                    int(self.m.s.sg_y1_motor),
-                    int(self.m.s.sg_y2_motor),
-                    int(self.m.s.sg_z_motor_axis),
-                    int(self.m.s.motor_driver_temp),
-                    int(self.m.s.pcb_temp),
-                    int(self.m.s.transistor_heatsink_temp),
-                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    self.m.feed_rate(),
-                    0,
-                    0,
-                    2
-
-        ]
+        status = (
+            int(self.sn_for_db[2:] + str(self.stage)),
+            self.m.mpos_x(),
+            self.m.mpos_y(),
+            self.m.mpos_z(),
+            x_dir,
+            y_dir,
+            z_dir,
+            int(self.m.s.sg_x_motor_axis),
+            int(self.m.s.sg_y_axis),
+            int(self.m.s.sg_y1_motor),
+            int(self.m.s.sg_y2_motor),
+            int(self.m.s.sg_z_motor_axis),
+            int(self.m.s.motor_driver_temp),
+            int(self.m.s.pcb_temp),
+            int(self.m.s.transistor_heatsink_temp),
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            self.m.feed_rate(),
+            0,
+            0,
+            2
+        )
 
         self.status_data_dict[self.stage].append(status)
 
@@ -1688,7 +1688,7 @@ class OvernightTesting(Screen):
         try:
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
