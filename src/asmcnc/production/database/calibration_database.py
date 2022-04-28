@@ -90,8 +90,6 @@ class CalibrationDatabase(object):
     def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
         combined_id = (zh_serial + str(motor_index) + str(calibration_stage_id))[2:]
 
-        print combined_id
-
         with self.conn.cursor() as cursor:
             query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
                     "'%s', '%s', %s, %s)" % (combined_id, zh_serial, motor_index, calibration_stage_id)
