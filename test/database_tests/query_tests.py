@@ -82,8 +82,8 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # Stages
 
-    def test_insert_final_test_stage(self):
-        self.db.insert_final_test_stage('ys62222', 6)
+    # def test_insert_final_test_stage(self):
+    #     self.db.insert_final_test_stage('ys62222', 6)
 
     def test_does_final_test_stage_already_exist_yarp(self):
         self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
@@ -93,9 +93,9 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # Statistics
 
-    def test_insert_final_test_statistics(self):
-        statistics_list = ['ys62222', 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-        self.db.insert_final_test_statistics(*statistics_list)
+    # def test_insert_final_test_statistics(self):
+    #     statistics_list = ['ys62222', 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    #     self.db.insert_final_test_statistics(*statistics_list)
 
     # # # Statuses
 
