@@ -1,6 +1,5 @@
 try: 
     import unittest
-    from mock import Mock, MagicMock
 
 except:
     print("Can't import mocking packages, are you on a dev machine?")
@@ -49,8 +48,8 @@ class SQLQueryTests(unittest.TestCase):
     # def test_get_ambient_temperature(self):
     #     self.assertIsNotNone(self.db.get_ambient_temperature(), "No temp :(")
 
-    # def test_get_stage_id_by_description(self):
-    #     self.assertEqual(self.db.get_stage_id_by_description('CalibrationQC'), 1)
+    def test_get_stage_id_by_description(self):
+        self.assertEqual(self.db.get_stage_id_by_description('CalibrationQC'), 1)
 
     # # # QC CALIBRATION TESTS
 
@@ -65,8 +64,8 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # FETCH COEFFICIENTS TEST
 
-    # def test_get_lower_beam_coefficents(self):
-    #     self.assertIsNotNone(self.db.get_lower_beam_coefficents('xl2222', 2, 1))
+    def test_get_lower_beam_coefficents(self):
+        self.assertIsNotNone(self.db.get_lower_beam_coefficents('xl2222', 2, 1))
 
     # # # FINAL TEST TESTS
 
@@ -75,28 +74,28 @@ class SQLQueryTests(unittest.TestCase):
     # # def test_insert_serial_numbers(self):
     # #     self.db.insert_serial_numbers('ys62222', 'zh2222', 'xl2222', 'xu2222','cs2222', 'yb2222', '123456Y', 'v9.9.9', '9.9.9', '0.0')
 
-    # def test_get_serials_by_machine_serial(self):
-    #     self.assertIsNotNone(self.db.get_serials_by_machine_serial('ys62222'))
+    def test_get_serials_by_machine_serial(self):
+        self.assertIsNotNone(self.db.get_serials_by_machine_serial('ys62222'))
 
-    # def test_get_all_serials_by_machine_serial(self):
-    #     self.assertIsNotNone(self.db.get_all_serials_by_machine_serial('ys62222'))
+    def test_get_all_serials_by_machine_serial(self):
+        self.assertIsNotNone(self.db.get_all_serials_by_machine_serial('ys62222'))
 
     # # # Stages
 
-    # # def test_insert_final_test_stage(self):
-    # #     self.db.insert_final_test_stage('ys62222', 5)
+    def test_insert_final_test_stage(self):
+        self.db.insert_final_test_stage('ys62222', 6)
 
-    # def test_does_final_test_stage_already_exist_yarp(self):
-    #     self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
+    def test_does_final_test_stage_already_exist_yarp(self):
+        self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
 
-    # def test_does_final_test_stage_already_exist_narp(self):
-    #     self.assertIsNone(self.db.does_final_test_stage_already_exist('622228'))
+    def test_does_final_test_stage_already_exist_narp(self):
+        self.assertIsNone(self.db.does_final_test_stage_already_exist('622228'))
 
     # # # Statistics
 
-    # def test_insert_final_test_statistics(self):
-    #     statistics_list = ['ys62222', 5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-    #     self.db.insert_final_test_statistics(*statistics_list)
+    def test_insert_final_test_statistics(self):
+        statistics_list = ['ys62222', 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        self.db.insert_final_test_statistics(*statistics_list)
 
     # # # Statuses
 
