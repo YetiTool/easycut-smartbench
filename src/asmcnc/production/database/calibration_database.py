@@ -29,7 +29,7 @@ class CalibrationDatabase(object):
         "FullyCalibratedTest": 8
     }
 
-    connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;'
+    connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;'
 
     def __init__(self):
         self.conn = None
