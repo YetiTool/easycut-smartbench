@@ -8,6 +8,7 @@ pkgs:
 - python-influxdb
 - freetds-bin
 - freetds-dev
+- tdsodbc
 - python-pyodbc
 
 
