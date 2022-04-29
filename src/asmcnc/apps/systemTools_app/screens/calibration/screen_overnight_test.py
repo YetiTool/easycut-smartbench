@@ -959,6 +959,7 @@ class OvernightTesting(Screen):
 
         self.statuses = []
         self.stage = ""
+        self.stage_id = 0
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
@@ -1029,7 +1030,7 @@ class OvernightTesting(Screen):
     def set_stage(self, stage):
 
         self.stage = stage
-        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
 
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
@@ -1081,7 +1082,7 @@ class OvernightTesting(Screen):
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
         status = (
-            int(self.sn_for_db[2:] + str(self.stage)),
+            int(self.sn_for_db[2:] + int(self.stage_id),
             self.m.mpos_x(),
             self.m.mpos_y(),
             self.m.mpos_z(),
