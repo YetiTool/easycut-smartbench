@@ -14,6 +14,15 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
+  - name: Copying the install Microsoft ODBC driver for SQL Server script
+    template:
+      src: odbc-setup.sh
+      dest: /usr/local/bin/odbc-setup.sh
+      mode: '0544'
+  - name: Install the Microsoft ODBC driver for SQL Server 
+    command: /usr/local/bin/odbc-setup.sh
+    become: yes
+    become_user: root
   - name: Install packages
     package:
       name: "{{ item }}"
