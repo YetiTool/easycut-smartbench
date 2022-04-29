@@ -1082,7 +1082,7 @@ class OvernightTesting(Screen):
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
         status = (
-            int(self.sn_for_db[2:] + int(self.stage_id),
+            int(self.sn_for_db[2:] + str(self.stage_id)),
             self.m.mpos_x(),
             self.m.mpos_y(),
             self.m.mpos_z(),
