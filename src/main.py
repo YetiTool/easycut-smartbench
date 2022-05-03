@@ -80,9 +80,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
-from asmcnc.tests.gauges.screen_gauges import GaugeScreen
 from asmcnc.tests.gauges.widget_gauge_new import LoadGauge
-from asmcnc.tests.gauges.widget_circle_gauge import CircleGauge
 from random import randint
 
 # developer testing
