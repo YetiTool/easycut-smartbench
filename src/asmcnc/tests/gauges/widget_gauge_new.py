@@ -169,5 +169,4 @@ class LoadGauge(Widget):
             self.value_stack.append(value)
 
         peak_value = max(self.value_stack, key=abs)
-
         self.peak_value = peak_value
