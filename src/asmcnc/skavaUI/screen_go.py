@@ -516,13 +516,6 @@ class GoScreen(Screen):
 
         self.gauge_container_spindle.add_widget(self.spindle_killtime_gauge)
 
-        import random
-
-        def set_random_value(dt):
-            self.spindle_load_gauge.set_value(random.randint(0, 1000))
-
-        Clock.schedule_interval(set_random_value, 1)
-
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
     def on_pre_enter(self, *args):
