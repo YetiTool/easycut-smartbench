@@ -5,7 +5,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 
 #######################################################
-Z HEAD QC APPLICATION
+Z HEAD CYCLE QC JIG
 
 Used in production to carry out quality control checks. 
 #######################################################
