@@ -1,7 +1,6 @@
 from __future__ import division
 
 from kivy.lang import Builder
-from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
@@ -89,6 +88,10 @@ class PositiveLoadGauge(Widget):
 
         self.bind(r=self.redraw)
         self.bind(peak_value=self.redraw_peak)
+
+        self.max_value = 100
+        self.warning_percentage = 0.5
+        self.error_percentage = 0.75
 
         self.value_stack = []
 

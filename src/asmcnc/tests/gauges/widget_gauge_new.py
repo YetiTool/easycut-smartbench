@@ -1,7 +1,6 @@
 from __future__ import division
 
 from kivy.lang import Builder
-from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
@@ -101,6 +100,10 @@ class LoadGauge(Widget):
         self.bind(r=self.redraw)
         self.bind(peak_value=self.redraw_peak)
 
+        self.max_value = 100
+        self.warning_percentage = 0.5
+        self.error_percentage = 0.75
+
         # max of 10 values
         self.value_stack = []
 
@@ -119,9 +122,7 @@ class LoadGauge(Widget):
 
     def set_size(self, width, height):
         self.size_hint = None, None
-
         self.outer_box.width = 150
-
         self.height = height + 25
         self.outer_box.height = height
         self.wrapper.height = height + 25
@@ -155,9 +156,6 @@ class LoadGauge(Widget):
             self.r = 0
             self.g = 1
             self.b = 0
-
-    def animate_width(self, el, width):
-        self.inner_box.width = width
 
     def redraw(self, *args):
         with self.inner_box.canvas:
