@@ -69,7 +69,7 @@ Builder.load_string("""
                             rgba: 0, 0, 0, 1
 
                         Line:
-                            points: self.parent.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
+                            points: self.outer_box.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.outer_box.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
 """)
 
 
