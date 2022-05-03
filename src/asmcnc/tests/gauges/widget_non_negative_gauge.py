@@ -100,8 +100,8 @@ class PositiveLoadGauge(Widget):
         self.peak_line.canvas.clear()
         with self.peak_line.canvas:
             Color(0, 0, 0, 1)
-            Line(points=(peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height),
-                         peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)),
+            Line(points=(self.outer_box.pos[0] + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height),
+                         self.outer_box.pos[0] + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)),
                  close=True)
 
     def set_title(self, title):
