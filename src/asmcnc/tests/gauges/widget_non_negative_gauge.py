@@ -26,10 +26,14 @@ Builder.load_string("""
 
             Label:
                 id: title_label
+                text_size: self.size
+                halign: 'left'
                 color: 0, 0, 0, 1
 
             Label:
                 id: value_label
+                text_size: self.size
+                halign: 'right'
                 color: 0, 0, 0, 1
 
         BoxLayout:
@@ -116,10 +120,10 @@ class PositiveLoadGauge(Widget):
         self.size_hint = None, None
 
         self.outer_box.width = 150
-
         self.height = height + 25
         self.outer_box.height = height
         self.wrapper.height = height + 25
+        self.wrapper.width = 150
         self.inner_box.height = height - (0.08 * height)
 
     def set_boundaries(self, warning_percentage, error_percentage):
@@ -127,10 +131,13 @@ class PositiveLoadGauge(Widget):
         self.error_percentage = error_percentage
 
     def set_value(self, value, dt=None):
-        if value == -999:
+        if value == -999 or value < 0:
             value = 0
 
         width = ((self.outer_box.width / self.max_value) * value)
+
+        if value > self.max_value:
+            width = ((self.outer_box.width / self.max_value) * self.max_value)
 
         if self.peak_visibility:
             self.add_value_to_stack(width)

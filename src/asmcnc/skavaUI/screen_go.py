@@ -518,6 +518,18 @@ class GoScreen(Screen):
 
         self.gauge_container_spindle.add_widget(self.spindle_killtime_gauge)
 
+        self.gauges = []
+        self.gauges.append(self.x_load_gauge)
+        self.gauges.append(self.y_load_gauge)
+        self.gauges.append(self.z_load_gauge)
+        self.gauges.append(self.spindle_load_gauge)
+        self.gauges.append(self.spindle_temp_gauge)
+        self.gauges.append(self.spindle_killtime_gauge)
+
+    def reset_gauge_values(self):
+        for gauge in self.gauges:
+            gauge.set_value(0)
+
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
     def on_pre_enter(self, *args):
@@ -573,6 +585,8 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
     def on_enter(self):
+
+        self.reset_gauge_values()
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
