@@ -69,7 +69,7 @@ Builder.load_string("""
                             rgba: 0, 0, 0, 1
 
                         Line:
-                            points: self.outer_box.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.outer_box.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
+                            points: self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
 """)
 
 
@@ -92,6 +92,8 @@ class PositiveLoadGauge(Widget):
         self.max_value = 100
         self.warning_percentage = 0.5
         self.error_percentage = 0.75
+        self.inverse_boundaries = False
+        self.peak_visibility = True
 
         self.value_stack = []
 
@@ -130,24 +132,39 @@ class PositiveLoadGauge(Widget):
 
         width = ((self.outer_box.width / self.max_value) * value)
 
-        self.add_value_to_stack(width)
+        if self.peak_visibility:
+            self.add_value_to_stack(width)
 
         self.value_label.text = str(value)
 
         self.inner_box.width = width
 
-        if abs(float(value) / float(self.max_value)) > self.error_percentage:
-            self.r = 1
-            self.g = 0
-            self.b = 0
-        elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
-            self.r = 1
-            self.g = 1
-            self.b = 0
+        if not self.inverse_boundaries:
+            if abs(float(value) / float(self.max_value)) > self.error_percentage:
+                self.r = 1
+                self.g = 0
+                self.b = 0
+            elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
+                self.r = 1
+                self.g = 1
+                self.b = 0
+            else:
+                self.r = 0
+                self.g = 1
+                self.b = 0
         else:
-            self.r = 0
-            self.g = 1
-            self.b = 0
+            if abs(float(value) / float(self.max_value)) < 100 - self.error_percentage:
+                self.r = 1
+                self.g = 0
+                self.b = 0
+            elif abs(float(value) / float(self.max_value)) < 100 - self.warning_percentage:
+                self.r = 1
+                self.g = 1
+                self.b = 0
+            else:
+                self.r = 0
+                self.g = 1
+                self.b = 0
 
     def animate_width(self, el, width):
         self.inner_box.width = width
@@ -155,6 +172,12 @@ class PositiveLoadGauge(Widget):
     def redraw(self, *args):
         with self.inner_box.canvas:
             Color(self.r, self.g, self.b, 1)
+
+    def set_inverse_boundaries(self, value):
+        self.inverse_boundaries = value
+
+    def set_peak_visibility(self, value):
+        self.peak_visibility = value
 
     def add_value_to_stack(self, value):
         if len(self.value_stack) == 10:
