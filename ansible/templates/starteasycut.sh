@@ -33,12 +33,6 @@ if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
                 echo "Running LB Calibration app"
                 exec python lb_calibration_app.py
 
-        elif [ -f /home/pi/YETI_ZHEADCYCLE_PROD_JIG.txt ]
-        then
-                echo "Running Z Head cycle app"
-                exec python z_head_cycle_app.py
-
-
         fi
 
 else

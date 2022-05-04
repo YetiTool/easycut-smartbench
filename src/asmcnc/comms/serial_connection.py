@@ -2,17 +2,10 @@
 Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
-
-THIS LOOKS FOR PORT ttyAMA not ttyS - incompatible with older platforms.
 '''
 
 from kivy.config import Config
 from __builtin__ import True
-
-# Set the Kivy "Clock" to tick at its fastest.
-# # Clock usually used to establish consistent framerate for animations, but we need it to tick much faster (e.g. than 25fps) for serial refreshing
-# Config.set('graphics', 'maxfps', '30')
-# Config.write()
 
 import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
@@ -1369,7 +1362,6 @@ class SerialConnection(object):
 
 ## WRITE-----------------------------------------------------------------------------
 
-
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
@@ -1442,38 +1434,9 @@ class SerialConnection(object):
                 log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
                 self.get_serial_screen('Could not write last command to serial buffer.')
 
-    # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
         
         self.write_command_buffer.append([serialCommand, kwargs])        
-## OLD --------------------------------------------------------------------------------------------
-#         # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-#         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
-#         try:
-#             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-#             #if show_in_sys and altDisplayText==None: print serialCommand
-#             log('> ' + serialCommand)
-#             if altDisplayText != None: print altDisplayText
-# 
-#             # Print to console in the UI
-#             if show_in_console  and altDisplayText == None:
-#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-#             if altDisplayText != None:
-#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-# 
-#         except:
-#             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#             log('Console display error: ' + str(consoleDisplayError))
-# 
-#         # Finally issue the command
-#         if self.s:
-#             try:
-#                 self.s.write(serialCommand + '\n')
-#                 
-#             except SerialException as serialError:
-#                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#                 log('Serial Error: ' + str(serialError))
-## -----------------------------------------------------------------------------------------------------
 
     # Many realtime commands are non-printables, and cause the gcode console to crash. 
     # GCode console with therefore print 'altDisplayText' arg instead
@@ -1485,71 +1448,3 @@ class SerialConnection(object):
         
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
-
-## OLD -------------------------------------------------------------------------------------------------
-#         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
-# 
-#         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
-#         try:
-#             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-#             #if show_in_sys and altDisplayText==None: print serialCommand
-#             if not serialCommand.startswith('?'):
-#                 log('> ' + serialCommand)
-#             if altDisplayText != None: print altDisplayText
-# 
-#             # Print to console in the UI
-#             if show_in_console and altDisplayText == None:
-#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-#             if altDisplayText != None:
-#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-# 
-#         except:
-#             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#             log('Console display error: ' + str(consoleDisplayError))
-# 
-#         # Finally issue the command
-#         if self.s:
-#             try:
-#                 self.s.write(serialCommand)
-# 
-#             except SerialException as serialError:
-#                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#                 log('Serial Error: ' + str(serialError))
-## --------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-##### Warning: WIP. 
-# Dangerous conflicts. 
-# E.g. cannot handle an 'M56' command, since it acts on it as if it was an M5!!!!!!
-
-# 
-#     def maintenance_value_logging(self, serialCommand):
-#         
-#         # Record spindle up time
-#         if serialCommand.find('M30') >= 0: 
-#             pass
-#         elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
-#             log("Spindle timer started")
-#             self.spindle_start_time = time.time()
-#             
-#         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
-#             log("Spindle timer stopped")
-#             self.spindle_finish_time = time.time()
-#             spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
-#             try:
-#                 file = open(self.m.spindle_brush_use_file_path, 'r')
-#                 existing_value_in_file = file.readline()
-#                 total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
-#                 file = open(self.m.spindle_brush_use_file_path, 'w')
-#                 file.write(str(total_up_seconds))
-#                 file.close
-#             except:
-#                 log("Unable to write to " + self.m.spindle_brush_use_file_path)
-# 
-# 
-
-
