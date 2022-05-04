@@ -516,29 +516,50 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
         self.test_fw_update_button.text = "  Updating..."
 
+        def disconnect_and_update():
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            Clock.schedule_once(nested_do_fw_update, 1)
+
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
             print(pi.get_mode(17))
             pi.stop()
-            self.m.s.s.close()
-            # os.system("grbl_file=/media/usb/nonsense*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            stdout, stderr = proc.communicate()
-            exit_code = int(proc.returncode)
+            self.stdout, stderr = proc.communicate()
+            self.exit_code = int(proc.returncode)
 
-            if exit_code == 0: 
-                did_fw_update_succeed = "Success! Disconnect or reboot to reconnect to Z head."
+            connect()
+
+        def connect():
+            self.m.starting_serial_connection = True
+            Clock.schedule_once(do_connection, 0.1)
+
+        def do_connection(dt):
+            self.m.reconnect_serial_connection()
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+
+        def try_start_services(dt):
+            if self.m.s.is_connected():
+                Clock.unschedule(self.poll_for_reconnection)
+                Clock.schedule_once(self.m.s.start_services, 1)
+                # hopefully 1 second should always be enough to start services
+                Clock.schedule_once(update_complete, 2)
+
+        def update_complete(dt):
+            if self.exit_code == 0: 
+                did_fw_update_succeed = "Success!"
 
             else: 
-                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
+                did_fw_update_succeed = "Update failed."
 
-            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
-            self.test_fw_update_button.text = "  19. Test FW Update"
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
+            self.test_fw_update_button.text = '  17. Test FW Update'
 
-        Clock.schedule_once(nested_do_fw_update, 1)
+        disconnect_and_update()
 
 
     def update_status_text(self, dt):
