@@ -27,12 +27,14 @@ Builder.load_string("""
             Label:
                 id: title_label
                 text_size: self.size
+                size: self.texture_size
                 halign: 'left'
                 color: 0, 0, 0, 1
 
             Label:
                 id: value_label
                 text_size: self.size
+                size: self.texture_size
                 halign: 'right'
                 color: 0, 0, 0, 1
 
