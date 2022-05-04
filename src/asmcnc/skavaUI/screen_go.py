@@ -474,7 +474,7 @@ class GoScreen(Screen):
         self.spindle_load_gauge.set_max_value(1000)
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
         self.spindle_load_gauge.set_value(0, None)
-        self.spindle_load_gauge.set_title('Spindle Load')
+        self.spindle_load_gauge.set_title('Load')
 
         self.gauge_container_spindle.add_widget(self.spindle_load_gauge)
 
@@ -493,7 +493,7 @@ class GoScreen(Screen):
         self.spindle_temp_gauge.set_max_value(100)
         self.spindle_temp_gauge.set_boundaries(0.25, 0.625)
         self.spindle_temp_gauge.set_value(0, None)
-        self.spindle_temp_gauge.set_title('Spindle Temp')
+        self.spindle_temp_gauge.set_title('Temperature')
 
         self.gauge_container_spindle.add_widget(self.spindle_temp_gauge)
 
@@ -512,7 +512,7 @@ class GoScreen(Screen):
         self.spindle_killtime_gauge.set_max_value(260)
         self.spindle_killtime_gauge.set_boundaries(0.05, 0.8)
         self.spindle_killtime_gauge.set_value(0, None)
-        self.spindle_killtime_gauge.set_title('Spindle Kill Time')
+        self.spindle_killtime_gauge.set_title('Kill Time')
         self.spindle_killtime_gauge.set_peak_visibility(False)
         self.spindle_killtime_gauge.set_inverse_boundaries(True)
 
