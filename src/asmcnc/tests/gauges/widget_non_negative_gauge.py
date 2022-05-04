@@ -143,6 +143,9 @@ class PositiveLoadGauge(Widget):
         if value > self.max_value:
             width = ((self.outer_box.width / self.max_value) * self.max_value)
 
+        if self.inverse_boundaries:
+            width = ((self.outer_box.width / self.max_value) * abs(value - self.max_value))
+
         if self.peak_visibility:
             self.add_value_to_stack(width)
 
