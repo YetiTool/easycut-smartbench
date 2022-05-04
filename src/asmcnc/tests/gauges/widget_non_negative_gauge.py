@@ -30,6 +30,14 @@ Builder.load_string("""
                 size: self.texture_size
                 halign: 'left'
                 color: 0, 0, 0, 1
+                
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
             Label:
                 id: value_label
@@ -37,6 +45,15 @@ Builder.load_string("""
                 size: self.texture_size
                 halign: 'right'
                 color: 0, 0, 0, 1
+                
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                
 
         BoxLayout:
             id: outer_box
