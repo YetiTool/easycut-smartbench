@@ -514,6 +514,7 @@ class GoScreen(Screen):
         self.spindle_killtime_gauge.set_value(0, None)
         self.spindle_killtime_gauge.set_title('Spindle Kill Time')
         self.spindle_killtime_gauge.set_peak_visibility(False)
+        self.spindle_killtime_gauge.set_inverse_boundaries(True)
 
         self.gauge_container_spindle.add_widget(self.spindle_killtime_gauge)
 
