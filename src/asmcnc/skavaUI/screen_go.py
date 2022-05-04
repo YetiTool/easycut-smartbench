@@ -509,7 +509,7 @@ class GoScreen(Screen):
 
         self.spindle_killtime_gauge = PositiveLoadGauge(sm=self.sm, m=self.m)
         self.spindle_killtime_gauge.set_size(300, 50)
-        self.spindle_killtime_gauge.set_max_value(255)
+        self.spindle_killtime_gauge.set_max_value(260)
         self.spindle_killtime_gauge.set_boundaries(0.05, 0.8)
         self.spindle_killtime_gauge.set_value(0, None)
         self.spindle_killtime_gauge.set_title('Spindle Kill Time')
