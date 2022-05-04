@@ -7,6 +7,7 @@ from kivy.properties import NumericProperty, ObjectProperty
 
 Builder.load_string("""
 <PositiveLoadGauge>:
+    wrapper:wrapper
     outer_box:outer_box
     inner_box:inner_box
     title_label:title_label
@@ -14,83 +15,69 @@ Builder.load_string("""
     peak_line:peak_line
 
     GridLayout:
-        size: self.parent.size
-        cols: 2
+        id: wrapper
+        size_hint: None, None
+        pos: self.parent.pos
+        rows: 2
 
-        BoxLayout:
-            orientation: 'vertical'
-            
-            canvas:
-                Color:
-                    rgba: 1, 1, 1, 1
+        GridLayout:
+            size: self.parent.size
+            cols: 2
                 
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            
             Label:
                 id: title_label
                 size: self.texture_size
                 text_size: self.size
+                font_size: '10sp'
                 halign: 'left'
                 color: 0, 0, 0, 1
 
-        BoxLayout:
-            orientation: 'vertical'
-            
-            canvas:
-                Color:
-                    rgba: 1, 1, 1, 1
-                
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            
             Label:
                 id: value_label
                 size: self.texture_size
                 text_size: self.size
+                font_size: '10sp'
                 halign: 'right'
                 color: 0, 0, 0, 1
-            
-    BoxLayout:
-        id: outer_box
-        orientation: 'vertical'
-        size_hint: None, None
-        # height: self.parent.height
-
-        canvas:
-            Color:
-                rgba: 0, 0, 0, 1
-
-            Line:
-                width: 2
-                rectangle: self.x, self.y, self.width, self.height
-
+                
         BoxLayout:
-            id: inner_box
+            id: outer_box
+            orientation: 'vertical'
             size_hint: None, None
-            height: self.parent.height
+            # height: self.parent.height
 
             canvas:
                 Color:
-                    rgba: root.r, root.g, root.b, 1
+                    rgba: 0, 0, 0, 1
 
-                Rectangle:
-                    pos: [self.pos[0] + 2, self.parent.center_y - (0.5 * self.height)]
-                    size: self.size
-                    
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+
             BoxLayout:
-                id: peak_line
+                id: inner_box
                 size_hint: None, None
-                pos: [self.parent.center_x, self.parent.center_y]
+                height: self.parent.height
 
                 canvas:
                     Color:
-                        rgba: 0, 0, 0, 1
+                        rgba: root.r, root.g, root.b, 1
 
-                    Line:
-                        points: self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
+                    Rectangle:
+                        pos: [self.pos[0] + 2, self.parent.center_y - (0.5 * self.height)]
+                        size: self.size
+                        
+                BoxLayout:
+                    id: peak_line
+                    size_hint: None, None
+                    pos: [self.parent.center_x, self.parent.center_y]
+
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+                        Line:
+                            points: self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y - (0.5 * self.parent.height), self.parent.parent.pos[0] + root.peak_value, self.parent.parent.center_y + (0.5 * self.parent.height)
 """)
 
 
@@ -139,8 +126,8 @@ class PositiveLoadGauge(Widget):
         self.outer_box.width = 150
         self.height = height + 25
         self.outer_box.height = height
-        # self.wrapper.height = height + 25
-        # self.wrapper.width = 150
+        self.wrapper.height = height + 25
+        self.wrapper.width = 150
         self.inner_box.height = height - (0.08 * height)
 
     def set_boundaries(self, warning_percentage, error_percentage):
