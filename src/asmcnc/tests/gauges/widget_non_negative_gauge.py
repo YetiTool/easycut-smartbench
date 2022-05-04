@@ -7,7 +7,6 @@ from kivy.properties import NumericProperty, ObjectProperty
 
 Builder.load_string("""
 <PositiveLoadGauge>:
-    wrapper:wrapper
     outer_box:outer_box
     inner_box:inner_box
     title_label:title_label
