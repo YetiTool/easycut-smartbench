@@ -26,37 +26,39 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
+                
+                canvas:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                
                 Label:
                     id: title_label
                     size: self.texture_size
                     text_size: self.size
                     halign: 'left'
                     color: 0, 0, 0, 1
+
+            BoxLayout:
+                orientation: 'vertical'
                 
                 canvas:
                     Color:
                         rgba: 1, 1, 1, 1
-
+                    
                     Rectangle:
                         pos: self.pos
                         size: self.size
-
-            BoxLayout:
-                orientation: 'vertical'
+                
                 Label:
                     id: value_label
                     size: self.texture_size
                     text_size: self.size
                     halign: 'right'
                     color: 0, 0, 0, 1
-                    
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 1
-                    
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
                 
         BoxLayout:
             id: outer_box
