@@ -153,11 +153,11 @@ class PositiveLoadGauge(Widget):
                 self.g = 1
                 self.b = 0
         else:
-            if abs(float(value) / float(self.max_value)) < 100 - self.error_percentage:
+            if abs(float(value) / float(self.max_value)) < 1.0 - self.error_percentage:
                 self.r = 1
                 self.g = 0
                 self.b = 0
-            elif abs(float(value) / float(self.max_value)) < 100 - self.warning_percentage:
+            elif abs(float(value) / float(self.max_value)) < 1.0 - self.warning_percentage:
                 self.r = 1
                 self.g = 1
                 self.b = 0
