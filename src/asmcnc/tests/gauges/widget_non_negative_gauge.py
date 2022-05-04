@@ -5,6 +5,29 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
+
+def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
+    if abs(float(value) / float(max_value)) * 100 < lower_boundary:
+        return (1, 0, 0, 1) if inverse else (0, 1, 0, 1)
+
+    if abs(float(value) / float(max_value)) * 100 > 100 - upper_boundary:
+        return (0, 1, 0, 1) if inverse else (1, 0, 1, 1)
+
+    # logic behind gradient?
+    percentage = float(value) / float(max_value) * 100
+
+    return get_colour_kivy(get_colour(percentage))
+
+
+def get_colour(percentage):
+    r = 255 * percentage / 100
+    g = 255 - (255 * percentage / 100)
+    return r, g, 0, 1
+
+
+def get_colour_kivy(rgba):
+    return rgba[0] / 255, rgba[1] / 255, 0, 1
+
 Builder.load_string("""
 <PositiveLoadGauge>:
     wrapper:wrapper
@@ -153,32 +176,37 @@ class PositiveLoadGauge(Widget):
 
         self.inner_box.width = width
 
-        if not self.inverse_boundaries:
-            if abs(float(value) / float(self.max_value)) > self.error_percentage:
-                self.r = 1
-                self.g = 0
-                self.b = 0
-            elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
-                self.r = 1
-                self.g = 1
-                self.b = 0
-            else:
-                self.r = 0
-                self.g = 1
-                self.b = 0
-        else:
-            if abs(float(value) / float(self.max_value)) < 1.0 - self.error_percentage:
-                self.r = 1
-                self.g = 0
-                self.b = 0
-            elif abs(float(value) / float(self.max_value)) < 1.0 - self.warning_percentage:
-                self.r = 1
-                self.g = 1
-                self.b = 0
-            else:
-                self.r = 0
-                self.g = 1
-                self.b = 0
+        colour = get_gradient(value, self.max_value)
+
+        self.r = colour[0]
+        self.g = colour[1]
+
+        # if not self.inverse_boundaries:
+        #     if abs(float(value) / float(self.max_value)) > self.error_percentage:
+        #         self.r = 1
+        #         self.g = 0
+        #         self.b = 0
+        #     elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
+        #         self.r = 1
+        #         self.g = 1
+        #         self.b = 0
+        #     else:
+        #         self.r = 0
+        #         self.g = 1
+        #         self.b = 0
+        # else:
+        #     if abs(float(value) / float(self.max_value)) < 1.0 - self.error_percentage:
+        #         self.r = 1
+        #         self.g = 0
+        #         self.b = 0
+        #     elif abs(float(value) / float(self.max_value)) < 1.0 - self.warning_percentage:
+        #         self.r = 1
+        #         self.g = 1
+        #         self.b = 0
+        #     else:
+        #         self.r = 0
+        #         self.g = 1
+        #         self.b = 0
 
     def animate_width(self, el, width):
         self.inner_box.width = width
