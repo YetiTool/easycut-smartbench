@@ -226,6 +226,9 @@ class CalibrationDatabase(object):
 
     # @lettie please ensure data is input in the correct order according to below
     def insert_final_test_statuses(self, statuses):
+
+        print("Before insert ft status")
+
         with self.conn.cursor() as cursor:
             query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
                     "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
@@ -237,6 +240,8 @@ class CalibrationDatabase(object):
             cursor.executemany(query, statuses)
 
             self.conn.commit()
+
+            print("After insert ft status")
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
