@@ -238,7 +238,7 @@ class CalibrationDatabase(object):
 
                 cursor.fast_executemany = True
 
-                # cursor.executemany(query, statuses)
+                cursor.executemany(query, statuses)
 
                 # self.conn.commit()
 
