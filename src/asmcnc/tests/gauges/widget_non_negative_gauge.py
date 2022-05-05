@@ -6,6 +6,13 @@ from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
 
+def get_colour(percentage):
+    red = 1 - 2 * (percentage - 50) / 100 if percentage > 50 else 1.0
+    green = 1.0 if percentage > 50 else 2 * percentage / 100.0
+    blue = 0.0
+    return red, green, blue, 1.0
+
+
 def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
     if abs(float(value) / float(max_value)) * 100 < lower_boundary:
         return (1, 0, 0, 1) if inverse else (0, 1, 0, 1)
@@ -16,17 +23,8 @@ def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse
     # logic behind gradient?
     percentage = float(value) / float(max_value) * 100
 
-    return get_colour_kivy(get_colour(percentage))
+    return get_colour(percentage)
 
-
-def get_colour(percentage):
-    r = 255 * percentage / 100
-    g = 255 - (255 * percentage / 100)
-    return r, g, 0, 1
-
-
-def get_colour_kivy(rgba):
-    return rgba[0] / 255, rgba[1] / 255, 0, 1
 
 Builder.load_string("""
 <PositiveLoadGauge>:
@@ -176,7 +174,7 @@ class PositiveLoadGauge(Widget):
 
         self.inner_box.width = width
 
-        colour = get_gradient(value, self.max_value)
+        colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries)
 
         self.r = colour[0]
         self.g = colour[1]
