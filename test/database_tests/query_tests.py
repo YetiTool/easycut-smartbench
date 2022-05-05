@@ -48,8 +48,8 @@ class SQLQueryTests(unittest.TestCase):
     # def test_get_ambient_temperature(self):
     #     self.assertIsNotNone(self.db.get_ambient_temperature(), "No temp :(")
 
-    def test_get_stage_id_by_description(self):
-        self.assertEqual(self.db.get_stage_id_by_description('CalibrationQC'), 1)
+    # def test_get_stage_id_by_description(self):
+    #     self.assertEqual(self.db.get_stage_id_by_description('CalibrationQC'), 1)
 
     # # # QC CALIBRATION TESTS
 
@@ -64,8 +64,8 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # FETCH COEFFICIENTS TEST
 
-    def test_get_lower_beam_coefficents(self):
-        self.assertIsNotNone(self.db.get_lower_beam_coefficents('xl2222', 2, 1))
+    # def test_get_lower_beam_coefficents(self):
+    #     self.assertIsNotNone(self.db.get_lower_beam_coefficents('xl2222', 2, 1))
 
     # # # FINAL TEST TESTS
 
@@ -74,16 +74,16 @@ class SQLQueryTests(unittest.TestCase):
     # # def test_insert_serial_numbers(self):
     # #     self.db.insert_serial_numbers('ys62222', 'zh2222', 'xl2222', 'xu2222','cs2222', 'yb2222', '123456Y', 'v9.9.9', '9.9.9', '0.0')
 
-    def test_get_serials_by_machine_serial(self):
-        self.assertIsNotNone(self.db.get_serials_by_machine_serial('ys62222'))
+    # def test_get_serials_by_machine_serial(self):
+    #     self.assertIsNotNone(self.db.get_serials_by_machine_serial('ys62222'))
 
-    def test_get_all_serials_by_machine_serial(self):
-        self.assertIsNotNone(self.db.get_all_serials_by_machine_serial('ys62222'))
+    # def test_get_all_serials_by_machine_serial(self):
+    #     self.assertIsNotNone(self.db.get_all_serials_by_machine_serial('ys62222'))
 
     # # # Stages
 
-    # def test_insert_final_test_stage(self):
-    #     self.db.insert_final_test_stage('ys62222', 6)
+    def test_insert_final_test_stage(self):
+        self.db.insert_final_test_stage('ys62222', 5)
 
     def test_does_final_test_stage_already_exist_yarp(self):
         self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
@@ -99,11 +99,11 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # Statuses
 
-    # def test_insert_final_test_statuses(self):
-    #                   # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
-    #     status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
-    #     more_statuses = [status_list, status_list, status_list]
-    #     self.db.insert_final_test_statuses(more_statuses)
+    def test_insert_final_test_statuses(self):
+                      # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
+        status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
+        more_statuses = [status_list, status_list, status_list]
+        self.db.insert_final_test_statuses(more_statuses)
 
 
 if __name__ == "__main__":
