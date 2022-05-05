@@ -42,7 +42,7 @@ Builder.load_string("""
     unweighted_test_button : unweighted_test_button
     x_load_button : x_load_button
     y_load_button : y_load_button
-    z_load_button : z_load_button
+    # z_load_button : z_load_button
 
     data_send_button : data_send_button
     data_send_label : data_send_label
