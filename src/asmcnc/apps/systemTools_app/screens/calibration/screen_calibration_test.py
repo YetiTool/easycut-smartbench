@@ -1656,13 +1656,13 @@ class CalibrationTesting(Screen):
         try:
 
             if self.is_step_ticked(self.unweighted_test_check): 
-                success = success*self.get_statistics("UnweightedFT")
+                self.get_statistics("UnweightedFT")
                 success = success*self.send_data_for_each_stage("UnweightedFT")
             
             if all([self.is_step_ticked(self.x_test_check),
                     self.is_step_ticked(self.y_test_check)]):
 
-                success = success*self.get_statistics("WeightedFT")
+                self.get_statistics("WeightedFT")
                 success = success*self.send_data_for_each_stage("WeightedFT")
 
             if success: self.sent_data_check.source = self.green_tick
