@@ -82,8 +82,8 @@ Builder.load_string("""
     x_fw_range_weighted : x_fw_range_weighted
     x_bw_range_weighted : x_bw_range_weighted
     x_peak_checkbox_weighted : x_peak_checkbox_weighted
-    z_fw_range_weighted : z_fw_range_weighted
-    z_bw_range_weighted : z_bw_range_weighted
+    # z_fw_range_weighted : z_fw_range_weighted
+    # z_bw_range_weighted : z_bw_range_weighted
     # z_peak_checkbox_weighted : z_peak_checkbox_weighted
 
     status_container : status_container
