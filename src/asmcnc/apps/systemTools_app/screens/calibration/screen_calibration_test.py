@@ -35,14 +35,14 @@ Builder.load_string("""
 
     x_test_check:x_test_check
     y_test_check:y_test_check
-    z_test_check:z_test_check
+    # z_test_check:z_test_check
     unweighted_test_check:unweighted_test_check
     sent_data_check:sent_data_check
 
     unweighted_test_button : unweighted_test_button
     x_load_button : x_load_button
     y_load_button : y_load_button
-    z_load_button : z_load_button
+    # z_load_button : z_load_button
 
     data_send_button : data_send_button
     data_send_label : data_send_label
@@ -62,13 +62,13 @@ Builder.load_string("""
     y1_peak_posve_weighted : y1_peak_posve_weighted
     y2_peak_posve_weighted : y2_peak_posve_weighted
     x_peak_posve_weighted : x_peak_posve_weighted
-    z_peak_posve_weighted : z_peak_posve_weighted
+    # z_peak_posve_weighted : z_peak_posve_weighted
 
     y_peak_negve_weighted : y_peak_negve_weighted
     y1_peak_negve_weighted : y1_peak_negve_weighted
     y2_peak_negve_weighted : y2_peak_negve_weighted
     x_peak_negve_weighted : x_peak_negve_weighted
-    z_peak_negve_weighted : z_peak_negve_weighted
+    # z_peak_negve_weighted : z_peak_negve_weighted
 
     y_axis_fw_range_weighted : y_axis_fw_range_weighted
     y_axis_bw_range_weighted : y_axis_bw_range_weighted
@@ -82,9 +82,9 @@ Builder.load_string("""
     x_fw_range_weighted : x_fw_range_weighted
     x_bw_range_weighted : x_bw_range_weighted
     x_peak_checkbox_weighted : x_peak_checkbox_weighted
-    z_fw_range_weighted : z_fw_range_weighted
-    z_bw_range_weighted : z_bw_range_weighted
-    z_peak_checkbox_weighted : z_peak_checkbox_weighted
+    # z_fw_range_weighted : z_fw_range_weighted
+    # z_bw_range_weighted : z_bw_range_weighted
+    # z_peak_checkbox_weighted : z_peak_checkbox_weighted
 
     status_container : status_container
 
@@ -190,18 +190,24 @@ Builder.load_string("""
                 GridLayout:
                     cols: 2
 
-                    Button:
-                        id: z_load_button
-                        text: 'Run Z (2kg)'
-                        on_press: root.run_z_procedure(None)
+                    Label:
+                        text: ''
 
-                    Image:
-                        id: z_test_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+                    Label:
+                        text: ''
+
+                    # Button:
+                    #     id: z_load_button
+                    #     text: 'Run Z (2kg)'
+                    #     on_press: root.run_z_procedure(None)
+
+                    # Image:
+                    #     id: z_test_check
+                    #     source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    #     center_x: self.parent.center_x
+                    #     y: self.parent.y
+                    #     size: self.parent.width, self.parent.height
+                    #     allow_stretch: True
 
                 Button:
                     id: data_send_button
@@ -759,59 +765,80 @@ Builder.load_string("""
 
                     ## Z axis
 
-                    Label:
-                        text: 'Z-:'
-                        halign: 'right'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    Label: 
+                        text: ''
 
-                    Label:
-                        id: z_peak_negve_weighted
-                        text: 'zzz'
-                        halign: 'left'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    Label: 
+                        text: ''
 
-                    Label:
-                        id: z_fw_range_weighted
-                        text: 'zzz - zzz'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-                        halign: 'center'
+                    Label: 
+                        text: ''
 
-                    Label:
-                        text: 'Z+:'
-                        halign: 'right'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    # Label:
+                    #     text: 'Z-:'
+                    #     halign: 'right'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
 
-                    Label:
-                        id: z_peak_posve_weighted
-                        text: 'zzz'
-                        halign: 'left'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    # Label:
+                    #     id: z_peak_negve_weighted
+                    #     text: 'zzz'
+                    #     halign: 'left'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
 
-                    Label:
-                        id: z_bw_range_weighted
-                        text: 'zzz - zzz'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-                        halign: 'center'
+                    # Label:
+                    #     id: z_fw_range_weighted
+                    #     text: 'zzz - zzz'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+                    #     halign: 'center'
 
-                    Image:
-                        id: z_peak_checkbox_weighted
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+                    Label: 
+                        text: ''
+
+                    Label: 
+                        text: ''
+
+                    Label: 
+                        text: ''
+
+                    Label: 
+                        text: ''
+
+                    # Label:
+                    #     text: 'Z+:'
+                    #     halign: 'right'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+
+                    # Label:
+                    #     id: z_peak_posve_weighted
+                    #     text: 'zzz'
+                    #     halign: 'left'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+
+                    # Label:
+                    #     id: z_bw_range_weighted
+                    #     text: 'zzz - zzz'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+                    #     halign: 'center'
+
+                    # Image:
+                    #     id: z_peak_checkbox_weighted
+                    #     source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    #     center_x: self.parent.center_x
+                    #     y: self.parent.y
+                    #     size: self.parent.width, self.parent.height
+                    #     allow_stretch: True
 
         BoxLayout:
             size_hint_y: 0.08
@@ -865,7 +892,7 @@ class CalibrationTesting(Screen):
 
         self.x_weight = 0
         self.y_weight = 0
-        self.z_weight = 0
+        self.z_weight = 2
 
         self.status_data_dict = {
 
@@ -1042,7 +1069,7 @@ class CalibrationTesting(Screen):
     def enable_run_buttons(self):
         self.x_load_button.disabled = False
         self.y_load_button.disabled = False
-        self.z_load_button.disabled = False
+        # self.z_load_button.disabled = False
         self.unweighted_test_button.disabled = False
         self.home_button.disabled = False
         self.x0y0_jog_button.disabled = False
@@ -1052,8 +1079,7 @@ class CalibrationTesting(Screen):
 
         if all([self.is_step_ticked(self.unweighted_test_check),
                 self.is_step_ticked(self.x_test_check),
-                self.is_step_ticked(self.y_test_check),
-                self.is_step_ticked(self.z_test_check)]):
+                self.is_step_ticked(self.y_test_check)]):
 
             self.data_send_button.disabled = False
 
@@ -1064,7 +1090,7 @@ class CalibrationTesting(Screen):
     def disable_run_buttons(self):
         self.x_load_button.disabled = True
         self.y_load_button.disabled = True
-        self.z_load_button.disabled = True
+        # self.z_load_button.disabled = True
         self.unweighted_test_button.disabled = True
         self.home_button.disabled = True
         self.x0y0_jog_button.disabled = True
@@ -1179,13 +1205,13 @@ class CalibrationTesting(Screen):
             self.get_peak_as_string(self.y_peak_posve_weighted, self.raw_y_pos_vals[self.stage])
             self.get_peak_as_string(self.y1_peak_posve_weighted, self.raw_y1_pos_vals[self.stage])
             self.get_peak_as_string(self.y2_peak_posve_weighted, self.raw_y2_pos_vals[self.stage])
-            self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_pos_vals[self.stage])
+            # self.get_peak_as_string(self.z_peak_posve_weighted, self.raw_z_pos_vals[self.stage])
 
             self.get_peak_as_string(self.x_peak_negve_weighted, self.raw_x_neg_vals[self.stage])
             self.get_peak_as_string(self.y_peak_negve_weighted, self.raw_y_neg_vals[self.stage])
             self.get_peak_as_string(self.y1_peak_negve_weighted, self.raw_y1_neg_vals[self.stage])
             self.get_peak_as_string(self.y2_peak_negve_weighted, self.raw_y2_neg_vals[self.stage])
-            self.get_peak_as_string(self.z_peak_negve_weighted, self.raw_z_neg_vals[self.stage])
+            # self.get_peak_as_string(self.z_peak_negve_weighted, self.raw_z_neg_vals[self.stage])
             return
 
     def get_peak_as_string(self, label_id, raw_vals):
@@ -1223,9 +1249,9 @@ class CalibrationTesting(Screen):
                         int(self.y1_peak_posve_weighted.text),
                         int(self.y1_peak_negve_weighted.text),
                         int(self.y2_peak_posve_weighted.text),
-                        int(self.y2_peak_negve_weighted.text),
-                        int(self.z_peak_negve_weighted.text),
-                        int(self.z_peak_posve_weighted.text)
+                        int(self.y2_peak_negve_weighted.text)
+                        # int(self.z_peak_negve_weighted.text),
+                        # int(self.z_peak_posve_weighted.text)
             ]
 
             return peak_list
@@ -1236,69 +1262,100 @@ class CalibrationTesting(Screen):
             # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
             peak_list = self.read_out_peaks(stage)
 
-            self.statistics_data_dict[stage] = [
+            if stage == "UnweightedFT":
 
-                            sum(self.raw_x_pos_vals[stage])/len(self.raw_x_pos_vals[stage]),
-                            peak_list[0],
-                            sum(self.raw_x_neg_vals[stage])/len(self.raw_x_neg_vals[stage]),
-                            peak_list[1],
-                            sum(self.raw_y_pos_vals[stage])/len(self.raw_y_pos_vals[stage]),
-                            peak_list[2],
-                            sum(self.raw_y_neg_vals[stage])/len(self.raw_y_neg_vals[stage]),
-                            peak_list[3],
-                            sum(self.raw_y1_pos_vals[stage])/len(self.raw_y1_pos_vals[stage]),
-                            peak_list[4],
-                            sum(self.raw_y1_neg_vals[stage])/len(self.raw_y1_neg_vals[stage]),
-                            peak_list[5],
-                            sum(self.raw_y2_pos_vals[stage])/len(self.raw_y2_pos_vals[stage]),
-                            peak_list[6],
-                            sum(self.raw_y2_neg_vals[stage])/len(self.raw_y2_neg_vals[stage]),
-                            peak_list[7],
-                            sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
-                            peak_list[8],
-                            sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
-                            peak_list[9]
+                self.statistics_data_dict[stage] = [
 
-            ]
+                                sum(self.raw_x_pos_vals[stage])/len(self.raw_x_pos_vals[stage]),
+                                peak_list[0],
+                                sum(self.raw_x_neg_vals[stage])/len(self.raw_x_neg_vals[stage]),
+                                peak_list[1],
+                                sum(self.raw_y_pos_vals[stage])/len(self.raw_y_pos_vals[stage]),
+                                peak_list[2],
+                                sum(self.raw_y_neg_vals[stage])/len(self.raw_y_neg_vals[stage]),
+                                peak_list[3],
+                                sum(self.raw_y1_pos_vals[stage])/len(self.raw_y1_pos_vals[stage]),
+                                peak_list[4],
+                                sum(self.raw_y1_neg_vals[stage])/len(self.raw_y1_neg_vals[stage]),
+                                peak_list[5],
+                                sum(self.raw_y2_pos_vals[stage])/len(self.raw_y2_pos_vals[stage]),
+                                peak_list[6],
+                                sum(self.raw_y2_neg_vals[stage])/len(self.raw_y2_neg_vals[stage]),
+                                peak_list[7],
+                                sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
+                                peak_list[8],
+                                sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
+                                peak_list[9]
 
+                ]
 
-    def run_z_procedure(self, dt):
+            if stage == "WeightedFT":
 
-        # start run, run all the way down and then all the way back up. 
+                self.statistics_data_dict[stage] = [
 
-        if self.m.mpos_z() != self.m.z_max_jog_abs_limit:
-            popup_info.PopupError(self.sm, self.l, "Move Z to Z0 first!")
-            return
+                                sum(self.raw_x_pos_vals[stage])/len(self.raw_x_pos_vals[stage]),
+                                peak_list[0],
+                                sum(self.raw_x_neg_vals[stage])/len(self.raw_x_neg_vals[stage]),
+                                peak_list[1],
+                                sum(self.raw_y_pos_vals[stage])/len(self.raw_y_pos_vals[stage]),
+                                peak_list[2],
+                                sum(self.raw_y_neg_vals[stage])/len(self.raw_y_neg_vals[stage]),
+                                peak_list[3],
+                                sum(self.raw_y1_pos_vals[stage])/len(self.raw_y1_pos_vals[stage]),
+                                peak_list[4],
+                                sum(self.raw_y1_neg_vals[stage])/len(self.raw_y1_neg_vals[stage]),
+                                peak_list[5],
+                                sum(self.raw_y2_pos_vals[stage])/len(self.raw_y2_pos_vals[stage]),
+                                peak_list[6],
+                                sum(self.raw_y2_neg_vals[stage])/len(self.raw_y2_neg_vals[stage]),
+                                peak_list[7],
+                                0,
+                                0,
+                                0,
+                                0
+                                # sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
+                                # peak_list[8],
+                                # sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
+                                # peak_list[9]
 
-        self.disable_run_buttons()
+                ]
 
-        self.raw_z_pos_vals["WeightedFT"] = []
-        self.raw_z_neg_vals["WeightedFT"] = []
+    # def run_z_procedure(self, dt):
 
-        if self.stage != "WeightedFT":
-            self.set_stage("WeightedFT")
+    #     # start run, run all the way down and then all the way back up. 
+
+    #     if self.m.mpos_z() != self.m.z_max_jog_abs_limit:
+    #         popup_info.PopupError(self.sm, self.l, "Move Z to Z0 first!")
+    #         return
+
+    #     self.disable_run_buttons()
+
+    #     self.raw_z_pos_vals["WeightedFT"] = []
+    #     self.raw_z_neg_vals["WeightedFT"] = []
+
+    #     if self.stage != "WeightedFT":
+    #         self.set_stage("WeightedFT")
         
-        self.x_weight = 0
-        self.y_weight = 0
-        self.z_weight = 2
+    #     self.x_weight = 0
+    #     self.y_weight = 0
 
-        self.set_weighted_z_range()
+    #     self.set_weighted_z_range()
 
-        self.z_running = True
+    #     self.z_running = True
 
-        self.m.send_any_gcode_command('G91 G1 Z-149 F' + str(MAX_Z_SPEED))
-        self.m.send_any_gcode_command('G91 G1 Z149 F' + str(MAX_Z_SPEED))
+    #     self.m.send_any_gcode_command('G91 G1 Z-149 F' + str(MAX_Z_SPEED))
+    #     self.m.send_any_gcode_command('G91 G1 Z149 F' + str(MAX_Z_SPEED))
 
-        # poll to see when run is done
-        self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
+    #     # poll to see when run is done
+    #     self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
 
 
-    def confirm_z(self, dt):
-        if self.m.state().startswith('Idle'):
-            self.z_running = False
-            self.enable_run_buttons()
-            self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-            self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
+    # def confirm_z(self, dt):
+    #     if self.m.state().startswith('Idle'):
+    #         self.z_running = False
+    #         self.enable_run_buttons()
+    #         self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+    #         self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
 
 
     def run_y_procedure(self, dt):
@@ -1319,7 +1376,6 @@ class CalibrationTesting(Screen):
 
         self.x_weight = 0
         self.y_weight = 7.5
-        self.z_weight = 0
 
         self.set_weighted_y_range()
 
@@ -1356,7 +1412,6 @@ class CalibrationTesting(Screen):
 
         self.x_weight = 7.5
         self.y_weight = 0
-        self.z_weight = 0
 
         self.set_weighted_x_range()
 
@@ -1388,7 +1443,6 @@ class CalibrationTesting(Screen):
 
             self.x_weight = 0
             self.y_weight = 0
-            self.z_weight = 0
 
             self.zero_x_and_y()
             self.zero_Z()
@@ -1571,17 +1625,17 @@ class CalibrationTesting(Screen):
 
     def set_unweighted_z_range(self):
 
-        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 0, self.Z_SG_to_kg_scaling)
+        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
 
         self.z_fw_range.text = z_fw_range_text
         self.z_bw_range.text = z_bw_range_text
 
-    def set_weighted_z_range(self):
+    # def set_weighted_z_range(self):
 
-        z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
+    #     z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
 
-        self.z_fw_range_weighted.text = z_fw_range_text
-        self.z_bw_range_weighted.text = z_bw_range_text
+    #     self.z_fw_range_weighted.text = z_fw_range_text
+    #     self.z_bw_range_weighted.text = z_bw_range_text
 
 
     def send_all_data(self):
@@ -1602,8 +1656,7 @@ class CalibrationTesting(Screen):
                 self.send_data_for_each_stage("UnweightedFT")
             
             if all([self.is_step_ticked(self.x_test_check),
-                    self.is_step_ticked(self.y_test_check),
-                    self.is_step_ticked(self.z_test_check)]):
+                    self.is_step_ticked(self.y_test_check)]):
 
                 self.get_statistics("WeightedFT")
                 self.send_data_for_each_stage("WeightedFT")
