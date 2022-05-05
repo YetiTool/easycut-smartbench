@@ -82,14 +82,14 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # Stages
 
-    def test_insert_final_test_stage(self):
-        self.db.insert_final_test_stage('ys62222', 5)
+    # def test_insert_final_test_stage(self):
+    #     self.db.insert_final_test_stage('ys62222', 5)
 
-    def test_does_final_test_stage_already_exist_yarp(self):
-        self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
+    # def test_does_final_test_stage_already_exist_yarp(self):
+    #     self.assertIsNotNone(self.db.does_final_test_stage_already_exist('622225'))
 
-    def test_does_final_test_stage_already_exist_narp(self):
-        self.assertIsNone(self.db.does_final_test_stage_already_exist('622228'))
+    # def test_does_final_test_stage_already_exist_narp(self):
+    #     self.assertIsNone(self.db.does_final_test_stage_already_exist('622228'))
 
     # # # Statistics
 
@@ -102,7 +102,8 @@ class SQLQueryTests(unittest.TestCase):
     def test_insert_final_test_statuses(self):
                       # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
         status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
-        more_statuses = [status_list, status_list, status_list]
+        # more_statuses = [status_list, status_list, status_list]
+        more_statuses = [status_list]
         self.db.insert_final_test_statuses(more_statuses)
 
 
