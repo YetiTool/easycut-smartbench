@@ -6,6 +6,11 @@ pkgs:
 - python-pigpio
 - git-repair
 - python-influxdb
+- freetds-bin
+- freetds-dev
+- tdsodbc
+- python-pyodbc
+
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool

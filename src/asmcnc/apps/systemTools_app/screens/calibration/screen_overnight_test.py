@@ -990,6 +990,7 @@ class OvernightTesting(Screen):
 
         self.statuses = []
         self.stage = ""
+        self.stage_id = 0
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
@@ -1060,10 +1061,10 @@ class OvernightTesting(Screen):
     def set_stage(self, stage):
 
         self.stage = stage
-        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
 
         try:
-            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
 
         except: 
             log("Could not insert final test stage into DB!!")
@@ -1092,16 +1093,16 @@ class OvernightTesting(Screen):
 
         if len(self.status_data_dict[self.stage]) > 0:
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_x(): x_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_x(): x_dir = 1
             else: x_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_y(): y_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_y(): y_dir = 1
             else: y_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] < self.m.mpos_z(): z_dir = 1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
         else:
@@ -1111,28 +1112,28 @@ class OvernightTesting(Screen):
         
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        status = [
-                    self.m.mpos_x(),
-                    self.m.mpos_y(),
-                    self.m.mpos_z(),
-                    x_dir,
-                    y_dir,
-                    z_dir,
-                    int(self.m.s.sg_x_motor_axis),
-                    int(self.m.s.sg_y_axis),
-                    int(self.m.s.sg_y1_motor),
-                    int(self.m.s.sg_y2_motor),
-                    int(self.m.s.sg_z_motor_axis),
-                    int(self.m.s.motor_driver_temp),
-                    int(self.m.s.pcb_temp),
-                    int(self.m.s.transistor_heatsink_temp),
-                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    self.m.feed_rate(),
-                    0,
-                    0,
-                    2
-
-        ]
+        status = (
+            int(self.sn_for_db[2:] + str(self.stage_id)),
+            self.m.mpos_x(),
+            self.m.mpos_y(),
+            self.m.mpos_z(),
+            x_dir,
+            y_dir,
+            z_dir,
+            int(self.m.s.sg_x_motor_axis),
+            int(self.m.s.sg_y_axis),
+            int(self.m.s.sg_y1_motor),
+            int(self.m.s.sg_y2_motor),
+            int(self.m.s.sg_z_motor_axis),
+            int(self.m.s.motor_driver_temp),
+            int(self.m.s.pcb_temp),
+            int(self.m.s.transistor_heatsink_temp),
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            self.m.feed_rate(),
+            0,
+            0,
+            2
+        )
 
         self.status_data_dict[self.stage].append(status)
 
@@ -1325,33 +1326,40 @@ class OvernightTesting(Screen):
 
     def get_statistics(self):
 
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-            peak_list = self.read_out_peaks(self.stage)
+            log("Getting statistics...")
 
-            self.statistics_data_dict[self.stage] = [
+            try: 
 
-                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
-                            peak_list[0],
-                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
-                            peak_list[1],
-                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
-                            peak_list[2],
-                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
-                            peak_list[3],
-                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
-                            peak_list[4],
-                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
-                            peak_list[5],
-                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
-                            peak_list[6],
-                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
-                            peak_list[7],
-                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
-                            peak_list[8],
-                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
-                            peak_list[9]
+                # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+                peak_list = self.read_out_peaks(self.stage)
 
-            ]
+                self.statistics_data_dict[self.stage] = [
+
+                                sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                                peak_list[0],
+                                sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                                peak_list[1],
+                                sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                                peak_list[2],
+                                sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                                peak_list[3],
+                                sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                                peak_list[4],
+                                sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                                peak_list[5],
+                                sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                                peak_list[6],
+                                sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                                peak_list[7],
+                                sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                                peak_list[8],
+                                sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                                peak_list[9]
+
+                ]
+
+            except:
+                print(traceback.format_exc())
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1422,7 +1430,7 @@ class OvernightTesting(Screen):
         # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         self.poll_for_recalibration_stage = Clock.schedule_interval(self.ready_for_recalibration, 10)
         self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(self.ready_for_fully_calibrated_final_run, 10)
-        self.poll_for_completion_of_overnight_test = Clock.schedule_interval(self.overnight_test_completed, 600)
+        self.poll_for_completion_of_overnight_test = Clock.schedule_interval(self.overnight_test_completed, 120)
         self.start_six_hour_wear_in()
 
 
@@ -1717,7 +1725,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        if self.mini_run_dev_mode: filename_end = 'mini_run'
+        if self.mini_run_dev_mode: filename_end = 'super_mini_run'
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
@@ -1751,6 +1759,7 @@ class OvernightTesting(Screen):
     # Add all statuses to same array - and then for each function/check, see if any of the stages are in the lists. 
 
     def send_six_hour_wear_in_data(self):
+        log("Sending six hour wear-in data")
         self._has_data_been_sent("OvernightWearIn", self.sent_six_hour_wear_in_data)
 
 
@@ -1772,12 +1781,13 @@ class OvernightTesting(Screen):
     def send_data(self, stage):
 
         try:
-
+            log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
+            log("Finish data send")
             return True
 
         except:
@@ -1927,10 +1937,10 @@ class OvernightTesting(Screen):
 
         print("Lower bound: " + str((-1*within_plus_minus)))
         print("Upper bound: " + str(within_plus_minus))
-        print ("Peak pos: " + str(int(peak_id_pos.text)))
-        print ("Peak neg: " + str(int(peak_id_neg.text)))
-        print ("Min pos: " + str(int(min_pos)))
-        print ("Min neg: " + str(int(min_neg)))
+        print ("Peak pos: " + str(peak_id_pos.text))
+        print ("Peak neg: " + str(peak_id_neg.text))
+        print ("Min pos: " + str(min_pos))
+        print ("Min neg: " + str(min_neg))
 
         try: 
             if not (-1*within_plus_minus) < int(peak_id_pos.text) < within_plus_minus: return False
