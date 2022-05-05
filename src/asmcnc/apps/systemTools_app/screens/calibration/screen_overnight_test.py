@@ -1326,33 +1326,40 @@ class OvernightTesting(Screen):
 
     def get_statistics(self):
 
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-            peak_list = self.read_out_peaks(self.stage)
+            log("Getting statistics...")
 
-            self.statistics_data_dict[self.stage] = [
+            try: 
 
-                            sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
-                            peak_list[0],
-                            sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
-                            peak_list[1],
-                            sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
-                            peak_list[2],
-                            sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
-                            peak_list[3],
-                            sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
-                            peak_list[4],
-                            sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
-                            peak_list[5],
-                            sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
-                            peak_list[6],
-                            sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
-                            peak_list[7],
-                            sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
-                            peak_list[8],
-                            sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
-                            peak_list[9]
+                # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+                peak_list = self.read_out_peaks(self.stage)
 
-            ]
+                self.statistics_data_dict[self.stage] = [
+
+                                sum(self.raw_x_pos_vals)/len(self.raw_x_pos_vals),
+                                peak_list[0],
+                                sum(self.raw_x_neg_vals)/len(self.raw_x_neg_vals),
+                                peak_list[1],
+                                sum(self.raw_y_pos_vals)/len(self.raw_y_pos_vals),
+                                peak_list[2],
+                                sum(self.raw_y_neg_vals)/len(self.raw_y_neg_vals),
+                                peak_list[3],
+                                sum(self.raw_y1_pos_vals)/len(self.raw_y1_pos_vals),
+                                peak_list[4],
+                                sum(self.raw_y1_neg_vals)/len(self.raw_y1_neg_vals),
+                                peak_list[5],
+                                sum(self.raw_y2_pos_vals)/len(self.raw_y2_pos_vals),
+                                peak_list[6],
+                                sum(self.raw_y2_neg_vals)/len(self.raw_y2_neg_vals),
+                                peak_list[7],
+                                sum(self.raw_z_pos_vals)/len(self.raw_z_pos_vals),
+                                peak_list[8],
+                                sum(self.raw_z_neg_vals)/len(self.raw_z_neg_vals),
+                                peak_list[9]
+
+                ]
+
+            except:
+                print(traceback.format_exc())
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1752,6 +1759,7 @@ class OvernightTesting(Screen):
     # Add all statuses to same array - and then for each function/check, see if any of the stages are in the lists. 
 
     def send_six_hour_wear_in_data(self):
+        log("Sending six hour wear-in data")
         self._has_data_been_sent("OvernightWearIn", self.sent_six_hour_wear_in_data)
 
 
