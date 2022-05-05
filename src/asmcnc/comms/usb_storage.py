@@ -120,18 +120,6 @@ class USB_storage(object):
 
 
         ejecting_popup = self.show_user_usb_status("ejecting")
-
-        # if (self.sm.current == 'local_filechooser' or 
-        #     self.sm.current == 'usb_filechooser' or
-        #     self.sm.current == 'loading'):
-
-        #     self.sm.get_screen('loading').usb_status = 'ejecting'
-        #     self.sm.get_screen('loading').update_usb_status()
-        #     self.sm.get_screen('usb_filechooser').update_usb_status()
-
-        # else:
-        #     popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, False)
-        #     dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
      
         try:
             os.system(unmount_command)
@@ -159,19 +147,6 @@ class USB_storage(object):
                         if popup_USB != None: popup_USB.popup.dismiss()
 
                         self.show_user_usb_status("ejected")
-
-                        # if (self.sm.current == 'local_filechooser' or 
-                        #     self.sm.current == 'usb_filechooser' or
-                        #     self.sm.current == 'loading'):
-
-                        #     self.sm.get_screen('loading').usb_status = 'ejected'
-                        #     self.sm.get_screen('loading').update_usb_status()
-                        #     self.sm.get_screen('usb_filechooser').update_usb_status()
-
-                        # else:
-                        #     new_popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, True)
-                        #     Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1.8)
-
 
                     Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
   
@@ -201,18 +176,6 @@ class USB_storage(object):
                 if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
 
                 self.show_user_usb_status("connected")
-
-                # if (self.sm.current == 'local_filechooser' or 
-                #     self.sm.current == 'usb_filechooser' or
-                #     self.sm.current == 'loading'):
-
-                #     self.sm.get_screen('loading').usb_status = 'connected'
-                #     self.sm.get_screen('loading').update_usb_status()
-                #     self.sm.get_screen('usb_filechooser').update_usb_status()
-
-                # else:
-                #     popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, 'mounted')
-                #     Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
             else:
                 popup_USB_error = popup_info.PopupUSBError(self.sm, self.l, self)

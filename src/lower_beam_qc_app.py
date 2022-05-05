@@ -18,7 +18,7 @@ as default application at startup:
 
 touch /home/pi/YETI_LBQC_PROD_JIG.txt
 
-########
+#######################################################
 '''
 
 from kivy.app import App

@@ -226,6 +226,8 @@ class SkavaUI(App):
         log('Screen manager activated: ' + str(sm.current))
 
 
+        ## LOCALIZATION TESTING -----------------------------------------------------------
+
         # test_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polskie (PL)", "Dansk (DK)"]
 
         # def test_cycle(dt):
@@ -263,6 +265,8 @@ class SkavaUI(App):
         # 	Clock.schedule_interval(test_run_through_sequence, 3)
 
         # Clock.schedule_once(start_loop, 10)
+
+        ## -----------------------------------------------------------------------------------
 
         return sm
 
