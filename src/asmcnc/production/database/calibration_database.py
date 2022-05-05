@@ -236,11 +236,9 @@ class CalibrationDatabase(object):
                         "MOTTemperature, Timestamp, Feedrate, XWeight, YWeight, ZWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?," \
                         " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-                # cursor.fast_executemany = True
-
                 cursor.executemany(query, statuses)
 
-                # self.conn.commit()
+                self.conn.commit()
 
         except: 
             print(traceback.format_exc())

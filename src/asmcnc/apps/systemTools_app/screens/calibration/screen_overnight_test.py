@@ -939,7 +939,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = True
+    mini_run_dev_mode = False
 
     sn_for_db = ''
 
@@ -1430,7 +1430,7 @@ class OvernightTesting(Screen):
         # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         self.poll_for_recalibration_stage = Clock.schedule_interval(self.ready_for_recalibration, 10)
         self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(self.ready_for_fully_calibrated_final_run, 10)
-        self.poll_for_completion_of_overnight_test = Clock.schedule_interval(self.overnight_test_completed, 600)
+        self.poll_for_completion_of_overnight_test = Clock.schedule_interval(self.overnight_test_completed, 120)
         self.start_six_hour_wear_in()
 
 
