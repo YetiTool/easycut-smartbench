@@ -229,19 +229,23 @@ class CalibrationDatabase(object):
 
         print("Before insert ft status")
 
-        with self.conn.cursor() as cursor:
-            query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
-                    "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
-                    "MOTTemperature, Timestamp, Feedrate, XWeight, YWeight, ZWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?," \
-                    " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        try:
+            with self.conn.cursor() as cursor:
+                query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
+                        "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
+                        "MOTTemperature, Timestamp, Feedrate, XWeight, YWeight, ZWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?," \
+                        " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
-            cursor.fast_executemany = True
+                cursor.fast_executemany = True
 
-            cursor.executemany(query, statuses)
+                cursor.executemany(query, statuses)
 
-            self.conn.commit()
+                self.conn.commit()
 
-            print("After insert ft status")
+        except: 
+            print(traceback.format_exc())
+
+        print("After insert ft status")
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
