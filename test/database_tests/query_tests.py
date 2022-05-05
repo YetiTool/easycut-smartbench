@@ -101,7 +101,7 @@ class SQLQueryTests(unittest.TestCase):
 
     def test_insert_final_test_statuses(self):
                       # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
-        status_list = [622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2]
+        status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
         # more_statuses = [status_list, status_list, status_list]
         more_statuses = [status_list]
         self.db.insert_final_test_statuses(more_statuses)
