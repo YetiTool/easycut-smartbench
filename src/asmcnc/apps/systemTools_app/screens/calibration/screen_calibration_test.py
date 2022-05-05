@@ -765,28 +765,37 @@ Builder.load_string("""
 
                     ## Z axis
 
-                    Label:
-                        text: 'Z-:'
-                        halign: 'right'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    Label: 
+                        text: ''
 
-                    Label:
-                        id: z_peak_negve_weighted
-                        text: 'zzz'
-                        halign: 'left'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
+                    Label: 
+                        text: ''
 
-                    Label:
-                        id: z_fw_range_weighted
-                        text: 'zzz - zzz'
-                        markup: True
-                        valign: 'middle'
-                        text_size: self.size
-                        halign: 'center'
+                    Label: 
+                        text: ''
+
+                    # Label:
+                    #     text: 'Z-:'
+                    #     halign: 'right'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+
+                    # Label:
+                    #     id: z_peak_negve_weighted
+                    #     text: 'zzz'
+                    #     halign: 'left'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+
+                    # Label:
+                    #     id: z_fw_range_weighted
+                    #     text: 'zzz - zzz'
+                    #     markup: True
+                    #     valign: 'middle'
+                    #     text_size: self.size
+                    #     halign: 'center'
 
                     Label: 
                         text: ''
