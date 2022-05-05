@@ -1465,7 +1465,7 @@ class OvernightTesting(Screen):
             return
 
         self.set_stage("OvernightWearIn")
-        self._stream_overnight_file('six_hour_rectangle')
+        self._stream_overnight_file('five_rectangles')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
         log("Running six hour wear-in...")
@@ -1658,7 +1658,7 @@ class OvernightTesting(Screen):
 
         self.m.set_workzone_to_pos_xy()
         self.m.set_jobstart_z()
-        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('mini_run'), 3)
+        self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('five_rectangles'), 3)
         log("Running last rectangle")
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(self.post_fully_calibrated_final_run, 60)
 
