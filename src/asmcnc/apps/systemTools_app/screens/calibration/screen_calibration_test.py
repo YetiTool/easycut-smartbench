@@ -888,6 +888,7 @@ class CalibrationTesting(Screen):
         self.z_running = False
 
         self.stage = ''
+        self.stage_id = 0
         self.statuses = []
 
         self.x_weight = 0
@@ -985,9 +986,9 @@ class CalibrationTesting(Screen):
     def set_stage(self, stage):
 
         self.stage = stage
-        stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
+        self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
         try: 
-            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
 
         except: 
             log("Could not insert final test stage into DB!!")
@@ -1114,16 +1115,16 @@ class CalibrationTesting(Screen):
 
         if len(self.status_data_dict[self.stage]) > 0:
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_x(): x_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_x(): x_dir = 1
             else: x_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_y(): y_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_y(): y_dir = 1
             else: y_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] < self.m.mpos_z(): z_dir = 1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
         else:
@@ -1133,7 +1134,8 @@ class CalibrationTesting(Screen):
         
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        status = [
+        status = (
+                    int(self.sn_for_db[2:] + str(self.stage_id)),
                     self.m.mpos_x(),
                     self.m.mpos_y(),
                     self.m.mpos_z(),
@@ -1153,7 +1155,7 @@ class CalibrationTesting(Screen):
                     self.x_weight,
                     self.y_weight,
                     self.z_weight
-        ]
+        )
 
         self.status_data_dict[self.stage].append(status)
 
@@ -1649,19 +1651,22 @@ class CalibrationTesting(Screen):
 
     def do_data_send(self, dt):
 
+        success = True
+
         try:
 
             if self.is_step_ticked(self.unweighted_test_check): 
-                self.get_statistics("UnweightedFT")
-                self.send_data_for_each_stage("UnweightedFT")
+                success = success*self.get_statistics("UnweightedFT")
+                success = success*self.send_data_for_each_stage("UnweightedFT")
             
             if all([self.is_step_ticked(self.x_test_check),
                     self.is_step_ticked(self.y_test_check)]):
 
-                self.get_statistics("WeightedFT")
-                self.send_data_for_each_stage("WeightedFT")
+                success = success*self.get_statistics("WeightedFT")
+                success = success*self.send_data_for_each_stage("WeightedFT")
 
-            self.sent_data_check.source = self.green_tick
+            if success: self.sent_data_check.source = self.green_tick
+            else: self.sent_data_check.source = self.red_cross
 
         except:
             self.sent_data_check.source = self.red_cross
@@ -1676,7 +1681,7 @@ class CalibrationTesting(Screen):
         try:
 
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.calibration_db.insert_final_test_statuses(self.sn_for_db, stage_id, self.status_data_dict[stage])
+            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
