@@ -1064,7 +1064,7 @@ class OvernightTesting(Screen):
         self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
 
         try:
-            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
 
         except: 
             log("Could not insert final test stage into DB!!")
@@ -1928,10 +1928,10 @@ class OvernightTesting(Screen):
 
         print("Lower bound: " + str((-1*within_plus_minus)))
         print("Upper bound: " + str(within_plus_minus))
-        print ("Peak pos: " + str(int(peak_id_pos.text)))
-        print ("Peak neg: " + str(int(peak_id_neg.text)))
-        print ("Min pos: " + str(int(min_pos)))
-        print ("Min neg: " + str(int(min_neg)))
+        print ("Peak pos: " + str(peak_id_pos.text))
+        print ("Peak neg: " + str(peak_id_neg.text))
+        print ("Min pos: " + str(min_pos))
+        print ("Min neg: " + str(min_neg))
 
         try: 
             if not (-1*within_plus_minus) < int(peak_id_pos.text) < within_plus_minus: return False
