@@ -1093,16 +1093,16 @@ class OvernightTesting(Screen):
 
         if len(self.status_data_dict[self.stage]) > 0:
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] < self.m.mpos_x(): x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][0] > self.m.mpos_x(): x_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_x(): x_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_x(): x_dir = 1
             else: x_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_y(): y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_y(): y_dir = 1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_y(): y_dir = -1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_y(): y_dir = 1
             else: y_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_z(): z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_z(): z_dir = -1
+            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] < self.m.mpos_z(): z_dir = 1
+            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] > self.m.mpos_z(): z_dir = -1
             else: z_dir = 0
 
         else:
