@@ -1060,7 +1060,7 @@ class CalibrationTesting(Screen):
     def enable_run_buttons(self):
         self.x_load_button.disabled = False
         self.y_load_button.disabled = False
-        self.z_load_button.disabled = False
+        # self.z_load_button.disabled = False
         self.unweighted_test_button.disabled = False
         self.home_button.disabled = False
         self.x0y0_jog_button.disabled = False
@@ -1081,7 +1081,7 @@ class CalibrationTesting(Screen):
     def disable_run_buttons(self):
         self.x_load_button.disabled = True
         self.y_load_button.disabled = True
-        self.z_load_button.disabled = True
+        # self.z_load_button.disabled = True
         self.unweighted_test_button.disabled = True
         self.home_button.disabled = True
         self.x0y0_jog_button.disabled = True
