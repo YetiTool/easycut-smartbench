@@ -1076,11 +1076,11 @@ class SerialConnection(object):
 
                     try:
                         Clock.schedule_once(
-                            partial(self.sm.get_screen('go').x_load_gauge.set_value, self.sg_x_motor_axis / 10))
+                            partial(self.sm.get_screen('go').x_load_gauge.set_value, self.sg_x_motor_axis))
                         Clock.schedule_once(
-                            partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis / 10))
+                            partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis))
                         Clock.schedule_once(
-                            partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis / 10))
+                            partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis))
                     except:
                         pass
 
