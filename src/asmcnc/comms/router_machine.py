@@ -2514,15 +2514,26 @@ class RouterMachine(object):
 
         self.calibration_upload_in_progress = True
         self.calibration_upload_fail_info = ''
-        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Z)
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 1)
 
     def upload_Y_calibration_settings_from_motor_classes(self):
         self.calibration_upload_in_progress = True
         self.calibration_upload_fail_info = ''
-        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 0.5)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Y1)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Y2)
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 2)
 
 
     time_to_check_for_upload_prep = 0
+
+
+    def set_sgt_and_toff_calibrated_at_settings(self, motor_index):
+
+        display_text = "SET CALIBRATED AT FOR MOTOR " + str(motor_index) + ", "
+        self.send_command_to_motor(display_text + "SGT", motor = motor_index, command = SET_SGT, value = self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
+        self.send_command_to_motor(display_text + "TOFF", motor = motor_index, command = SET_TOFF, value = self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
+
 
     def initialise_calibration_upload(self, axis):
 
@@ -2615,7 +2626,12 @@ class RouterMachine(object):
 
     def output_uploaded_coefficients(self):
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
-        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
+        Clock.schedule_once(lambda dt: self.output_registers_to_check(), 2)
+
+
+    def output_registers_to_check(self):
+        self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
+        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 2)
 
 
     def complete_calibration_upload(self):
@@ -2629,13 +2645,6 @@ class RouterMachine(object):
 
         else: 
             Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
-
-
-    def set_sgt_and_toff_calibrated_at_settings(self, motor_index):
-
-        display_text = "SET CALIBRATED AT FOR MOTOR " + str(motor_index) + ", "
-        self.send_command_to_motor(display_text + "SGT", motor = motor_index, command = SET_SGT, value = self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
-        self.send_command_to_motor(display_text + "TOFF", motor = motor_index, command = SET_TOFF, value = self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
 
 
 
