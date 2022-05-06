@@ -151,7 +151,7 @@ class LoadGauge(Widget):
 
         width = ((self.outer_box.width / self.max_value) * value) / 2
 
-        if value >= self.max_value:
+        if value > self.max_value:
             width = ((self.outer_box.width / self.max_value) * self.max_value)
 
         self.add_value_to_stack(width)
