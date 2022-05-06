@@ -2531,8 +2531,10 @@ class RouterMachine(object):
     def set_sgt_and_toff_calibrated_at_settings(self, motor_index):
 
         display_text = "SET CALIBRATED AT FOR MOTOR " + str(motor_index) + ", "
-        self.send_command_to_motor(display_text + "SGT", motor = motor_index, command = SET_SGT, value = self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting)
-        self.send_command_to_motor(display_text + "TOFF", motor = motor_index, command = SET_TOFF, value = self.TMC_motor[int(motor_index)].calibrated_at_toff_setting)
+        sgt_val = self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting
+        toff_val = self.TMC_motor[int(motor_index)].calibrated_at_toff_setting
+        self.send_command_to_motor(display_text + "SGT " + str(sgt_val), motor = motor_index, command = SET_SGT, value = sgt_val)
+        self.send_command_to_motor(display_text + "TOFF " + str(toff_val), motor = motor_index, command = SET_TOFF, value = toff_val)
 
 
     def initialise_calibration_upload(self, axis):
