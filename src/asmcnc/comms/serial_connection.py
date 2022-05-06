@@ -736,7 +736,7 @@ class SerialConnection(object):
     sg_y2_motor = None
 
     # FOR CALIBRATION TUNING
-    tuning_flag = False
+    record_sg_values_flag = False
 
     # SPINDLE STATISTICS
     spindle_serial_number = None
@@ -1032,7 +1032,7 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
-                    if self.tuning_flag:
+                    if self.record_sg_values_flag:
 
                         self.m.temp_sg_array.append([
                                                     self.sg_z_motor_axis,
