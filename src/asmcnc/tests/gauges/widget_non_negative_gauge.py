@@ -244,6 +244,6 @@ class PositiveLoadGauge(Widget):
         else:
             self.peak_value = peak_value
 
-    def peak_line_avg(self, peak_line_avg):
+    def set_peak_line_avg(self, peak_line_avg):
         self.peak_line_avg = peak_line_avg
 
