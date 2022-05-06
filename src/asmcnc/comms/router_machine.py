@@ -1771,6 +1771,9 @@ class RouterMachine(object):
     # CALIBRATION AND TUNNING PROCEDURES
     #####################################################################
 
+    # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE JUST X AND Z OR JUST Y ARE FOR FREE MOTORS IN SPACE
+    # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE ALL THREE AXIS ARE DOING IT ON AN ASSEMBLED MACHINE, WITH ENGAGED MOTORS
+
     # CALL THESE FROM MAIN APP
 
     calibration_tuning_fail_info = ''
@@ -1797,6 +1800,16 @@ class RouterMachine(object):
         log("Jog to check SG values")
         self.tuning_jog_forwards_fast(X = False, Y = True, Z = False)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
+
+    def tune_X_Y_Z_for_calibration(self):
+
+        self.tuning_in_progress = True
+        log("Tuning X Y and Z...")
+        self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.tuning_jog_forwards_fast(X = True, Y = True, Z = True)
+        self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = True, Z = True)
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False

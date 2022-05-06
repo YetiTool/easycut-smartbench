@@ -926,6 +926,7 @@ class OvernightTesting(Screen):
     poll_for_recalibration_completion = None
     poll_for_recalibration_check_completion = None
     poll_end_of_fully_calibrated_final_run = None
+    poll_for_tuning_completion = None
     start_six_hour_wear_in_event = None
     start_recalibration_event = None
     start_fully_calibrated_final_run_event = None
@@ -1395,6 +1396,7 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.poll_end_of_spiral)
         self._unschedule_event(self.start_last_rectangle)      
         self._unschedule_event(self.run_event_after_datum_set)  
+        self._unschedule_event(self.poll_for_tuning_completion)
 
         # also stop measurement running
         self.overnight_running = False
@@ -1529,8 +1531,30 @@ class OvernightTesting(Screen):
         self.stage = ""
         self.m.send_any_gcode_command('M3 S20000')
         self.stop_button.disabled = True
-        self.m.calibrate_X_Y_and_Z()
-        self.poll_for_recalibration_completion = Clock.schedule_interval(self.prepare_to_check_recalibration, 5)
+        self.do_tuning()
+
+
+    def do_tuning(self):
+        if not self.m.run_calibration and not self.m.tuning_in_progress:
+            self.m.tune_X_and_Z_for_calibration() # CHANGE ME
+            self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
+
+
+    def do_calibration(self):
+
+        if not self.m.tuning_in_progress:
+            Clock.unschedule(self.poll_for_tuning_completion)
+
+            if not self.m.calibration_tuning_fail_info:
+                self.m.calibrate_X_Y_and_Z()
+                self.poll_for_recalibration_completion = Clock.schedule_interval(self.prepare_to_check_recalibration, 5)
+
+            else:
+                # Tuning has failed, so no point running future tests
+                self.cancel_active_polls()
+                self.tick_checkbox(self.recalibration_checkbox, False)
+                self.buttons_disabled(False)
+
 
     def prepare_to_check_recalibration(self, dt):
 
