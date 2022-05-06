@@ -1536,7 +1536,7 @@ class OvernightTesting(Screen):
 
     def do_tuning(self):
         if not self.m.run_calibration and not self.m.tuning_in_progress:
-            self.m.tune_X_and_Z_for_calibration() # CHANGE ME
+            self.m.tune_X_Y_Z_for_calibration()
             self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
 
 

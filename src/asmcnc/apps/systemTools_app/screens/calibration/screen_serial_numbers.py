@@ -375,9 +375,12 @@ class UploadSerialNumbersScreen(Screen):
 
             self.error_label.text = "Uploading to ZH..."
 
-            Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1)
+            # Need slight delay between each command as FW needs time to do each command
+            Clock.schedule_once(lambda dt: self.m.set_sgt_and_toff_calibrated_at_settings(TMC_Y1), 1)
+            Clock.schedule_once(lambda dt: self.m.set_sgt_and_toff_calibrated_at_settings(TMC_Y2), 2)
+            Clock.schedule_once(lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 3)
 
-            self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 5)
+            self.poll_for_end_of_upload = Clock.schedule_interval(self.report_info_back_to_user_and_return, 10)
 
         except:
             self.error_label.text = "Could not get data"
