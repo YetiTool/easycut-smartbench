@@ -101,6 +101,10 @@ Builder.load_string("""
 """)
 
 
+def mean(values):
+    return float(sum(values) / max(len(values), 1))
+
+
 class PositiveLoadGauge(Widget):
     r = NumericProperty(0)
     g = NumericProperty(0)
@@ -121,6 +125,7 @@ class PositiveLoadGauge(Widget):
         self.inverse_boundaries = False
         self.peak_visibility = True
         self.unit = ''
+        self.peak_line_avg = False
 
         self.lower_bound = 15
         self.upper_bound = 15
@@ -174,9 +179,9 @@ class PositiveLoadGauge(Widget):
         if self.peak_visibility:
             self.add_value_to_stack(width)
 
-        self.value_label.text = str(value) + self.unit
+        self.value_label.text = str(value) + ' ' + self.unit
 
-        self.inner_box.width = width
+        self.inner_box.width = mean(self.value_stack)
 
         colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
                               lower_boundary=self.lower_bound)
@@ -232,4 +237,13 @@ class PositiveLoadGauge(Widget):
             self.value_stack.append(value)
 
         peak_value = max(self.value_stack, key=abs)
-        self.peak_value = peak_value
+        avg_value = mean(self.value_stack)
+
+        if self.peak_line_avg:
+            self.peak_value = avg_value
+        else:
+            self.peak_value = peak_value
+
+    def peak_line_avg(self, peak_line_avg):
+        self.peak_line_avg = peak_line_avg
+

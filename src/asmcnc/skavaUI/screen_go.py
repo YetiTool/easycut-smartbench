@@ -500,6 +500,7 @@ class GoScreen(Screen):
         self.spindle_temp_gauge.set_value(0, None)
         self.spindle_temp_gauge.set_title('Temperature')
         self.spindle_temp_gauge.set_unit('°C')
+        self.spindle_temp_gauge.peak_line_avg(True)
 
         self.gauge_container_spindle.add_widget(self.spindle_temp_gauge)
 

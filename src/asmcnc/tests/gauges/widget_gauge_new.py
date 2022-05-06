@@ -162,7 +162,7 @@ class LoadGauge(Widget):
 
         self.add_value_to_stack(width)
 
-        self.value_label.text = str(value) + self.unit
+        self.value_label.text = str(value) + ' ' + self.unit
 
         self.inner_box.width = width
 
