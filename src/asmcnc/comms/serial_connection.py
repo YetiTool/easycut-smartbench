@@ -944,7 +944,7 @@ class SerialConnection(object):
 
                         try:
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_load_gauge.set_value,
-                                                digital_spindle_ld_watts))
+                                                int(digital_spindle_ld_watts)))
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
                                                 self.digital_spindle_temperature))
                             Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge.set_value,

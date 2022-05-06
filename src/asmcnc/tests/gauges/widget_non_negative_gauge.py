@@ -118,11 +118,12 @@ class PositiveLoadGauge(Widget):
         self.bind(peak_value=self.redraw_peak)
 
         self.max_value = 100
-        self.warning_percentage = 0.5
-        self.error_percentage = 0.75
         self.inverse_boundaries = False
         self.peak_visibility = True
         self.unit = ''
+
+        self.lower_bound = 15
+        self.upper_bound = 15
 
         self.value_stack = []
 
@@ -154,9 +155,9 @@ class PositiveLoadGauge(Widget):
         self.wrapper.width = 150
         self.inner_box.height = height - (0.08 * height)
 
-    def set_boundaries(self, warning_percentage, error_percentage):
-        self.warning_percentage = warning_percentage
-        self.error_percentage = error_percentage
+    def set_boundaries(self, lower_bound, upper_bound):
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
 
     def set_value(self, value, dt=None):
         if value == -999 or value < 0:
@@ -177,7 +178,8 @@ class PositiveLoadGauge(Widget):
 
         self.inner_box.width = width
 
-        colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries)
+        colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
+                              lower_boundary=self.lower_bound)
 
         self.r = colour[0]
         self.g = colour[1]
