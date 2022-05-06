@@ -2758,10 +2758,10 @@ class RouterMachine(object):
                                 str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)) + ", " + \
                                 str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4))
 
-
-                    log("Max Y axis SG values: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)))
-                    log("Max Y1 SG values: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)))
-                    log("Max Y2 SG values: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)))
+                    log(self.checking_calibration_fail_info)
+                    log("Y axis: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)))
+                    log("Y1: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)))
+                    log("Y2: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)))
 
 
             if 'Z' in axes:

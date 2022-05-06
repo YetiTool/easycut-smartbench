@@ -56,7 +56,7 @@ class MotorCommandsTest(unittest.TestCase):
             status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
 
         else:
-            status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-999,-1,-99,-20,-2>"
+            status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-999,-16,-15,-20,-2>"
 
         return status
 
