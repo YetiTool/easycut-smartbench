@@ -532,9 +532,9 @@ class GoScreen(Screen):
     def reset_gauge_values(self):
         for gauge in self.gauges:
             if gauge.inverse_boundaries:
-                gauge.set_value(gauge.max_value)
-            else:
                 gauge.set_value(0)
+            else:
+                gauge.set_value(gauge.max_value)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 

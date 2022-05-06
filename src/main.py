@@ -289,7 +289,7 @@ class SkavaUI(App):
 		# 	Clock.schedule_interval(test_run_through_sequence, 3)
 
 		# Clock.schedule_once(start_loop, 10)
-		# sm.current = 'go'
+		sm.current = 'go'
 		return sm
 
 if __name__ == '__main__':
