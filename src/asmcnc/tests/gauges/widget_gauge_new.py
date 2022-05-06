@@ -20,16 +20,23 @@ Builder.load_string("""
         pos: self.parent.pos
         rows: 2
 
-        GridLayout:
-            size: self.parent.size
+        BoxLayout:
             cols: 2
 
             Label:
                 id: title_label
+                size_hint_x: 0.75
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
                 color: 0, 0, 0, 1
 
             Label:
                 id: value_label
+                size_hint_x: 0.25
+                text_size: self.size
+                halign: 'right'
+                valign: 'middle'
                 color: 0, 0, 0, 1
 
         BoxLayout:
