@@ -474,7 +474,7 @@ class GoScreen(Screen):
         self.spindle_load_gauge = PositiveLoadGauge(sm=self.sm, m=self.m)
         self.spindle_load_gauge.set_size(300, 50)
         self.spindle_load_gauge.set_max_value(1000)
-        self.spindle_load_gauge.set_boundaries(15, 15)
+        self.spindle_load_gauge.set_boundaries(30, 15)
         self.spindle_load_gauge.set_value(0, None)
         self.spindle_load_gauge.set_title('Load')
         self.spindle_load_gauge.set_unit('W')
@@ -512,7 +512,7 @@ class GoScreen(Screen):
         self.z_load_gauge.set_value(0, None)
         self.z_load_gauge.set_title('Z Load')
         self.z_load_gauge.set_unit('KG')
-        self.z_load_gauge.set_factor(10)
+        self.z_load_gauge.set_factor(5)
 
         self.gauge_container.add_widget(self.z_load_gauge)
 
