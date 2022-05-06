@@ -122,8 +122,12 @@ class PositiveLoadGauge(Widget):
         self.error_percentage = 0.75
         self.inverse_boundaries = False
         self.peak_visibility = True
+        self.unit = ''
 
         self.value_stack = []
+
+    def set_unit(self, unit):
+        self.unit = unit
 
     def redraw_peak(self, *args):
         peak_value = self.peak_value
@@ -169,7 +173,7 @@ class PositiveLoadGauge(Widget):
         if self.peak_visibility:
             self.add_value_to_stack(width)
 
-        self.value_label.text = str(value)
+        self.value_label.text = str(value) + self.unit
 
         self.inner_box.width = width
 

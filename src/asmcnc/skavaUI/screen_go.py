@@ -475,6 +475,7 @@ class GoScreen(Screen):
         self.spindle_load_gauge.set_boundaries(0.25, 0.625)
         self.spindle_load_gauge.set_value(0, None)
         self.spindle_load_gauge.set_title('Load')
+        self.spindle_load_gauge.set_unit('W')
 
         self.gauge_container_spindle.add_widget(self.spindle_load_gauge)
 
@@ -494,6 +495,7 @@ class GoScreen(Screen):
         self.spindle_temp_gauge.set_boundaries(0.25, 0.625)
         self.spindle_temp_gauge.set_value(0, None)
         self.spindle_temp_gauge.set_title('Temperature')
+        self.spindle_temp_gauge.set_unit('°C')
 
         self.gauge_container_spindle.add_widget(self.spindle_temp_gauge)
 
@@ -515,6 +517,7 @@ class GoScreen(Screen):
         self.spindle_killtime_gauge.set_title('Kill Time')
         self.spindle_killtime_gauge.set_peak_visibility(False)
         self.spindle_killtime_gauge.set_inverse_boundaries(True)
+        self.spindle_killtime_gauge.set_unit('s')
 
         self.gauge_container_spindle.add_widget(self.spindle_killtime_gauge)
 
@@ -528,7 +531,10 @@ class GoScreen(Screen):
 
     def reset_gauge_values(self):
         for gauge in self.gauges:
-            gauge.set_value(0)
+            if gauge.inverse_boundaries:
+                gauge.set_value(gauge.max_value)
+            else:
+                gauge.set_value(0)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 

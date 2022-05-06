@@ -103,9 +103,14 @@ class LoadGauge(Widget):
         self.max_value = 100
         self.warning_percentage = 0.5
         self.error_percentage = 0.75
+        self.inverse_boundaries = False
+        self.unit = ''
 
         # max of 10 values
         self.value_stack = []
+
+    def set_unit(self, unit):
+        self.unit = unit
 
     def redraw_peak(self, *args):
         peak_value = self.peak_value
@@ -144,7 +149,7 @@ class LoadGauge(Widget):
 
         self.add_value_to_stack(width)
 
-        self.value_label.text = str(value)
+        self.value_label.text = str(value) + self.unit
 
         self.inner_box.width = width
 
