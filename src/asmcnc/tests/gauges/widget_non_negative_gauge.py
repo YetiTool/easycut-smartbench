@@ -181,7 +181,10 @@ class PositiveLoadGauge(Widget):
 
         self.value_label.text = str(value) + ' ' + self.unit
 
-        self.inner_box.width = mean(self.value_stack)
+        if self.peak_line_avg:
+            self.inner_box.width = mean(self.value_stack)
+        else:
+            self.inner_box.width = width
 
         colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
                               lower_boundary=self.lower_bound)
