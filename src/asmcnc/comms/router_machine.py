@@ -2172,7 +2172,7 @@ class RouterMachine(object):
                         time.sleep(0.01)
 
                     # But don't measure the backwards fast jogs!
-                    elif self.feed_rate() > 303:
+                    elif self.feed_rate() > 430:
                         log('Feed rate too high, skipping')
                         self.s.record_sg_values_flag = False
                         self.temp_sg_array = []
