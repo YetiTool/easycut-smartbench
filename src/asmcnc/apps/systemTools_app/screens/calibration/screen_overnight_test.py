@@ -1540,7 +1540,7 @@ class OvernightTesting(Screen):
             self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
 
 
-    def do_calibration(self):
+    def do_calibration(self, dt):
 
         if not self.m.tuning_in_progress:
             Clock.unschedule(self.poll_for_tuning_completion)
