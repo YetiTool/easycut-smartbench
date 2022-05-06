@@ -79,6 +79,7 @@ from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
 
 # developer testing
 Cmport = 'COM3'
@@ -191,6 +192,7 @@ class SkavaUI(App):
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
+        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, localization = l)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -218,6 +220,7 @@ class SkavaUI(App):
         sm.add_widget(stop_or_resume_decision_screen)
         sm.add_widget(lift_z_on_pause_decision_screen)
         sm.add_widget(tool_selection_screen)
+        sm.add_widget(job_recovery_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 

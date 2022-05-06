@@ -207,9 +207,25 @@ Builder.load_string("""
                                             size: self.parent.width, self.parent.height
                                             allow_stretch: True
 
+                                Button:
+                                    size_hint_x: 1
+                                    background_color: hex('#F4433600')
+                                    on_press:
+                                        root.manager.current = 'job_recovery'
+                                    BoxLayout:
+                                        padding: 0
+                                        size: self.parent.size
+                                        pos: self.parent.pos
+                                        Image:
+                                            source: "./asmcnc/skavaUI/img/recover_job_disabled.png"
+                                            center_x: self.parent.center_x
+                                            y: self.parent.y
+                                            size: self.parent.width, self.parent.height
+                                            allow_stretch: True
+
                                 Label:
                                     id: file_data_label
-                                    size_hint_x: 4
+                                    size_hint_x: 5
                                     text_size: self.size
                                     font_size: '20sp'
                                     markup: True
