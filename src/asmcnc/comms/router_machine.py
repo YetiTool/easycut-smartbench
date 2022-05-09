@@ -1771,6 +1771,9 @@ class RouterMachine(object):
     # CALIBRATION AND TUNNING PROCEDURES
     #####################################################################
 
+    # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE JUST X AND Z OR JUST Y ARE FOR FREE MOTORS IN SPACE
+    # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE ALL THREE AXIS ARE DOING IT ON AN ASSEMBLED MACHINE, WITH ENGAGED MOTORS
+
     # CALL THESE FROM MAIN APP
 
     calibration_tuning_fail_info = ''
@@ -1797,6 +1800,16 @@ class RouterMachine(object):
         log("Jog to check SG values")
         self.tuning_jog_forwards_fast(X = False, Y = True, Z = False)
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
+
+    def tune_X_Y_Z_for_calibration(self):
+
+        self.tuning_in_progress = True
+        log("Tuning X Y and Z...")
+        self.prepare_for_tuning()
+        # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
+        self.tuning_jog_forwards_fast(X = True, Y = True, Z = True)
+        self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = True, Z = True)
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
@@ -1986,6 +1999,9 @@ class RouterMachine(object):
         if X and Z and not Y: 
             self.s.write_command('$J = G91 X2000 Z-200 F301.5')
 
+        elif X and Y and Z: 
+            self.s.write_command('$J = G91 X1290 Y1290 Z-129 F425.3')
+
         elif Y: 
             self.s.write_command('$J = G91 Y2000 F300')
 
@@ -2003,7 +2019,10 @@ class RouterMachine(object):
     def tuning_jog_back_fast(self, X=False, Y=False, Z=False):
 
         if X and Z and not Y: 
-            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z ' + str(self.z_max_jog_abs_limit) + ' F6029.9')
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F6029.9')
+
+        elif X and Y and Z: 
+            self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Y' + str(self.y_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F8518.3')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
@@ -2023,6 +2042,9 @@ class RouterMachine(object):
 
         if X and Z and not Y: 
             self.s.write_command('$J=G53 X-1192 Z-149 F6046')
+
+        elif X and Y and Z: 
+            self.s.write_command('$J = G91 X-1290 Y-1290 Z129 F8518.3')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
@@ -2150,7 +2172,7 @@ class RouterMachine(object):
                         time.sleep(0.01)
 
                     # But don't measure the backwards fast jogs!
-                    elif self.feed_rate() > 303:
+                    elif self.feed_rate() > 430:
                         log('Feed rate too high, skipping')
                         self.s.record_sg_values_flag = False
                         self.temp_sg_array = []
@@ -2492,15 +2514,28 @@ class RouterMachine(object):
 
         self.calibration_upload_in_progress = True
         self.calibration_upload_fail_info = ''
-        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 0.5)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Z)
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Z'), 1)
 
     def upload_Y_calibration_settings_from_motor_classes(self):
         self.calibration_upload_in_progress = True
         self.calibration_upload_fail_info = ''
-        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 0.5)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Y1)
+        self.set_sgt_and_toff_calibrated_at_settings(TMC_Y2)
+        Clock.schedule_once(lambda dt: self.initialise_calibration_upload('Y'), 2)
 
 
     time_to_check_for_upload_prep = 0
+
+
+    def set_sgt_and_toff_calibrated_at_settings(self, motor_index):
+
+        display_text = "SET CALIBRATED AT FOR MOTOR " + str(motor_index) + ", "
+        sgt_val = self.TMC_motor[int(motor_index)].calibrated_at_sgt_setting
+        toff_val = self.TMC_motor[int(motor_index)].calibrated_at_toff_setting
+        self.send_command_to_motor(display_text + "SGT " + str(sgt_val), motor = motor_index, command = SET_SGT, value = sgt_val)
+        self.send_command_to_motor(display_text + "TOFF " + str(toff_val), motor = motor_index, command = SET_TOFF, value = toff_val)
+
 
     def initialise_calibration_upload(self, axis):
 
@@ -2593,7 +2628,12 @@ class RouterMachine(object):
 
     def output_uploaded_coefficients(self):
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
-        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
+        Clock.schedule_once(lambda dt: self.output_registers_to_check(), 2)
+
+
+    def output_registers_to_check(self):
+        self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
+        Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 2)
 
 
     def complete_calibration_upload(self):
@@ -2607,7 +2647,6 @@ class RouterMachine(object):
 
         else: 
             Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
-
 
 
 
@@ -2705,7 +2744,8 @@ class RouterMachine(object):
 
             if 'X' in axes:
                 if not (self.cal_check_threshold_x_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1) < self.cal_check_threshold_x_max):
-                    self.checking_calibration_fail_info = "X SG values out of expected range"
+                    self.checking_calibration_fail_info = "X SG values out of expected range, max: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1))
+                    log(self.checking_calibration_fail_info)
 
             if 'Y' in axes:
 
@@ -2713,12 +2753,21 @@ class RouterMachine(object):
                     not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3) < self.cal_check_threshold_y_max) or
                     not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4) < self.cal_check_threshold_y_max)):
 
-                    self.checking_calibration_fail_info = "Y SG values out of expected range"
+                    self.checking_calibration_fail_info = "Y SG values out of expected range: " + \
+                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)) + ", " + \
+                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)) + ", " + \
+                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4))
+
+                    log(self.checking_calibration_fail_info)
+                    log("Y axis: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)))
+                    log("Y1: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)))
+                    log("Y2: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)))
 
 
             if 'Z' in axes:
                 if not (self.cal_check_threshold_z_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0) < self.cal_check_threshold_z_max):
-                    self.checking_calibration_fail_info = "Z SG values out of expected range"
+                    self.checking_calibration_fail_info = "Z SG values out of expected range, max: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0))
+                    log(self.checking_calibration_fail_info)
 
         except:
             if not self.checking_calibration_fail_info: self.checking_calibration_fail_info = "Unexpected error"
