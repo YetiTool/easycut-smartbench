@@ -53,24 +53,6 @@ Builder.load_string("""
     x_wear_in_checkbox : x_wear_in_checkbox
     z_wear_in_checkbox : z_wear_in_checkbox
 
-    y_recalibration_peak_pos : y_recalibration_peak_pos
-    y1_recalibration_peak_pos : y1_recalibration_peak_pos
-    y2_recalibration_peak_pos : y2_recalibration_peak_pos
-    x_recalibration_peak_pos : x_recalibration_peak_pos
-    z_recalibration_peak_pos : z_recalibration_peak_pos
-
-    y_recalibration_peak_neg : y_recalibration_peak_neg
-    y1_recalibration_peak_neg : y1_recalibration_peak_neg
-    y2_recalibration_peak_neg : y2_recalibration_peak_neg
-    x_recalibration_peak_neg : x_recalibration_peak_neg
-    z_recalibration_peak_neg : z_recalibration_peak_neg
-
-    y_recalibration_checkbox : y_recalibration_checkbox
-    y1_recalibration_checkbox : y1_recalibration_checkbox
-    y2_recalibration_checkbox : y2_recalibration_checkbox
-    x_recalibration_checkbox : x_recalibration_checkbox
-    z_recalibration_checkbox : z_recalibration_checkbox
-
     y_fully_calibrated_peak_pos : y_fully_calibrated_peak_pos
     y1_fully_calibrated_peak_pos : y1_fully_calibrated_peak_pos
     y2_fully_calibrated_peak_pos : y2_fully_calibrated_peak_pos
@@ -491,203 +473,10 @@ Builder.load_string("""
 
                     ## RECALIBRATION PEAKS
 
-                    GridLayout:
-                        cols: 5
-                        rows: 5
-                        size_hint_y: 0.5
-                        spacing: [5,0]
+                    # Placeholding
+                    BoxLayout:
+                        orientation: 'vertical'
 
-                        Label:
-                            text: 'Y+:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y_recalibration_peak_pos
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            text: 'Y-:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y_recalibration_peak_neg
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Image:
-                            id: y_recalibration_checkbox
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
-
-                        Label:
-                            text: 'Y1+:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y1_recalibration_peak_pos
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            text: 'Y1-:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y1_recalibration_peak_neg
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Image:
-                            id: y1_recalibration_checkbox
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
-
-                        Label:
-                            text: 'Y2+:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y2_recalibration_peak_pos
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            text: 'Y2-:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: y2_recalibration_peak_neg
-                            text: 'yyy'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Image:
-                            id: y2_recalibration_checkbox
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
-                        Label:
-                            text: 'X+:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: x_recalibration_peak_pos
-                            text: 'xxx'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            text: 'X-:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: x_recalibration_peak_neg
-                            text: 'xxx'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Image:
-                            id: x_recalibration_checkbox
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
-                        Label:
-                            text: 'Z-:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: z_recalibration_peak_neg
-                            text: 'zzz'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            text: 'Z+:  '
-                            halign: 'right'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Label:
-                            id: z_recalibration_peak_pos
-                            text: 'zzz'
-                            halign: 'left'
-                            markup: True
-                            valign: 'middle'
-                            text_size: self.size
-
-                        Image:
-                            id: z_recalibration_checkbox
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
 
                     ## FULLY CALIBRATED PEAKS
 
@@ -916,7 +705,7 @@ class OvernightTesting(Screen):
     # "WeightedFT"
     # "OvernightWearIn"
     # "CalibrationOT"
-    # "CalibrationCheckOT"
+    # "CalibrationCheckOT" (obsolete, but still a DB stage)
     # "FullyCalibratedTest"
 
 
@@ -999,7 +788,6 @@ class OvernightTesting(Screen):
         self.status_data_dict = {
 
             "OvernightWearIn" : [],
-            "CalibrationCheckOT" : [],
             "FullyCalibratedTest" : []
 
         }
@@ -1007,12 +795,11 @@ class OvernightTesting(Screen):
         self.statistics_data_dict = {
 
             "OvernightWearIn" : [],
-            "CalibrationCheckOT" : [],
             "FullyCalibratedTest" : []
 
         }
 
-        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("CalibrationOT")
+        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("OvernightWearIn")
 
 
     # Set up and clear/reset arrays for storing SG/measurement data
@@ -1179,21 +966,6 @@ class OvernightTesting(Screen):
             self.get_peak_as_string(self.z_wear_in_peak_neg, self.raw_z_neg_vals)
             return
 
-        if self.stage == "CalibrationCheckOT":
-
-            self.get_peak_as_string(self.x_recalibration_peak_pos, self.raw_x_pos_vals)
-            self.get_peak_as_string(self.y_recalibration_peak_pos, self.raw_y_pos_vals)
-            self.get_peak_as_string(self.y1_recalibration_peak_pos, self.raw_y1_pos_vals)
-            self.get_peak_as_string(self.y2_recalibration_peak_pos, self.raw_y2_pos_vals)
-            self.get_peak_as_string(self.z_recalibration_peak_pos, self.raw_z_pos_vals)
-
-            self.get_peak_as_string(self.x_recalibration_peak_neg, self.raw_x_neg_vals)
-            self.get_peak_as_string(self.y_recalibration_peak_neg, self.raw_y_neg_vals)
-            self.get_peak_as_string(self.y1_recalibration_peak_neg, self.raw_y1_neg_vals)
-            self.get_peak_as_string(self.y2_recalibration_peak_neg, self.raw_y2_neg_vals)
-            self.get_peak_as_string(self.z_recalibration_peak_neg, self.raw_z_neg_vals)
-            return 
-
         if self.stage == "FullyCalibratedTest":
 
             self.get_peak_as_string(self.x_fully_calibrated_peak_pos, self.raw_x_pos_vals)
@@ -1233,21 +1005,6 @@ class OvernightTesting(Screen):
             self.z_wear_in_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return
 
-        if self.stage == "CalibrationCheckOT":
-
-            self.x_recalibration_min_pos = self.get_min_peak(self.raw_x_pos_vals)
-            self.y_recalibration_min_pos = self.get_min_peak(self.raw_y_pos_vals)
-            self.y1_recalibration_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
-            self.y2_recalibration_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
-            self.z_recalibration_min_pos = self.get_min_peak(self.raw_z_pos_vals)
-
-            self.x_recalibration_min_neg = self.get_min_peak(self.raw_x_neg_vals)
-            self.y_recalibration_min_neg = self.get_min_peak(self.raw_y_neg_vals)
-            self.y1_recalibration_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
-            self.y2_recalibration_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
-            self.z_recalibration_min_neg = self.get_min_peak(self.raw_z_neg_vals)
-            return 
-
         if self.stage == "FullyCalibratedTest":
 
             self.x_fully_calibrated_min_pos = self.get_min_peak(self.raw_x_pos_vals)
@@ -1286,23 +1043,6 @@ class OvernightTesting(Screen):
                         int(self.y2_wear_in_peak_neg.text),
                         int(self.z_wear_in_peak_neg.text),
                         int(self.z_wear_in_peak_pos.text)
-            ]
-
-            return peak_list
-
-        if stage == "CalibrationCheckOT":
-
-            peak_list = [
-                        int(self.x_recalibration_peak_pos.text),
-                        int(self.x_recalibration_peak_neg.text),
-                        int(self.y_recalibration_peak_pos.text),
-                        int(self.y_recalibration_peak_neg.text),
-                        int(self.y1_recalibration_peak_pos.text),
-                        int(self.y1_recalibration_peak_neg.text),
-                        int(self.y2_recalibration_peak_pos.text),
-                        int(self.y2_recalibration_peak_neg.text),
-                        int(self.z_recalibration_peak_neg.text),
-                        int(self.z_recalibration_peak_pos.text)
             ]
 
             return peak_list
@@ -1513,11 +1253,6 @@ class OvernightTesting(Screen):
 
         self.buttons_disabled(True)
         self.reset_checkbox(self.recalibration_checkbox)
-        self.reset_checkbox(self.y_recalibration_checkbox)
-        self.reset_checkbox(self.y1_recalibration_checkbox)
-        self.reset_checkbox(self.y2_recalibration_checkbox)
-        self.reset_checkbox(self.x_recalibration_checkbox)
-        self.reset_checkbox(self.z_recalibration_checkbox)
         self.reset_checkbox(self.sent_recalibration_data)
 
         if self._not_ready_to_stream():
@@ -1547,7 +1282,7 @@ class OvernightTesting(Screen):
 
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_X_Y_and_Z()
-                self.poll_for_recalibration_completion = Clock.schedule_interval(self.prepare_to_check_recalibration, 5)
+                self.poll_for_recalibration_completion = Clock.schedule_interval(self.post_recalibration, 5)
 
             else:
                 # Tuning has failed, so no point running future tests
@@ -1556,59 +1291,22 @@ class OvernightTesting(Screen):
                 self.buttons_disabled(False)
 
 
-    def prepare_to_check_recalibration(self, dt):
+    def post_recalibration(self, dt):
 
         if self.m.run_calibration:
             return
 
-        if self._not_ready_to_stream():
-            return
-
-        Clock.unschedule(self.poll_for_recalibration_completion)
-        self.stop_button.disabled = False
-
-        if not self.m.calibration_tuning_fail_info:
-            self.start_calibration_check_event = Clock.schedule_once(self.do_calibration_check, 10)
-
-        else:
-
-            # Calibration has failed, so no point running future tests
-            self.cancel_active_polls()
-            self.tick_checkbox(self.recalibration_checkbox, False)
-            self.buttons_disabled(False)
-
-    def do_calibration_check(self, dt):
-
-        log("Recalibration complete, starting to stream files to check ranges...")
-
-        # set up arrays and stages
-        self.setup_arrays()
-        self.set_stage("CalibrationCheckOT")
-        self.overnight_running = True
-
-        # start check
-        self.m.check_x_y_z_calibration()
-        self.poll_for_recalibration_check_completion = Clock.schedule_interval(self.post_recalibration_check, 5)
-
-
-    def post_recalibration_check(self, dt):
-
-        if self.m.checking_calibration_in_progress:
-            return
-
-        if self.poll_for_recalibration_check_completion != None: Clock.unschedule(self.poll_for_recalibration_check_completion)
+        if self.poll_for_recalibration_completion != None: Clock.unschedule(self.poll_for_recalibration_completion)
         self.overnight_running = False
         self.m.send_any_gcode_command('M5')
 
-        if not self.m.checking_calibration_fail_info:
+        if not self.m.calibration_tuning_fail_info:
 
-            self.pass_or_fail_peak_loads()
             self.tick_checkbox(self.recalibration_checkbox, True)
-            self.get_statistics()
             self.send_recalibration_data()
             self.setup_arrays()
 
-            log("Recalibration check complete...")
+            log("Recalibration complete...")
 
         else: 
             self.tick_checkbox(self.recalibration_checkbox, False)
@@ -1616,7 +1314,7 @@ class OvernightTesting(Screen):
             self.cancel_active_polls()
             self.buttons_disabled(False)
 
-            log("Recalibration check did not complete, cancelling further tests")
+            log("Recalibration did not complete, cancelling further tests")
 
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
@@ -1788,8 +1486,7 @@ class OvernightTesting(Screen):
 
 
     def send_recalibration_data(self):
-        if self.send_all_calibration_coefficients():
-            self._has_data_been_sent("CalibrationCheckOT", self.sent_recalibration_data)
+        self.send_all_calibration_coefficients()
 
 
     def send_fully_calibrated_final_run_data(self):
@@ -1916,25 +1613,6 @@ class OvernightTesting(Screen):
              )
             return
 
-        if self.stage == "CalibrationCheckOT":
-
-            self.tick_checkbox(self.y_recalibration_checkbox, \
-                self.check_in_range(self.y_recalibration_peak_pos, self.y_recalibration_peak_neg, self.y_recalibration_min_pos, self.y_recalibration_min_neg, 150)
-                )
-            self.tick_checkbox(self.y1_recalibration_checkbox, \
-                self.check_in_range(self.y1_recalibration_peak_pos, self.y1_recalibration_peak_neg, self.y1_recalibration_min_pos, self.y1_recalibration_min_neg, 500)
-                )
-            self.tick_checkbox(self.y2_recalibration_checkbox, \
-                self.check_in_range(self.y2_recalibration_peak_pos, self.y2_recalibration_peak_neg, self.y2_recalibration_min_pos, self.y2_recalibration_min_neg, 500)
-                )
-            self.tick_checkbox(self.x_recalibration_checkbox, \
-                self.check_in_range(self.x_recalibration_peak_pos, self.x_recalibration_peak_neg, self.x_recalibration_min_pos, self.x_recalibration_min_neg, 200)
-                )
-            self.tick_checkbox(self.z_recalibration_checkbox, \
-                self.check_in_range(self.z_recalibration_peak_pos, self.z_recalibration_peak_neg, self.z_recalibration_min_pos, self.z_recalibration_min_neg, 100)
-                )
-            return
-
         if self.stage == "FullyCalibratedTest":
 
             within_plus_minus = 100
@@ -1952,7 +1630,7 @@ class OvernightTesting(Screen):
                 self.check_in_range(self.x_fully_calibrated_peak_pos, self.x_fully_calibrated_peak_neg, self.x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,  200)
                 )
             self.tick_checkbox(self.z_fully_calibrated_checkbox, \
-                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  100)
+                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  150)
                 )
             return
 
