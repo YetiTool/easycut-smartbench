@@ -2655,14 +2655,14 @@ class RouterMachine(object):
     checking_calibration_in_progress = False
     checking_calibration_fail_info = ''
 
-    cal_check_threshold_x_min = -101
-    cal_check_threshold_x_max = 101
+    cal_check_threshold_x_min = -201
+    cal_check_threshold_x_max = 201
 
-    cal_check_threshold_y_min = -101
-    cal_check_threshold_y_max = 101
+    cal_check_threshold_y_min = -201
+    cal_check_threshold_y_max = 201
 
-    cal_check_threshold_z_min = -101
-    cal_check_threshold_z_max = 101
+    cal_check_threshold_z_min = -201
+    cal_check_threshold_z_max = 201
 
     poll_end_of_calibration_check = None
 
@@ -2674,7 +2674,6 @@ class RouterMachine(object):
     def check_x_z_calibration(self):
 
         self.checking_calibration_in_progress = True
-        self.cal_check_threshold_z_max = 151
         self.stream_calibration_check_files(['X', 'Z'])
 
     def check_y_calibration(self):
@@ -2684,14 +2683,14 @@ class RouterMachine(object):
 
 
     def reset_cal_check_pass_thresholds(self):
-        self.cal_check_threshold_x_min = -101
-        self.cal_check_threshold_x_max = 101
+        self.cal_check_threshold_x_min = -201
+        self.cal_check_threshold_x_max = 201
 
-        self.cal_check_threshold_y_min = -101
-        self.cal_check_threshold_y_max = 101
+        self.cal_check_threshold_y_min = -201
+        self.cal_check_threshold_y_max = 201
 
-        self.cal_check_threshold_z_min = -101
-        self.cal_check_threshold_z_max = 101
+        self.cal_check_threshold_z_min = -201
+        self.cal_check_threshold_z_max = 201
 
 
     def stream_calibration_check_files(self, axes):
