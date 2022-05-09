@@ -1845,7 +1845,7 @@ class OvernightTesting(Screen):
                 self.check_in_range(self.x_fully_calibrated_peak_pos, self.x_fully_calibrated_peak_neg, self.x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,  200)
                 )
             self.tick_checkbox(self.z_fully_calibrated_checkbox, \
-                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  100)
+                self.check_in_range(self.z_fully_calibrated_peak_pos, self.z_fully_calibrated_peak_neg, self.z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,  150)
                 )
             return
 
