@@ -1904,13 +1904,13 @@ class RouterMachine(object):
         log("Pos y: " + self.y_pos_str())
         log("Pos z: " + self.z_pos_str())
 
-
         self.s.write_command('$20=0')
 
         # Enable raw SG reporting: command REPORT_RAW_SG
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
-
         self.reset_tuning_flags()
+
+        sleep(0.5) # Is the report raw SG setting messing with jogs? Does putting in a delay fix things? 
 
         # Zero position
         log("Zero position")
