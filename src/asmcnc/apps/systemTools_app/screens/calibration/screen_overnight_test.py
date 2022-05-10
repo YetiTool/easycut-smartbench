@@ -1246,8 +1246,8 @@ class OvernightTesting(Screen):
 
             if self.poll_for_recalibration_stage != None: Clock.unschedule(self.poll_for_recalibration_stage)
             log("Start recalibration...")
-            self.jog_absolute_xy(self.x_min_jog_abs_limit + 2, self.y_min_jog_abs_limit + 2, 6000)
-            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit - 2, 750)
+            self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 2, self.m.y_min_jog_abs_limit + 2, 6000)
+            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 2, 750)
             self.start_recalibration()
 
 
