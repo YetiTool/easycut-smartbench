@@ -1900,11 +1900,14 @@ class RouterMachine(object):
         log("Prepare for tuning")
         self.calibration_tuning_fail_info = ''
 
+        log("Pos x: " + self.x_pos_str())
+        log("Pos y: " + self.y_pos_str())
+        log("Pos z: " + self.z_pos_str())
+
         self.s.write_command('$20=0')
 
         # Enable raw SG reporting: command REPORT_RAW_SG
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
-
         self.reset_tuning_flags()
 
         # Zero position
@@ -2355,10 +2358,6 @@ class RouterMachine(object):
         self.calibration_tuning_fail_info = ''
 
         self.s.write_command('$20=0')
-
-        # self.s.write_command('$J=G53 X0 F6000')
-        # self.s.write_command('$J=G53 Y0 F6000')
-        # self.s.write_command('$J=G53 Z0 F750')
 
         log("Zero position")
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
