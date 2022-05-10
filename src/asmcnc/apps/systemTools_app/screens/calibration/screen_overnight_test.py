@@ -724,6 +724,7 @@ class OvernightTesting(Screen):
     poll_end_of_spiral = None
     start_last_rectangle = None
     run_event_after_datum_set = None
+    start_tuning_event = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -1246,8 +1247,6 @@ class OvernightTesting(Screen):
 
             if self.poll_for_recalibration_stage != None: Clock.unschedule(self.poll_for_recalibration_stage)
             log("Start recalibration...")
-            self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 2, self.m.y_min_jog_abs_limit + 2, 6000)
-            self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 2, 750)
             self.start_recalibration()
 
 
@@ -1267,11 +1266,18 @@ class OvernightTesting(Screen):
         self.overnight_running = False
         self.stage = ""
         self.m.send_any_gcode_command('M3 S20000')
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 2, self.m.y_min_jog_abs_limit + 2, 6000)
+        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 2, 750)
         self.stop_button.disabled = True
-        self.do_tuning()
+        self.start_tuning_event = Clock.schedule_once(self.do_tuning, 2)
 
 
-    def do_tuning(self):
+    def do_tuning(self, dt):
+
+        if self._not_ready_to_stream():
+            self.start_tuning_event = Clock.schedule_once(self.do_tuning, 2)
+            return
+
         if not self.m.run_calibration and not self.m.tuning_in_progress:
             self.m.tune_X_Y_Z_for_calibration()
             self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
