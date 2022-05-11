@@ -6,9 +6,10 @@ from asmcnc.skavaUI import widget_z_move_recovery
 Builder.load_string("""
 <JobRecoveryScreen>:
     status_container:status_container
-    gcode_container:gcode_container
-    pos_container:pos_container
     z_move_container:z_move_container
+
+    gcode_label:gcode_label
+    pos_label:pos_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -58,9 +59,33 @@ Builder.load_string("""
                             padding: [dp(50), dp(0)]
                             spacing: dp(10)
 
-                            Button
+                            Button:
+                                background_color: [0,0,0,0]
+                                on_press: root.scroll_up()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/skavaUI/img/arrow_up.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
 
-                            Button
+                            Button:
+                                background_color: [0,0,0,0]
+                                on_press: root.scroll_down()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/skavaUI/img/arrow_down.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
 
                     Button
 
@@ -73,8 +98,8 @@ Builder.load_string("""
                     spacing: dp(15)
 
                     BoxLayout:
-                        id: gcode_container
                         size_hint_y: 3.5
+                        padding: [dp(12), dp(0)]
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -82,14 +107,34 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
+                        Label:
+                            id: gcode_label
+                            color: 0,0,0,1
+                            font_size: dp(16)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+
+                            canvas.before:
+                                Color:
+                                    rgba: hex('#A7D5FAFF')
+                                Rectangle:
+                                    size: self.parent.size[0], dp(20)
+                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(10)
+
+
                     BoxLayout:
-                        id: pos_container
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
+
+                        Label:
+                            id: pos_label
 
             BoxLayout:
                 orientation: 'vertical'
@@ -97,7 +142,7 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing: dp(15)
+                    spacing: dp(25)
 
                     Button
 
@@ -132,6 +177,19 @@ Builder.load_string("""
                                 pos: self.pos
 
                     Button
+                        # background_color: [0,0,0,0]
+                        # background_color: hex('#F4433600')
+                        # on_press: root.next_screen()
+                        # BoxLayout:
+                        #     padding: 0
+                        #     size: self.parent.size
+                        #     pos: self.parent.pos
+                        #     Image:
+                        #         source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
+                        #         center_x: self.parent.center_x
+                        #         y: self.parent.y
+                        #         size: self.parent.width, self.parent.height
+                        #         allow_stretch: True    
 
         # GREEN STATUS BAR
 
@@ -142,11 +200,17 @@ Builder.load_string("""
 """)
 
 class JobRecoveryScreen(Screen):
+
+    selected_line_index = 0
+    max_index = 0
+    display_list = []
+
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
+        self.jd = kwargs['job']
         self.l = kwargs['localization']
 
         # Green status bar
@@ -154,6 +218,22 @@ class JobRecoveryScreen(Screen):
 
         # Z move widget
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
+
+    def on_pre_enter(self):
+        self.selected_line_index = 0
+        self.max_index = len(self.jd.job_gcode) - 1
+        self.display_list = ["" for _ in range (7)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (7)]
+        self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+
+    def scroll_up(self):
+        if self.selected_line_index > 0:
+            self.selected_line_index -= 1
+            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+
+    def scroll_down(self):
+        if self.selected_line_index < self.max_index:
+            self.selected_line_index += 1
+            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
 
     def back_to_home(self):
         self.sm.current = 'home'
