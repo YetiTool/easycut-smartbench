@@ -99,7 +99,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         size_hint_y: 3.5
-                        padding: [dp(12), dp(0)]
+                        padding: [dp(12), dp(12), dp(12), dp(0)]
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -112,7 +112,7 @@ Builder.load_string("""
                             color: 0,0,0,1
                             font_size: dp(16)
                             halign: "left"
-                            valign: "middle"
+                            valign: "top"
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
@@ -122,7 +122,7 @@ Builder.load_string("""
                                     rgba: hex('#A7D5FAFF')
                                 Rectangle:
                                     size: self.parent.size[0], dp(20)
-                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(10)
+                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(5)
 
 
                     BoxLayout:
