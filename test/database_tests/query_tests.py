@@ -56,11 +56,13 @@ class SQLQueryTests(unittest.TestCase):
     # # def test_setup_z_head_coefficients(self):
     # #     self.db.setup_z_head_coefficients('zh2222', 4, 4)
 
-    # # def test_setup_lower_beam_coefficients(self):
-    # #     self.db.setup_lower_beam_coefficients('xl2222', 2, 1)
+    def test_setup_lower_beam_coefficients(self):
+        self.db.setup_lower_beam_coefficients('xl2222', 2, 1)
+        self.db.setup_lower_beam_coefficients('xl2222', 3, 1)
 
-    # def test_insert_calibration_coefficients(self):
-    #     self.db.insert_calibration_coefficients('xl2222', 2, 1, self.coefficients)
+    def test_insert_calibration_coefficients(self):
+        self.db.insert_calibration_coefficients('xl2222', 2, 1, self.coefficients)
+        self.db.insert_calibration_coefficients('xl2222', 3, 1, self.coefficients)
 
     # # # FETCH COEFFICIENTS TEST
 
@@ -99,12 +101,12 @@ class SQLQueryTests(unittest.TestCase):
 
     # # # Statuses
 
-    def test_insert_final_test_statuses(self):
-                      # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
-        status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
-        # more_statuses = [status_list, status_list, status_list]
-        more_statuses = [status_list]
-        self.db.insert_final_test_statuses(more_statuses)
+    # def test_insert_final_test_statuses(self):
+    #                   # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
+    #     status_list = (622225, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
+    #     # more_statuses = [status_list, status_list, status_list]
+    #     more_statuses = [status_list]
+    #     self.db.insert_final_test_statuses(more_statuses)
 
 
 if __name__ == "__main__":
