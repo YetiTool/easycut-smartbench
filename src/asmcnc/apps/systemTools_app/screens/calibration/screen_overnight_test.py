@@ -800,7 +800,7 @@ class OvernightTesting(Screen):
 
         }
 
-        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("OvernightWearIn")
+        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description("CalibrationOT")
 
 
     # Set up and clear/reset arrays for storing SG/measurement data
@@ -1494,7 +1494,8 @@ class OvernightTesting(Screen):
 
 
     def send_recalibration_data(self):
-        self.send_all_calibration_coefficients()
+        if self.send_all_calibration_coefficients(): self.tick_checkbox(self.sent_recalibration_data, True)
+        else: self.tick_checkbox(self.sent_recalibration_data, False)
 
 
     def send_fully_calibrated_final_run_data(self):
@@ -1539,7 +1540,6 @@ class OvernightTesting(Screen):
         except: 
             log("Failed to send calibration coefficients to DB!!")
             print(traceback.format_exc())
-            self.tick_checkbox(self.sent_recalibration_data, False)
             return False
 
 
