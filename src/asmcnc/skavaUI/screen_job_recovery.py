@@ -11,6 +11,8 @@ Builder.load_string("""
     gcode_label:gcode_label
     pos_label:pos_label
 
+    line_input:line_input
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -46,12 +48,22 @@ Builder.load_string("""
                                 markup: True
 
                             BoxLayout:
+                                padding: dp(5)
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
+
+                                TextInput:
+                                    id: line_input
+                                    font_size: dp(25)
+                                    halign: 'center'
+                                    input_filter: 'int'
+                                    multiline: False
+                                    background_color: (0,0,0,0)
+                                    hint_text: "Enter #"
 
                         BoxLayout:
                             orientation: 'vertical'
@@ -213,6 +225,8 @@ class JobRecoveryScreen(Screen):
         self.jd = kwargs['job']
         self.l = kwargs['localization']
 
+        self.line_input.bind(text = self.jump_to_line)
+
         # Green status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
@@ -220,6 +234,7 @@ class JobRecoveryScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
 
     def on_pre_enter(self):
+        self.line_input.text = ""
         self.selected_line_index = 0
         self.max_index = len(self.jd.job_gcode) - 1
         self.display_list = ["" for _ in range (7)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (7)]
@@ -234,6 +249,16 @@ class JobRecoveryScreen(Screen):
         if self.selected_line_index < self.max_index:
             self.selected_line_index += 1
             self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+
+    def jump_to_line(self, instance, value):
+        if value:
+            if value == "-":
+                # Stop user inputting negative values
+                instance.text = ""
+            else:
+                # If user inputs values outside of range, just show max line
+                self.selected_line_index = min(int(value), self.max_index)
+                self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
 
     def back_to_home(self):
         self.sm.current = 'home'
