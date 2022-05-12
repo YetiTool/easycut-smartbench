@@ -188,20 +188,25 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
-                    Button
-                        # background_color: [0,0,0,0]
-                        # background_color: hex('#F4433600')
-                        # on_press: root.next_screen()
-                        # BoxLayout:
-                        #     padding: 0
-                        #     size: self.parent.size
-                        #     pos: self.parent.pos
-                        #     Image:
-                        #         source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
-                        #         center_x: self.parent.center_x
-                        #         y: self.parent.y
-                        #         size: self.parent.width, self.parent.height
-                        #         allow_stretch: True    
+                    BoxLayout:
+
+                        padding: [(self.size[0] - dp(88)) / 2, (self.size[1] - dp(67)) / 2]
+
+                        Button:
+                            background_color: [0,0,0,0]
+                            on_press: root.next_screen()
+                            size_hint: (None, None)
+                            height: dp(67)
+                            width: dp(88)
+                            BoxLayout:
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
 
         # GREEN STATUS BAR
 
@@ -262,3 +267,6 @@ class JobRecoveryScreen(Screen):
 
     def back_to_home(self):
         self.sm.current = 'home'
+
+    def next_screen(self):
+        self.sm.current = 'nudge'
