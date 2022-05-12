@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import widget_z_move_recovery
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <JobRecoveryScreen>:
@@ -156,13 +157,25 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     spacing: dp(25)
 
-                    Button
+                    BoxLayout:
+                        padding: [dp(15), dp(15), dp(0), dp(15)]
+                        Button:
+                            background_color: [0,0,0,0]
+                            on_press: root.get_info()
+                            BoxLayout:
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True   
 
                     Button:
                         background_color: [0,0,0,0]
                         on_press: root.back_to_home()
                         BoxLayout:
-                            padding: 0
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -264,6 +277,12 @@ class JobRecoveryScreen(Screen):
                 # If user inputs values outside of range, just show max line
                 self.selected_line_index = min(int(value), self.max_index)
                 self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+
+    def get_info(self):
+
+        info = "This is the job recovery screen."
+
+        popup_info.PopupInfo(self.sm, self.l, 700, info)   
 
     def back_to_home(self):
         self.sm.current = 'home'
