@@ -100,7 +100,16 @@ Builder.load_string("""
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
 
-                    Button
+                    Button:
+                        valign: "middle"
+                        halign: "center"
+                        markup: True
+                        font_size: dp(30)
+                        text_size: self.size
+                        text: "GO XY"
+                        background_normal: "./asmcnc/skavaUI/img/blank_small_button.png"
+                        background_down: "./asmcnc/skavaUI/img/blank_small_button.png"
+                        on_press: root.go_xy()
 
             BoxLayout:
                 size_hint_x: 2
@@ -252,6 +261,9 @@ class JobRecoveryScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
 
     def on_pre_enter(self):
+        # Change this to get x and y based by scraping file in the future
+        self.x, self.y = 0, 0
+
         self.line_input.text = ""
         self.selected_line_index = 0
         self.max_index = len(self.jd.job_gcode) - 1
@@ -283,6 +295,9 @@ class JobRecoveryScreen(Screen):
         info = "This is the job recovery screen."
 
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
+
+    def go_xy(self):
+        self.m.jog_absolute_xy(self.x, self.y, 8000)
 
     def back_to_home(self):
         self.sm.current = 'home'
