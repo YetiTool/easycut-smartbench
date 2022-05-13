@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
-import traceback, glob, os
+import traceback, glob, os, re
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -167,7 +167,7 @@ class ZHeadWarrantyChoice(Screen):
 
         if self.usb.is_available():
             try:
-                self.fw_on_usb = str(glob.glob("/media/usb/GRBL*.hex")[0])
+                self.fw_on_usb = re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]).split("GRBL."))[1]
                 print(self.fw_on_usb)
                 self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
             except:
