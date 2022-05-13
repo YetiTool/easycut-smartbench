@@ -155,13 +155,12 @@ class ZHeadWarrantyChoice(Screen):
         if not self.usb.stick_enabled:
             self.usb.enable()
 
-        print(self.usb.is_available())
-
         if self.usb.is_available():
+            print(os.path.exists("/media/usb/GRBL*.hex"))
             if os.path.exists("/media/usb/GRBL*.hex"):
                 self.fw_on_usb = str(glob.glob("/media/usb/GRBL*.hex")[0])
                 print(self.fw_on_usb)
                 self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
-                return
+            return
 
         Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file(), 1)
