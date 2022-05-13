@@ -239,12 +239,12 @@ Builder.load_string("""
                         halign: 'left'
                         valign: 'middle'
                     Button: 
-                        text: 'Up'
-                        on_press: root.z_motor_up()
-                        on_release: root.quit_jog()
-                    Button: 
                         text: 'Down'
                         on_press: root.z_motor_down()
+                        on_release: root.quit_jog()
+                    Button: 
+                        text: 'Up'
+                        on_press: root.z_motor_up()
                         on_release: root.quit_jog()
                 GridLayout:
                     cols: 2
