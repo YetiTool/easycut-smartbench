@@ -81,10 +81,12 @@ class ZHeadQCHome(Screen):
         self.m = kwargs['m']
         self.usb = kwargs['usb']
 
-    def enter_qc(self):
-        self.sm.current = 'qc1'
+    def on_enter(self):
         self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
         self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+
+    def enter_qc(self):
+        self.sm.current = 'qc1'
 
     def test_fw_update(self):
 
