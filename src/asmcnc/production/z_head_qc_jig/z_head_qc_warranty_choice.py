@@ -167,7 +167,7 @@ class ZHeadWarrantyChoice(Screen):
 
         if self.usb.is_available():
             try:
-                self.fw_on_usb = re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]).split("GRBL."))[1]
+                self.fw_on_usb = re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
                 print(self.fw_on_usb)
                 self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
             except:
