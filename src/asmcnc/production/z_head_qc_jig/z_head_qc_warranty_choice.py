@@ -7,6 +7,9 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 <ZHeadWarrantyChoice>:
+
+    fw_version_label : fw_version_label
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -29,6 +32,7 @@ Builder.load_string("""
                     font_size: dp(30)
 
                 Label: 
+                    id: fw_version_label
                     text: 'Detecting FW version...'
                     color: 1,1,1,1
                     text_size: self.size
