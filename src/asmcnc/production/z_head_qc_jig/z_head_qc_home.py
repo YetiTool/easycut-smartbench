@@ -119,12 +119,6 @@ class ZHeadQCHome(Screen):
 
         def connect():
             self.m.starting_serial_connection = True
-            # Have to delete these screens manually, as they are created again upon serial comms startup, causing errors
-            self.sm.remove_widget(self.sm.get_screen('alarm_1'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_2'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_3'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_4'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_5'))
             Clock.schedule_once(do_connection, 0.1)
 
         def do_connection(dt):
