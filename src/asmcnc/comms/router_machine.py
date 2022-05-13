@@ -168,14 +168,15 @@ class RouterMachine(object):
         if self.s.is_connected():
             self.s.s.close()
 
-        # Have to delete these screens manually, as they are created again upon serial comms startup, causing errors
-        self.sm.remove_widget(self.sm.get_screen('alarm_1'))
-        self.sm.remove_widget(self.sm.get_screen('alarm_2'))
-        self.sm.remove_widget(self.sm.get_screen('alarm_3'))
-        self.sm.remove_widget(self.sm.get_screen('alarm_4'))
-        self.sm.remove_widget(self.sm.get_screen('alarm_5'))
+        # # Have to delete these screens manually, as they are created again upon serial comms startup, causing errors
+        # self.sm.remove_widget(self.sm.get_screen('alarm_1'))
+        # self.sm.remove_widget(self.sm.get_screen('alarm_2'))
+        # self.sm.remove_widget(self.sm.get_screen('alarm_3'))
+        # self.sm.remove_widget(self.sm.get_screen('alarm_4'))
+        # self.sm.remove_widget(self.sm.get_screen('alarm_5'))
 
-        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
+        # I don't think this needs to be remade each time
+        # self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(self.win_serial_port)
 
     def close_serial_connection(self, dt):
