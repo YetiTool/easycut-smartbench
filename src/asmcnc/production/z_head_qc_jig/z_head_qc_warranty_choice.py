@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
+import traceback
 
 
 Builder.load_string("""
@@ -77,6 +78,8 @@ class ZHeadWarrantyChoice(Screen):
     after_label = "Made AFTER April 2021\n\nFW version v1.3.6 or above"
     before_label = "Made BEFORE April 2021\n\nFW version v1.1.2 or below"
 
+    poll_for_fw = None
+
 
     def __init__(self, **kwargs):
         super(ZHeadWarrantyChoice, self).__init__(**kwargs)
@@ -93,7 +96,8 @@ class ZHeadWarrantyChoice(Screen):
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
         
         except:
-            pass
+            print("could not detect fw/update label")
+            print(traceback.format_ex())
 
     def after_apr21(self):
         self.sm.current = 'qcW136'
