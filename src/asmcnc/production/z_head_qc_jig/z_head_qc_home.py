@@ -81,20 +81,6 @@ class ZHeadQCHome(Screen):
     def enter_qc(self):
         self.sm.current = 'qc1'
 
-    def load_usb_stick_with_hex_file(self):
-
-        if not self.usb.stick_enabled:
-            self.usb.enable()
-
-        if self.usb.is_available():
-            if os.path.exists("/media/usb/GRBL*.hex"):
-                print("GRBL file found on USB, start update...")
-                self.test_fw_update()
-                return
-
-        Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file, 1)
-
-
     def test_fw_update(self):
 
         self.test_fw_update_button.text = "  Updating..."
