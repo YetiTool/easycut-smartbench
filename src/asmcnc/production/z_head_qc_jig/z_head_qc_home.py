@@ -47,6 +47,8 @@ Builder.load_string("""
                     text: 'NO - Update FW now! (For v1.3)'
                     font_size: dp(20)
                     on_press: root.test_fw_update()
+                    markup: True
+                    halign: "center"
 
                 Button:
                     text: 'YES - Take me to QC! (For v1.3)'

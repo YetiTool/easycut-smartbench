@@ -89,6 +89,8 @@ Builder.load_string("""
                     text: 'FW on USB: vx.x.x'
                     font_size: dp(20)
                     on_press: root.toggle_usb_mounted()
+                    markup: True
+                    halign: "center"
 
         BoxLayout:
             size_hint_y: 0.08
