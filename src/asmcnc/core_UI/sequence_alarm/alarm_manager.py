@@ -44,6 +44,8 @@ class AlarmSequenceManager(object):
 	report_setup_event = None
 
 	db = None
+
+	sg_alarm = False
 	
 	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
@@ -87,17 +89,24 @@ class AlarmSequenceManager(object):
 					self.return_to_screen = self.sm.current
 
 
-				self.alarm_code = message
-				self.alarm_description = ALARM_CODES_DICT.get(message, "")
-				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-					self.sm.get_screen('alarm_1').description_label.text = (
-						self.l.get_str(self.alarm_description) + \
-						"\n" + \
-						self.l.get_str("Getting details...")
-						)
-				else:
-					self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
+				if not self.sg_alarm:
+
+					self.alarm_code = message
+					self.alarm_description = ALARM_CODES_DICT.get(message, "")
+					if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+						self.sm.get_screen('alarm_1').description_label.text = (
+							self.l.get_str(self.alarm_description) + \
+							"\n" + \
+							self.l.get_str("Getting details...")
+							)
+					else:
+						self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
+
+				else: 
+					self.sm.get_screen('alarm_1').description_label.text = "Stall guard triggered!!"
+
 				self.determine_screen_sequence()
+				self.sg_alarm = False
 				self.sm.current = 'alarm_1'
 
 		except:
@@ -117,7 +126,11 @@ class AlarmSequenceManager(object):
 
 
 	def determine_screen_sequence(self):
-		if ((self.alarm_code).endswith('4') or (self.alarm_code).endswith('5') or (self.alarm_code).endswith('6') or (self.alarm_code).endswith('7')):
+		if ((self.alarm_code).endswith('4') or \
+			(self.alarm_code).endswith('5') or \
+			(self.alarm_code).endswith('6') or \
+			(self.alarm_code).endswith('7') or \
+			self.sg_alarm):
 			self.support_sequence = False
 		else:
 			self.support_sequence = True

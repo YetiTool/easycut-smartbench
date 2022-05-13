@@ -1160,6 +1160,8 @@ class SerialConnection(object):
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
 
+        elif message.startswith('SGALARM:'):
+            self.alarm.sg_alarm = True
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)

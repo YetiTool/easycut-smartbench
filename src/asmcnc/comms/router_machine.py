@@ -965,6 +965,7 @@ class RouterMachine(object):
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
         Clock.schedule_once(lambda dt: self.tmc_handshake(), 3)
 
+        # TEMP!!!
         Clock.schedule_once(lambda dt: self.set_sg_threshold(), 5)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
@@ -987,7 +988,7 @@ class RouterMachine(object):
 
     def set_sg_threshold(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
-            self.send_command_to_motor("SET SG ALARM THRESHOLD", command=SET_SG_ALARM_TRSHLD, value=20)
+            self.send_command_to_motor("SET SG ALARM THRESHOLD", command=SET_SG_ALARM_TRSHLD, value=250)
 
 # CRITICAL START/STOP
 
