@@ -142,13 +142,21 @@ class ZHeadWarrantyChoice(Screen):
     def toggle_connection_to_z_head(self):
 
         if self.connection_button.state == 'normal': 
-            self.connection_button.text = "Disconnect Z Head"
+            self.connection_button.text = "Reconnecting..."
             Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection(), 0.2)
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 1)
 
         else: 
             self.connection_button.text = "Reconnect Z Head"
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.2)
+
+
+        def try_start_services(dt):
+            if self.m.s.is_connected():
+                Clock.unschedule(self.poll_for_reconnection)
+                Clock.schedule_once(self.m.s.start_services, 1)
+                self.connection_button.text = "Disconnect Z Head"
 
 
     def toggle_usb_mounted(self):
@@ -168,7 +176,6 @@ class ZHeadWarrantyChoice(Screen):
         if self.usb.is_available():
             try:
                 self.fw_on_usb = re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
-                print(self.fw_on_usb)
                 self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
             except:
                 print(traceback.format_exc())
@@ -176,3 +183,4 @@ class ZHeadWarrantyChoice(Screen):
             return
 
         Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file(), 1)
+
