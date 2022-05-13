@@ -152,7 +152,7 @@ class ZHeadWarrantyChoice(Screen):
             Clock.schedule_once(self.m.close_serial_connection, 0.2)
 
 
-    def try_start_services(dt):
+    def try_start_services(self, dt):
         if self.m.s.is_connected():
             Clock.unschedule(self.poll_for_reconnection)
             Clock.schedule_once(self.m.s.start_services, 1)
