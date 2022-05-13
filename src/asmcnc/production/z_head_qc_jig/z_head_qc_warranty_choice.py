@@ -144,7 +144,7 @@ class ZHeadWarrantyChoice(Screen):
         if self.connection_button.state == 'normal': 
             self.connection_button.text = "Reconnecting..."
             Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection(), 0.2)
-            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 1)
+            self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 1)
 
         else: 
             self.connection_button.text = "Reconnect Z Head"
@@ -152,11 +152,11 @@ class ZHeadWarrantyChoice(Screen):
             Clock.schedule_once(self.m.close_serial_connection, 0.2)
 
 
-        def try_start_services(dt):
-            if self.m.s.is_connected():
-                Clock.unschedule(self.poll_for_reconnection)
-                Clock.schedule_once(self.m.s.start_services, 1)
-                self.connection_button.text = "Disconnect Z Head"
+    def try_start_services(dt):
+        if self.m.s.is_connected():
+            Clock.unschedule(self.poll_for_reconnection)
+            Clock.schedule_once(self.m.s.start_services, 1)
+            self.connection_button.text = "Disconnect Z Head"
 
 
     def toggle_usb_mounted(self):
