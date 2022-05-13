@@ -78,7 +78,7 @@ Builder.load_string("""
 
                 ToggleButton: 
                     id: connection_button
-                    text: 'Disconnect'
+                    text: "Disconnect Z Head"
                     font_size: dp(20)
                     on_press: root.toggle_connection_to_z_head()
 
@@ -131,13 +131,13 @@ class ZHeadWarrantyChoice(Screen):
     def toggle_connection_to_z_head(self):
 
         if self.connection_button.state == 'normal': 
+            self.connection_button.text = "Disconnect Z Head"
+            Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection, 0.2)
+
+        else: 
             self.connection_button.text = "Reconnect Z Head"
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.2)
-
-        else: 
-            self.connection_button.text = "Disconnect Z Head"
-            Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection, 0.2)
 
 
     def toggle_usb_mounted(self):
