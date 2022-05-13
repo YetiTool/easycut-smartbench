@@ -84,8 +84,13 @@ class ZHeadQCHome(Screen):
         self.usb = kwargs['usb']
 
     def on_enter(self):
-        self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
-        self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+        try: 
+            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
+            self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+
+        except: 
+            self.test_fw_update_button.text = "Looking for USB"
+            self.usb.enable()
 
     def enter_qc(self):
         self.sm.current = 'qc1'
