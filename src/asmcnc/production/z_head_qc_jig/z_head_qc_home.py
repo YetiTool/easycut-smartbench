@@ -71,6 +71,9 @@ Builder.load_string("""
 
 
 class ZHeadQCHome(Screen):
+
+    fw_button_string = 'NO - Update FW now! (For v1.3)'
+
     def __init__(self, **kwargs):
         super(ZHeadQCHome, self).__init__(**kwargs)
 
@@ -80,6 +83,8 @@ class ZHeadQCHome(Screen):
 
     def enter_qc(self):
         self.sm.current = 'qc1'
+        self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
+        self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
 
     def test_fw_update(self):
 
