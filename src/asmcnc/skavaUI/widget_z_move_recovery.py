@@ -8,6 +8,7 @@ Builder.load_string("""
     speed_toggle:speed_toggle
     speed_image:speed_image
     jogModeButtonImage:jogModeButtonImage
+    up_button:up_button
 
     BoxLayout:
 
@@ -59,6 +60,7 @@ Builder.load_string("""
             orientation: "vertical"
 
             Button:
+                id: up_button
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -100,18 +102,17 @@ Builder.load_string("""
                         allow_stretch: True
 
     FloatLayout:
-
         Label:
-            x: 750
-            y: 340
+            x: up_button.pos[0] + up_button.size[0] * 0.75
+            y: up_button.pos[1] + up_button.size[1] * 0.75
             size_hint: None, None
-            height: 30
-            width: 30
+            height: dp(30)
+            width: dp(30)
             text: 'Z'
             markup: True
             bold: True
-            color: 0,0,0,1
-            font_size: 20
+            color: hex('#333333ff')
+            font_size: dp(20)
 
 """)
     
