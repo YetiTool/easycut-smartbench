@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 import traceback, glob, os
 
-
+from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
 <ZHeadWarrantyChoice>:
@@ -89,6 +89,11 @@ Builder.load_string("""
                     font_size: dp(20)
                     on_press: root.toggle_usb_mounted()
 
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container 
+            pos: self.pos
+
 """)
 
 
@@ -106,6 +111,10 @@ class ZHeadWarrantyChoice(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.usb = kwargs['usb']
+
+        # Status bar
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self):
         self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 0.2)
