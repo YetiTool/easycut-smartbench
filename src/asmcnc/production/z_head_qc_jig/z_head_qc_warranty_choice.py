@@ -133,11 +133,12 @@ class ZHeadWarrantyChoice(Screen):
         if self.connection_button.state == 'normal': 
             self.connection_button.text = "Reconnect Z Head"
             self.m.s.grbl_scanner_running = False
-            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            Clock.schedule_once(self.m.close_serial_connection, 0.2)
 
         else: 
             self.connection_button.text = "Disconnect Z Head"
-            self.m.reconnect_serial_connection()
+            Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection, 0.2)
+
 
     def toggle_usb_mounted(self):
 
