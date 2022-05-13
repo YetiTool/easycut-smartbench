@@ -3,8 +3,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
-import traceback
-import glob
+import traceback, glob, os
+
 
 
 Builder.load_string("""
