@@ -4,12 +4,15 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.clock import Clock
 import traceback
+import glob
 
 
 Builder.load_string("""
 <ZHeadWarrantyChoice>:
 
     fw_version_label : fw_version_label
+    connection_button : connection_button
+    usb_change_button : usb_change_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -65,10 +68,26 @@ Builder.load_string("""
                     valign: 'middle'
                     on_press: root.before_apr21()
 
-            Button: 
-                text: '<<< Back'
-                font_size: dp(20)
-                on_press: root.back_to_home()
+            BoxLayout: 
+                orientation: 'horizontal'
+
+                Button: 
+                    text: '<<< Back'
+                    font_size: dp(20)
+                    on_press: root.back_to_home()
+
+                ToggleButton: 
+                    id: connection_button
+                    text: 'Disconnect'
+                    font_size: dp(20)
+                    on_press: root.toggle_connection_to_z_head()
+
+
+                ToggleButton:
+                    id: usb_change_button
+                    text: 'FW on USB: vx.x.x'
+                    font_size: dp(20)
+                    on_press: root.toggle_usb_mounted()
 
 """)
 
@@ -86,9 +105,10 @@ class ZHeadWarrantyChoice(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.usb = kwargs['usb']
 
     def on_enter(self):
-        self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
+        self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 0.2)
 
     def scrape_fw_version(self, dt):
         try:
@@ -107,3 +127,36 @@ class ZHeadWarrantyChoice(Screen):
 
     def back_to_home(self):
         self.sm.current = 'qchome'
+
+    def toggle_connection_to_z_head(self):
+
+        if self.connection_button.state == 'normal': 
+            self.connection_button.text = "Reconnect Z Head"
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+
+        else: 
+            self.connection_button.text = "Disconnect Z Head"
+            self.m.reconnect_serial_connection()
+
+    def toggle_usb_mounted(self):
+
+        if self.usb_change_button.state == 'normal':
+            self.load_usb_stick_with_hex_file() 
+
+        else: 
+            self.usb_change_button.text = "No USB\n\nReconnect?"
+            self.usb.disable()
+
+    def load_usb_stick_with_hex_file(self):
+
+        if not self.usb.stick_enabled:
+            self.usb.enable()
+
+        if self.usb.is_available():
+            if os.path.exists("/media/usb/GRBL*.hex"):
+                self.fw_on_usb = str(glob.glob("/media/usb/GRBL*.hex")[0])
+                self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
+                return
+
+        Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file, 1)
