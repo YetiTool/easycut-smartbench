@@ -13,6 +13,7 @@ Builder.load_string("""
     fw_version_label : fw_version_label
     connection_button : connection_button
     usb_change_button : usb_change_button
+    status_container : status_container
 
     BoxLayout:
         orientation: 'vertical'
