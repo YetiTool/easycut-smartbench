@@ -85,12 +85,16 @@ class ZHeadQCHome(Screen):
 
     def on_enter(self):
         try: 
-            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
-            self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+            self.update_usb_button_label()
 
         except: 
             self.test_fw_update_button.text = "Looking for USB"
             self.usb.enable()
+            Clock.schedule_once(lambda dt: self.update_usb_button_label(), 2)
+
+    def update_usb_button_label(self):
+        self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
+        self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
 
     def enter_qc(self):
         self.sm.current = 'qc1'
