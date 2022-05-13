@@ -211,7 +211,7 @@ Builder.load_string("""
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
-                                        root.manager.current = 'job_recovery'
+                                        root.manager.current = 'recovery_decision'
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
