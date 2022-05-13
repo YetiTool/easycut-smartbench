@@ -8,7 +8,7 @@ from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 import subprocess
 
-import sys, os
+import sys, os, re
 
 try: 
     import pigpio
