@@ -109,6 +109,7 @@ class ZHeadWarrantyChoice(Screen):
 
     def on_enter(self):
         self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 0.2)
+        self.load_usb_stick_with_hex_file() 
 
     def scrape_fw_version(self, dt):
         try:
