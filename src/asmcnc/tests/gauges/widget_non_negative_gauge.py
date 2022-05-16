@@ -76,7 +76,7 @@ Builder.load_string("""
 
                 canvas:
                     Color:
-                        hsv: root.h, 1, 1
+                        hsv: root.h, root.s, root.l
                         a: 1
 
                     Rectangle:
@@ -103,8 +103,8 @@ def mean(values):
 
 class PositiveLoadGauge(Widget):
     h = NumericProperty(0)
-    s = NumericProperty(0)
-    l = NumericProperty(0)
+    s = NumericProperty(1)
+    l = NumericProperty(1)
 
     peak_value = NumericProperty(0)
 
@@ -186,6 +186,8 @@ class PositiveLoadGauge(Widget):
                               lower_boundary=self.lower_bound)
 
         self.h = colour[0]
+        self.s = colour[1]
+        self.l = colour[2]
 
     def animate_width(self, el, width):
         self.inner_box.width = width

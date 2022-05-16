@@ -109,8 +109,8 @@ Builder.load_string("""
 
 class LoadGauge(Widget):
     h = NumericProperty(0)
-    s = NumericProperty(0)
-    l = NumericProperty(0)
+    s = NumericProperty(1)
+    l = NumericProperty(1)
 
     peak_value = NumericProperty(0)
 
@@ -124,8 +124,8 @@ class LoadGauge(Widget):
         self.bind(peak_value=self.redraw_peak)
 
         self.max_value = 100
-        self.warning_percentage = 0.5
-        self.error_percentage = 0.75
+        self.lower_bound = 15
+        self.upper_bound = 15
         self.inverse_boundaries = False
         self.unit = ''
         self.factor = 1
@@ -182,10 +182,12 @@ class LoadGauge(Widget):
 
         self.inner_box.width = width
 
-        colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
+        colour = get_gradient(abs(value), self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
                               lower_boundary=self.lower_bound)
 
         self.h = colour[0]
+        self.s = colour[1]
+        self.l = colour[2]
 
     def redraw(self, *args):
         with self.inner_box.canvas:
