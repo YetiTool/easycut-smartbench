@@ -10,10 +10,10 @@ def get_hsl_by_percentage(percentage):
 
 def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
     if abs(float(value) / float(max_value)) * 100 < lower_boundary:
-        return (1, 0, 0, 1) if inverse else (0, 1, 0, 1)
+        return (120 / 360, 1, 1) if inverse else (0, 1, 1)
 
     if abs(float(value) / float(max_value)) * 100 > 100 - upper_boundary:
-        return (0, 1, 0, 1) if inverse else (1, 0, 1, 1)
+        return (0, 1, 1) if inverse else (120 / 360, 1, 1)
 
     # logic behind gradient?
     percentage = float(value) / float(max_value) 
