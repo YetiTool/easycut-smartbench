@@ -5,6 +5,21 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
+def get_hsl_by_percentage(percentage):
+    return (120 * (1 - percentage)) / 360, 1, 1
+
+def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
+    if abs(float(value) / float(max_value)) * 100 < lower_boundary:
+        return (0, 1, 1) if inverse else (120 / 360, 1, 1)
+
+    if abs(float(value) / float(max_value)) * 100 > 100 - upper_boundary:
+        return (120 / 360, 1, 1) if inverse else (0, 1, 1)
+
+    # logic behind gradient?
+    percentage = float(value) / float(max_value) 
+
+    return get_hsl_by_percentage(percentage)
+
 Builder.load_string("""
 <LoadGauge>:
     wrapper:wrapper
@@ -60,7 +75,8 @@ Builder.load_string("""
 
                 canvas:
                     Color:
-                        rgba: root.r, root.g, root.b, 1
+                        hsv: root.h, root.s, root.l
+                        a: 1
 
                     Rectangle:
                         pos: [self.parent.center_x, self.parent.center_y - (0.5 * self.height)]
@@ -92,9 +108,9 @@ Builder.load_string("""
 
 
 class LoadGauge(Widget):
-    r = NumericProperty(0)
-    g = NumericProperty(0)
-    b = NumericProperty(0)
+    h = NumericProperty(0)
+    s = NumericProperty(0)
+    l = NumericProperty(0)
 
     peak_value = NumericProperty(0)
 
@@ -104,7 +120,7 @@ class LoadGauge(Widget):
     def __init__(self, **kwargs):
         super(LoadGauge, self).__init__(**kwargs)
 
-        self.bind(r=self.redraw)
+        self.bind(h=self.redraw)
         self.bind(peak_value=self.redraw_peak)
 
         self.max_value = 100
@@ -181,7 +197,7 @@ class LoadGauge(Widget):
 
     def redraw(self, *args):
         with self.inner_box.canvas:
-            Color(self.r, self.g, self.b, 1)
+            Color(self.h, self.s, self.l, 1)
 
     def add_value_to_stack(self, value):
         if len(self.value_stack) == 10:
