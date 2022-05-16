@@ -40,7 +40,7 @@ Builder.load_string("""
 
             Label:
                 id: title_label
-                size_hint_x: 0.65
+                size_hint_x: 0.6
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
@@ -48,7 +48,7 @@ Builder.load_string("""
 
             Label:
                 id: value_label
-                size_hint_x: 0.35
+                size_hint_x: 0.4
                 text_size: self.size
                 halign: 'right'
                 valign: 'middle'
