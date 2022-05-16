@@ -76,7 +76,8 @@ Builder.load_string("""
 
                 canvas:
                     Color:
-                        hsv: root.h, root.s, root.l
+                        hsv: root.h, 1, 1
+                        a: 1
 
                     Rectangle:
                         pos: [self.pos[0] + 2, self.parent.center_y - (0.5 * self.height)]
