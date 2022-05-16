@@ -182,18 +182,10 @@ class LoadGauge(Widget):
 
         self.inner_box.width = width
 
-        if abs(float(value) / float(self.max_value)) > self.error_percentage:
-            self.r = 1
-            self.g = 0
-            self.b = 0
-        elif abs(float(value) / float(self.max_value)) > self.warning_percentage:
-            self.r = 1
-            self.g = 1
-            self.b = 0
-        else:
-            self.r = 0
-            self.g = 1
-            self.b = 0
+        colour = get_gradient(value, self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
+                              lower_boundary=self.lower_bound)
+
+        self.h = colour[0]
 
     def redraw(self, *args):
         with self.inner_box.canvas:
