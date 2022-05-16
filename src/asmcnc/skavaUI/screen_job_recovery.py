@@ -12,6 +12,7 @@ Builder.load_string("""
     gcode_label:gcode_label
     pos_label:pos_label
     speed_label:speed_label
+    stopped_on_label:stopped_on_label
 
     line_input:line_input
 
@@ -121,6 +122,7 @@ Builder.load_string("""
                     spacing: dp(15)
 
                     BoxLayout:
+                        orientation: 'vertical'
                         size_hint_y: 3.5
                         padding: [dp(12), dp(12), dp(12), dp(0)]
                         canvas:
@@ -139,14 +141,25 @@ Builder.load_string("""
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
+                            markup: True
 
                             canvas.before:
                                 Color:
                                     rgba: hex('#A7D5FAFF')
                                 Rectangle:
                                     size: self.parent.size[0], dp(20)
-                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(5)
+                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(3)
 
+                        Label:
+                            id: stopped_on_label
+                            size_hint_y: 0.13
+                            color: 1,0,0,1
+                            font_size: dp(16)
+                            halign: "left"
+                            valign: "top"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -290,25 +303,65 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         # Change this to get x and y based by scraping file in the future
-        self.x, self.y = 0, 0
+        self.pos_x, self.pos_y = 0, 0
         self.pos_label.text = "wX: 0.000 | wY: 0.000 | wZ: 0.000"
         self.speed_label.text = "F: 0 | S: 0"
 
+        self.m.jog_absolute_single_axis('Z', -10, 750)
         self.line_input.text = ""
         self.selected_line_index = 0
         self.max_index = len(self.jd.job_gcode) - 1
-        self.display_list = ["" for _ in range (7)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (7)]
-        self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+        self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (6)]
+
+        # For video demonstration
+        if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+            self.selected_line_index = 4578
+            self.pos_x, self.pos_y, self.pos_z = 376.324, 289.638, 11.000
+            self.feed, self.speed = 3000.0, 20000
+            self.update_pos_speed_info()
+            self.stopped_on_label.text = "Job stopped on line " + str(self.selected_line_index)
+            self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
+            self.pos_speed_info_dict = {4568:[370.986, 245.593, 11.500, 3000.0, 20000],
+                                   4569:[359.464, 245.593, 11.500, 3000.0, 20000],
+                                   4570:[359.464, 245.593, 11.000, 750.0, 20000],
+                                   4571:[359.464, 218.000, 11.000, 3000.0, 20000],
+                                   4572:[342.701, 218.000, 11.000, 3000.0, 20000],
+                                   4573:[342.701, 290.000, 11.000, 3000.0, 20000],
+                                   4574:[370.393, 290.000, 11.000, 3000.0, 20000],
+                                   4575:[371.936, 289.977, 11.000, 3000.0, 20000],
+                                   4576:[373.439, 289.910, 11.000, 3000.0, 20000],
+                                   4577:[374.902, 289.797, 11.000, 3000.0, 20000],
+                                   4578:[376.324, 289.638, 11.000, 3000.0, 20000]
+            }
+        self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+
+    def update_pos_speed_info(self):
+        self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (str(self.pos_x), str(self.pos_y), str(self.pos_z))
+        self.speed_label.text = "F: %s | S: %s" % (str(self.feed), str(self.speed))
 
     def scroll_up(self):
         if self.selected_line_index > 0:
             self.selected_line_index -= 1
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+
+            # For video demonstration
+            if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+                info = self.pos_speed_info_dict.get(self.selected_line_index)
+                if info:
+                    self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = info
+                    self.update_pos_speed_info()
 
     def scroll_down(self):
         if self.selected_line_index < self.max_index:
             self.selected_line_index += 1
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+
+            # For video demonstration
+            if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+                info = self.pos_speed_info_dict.get(self.selected_line_index)
+                if info:
+                    self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = info
+                    self.update_pos_speed_info()
 
     def jump_to_line(self, instance, value):
         if value:
@@ -318,7 +371,14 @@ class JobRecoveryScreen(Screen):
             else:
                 # If user inputs values outside of range, just show max line
                 self.selected_line_index = min(int(value), self.max_index)
-                self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 15])
+                self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+
+                # For video demonstration
+                if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+                    info = self.pos_speed_info_dict.get(self.selected_line_index)
+                    if info:
+                        self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = info
+                        self.update_pos_speed_info()
 
     def get_info(self):
 
@@ -327,7 +387,7 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
 
     def go_xy(self):
-        self.m.jog_absolute_xy(self.x, self.y, 8000)
+        self.m.jog_absolute_xy(self.pos_x, self.pos_y, 8000)
 
     def back_to_home(self):
         self.sm.current = 'home'

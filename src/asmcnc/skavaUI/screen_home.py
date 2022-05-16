@@ -335,6 +335,13 @@ class HomeScreen(Screen):
             except:
                 log('Unable to preview file')
 
+            # For video demonstration
+            if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+                if self.sm.get_screen('job_recovery').selected_line_index == 4568:
+                    self.file_data_label.text += "\n[color=FF0000]From line 4568[/color]"
+                else:
+                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
+
     def on_pre_enter(self):
 
         if self.jd.job_gcode == []:
