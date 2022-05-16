@@ -6,7 +6,7 @@ from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
 def get_hsl_by_percentage(percentage):
-    return 120 * ((100 - percentage) / 100), 100, 50, 1
+    return (120 * ((100 - percentage) / 100)) / 360, 1, 0.5
 
 
 def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
@@ -77,7 +77,7 @@ Builder.load_string("""
 
                 canvas:
                     Color:
-                        hsv: root.h, root.s, root.l, 1
+                        hsv: root.h, root.s, root.l
 
                     Rectangle:
                         pos: [self.pos[0] + 2, self.parent.center_y - (0.5 * self.height)]
