@@ -62,7 +62,7 @@ Builder.load_string("""
 
             canvas:
                 Color:
-                    rgba: 0, 0, 0, 1
+                    rgba: 0.5, 0.5, 0.5, 1
 
                 Line:
                     width: 2
