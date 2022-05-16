@@ -6,8 +6,7 @@ from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
 def get_hsl_by_percentage(percentage):
-    return (120 * ((100 - percentage) / 100)) / 360, 1, 0.5
-
+    return (120 * (1 - percentage)) / 360, 1, 0.5
 
 def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse=False):
     if abs(float(value) / float(max_value)) * 100 < lower_boundary:
