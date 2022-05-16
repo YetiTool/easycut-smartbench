@@ -11,6 +11,7 @@ Builder.load_string("""
 
     gcode_label:gcode_label
     pos_label:pos_label
+    speed_label:speed_label
 
     line_input:line_input
 
@@ -148,6 +149,9 @@ Builder.load_string("""
 
 
                     BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(12)
+                        spacing: dp(10)
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -156,7 +160,31 @@ Builder.load_string("""
                                 pos: self.pos
 
                         Label:
+                            size_hint_y: 0.75
+                            text: "[b][color=333333]Job resumes at:[/color][/b]"
+                            markup: True
+                            font_size: dp(15)
+                            halign: 'left'
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
                             id: pos_label
+                            text: "wX: | wY: | wZ:"
+                            color: 0,0,0,1
+                            font_size: dp(20)
+                            halign: 'left'
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Label:
+                            id: speed_label
+                            text: "F: | S:"
+                            color: 0,0,0,1
+                            font_size: dp(20)
+                            halign: 'left'
+                            valign: 'middle'
+                            text_size: self.size
 
             BoxLayout:
                 orientation: 'vertical'
@@ -263,6 +291,8 @@ class JobRecoveryScreen(Screen):
     def on_pre_enter(self):
         # Change this to get x and y based by scraping file in the future
         self.x, self.y = 0, 0
+        self.pos_label.text = "wX: 0.000 | wY: 0.000 | wZ: 0.000"
+        self.speed_label.text = "F: 0 | S: 0"
 
         self.line_input.text = ""
         self.selected_line_index = 0
