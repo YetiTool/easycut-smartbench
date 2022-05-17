@@ -243,7 +243,7 @@ class AlarmSequenceManager(object):
 
 		self.sm.get_screen('alarm_5').description_label.text = (
 				self.l.get_str("SmartBench will now cancel the job.") + \
-				"\n" + \
+				" " + \
 				self.l.get_str("This job can be restarted at the point of cancellation using the recovery button.")
 		)
 
