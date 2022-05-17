@@ -224,17 +224,14 @@ class AlarmSequenceManager(object):
 
 		print(self.m.s.last_stall_tmc_index)
 		
-		if self.m.s.last_stall_tmc_index == "0": 
+		if int(self.m.s.last_stall_tmc_index) == 0: 
 			self.stall_axis = "X"
-			return
 
-		if self.m.s.last_stall_tmc_index == "4": 
+		if int(self.m.s.last_stall_tmc_index) == 4: 
 			self.stall_axis = "Z"
-			return
 
-		if self.m.s.last_stall_tmc_index == "2" or self.m.s.last_stall_tmc_index == "3": 
+		if int(self.m.s.last_stall_tmc_index) == 2 or int(self.m.s.last_stall_tmc_index) == 3: 
 			self.stall_axis = "Y"
-			return
 
 		self.sm.get_screen('alarm_1').description_label.text = ("The " + \
 			self.stall_axis + \
