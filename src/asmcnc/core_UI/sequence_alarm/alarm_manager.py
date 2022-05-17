@@ -46,6 +46,7 @@ class AlarmSequenceManager(object):
 	db = None
 
 	sg_alarm = False
+	stall_axis = None
 	
 	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
@@ -103,7 +104,7 @@ class AlarmSequenceManager(object):
 						self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
 
 				else: 
-					self.sm.get_screen('alarm_1').description_label.text = "Stall guard triggered!!"
+					self.get_stall_info()
 
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
