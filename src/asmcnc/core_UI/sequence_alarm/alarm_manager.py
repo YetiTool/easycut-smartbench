@@ -106,7 +106,6 @@ class AlarmSequenceManager(object):
 					self.sm.get_screen('alarm_1').description_label.text = "Stall guard triggered!!"
 
 				self.determine_screen_sequence()
-				self.sg_alarm = False
 				self.sm.current = 'alarm_1'
 
 		except:
@@ -138,6 +137,7 @@ class AlarmSequenceManager(object):
 
 	def exit_sequence(self):
 		
+		self.sg_alarm = False
 		self.m.resume_from_alarm()
 		
 		if self.sm.has_screen(self.return_to_screen):
@@ -206,10 +206,41 @@ class AlarmSequenceManager(object):
 
 	def get_status_info(self):
 
+		if self.sg_alarm: 
+			self.status_cache = self.m.s.last_stall_status
+			return
+
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
 		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 
+
+	def get_stall_info(self):
+
+		self.sm.get_screen('alarm_1').alarm_title.text = self.a.l.get_bold("Alarm: Pre-stall event")
+		
+		if self.m.s.last_stall_tmc_index == 0: 
+			self.stall_axis = "X"
+			return
+
+		if self.m.s.last_stall_tmc_index == 4: 
+			self.stall_axis = "Z"
+			return
+
+		if self.m.s.last_stall_tmc_index == 2 or self.m.s.last_stall_tmc_index == 3: 
+			self.stall_axis = "Y"
+			return
+
+		self.sm.get_screen('alarm_1').description_label.text = ("The " + \
+			self.stall_axis + \
+			" axis was overloaded during a move. SmartBench has paused the job, to prevent further damage."
+			)
+
+		self.sm.get_screen('alarm_5').description_label.text = (
+				self.l.get_str("SmartBench will now cancel the job.") + \
+				"\n" + \
+				self.l.get_str("This job can be restarted at the point of cancellation using the recovery button.")
+		)
 
 	def get_version_data(self):
 
@@ -223,7 +254,11 @@ class AlarmSequenceManager(object):
 	def update_screens(self):
 
 		self.get_version_data()
-		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+
+		if self.sg_alarm: 
+			pass
+
+		elif ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 			self.get_suspected_trigger()
 
 		if self.trigger_description != '':
@@ -283,6 +318,8 @@ class AlarmSequenceManager(object):
 		except:
 			alarm_number = ""
 
+		if not self.sg_alarm: description = self.l.get_str(self.alarm_description)
+		else: description = self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis)
 
 		self.report_string = (
 
@@ -295,7 +332,7 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			self.l.get_str("Alarm code:") + " " + alarm_number + \
 			"\n" + \
-			self.l.get_str("Alarm description:") + " " + self.l.get_str(self.alarm_description) + \
+			self.l.get_str("Alarm description:") + " " + description + \
 			"\n" + \
 			self.trigger_description + \
 			"\n\n" + \

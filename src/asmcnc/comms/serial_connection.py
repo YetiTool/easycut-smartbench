@@ -285,7 +285,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
 
@@ -735,6 +735,10 @@ class SerialConnection(object):
     sg_y1_motor = None
     sg_y2_motor = None
 
+    # STALL GUARD WARNING
+    last_stall_axis = None
+    last_stall_status = None
+
     # FOR CALIBRATION TUNING
     record_sg_values_flag = False
 
@@ -1054,6 +1058,12 @@ class SerialConnection(object):
                         if self.sm.has_screen('current_adjustment'):
                             self.sm.get_screen('current_adjustment').measure()
 
+                # SG ALARM
+                elif part.startswith('SGALARM:'):
+                    self.alarm.sg_alarm = True
+                    self.last_stall_tmc_index = part[8:].split(',')[0]
+                    self.last_stall_status = message
+
                 elif part.startswith('Sp:'):
 
                     spindle_statistics = part[3:].split(',')
@@ -1155,8 +1165,6 @@ class SerialConnection(object):
                     except:
                         log("Could not print calibration output")
 
-                elif part.startswith('SGALARM:'):
-                    self.alarm.sg_alarm = True
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
