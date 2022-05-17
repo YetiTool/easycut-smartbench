@@ -46,7 +46,7 @@ class AlarmSequenceManager(object):
 	db = None
 
 	sg_alarm = False
-	stall_axis = None
+	stall_axis = "W"
 	
 	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
@@ -320,7 +320,7 @@ class AlarmSequenceManager(object):
 			alarm_number = ""
 
 		if not self.sg_alarm: description = self.l.get_str(self.alarm_description)
-		else: description = self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis)
+		else: description = (self.l.get_str("The N axis was overloaded during a move.")).replace("N", self.stall_axis)
 
 		self.report_string = (
 
