@@ -885,6 +885,8 @@ class SerialConnection(object):
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
+                    if 'S' in pins_info: self.alarm.sg_alarm = True
+
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -1153,15 +1155,11 @@ class SerialConnection(object):
                     except:
                         log("Could not print calibration output")
 
-                # else:
-                #     continue
-                # end of for loop
+                elif part.startswith('SGALARM:'):
+                    self.alarm.sg_alarm = True
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
-
-        elif message.startswith('SGALARM:'):
-            self.alarm.sg_alarm = True
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
