@@ -281,6 +281,7 @@ Builder.load_string("""
 
 class JobRecoveryScreen(Screen):
 
+    initial_line_index = 0
     selected_line_index = 0
     max_index = 0
     display_list = []
@@ -302,19 +303,25 @@ class JobRecoveryScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
 
     def on_pre_enter(self):
+        self.m.set_led_colour("WHITE")
+        self.m.jog_absolute_single_axis('Z', -10, 750)
+
         # Change this to get x and y based by scraping file in the future
         self.pos_x, self.pos_y = 0, 0
         self.pos_label.text = "wX: 0.000 | wY: 0.000 | wZ: 0.000"
         self.speed_label.text = "F: 0 | S: 0"
 
-        self.m.jog_absolute_single_axis('Z', -10, 750)
+        # Change this to get stall line properly
+        self.initial_line_index = 0
+
         self.line_input.text = ""
-        self.selected_line_index = 0
+        self.selected_line_index = self.initial_line_index
         self.max_index = len(self.jd.job_gcode) - 1
         self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (6)]
 
         # For video demonstration
         if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
+            self.initial_line_index = 4578
             self.selected_line_index = 4578
             self.pos_x, self.pos_y, self.pos_z = 376.324, 289.638, 11.000
             self.feed, self.speed = 3000.0, 20000
@@ -379,6 +386,10 @@ class JobRecoveryScreen(Screen):
                     if info:
                         self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = info
                         self.update_pos_speed_info()
+        else:
+            # If user clears input, return to initial line
+            self.selected_line_index = self.initial_line_index
+            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
 
     def get_info(self):
 
