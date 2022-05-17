@@ -1064,6 +1064,9 @@ class SerialConnection(object):
                     self.last_stall_tmc_index = part[8:].split(',')[0]
                     self.last_stall_status = message
 
+                    print(message)
+                    print(self.last_stall_tmc_index)
+
                 elif part.startswith('Sp:'):
 
                     spindle_statistics = part[3:].split(',')

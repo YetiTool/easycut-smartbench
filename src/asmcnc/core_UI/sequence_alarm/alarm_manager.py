@@ -2,6 +2,7 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 import datetime
+import traceback
 
 from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
@@ -111,6 +112,7 @@ class AlarmSequenceManager(object):
 
 		except:
 			print("Kivy fail happened, try everything again")
+			print(traceback.format_exc())
 			self.refire_screen()
 
 		self.handle_alarm_state()
@@ -219,6 +221,8 @@ class AlarmSequenceManager(object):
 	def get_stall_info(self):
 
 		self.sm.get_screen('alarm_1').alarm_title.text = self.a.l.get_bold("Alarm: Pre-stall event")
+
+		print(self.m.s.last_stall_tmc_index)
 		
 		if self.m.s.last_stall_tmc_index == 0: 
 			self.stall_axis = "X"
