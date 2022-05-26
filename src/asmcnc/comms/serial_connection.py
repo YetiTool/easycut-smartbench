@@ -714,8 +714,8 @@ class SerialConnection(object):
 
     expecting_probe_result = False
     
-    fw_version = '0'
-    hw_version = '0'
+    fw_version = ''
+    hw_version = ''
 
     # TEMPERATURES
     motor_driver_temp = None
