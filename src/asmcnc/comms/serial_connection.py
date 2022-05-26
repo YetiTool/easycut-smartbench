@@ -736,7 +736,7 @@ class SerialConnection(object):
     sg_y2_motor = None
 
     # STALL GUARD WARNING
-    last_stall_axis = None
+    last_stall_tmc_index = None
     last_stall_status = None
 
     # FOR CALIBRATION TUNING
