@@ -714,8 +714,8 @@ class SerialConnection(object):
 
     expecting_probe_result = False
     
-    fw_version = ''
-    hw_version = ''
+    fw_version = '0'
+    hw_version = '0'
 
     # TEMPERATURES
     motor_driver_temp = None
@@ -860,13 +860,7 @@ class SerialConnection(object):
                     else: self.limit_x = False
                     
                     if 'X' in pins_info: self.limit_X = True
-                    else: self.limit_X = False
-                    
-                    if 'y' in pins_info: self.limit_y = True
-                    else: self.limit_y = False
-                    
-                    if 'Y' in pins_info: self.limit_Y = True
-                    else: self.limit_Y = False
+                    else: self.limit_X = False                
                     
                     if 'Z' in pins_info: self.limit_z = True
                     else: self.limit_z = False
@@ -880,6 +874,37 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
+                    if 'S' in pins_info: self.stall_X = True
+                    else: self.stall_X = False
+
+                    if 'z' in pins_info: self.stall_Z = True
+                    else: self.stall_Z = False
+
+                    # Depending on the firmware version (and the alarm type), 
+                    # Y pin means either Y max limit OR Y stall
+                    if 'y' or 'Y' in pins_info: 
+
+                        if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
+
+                            if 'y' in pins_info: self.limit_y = True
+                            else: self.limit_y = False
+
+                            if 'Y' in pins_info: self.limit_Y = True
+                            else: self.limit_Y = False
+
+                        else:
+
+                            if 'y' in pins_info: 
+                                self.limit_Y = True
+                                self.limit_y = True
+                            else: 
+                                self.limit_Y = False
+                                self.limit_y = False
+
+                            if 'Y' in pins_info: self.stall_Y = True
+                            else: self.stall_Y = False
+
+
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
@@ -889,7 +914,6 @@ class SerialConnection(object):
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
-                    if 'S' in pins_info: self.alarm.sg_alarm = True
 
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
@@ -1063,9 +1087,6 @@ class SerialConnection(object):
                     self.alarm.sg_alarm = True
                     self.last_stall_tmc_index = part[8:].split(',')[0]
                     self.last_stall_status = message
-
-                    print(message)
-                    print(self.last_stall_tmc_index)
 
                 elif part.startswith('Sp:'):
 

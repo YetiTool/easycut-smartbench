@@ -93,6 +93,8 @@ class AlarmSequenceManager(object):
 
 				if not self.sg_alarm:
 
+					print("NOT SG ALARM, DOING NORMAL")
+
 					self.alarm_code = message
 					self.alarm_description = ALARM_CODES_DICT.get(message, "")
 					if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
@@ -221,8 +223,6 @@ class AlarmSequenceManager(object):
 	def get_stall_info(self):
 
 		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Pre-stall event")
-
-		print(self.m.s.last_stall_tmc_index)
 		
 		if int(self.m.s.last_stall_tmc_index) == 0: 
 			self.stall_axis = "X"
@@ -233,9 +233,10 @@ class AlarmSequenceManager(object):
 		if int(self.m.s.last_stall_tmc_index) == 2 or int(self.m.s.last_stall_tmc_index) == 3: 
 			self.stall_axis = "Y"
 
-		self.sm.get_screen('alarm_1').description_label.text = ("The " + \
-			self.stall_axis + \
-			" axis was overloaded during a move. SmartBench has paused the job, to prevent further damage."
+		self.sm.get_screen('alarm_1').description_label.text = (
+			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
+			" " + \
+			self.l.get_str("SmartBench has paused the job, to prevent further damage.")
 			)
 
 		self.sm.get_screen('alarm_5').description_label.text = (
