@@ -93,8 +93,6 @@ class AlarmSequenceManager(object):
 
 				if not self.sg_alarm:
 
-					print("NOT SG ALARM, DOING NORMAL")
-
 					self.alarm_code = message
 					self.alarm_description = ALARM_CODES_DICT.get(message, "")
 					if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
