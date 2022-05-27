@@ -706,6 +706,9 @@ class SerialConnection(object):
     probe = False
     dust_shoe_cover = False
     spare_door = False
+    stall_X = False
+    stall_Z = False
+    stall_Y = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -903,6 +906,13 @@ class SerialConnection(object):
 
                             if 'Y' in pins_info: self.stall_Y = True
                             else: self.stall_Y = False
+
+                    else:
+                        self.limit_y = False
+                        self.limit_Y = False
+                        self.stall_Y = False
+
+
 
 
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
