@@ -204,6 +204,9 @@ class AlarmSequenceManager(object):
 		if limit_list == []:
 			limit_list.append(self.l.get_str('Unknown'))
 
+		if limit_list == ['Y home','Y max']:
+			limit_list = ['Y home or Y max']
+
 		self.trigger_description = limit_code + (', ').join(limit_list)
 
 

@@ -47,8 +47,8 @@ class ScreenTest(App):
 
     lang_idx = 0
     
-    fw_version = "1.4.2"
-    alarm_pin = "y"
+    fw_version = "2.4.2"
+    alarm_pin = "Y"
 
     stall_pin = "Y"
     motor_id = 0
@@ -78,8 +78,8 @@ class ScreenTest(App):
 
     def give_status(self):
 
-        status = self.sg_alarm_status
-        # status = self.status
+        # status = self.sg_alarm_status
+        status = self.status
         return status
 
     def give_me_a_PCB(outerSelf):
