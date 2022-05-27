@@ -59,7 +59,7 @@ class RouterMachine(object):
     TMC_motor = {}
 
     # SG threshold
-    default_stall_guard_threshold = 25 # 250
+    default_stall_guard_threshold = 250 # 250
 
     starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
 
@@ -967,8 +967,6 @@ class RouterMachine(object):
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
         Clock.schedule_once(lambda dt: self.tmc_handshake(), 3)
 
-        # TEMP!!!
-        Clock.schedule_once(lambda dt: self.set_sg_threshold(self.default_stall_guard_threshold), 5)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
     handshake_event = None
