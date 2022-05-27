@@ -706,6 +706,7 @@ class SerialConnection(object):
     probe = False
     dust_shoe_cover = False
     spare_door = False
+    limit_Y_axis = False
     stall_X = False
     stall_Z = False
     stall_Y = False
@@ -877,16 +878,11 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'S' in pins_info: self.stall_X = True
-                    else: self.stall_X = False
+                    if 'S' or 'z' or 'Y' or 'y' in pins_info:
 
-                    if 'z' in pins_info: self.stall_Z = True
-                    else: self.stall_Z = False
-
-                    # Depending on the firmware version (and the alarm type), 
-                    # Y pin means either Y max limit OR Y stall
-                    if 'y' or 'Y' in pins_info: 
-
+                        # Depending on the firmware version (and the alarm type), 
+                        # Y pin means either Y max limit OR Y stall
+                        # and little y could be y home OR either y limit
                         if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
 
                             if 'y' in pins_info: self.limit_y = True
@@ -895,15 +891,20 @@ class SerialConnection(object):
                             if 'Y' in pins_info: self.limit_Y = True
                             else: self.limit_Y = False
 
-                        else:
+                        elif 'y' in pins_info: 
 
-                            if 'y' in pins_info: 
-                                self.limit_Y = True
-                                self.limit_y = True
+                            self.limit_Y_axis = True
 
-                            else: 
-                                self.limit_Y = False
-                                self.limit_y = False
+                        else: 
+
+                            self.limit_Y_axis = False
+                            self.alarm.sg_alarm = True
+
+                            if 'S' in pins_info: self.stall_X = True
+                            else: self.stall_X = False
+
+                            if 'z' in pins_info: self.stall_Z = True
+                            else: self.stall_Z = False
 
                             if 'Y' in pins_info: self.stall_Y = True
                             else: self.stall_Y = False
@@ -911,7 +912,10 @@ class SerialConnection(object):
                     else:
                         self.limit_y = False
                         self.limit_Y = False
+                        self.limit_Y_axis = False
+                        self.stall_X = False
                         self.stall_Y = False
+                        self.stall_Z = False
 
 
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
@@ -1092,7 +1096,6 @@ class SerialConnection(object):
 
                 # SG ALARM
                 elif part.startswith('SGALARM:'):
-                    self.alarm.sg_alarm = True
                     self.last_stall_tmc_index = part[8:].split(',')[0]
                     self.last_stall_status = message
 

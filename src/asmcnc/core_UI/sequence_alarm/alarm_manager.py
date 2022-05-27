@@ -198,14 +198,14 @@ class AlarmSequenceManager(object):
 		if self.m.s.limit_Y: 
 			limit_list.append(self.l.get_str('Y max'))
 
+		if self.m.s.limit_Y_axis:
+			limit_list.append(self.l.get_str('Y home or Y max'))
+
 		if self.m.s.limit_z: 
 			limit_list.append(self.l.get_str('Z home'))
 
 		if limit_list == []:
 			limit_list.append(self.l.get_str('Unknown'))
-
-		if limit_list == ['Y home','Y max']:
-			limit_list = ['Y home or Y max']
 
 		self.trigger_description = limit_code + (', ').join(limit_list)
 
@@ -225,14 +225,14 @@ class AlarmSequenceManager(object):
 
 		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Pre-stall event")
 		
-		if int(self.m.s.last_stall_tmc_index) == 0: 
+		if self.m.s.stall_X: 
 			self.stall_axis = "X"
 
-		if int(self.m.s.last_stall_tmc_index) == 4: 
-			self.stall_axis = "Z"
-
-		if int(self.m.s.last_stall_tmc_index) == 2 or int(self.m.s.last_stall_tmc_index) == 3: 
+		if self.m.s.stall_Y: 
 			self.stall_axis = "Y"
+
+		if self.m.s.stall_Z: 
+			self.stall_axis = "Z"
 
 		self.sm.get_screen('alarm_1').description_label.text = (
 			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
