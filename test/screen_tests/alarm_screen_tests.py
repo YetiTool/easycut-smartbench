@@ -78,8 +78,8 @@ class ScreenTest(App):
 
     def give_status(self):
 
-        # status = self.sg_alarm_status
-        status = self.status
+        status = self.sg_alarm_status
+        # status = self.status
         return status
 
     def give_me_a_PCB(outerSelf):
