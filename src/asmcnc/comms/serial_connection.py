@@ -900,6 +900,7 @@ class SerialConnection(object):
                             if 'y' in pins_info: 
                                 self.limit_Y = True
                                 self.limit_y = True
+
                             else: 
                                 self.limit_Y = False
                                 self.limit_y = False
@@ -913,8 +914,6 @@ class SerialConnection(object):
                         self.stall_Y = False
 
 
-
-
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
@@ -923,7 +922,6 @@ class SerialConnection(object):
                             log("Power loss or DC power supply")
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
-
 
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:

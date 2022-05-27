@@ -15,6 +15,8 @@ Config.write()
 # Run from easycut-smartbench folder, with 
 # python -m test.screen_tests.alarm_screen_tests
 
+# Would be good to make this more of a unit test system
+
 import sys, os
 sys.path.append('./src')
 os.chdir('./src')
@@ -43,6 +45,11 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
+    lang_idx = 0
+    
+    fw_version = "1.4.2"
+    alarm_pin = "y"
+
     stall_pin = "Y"
     motor_id = 0
     step_size = 75
@@ -53,9 +60,10 @@ class ScreenTest(App):
     y_coord = -2487.003
     z_coord = -99.954
 
+
     alarm_message = "ALARM:1\n"
 
-    status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
+    status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
     sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
         stall_pin + \
         "|SGALARM:" + \
@@ -70,8 +78,8 @@ class ScreenTest(App):
 
     def give_status(self):
 
-        status = self.sg_alarm_status
-        # status = self.status
+        # status = self.sg_alarm_status
+        status = self.status
         return status
 
     def give_me_a_PCB(outerSelf):
@@ -96,6 +104,7 @@ class ScreenTest(App):
 
         # Localization/language object
         l = localization.Localization()
+        l.load_in_new_language(l.approved_languages[self.lang_idx])
 
         # Initialise settings object
         sett = settings_manager.Settings(sm)
@@ -111,6 +120,7 @@ class ScreenTest(App):
 
         m.s.s = DummySerial(self.give_me_a_PCB())
         m.s.s.fd = 1 # this is needed to force it to run
+        m.s.fw_version = self.fw_version
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
