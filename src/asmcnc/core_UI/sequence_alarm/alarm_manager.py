@@ -256,11 +256,9 @@ class AlarmSequenceManager(object):
 
 		self.get_version_data()
 
-		if self.sg_alarm: 
-			pass
-
-		elif ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-			self.get_suspected_trigger()
+		if not self.sg_alarm: 
+			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+				self.get_suspected_trigger()
 
 		if self.trigger_description != '':
 			self.sm.get_screen('alarm_1').description_label.text = (
@@ -269,7 +267,6 @@ class AlarmSequenceManager(object):
 					self.trigger_description
 				)
 		self.report_setup_event = Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
-
 
 
 	def reset_variables(self):
