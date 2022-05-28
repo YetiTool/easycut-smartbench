@@ -48,6 +48,9 @@ Builder.load_string("""
     gcode_preview_container:gcode_preview_container
     move_tab:move_tab
 
+    job_recovery_button:job_recovery_button
+    job_recovery_button_image:job_recovery_button_image
+
     BoxLayout:
         padding: 0
         spacing: 10
@@ -208,16 +211,19 @@ Builder.load_string("""
                                             allow_stretch: True
 
                                 Button:
+                                    id: job_recovery_button
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
                                         root.manager.current = 'recovery_decision'
+                                    disabled: True
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:
-                                            source: "./asmcnc/skavaUI/img/recover_job.png"
+                                            id: job_recovery_button_image
+                                            source: "./asmcnc/skavaUI/img/recover_job_disabled.png"
                                             center_x: self.parent.center_x
                                             y: self.parent.y
                                             size: self.parent.width, self.parent.height
@@ -335,12 +341,19 @@ class HomeScreen(Screen):
             except:
                 log('Unable to preview file')
 
-            # For video demonstration
-            if self.jd.job_name == "First Routing Project_1-Engrave.gcode":
-                if self.sm.get_screen('job_recovery').selected_line_index == 4568:
-                    self.file_data_label.text += "\n[color=FF0000]From line 4568[/color]"
-                else:
+            # Check if job recovery is available
+            if self.jd.job_recovery_cancel_line > 0 and self.jd.job_recovery_filepath == self.jd.filename:
+                self.job_recovery_button.disabled = False
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
+
+                # Line -1 being selected represents no selected line
+                if self.jd.job_recovery_selected_line == -1:
                     self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
+                else:
+                    self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
+            else:
+                self.job_recovery_button.disabled = True
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def on_pre_enter(self):
 

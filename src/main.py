@@ -195,7 +195,7 @@ class SkavaUI(App):
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
         job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, job = jd, localization = l)
-        nudge_screen = screen_nudge.NudgeScreen(name = 'nudge', screen_manager = sm, machine = m, localization = l)
+        nudge_screen = screen_nudge.NudgeScreen(name = 'nudge', screen_manager = sm, machine = m, job = jd, localization = l)
         recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name = 'recovery_decision', screen_manager = sm, machine = m, job = jd, localization = l)
 
         # add the screens to screen manager

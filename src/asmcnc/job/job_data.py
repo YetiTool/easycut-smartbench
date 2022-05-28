@@ -77,6 +77,12 @@ class JobData(object):
     check_info_string = ''    
     comments_string = ''
 
+    # Job recovery
+    job_recovery_info_filepath = './asmcnc/job/job_recovery.txt'
+    job_recovery_filepath = ''
+    job_recovery_cancel_line = 0
+    job_recovery_selected_line = -1
+
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
         self.set = kwargs['settings_manager']
@@ -111,6 +117,9 @@ class JobData(object):
             self.l.get_bold("Customer Order Reference"): 24,
             self.l.get_bold("Parts Made So Far"): 25
             }
+
+        # Restore job recovery info
+        self.read_from_recovery_file()
 
     def reset_values(self):
 
@@ -389,3 +398,30 @@ class JobData(object):
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
+
+
+    def read_from_recovery_file(self):
+        try:
+            with open(self.job_recovery_info_filepath, 'r') as job_recovery_info_file:
+                job_recovery_info = job_recovery_info_file.read().splitlines()
+
+            self.job_recovery_filepath = job_recovery_info[0]
+            self.job_recovery_cancel_line = int(job_recovery_info[1])
+
+        except:
+            print("Could not read recovery info")
+            print(str(traceback.format_exc()))
+
+    def write_to_recovery_file(self, cancel_line):
+        try:
+            with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
+                job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
+
+            # Simultaneously update variables
+            self.job_recovery_filepath = self.filename
+            self.job_recovery_cancel_line = cancel_line
+            self.job_recovery_selected_line = -1
+        
+        except:
+            print("Could not write recovery info")
+            print(str(traceback.format_exc()))

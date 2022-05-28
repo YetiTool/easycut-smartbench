@@ -185,6 +185,7 @@ class NudgeScreen(Screen):
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
+        self.jd = kwargs['job']
         self.l = kwargs['localization']
 
         # Green status bar
@@ -209,6 +210,7 @@ class NudgeScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
 
     def back_to_home(self):
+        self.jd.job_recovery_selected_line = -1
         self.sm.current = 'home'
 
     def previous_screen(self):
