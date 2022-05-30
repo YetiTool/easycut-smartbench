@@ -50,7 +50,7 @@ class ScreenTest(App):
     fw_version = "2.4.2"
     alarm_pin = "Y"
 
-    stall_pin = "Y"
+    stall_pin = "YSz"
     motor_id = 0
     step_size = 75
     sg_val = 151

@@ -224,15 +224,18 @@ class AlarmSequenceManager(object):
 	def get_stall_info(self):
 
 		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Pre-stall event")
+		stall_list = []
 		
 		if self.m.s.stall_X: 
-			self.stall_axis = "X"
+			stall_list.append("X")
 
 		if self.m.s.stall_Y: 
-			self.stall_axis = "Y"
+			stall_list.append("Y")
 
 		if self.m.s.stall_Z: 
-			self.stall_axis = "Z"
+			stall_list.append("Z")
+
+		self.stall_axis = (', ').join(stall_list)
 
 		self.sm.get_screen('alarm_1').description_label.text = (
 			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
