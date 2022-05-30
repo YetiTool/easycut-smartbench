@@ -878,7 +878,7 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'S' or 'z' or 'Y' or 'y' in pins_info:
+                    if 'Y' or 'y' in pins_info:
 
                         # Depending on the firmware version (and the alarm type), 
                         # Y pin means either Y max limit OR Y stall
@@ -891,20 +891,10 @@ class SerialConnection(object):
                             if 'Y' in pins_info: self.limit_Y = True
                             else: self.limit_Y = False
 
-                        elif 'y' in pins_info: 
+                        else:
 
-                            self.limit_Y_axis = True
-
-                        else: 
-
-                            self.limit_Y_axis = False
-                            self.alarm.sg_alarm = True
-
-                            if 'S' in pins_info: self.stall_X = True
-                            else: self.stall_X = False
-
-                            if 'z' in pins_info: self.stall_Z = True
-                            else: self.stall_Z = False
+                            if 'y' in pins_info: self.limit_Y_axis = True
+                            else: self.limit_Y_axis = False      
 
                             if 'Y' in pins_info: self.stall_Y = True
                             else: self.stall_Y = False
@@ -913,10 +903,16 @@ class SerialConnection(object):
                         self.limit_y = False
                         self.limit_Y = False
                         self.limit_Y_axis = False
-                        self.stall_X = False
                         self.stall_Y = False
-                        self.stall_Z = False
 
+                    if 'S' in pins_info: self.stall_X = True
+                    else: self.stall_X = False
+
+                    if 'z' in pins_info: self.stall_Z = True
+                    else: self.stall_Z = False
+
+                    if self.stall_X or self.stall_Y or self.stall_Z:
+                        self.alarm.sg_alarm = True
 
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
