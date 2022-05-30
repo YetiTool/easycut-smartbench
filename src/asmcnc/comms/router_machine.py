@@ -2782,9 +2782,10 @@ class RouterMachine(object):
 
 
     ## SET SMART FEATURES
-    def set_sg_threshold(self, threshold):
+    def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
-            self.send_command_to_motor("SET SG ALARM THRESHOLD", command=SET_SG_ALARM_TRSHLD, value=threshold)
+            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + motor + ", THR: " + threshold
+            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
 
 
     ## FIRMWARE UPDATES
