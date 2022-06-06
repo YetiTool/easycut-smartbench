@@ -6,7 +6,7 @@ Created 31 May 2022
 import kivy
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-
+from kivy.properties import ListProperty
 
 Builder.load_string("""
 
@@ -16,7 +16,7 @@ Builder.load_string("""
 
     GridLayout: 
 
-        size: self.size
+        size: self.parent.size
         pos: self.parent.pos
         cols: 8
         rows: 2
@@ -50,28 +50,28 @@ Builder.load_string("""
         # THRESHOLD 1
 
         Label: 
-            text: ""
+            text: str(root.t[0])
 
         Button: 
-            on_press: root.choose_test(root.f[0], root.t[0])
+            on_press: root.choose_test(root.f[0], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[1], root.t[0])
+            on_press: root.choose_test(root.f[1], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[2], root.t[0])
+            on_press: root.choose_test(root.f[2], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[3], root.t[0])
+            on_press: root.choose_test(root.f[3], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[4], root.t[0])
+            on_press: root.choose_test(root.f[4], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[5], root.t[0])
+            on_press: root.choose_test(root.f[5], str(root.t[0]))
 
         Button: 
-            on_press: root.choose_test(root.f[6], root.t[0])
+            on_press: root.choose_test(root.f[6], str(root.t[0]))
 
 
 
@@ -79,10 +79,13 @@ Builder.load_string("""
 
 """)
 
-##  AttributeError: 'FeedThresholdGrid' object has no attribute 'f'
-# need object properties
+# THESE WILL NEED TO BE SET UP FOR EACH AXIS INDIVIDUALLY, OTHERWISE CLASS LISTS WILL GET MESSED UP
 
 class FeedThresholdGrid(Widget):
+
+    axis = "W"
+    f = ['1','2','3','4','5','6','7']
+    t = [1,2,3,4,5]
 
     def __init__(self, **kwargs):
 
@@ -91,9 +94,9 @@ class FeedThresholdGrid(Widget):
         self.sm=kwargs['screen_manager']
         self.parent_screen=kwargs['parent_screen']
 
-        self.axis = "W"
+        self.axis = "X"
         self.f = ['1','2','3','4','5','6','7']
-        self.t = ['1',2,3,4,5]
+        self.t = [1,2,3,4,5]
 
     def choose_test(self, feed, threshold):
         if not isinstance(feed,int) or not isinstance(threshold, int):
