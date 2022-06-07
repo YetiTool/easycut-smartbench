@@ -741,6 +741,13 @@ class SerialConnection(object):
 
     # STALL GUARD WARNING
     last_stall_tmc_index = None
+    last_stall_motor_step_size = None
+    last_stall_load = None
+    last_stall_threshold = None
+    last_stall_travel_distance = None
+    last_stall_x_coord = None
+    last_stall_y_coord = None
+    last_stall_z_coord = None
     last_stall_status = None
 
     # FOR CALIBRATION TUNING
@@ -1092,7 +1099,15 @@ class SerialConnection(object):
 
                 # SG ALARM
                 elif part.startswith('SGALARM:'):
-                    self.last_stall_tmc_index = part[8:].split(',')[0]
+                    sg_alarm_parts = part[8:].split(',')
+                    self.last_stall_tmc_index = sg_alarm_parts[0]
+                    self.last_stall_motor_step_size = sg_alarm_parts[1]
+                    self.last_stall_load = sg_alarm_parts[2]
+                    self.last_stall_threshold = sg_alarm_parts[3]
+                    self.last_stall_travel_distance = sg_alarm_parts[4]
+                    self.last_stall_x_coord = sg_alarm_parts[5]
+                    self.last_stall_y_coord = sg_alarm_parts[6]
+                    self.last_stall_z_coord = sg_alarm_parts[7]
                     self.last_stall_status = message
 
                 elif part.startswith('Sp:'):
