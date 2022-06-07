@@ -170,9 +170,9 @@ class StallJigScreen(Screen):
 
         self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
 
-        self.populate_axis_grid(self.x_grid_container, "X")
-        self.populate_axis_grid(self.y_grid_container, "Y")
-        self.populate_axis_grid(self.z_grid_container, "Z")
+        # self.populate_axis_grid(self.x_grid_container, "X")
+        # self.populate_axis_grid(self.y_grid_container, "Y")
+        # self.populate_axis_grid(self.z_grid_container, "Z")
     
     def on_pre_enter(self):
         self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
