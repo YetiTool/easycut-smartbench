@@ -15,6 +15,7 @@ from  kivy.uix.button import Button
 from kivy.clock import Clock
 import sys, os
 from functools import partial
+from time import sleep
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
@@ -190,9 +191,24 @@ class StallJigScreen(Screen):
         "feed": 0
     }
 
+    stall_tolerance_xy = 3
+    stall_tolerance_z = 1
+
+    overjog_xy = 8
+    overjog_z = 8
+
+    move_distance = {
+
+        "X": 10 + overjog_xy,
+        "Y": 10 + overjog_xy,
+        "Z": 10 + overjog_z
+
+    }
+
     threshold_reached = False
 
     poll_for_completion_loop = None
+    poll_for_threshold_detection = None
     
     def __init__(self, **kwargs):
 
@@ -274,10 +290,10 @@ class StallJigScreen(Screen):
 
     def register_threshold_detection(self):
 
-        self.threshold_reached = True
         self.m.resume_from_alarm()
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = [51/255, 255/255, 0, 1]
+        self.threshold_reached = True
 
 
     def start_homing(self):
@@ -334,6 +350,57 @@ class StallJigScreen(Screen):
         pass
 
     def run(self):
+        
+        # If no tests have been started yet, SB will need to do a prep sequence instead
+        if self.start_of_all_tests():
+            return
+
+        axis = self.axes[self.indices["axis"]]
+        threshold = self.threshold_dict[axis][self.indices["threshold"]]
+        feed = self.feed_dict[axis][self.indices["feed"]]
+
+        self.m.set_threshold_for_axis(axis, threshold)
+        sleep(0.5)
+        self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + feed)
+        self.poll_for_threshold_detection = Clock.schedule_once(self.get_test_result, 1)
+
+
+    def get_test_result(self):
+
+        if self.threshold_reached: self.pass_condition()
+        elif self.m.state().startswith("Idle"): self.fail_condition()
+        else: self.poll_for_threshold_detection = Clock.schedule_once(self.get_test_result, 1)
+
+
+    def start_of_all_tests(self):
+
+        if not (self.indices["axis"] == 0 and
+            self.indices["threshold"] == 0 and
+            self.indices["feed"] == 0):
+            return False
+            
+        # start calibration/set up sequence here
+
+        # HOME
+        # CALIBRATION CHECK
+        # SET STALL POSITION FOR X
+
+        return True
+
+
+    def pass_condition(self):
+        pass
+        self.m.s.last_stall_status
+
+
+
+        self.m.s.setting_100 # X steps/mm
+        self.m.s.setting_101 # Y steps/mm
+        self.m.s.setting_102 # Z steps/mm
+
+
+
+    def fail_condition(self):
         pass
 
 
@@ -344,6 +411,9 @@ class StallJigScreen(Screen):
 
 
 
+
+    def unschedule_all_events(self):
+        pass
 
 
 
