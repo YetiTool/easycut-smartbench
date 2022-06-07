@@ -197,6 +197,14 @@ class StallJigScreen(Screen):
     overjog_xy = 8
     overjog_z = 8
 
+    backoff_x = 10
+    backoff_y = -10
+    backoff_z = 10
+
+    fast_x = 8000
+    fast_y = 6000
+    fast_z = 750
+
     move_distance = {
 
         "X": 10 + overjog_xy,
@@ -209,6 +217,11 @@ class StallJigScreen(Screen):
 
     poll_for_completion_loop = None
     poll_for_threshold_detection = None
+    poll_for_back_off_completion = None
+
+    id_stage = ""
+
+    stall_test_events = []
     
     def __init__(self, **kwargs):
 
@@ -362,14 +375,17 @@ class StallJigScreen(Screen):
         self.m.set_threshold_for_axis(axis, threshold)
         sleep(0.5)
         self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + feed)
-        self.poll_for_threshold_detection = Clock.schedule_once(self.get_test_result, 1)
+        self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
 
 
-    def get_test_result(self):
+    def sb_has_travelled_or_detected(self):
 
-        if self.threshold_reached: self.pass_condition()
-        elif self.m.state().startswith("Idle"): self.fail_condition()
-        else: self.poll_for_threshold_detection = Clock.schedule_once(self.get_test_result, 1)
+        if self.m.state().startswith("Idle"): self.back_off()
+        else: self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
+
+        # if self.threshold_reached: self.pass_condition()
+        # elif self.m.state().startswith("Idle"): self.fail_condition()
+        # else: self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
 
 
     def start_of_all_tests(self):
@@ -389,27 +405,142 @@ class StallJigScreen(Screen):
 
 
     def pass_condition(self):
+
+        self.pass_sub_test = True
+
+        
+
+    def back_off(self):
+
+        # refactor
+        if self.indices["axis"] == 0: 
+            final_pos = self.m.mpos_x() + backoff_x
+            feed = "F" + str(fast_x)
+
+        if self.indices["axis"] == 1:
+            final_pos = self.m.mpos_y() + backoff_y 
+            feed = "F" + str(fast_y)
+
+        if self.indices["axis"] == 2:
+            final_pos = self.m.mpos_z() + backoff_z
+            feed = "F" + str(fast_z)
+
+        self.m.send_any_gcode_command("G91 " + self.axes[self.indices["axis"]] + str(final_pos) + feed)
+        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(final_pos), 1)
+
+
+    def back_off_completed(self, final_pos):
+
+        if self.indices["axis"] == 0: pos = self.m.mpos_x()
+        if self.indices["axis"] == 1: pos = self.m.mpos_y()
+        if self.indices["axis"] == 2: pos = self.m.mpos_z()
+
+        if round(pos, 1) == round(final_pos, 1) and self.m.state().startswith("Idle"):
+
+            self.start_stalling_or_homing()
+            return
+
+        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(final_pos), 1)
+
+
+    def start_stalling_or_homing(self):
+        pass # TBC
+
+
+    def relax_motors(self):
+        # write dedicated funcs for this in router_machine
         pass
-        self.m.s.last_stall_status
+
+
+    def reposition_for_next_test(self):
+        pass
 
 
 
-        self.m.s.setting_100 # X steps/mm
-        self.m.s.setting_101 # Y steps/mm
-        self.m.s.setting_102 # Z steps/mm
+    def record_stall_event(self):
+
+        # Calculate feed rate at stall
+        if self.indices["axis"] == 0: 
+            step_rate = self.m.s.setting_100
+            stall_coord = self.m.s.last_stall_x_coord
+
+        if self.indices["axis"] == 1: 
+            step_rate = self.m.s.setting_101
+            stall_coord = self.m.s.last_stall_y_coord
+
+        if self.indices["axis"] == 2: 
+            step_rate = self.m.s.setting_102
+            stall_coord = self.m.s.last_stall_z_coord
+
+        step_us = self.m.s.last_stall_motor_step_size
+        rpm = 60*(1000000.0/step_us)/3200
+        reported_feed = 3200.0 / step_rate * rpm
+
+
+        last_test_pass = [
+
+            id_stage,
+            self.axes[self.indices["axis"]],
+            self.feed_dict[axis][self.indices["feed"]],
+            self.threshold_dict[axis][self.indices["threshold"]],
+            reported_feed,
+            self.m.s.last_stall_load,
+            stall_coord
+        ]
+
+        self.stall_test_events.append(last_test_pass)
+
+
+
+    def start_next_test(self):
+
+        self.record_stall_event()
+        self.threshold_reached = False
+
+        if self.indices["threshold"] + 1 < len(self.threshold_dict[self.axes[self.indices["axis"]]]):
+            self.indices["threshold"] = self.indices["threshold"] + 1
+
+        elif self.indices["feed"] + 1 < len(self.feed_dict[self.axes[self.indices["axis"]]]):
+            self.indices["feed"] = self.indices["feed"] + 1
+            self.indices["threshold"] = 0
+
+        elif self.indices["axis"] + 1 < len(self.axes):
+            self.indices["axis"] = self.indices["axis"] + 1
+            self.indices["feed"] = 0
+            self.indices["threshold"] = 0
+
+        else: 
+            self.end_of_tests()
 
 
 
     def fail_condition(self):
-        pass
+
+        self.pass_sub_test = False
+
+
+
+    def go_to_next_feed_set(self):
+
+        if self.indices["feed"] + 1 < len(self.feed_dict[self.axes[self.indices["axis"]]]):
+            self.indices["feed"] = self.indices["feed"] + 1
+            self.indices["threshold"] = 0
+
+        elif self.indices["axis"] + 1 < len(self.axes):
+            self.indices["axis"] = self.indices["axis"] + 1
+            self.indices["feed"] = 0
+            self.indices["threshold"] = 0
+
+        else: 
+            self.end_of_tests()
 
 
 
 
+    def end_of_tests(self):
 
-
-
-
+        self.test_status_label.text = "SENDING DATA"
+        self.do_data_send()
 
 
     def unschedule_all_events(self):
