@@ -116,7 +116,7 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint_y: 4
-                    padding: [10,0]
+                    padding: [0,10]
 
                     BoxLayout:
                         id: move_container
