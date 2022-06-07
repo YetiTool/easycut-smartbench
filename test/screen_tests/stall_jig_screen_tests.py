@@ -123,7 +123,7 @@ class ScreenTest(App):
         m.s.fw_version = self.fw_version
 
         # CHANGE ME
-        stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(stall_jig_screen)
         sm.current = 'stall_jig'
         

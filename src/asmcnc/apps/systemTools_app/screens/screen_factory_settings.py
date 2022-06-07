@@ -20,6 +20,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -333,9 +334,17 @@ Builder.load_string("""
                         Button:
                             text: 'Overnight test'
                             on_press: root.enter_overnight_test()
-                        Button:
-                            text: 'Current Adjustment'
-                            on_press: root.enter_current_adjustment()
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+
+                            Button:
+                                text: 'Current'
+                                on_press: root.enter_current_adjustment()
+
+                            Button:
+                                text: 'Stall Jig'
+                                on_press: root.enter_stall_jig()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -896,3 +905,22 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
+
+
+    def enter_stall_jig(self):
+        if not self.systemtools_sm.sm.has_screen('stall_jig'):
+            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l)
+            self.systemtools_sm.sm.add_widget(stall_jig_screen)
+        
+        self.systemtools_sm.sm.current = 'stall_jig'
+
+
+
+
+
+
+
+
+
+
+
