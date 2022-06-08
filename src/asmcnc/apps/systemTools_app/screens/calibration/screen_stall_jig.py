@@ -68,7 +68,7 @@ Builder.load_string("""
                     size_hint_y: 1
                     background_normal: ""
                     background_color: hex('#4CAF50FF')
-                    text: "RUN"
+                    text: "PREP TEST"
                     on_press: root.run()
 
                 Button:
@@ -191,29 +191,94 @@ class StallJigScreen(Screen):
         "feed": 0
     }
 
-    stall_tolerance_xy = 3
-    stall_tolerance_z = 1
+    stall_tolerance = {
 
-    overjog_xy = 8
-    overjog_z = 8
-
-    backoff_x = 10
-    backoff_y = -10
-    backoff_z = 10
-
-    fast_x = 8000
-    fast_y = 6000
-    fast_z = 750
-
-    move_distance = {
-
-        "X": 10 + overjog_xy,
-        "Y": 10 + overjog_xy,
-        "Z": 10 + overjog_z
+        "X": 3,
+        "Y": 3,
+        "Z": 1
 
     }
 
+    overjog = {
+
+        "X": 8,
+        "Y": 8,
+        "Z": 8
+
+    }
+
+    backoff = {
+
+        "X": 10,
+        "Y": -10,
+        "Z": 10
+
+    }
+
+    fast_travel = {
+
+        "X": 8000,
+        "Y": 6000,
+        "Z": 750
+
+    }
+
+
+    initial_move_distance = {
+
+        "X": -10,
+        "Y": 10,
+        "Z": -10
+
+    }
+
+    travel_to_stall_pos = {
+
+        "X": None,
+        "Y": None,
+        "Z": None
+
+    }
+
+    limit_pull_off = {
+
+        "X": -5,
+        "Y": 5,
+        "Z": 5
+
+    }
+
+
+    start_pos_x_test = {
+
+        "X": -1100,
+        "Y": - 2400,
+        "Z": -160
+
+    }
+
+
+    start_pos_y_test = {
+
+        "X": -750,
+        "Y": - 2400,
+        "Z": -160
+
+    }
+
+    start_pos_z_test = {
+
+        "X": -1200,
+        "Y": - 2300,
+        "Z": -140
+
+    }
+
+    current_position = {}
+
     threshold_reached = False
+    setting_up_axis_for_test = False
+    og_homed = False
 
     poll_for_completion_loop = None
     poll_for_threshold_detection = None
@@ -240,20 +305,50 @@ class StallJigScreen(Screen):
         self.populate_axis_grid(self.z_grid_container, 2)
     
 
+        self.current_position = {
+
+            "X": self.m.mpos_x,
+            "Y": self.m.mpos_y,
+            "Z": self.m.mpos_z
+
+        }
+
+        self.disable_motors = {
+
+            "X": self.m.disable_x_motors,
+            "Y": self.m.disable_y_motors,
+            "Z": self.m.disable_z_motor
+
+        }
+
+        self.enable_motors = {
+
+            "X": self.m.enable_x_motors,
+            "Y": self.m.enable_y_motors,
+            "Z": self.m.enable_z_motor
+
+        }
+
+
     def on_pre_enter(self):
         self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
 
-
     def on_pre_leave(self):
-        if self.expected_stall_alarm_detected():
-            self.systemtools_sm.sm.current = 'stall_jig'
-            self.register_threshold_detection()
+
+        if not self.self.systemtools_sm.sm.current.startswith('alarm'):
             return
+
+        self.systemtools_sm.sm.current = 'stall_jig'
+
+        if self.expected_stall_alarm_detected():
+            self.register_threshold_detection()
+
+        if self.expected_limit_alarm():
+            self.register_hard_limit_found()
 
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
-
 
     def populate_axis_grid(self, grid_container, axis):
         
@@ -291,13 +386,13 @@ class StallJigScreen(Screen):
     def expected_stall_alarm_detected(self):
 
         if not (
-            self.systemtools_sm.sm.current.startswith('alarm') and
             self.m.s.alarm.sg_alarm and
             self.axes[self.indices["axis"]] in self.m.s.alarm.stall_axis
             ):
-
             return False
 
+        self.m.s.alarm.sg_alarm = False
+        self.m.s.alarm.stall_axis = "W"
         return True
 
 
@@ -307,6 +402,19 @@ class StallJigScreen(Screen):
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = [51/255, 255/255, 0, 1]
         self.threshold_reached = True
+
+
+    def expected_limit_alarm(self):
+        if not self.axes[self.indices["axis"]] in self.m.s.alarm.limit_list:
+            return False
+
+        return True
+
+
+    def register_hard_limit_found(self):
+        self.m.resume_from_alarm()
+        self.test_status_label.text = "STALL POS FOUND"
+        self.expected_limit_found = True
 
 
     def start_homing(self):
@@ -329,11 +437,14 @@ class StallJigScreen(Screen):
         if self.m.state().startswith('Alarm'):
             print "Poll for homing success unscheduled"
             if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+            self.test_status_label.text = "ALARM"
 
         # if sequential_stream completes successfully
         elif self.m.s.is_sequential_streaming == False:
             print "Homing detected as success!"
-            self.homing_detected_as_complete()
+            self.test_status_label.text = "READY"
+            self.og_homed = True
+
 
 
     def grbl_reset(self):
@@ -363,98 +474,138 @@ class StallJigScreen(Screen):
         pass
 
     def run(self):
+
+        self.threshold_reached = False
         
         # If no tests have been started yet, SB will need to do a prep sequence instead
         if self.start_of_all_tests():
             return
 
+        if self.end_of_all_tests():
+            return
+
         axis = self.axes[self.indices["axis"]]
+
+        if not self.travel_to_stall_pos[axis]:
+            self.set_travel()
+            return
+
         threshold = self.threshold_dict[axis][self.indices["threshold"]]
         feed = self.feed_dict[axis][self.indices["feed"]]
 
         self.m.set_threshold_for_axis(axis, threshold)
         sleep(0.5)
-        self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + feed)
+        self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + str(feed))
         self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
-
-
-    def sb_has_travelled_or_detected(self):
-
-        if self.m.state().startswith("Idle"): self.back_off()
-        else: self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
-
-        # if self.threshold_reached: self.pass_condition()
-        # elif self.m.state().startswith("Idle"): self.fail_condition()
-        # else: self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
 
 
     def start_of_all_tests(self):
 
         if not (self.indices["axis"] == 0 and
             self.indices["threshold"] == 0 and
-            self.indices["feed"] == 0):
+            self.indices["feed"] == 0 and
+            not self.travel_to_stall_pos["X"]):
             return False
-            
+
         # start calibration/set up sequence here
 
         # HOME
+        if not self.og_homed: self.start_homing()
+
         # CALIBRATION CHECK
-        # SET STALL POSITION FOR X
+        self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
 
-        return True
-
-
-    def pass_condition(self):
-
-        self.pass_sub_test = True
-
-        
-
-    def back_off(self):
-
-        # refactor
-        if self.indices["axis"] == 0: 
-            final_pos = self.m.mpos_x() + backoff_x
-            feed = "F" + str(fast_x)
-
-        if self.indices["axis"] == 1:
-            final_pos = self.m.mpos_y() + backoff_y 
-            feed = "F" + str(fast_y)
-
-        if self.indices["axis"] == 2:
-            final_pos = self.m.mpos_z() + backoff_z
-            feed = "F" + str(fast_z)
-
-        self.m.send_any_gcode_command("G91 " + self.axes[self.indices["axis"]] + str(final_pos) + feed)
-        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(final_pos), 1)
+        # DISABLE SOFT LIMITS
+        # TELL USER TO FIX MAGNETS
 
 
-    def back_off_completed(self, final_pos):
 
-        if self.indices["axis"] == 0: pos = self.m.mpos_x()
-        if self.indices["axis"] == 1: pos = self.m.mpos_y()
-        if self.indices["axis"] == 2: pos = self.m.mpos_z()
+    def full_calibration_check(self):
+        if self.m.state().startswith("Idle"):
+            self.m.check_x_y_z_calibration()
 
-        if round(pos, 1) == round(final_pos, 1) and self.m.state().startswith("Idle"):
 
-            self.start_stalling_or_homing()
+        # clock ready to run tests
+
+
+    def ready_to_run_tests(self):
+        pass
+
+        # if idle: 
+            # disable soft limits
+            # go to start position
+            # tell user to fix magnets
+            # self.run_button.text = "RUN"
+
+
+
+
+    def end_of_all_tests(self):
+
+        if not (self.indices["axis"] + 1 < len(self.axes) and
+            self.indices["threshold"] + 1 < len(self.threshold_dict[self.axes[self.indices["axis"]]]) and
+            self.indices["feed"] + 1 < len(self.feed_dict[self.axes[self.indices["axis"]]])):
+            return False
+
+        self.test_status_label.text = "SENDING DATA"
+        self.do_data_send()
+
+
+    def sb_has_travelled_or_detected(self, dt):
+
+        if self.m.state().startswith("Idle"): self.back_off_and_find_position()
+        else: self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
+
+
+    def back_off_and_find_position(self):
+
+        self.m.enable_only_hard_limits()
+        axis = self.axes[self.indices["axis"]]
+        move_command = "G91 " + axis + str(self.back_off[axis]) + " F" + str(self.fast_travel[axis])
+        self.m.send_any_gcode_command(move_command)
+        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
+
+
+    def back_off_completed(self):
+
+        if self.expected_limit_found:
+            self.m.disable_only_hard_limits()
+            axis = self.axes[self.indices["axis"]]
+            move_command = "G91 " + axis + str(self.limit_pull_off[axis]) + " F" + str(self.fast_travel[axis])
+            self.m.send_any_gcode_command(move_command)
+            self.poll_to_relax_motors = Clock.schedule_once(lambda dt: self.relax_motors(), 1)
             return
 
-        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(final_pos), 1)
-
-
-    def start_stalling_or_homing(self):
-        pass # TBC
+        self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
 
 
     def relax_motors(self):
-        # write dedicated funcs for this in router_machine
-        pass
+
+        if self.m.state().startswith("Idle"):
+            self.disable_motors[self.axes[self.indices["axis"]]]()
+            sleep(1)
+            self.enable_motors[self.axes[self.indices["axis"]]]()
+            sleep(1)
+            self.m.enable_only_hard_limits()
+            self.pass_or_fail_test()
+            return
+
+        self.poll_to_relax_motors = Clock.schedule_once(lambda dt: self.relax_motors(), 1)
 
 
-    def reposition_for_next_test(self):
-        pass
+    def pass_or_fail_test(self):
 
+        if setting_up_axis_for_test: 
+            pass
+
+        elif self.threshold_reached:
+            self.record_stall_event()
+            self.go_to_next_threshold()
+
+        else:
+            self.go_to_next_feed_set()
+
+        self.run()
 
 
     def record_stall_event(self):
@@ -491,11 +642,7 @@ class StallJigScreen(Screen):
         self.stall_test_events.append(last_test_pass)
 
 
-
-    def start_next_test(self):
-
-        self.record_stall_event()
-        self.threshold_reached = False
+    def go_to_next_threshold(self):
 
         if self.indices["threshold"] + 1 < len(self.threshold_dict[self.axes[self.indices["axis"]]]):
             self.indices["threshold"] = self.indices["threshold"] + 1
@@ -509,16 +656,6 @@ class StallJigScreen(Screen):
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
 
-        else: 
-            self.end_of_tests()
-
-
-
-    def fail_condition(self):
-
-        self.pass_sub_test = False
-
-
 
     def go_to_next_feed_set(self):
 
@@ -531,31 +668,36 @@ class StallJigScreen(Screen):
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
 
-        else: 
-            self.end_of_tests()
+
+    def set_travel(self):
+
+        if not self.m.state().startswith("Idle"):
+            self.test_status_label.text = "NOT IDLE!"
+            return
+
+        axis = self.axes[self.indices["axis"]]
+        threshold = self.threshold_dict[axis][0]
+
+        start_pos = self.current_position[axis]()
+
+        self.m.set_threshold_for_axis(axis, threshold)
+        sleep(0.5)
+        self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + str(feed))
+        self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
 
 
+    def stall_position_found(self, axis, start_pos):
 
+        if self.threshold_reached:
+            self.travel_to_stall_pos[axis] = self.current_position[axis]() - start_pos
+            self.back_off_and_find_position()
+            return
 
-    def end_of_tests(self):
-
-        self.test_status_label.text = "SENDING DATA"
-        self.do_data_send()
+        self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
 
 
     def unschedule_all_events(self):
         pass
-
-
-
-
-
-
-
-
-
-
-
 
 
 

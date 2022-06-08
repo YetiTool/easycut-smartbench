@@ -1170,6 +1170,8 @@ class RouterMachine(object):
     def buffer_capacity(self): return self.s.serial_blocks_available
 
 
+# GRBL STATES AND SETTINGS
+
     def set_state(self, temp_state):
         grbl_state_words = ['Idle', 'Run', 'Hold', 'Jog', 'Alarm', 'Door', 'Check', 'Home', 'Sleep']
         if temp_state in grbl_state_words:
@@ -1226,6 +1228,47 @@ class RouterMachine(object):
         print 'switching soft limits & hard limts ON'
         settings = ['$22=1','$20=1','$21=1']
         self.s.start_sequential_stream(settings)
+
+    def disable_only_hard_limits(self):
+
+        log("TURNING OFF HARD LIMITS")
+        settings = ['$21=0']
+        self.s.start_sequential_stream(settings)
+
+    def enable_only_hard_limits(self):
+
+        log("TURNING ON HARD LIMITS")
+        settings = ['$21=1']
+        self.s.start_sequential_stream(settings)
+
+    # settings for v1.3 and above
+
+    def disable_x_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable x motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_x_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable x motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=1)
+
+    def disable_y_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable y motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=0)
+            self.send_command_to_motor("Disable X motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_y_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable y motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Disable X motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
+
+    def disable_z_motor(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable z motor'):
+            self.send_command_to_motor("Disable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_z_motor(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable z motor'):
+            self.send_command_to_motor("Disable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+
 
 # SETTINGS GETTERS
     def serial_number(self): 
