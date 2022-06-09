@@ -1241,6 +1241,18 @@ class RouterMachine(object):
         settings = ['$21=1']
         self.s.start_sequential_stream(settings)
 
+    def disable_only_soft_limits(self):
+
+        log("TURNING OFF SOFT LIMITS")
+        settings = ['$20=0']
+        self.s.start_sequential_stream(settings)
+
+    def enable_only_soft_limits(self):
+
+        log("TURNING ON SOFT LIMITS")
+        settings = ['$20=1']
+        self.s.start_sequential_stream(settings)
+
     # settings for v1.3 and above
 
     def disable_x_motors(self):
