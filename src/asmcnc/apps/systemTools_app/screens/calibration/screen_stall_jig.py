@@ -349,6 +349,7 @@ class StallJigScreen(Screen):
 
     poll_for_homing_completion_loop = None
     poll_for_ready_to_check_calibration = None
+    poll_for_ready_to_run_tests = None
     poll_for_going_to_start_pos = None
     poll_to_set_travel = None
     poll_for_stall_position_found = None
@@ -439,6 +440,7 @@ class StallJigScreen(Screen):
     def unschedule_all_events(self):
         if self.poll_for_homing_completion_loop != None: Clock.unschedule(self.poll_for_homing_completion_loop)
         if self.poll_for_ready_to_check_calibration != None: Clock.unschedule(self.poll_for_ready_to_check_calibration)
+        if self.poll_for_ready_to_run_tests != None: Clock.unschedule(self.poll_for_ready_to_run_tests)
         if self.poll_for_going_to_start_pos != None: Clock.unschedule(self.poll_for_going_to_start_pos)
         if self.poll_to_set_travel != None: Clock.unschedule(self.poll_to_set_travel)
         if self.poll_for_stall_position_found != None: Clock.unschedule(self.poll_for_stall_position_found)
@@ -534,7 +536,7 @@ class StallJigScreen(Screen):
         tidx = self.indices["threshold"]
         fidx = self.indices["feed"]
 
-        button_object = self.grid_button_objects[self.generate_grid_key(aidx, tidx, fidx)]
+        button_object = self.get_grid_button(aidx, tidx, fidx)
         button_object.background_normal = ''
         button_object.background_color = colour
         button_object.background_disabled_normal = ''
@@ -569,6 +571,7 @@ class StallJigScreen(Screen):
     # RETURN TO FACTORY SETTINGS
 
     def back_to_fac_settings(self):
+
         self.m.enable_only_soft_limits()
         self.restore_acceleration()
         self.systemtools_sm.open_factory_settings_screen()
@@ -668,14 +671,12 @@ class StallJigScreen(Screen):
         # if alarm state is triggered which prevents homing from completing, stop checking for success
         if self.m.state().startswith('Alarm'):
             log("Poll for homing success unscheduled")
-            if self.poll_for_homing_completion_loop != None: Clock.unschedule(self.poll_for_homing_completion_loop)
             self.test_status_label.text = "ALARM"
             return
 
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
             log("Homing detected as success!")
-            if self.poll_for_homing_completion_loop != None: Clock.unschedule(self.poll_for_homing_completion_loop)
             self.test_status_label.text = "READY"
             return
 
@@ -956,19 +957,20 @@ class StallJigScreen(Screen):
         log("Run a calibration check in all axes")
         self.test_status_label.text = "CHECK CALIBRATION"
         self.m.check_x_y_z_calibration()
-        Clock.schedule_interval(self.ready_to_run_tests, 5)
+        self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 60)
 
 
     def ready_to_run_tests(self, dt):
 
-        if self.m.checking_calibration_in_progress:
+        if (self.m.checking_calibration_in_progress or \
+            (not self.m.state().startswith("Idle")) or \
+            self.test_stopped):
+            if self.VERBOSE: log("Poll for ready to run tests")
+            self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 3)
             return
 
         if self.m.checking_calibration_fail_info:
             self.test_status_label.text = "CAL CHECK FAIL"
-            return
-
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
             return
 
         log("Ready to run tests, disabling limits & maxing acceleration")
