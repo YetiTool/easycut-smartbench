@@ -1265,13 +1265,13 @@ class RouterMachine(object):
 
     def disable_y_motors(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable y motors'):
-            self.send_command_to_motor("Disable X motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=0)
-            self.send_command_to_motor("Disable X motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=0)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=0)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=0)
 
     def enable_y_motors(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable y motors'):
-            self.send_command_to_motor("Disable X motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
-            self.send_command_to_motor("Disable X motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
 
     def disable_z_motor(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable z motor'):
@@ -2839,7 +2839,7 @@ class RouterMachine(object):
     ## SET SMART FEATURES
     def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
-            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + motor + ", THR: " + threshold
+            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + str(motor) + ", THR: " + str(threshold)
             self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
 
     def set_threshold_for_axis(self, axis, threshold):
