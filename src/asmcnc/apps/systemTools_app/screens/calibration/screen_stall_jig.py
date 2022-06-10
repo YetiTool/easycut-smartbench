@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
-Created Mayh 2019
+Created June 2022
 
 @author: Letty
 
-Basic screen 
+Stall detection experiment
 '''
 import kivy
 from kivy.lang import Builder
