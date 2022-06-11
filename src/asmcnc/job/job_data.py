@@ -6,6 +6,7 @@ Module used to keep track of information about the current job
 import sys, os, re
 from datetime import datetime, timedelta
 from pipes import quote
+from turtle import distance
 from chardet import detect
 from itertools import takewhile
 import traceback
@@ -188,7 +189,7 @@ class JobData(object):
             # metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
-            print self.metadata_dict
+            print(self.metadata_dict)
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
@@ -425,3 +426,149 @@ class JobData(object):
         except:
             print("Could not write recovery info")
             print(str(traceback.format_exc()))
+
+
+    def generate_recovery_gcode(self):
+        try:
+            recovery_gcode = []
+
+            # Recover most recent spindle speed
+            spindle_speed_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'S' in s), None)
+            if spindle_speed_line:
+                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+                recovery_gcode.append("S" + spindle_speed)
+
+            # Recover most recent feedrate
+            feedrate_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'F' in s), None)
+            if feedrate_line:
+                feedrate = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
+
+
+            # Recover most recent position
+            x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
+            if x_line:
+                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
+            else:
+                x = "0.000"
+            y_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
+            if y_line:
+                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
+            else:
+                y = "0.000"
+            z_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
+            if z_line:
+                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
+            else:
+                z = "0.000"
+
+
+            # Recover modal gcodes
+
+            # Motion mode
+            motion_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G0?[0,1](\D|$)", s)), None)
+            if motion_line:
+                # Do G0 or G1 last depending on which happened latest
+                if re.search("G0?1(\D|$)", motion_line):
+                    recovery_gcode.append("G0 X" + x + " Y" + y)
+                    recovery_gcode.append("G0 Z" + z)
+                    if feedrate_line:
+                        recovery_gcode.append("G1 F" + feedrate)
+                else:
+                    if feedrate_line:
+                        recovery_gcode.append("G1 F" + feedrate)
+                    recovery_gcode.append("G0 X" + x + " Y" + y)
+                    recovery_gcode.append("G0 Z" + z)
+            else:
+                recovery_gcode.append("G0 X" + x + " Y" + y)
+                recovery_gcode.append("G0 Z" + z)
+                if feedrate_line:
+                    recovery_gcode.append("G1 F" + feedrate)
+
+            # Coordinate System Select
+            coord_system_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G59.1', 'G59.2', 'G59.3', 'G54', 'G55', 'G56', 'G57', 'G58', 'G59'])), None)
+            if coord_system_line:
+                recovery_gcode.append(next((m for m in ['G59.1', 'G59.2', 'G59.3', 'G54', 'G55', 'G56', 'G57', 'G58', 'G59'] if m in coord_system_line), None))
+
+            # Plane selection
+            plane_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G17', 'G18', 'G19'])), None)
+            if plane_line:
+                recovery_gcode.append(next((m for m in ['G17', 'G18', 'G19'] if m in plane_line), None))
+
+            # Distance mode
+            distance_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]([A-Z]|\s|$)", s)), None)
+            if distance_line:
+                # Recovery not allowed if G91 is used
+                if re.search("G91([A-Z]|\s|$)", distance_line):
+                    return False
+                recovery_gcode.append("G90")
+
+            # Arc IJK distance mode
+            arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G90.1', 'G91.1'])), None)
+            if arc_mode_line:
+                recovery_gcode.append(next((m for m in ['G90.1', 'G91.1'] if m in arc_mode_line), None))
+
+            # Feed rate mode
+            feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G93', 'G94', 'G95'])), None)
+            if feedrate_mode_line:
+                recovery_gcode.append(next((m for m in ['G93', 'G94', 'G95'] if m in feedrate_mode_line), None))
+
+            # Units
+            unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G20', 'G21'])), None)
+            if unit_line:
+                recovery_gcode.append(next((m for m in ['G20', 'G21'] if m in unit_line), None))
+
+            # Cutter radius compensation
+            if next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'G40' in s), None):
+                recovery_gcode.append('G40')
+
+            # Tool length offset
+            tool_length_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G43.1', 'G49'])), None)
+            if tool_length_line:
+                recovery_gcode.append(next((m for m in ['G43.1', 'G49'] if m in tool_length_line), None))
+
+            # Program mode
+            program_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[0,1,2](\D|$)|M30", s)), None)
+            if program_line:
+                # String needs to be sliced to different length depending on whether there is an extra 0
+                if re.search("M0[0,1,2](\D|$)|M30", program_line):
+                    recovery_gcode.append(re.search("M0?[0,1,2](\D|$)|M30", program_line).group(0)[:3])
+                else:
+                    recovery_gcode.append(re.search("M0?[0,1,2](\D|$)|M30", program_line).group(0)[:2])
+
+            # Spindle state
+            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3,4,5](\D|$)", s)), None)
+            if spindle_state_line:
+                # String needs to be sliced to different length depending on whether there is an extra 0
+                if re.search("M0[3,4,5](\D|$)", spindle_state_line):
+                    recovery_gcode.append(re.search("M0?[3,4,5](\D|$)", spindle_state_line).group(0)[:3])
+                else:
+                    recovery_gcode.append(re.search("M0?[3,4,5](\D|$)", spindle_state_line).group(0)[:2])
+
+            # Coolant state
+            gcode_to_search = reversed(self.job_gcode[:self.job_recovery_selected_line])
+            coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,8,9](\D|$)", s)), None)
+            if coolant_line:
+                if re.search("M0?9(\D|$)", coolant_line):
+                    recovery_gcode.append("M9")
+                else:
+                    # M7 and M8 can be enabled simultaneously according to documentation
+                    if 'M7' in coolant_line or 'M07' in coolant_line:
+                        previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[8,9](\D|$)", s)), None)
+                        if 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
+                            recovery_gcode += ['M8', 'M7']
+                        else:
+                            recovery_gcode.append('M7')
+                    elif 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
+                        previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
+                        if 'M7' in coolant_line or 'M07' in coolant_line:
+                            recovery_gcode += ['M7', 'M8']
+                        else:
+                            recovery_gcode.append('M8')
+
+            recovery_gcode += self.job_gcode[self.job_recovery_selected_line:]
+
+            return recovery_gcode
+
+        except:
+            # An error occurred, job cannot be recovered
+            return False

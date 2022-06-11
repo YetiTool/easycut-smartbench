@@ -217,4 +217,5 @@ class NudgeScreen(Screen):
         self.sm.current = 'job_recovery'
 
     def next_screen(self):
+        self.jd.generate_recovery_gcode()
         self.sm.current = 'home'
