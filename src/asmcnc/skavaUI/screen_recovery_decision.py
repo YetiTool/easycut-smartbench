@@ -87,7 +87,7 @@ class RecoveryDecisionScreen(Screen):
         self.sm.current = 'job_recovery'
 
     def repeat_job(self):
-        self.jd.job_recovery_selected_line = -1
+        self.jd.reset_recovery()
         self.sm.current = 'home'
 
     def back_to_home(self):

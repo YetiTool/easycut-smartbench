@@ -591,6 +591,9 @@ class SerialConnection(object):
 
         self.jd.job_gcode_running = []
         self.jd.percent_thru_job = 100
+        # Check if job recovery has been completed
+        if self.jd.job_recovery_filepath == self.jd.filename:
+            self.jd.clear_recovery_file()
 
     def cancel_stream(self):
 

@@ -603,16 +603,29 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
-        # Turn vac on if spindle gets turned on during job
-        if ((str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) or (
-                str(self.jd.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
-            modified_job_gcode.append("AE")  # turns vacuum on
-            modified_job_gcode.append("G4 P2")  # sends pause command
-            modified_job_gcode.extend(self.jd.job_gcode)
-            modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
-            modified_job_gcode.append("AF")  # turns vac off
+        # If job recovery is being performed, use job recovery gcode instead
+        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+            # Turn vac on if spindle gets turned on during job
+            if ((str(self.jd.job_recovery_gcode).count("M3") > str(self.jd.job_recovery_gcode).count("M30")) or (
+                    str(self.jd.job_recovery_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
+                modified_job_gcode.append("AE")  # turns vacuum on
+                modified_job_gcode.append("G4 P2")  # sends pause command
+                modified_job_gcode.extend(self.jd.job_recovery_gcode)
+                modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
+                modified_job_gcode.append("AF")  # turns vac off
+            else:
+                modified_job_gcode.extend(self.jd.job_recovery_gcode)
         else:
-            modified_job_gcode.extend(self.jd.job_gcode)
+            # Turn vac on if spindle gets turned on during job
+            if ((str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) or (
+                    str(self.jd.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
+                modified_job_gcode.append("AE")  # turns vacuum on
+                modified_job_gcode.append("G4 P2")  # sends pause command
+                modified_job_gcode.extend(self.jd.job_gcode)
+                modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
+                modified_job_gcode.append("AF")  # turns vac off
+            else:
+                modified_job_gcode.extend(self.jd.job_gcode)
 
         # Spindle command??
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution

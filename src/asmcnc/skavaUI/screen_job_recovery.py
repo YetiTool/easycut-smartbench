@@ -359,7 +359,7 @@ class JobRecoveryScreen(Screen):
         self.m.jog_absolute_xy(self.pos_x, self.pos_y, 8000)
 
     def back_to_home(self):
-        self.jd.job_recovery_selected_line = -1
+        self.jd.reset_recovery()
         self.sm.current = 'home'
 
     def next_screen(self):

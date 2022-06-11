@@ -83,6 +83,7 @@ class JobData(object):
     job_recovery_filepath = ''
     job_recovery_cancel_line = 0
     job_recovery_selected_line = -1
+    job_recovery_gcode = []
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
@@ -422,11 +423,30 @@ class JobData(object):
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
             self.job_recovery_selected_line = -1
+            self.job_recovery_gcode = []
         
         except:
             print("Could not write recovery info")
             print(str(traceback.format_exc()))
 
+    def clear_recovery_file(self):
+        try:
+            open(self.job_recovery_info_filepath, 'w').close()
+
+            # Simultaneously update variables
+            self.job_recovery_filepath = ''
+            self.job_recovery_cancel_line = 0
+            self.job_recovery_selected_line = -1
+            self.job_recovery_gcode = []
+        
+        except:
+            print("Could not clear recovery info")
+            print(str(traceback.format_exc()))
+
+
+    def reset_recovery(self):
+        self.job_recovery_selected_line = -1
+        self.job_recovery_gcode = []
 
     def generate_recovery_gcode(self):
         try:
@@ -499,7 +519,7 @@ class JobData(object):
             if distance_line:
                 # Recovery not allowed if G91 is used
                 if re.search("G91([A-Z]|\s|$)", distance_line):
-                    return False
+                    return False, 'This job contains the G91 g-code, so it cannot be recovered.'
                 recovery_gcode.append("G90")
 
             # Arc IJK distance mode
@@ -558,17 +578,18 @@ class JobData(object):
                             recovery_gcode += ['M8', 'M7']
                         else:
                             recovery_gcode.append('M7')
-                    elif 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
+                    elif 'M8' in coolant_line or 'M08' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
-                        if 'M7' in coolant_line or 'M07' in coolant_line:
+                        if 'M7' in previous_coolant_line or 'M07' in previous_coolant_line:
                             recovery_gcode += ['M7', 'M8']
                         else:
                             recovery_gcode.append('M8')
 
             recovery_gcode += self.job_gcode[self.job_recovery_selected_line:]
+            self.job_recovery_gcode = recovery_gcode
 
-            return recovery_gcode
+            return True, ''
 
         except:
             # An error occurred, job cannot be recovered
-            return False
+            return False, 'This job cannot be recovered! Please check your job for errors.'

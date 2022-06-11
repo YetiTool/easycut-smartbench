@@ -1,3 +1,4 @@
+from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
@@ -210,12 +211,21 @@ class NudgeScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
 
     def back_to_home(self):
-        self.jd.job_recovery_selected_line = -1
+        self.jd.reset_recovery()
         self.sm.current = 'home'
 
     def previous_screen(self):
         self.sm.current = 'job_recovery'
 
     def next_screen(self):
-        self.jd.generate_recovery_gcode()
-        self.sm.current = 'home'
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
+
+        def generate_gcode():
+            success, message = self.jd.generate_recovery_gcode()
+            wait_popup.popup.dismiss()
+            if not success:
+                popup_info.PopupError(self.sm, self.l, message)
+                self.jd.reset_recovery()
+            self.sm.current = 'home'
+
+        Clock.schedule_once(lambda dt: generate_gcode(), 0.5)
