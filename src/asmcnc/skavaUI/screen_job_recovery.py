@@ -1,3 +1,4 @@
+import re
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
@@ -185,7 +186,7 @@ Builder.load_string("""
                             id: pos_label
                             text: "wX: | wY: | wZ:"
                             color: 0,0,0,1
-                            font_size: dp(20)
+                            font_size: dp(16)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -194,7 +195,7 @@ Builder.load_string("""
                             id: speed_label
                             text: "F: | S:"
                             color: 0,0,0,1
-                            font_size: dp(20)
+                            font_size: dp(16)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -309,7 +310,6 @@ class JobRecoveryScreen(Screen):
         if self.jd.job_recovery_selected_line == -1:
             # Change this to get info by scraping file in the future
             self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = 0, 0, 0, 0, 0
-            self.update_pos_speed_info()
 
             self.line_input.text = ""
             self.initial_line_index = self.jd.job_recovery_cancel_line
@@ -319,21 +319,17 @@ class JobRecoveryScreen(Screen):
 
             self.stopped_on_label.text = "Job stopped on line " + str(self.initial_line_index)
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
-
-    def update_pos_speed_info(self):
-        self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (str(self.pos_x), str(self.pos_y), str(self.pos_z))
-        self.speed_label.text = "F: %s | S: %s" % (str(self.feed), str(self.speed))
+            self.update_display()
 
     def scroll_up(self):
         if self.selected_line_index > 0:
             self.selected_line_index -= 1
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+            self.update_display()
 
     def scroll_down(self):
         if self.selected_line_index < self.max_index:
             self.selected_line_index += 1
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+            self.update_display()
 
     def jump_to_line(self, instance, value):
         if value:
@@ -343,11 +339,48 @@ class JobRecoveryScreen(Screen):
             else:
                 # If user inputs values outside of range, just show max line
                 self.selected_line_index = min(int(value), self.max_index)
-                self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+                self.update_display()
         else:
             # If user clears input, return to initial line
             self.selected_line_index = self.initial_line_index
-            self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+            self.update_display()
+
+    def update_display(self):
+        self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
+
+        # Recover most recent spindle speed
+        spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'S' in s), None)
+        if spindle_speed_line:
+            self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+        else:
+            self.speed = "Undefined"
+
+        # Recover most recent feedrate
+        feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'F' in s), None)
+        if feedrate_line:
+            self.feed = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
+        else:
+            self.feed = "Undefined"
+
+        # Recover most recent position
+        x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'X' in s), None)
+        if x_line:
+            self.pos_x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
+        else:
+            self.pos_x = "0.000"
+        y_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Y' in s), None)
+        if y_line:
+            self.pos_y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
+        else:
+            self.pos_y = "0.000"
+        z_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Z' in s), None)
+        if z_line:
+            self.pos_z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
+        else:
+            self.pos_z = "0.000"
+
+        self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (str(self.pos_x), str(self.pos_y), str(self.pos_z))
+        self.speed_label.text = "F: %s | S: %s" % (str(self.feed), str(self.speed))
 
     def get_info(self):
 
