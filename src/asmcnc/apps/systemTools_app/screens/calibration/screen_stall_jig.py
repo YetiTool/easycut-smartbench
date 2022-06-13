@@ -904,6 +904,7 @@ class StallJigScreen(Screen):
 
         if not self.m.state().startswith("Idle") or self.test_stopped:
             self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
+            return
 
         if not self.result_label.text == "THRESHOLD REACHED":
             self.result_label.text = "THRESHOLD NOT REACHED"
