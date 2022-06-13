@@ -623,10 +623,10 @@ class StallJigScreen(Screen):
             return
 
         self.systemtools_sm.sm.current = 'stall_jig'
-        self.m.reset_from_alarm()
 
         # UPDATE USER ON WHAT ALARM IS HAPPENING, IN CASE IT'S A GENERAL ONE
         self.test_status_label.text = self.m.s.alarm.alarm_code
+        self.m.reset_from_alarm()
 
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
@@ -1185,7 +1185,7 @@ class StallJigScreen(Screen):
         self.stall_test_events.append(last_test_pass)
 
         log("Stall data: ")
-        for i in range(len(self.last_test_pass)):
+        for i in range(len(last_test_pass)):
             log(self.stall_test_data_col_names[i] + last_test_pass[i])
 
 
