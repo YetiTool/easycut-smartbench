@@ -223,9 +223,9 @@ class StallJigScreen(Screen):
 
     absolute_start_pos = {
 
-        "X": -1300,
-        "Y": -2502,
-        "Z": 0
+        "X": -1299,
+        "Y": -2501,
+        "Z": 1
 
     }
 
@@ -798,8 +798,8 @@ class StallJigScreen(Screen):
         move_sequence = [
 
                         "G0 G53 Z-" + str(self.m.s.setting_27),
-                        "G90" + "X" + str(pos_dict["X"]) + "Y" + str(pos_dict["Y"]) + "F" + str(self.fast_travel["Y"]),
-                        "G90" + "Z" + str(pos_dict["Z"]) + "F" + str(self.fast_travel["Z"])
+                        "G90 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]),
+                        "G90 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"])
         ]
 
         self.m.s.start_sequential_stream(move_sequence)
@@ -976,6 +976,9 @@ class StallJigScreen(Screen):
         # update labels for user input
         self.test_status_label.text = "FIX MAGNETS"
         self.run_button.text = "RUN"
+
+        self.enable_all_buttons_except_run()
+        self.disable_run(False)
 
 
     # NECESSARY SET UP THAT'S DONE EACH TIME A NEW AXIS IS TESTED ----------------------------------------------------------
