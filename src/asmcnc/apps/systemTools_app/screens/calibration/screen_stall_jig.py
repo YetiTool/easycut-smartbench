@@ -223,9 +223,9 @@ class StallJigScreen(Screen):
 
     absolute_start_pos = {
 
-        "X": -1100,
-        "Y": -2400,
-        "Z": -160
+        "X": -1300,
+        "Y": -2502,
+        "Z": 0
 
     }
 
@@ -233,25 +233,25 @@ class StallJigScreen(Screen):
     ### (SO NOT TRUE MACHINE COORDS)
     start_pos_x_test = {
 
-        "X": -1100,
-        "Y": -2400,
-        "Z": -160
+        "X": -1300,
+        "Y": -2502,
+        "Z": 0
 
     }
 
     start_pos_y_test = {
 
         "X": -750,
-        "Y": -2400,
-        "Z": -160
+        "Y": -2502,
+        "Z": 0
 
     }
 
     start_pos_z_test = {
 
-        "X": -1200,
-        "Y": -2300,
-        "Z": -140
+        "X": -1300,
+        "Y": -2502,
+        "Z": 0
 
     }
 
@@ -278,8 +278,6 @@ class StallJigScreen(Screen):
 
     }
 
-    three_axis_max_feed = 6000
-
     ## ALL THE OTHER EXPERIMENTAL PARAMETERS
 
     stall_tolerance = {
@@ -290,17 +288,9 @@ class StallJigScreen(Screen):
 
     }
 
-    overjog = {
+    back_off = {
 
-        "X": 8,
-        "Y": 8,
-        "Z": 8
-
-    }
-
-    backoff = {
-
-        "X": 10,
+        "X": -10,
         "Y": -10,
         "Z": 10
 
@@ -308,17 +298,17 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": -5,
+        "X": 5,
         "Y": 5,
-        "Z": 5
+        "Z": -5
 
     }    
 
     initial_move_distance = {
 
-        "X": -10,
-        "Y": 10,
-        "Z": -10
+        "X": 20,
+        "Y": 20,
+        "Z": -20
 
     }
 
@@ -351,7 +341,7 @@ class StallJigScreen(Screen):
     poll_for_ready_to_check_calibration = None
     poll_for_ready_to_run_tests = None
     poll_for_going_to_start_pos = None
-    poll_to_set_travel = None
+    poll_to_find_travel_from_start_pos = None
     poll_for_stall_position_found = None
     poll_for_threshold_detection = None
     poll_for_back_off_completion = None
@@ -442,7 +432,7 @@ class StallJigScreen(Screen):
         if self.poll_for_ready_to_check_calibration != None: Clock.unschedule(self.poll_for_ready_to_check_calibration)
         if self.poll_for_ready_to_run_tests != None: Clock.unschedule(self.poll_for_ready_to_run_tests)
         if self.poll_for_going_to_start_pos != None: Clock.unschedule(self.poll_for_going_to_start_pos)
-        if self.poll_to_set_travel != None: Clock.unschedule(self.poll_to_set_travel)
+        if self.poll_to_find_travel_from_start_pos != None: Clock.unschedule(self.poll_to_find_travel_from_start_pos)
         if self.poll_for_stall_position_found != None: Clock.unschedule(self.poll_for_stall_position_found)
         if self.poll_for_threshold_detection != None: Clock.unschedule(self.poll_for_threshold_detection)
         if self.poll_for_back_off_completion != None: Clock.unschedule(self.poll_for_back_off_completion)
@@ -1004,7 +994,7 @@ class StallJigScreen(Screen):
         self.poll_for_going_to_start_pos = Clock.schedule_once(self.go_to_start_pos, 2)
 
 
-    def go_to_start_pos(self, dt):
+    def go_to_start_pos(self, dt): # may want to set this to 0,0,0 and turn off limits
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll for going to start position")
@@ -1015,27 +1005,42 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "GO TO START POS"
 
         # go to test start position, relative to faux home
+        self.m.disable_only_hard_limits()
         self.move_all_axes(self.start_positions[self.current_axis()])
 
         # when start pos set up, set travel for stall
-        self.poll_to_set_travel = Clock.schedule_once(self.set_travel, 1)
+        self.poll_to_find_travel_from_start_pos = Clock.schedule_once(self.find_travel_from_start_pos, 1)
 
     ## LOWER THE THRESHOLD AND MAX OUT THE FEED TO RECORD THE POSITION WHERE WE EXPECT SB TO STALL
 
-    def set_travel(self):
+    def find_travel_from_start_pos(self):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll for setting travel")
-            self.poll_to_set_travel = Clock.schedule_once(self.set_travel, 1)
+            self.poll_to_find_travel_from_start_pos = Clock.schedule_once(self.find_travel_from_start_pos, 1)
             return
 
         log("Set expected travel to stall position")
         self.test_status_label.text = "SET TRAVEL"
 
         start_pos = self.current_position[self.current_axis()]()
+        
+        log("Pull off from limit")
+        move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[axis]) + " F" + str(self.fast_travel[axis])
+        self.m.send_any_gcode_command(move_command)
+
+        self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(axis, start_pos), 1)
+
+    def prepare_to_find_stall_pos(self, start_pos):
+
+        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+            if self.VERBOSE: log("Poll to prepare to find stall pos")
+            self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(axis, start_pos), 1)
+            return
+
+        self.m.enable_only_hard_limits()
         self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0)
         self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
-
 
     def stall_position_found(self, axis, start_pos):
 
@@ -1051,7 +1056,6 @@ class StallJigScreen(Screen):
         log("Stall position found")
         self.travel_to_stall_pos[axis] = self.current_position[axis]() - start_pos
         self.back_off_and_find_position()
-
 
     # PARSE RESULTS OF EXPERIMENT ------------------------------------------------------------------------------------------
 
@@ -1176,6 +1180,9 @@ class StallJigScreen(Screen):
 
 
     # testing
+
+    # currently doesn't check that position is within stall tolerance
+    # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
 
     # measurement creating & refactoring
     # set up database queries etc. 
