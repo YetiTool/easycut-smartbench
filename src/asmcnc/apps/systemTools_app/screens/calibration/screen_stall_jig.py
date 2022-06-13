@@ -177,6 +177,8 @@ def log(message):
 
 class StallJigScreen(Screen):
 
+    dev_mode = True
+
     # ALL NUMBERS ARE DECLARED HERE, SO THAT THEY CAN BE EASILY EDITED AS/WHEN REQUIRED
 
     ## AXES, FEEDS, AND THRESHOLDS
@@ -941,7 +943,13 @@ class StallJigScreen(Screen):
         self.start_homing()
 
         # CALIBRATION CHECK
-        self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
+
+        if not self.dev_mode: 
+            self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
+
+        else: 
+            self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 2)
+
         return True
 
 
