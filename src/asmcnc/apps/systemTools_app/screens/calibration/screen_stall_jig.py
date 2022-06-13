@@ -665,7 +665,7 @@ class StallJigScreen(Screen):
     def expected_limit_alarm(self):
 
         if  self.current_axis() in self.m.s.alarm.trigger_description or \
-            self.current_axis.lower() in self.m.s.alarm.trigger_description:
+            self.current_axis().lower() in self.m.s.alarm.trigger_description:
             return True
 
         return False
