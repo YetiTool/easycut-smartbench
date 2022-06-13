@@ -1186,7 +1186,7 @@ class StallJigScreen(Screen):
 
         log("Stall data: ")
         for i in range(len(last_test_pass)):
-            log(self.stall_test_data_col_names[i] + last_test_pass[i])
+            log(str(self.stall_test_data_col_names[i]) + str(last_test_pass[i]))
 
 
     ## IF TEST PASSES, GO TO NEXT THRESHOLD (UNLESS DONE ALL THRESHOLDS IN FEED SET)
