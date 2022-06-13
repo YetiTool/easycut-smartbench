@@ -871,7 +871,7 @@ class StallJigScreen(Screen):
         log("Back off and find position")
         self.test_status_label.text = "REFIND POS"
         self.m.enable_only_hard_limits()
-        move_command = "G91 " + self.current_axis() + str(self.back_off[axis]) + " F" + str(self.fast_travel[axis])
+        move_command = "G91 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         self.m.send_any_gcode_command(move_command)
         self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
 
@@ -888,7 +888,7 @@ class StallJigScreen(Screen):
         self.m.disable_only_hard_limits()
         self.expected_limit_found = False
         log("Pull off from limit")
-        move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[axis]) + " F" + str(self.fast_travel[axis])
+        move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         self.m.send_any_gcode_command(move_command)
         self.poll_to_relax_motors = Clock.schedule_once(lambda dt: self.relax_motors(), 1)
 
