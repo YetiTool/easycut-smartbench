@@ -308,8 +308,8 @@ class StallJigScreen(Screen):
 
     initial_move_distance = {
 
-        "X": 20,
-        "Y": 20,
+        "X": 200,
+        "Y": 200,
         "Z": -20
 
     }
