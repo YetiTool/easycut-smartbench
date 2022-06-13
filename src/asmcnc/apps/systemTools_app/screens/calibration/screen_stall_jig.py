@@ -365,7 +365,7 @@ class StallJigScreen(Screen):
     threshold_detection_event = None
     hard_limit_found_event = None
     set_expected_limit_found_flag_event = None
-
+    poll_to_start_back_off = None
 
     ## DATABASE OBJECTS
 
@@ -465,6 +465,7 @@ class StallJigScreen(Screen):
         if self.threshold_detection_event != None: Clock.unschedule(self.threshold_detection_event)
         if self.hard_limit_found_event != None: Clock.unschedule(self.hard_limit_found_event)
         if self.set_expected_limit_found_flag_event != None: Clock.unschedule(self.set_expected_limit_found_flag_event)
+        if self.poll_to_start_back_off != None: Clock.unschedule(self.poll_to_start_back_off)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -901,6 +902,9 @@ class StallJigScreen(Screen):
 
     def back_off_and_find_position(self):
 
+        if not self.m.state().startswith("Idle") or self.test_stopped:
+            self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
+
         if not self.result_label.text == "THRESHOLD REACHED":
             self.result_label.text = "THRESHOLD NOT REACHED"
             self.result_label.background_color = self.fail_orange
@@ -1137,7 +1141,7 @@ class StallJigScreen(Screen):
             return
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
-        self.back_off_and_find_position()
+        self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
 
     ## RECORD STALL EVENT TO SEND TO DATABASE AT END OF ALL EXPERIMENTS 
     ## NOTE THAT THIS IS ONLY CALLED IF THE TEST PASSES - WE DO NOT RECORD FAILED EXPERIMENT DATA IN THE DATABASE
