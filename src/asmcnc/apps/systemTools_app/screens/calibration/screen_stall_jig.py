@@ -664,11 +664,10 @@ class StallJigScreen(Screen):
 
     def expected_limit_alarm(self):
 
-        if  self.current_axis() in self.m.s.alarm.trigger_description or \
-            self.current_axis().lower() in self.m.s.alarm.trigger_description:
-            return True
+        if not self.current_axis() in self.get_limits():
+            return False
 
-        return False
+        return True
 
     def register_hard_limit_found(self):
         self.m.resume_from_alarm()
@@ -678,6 +677,24 @@ class StallJigScreen(Screen):
     def set_expected_limit_found_flag(self, dt):
         self.expected_limit_found = True
         log("Hard limit found, position known")
+
+    ## LIMITS
+
+    def get_limits(self):
+
+        limit_list = []
+
+        if self.m.s.limit_x or self.m.s.limit_X:
+            limit_list.append(self.l.get_str('X'))
+
+        if self.m.s.limit_Y_axis: 
+            limit_list.append(self.l.get_str('Y'))
+
+        if self.m.s.limit_z: 
+            limit_list.append(self.l.get_str('Z'))
+
+        return limit_list
+
 
 
     # HOMING --------------------------------------------------------------------------------------------
