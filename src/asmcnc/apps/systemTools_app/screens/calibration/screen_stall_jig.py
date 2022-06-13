@@ -663,10 +663,12 @@ class StallJigScreen(Screen):
         log("Threshold reached (imminent stall detected)")
 
     def expected_limit_alarm(self):
-        if not self.current_axis() in self.m.s.alarm.trigger_description:
-            return False
 
-        return True
+        if  self.current_axis() in self.m.s.alarm.trigger_description or \
+            self.current_axis.lower() in self.m.s.alarm.trigger_description:
+            return True
+
+        return False
 
     def register_hard_limit_found(self):
         self.m.resume_from_alarm()
