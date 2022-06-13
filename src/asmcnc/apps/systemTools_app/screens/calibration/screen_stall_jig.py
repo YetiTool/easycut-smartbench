@@ -664,9 +664,13 @@ class StallJigScreen(Screen):
 
     def expected_limit_alarm(self):
 
+
+        if self.VERBOSE: log("Possible limit alarm: Is " + self.current_axis() + " in " + str(self.get_limits()))
+
         if not self.current_axis() in self.get_limits():
             return False
 
+        if self.VERBOSE: log("Expected limit found!")
         return True
 
     def register_hard_limit_found(self):
