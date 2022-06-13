@@ -292,9 +292,9 @@ class StallJigScreen(Screen):
 
     back_off = {
 
-        "X": -10,
-        "Y": -10,
-        "Z": 10
+        "X": -50,
+        "Y": -50,
+        "Z": 50
 
     }
 
@@ -652,7 +652,7 @@ class StallJigScreen(Screen):
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS" # might move this to after analysis of position
         log("Threshold reached (imminent stall detected), test passed")
-        self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1.2)
+        self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 2)
 
     def set_threshold_reached_flag(self, dt):
         self.threshold_reached = True
