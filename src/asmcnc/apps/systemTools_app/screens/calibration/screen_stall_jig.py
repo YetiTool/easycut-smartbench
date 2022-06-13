@@ -621,6 +621,7 @@ class StallJigScreen(Screen):
             log("Leaving stall jig...")
             return
 
+        self.m.reset_from_alarm()
         self.systemtools_sm.sm.current = 'stall_jig'
 
         # UPDATE USER ON WHAT ALARM IS HAPPENING, IN CASE IT'S A GENERAL ONE
