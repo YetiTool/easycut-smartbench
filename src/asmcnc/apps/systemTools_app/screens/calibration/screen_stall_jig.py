@@ -1255,6 +1255,10 @@ class StallJigScreen(Screen):
 
     # testing
 
+    # refactor alarm detection
+
+    # why is the screen blacking out?? 
+
     # currently doesn't check that position is within stall tolerance
 
     # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
