@@ -798,8 +798,8 @@ class StallJigScreen(Screen):
         move_sequence = [
 
                         "G0 G53 Z-" + str(self.m.s.setting_27),
-                        "G90" + "X" + str(pos_dict["X"]) + "Y" + str(pos_dict["Y"]) + str(self.fast_travel["Y"]),
-                        "G90" + "Z" + str(pos_dict["Z"]) + str(self.fast_travel["Z"])
+                        "G90" + "X" + str(pos_dict["X"]) + "Y" + str(pos_dict["Y"]) + "F" + str(self.fast_travel["Y"]),
+                        "G90" + "Z" + str(pos_dict["Z"]) + "F" + str(self.fast_travel["Z"])
         ]
 
         self.m.s.start_sequential_stream(move_sequence)
@@ -1183,6 +1183,7 @@ class StallJigScreen(Screen):
 
     # currently doesn't check that position is within stall tolerance
     # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
+    # enable run button/other buttons at end of prep
 
     # measurement creating & refactoring
     # set up database queries etc. 
