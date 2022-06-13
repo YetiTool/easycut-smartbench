@@ -505,14 +505,14 @@ class JobData(object):
                     recovery_gcode.append("G1 F" + feedrate)
 
             # Coordinate System Select
-            coord_system_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G59.1', 'G59.2', 'G59.3', 'G54', 'G55', 'G56', 'G57', 'G58', 'G59'])), None)
+            coord_system_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G5[4-9]", s)), None)
             if coord_system_line:
-                recovery_gcode.append(next((m for m in ['G59.1', 'G59.2', 'G59.3', 'G54', 'G55', 'G56', 'G57', 'G58', 'G59'] if m in coord_system_line), None))
+                recovery_gcode.append(re.search("G5[4-9](\.[1-3])?", coord_system_line).group(0))
 
             # Plane selection
-            plane_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G17', 'G18', 'G19'])), None)
+            plane_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G1[7-9]", s)), None)
             if plane_line:
-                recovery_gcode.append(next((m for m in ['G17', 'G18', 'G19'] if m in plane_line), None))
+                recovery_gcode.append(re.search("G1[7-9]", plane_line).group(0))
 
             # Distance mode
             distance_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]([A-Z]|\s|$)", s)), None)
@@ -523,50 +523,50 @@ class JobData(object):
                 recovery_gcode.append("G90")
 
             # Arc IJK distance mode
-            arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G90.1', 'G91.1'])), None)
+            arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]\.1", s)), None)
             if arc_mode_line:
-                recovery_gcode.append(next((m for m in ['G90.1', 'G91.1'] if m in arc_mode_line), None))
+                recovery_gcode.append(re.search("G9[0,1]\.1", arc_mode_line).group(0))
 
             # Feed rate mode
-            feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G93', 'G94', 'G95'])), None)
+            feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[3-5]", s)), None)
             if feedrate_mode_line:
-                recovery_gcode.append(next((m for m in ['G93', 'G94', 'G95'] if m in feedrate_mode_line), None))
+                recovery_gcode.append(re.search("G9[3-5]", feedrate_mode_line).group(0))
 
             # Units
-            unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G20', 'G21'])), None)
+            unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G2[0,1]", s)), None)
             if unit_line:
-                recovery_gcode.append(next((m for m in ['G20', 'G21'] if m in unit_line), None))
+                recovery_gcode.append(re.search("G2[0,1]", unit_line).group(0))
 
             # Cutter radius compensation
             if next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'G40' in s), None):
                 recovery_gcode.append('G40')
 
             # Tool length offset
-            tool_length_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if any(m in s for m in ['G43.1', 'G49'])), None)
+            tool_length_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G4(3\.1|9)", s)), None)
             if tool_length_line:
-                recovery_gcode.append(next((m for m in ['G43.1', 'G49'] if m in tool_length_line), None))
+                recovery_gcode.append(re.search("G4(3\.1|9)", tool_length_line).group(0))
 
             # Program mode
-            program_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[0,1,2](\D|$)|M30", s)), None)
+            program_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[0-2](\D|$)|M30", s)), None)
             if program_line:
                 # String needs to be sliced to different length depending on whether there is an extra 0
-                if re.search("M0[0,1,2](\D|$)|M30", program_line):
-                    recovery_gcode.append(re.search("M0?[0,1,2](\D|$)|M30", program_line).group(0)[:3])
+                if re.search("M0[0-2](\D|$)|M30", program_line):
+                    recovery_gcode.append(re.search("M0?[0-2](\D|$)|M30", program_line).group(0)[:3])
                 else:
-                    recovery_gcode.append(re.search("M0?[0,1,2](\D|$)|M30", program_line).group(0)[:2])
+                    recovery_gcode.append(re.search("M0?[0-2](\D|$)|M30", program_line).group(0)[:2])
 
             # Spindle state
-            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3,4,5](\D|$)", s)), None)
+            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3-5](\D|$)", s)), None)
             if spindle_state_line:
                 # String needs to be sliced to different length depending on whether there is an extra 0
-                if re.search("M0[3,4,5](\D|$)", spindle_state_line):
-                    recovery_gcode.append(re.search("M0?[3,4,5](\D|$)", spindle_state_line).group(0)[:3])
+                if re.search("M0[3-5](\D|$)", spindle_state_line):
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:3])
                 else:
-                    recovery_gcode.append(re.search("M0?[3,4,5](\D|$)", spindle_state_line).group(0)[:2])
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:2])
 
             # Coolant state
             gcode_to_search = reversed(self.job_gcode[:self.job_recovery_selected_line])
-            coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,8,9](\D|$)", s)), None)
+            coolant_line = next((s for s in gcode_to_search if re.search("M0?[7-9](\D|$)", s)), None)
             if coolant_line:
                 if re.search("M0?9(\D|$)", coolant_line):
                     recovery_gcode.append("M9")
