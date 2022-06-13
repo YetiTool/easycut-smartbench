@@ -306,7 +306,7 @@ class StallJigScreen(Screen):
 
     }    
 
-    initial_move_distance = {
+    crash_distance = {
 
         "X": 20,
         "Y": 20,
@@ -833,7 +833,7 @@ class StallJigScreen(Screen):
 
         self.m.set_threshold_for_axis(axis, threshold)
         sleep(1)
-        self.m.send_any_gcode_command("G91 " + axis + str(self.move_distance[axis]) + " F" + str(feed))
+        self.m.send_any_gcode_command("G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed))
 
 
     ## REPOSITIONING PROCEDURE
