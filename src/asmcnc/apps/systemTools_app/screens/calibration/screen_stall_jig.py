@@ -361,6 +361,7 @@ class StallJigScreen(Screen):
     poll_to_prepare_to_find_stall_pos = None
     tell_user_ready_event = None
     poll_to_move_to_axis_start = None
+    set_threshold_reached_flag_event = None
 
 
     ## DATABASE OBJECTS
@@ -457,6 +458,7 @@ class StallJigScreen(Screen):
         if self.poll_to_prepare_to_find_stall_pos != None: Clock.unschedule(self.poll_to_prepare_to_find_stall_pos)
         if self.tell_user_ready_event != None: Clock.unschedule(self.tell_user_ready_event)
         if self.poll_to_move_to_axis_start != None: Clock.unschedule(self.poll_to_move_to_axis_start)
+        if self.set_threshold_reached_flag_event != None: Clock.unschedule(self.set_threshold_reached_flag_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -648,10 +650,12 @@ class StallJigScreen(Screen):
         self.m.resume_from_alarm()
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
-        self.threshold_reached = True
-        self.test_status_label.text = "PASS"
+        self.test_status_label.text = "PASS" # might move this to after analysis of position
         log("Threshold reached (imminent stall detected), test passed")
+        self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1.2)
 
+    def set_threshold_reached_flag(self, dt):
+        self.threshold_reached = True
 
     def expected_limit_alarm(self):
         if not self.current_axis() in self.m.s.alarm.trigger_description:
