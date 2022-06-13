@@ -943,12 +943,7 @@ class StallJigScreen(Screen):
         self.start_homing()
 
         # CALIBRATION CHECK
-
-        if not self.dev_mode: 
-            self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
-
-        else: 
-            self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 2)
+        self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
 
         return True
 
