@@ -813,7 +813,7 @@ class StallJigScreen(Screen):
         threshold_idx = self.indices["threshold"]
         feed_idx = self.indices["feed"]
         self.set_threshold_and_drive_into_barrier(self.current_axis(), threshold_idx, feed_idx)
-        self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
+        self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 2)
 
 
     # CORE TEST FUNCTIONS -------------------------------------------------------------------------------------------
