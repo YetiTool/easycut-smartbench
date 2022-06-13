@@ -227,7 +227,7 @@ class StallJigScreen(Screen):
 
         "X": -1299,
         "Y": -2501,
-        "Z": 1
+        "Z": -1
 
     }
 
@@ -304,13 +304,21 @@ class StallJigScreen(Screen):
         "Y": 5,
         "Z": -5
 
-    }    
+    }
 
-    crash_distance = {
+    initial_move_distance = {
 
         "X": 20,
         "Y": 20,
         "Z": -20
+
+    }
+
+    crash_distance = {
+
+        "X": initial_move_distance["X"],
+        "Y": initial_move_distance["Y"],
+        "Z": initial_move_distance["Z"]
 
     }
 
@@ -460,6 +468,14 @@ class StallJigScreen(Screen):
         self.threshold_reached = False
         self.all_tests_completed = False
         self.test_stopped = False
+        self.crash_distance = {
+
+            "X": self.initial_move_distance["X"],
+            "Y": self.initial_move_distance["Y"],
+            "Z": self.initial_move_distance["Z"]
+
+        }
+
         log("Reset flags")
 
     ## DISABLE/ENABLE BUTTON FUNCTIONS ----------------------------------------------------------------------
@@ -942,6 +958,7 @@ class StallJigScreen(Screen):
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
 
+        self.choose_test(0,0,0)
         self.start_homing()
 
         # CALIBRATION CHECK
@@ -1198,7 +1215,9 @@ class StallJigScreen(Screen):
     # testing
 
     # currently doesn't check that position is within stall tolerance
+
     # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
+    # this needs setting for each axis after the stall pos has been found
 
     # measurement creating & refactoring
     # set up database queries etc. 
