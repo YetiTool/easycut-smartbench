@@ -798,8 +798,8 @@ class StallJigScreen(Screen):
         move_sequence = [
 
                         "G0 G53 Z-" + str(self.m.s.setting_27),
-                        "G90" + "X" + pos_dict["X"] + "Y" + pos_dict["Y"] + self.fast_travel["Y"],
-                        "G90" + "Z" + pos_dict["Z"] + self.fast_travel["Z"]
+                        "G90" + "X" + str(pos_dict["X"]) + "Y" + str(pos_dict["Y"]) + str(self.fast_travel["Y"]),
+                        "G90" + "Z" + str(pos_dict["Z"]) + str(self.fast_travel["Z"])
         ]
 
         self.m.s.start_sequential_stream(move_sequence)
@@ -1121,7 +1121,7 @@ class StallJigScreen(Screen):
 
         if self.indices["threshold"] + 1 < len(self.threshold_dict[self.current_axis()]):
             self.indices["threshold"] = self.indices["threshold"] + 1
-            log("Next threshold index: " + self.indices["threshold"])
+            log("Next threshold index: " + str(self.indices["threshold"]))
 
         else: 
             self.go_to_next_feed_set()
@@ -1134,8 +1134,8 @@ class StallJigScreen(Screen):
             self.indices["feed"] = self.indices["feed"] + 1
             self.indices["threshold"] = 0
 
-            log("Next feed index: " + self.indices["feed"])
-            log("Next threshold index: " + self.indices["threshold"])
+            log("Next feed index: " + str(self.indices["feed"]))
+            log("Next threshold index: " + str(self.indices["threshold"]))
 
         else:
             self.go_to_next_axis()
@@ -1150,9 +1150,9 @@ class StallJigScreen(Screen):
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
 
-            log("Next feed index: " + self.indices["feed"])
-            log("Next threshold index: " + self.indices["threshold"])
-            log("Next axis index: " + self.indices["axis"])
+            log("Next feed index: " + str(self.indices["feed"]))
+            log("Next threshold index: " + str(self.indices["threshold"]))
+            log("Next axis index: " + str(self.indices["axis"]))
 
         else: 
             self.all_tests_completed = True
