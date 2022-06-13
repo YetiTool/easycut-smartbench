@@ -133,23 +133,24 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
-                        Label:
-                            id: gcode_label
-                            color: 0,0,0,1
-                            font_size: dp(16)
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            markup: True
+                        FloatLayout:
+                            Label:
+                                id: gcode_label
+                                color: 0,0,0,1
+                                font_size: dp(16)
+                                halign: "left"
+                                valign: "top"
+                                text_size: self.size[0] * 2, self.size[1]
+                                size: self.parent.size
+                                pos: self.parent.pos[0] + self.size[0]/2, self.parent.pos[1]
+                                markup: True
 
-                            canvas.before:
-                                Color:
-                                    rgba: hex('#A7D5FAFF')
-                                Rectangle:
-                                    size: self.parent.size[0], dp(20)
-                                    pos: self.center_x - self.parent.size[0]/2, self.center_y - dp(3)
+                                canvas.before:
+                                    Color:
+                                        rgba: hex('#A7D5FAFF')
+                                    Rectangle:
+                                        size: self.parent.parent.size[0], dp(20)
+                                        pos: self.parent.parent.pos[0], self.center_y - dp(3)
 
                         Label:
                             id: stopped_on_label
