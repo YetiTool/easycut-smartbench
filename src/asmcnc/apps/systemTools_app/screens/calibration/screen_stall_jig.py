@@ -225,9 +225,9 @@ class StallJigScreen(Screen):
 
     absolute_start_pos = {
 
-        "X": -1295,
-        "Y": -2495,
-        "Z": 5
+        "X": -1290,
+        "Y": -2490,
+        "Z": 10
 
     }
 
@@ -352,6 +352,7 @@ class StallJigScreen(Screen):
     move_to_start_pos_event = None
     poll_to_prepare_to_find_stall_pos = None
     tell_user_ready_event = None
+    poll_to_move_to_axis_start = None
 
 
     ## DATABASE OBJECTS
@@ -447,6 +448,7 @@ class StallJigScreen(Screen):
         if self.move_to_start_pos_event != None: Clock.unschedule(self.move_to_start_pos_event)
         if self.poll_to_prepare_to_find_stall_pos != None: Clock.unschedule(self.poll_to_prepare_to_find_stall_pos)
         if self.tell_user_ready_event != None: Clock.unschedule(self.tell_user_ready_event)
+        if self.poll_to_move_to_axis_start != None: Clock.unschedule(self.poll_to_move_to_axis_start)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -1021,14 +1023,14 @@ class StallJigScreen(Screen):
 
         # go to test start position, relative to faux home
         self.m.disable_only_hard_limits()
-        self.move_all_axes(self.start_positions[self.current_axis()])
+        self.poll_to_move_to_axis_start = Clock.schedule_once(lambda dt: self.move_all_axes(self.start_positions[self.current_axis()]), 2)
 
         # when start pos set up, set travel for stall
-        self.poll_to_find_travel_from_start_pos = Clock.schedule_once(self.find_travel_from_start_pos, 1)
+        self.poll_to_find_travel_from_start_pos = Clock.schedule_once(self.find_travel_from_start_pos, 5)
 
     ## LOWER THE THRESHOLD AND MAX OUT THE FEED TO RECORD THE POSITION WHERE WE EXPECT SB TO STALL
 
-    def find_travel_from_start_pos(self):
+    def find_travel_from_start_pos(self, dt):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll for setting travel")
