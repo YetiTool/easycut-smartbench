@@ -223,9 +223,9 @@ class StallJigScreen(Screen):
 
     absolute_start_pos = {
 
-        "X": -1299,
-        "Y": -2501,
-        "Z": 1
+        "X": -1295,
+        "Y": -2495,
+        "Z": 5
 
     }
 
@@ -571,8 +571,8 @@ class StallJigScreen(Screen):
 
     def on_pre_enter(self):
 
-        self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
-        self.run_button.text = self.l.get_str('PREP TEST') + '...'
+        # self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
+        # self.run_button.text = self.l.get_str('PREP TEST') + '...'
         log("Opening stall experiment wizard")
 
     # STALL/LIMIT EVENT DETECTION -----------------------------------------------------------------
@@ -1186,7 +1186,6 @@ class StallJigScreen(Screen):
 
     # currently doesn't check that position is within stall tolerance
     # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
-    # enable run button/other buttons at end of prep
 
     # measurement creating & refactoring
     # set up database queries etc. 
