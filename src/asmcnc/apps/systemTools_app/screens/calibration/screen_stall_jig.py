@@ -621,8 +621,8 @@ class StallJigScreen(Screen):
             log("Leaving stall jig...")
             return
 
-        self.m.reset_from_alarm()
         self.systemtools_sm.sm.current = 'stall_jig'
+        self.m.reset_from_alarm()
 
         # UPDATE USER ON WHAT ALARM IS HAPPENING, IN CASE IT'S A GENERAL ONE
         self.test_status_label.text = self.m.s.alarm.alarm_code
@@ -665,16 +665,18 @@ class StallJigScreen(Screen):
 
     def expected_limit_alarm(self):
 
+        if self.m.s.alarm.alarm_code != "ALARM:1"
+            return False
 
         if self.VERBOSE: log("Possible limit alarm: Is " + self.current_axis() + " in " + str(self.get_limits()))
+        return True
 
+    def register_hard_limit_found(self):
+        
         if not self.current_axis() in self.get_limits():
             return False
 
         if self.VERBOSE: log("Expected limit found!")
-        return True
-
-    def register_hard_limit_found(self):
         self.m.resume_from_alarm()
         self.test_status_label.text = "LIMIT FOUND"
         self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
@@ -699,8 +701,6 @@ class StallJigScreen(Screen):
             limit_list.append(self.l.get_str('Z'))
 
         return limit_list
-
-
 
     # HOMING --------------------------------------------------------------------------------------------
 
