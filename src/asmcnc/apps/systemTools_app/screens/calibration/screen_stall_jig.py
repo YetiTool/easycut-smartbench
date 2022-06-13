@@ -225,9 +225,9 @@ class StallJigScreen(Screen):
 
     absolute_start_pos = {
 
-        "X": -1290,
-        "Y": -2490,
-        "Z": 10
+        "X": -1299,
+        "Y": -2501,
+        "Z": 1
 
     }
 
@@ -1043,12 +1043,12 @@ class StallJigScreen(Screen):
         start_pos = self.current_position[self.current_axis()]()
         
         log("Pull off from limit")
-        move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[axis]) + " F" + str(self.fast_travel[axis])
+        move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         self.m.send_any_gcode_command(move_command)
 
-        self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(axis, start_pos), 1)
+        self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
 
-    def prepare_to_find_stall_pos(self, start_pos):
+    def prepare_to_find_stall_pos(self, axis, start_pos):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll to prepare to find stall pos")
