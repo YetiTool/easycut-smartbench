@@ -292,8 +292,8 @@ class StallJigScreen(Screen):
 
     back_off = {
 
-        "X": -50,
-        "Y": -50,
+        "X": -500,
+        "Y": -500,
         "Z": 50
 
     }
@@ -362,6 +362,9 @@ class StallJigScreen(Screen):
     tell_user_ready_event = None
     poll_to_move_to_axis_start = None
     set_threshold_reached_flag_event = None
+    threshold_detection_event = None
+    hard_limit_found_event = None
+    set_expected_limit_found_flag_event = None
 
 
     ## DATABASE OBJECTS
@@ -459,6 +462,9 @@ class StallJigScreen(Screen):
         if self.tell_user_ready_event != None: Clock.unschedule(self.tell_user_ready_event)
         if self.poll_to_move_to_axis_start != None: Clock.unschedule(self.poll_to_move_to_axis_start)
         if self.set_threshold_reached_flag_event != None: Clock.unschedule(self.set_threshold_reached_flag_event)
+        if self.threshold_detection_event != None: Clock.unschedule(self.threshold_detection_event)
+        if self.hard_limit_found_event != None: Clock.unschedule(self.hard_limit_found_event)
+        if self.set_expected_limit_found_flag_event != None: Clock.unschedule(self.set_expected_limit_found_flag_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -621,10 +627,10 @@ class StallJigScreen(Screen):
         self.test_status_label.text = self.m.s.alarm.alarm_code
 
         if self.expected_stall_alarm_detected():
-            Clock.schedule_once(lambda dt: self.register_threshold_detection(), 2)
+            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
 
         if self.expected_limit_alarm():
-            self.register_hard_limit_found()
+            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1)
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
@@ -644,18 +650,17 @@ class StallJigScreen(Screen):
         self.m.s.alarm.stall_axis = "W"
         return True
 
-
     def register_threshold_detection(self):
 
         self.m.resume_from_alarm()
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS" # might move this to after analysis of position
-        log("Threshold reached (imminent stall detected), test passed")
-        self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 5)
+        self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
 
     def set_threshold_reached_flag(self, dt):
         self.threshold_reached = True
+        log("Threshold reached (imminent stall detected)")
 
     def expected_limit_alarm(self):
         if not self.current_axis() in self.m.s.alarm.trigger_description:
@@ -666,8 +671,12 @@ class StallJigScreen(Screen):
     def register_hard_limit_found(self):
         self.m.resume_from_alarm()
         self.test_status_label.text = "LIMIT FOUND"
+        self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
+
+    def set_expected_limit_found_flag(self, dt):
         self.expected_limit_found = True
         log("Hard limit found, position known")
+
 
     # HOMING --------------------------------------------------------------------------------------------
 
@@ -882,7 +891,7 @@ class StallJigScreen(Screen):
     def back_off_completed(self):
 
         if (not self.expected_limit_found) or self.test_stopped:
-            if self.VERBOSE: log("Poll for back off completed")
+            if self.VERBOSE: log("Poll for back off completion")
             self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
             return
 
