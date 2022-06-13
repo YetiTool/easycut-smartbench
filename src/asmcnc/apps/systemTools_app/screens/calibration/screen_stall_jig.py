@@ -347,6 +347,10 @@ class StallJigScreen(Screen):
     poll_for_back_off_completion = None
     poll_to_relax_motors = None
     stadib_event = None
+    move_to_start_pos_event = None
+    poll_to_prepare_to_find_stall_pos = None
+    tell_user_ready_event = None
+
 
     ## DATABASE OBJECTS
 
@@ -438,6 +442,9 @@ class StallJigScreen(Screen):
         if self.poll_for_back_off_completion != None: Clock.unschedule(self.poll_for_back_off_completion)
         if self.poll_to_relax_motors != None: Clock.unschedule(self.poll_to_relax_motors)
         if self.stadib_event != None: Clock.unschedule(self.stadib_event)
+        if self.move_to_start_pos_event != None: Clock.unschedule(self.move_to_start_pos_event)
+        if self.poll_to_prepare_to_find_stall_pos != None: Clock.unschedule(self.poll_to_prepare_to_find_stall_pos)
+        if self.tell_user_ready_event != None: Clock.unschedule(self.tell_user_ready_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -966,11 +973,13 @@ class StallJigScreen(Screen):
         log("Ready to run tests, disabling limits & maxing acceleration")
         self.m.disable_only_soft_limits()
         self.max_out_acceleration()
-        sleep(1)
 
         log("Move to start position")
         # go to absolute start position (relative to true home)
-        self.move_all_axes(self.absolute_start_pos)
+        self.move_to_start_pos_event = Clock.schedule_once(lambda dt: self.move_all_axes(self.absolute_start_pos), 3)
+        self.tell_user_ready_event = Clock.schedule_once(self.tell_user_that_SB_is_ready_to_run_tests, 4)
+
+    def tell_user_that_SB_is_ready_to_run_tests(self, dt):
 
         log("Tell user to put the magnets on to set up fake home")
         # update labels for user input
