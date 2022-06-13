@@ -1045,14 +1045,13 @@ class StallJigScreen(Screen):
         log("Pull off from limit")
         move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         self.m.send_any_gcode_command(move_command)
-
-        self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
+        self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
 
     def prepare_to_find_stall_pos(self, axis, start_pos):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll to prepare to find stall pos")
-            self.poll_to_prepare_to_find_stall_pos = (lambda dt: self.prepare_to_find_stall_pos(axis, start_pos), 1)
+            self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
             return
 
         self.m.enable_only_hard_limits()
