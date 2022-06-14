@@ -887,7 +887,7 @@ class StallJigScreen(Screen):
         sleep(1)
         # self.m.send_any_gcode_command("G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed))
 
-        move_sequence = "G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)
+        move_sequence = ["G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
         self.m.s.start_sequential_stream(move_sequence)
 
         if self.setting_up_axis_for_test:
