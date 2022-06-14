@@ -871,7 +871,7 @@ class StallJigScreen(Screen):
 
     ## FUNCTION TO SET THE THRESHOLD AND CRASH INTO AN OBSTACLE
 
-    def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx):
+    def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx, start_pos = None):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll for set threshold and drive into barrier")
@@ -1120,7 +1120,7 @@ class StallJigScreen(Screen):
             return
 
         self.m.enable_only_hard_limits()
-        self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0)
+        self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0, start_pos)
 
     def stall_position_found(self, axis, start_pos):
 
