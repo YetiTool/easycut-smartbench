@@ -813,7 +813,6 @@ class StallJigScreen(Screen):
         threshold_idx = self.indices["threshold"]
         feed_idx = self.indices["feed"]
         self.set_threshold_and_drive_into_barrier(self.current_axis(), threshold_idx, feed_idx)
-        self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 2)
 
 
     # CORE TEST FUNCTIONS -------------------------------------------------------------------------------------------
@@ -870,7 +869,6 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream(move_sequence)
 
 
-
     ## FUNCTION TO SET THE THRESHOLD AND CRASH INTO AN OBSTACLE
 
     def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx):
@@ -883,11 +881,20 @@ class StallJigScreen(Screen):
         threshold = self.threshold_dict[axis][threshold_idx]
         feed = self.feed_dict[axis][feed_idx]
 
-        log("Setting threshold to " + str(threshold) + "for " + axis + ", and drive into barrier at feed: " + str(feed))
+        log("Setting threshold to " + str(threshold) + " for " + axis + ", and drive into barrier at feed: " + str(feed))
 
         self.m.set_threshold_for_axis(axis, threshold)
         sleep(1)
-        self.m.send_any_gcode_command("G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed))
+        # self.m.send_any_gcode_command("G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed))
+
+        move_sequence = "G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)
+        self.m.s.start_sequential_stream(move_sequence)
+
+        if self.setting_up_axis_for_test:
+            self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
+
+        else:
+            self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 2)
 
 
     ## REPOSITIONING PROCEDURE
@@ -1114,14 +1121,13 @@ class StallJigScreen(Screen):
 
         self.m.enable_only_hard_limits()
         self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0)
-        self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
 
     def stall_position_found(self, axis, start_pos):
 
         # NB: THIS TEST WILL NOT TIME OUT IF IT DOES NOT REACH THRESHOLD
         # THE USER WILL HAVE TO MANUALLY STOP IN THIS INSTANCE AND TRY AGAIN. 
 
-        if (not self.threshold_reached) or self.test_stopped:
+        if (not self.threshold_reached) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for finding stall position")
             self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
             return
@@ -1136,7 +1142,7 @@ class StallJigScreen(Screen):
     ## POLLED EVENT, WHEN SB IS NO LONGER MOVING AND ALARMS HAVE BEEN RESET, IT WILL START THE REPOSITIONING PROCEDURE
     def sb_has_travelled_or_detected(self, dt):
 
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for threshold detection")
             self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
             return
@@ -1257,7 +1263,17 @@ class StallJigScreen(Screen):
 
     # refactor alarm detection
 
-    # why is the screen blacking out?? 
+    # why is the screen blacking out?? only seems to be on stall alarms
+    ## IS NOT ONLY ON STALL ALARMS
+
+    # but does seem related to: 
+
+    # 16:40:33.875 > SET SG ALARM THRESHOLD, MTR: 2, THR: 150
+    # 16:40:33.925 > SET SG ALARM THRESHOLD, MTR: 3, THR: 150
+    # 16:40:34.873 > G91 Y200 F2000
+    # 16:40:34.943 SB has either completed its move command, or it has detected that a limit has been reached!
+
+    # so hopefully refactor will fix it 
 
     # currently doesn't check that position is within stall tolerance
 
