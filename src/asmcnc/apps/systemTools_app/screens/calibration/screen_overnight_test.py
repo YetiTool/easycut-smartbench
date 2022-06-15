@@ -1285,6 +1285,9 @@ class OvernightTesting(Screen):
 
     def do_calibration(self, dt):
 
+        if self._not_ready_to_stream():
+            return
+
         if not self.m.tuning_in_progress:
             Clock.unschedule(self.poll_for_tuning_completion)
 
