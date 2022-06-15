@@ -110,8 +110,9 @@ class SpindleSaveWidget(Widget):
     def save(self):
 
         try: 
-            [brand, digital, voltage] = (self.sm.get_screen('maintenance').spindle_settings_widget.spindle_brand.text).split()
-    
+            [brand, digital, voltage] = (self.sm.get_screen('maintenance').spindle_settings_widget.spindle_brand.text).rsplit(' ', 2)
+
+            brand = brand[1:]
             voltage = voltage.strip('V')
 
             if 'digital' in digital: digital = True
