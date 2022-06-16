@@ -1771,7 +1771,7 @@ class RouterMachine(object):
         return self.TMC_motor[motor].shadowRegisters[register]
 
     #####################################################################
-    # CALIBRATION AND TUNNING PROCEDURES
+    # CALIBRATION AND TUNING PROCEDURES
     #####################################################################
 
     # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE JUST X AND Z OR JUST Y ARE FOR FREE MOTORS IN SPACE
@@ -2812,3 +2812,26 @@ class RouterMachine(object):
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
+
+
+
+    def set_motor_current(self, axis, current):
+
+        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle'):
+
+            if "X" in axis: motors = [TMC_X1, TMC_X2]
+            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
+            if "Z" in axis: motors = [TMC_Z]
+
+            for motor in motors: 
+
+                altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+                self.m.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
+                sleep(0.5)
+
+            return True
+
+        else:
+            return False
+

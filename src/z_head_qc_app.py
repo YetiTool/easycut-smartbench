@@ -44,7 +44,7 @@ from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_error
 
-
+from asmcnc.production.z_head_qc_jig.z_head_qc_connecting import ZHeadQCConnecting
 from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
 from asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
 from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
@@ -143,6 +143,9 @@ class ZHeadQC(App):
         z_head_qc_8 = ZHeadQC8(name='qc8', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_8)
 
+        z_head_qc_connecting = ZHeadQCConnecting(name='qcconnecting', sm = sm, m = m)
+        sm.add_widget(z_head_qc_connecting)
+
         z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm, m = m, usb = usb_stick)
         sm.add_widget(z_head_qc_home)
 
@@ -167,7 +170,7 @@ class ZHeadQC(App):
         z_head_qc_db_fail = ZHeadQCDBFail(name='qcDB4', sm = sm, m = m)
         sm.add_widget(z_head_qc_db_fail)
 
-        sm.current = 'qchome'
+        sm.current = 'qcconnecting'
         return sm
 
 if __name__ == '__main__':
