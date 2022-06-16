@@ -60,7 +60,7 @@ class ZHeadQCConnecting(Screen):
     
     def progress_to_next_screen(self):
 
-    	sm.current = 'qchome'
+    	self.sm.current = 'qchome'
 
 
     def get_and_set_current(self):
