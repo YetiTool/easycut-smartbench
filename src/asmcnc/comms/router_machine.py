@@ -2828,10 +2828,10 @@ class RouterMachine(object):
 
                 altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
-                sleep(0.5)
+                time.sleep(0.5)
 
             self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
-            sleep(0.5)
+            time.sleep(0.5)
             return True
 
         else:
