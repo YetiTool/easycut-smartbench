@@ -113,7 +113,7 @@ class RouterMachine(object):
     spindle_brush_lifetime_seconds = float(120*3600)
 
     ## SPINDLE COOLDOWN OPTIONS
-    spindle_brand = 'YETI' # String to hold brand name
+    spindle_brand = 'YETI SC1' # String to hold brand name
     spindle_voltage = 230 # Options are 230V or 110V
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
@@ -529,6 +529,10 @@ class RouterMachine(object):
             if read_spindle[2] == 'True': self.spindle_digital = True
             else: self.spindle_digital = False
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
+
+            # Account for old naming convention
+            if self.spindle_brand == 'YETI':
+                self.spindle_brand = 'YETI SC1'
 
             # only use spindle cooldown rpm from file if the default has been overridden,
             # otherwise use default values
