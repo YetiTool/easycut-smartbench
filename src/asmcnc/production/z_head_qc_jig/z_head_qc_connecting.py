@@ -86,5 +86,6 @@ class ZHeadQCConnecting(Screen):
 			
 			self.connecting_label.text = "Setting current..."
 			if self.m.set_motor_current("X", 22): Clock.schedule_once(lambda dt: self.progress_to_next_screen(), 0.5)
+			else: Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
 
 
