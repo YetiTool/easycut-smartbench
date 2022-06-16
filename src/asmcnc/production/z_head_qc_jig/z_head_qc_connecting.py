@@ -65,14 +65,14 @@ class ZHeadQCConnecting(Screen):
 
     def get_and_set_current(self):
 
-    	if not self.s.fw_version:
+    	if not self.m.s.fw_version:
 
     		Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
     		return
 
     	# If current is already set to 22, carry onto QC home
     	if 	self.m.TMC_motor[TMC_X1].ActiveCurrentScale == self.current or \
-    		not self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
+    		not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
 
     		self.progress_to_next_screen()
     		return
