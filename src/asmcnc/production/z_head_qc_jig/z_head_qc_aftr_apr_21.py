@@ -759,6 +759,13 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
             self.test_fw_update_button.text = "  19. Test FW Update"
 
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
+            Clock.unschedule(self.poll_for_temps_power)
+            self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, TEMP_POWER_POLL)
+
         disconnect_and_update()
 
     def update_status_text(self, dt):
@@ -773,3 +780,11 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
+
+    def reset_checkboxes(self):
+        self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.spindle_speed_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"

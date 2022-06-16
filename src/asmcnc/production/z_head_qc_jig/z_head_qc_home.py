@@ -146,6 +146,11 @@ class ZHeadQCHome(Screen):
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
             self.update_usb_button_label()
 
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
+
         disconnect_and_update()
 
 
