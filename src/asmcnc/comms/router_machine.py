@@ -2832,6 +2832,8 @@ class RouterMachine(object):
 
             self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
             time.sleep(0.5)
+            self.tmc_handshake()
+            time.sleep(0.5)
             return True
 
         else:
