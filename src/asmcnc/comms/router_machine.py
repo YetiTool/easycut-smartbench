@@ -2329,17 +2329,26 @@ class RouterMachine(object):
         # Read registers back in
         self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
+        Clock.schedule_once(self.send_final_tuning_commands, 3) # Give settings plenty of time to be sent and parsed
+
+
+    def send_final_tuning_commands(self, dt):
+
+        self.s.write_command('$20=1')
+        log("Tuning complete")
+        self.reset_tuning_flags()
         Clock.schedule_once(self.finish_tuning, 3) # Give settings plenty of time to be sent and parsed
 
 
     def finish_tuning(self, dt):
 
-        self.s.write_command('$20=1')
+        # Check SB is Idle and all buffers are empty
 
-        log("Tuning complete")
+        if  self.state().startswith('Idle') and \
+            not self.s.write_command_buffer and \
+            not self.s.write_protocol_buffer:
 
-        self.reset_tuning_flags()
-        self.tuning_in_progress = False
+            self.tuning_in_progress = False
 
 
     # MEAT OF CALIBRATION FUNCTIONS - DON'T CALL FROM MAIN APP
