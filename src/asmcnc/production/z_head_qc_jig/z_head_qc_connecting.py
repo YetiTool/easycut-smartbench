@@ -64,7 +64,7 @@ class ZHeadQCConnecting(Screen):
 
     	if not self.m.s.fw_version:
 
-    		Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
+    		Clock.schedule_once(lambda dt: self.get_and_set_current(), 0.5)
     		return
 
     	# If current is already set to 22, carry onto QC home
