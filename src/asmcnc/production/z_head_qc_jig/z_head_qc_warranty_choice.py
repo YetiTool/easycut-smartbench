@@ -159,6 +159,10 @@ class ZHeadWarrantyChoice(Screen):
             Clock.unschedule(self.poll_for_reconnection)
             Clock.schedule_once(self.m.s.start_services, 1)
             self.connection_button.text = "Disconnect Z Head"
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
 
 
     def toggle_usb_mounted(self):

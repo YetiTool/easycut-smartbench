@@ -441,3 +441,8 @@ class ZHeadQC2(Screen):
 
     def set_spindle_analogue(self):
         self.m.s.write_command('$51 = 0')
+
+    def reset_checkboxes(self):
+        self.digital_spindle_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.spindle_speed_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
