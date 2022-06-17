@@ -700,9 +700,9 @@ class RouterMachine(object):
                     '$11=0.010',      #Junction deviation, mm
                     '$12=0.002',      #Arc tolerance, mm
                     '$13=0',          #Report inches, boolean
+                    '$22=1',          #Homing cycle, boolean <------------------------
                     '$20=1',          #Soft limits, boolean <-------------------
                     '$21=1',          #Hard limits, boolean <------------------
-                    '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
                     '$24=600.0',      #Homing feed, mm/min
                     '$25=3000.0',     #Homing seek, mm/min
@@ -711,6 +711,8 @@ class RouterMachine(object):
                     '$30=25000.0',    #Max spindle speed, RPM
                     '$31=0.0',        #Min spindle speed, RPM
                     '$32=0',          #Laser mode, boolean
+                    '$51=0',          #Enable digital feedback spindle, boolean
+                    '$53=0',          #Enable stall guard alarm operation, boolean
 #                     '$100=56.649',    #X steps/mm
 #                     '$101=56.665',    #Y steps/mm
 #                     '$102=1066.667',  #Z steps/mm
