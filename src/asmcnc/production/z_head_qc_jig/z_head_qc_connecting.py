@@ -52,6 +52,7 @@ class ZHeadQCConnecting(Screen):
 
     def on_enter(self):
 
+        log("Set X current to 22 if it is not set already...")
     	self.get_and_set_current()
 
     
