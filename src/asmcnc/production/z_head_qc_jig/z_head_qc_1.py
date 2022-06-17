@@ -692,3 +692,10 @@ class ZHeadQC1(Screen):
 
     def enter_next_screen(self):
         self.sm.current = 'qc2'
+
+    def reset_checkboxes(self):
+        self.motor_chips_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.bake_grbl_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"

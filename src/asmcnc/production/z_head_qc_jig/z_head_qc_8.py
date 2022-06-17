@@ -91,6 +91,10 @@ class ZHeadQC8(Screen):
             Clock.schedule_once(self.back_to_start, 2)
 
     def back_to_start(self, dt):
+        self.sm.get_screen('qc1').reset_checkboxes()
+        self.sm.get_screen('qc2').reset_checkboxes()
+        self.sm.get_screen('qcW136').reset_checkboxes()
+        self.sm.get_screen('qcW112').reset_checkboxes()
         self.sm.current = 'qcconnecting'
         self.connect_button.text = 'Connect and Restart'
 
