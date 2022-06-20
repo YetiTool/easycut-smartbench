@@ -609,13 +609,13 @@ class ZHeadQC1(Screen):
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
-        if 10 < self.m.s.motor_driver_temp < 60:
+        if 35 < self.m.s.motor_driver_temp < 100:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
-            fail_report.append("Should be greater than 10 and less than 60 deg C.")
+            fail_report.append("Should be greater than 35 and less than 100 deg C.")
 
         if 0 < self.m.s.transistor_heatsink_temp < 100:
             pass_fail = pass_fail*(True)
@@ -626,13 +626,13 @@ class ZHeadQC1(Screen):
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
-        if 4800 < self.m.s.microcontroller_mV < 5200:
+        if 4500 < self.m.s.microcontroller_mV < 5500:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
-            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+            fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
         if 4800 < self.m.s.LED_mV < 5200:
             pass_fail = pass_fail*(True)
@@ -692,3 +692,10 @@ class ZHeadQC1(Screen):
 
     def enter_next_screen(self):
         self.sm.current = 'qc2'
+
+    def reset_checkboxes(self):
+        self.motor_chips_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.bake_grbl_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"

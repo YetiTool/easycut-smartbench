@@ -113,7 +113,7 @@ class RouterMachine(object):
     spindle_brush_lifetime_seconds = float(120*3600)
 
     ## SPINDLE COOLDOWN OPTIONS
-    spindle_brand = 'YETI' # String to hold brand name
+    spindle_brand = 'YETI SC1' # String to hold brand name
     spindle_voltage = 230 # Options are 230V or 110V
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
@@ -529,6 +529,10 @@ class RouterMachine(object):
             if read_spindle[2] == 'True': self.spindle_digital = True
             else: self.spindle_digital = False
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
+
+            # Account for old naming convention
+            if self.spindle_brand == 'YETI':
+                self.spindle_brand = 'YETI SC1'
 
             # only use spindle cooldown rpm from file if the default has been overridden,
             # otherwise use default values
@@ -1767,7 +1771,7 @@ class RouterMachine(object):
         return self.TMC_motor[motor].shadowRegisters[register]
 
     #####################################################################
-    # CALIBRATION AND TUNNING PROCEDURES
+    # CALIBRATION AND TUNING PROCEDURES
     #####################################################################
 
     # IT IS ASSUMED THAT FUNCTIONS THAT TUNE/CALIBRATE JUST X AND Z OR JUST Y ARE FOR FREE MOTORS IN SPACE
@@ -1871,6 +1875,9 @@ class RouterMachine(object):
     sgt_max = 20 # 20
 
     reference_temp = 55.0
+    temp_tolerance = 20.0
+    upper_temp_limit = reference_temp + temp_tolerance
+    lower_temp_limit = reference_temp - temp_tolerance
 
 
     def reset_tuning_flags(self):
@@ -1892,6 +1899,9 @@ class RouterMachine(object):
 
         self.temp_toff = 2
         self.temp_sgt = 0
+
+    def motor_driver_temp_in_range(self, temp_to_assess):
+        return (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit)
 
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
@@ -1956,7 +1966,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if ((self.reference_temp - 10) <= self.s.motor_driver_temp <= (self.reference_temp + 10)):
+        if self.motor_driver_temp_in_range(self.s.motor_driver_temp):
 
             log("Temperature reads valid, check machine is Idle...")
 
@@ -1966,7 +1976,14 @@ class RouterMachine(object):
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
             log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
-            self.calibration_tuning_fail_info = "Temps aren't in expected range (30-60), motor_driver_temp is: " + str(self.s.motor_driver_temp)
+            self.calibration_tuning_fail_info = (
+                "Temps aren't in expected range" + \
+                "(" + str(int(self.lower_temp_limit)) + \
+                "-" + \
+                str(int(self.upper_temp_limit)) + "), " + \
+                "motor_driver_temp is: " + str(self.s.motor_driver_temp)
+                )
+
             Clock.schedule_once(self.finish_tuning, 0.1)
 
 
@@ -2252,7 +2269,7 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
-        if ((self.reference_temp - 10) > current_temperature > (self.reference_temp + 10)):
+        if not self.motor_driver_temp_in_range(current_temperature):
 
             log("Temperatures out of expected range! Check set-up!")
             self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
@@ -2808,3 +2825,34 @@ class RouterMachine(object):
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
+
+
+
+    def set_motor_current(self, axis, current):
+
+        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle'):
+
+            if "X" in axis: motors = [TMC_X1, TMC_X2]
+            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
+            if "Z" in axis: motors = [TMC_Z]
+
+            for motor in motors: 
+
+                altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
+                time.sleep(0.5)
+
+                altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
+                time.sleep(0.5)
+
+            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+            time.sleep(0.5)
+            self.tmc_handshake()
+            time.sleep(0.5)
+            return True
+
+        else:
+            return False
+
