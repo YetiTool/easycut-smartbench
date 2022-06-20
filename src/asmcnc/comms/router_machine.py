@@ -687,7 +687,8 @@ class RouterMachine(object):
                             ]
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
-    def bake_default_grbl_settings(self): # move to machine module
+    def bake_default_grbl_settings(self):
+
         grbl_settings = [
                     '$0=10',          #Step pulse, microseconds
                     '$1=255',         #Step idle delay, milliseconds
@@ -700,9 +701,9 @@ class RouterMachine(object):
                     '$11=0.010',      #Junction deviation, mm
                     '$12=0.002',      #Arc tolerance, mm
                     '$13=0',          #Report inches, boolean
+                    '$22=1',          #Homing cycle, boolean <------------------------
                     '$20=1',          #Soft limits, boolean <-------------------
                     '$21=1',          #Hard limits, boolean <------------------
-                    '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
                     '$24=600.0',      #Homing feed, mm/min
                     '$25=3000.0',     #Homing seek, mm/min
@@ -722,14 +723,24 @@ class RouterMachine(object):
                     '$122=200.0',     #Z Acceleration, mm/sec^2
                     '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
                     '$131=2502.0',    #Y Max travel, mm
-                    '$132=150.0',     #Z Max travel, mm
-                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+                    '$132=150.0'     #Z Max travel, mm       
             ]
+
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
+
+            version_one_three_grbl_settings = [
+                    '$51=0',          #Enable digital feedback spindle, boolean
+                    '$53=0'           #Enable stall guard alarm operation, boolean
+                    ]
+
+            grbl_settings.extend(version_one_three_grbl_settings)
+
+        grbl_settings.append('$$')     # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+        grbl_settings.append('$#')     # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
-    def save_grbl_settings(self): # move to machine module
+    def save_grbl_settings(self):
 
         self.send_any_gcode_command("$$")
         self.send_any_gcode_command("$#")
