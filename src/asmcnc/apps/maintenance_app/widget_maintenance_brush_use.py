@@ -8,6 +8,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
@@ -149,7 +150,23 @@ class BrushUseWidget(Widget):
         self.update_strings()
         
     def restore(self):
+        try:
+            if self.m.s.setting_51:
+                self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                Clock.schedule_once(self.get_restore_info, 1)
+                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+                return
+        except:
+            pass
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
+
+    def get_restore_info(self, dt):
+        self.wait_popup.popup.dismiss()
+        # If info was obtained successfully, spindle production year should have a value
+        if self.m.s.spindle_production_year:
+            self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
+        else:
+            popup_info.PopupError(self.sm, self.l, "Could not get info - spindle not plugged in!")
 
     def reset_to_0(self):
         self.brush_use.text = '0'
