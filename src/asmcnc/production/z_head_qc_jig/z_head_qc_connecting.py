@@ -38,6 +38,9 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadQCConnecting(Screen):
 
@@ -52,7 +55,7 @@ class ZHeadQCConnecting(Screen):
 
     def on_enter(self):
 
-        print("Set X current to 22 if it is not set already...")
+        log("Set X current to 22 if it is not set already...")
     	self.get_and_set_current()
 
     
