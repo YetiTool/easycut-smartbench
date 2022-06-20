@@ -723,19 +723,20 @@ class RouterMachine(object):
                     '$122=200.0',     #Z Acceleration, mm/sec^2
                     '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
                     '$131=2502.0',    #Y Max travel, mm
-                    '$132=150.0',     #Z Max travel, mm
-                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+                    '$132=150.0'     #Z Max travel, mm       
             ]
 
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
 
             version_one_three_grbl_settings = [
                     '$51=0',          #Enable digital feedback spindle, boolean
-                    '$53=0'          #Enable stall guard alarm operation, boolean
+                    '$53=0'           #Enable stall guard alarm operation, boolean
                     ]
 
             grbl_settings.extend(version_one_three_grbl_settings)
+
+        grbl_settings.append('$$')     # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+        grbl_settings.append('$#')     # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
