@@ -735,7 +735,7 @@ class RouterMachine(object):
                     '$53=0'          #Enable stall guard alarm operation, boolean
                     ]
 
-            self.grbl_settings.extend(version_one_three_grbl_settings)
+            grbl_settings.extend(version_one_three_grbl_settings)
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
