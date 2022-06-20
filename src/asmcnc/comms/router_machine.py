@@ -688,6 +688,7 @@ class RouterMachine(object):
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
     def bake_default_grbl_settings(self): # move to machine module
+
         grbl_settings = [
                     '$0=10',          #Step pulse, microseconds
                     '$1=255',         #Step idle delay, milliseconds
@@ -711,8 +712,6 @@ class RouterMachine(object):
                     '$30=25000.0',    #Max spindle speed, RPM
                     '$31=0.0',        #Min spindle speed, RPM
                     '$32=0',          #Laser mode, boolean
-                    '$51=0',          #Enable digital feedback spindle, boolean
-                    '$53=0',          #Enable stall guard alarm operation, boolean
 #                     '$100=56.649',    #X steps/mm
 #                     '$101=56.665',    #Y steps/mm
 #                     '$102=1066.667',  #Z steps/mm
@@ -728,6 +727,15 @@ class RouterMachine(object):
                     '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
                     '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
             ]
+
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
+
+            version_one_three_grbl_settings = [
+                    '$51=0',          #Enable digital feedback spindle, boolean
+                    '$53=0'          #Enable stall guard alarm operation, boolean
+                    ]
+
+            self.grbl_settings.extend(version_one_three_grbl_settings)
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
