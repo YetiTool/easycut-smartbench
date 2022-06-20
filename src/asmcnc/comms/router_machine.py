@@ -1875,8 +1875,9 @@ class RouterMachine(object):
     sgt_max = 20 # 20
 
     reference_temp = 55.0
-    upper_temp_limit = 100.0
-    lower_temp_limit = 35.0
+    temp_tolerance = 20.0
+    upper_temp_limit = reference_temp + temp_tolerance
+    lower_temp_limit = reference_temp - temp_tolerance
 
 
     def reset_tuning_flags(self):
