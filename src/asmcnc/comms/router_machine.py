@@ -1901,9 +1901,7 @@ class RouterMachine(object):
         self.temp_sgt = 0
 
     def motor_driver_temp_in_range(self, temp_to_assess):
-
-        if (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit): return True
-        else: return False
+        return (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit)
 
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
