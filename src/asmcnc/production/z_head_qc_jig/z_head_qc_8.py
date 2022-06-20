@@ -95,7 +95,7 @@ class ZHeadQC8(Screen):
         self.sm.get_screen('qc2').reset_checkboxes()
         self.sm.get_screen('qcW136').reset_checkboxes()
         self.sm.get_screen('qcW112').reset_checkboxes()
-        self.sm.current = 'qchome'
+        self.sm.current = 'qcconnecting'
         self.connect_button.text = 'Connect and Restart'
 
     def enter_prev_screen(self):
