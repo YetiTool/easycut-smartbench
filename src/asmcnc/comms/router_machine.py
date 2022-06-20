@@ -687,7 +687,7 @@ class RouterMachine(object):
                             ]
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
-    def bake_default_grbl_settings(self): # move to machine module
+    def bake_default_grbl_settings(self):
 
         grbl_settings = [
                     '$0=10',          #Step pulse, microseconds
@@ -739,7 +739,7 @@ class RouterMachine(object):
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
-    def save_grbl_settings(self): # move to machine module
+    def save_grbl_settings(self):
 
         self.send_any_gcode_command("$$")
         self.send_any_gcode_command("$#")
