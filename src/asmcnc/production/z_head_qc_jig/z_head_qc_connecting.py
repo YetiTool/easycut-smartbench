@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from datetime import datetime
 
 Builder.load_string("""
 <ZHeadQCConnecting>:
