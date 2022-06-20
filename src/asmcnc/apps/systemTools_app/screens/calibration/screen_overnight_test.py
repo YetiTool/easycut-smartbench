@@ -930,7 +930,7 @@ class OvernightTesting(Screen):
             2
         )
 
-        self.status_data_dict[self.stage].append(status)
+        self.status_data_dict[self.stage]["Statuses"].append(status)
 
         # Record raw values for statistics calculations
 
