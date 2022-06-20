@@ -1875,6 +1875,8 @@ class RouterMachine(object):
     sgt_max = 20 # 20
 
     reference_temp = 55.0
+    upper_temp_limit = 100.0
+    lower_temp_limit = 35.0
 
 
     def reset_tuning_flags(self):
@@ -1896,6 +1898,11 @@ class RouterMachine(object):
 
         self.temp_toff = 2
         self.temp_sgt = 0
+
+    def motor_driver_temp_in_range(self, temp_to_assess):
+
+        if (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit): return True
+        else: return False
 
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
@@ -1960,7 +1967,7 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
-        if ((self.reference_temp - 10) <= self.s.motor_driver_temp <= (self.reference_temp + 10)):
+        if self.motor_driver_temp_in_range(self.s.motor_driver_temp):
 
             log("Temperature reads valid, check machine is Idle...")
 
@@ -1970,7 +1977,14 @@ class RouterMachine(object):
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
             log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
-            self.calibration_tuning_fail_info = "Temps aren't in expected range (30-60), motor_driver_temp is: " + str(self.s.motor_driver_temp)
+            self.calibration_tuning_fail_info = (
+                "Temps aren't in expected range" + \
+                "(" + str(int(self.lower_temp_limit)) + \
+                "-" + \
+                str(int(self.upper_temp_limit)) + "), " + \
+                "motor_driver_temp is: " + str(self.s.motor_driver_temp)
+                )
+
             Clock.schedule_once(self.finish_tuning, 0.1)
 
 
@@ -2256,7 +2270,7 @@ class RouterMachine(object):
         # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
         # use "Motor Driver temperature"
 
-        if ((self.reference_temp - 10) > current_temperature > (self.reference_temp + 10)):
+        if not self.motor_driver_temp_in_range(current_temperature):
 
             log("Temperatures out of expected range! Check set-up!")
             self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
