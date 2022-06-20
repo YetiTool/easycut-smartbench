@@ -8,6 +8,7 @@ import traceback
 from time import sleep
 import threading
 from datetime import datetime
+from asmcnc.production.database.payload_publisher import Publisher
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
@@ -787,9 +788,14 @@ class OvernightTesting(Screen):
 
 
         self.status_data_dict = {
-
-            "OvernightWearIn" : [],
-            "FullyCalibratedTest" : []
+            "OvernightWearIn": {
+                "Table": "FinalTestStatuses",
+                "Statuses": []
+            },
+            "FullyCalibratedTest": {
+                "Table": "FinalTestStatuses",
+                "Statuses": []
+            }
 
         }
 
@@ -1513,7 +1519,17 @@ class OvernightTesting(Screen):
         try:
             log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
+
+            publisher = Publisher()
+
+            data_table = self.status_data_dict[stage]["Table"]
+            data_statuses = self.status_data_dict[stage]["Statuses"]
+
+            response = publisher.publish(data_table, data_statuses)
+
+            log("Received %s from consumer" % response)
+
+            # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
