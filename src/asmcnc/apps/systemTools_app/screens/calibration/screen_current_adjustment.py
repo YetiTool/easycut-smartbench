@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.apps.maintenance_app.widget_maintenance_xy_move import MaintenanceXYMove
 from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
+from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Builder.load_string("""
@@ -159,8 +160,10 @@ class CurrentAdjustment(Screen):
         self.l = kwargs['l']
 
         # Movement widget
-        self.xy_move_widget = MaintenanceXYMove(machine=self.m, screen_manager=self.systemtools_sm, localization=self.l)
-        self.xy_move_container.add_widget(self.xy_move_widget)
+        self.xy_move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
+
+        # self.xy_move_widget = MaintenanceXYMove(machine=self.m, screen_manager=self.systemtools_sm, localization=self.l)
+        # self.xy_move_container.add_widget(self.xy_move_widget)
 
         # Current adjustment widgets
         self.x_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
