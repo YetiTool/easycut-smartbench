@@ -214,7 +214,7 @@ Builder.load_string("""
 
 class SpindleSettingsWidget(Widget):
 
-    brand_list = [' YETI digital 230V', ' YETI digital 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
+    brand_list = [' YETI SC1 digital 230V', ' YETI SC1 digital 110V', ' YETI SC2 digital 230V', ' YETI SC2 digital 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
 
     def __init__(self, **kwargs):
     
