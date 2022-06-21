@@ -210,27 +210,32 @@ class CurrentAdjustment(Screen):
             self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
             self.peak_y2_sg.text = str(max(self.y2_vals))
 
-        if self.m.s.sg_y2_motor != -999:
-            self.y2_vals.append(self.m.s.sg_y2_motor)
-            self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
-            self.peak_y2_sg.text = str(max(self.y2_vals))
+        if self.m.s.sg_z_motor != -999:
+            self.z_vals.append(self.m.s.sg_z_motor)
+            self.rt_z_sg.text = str(self.m.s.sg_z_motor)
+            self.peak_z_sg.text = str(max(self.z_vals))
 
     def clear_sg_vals(self):
         self.x_vals = []
         self.y1_vals = []
         self.y2_vals = []
+        self.z_vals = []
 
         self.rt_x_sg.text = '-'
         self.rt_y1_sg.text = '-'
         self.rt_y2_sg.text = '-'
+        self.rt_z_sg.text = '-'
         self.peak_x_sg.text = '-'
         self.peak_y1_sg.text = '-'
         self.peak_y2_sg.text = '-'
+        self.peak_z_sg.text = '-'
+
 
     def reset_currents(self):
         self.x_current_adjustment_widget.reset_current()
         self.y1_current_adjustment_widget.reset_current()
         self.y2_current_adjustment_widget.reset_current()
+        self.z_current_adjustment_widget.reset_current()
 
     def toggle_raw_sg_values(self):
         
