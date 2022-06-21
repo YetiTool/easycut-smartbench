@@ -889,7 +889,7 @@ class SerialConnection(object):
 
                         # Depending on the firmware version (and the alarm type), 
                         # Y pin means either Y max limit OR Y stall
-                        # and little y could be y home OR either y limit
+                        # and little y could be y home OR y limit
                         if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
 
                             if 'y' in pins_info: self.limit_y = True
