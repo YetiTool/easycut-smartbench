@@ -6,7 +6,6 @@ Module used to keep track of information about the current job
 import sys, os, re
 from datetime import datetime, timedelta
 from pipes import quote
-from turtle import distance
 from chardet import detect
 from itertools import takewhile
 import traceback
