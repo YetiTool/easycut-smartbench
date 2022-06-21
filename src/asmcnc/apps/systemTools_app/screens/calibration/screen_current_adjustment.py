@@ -13,9 +13,11 @@ Builder.load_string("""
     rt_x_sg:rt_x_sg
     rt_y1_sg:rt_y1_sg
     rt_y2_sg:rt_y2_sg
+    rt_z_sg:rt_z_sg
     peak_x_sg:peak_x_sg
     peak_y1_sg:peak_y1_sg
     peak_y2_sg:peak_y2_sg
+    peak_z_sg:peak_z_sg
 
     raw_sg_toggle_button : raw_sg_toggle_button
 
@@ -76,7 +78,7 @@ Builder.load_string("""
                 # SG value status box
                 GridLayout:
                     rows: 3
-                    cols: 4
+                    cols: 5
 
                     Label
 
@@ -88,6 +90,9 @@ Builder.load_string("""
 
                     Label:
                         text: 'SG Y2'
+
+                    Label:
+                        text: 'SG Z'
 
                     Label:
                         text: 'Realtime'
@@ -105,6 +110,10 @@ Builder.load_string("""
                         text: '-'
 
                     Label:
+                        id: rt_z_sg
+                        text: '-'
+
+                    Label:
                         text: 'Peak'
 
                     Label:
@@ -117,6 +126,10 @@ Builder.load_string("""
 
                     Label:
                         id: peak_y2_sg
+                        text: '-'
+
+                    Label:
+                        id: peak_z_sg
                         text: '-'
 
                 BoxLayout:
@@ -159,6 +172,9 @@ class CurrentAdjustment(Screen):
         self.y2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y2, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y2_current_adjustment_widget)
 
+        self.z_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Z, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.z_current_adjustment_widget)
+
         self.clear_sg_vals()
 
     def on_enter(self):
@@ -188,6 +204,11 @@ class CurrentAdjustment(Screen):
             self.y1_vals.append(self.m.s.sg_y1_motor)
             self.rt_y1_sg.text = str(self.m.s.sg_y1_motor)
             self.peak_y1_sg.text = str(max(self.y1_vals))
+
+        if self.m.s.sg_y2_motor != -999:
+            self.y2_vals.append(self.m.s.sg_y2_motor)
+            self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
+            self.peak_y2_sg.text = str(max(self.y2_vals))
 
         if self.m.s.sg_y2_motor != -999:
             self.y2_vals.append(self.m.s.sg_y2_motor)
