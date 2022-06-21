@@ -47,7 +47,6 @@ class Publisher(object):
             auto_ack=True
         )
 
-
     def _on_response(self, ch, method, props, body):
         if self.correlation_id == props.correlation_id:
             self.response = body

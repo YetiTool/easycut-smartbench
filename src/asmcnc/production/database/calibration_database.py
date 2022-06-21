@@ -14,6 +14,7 @@ try:
 
 except:
     log('Pyodbc or influxdb not installed')
+    print(traceback.format_exc())
 
 
 class CalibrationDatabase(object):
@@ -29,6 +30,7 @@ class CalibrationDatabase(object):
         "FullyCalibratedTest": 8
     }
 
+    #ODBC Driver 17 for SQL Server ON WINDOWS
     connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
     def __init__(self):

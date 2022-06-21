@@ -487,6 +487,8 @@ class FactorySettingsScreen(Screen):
         except:
             print("No /media/usb/ folder found")
 
+            self.calibration_db.set_up_connection()
+
 
     ## EXIT BUTTONS
     def go_back(self):
