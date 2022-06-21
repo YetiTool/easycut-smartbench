@@ -213,9 +213,9 @@ class CurrentAdjustment(Screen):
             self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
             self.peak_y2_sg.text = str(max(self.y2_vals))
 
-        if self.m.s.sg_z_motor != -999:
-            self.z_vals.append(self.m.s.sg_z_motor)
-            self.rt_z_sg.text = str(self.m.s.sg_z_motor)
+        if self.m.s.sg_z_motor_axis != -999:
+            self.z_vals.append(self.m.s.sg_z_motor_axis)
+            self.rt_z_sg.text = str(self.m.s.sg_z_motor_axis)
             self.peak_z_sg.text = str(max(self.z_vals))
 
     def clear_sg_vals(self):
