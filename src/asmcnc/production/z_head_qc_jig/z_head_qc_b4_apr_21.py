@@ -559,6 +559,11 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
             self.test_fw_update_button.text = '  17. Test FW Update'
 
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
+
         disconnect_and_update()
 
 
@@ -571,3 +576,9 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def back_to_choice(self):
         self.sm.current = 'qcWC'
+
+    def reset_checkboxes(self):
+        self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
