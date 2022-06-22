@@ -48,9 +48,17 @@ class ScreenTest(App):
     lang_idx = 0
     
     fw_version = "2.4.2"
-    alarm_pin = "Y"
 
-    stall_pin = "YSz"
+    # STALL ALARMS
+    stall_pin = ""
+
+    # LIMIT ALARMS
+    alarm_pin = "yx"
+
+    alarm_number = 7
+
+    stall_alarm_test = False
+
     motor_id = 0
     step_size = 75
     sg_val = 151
@@ -61,9 +69,9 @@ class ScreenTest(App):
     z_coord = -99.954
 
 
-    alarm_message = "ALARM:1\n"
+    alarm_message = "ALARM:" + str(alarm_number) + "\n"
 
-    status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
+    limit_status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>\n"
     sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
         stall_pin + \
         "|SGALARM:" + \
@@ -78,8 +86,8 @@ class ScreenTest(App):
 
     def give_status(self):
 
-        status = self.sg_alarm_status
-        # status = self.status
+        if self.stall_alarm_test: status = self.sg_alarm_status
+        else: status = self.limit_status
         return status
 
     def give_me_a_PCB(outerSelf):

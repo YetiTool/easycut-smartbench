@@ -212,7 +212,7 @@ class AlarmSequenceManager(object):
 
 	def get_status_info(self):
 
-		if self.sg_alarm: 
+		if self.sg_alarm and self.m.s.last_stall_status: 
 			self.status_cache = self.m.s.last_stall_status
 			return
 
