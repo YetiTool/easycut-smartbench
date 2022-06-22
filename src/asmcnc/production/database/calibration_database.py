@@ -199,6 +199,8 @@ class CalibrationDatabase(object):
             cursor.execute(query, params)
             data = cursor.fetchone()
 
+        print(combined_id_only_ints + " returned: " + data + "(len: " + len(data) + ")")
+
         return data
 
         ### check whether tuple is empty
