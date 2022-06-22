@@ -778,7 +778,7 @@ class OvernightTesting(Screen):
         self.overnight_running = False
 
         self.statuses = []
-        self.stage = ""
+        self.stage = "OvernightWearIn"
         self.stage_id = 0
 
         self.status_container.add_widget(
@@ -824,6 +824,11 @@ class OvernightTesting(Screen):
         self.get_sub_serials_from_database()
         self.m.s.FINAL_TEST = True
         self.stop_button.disabled = False
+
+        for i in range(0, 200000):
+            self.measure()
+
+        self.send_data("OvernightWearIn")
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
