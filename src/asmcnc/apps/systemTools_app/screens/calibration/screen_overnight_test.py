@@ -908,28 +908,29 @@ class OvernightTesting(Screen):
 
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        status = (
-            int(self.sn_for_db[2:] + str(self.stage_id)),
-            self.m.mpos_x(),
-            self.m.mpos_y(),
-            self.m.mpos_z(),
-            x_dir,
-            y_dir,
-            z_dir,
-            int(self.m.s.sg_x_motor_axis),
-            int(self.m.s.sg_y_axis),
-            int(self.m.s.sg_y1_motor),
-            int(self.m.s.sg_y2_motor),
-            int(self.m.s.sg_z_motor_axis),
-            int(self.m.s.motor_driver_temp),
-            int(self.m.s.pcb_temp),
-            int(self.m.s.transistor_heatsink_temp),
-            datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            self.m.feed_rate(),
-            0,
-            0,
-            2
-        )
+        status = {
+            "Id": "",
+            "FTID": int(self.sn_for_db[2:] + str(self.stage_id)),
+            "XCoordinate": self.m.mpos_x(),
+            "YCoordinate": self.m.mpos_y(),
+            "ZCoordinate": self.m.mpos_z(),
+            "XDirection": x_dir,
+            "YDirection": y_dir,
+            "ZDirection": z_dir,
+            "XSG": int(self.m.s.sg_x_motor_axis),
+            "YSG": int(self.m.s.sg_y_axis),
+            "Y1SG": int(self.m.s.sg_y1_motor),
+            "Y2SG": int(self.m.s.sg_y2_motor),
+            "ZSG": int(self.m.s.sg_z_motor_axis),
+            "TMCTemperature": int(self.m.s.motor_driver_temp),
+            "PCBTemperature": int(self.m.s.pcb_temp),
+            "MOTTemperature": int(self.m.s.transistor_heatsink_temp),
+            "Timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "Feedrate": self.m.feed_rate(),
+            "XWeight": 0,
+            "YWeight": 0,
+            "ZWeight": 2
+        }
 
         self.status_data_dict[self.stage]["Statuses"].append(status)
 
@@ -1501,10 +1502,9 @@ class OvernightTesting(Screen):
 
             publisher = Publisher()
 
-            data_table = self.status_data_dict[stage]["Table"]
-            data_statuses = self.status_data_dict[stage]["Statuses"]
+            j_obj = self.status_data_dict[stage]
 
-            response = publisher.publish(data_table, data_statuses)
+            response = publisher.publish(j_obj)
 
             if response == b'Done':
                 log("Successful")  # add more verbose output to user & update consumer's response

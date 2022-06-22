@@ -72,8 +72,9 @@ class Publisher(object):
 
         return self.response
 
-    def publish(self, data, table):
-        self._publish(get_full_payload(data, table))
+    def publish(self, j_obj):
+        self._publish(j_obj)
+
 
 def gfloat(a, b):
     return random.uniform(a, b)
@@ -95,6 +96,7 @@ def generate_status():
         "Feedrate": gint(0, 1500),
         "XWeight": gint(0, 10), "YWeight": gint(0, 10), "ZWeight": gint(0, 10)
     }
+
 
 def generate_payload():
     return [generate_status() for _ in range(0, 200000)]
