@@ -53,7 +53,7 @@ class MenuScreen(Screen):
     def on_enter(self):
     	self.sm.current = 'settings'
 
-    def on_leave(self):
+    def on_pre_leave(self):
 		self.sm.current = 'menu'	
 
 
