@@ -626,14 +626,14 @@ class StallJigScreen(Screen):
 
         # UPDATE USER ON WHAT ALARM IS HAPPENING, IN CASE IT'S A GENERAL ONE
         self.test_status_label.text = self.m.s.alarm.alarm_code
+        self.m.reset_from_alarm()
 
         if self.expected_stall_alarm_detected():
-            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1.5)
+            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 2)
 
         if self.expected_limit_alarm():
-            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1.5)
+            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 2)
 
-        self.m.resume_from_alarm()
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
     ## - THRESHOLD_REACHED 
@@ -654,6 +654,7 @@ class StallJigScreen(Screen):
 
     def register_threshold_detection(self):
 
+        self.m.resume_from_alarm()
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS" # might move this to after analysis of position
@@ -682,6 +683,7 @@ class StallJigScreen(Screen):
             return False
 
         if self.VERBOSE: log("Expected limit found!")
+        self.m.resume_from_alarm()
         self.test_status_label.text = "LIMIT FOUND"
         self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
 
