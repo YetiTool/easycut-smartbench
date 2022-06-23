@@ -57,7 +57,7 @@ class MenuScreen(Screen):
     def go_to_settings(self, dt):
     	self.sm.current = 'settings'
 
-    def on_pre_leave(self):
+    def on_leave(self):
 		self.sm.current = 'menu'	
 
 
