@@ -616,7 +616,7 @@ class StallJigScreen(Screen):
     ## USE THE ON PRE-LEAVE FUNCTION TO DETECT IF THE SCREEN IS GOING TO CHANGE TO AN ALARM
     ## AND THEN THIS TRIGGERS CHECKS FOR WHETHER AN EXPECTED STALL ALARM OR A LIMIT
 
-    def on_pre_leave(self):
+    def on_leave(self):
 
         if not self.systemtools_sm.sm.current.startswith('alarm'):
             log("Leaving stall jig...")
@@ -629,10 +629,10 @@ class StallJigScreen(Screen):
         self.m.reset_from_alarm()
 
         if self.expected_stall_alarm_detected():
-            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
+            self.register_threshold_detection()
 
         if self.expected_limit_alarm():
-            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1)
+            self.register_hard_limit_found()
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
@@ -1263,19 +1263,10 @@ class StallJigScreen(Screen):
 
     # refactor alarm detection
 
-    # why is the screen blacking out?? only seems to be on stall alarms
-    ## IS NOT ONLY ON STALL ALARMS
-
-    # but does seem related to: 
-
-    # 16:40:33.875 > SET SG ALARM THRESHOLD, MTR: 2, THR: 150
-    # 16:40:33.925 > SET SG ALARM THRESHOLD, MTR: 3, THR: 150
-    # 16:40:34.873 > G91 Y200 F2000
-    # 16:40:34.943 SB has either completed its move command, or it has detected that a limit has been reached!
-
     # so hopefully refactor will fix it 
 
     # currently doesn't check that position is within stall tolerance
+    # at the moment just PASSes on stall alarm detection
 
     # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
     # this needs setting for each axis after the stall pos has been found
