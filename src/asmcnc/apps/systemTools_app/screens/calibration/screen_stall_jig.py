@@ -919,7 +919,8 @@ class StallJigScreen(Screen):
 
     def drive_into_barrier(self, axis, feed, start_pos):
 
-        expected_pos = start_pos + self.travel_to_stall_pos[axis] + self.stall_tolerance[axis]
+        try: expected_pos = start_pos + self.travel_to_stall_pos[axis] + self.stall_tolerance[axis]
+        except: pass
 
         move_sequence = ["G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
         self.m.s.start_sequential_stream(move_sequence)
