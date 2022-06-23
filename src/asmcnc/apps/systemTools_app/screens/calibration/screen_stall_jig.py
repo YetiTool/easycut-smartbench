@@ -628,8 +628,6 @@ class StallJigScreen(Screen):
         self.test_status_label.text = self.m.s.alarm.alarm_code
         self.m.reset_from_alarm()
 
-        sleep(1)
-
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
 
@@ -663,6 +661,11 @@ class StallJigScreen(Screen):
         self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
 
     def set_threshold_reached_flag(self, dt):
+
+        if not self.m.state().startswith("Idle") or self.test_stopped:
+            self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
+            return
+
         self.threshold_reached = True
         log("Threshold reached (imminent stall detected)")
 
@@ -685,6 +688,11 @@ class StallJigScreen(Screen):
         self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
 
     def set_expected_limit_found_flag(self, dt):
+
+        if not self.m.state().startswith("Idle") or self.test_stopped:
+            self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
+            return
+
         self.expected_limit_found = True
         log("Hard limit found, position known")
 
