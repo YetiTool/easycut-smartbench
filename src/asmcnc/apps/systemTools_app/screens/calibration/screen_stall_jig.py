@@ -767,10 +767,12 @@ class StallJigScreen(Screen):
     # GENERAL ANCILLARY FUNCTIONS ------------------------------------------------------------------
 
     def if_less_than_coord(self, expected_pos):
-        return (self.current_position[self.current_axis()]() < expected_pos)
+        if self.current_position[self.current_axis()]() < expected_pos: return True
+        else: return False
 
     def if_more_than_coord(self, expected_pos):
-        return (self.current_position[self.current_axis()]() > expected_pos)
+        if self.current_position[self.current_axis()]() > expected_pos: return True
+        else: return False
 
     ## STOP BUTTON FUNCTION
 
