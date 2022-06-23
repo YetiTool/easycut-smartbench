@@ -388,7 +388,7 @@ class StallJigScreen(Screen):
 
     ## COLOURS: 
 
-    fail_orange = [245./255, 176./255, 65./255, 1]
+    fail_orange = [245./255, 127./255, 23./255, 1]
     pass_green = [0./255, 204./255, 51./255, 1]
     bright_pass_green = [51./255, 255./255, 0./255, 1]
     highlight_yellow = [1, 1, 0, 1]
