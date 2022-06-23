@@ -629,10 +629,10 @@ class StallJigScreen(Screen):
         self.m.reset_from_alarm()
 
         if self.expected_stall_alarm_detected():
-            self.register_threshold_detection()
+            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
 
         if self.expected_limit_alarm():
-            self.register_hard_limit_found()
+            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1)
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
