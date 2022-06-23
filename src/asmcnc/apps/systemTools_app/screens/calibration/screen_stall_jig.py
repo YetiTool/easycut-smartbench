@@ -286,7 +286,7 @@ class StallJigScreen(Screen):
 
         "X": 3,
         "Y": 3,
-        "Z": 1
+        "Z": -1
 
     }
 
@@ -344,6 +344,7 @@ class StallJigScreen(Screen):
     threshold_reached = False
     all_tests_completed = False
     test_stopped = False
+    test_passed = False
 
     ## CLOCK OBJECTS
 
@@ -366,6 +367,7 @@ class StallJigScreen(Screen):
     hard_limit_found_event = None
     set_expected_limit_found_flag_event = None
     poll_to_start_back_off = None
+    drive_into_barrier_event = None
 
     ## DATABASE OBJECTS
 
@@ -431,6 +433,13 @@ class StallJigScreen(Screen):
 
         }
 
+        self.detection_too_late = { # this may need changing depending on direction that X axis travels
+
+            "X": self.if_more_than_coord,
+            "Y": self.if_more_than_coord,
+            "Z": self.if_less_than_coord
+
+        }
 
         # GUI SET UP
 
@@ -466,6 +475,7 @@ class StallJigScreen(Screen):
         if self.hard_limit_found_event != None: Clock.unschedule(self.hard_limit_found_event)
         if self.set_expected_limit_found_flag_event != None: Clock.unschedule(self.set_expected_limit_found_flag_event)
         if self.poll_to_start_back_off != None: Clock.unschedule(self.poll_to_start_back_off)
+        if self.drive_into_barrier_event != None: Clock.unschedule(self.drive_into_barrier_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -655,9 +665,7 @@ class StallJigScreen(Screen):
     def register_threshold_detection(self):
 
         self.m.resume_from_alarm()
-        self.result_label.text = "THRESHOLD REACHED"
-        self.result_label.background_color = self.bright_pass_green
-        self.test_status_label.text = "PASS" # might move this to after analysis of position
+        self.alert_user_to_detection()
         self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
 
     def set_threshold_reached_flag(self, dt):
@@ -695,6 +703,11 @@ class StallJigScreen(Screen):
 
         self.expected_limit_found = True
         log("Hard limit found, position known")
+
+    def alert_user_to_detection(self):
+        self.result_label.text = "THRESHOLD REACHED"
+        self.result_label.background_color = self.highlight_yellow
+        self.test_status_label.text = "ANALYSING"
 
     ## LIMITS
 
@@ -751,6 +764,12 @@ class StallJigScreen(Screen):
 
     # GENERAL ANCILLARY FUNCTIONS ------------------------------------------------------------------
 
+    def if_less_than_coord(self, expected_pos):
+        return (self.current_position[self.current_axis()]() < expected_pos)
+
+    def if_more_than_coord(self, expected_pos):
+        return (self.current_position[self.current_axis()]() > expected_pos)
+
     ## STOP BUTTON FUNCTION
 
     def stop(self):
@@ -801,6 +820,7 @@ class StallJigScreen(Screen):
     def run(self):
 
         self.disable_all_buttons_except_stop()
+        self.test_passed = False
         self.threshold_reached = False
         self.result_label.text = ""
         self.result_label.background_color = [0,0,0,1]
@@ -881,7 +901,7 @@ class StallJigScreen(Screen):
 
     ## FUNCTION TO SET THE THRESHOLD AND CRASH INTO AN OBSTACLE
 
-    def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx, start_pos = None):
+    def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll for set threshold and drive into barrier")
@@ -890,12 +910,16 @@ class StallJigScreen(Screen):
 
         threshold = self.threshold_dict[axis][threshold_idx]
         feed = self.feed_dict[axis][feed_idx]
+        start_pos = self.current_position[axis]()
 
         log("Setting threshold to " + str(threshold) + " for " + axis + ", and drive into barrier at feed: " + str(feed))
-
         self.m.set_threshold_for_axis(axis, threshold)
-        sleep(1)
-        # self.m.send_any_gcode_command("G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed))
+        self.drive_into_barrier_event = Clock.schedule_once(lambda dt: self.drive_into_barrier(axis, feed, start_pos), 1)
+
+
+    def drive_into_barrier(self, axis, feed, start_pos):
+
+        expected_pos = start_pos + self.travel_to_stall_pos[axis] + self.stall_tolerance[axis]
 
         move_sequence = ["G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
         self.m.s.start_sequential_stream(move_sequence)
@@ -904,7 +928,7 @@ class StallJigScreen(Screen):
             self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
 
         else:
-            self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 2)
+            self.poll_for_threshold_detection = Clock.schedule_once(lambda dt: self.sb_has_travelled_or_detected(expected_pos), 2)
 
 
     ## REPOSITIONING PROCEDURE
@@ -922,10 +946,6 @@ class StallJigScreen(Screen):
         if not self.m.state().startswith("Idle") or self.test_stopped:
             self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
             return
-
-        if not self.result_label.text == "THRESHOLD REACHED":
-            self.result_label.text = "THRESHOLD NOT REACHED"
-            self.result_label.background_color = self.fail_orange
 
         log("Back off and find position")
         self.test_status_label.text = "REFIND POS"
@@ -981,7 +1001,7 @@ class StallJigScreen(Screen):
             log("Axis set up")
             self.setting_up_axis_for_test = False
 
-        elif self.threshold_reached:
+        elif self.test_passed:
             log("Recording stall detection event - test passed")
             self.colour_current_grid_button(self.pass_green)
             self.record_stall_event()
@@ -1115,22 +1135,20 @@ class StallJigScreen(Screen):
         log("Set expected travel to stall position")
         self.test_status_label.text = "SET TRAVEL"
 
-        start_pos = self.current_position[self.current_axis()]()
-        
         log("Pull off from limit")
         move_command = "G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         self.m.send_any_gcode_command(move_command)
-        self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
+        self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis()), 1)
 
-    def prepare_to_find_stall_pos(self, axis, start_pos):
+    def prepare_to_find_stall_pos(self, axis):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped:
             if self.VERBOSE: log("Poll to prepare to find stall pos")
-            self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis(), start_pos), 1)
+            self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis()), 1)
             return
 
         self.m.enable_only_hard_limits()
-        self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0, start_pos)
+        self.set_threshold_and_drive_into_barrier(self.current_axis(), 0, 0)
 
     def stall_position_found(self, axis, start_pos):
 
@@ -1150,7 +1168,7 @@ class StallJigScreen(Screen):
     # PARSE RESULTS OF EXPERIMENT ------------------------------------------------------------------------------------------
 
     ## POLLED EVENT, WHEN SB IS NO LONGER MOVING AND ALARMS HAVE BEEN RESET, IT WILL START THE REPOSITIONING PROCEDURE
-    def sb_has_travelled_or_detected(self, dt):
+    def sb_has_travelled_or_detected(self, expected_pos):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for threshold detection")
@@ -1158,7 +1176,29 @@ class StallJigScreen(Screen):
             return
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
+
+        if (self.threshold_reached and (not self.detection_too_late[self.current_axis()])): self.test_passed()
+        else: self.test_failed()
+
         self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
+
+    ## DO TEST RESULTS
+
+    def test_passed(self):
+
+        self.test_passed = True
+        self.result_label.text = "THRESHOLD REACHED"
+        self.result_label.background_color = self.bright_pass_green
+        self.test_status_label.text = "PASS"
+
+    def test_failed(self):
+
+        self.test_passed = False
+        self.result_label.text = "THRESHOLD NOT REACHED"
+        self.result_label.background_color = self.fail_orange
+        self.test_status_label.text = "TEST FAILED"
+
+
 
     ## RECORD STALL EVENT TO SEND TO DATABASE AT END OF ALL EXPERIMENTS 
     ## NOTE THAT THIS IS ONLY CALLED IF THE TEST PASSES - WE DO NOT RECORD FAILED EXPERIMENT DATA IN THE DATABASE
@@ -1269,20 +1309,9 @@ class StallJigScreen(Screen):
             return True
 
 
-    # testing
-
-    # refactor alarm detection
-
-    # so hopefully refactor will fix it 
-
+    # THIS IS NOW IN BUT NEEDS TESTING:
     # currently doesn't check that position is within stall tolerance
     # at the moment just PASSes on stall alarm detection
-
-    # amount of move when it drives into barrier should also be some combo of travel to stall pos - limit pull off + overjog
-    # this needs setting for each axis after the stall pos has been found
-
-    # measurement creating & refactoring
-    # set up database queries etc. 
 
 
 
