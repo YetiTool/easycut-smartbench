@@ -20,6 +20,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+from kivy.clock import Clock
 
 
 Builder.load_string("""
@@ -51,6 +52,9 @@ class MenuScreen(Screen):
         self.sm = kwargs['sm']
 
     def on_enter(self):
+    	Clock.schedule_once(self.go_to_settings, 1)
+
+    def go_to_settings(self, dt):
     	self.sm.current = 'settings'
 
     def on_pre_leave(self):
