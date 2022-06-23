@@ -628,6 +628,8 @@ class StallJigScreen(Screen):
         self.test_status_label.text = self.m.s.alarm.alarm_code
         self.m.reset_from_alarm()
 
+        sleep(1)
+
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
 
