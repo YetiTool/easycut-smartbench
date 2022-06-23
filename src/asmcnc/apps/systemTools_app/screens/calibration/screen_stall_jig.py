@@ -1180,7 +1180,7 @@ class StallJigScreen(Screen):
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
 
-        if (self.threshold_reached and (not self.detection_too_late[self.current_axis()])): self.test_passed()
+        if (self.threshold_reached and (not self.detection_too_late[self.current_axis()](expected_pos))): self.test_passed()
         else: self.test_failed()
 
         self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
