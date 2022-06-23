@@ -568,13 +568,13 @@ class ZHeadQC1(Screen):
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
-        if 25 < self.m.s.motor_driver_temp < 100:
+        if 15 < self.m.s.motor_driver_temp < 100:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
-            fail_report.append("Should be greater than 25 and less than 100 deg C.")
+            fail_report.append("Should be greater than 15 and less than 100 deg C.")
 
         if 0 < self.m.s.transistor_heatsink_temp < 100:
             pass_fail = pass_fail*(True)
