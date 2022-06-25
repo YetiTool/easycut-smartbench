@@ -285,7 +285,6 @@ class JobRecoveryScreen(Screen):
 
     initial_line_index = 0
     selected_line_index = 0
-    max_index = 0
     display_list = []
 
     def __init__(self, **kwargs):
@@ -315,8 +314,7 @@ class JobRecoveryScreen(Screen):
             self.line_input.text = ""
             self.initial_line_index = self.jd.job_recovery_cancel_line
             self.selected_line_index = self.initial_line_index
-            self.max_index = len(self.jd.job_gcode) - 1
-            self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.max_index + 1)] + ["" for _ in range (6)]
+            self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.initial_line_index + 1)] + ["" for _ in range (6)]
 
             self.stopped_on_label.text = "Job stopped on line " + str(self.initial_line_index)
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
@@ -328,7 +326,7 @@ class JobRecoveryScreen(Screen):
             self.update_display()
 
     def scroll_down(self):
-        if self.selected_line_index < self.max_index:
+        if self.selected_line_index < self.initial_line_index:
             self.selected_line_index += 1
             self.update_display()
 
@@ -339,7 +337,7 @@ class JobRecoveryScreen(Screen):
                 instance.text = ""
             else:
                 # If user inputs values outside of range, just show max line
-                self.selected_line_index = min(int(value), self.max_index)
+                self.selected_line_index = min(int(value), self.initial_line_index)
                 self.update_display()
         else:
             # If user clears input, return to initial line
