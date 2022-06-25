@@ -200,9 +200,14 @@ class NudgeScreen(Screen):
 
     def get_info(self):
 
-        info = "This is the nudge screen."
+        info = ('"Nudging" is using a manual movement to micro-position your cutting tool into the position you selected in the previous gcode viewer screen.\n\n'
+                'Nudging is used to identify minor differences in machine position between homing cycles, or in the event of an axis stall in the previous operation. '
+                'By "nudging", SmartBench can compensate for this.\n\n'
+                'Now that you have selected a start point in your gcode, use the movement buttons to position the tool exactly where you think it should be.\n\n'
+                'Check each axis individually. Any adjustments you make should be minor (normally < 3 mm).'
+        )
 
-        popup_info.PopupInfo(self.sm, self.l, 700, info)   
+        popup_info.PopupInfo(self.sm, self.l, 700, info)
 
     def popup_help(self):
 

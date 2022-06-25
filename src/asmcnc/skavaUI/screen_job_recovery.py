@@ -385,9 +385,16 @@ class JobRecoveryScreen(Screen):
 
     def get_info(self):
 
-        info = "This is the job recovery screen."
+        info = ('This screen allows you to choose where to start your recovery.\n\n'
+                'Use the arrows to navigate through the lines of the job file, and select a point to recover the job from. '
+                'The red marker indicates where the stall event happened. We suggest starting a few lines before here.\n\n'
+                'To confirm this start point, use the "GO TO XY" button. This will move the ZHead over the selected start point. '
+                'You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane. '
+                'This XY position can be fine adjusted in the next screen. \n\n'
+                'Note: the Z position will be automatically calculated when the job recovery starts.'
+        )
 
-        popup_info.PopupInfo(self.sm, self.l, 700, info)   
+        popup_info.PopupInfo(self.sm, self.l, 700, info)
 
     def go_xy(self):
         self.m.jog_absolute_xy(self.pos_x, self.pos_y, 8000)
