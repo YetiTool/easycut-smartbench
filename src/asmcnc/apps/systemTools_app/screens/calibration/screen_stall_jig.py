@@ -1186,19 +1186,19 @@ class StallJigScreen(Screen):
 
     def determine_test_result(self, expected_pos):
 
-        if self.threshold_reached and not self.detection_too_late[self.current_axis()](expected_pos): return self.test_passed()
-        else: return self.test_failed()
+        if self.threshold_reached and not self.detection_too_late[self.current_axis()](expected_pos): return self.test_did_pass()
+        else: return self.test_did_fail()
 
     ## DO TEST RESULTS
 
-    def test_passed(self):
+    def test_did_pass(self):
 
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS"
         return True
 
-    def test_failed(self):
+    def test_did_fail(self):
 
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
