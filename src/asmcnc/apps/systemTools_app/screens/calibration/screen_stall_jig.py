@@ -368,6 +368,7 @@ class StallJigScreen(Screen):
     set_expected_limit_found_flag_event = None
     poll_to_start_back_off = None
     drive_into_barrier_event = None
+    move_all_axes_event = None
 
     ## DATABASE OBJECTS
 
@@ -476,6 +477,7 @@ class StallJigScreen(Screen):
         if self.set_expected_limit_found_flag_event != None: Clock.unschedule(self.set_expected_limit_found_flag_event)
         if self.poll_to_start_back_off != None: Clock.unschedule(self.poll_to_start_back_off)
         if self.drive_into_barrier_event != None: Clock.unschedule(self.drive_into_barrier_event)
+        if self.move_all_axes_event != None: Clock.unschedule(self.move_all_axes_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -887,6 +889,11 @@ class StallJigScreen(Screen):
 
     def move_all_axes(self, pos_dict):
 
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
+            if self.VERBOSE: log("Poll to move all axes")
+            self.move_all_axes_event = Clock.schedule_once(lambda dt: self.move_all_axes(pos_dict), 2)
+            return  
+
         # Move Z up, 
         # Move to XY position
         # Move Z back down
@@ -907,7 +914,7 @@ class StallJigScreen(Screen):
 
     def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx):
 
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for set threshold and drive into barrier")
             self.stadib_event = Clock.schedule_once(lambda dt: self.set_threshold_and_drive_into_barrier(axis, threshold_idx, feed_idx), 2)
             return
@@ -1113,7 +1120,7 @@ class StallJigScreen(Screen):
 
     def go_to_start_pos(self, dt): # may want to set this to 0,0,0 and turn off limits
 
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for going to start position")
             self.poll_for_going_to_start_pos = Clock.schedule_once(self.go_to_start_pos, 2)
             return
@@ -1132,7 +1139,7 @@ class StallJigScreen(Screen):
 
     def find_travel_from_start_pos(self, dt):
 
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for setting travel")
             self.poll_to_find_travel_from_start_pos = Clock.schedule_once(self.find_travel_from_start_pos, 1)
             return
