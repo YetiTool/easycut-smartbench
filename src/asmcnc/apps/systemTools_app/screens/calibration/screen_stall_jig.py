@@ -657,16 +657,6 @@ class StallJigScreen(Screen):
         self.m.resume_from_alarm()
         self.alert_user_to_detection()
         log("Threshold reached (imminent stall detected)")
-        # self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
-
-    def set_threshold_reached_flag(self, dt):
-
-        if not self.m.state().startswith("Idle") or self.test_stopped:
-            self.set_threshold_reached_flag_event = Clock.schedule_once(self.set_threshold_reached_flag, 1)
-            return
-
-        self.threshold_reached = True
-        log("Threshold reached (imminent stall detected)")
 
     def expected_limit_alarm(self):
 
