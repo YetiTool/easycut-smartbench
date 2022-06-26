@@ -1181,7 +1181,7 @@ class StallJigScreen(Screen):
             return
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
-        self.test_passed = self.determine_test_result()
+        self.test_passed = self.determine_test_result(expected_pos)
         self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
 
     def determine_test_result(self, expected_pos):
