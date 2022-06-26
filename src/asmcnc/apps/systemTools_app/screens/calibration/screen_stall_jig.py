@@ -107,7 +107,7 @@ Builder.load_string("""
                     size_hint_y: 1
 
             BoxLayout: 
-                size_hint_x: 0.4
+                size_hint_x: 0.35
                 orientation: "vertical"
 
                 Button:
@@ -145,7 +145,7 @@ Builder.load_string("""
 
 
             BoxLayout: 
-                size_hint_x: 0.35
+                size_hint_x: 0.4
                 orientation: "vertical"
 
                 BoxLayout: 
@@ -187,7 +187,7 @@ class StallJigScreen(Screen):
 
     feed_dict = {
 
-        "X": [8000,6000,4500,3000,2000,1200,600],
+        "X": [8000,6000,4500,3700,3000,2000,1200,600],
         "Y": [6000,5000,4000,3000,2000,1200,600],
         "Z": [750,600,500,400,300,150,75] 
 
