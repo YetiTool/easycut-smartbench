@@ -51,11 +51,18 @@ class StallJigUnitTests(unittest.TestCase):
 
     # GENERAL TESTS
 
-    def test_is_connected(self):
-        self.assertIsNotNone(self.stall_jig_screen.if_less_than_coord(100), "Not working :(")
-
     def test_is_100_greater_than_0(self):
         assert self.stall_jig_screen.if_less_than_coord(100), "Not working :("
+
+    def test_is_minus_100_less_than_0(self):
+        assert self.stall_jig_screen.if_more_than_coord(-100), "Not working :("
+
+    def test_is_100_greater_than_0_using_function_dict(self):
+        assert self.stall_jig_screen.detection_too_late[self.stall_jig_screen.current_axis()](-100), "Not working :("
+
+    def test_determine_test_result(self):
+        self.stall_jig_screen.threshold_reached = True
+        self.assertTrue(self.stall_jig_screen.determine_test_result(100)), "Determine test result func failed"
 
 if __name__ == "__main__":
     unittest.main()

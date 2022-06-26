@@ -1181,28 +1181,29 @@ class StallJigScreen(Screen):
             return
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
-
-        if (self.threshold_reached and (not self.detection_too_late[self.current_axis()](expected_pos))): self.test_passed()
-        else: self.test_failed()
-
+        self.test_passed = self.determine_test_result()
         self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 2)
+
+    def determine_test_result(self, expected_pos):
+
+        if self.threshold_reached and not self.detection_too_late[self.current_axis()](expected_pos): return self.test_passed()
+        else: return self.test_failed()
 
     ## DO TEST RESULTS
 
     def test_passed(self):
 
-        self.test_passed = True
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS"
+        return True
 
     def test_failed(self):
 
-        self.test_passed = False
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
         self.test_status_label.text = "TEST FAILED"
-
+        return False
 
 
     ## RECORD STALL EVENT TO SEND TO DATABASE AT END OF ALL EXPERIMENTS 
