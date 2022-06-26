@@ -243,7 +243,7 @@ class StallJigScreen(Screen):
 
     start_pos_y_test = {
 
-        "X": -1229,
+        "X": -1210,
         "Y": -2502,
         "Z": -1
 
@@ -252,7 +252,7 @@ class StallJigScreen(Screen):
     start_pos_z_test = {
 
         "X": -1299,
-        "Y": -2501,
+        "Y": -2405,
         "Z": 0
 
     }
@@ -292,9 +292,9 @@ class StallJigScreen(Screen):
 
     back_off = {
 
-        "X": -500,
-        "Y": -500,
-        "Z": 100
+        "X": -400,
+        "Y": -70,
+        "Z": 50
 
     }
 
@@ -308,9 +308,9 @@ class StallJigScreen(Screen):
 
     crash_distance = {
 
-        "X": 200,
-        "Y": 200,
-        "Z": -50
+        "X": 368,
+        "Y": 65,
+        "Z": -44
 
     }
 
