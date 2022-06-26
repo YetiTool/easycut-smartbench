@@ -236,23 +236,23 @@ class StallJigScreen(Screen):
     start_pos_x_test = {
 
         "X": -1300,
-        "Y": -2502,
-        "Z": 0
+        "Y": -2501,
+        "Z": -1
 
     }
 
     start_pos_y_test = {
 
-        "X": -750,
+        "X": -1229,
         "Y": -2502,
-        "Z": 0
+        "Z": -1
 
     }
 
     start_pos_z_test = {
 
-        "X": -1300,
-        "Y": -2502,
+        "X": -1299,
+        "Y": -2501,
         "Z": 0
 
     }
@@ -306,19 +306,11 @@ class StallJigScreen(Screen):
 
     }
 
-    initial_move_distance = {
+    crash_distance = {
 
         "X": 200,
         "Y": 200,
         "Z": -50
-
-    }
-
-    crash_distance = {
-
-        "X": initial_move_distance["X"],
-        "Y": initial_move_distance["Y"],
-        "Z": initial_move_distance["Z"]
 
     }
 
@@ -489,14 +481,7 @@ class StallJigScreen(Screen):
         self.threshold_reached = False
         self.all_tests_completed = False
         self.test_stopped = False
-        self.crash_distance = {
-
-            "X": self.initial_move_distance["X"],
-            "Y": self.initial_move_distance["Y"],
-            "Z": self.initial_move_distance["Z"]
-
-        }
-
+        self.test_passed = False
         log("Reset flags")
 
     ## DISABLE/ENABLE BUTTON FUNCTIONS ----------------------------------------------------------------------
