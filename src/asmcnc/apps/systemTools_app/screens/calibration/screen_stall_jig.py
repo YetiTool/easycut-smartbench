@@ -361,6 +361,7 @@ class StallJigScreen(Screen):
     poll_to_start_back_off = None
     drive_into_barrier_event = None
     move_all_axes_event = None
+    poll_for_setting_up_axis_for_test = None
 
     ## DATABASE OBJECTS
 
@@ -470,6 +471,7 @@ class StallJigScreen(Screen):
         if self.poll_to_start_back_off != None: Clock.unschedule(self.poll_to_start_back_off)
         if self.drive_into_barrier_event != None: Clock.unschedule(self.drive_into_barrier_event)
         if self.move_all_axes_event != None: Clock.unschedule(self.move_all_axes_event)
+        if self.poll_for_setting_up_axis_for_test != None: Clock.unschedule(self.poll_for_setting_up_axis_for_test)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -1093,6 +1095,11 @@ class StallJigScreen(Screen):
 
         self.setting_up_axis_for_test = True
         self.test_status_label.text = "SET UP AXIS"
+
+        if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
+            if self.VERBOSE: log("Poll for setting up axis for test")
+            self.poll_for_setting_up_axis_for_test = Clock.schedule_once(lambda dt: self.set_up_axis_for_test(), 1)
+            return
 
         log("Set up axis for test")
 
