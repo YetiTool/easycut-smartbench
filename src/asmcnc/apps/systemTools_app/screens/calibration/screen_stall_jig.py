@@ -362,6 +362,7 @@ class StallJigScreen(Screen):
     drive_into_barrier_event = None
     move_all_axes_event = None
     poll_for_setting_up_axis_for_test = None
+    get_alarm_info_event = None
 
     ## DATABASE OBJECTS
 
@@ -472,6 +473,7 @@ class StallJigScreen(Screen):
         if self.drive_into_barrier_event != None: Clock.unschedule(self.drive_into_barrier_event)
         if self.move_all_axes_event != None: Clock.unschedule(self.move_all_axes_event)
         if self.poll_for_setting_up_axis_for_test != None: Clock.unschedule(self.poll_for_setting_up_axis_for_test)
+        if self.get_alarm_info_event != None: Clock.unschedule(self.get_alarm_info_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -626,6 +628,14 @@ class StallJigScreen(Screen):
         # UPDATE USER ON WHAT ALARM IS HAPPENING, IN CASE IT'S A GENERAL ONE
         self.test_status_label.text = self.m.s.alarm.alarm_code
         self.m.reset_from_alarm()
+        self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info, 0.5)
+
+
+    def get_alarm_info(self, dt):
+
+        if self.m.is_grbl_locked():
+            self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info, 0.5)
+            return
 
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 2)
@@ -661,6 +671,7 @@ class StallJigScreen(Screen):
     def expected_limit_alarm(self):
 
         if self.m.s.alarm.alarm_code != "ALARM:1":
+            if self.VERBOSE: log("Alarm that is not stall or limit! " + self.m.s.alarm.alarm_code)
             return False
 
         if self.VERBOSE: log("Possible limit alarm: Is " + self.current_axis() + " in " + str(self.get_limits()))
@@ -1302,11 +1313,6 @@ class StallJigScreen(Screen):
             self.do_data_send()
 
             return True
-
-
-    # THIS IS NOW IN BUT NEEDS TESTING:
-    # currently doesn't check that position is within stall tolerance
-    # at the moment just PASSes on stall alarm detection
 
 
 

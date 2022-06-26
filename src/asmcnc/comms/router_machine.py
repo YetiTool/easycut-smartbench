@@ -1183,6 +1183,7 @@ class RouterMachine(object):
     def is_job_streaming(self): return self.s.is_job_streaming
     def state(self): return self.s.m_state
     def buffer_capacity(self): return self.s.serial_blocks_available
+    def is_grbl_locked(self): return self.s.grbl_locked
 
 
 # GRBL STATES AND SETTINGS
