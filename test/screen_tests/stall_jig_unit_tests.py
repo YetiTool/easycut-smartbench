@@ -60,9 +60,13 @@ class StallJigUnitTests(unittest.TestCase):
     def test_is_100_greater_than_0_using_function_dict(self):
         assert self.stall_jig_screen.detection_too_late[self.stall_jig_screen.current_axis()](-100), "Not working :("
 
-    def test_determine_test_result(self):
+    def test_determine_test_result_true(self):
         self.stall_jig_screen.threshold_reached = True
         self.assertTrue(self.stall_jig_screen.determine_test_result(100)), "Determine test result func failed"
+
+    def test_determine_test_result_false(self):
+        self.stall_jig_screen.threshold_reached = True
+        self.assertFalse(self.stall_jig_screen.determine_test_result(-100)), "Determine test result func failed"
 
 if __name__ == "__main__":
     unittest.main()

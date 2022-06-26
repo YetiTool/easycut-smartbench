@@ -1177,7 +1177,7 @@ class StallJigScreen(Screen):
 
         if (not self.m.state().startswith("Idle")) or self.test_stopped or self.m.s.is_sequential_streaming:
             if self.VERBOSE: log("Poll for threshold detection")
-            self.poll_for_threshold_detection = Clock.schedule_once(self.sb_has_travelled_or_detected, 1)
+            self.poll_for_threshold_detection = Clock.schedule_once(lambda dt: self.sb_has_travelled_or_detected(expected_pos), 1)
             return
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
