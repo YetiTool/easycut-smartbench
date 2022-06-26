@@ -630,18 +630,18 @@ class StallJigScreen(Screen):
         self.m.reset_from_alarm()
         self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info, 0.5)
 
-
     def get_alarm_info(self, dt):
 
         if self.m.is_grbl_locked():
+            if self.VERBOSE: log("GRBL locked, can't get alarm info yet")
             self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info, 0.5)
             return
 
         if self.expected_stall_alarm_detected():
-            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 2)
+            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
 
         if self.expected_limit_alarm():
-            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 2)
+            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1)
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
