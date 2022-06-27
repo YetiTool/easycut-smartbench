@@ -308,9 +308,6 @@ class JobRecoveryScreen(Screen):
         self.m.jog_absolute_single_axis('Z', -10, 750)
 
         if self.jd.job_recovery_selected_line == -1:
-            # Change this to get info by scraping file in the future
-            self.pos_x, self.pos_y, self.pos_z, self.feed, self.speed = 0, 0, 0, 0, 0
-
             self.line_input.text = ""
             self.initial_line_index = self.jd.job_recovery_cancel_line
             self.selected_line_index = self.initial_line_index
@@ -364,19 +361,19 @@ class JobRecoveryScreen(Screen):
         # Recover most recent position
         x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'X' in s), None)
         if x_line:
-            self.pos_x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
+            self.pos_x = float(re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1])
         else:
-            self.pos_x = "0.000"
+            self.pos_x = 0.0
         y_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Y' in s), None)
         if y_line:
-            self.pos_y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
+            self.pos_y = float(re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1])
         else:
-            self.pos_y = "0.000"
+            self.pos_y = 0.0
         z_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Z' in s), None)
         if z_line:
-            self.pos_z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
+            self.pos_z = float(re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1])
         else:
-            self.pos_z = "0.000"
+            self.pos_z = 0.0
 
         self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (str(self.pos_x), str(self.pos_y), str(self.pos_z))
         self.speed_label.text = "F: %s | S: %s" % (str(self.feed), str(self.speed))
