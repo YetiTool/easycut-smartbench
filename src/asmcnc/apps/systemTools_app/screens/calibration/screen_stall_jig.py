@@ -237,7 +237,7 @@ class StallJigScreen(Screen):
 
         "X": -1300,
         "Y": -2501,
-        "Z": -45
+        "Z": -44
 
     }
 
@@ -245,7 +245,7 @@ class StallJigScreen(Screen):
 
         "X": -1210,
         "Y": -2502,
-        "Z": -45
+        "Z": -44
 
     }
 
