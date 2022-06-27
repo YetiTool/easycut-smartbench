@@ -367,8 +367,8 @@ class StallJigScreen(Screen):
     limits_acceleration_event = None
     post_move_all_axes_event = None
     restore_settings_event = None
-    poll_to_start_back_off = None
     poll_to_finish_procedure = None
+    data_send_event = None
 
     ## DATABASE OBJECTS
 
@@ -484,8 +484,8 @@ class StallJigScreen(Screen):
         if self.limits_acceleration_event != None: Clock.unschedule(self.limits_acceleration_event)
         if self.post_move_all_axes_event != None: Clock.unschedule(self.post_move_all_axes_event)
         if self.restore_settings_event != None: Clock.unschedule(self.restore_settings_event)
-        if self.poll_to_start_back_off != None: Clock.unschedule(self.poll_to_start_back_off)
         if self.poll_to_finish_procedure != None: Clock.unschedule(self.poll_to_finish_procedure)
+        if self.data_send_event != None: Clock.unschedule(self.data_send_event)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -618,9 +618,6 @@ class StallJigScreen(Screen):
     # SET UP SCREEN BEFORE ENTERING
 
     def on_pre_enter(self):
-
-        # self.test_status_label.text = self.l.get_str('STALL JIG') + '...'
-        # self.run_button.text = self.l.get_str('PREP TEST') + '...'
         log("Opening stall experiment wizard")
 
     # STALL/LIMIT EVENT DETECTION -----------------------------------------------------------------
@@ -640,6 +637,7 @@ class StallJigScreen(Screen):
         self.test_status_label.text = self.m.s.alarm.alarm_code
         self.m.reset_from_alarm()
         self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info(), 0.5)
+        log("Stall jig has registered an alarm")
 
     def get_alarm_info(self, dt):
 
@@ -648,11 +646,16 @@ class StallJigScreen(Screen):
             self.get_alarm_info_event = Clock.schedule_once(lambda dt: self.get_alarm_info(), 0.5)
             return
 
+        log("GRBL unlocked, getting alarm info")
+
         if self.expected_stall_alarm_detected():
-            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 1)
+            self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 0.5)
 
         if self.expected_limit_alarm():
-            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 1)
+            self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 0.5)
+
+        log("Resume from alarm")
+        self.m.resume_from_alarm()
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
@@ -675,7 +678,6 @@ class StallJigScreen(Screen):
     def register_threshold_detection(self):
 
         self.threshold_reached = True
-        self.m.resume_from_alarm()
         self.alert_user_to_detection()
         log("Threshold reached (imminent stall detected)")
 
@@ -694,13 +696,13 @@ class StallJigScreen(Screen):
             return False
 
         if self.VERBOSE: log("Expected limit found!")
-        self.m.resume_from_alarm()
         self.test_status_label.text = "LIMIT FOUND"
         self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
 
     def set_expected_limit_found_flag(self, dt):
 
         if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll for setting expected limit found flag")
             self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
             return
 
@@ -791,7 +793,7 @@ class StallJigScreen(Screen):
 
         self.m.resume_from_alarm()
         self.test_status_label.text = "GRBL RESET"
-        log("GRBL reset")
+        log("GRBL RESET")
 
     def smartbench_is_not_ready_for_next_command(self):
 
@@ -905,7 +907,7 @@ class StallJigScreen(Screen):
 
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll to move all axes")
-            self.move_all_axes_event = Clock.schedule_once(lambda dt: self.move_all_axes(pos_dict), 2)
+            self.move_all_axes_event = Clock.schedule_once(lambda dt: self.move_all_axes(pos_dict, next_func, disable_hard_limits), 2)
             return  
 
         # Move Z up, 
@@ -916,10 +918,12 @@ class StallJigScreen(Screen):
 
         move_sequence = []
 
-        if disable_hard_limits: self.move_sequence.append('$21=0')
-        self.move_sequence.append("G0 G53 Z-" + str(self.m.s.setting_27))
-        self.move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
-        self.move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
+        if disable_hard_limits: 
+            if self.VERBOSE: log("DISABLE HARD LIMITS")
+            move_sequence.append("$21=0")
+        move_sequence.append("G0 G53 Z-" + str(self.m.s.setting_27))
+        move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
+        move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
         self.m.s.start_sequential_stream(move_sequence)
 
         # IMPORTANT THAT THE FUNCTION PASSED ACCEPTS CLOCK TIME AS AN ARGUMENT
@@ -953,13 +957,16 @@ class StallJigScreen(Screen):
         try: expected_pos = start_pos + self.travel_to_stall_pos[axis] + self.stall_tolerance[axis]
         except: pass
 
+        log("Drive into barrier")
         move_sequence = ["G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
         self.m.s.start_sequential_stream(move_sequence)
 
         if self.setting_up_axis_for_test:
+            log("Setting up axis, so look for stall position")
             self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 1)
 
         else:
+            log("Start poll for SB travelling or exceeding threshold")
             self.poll_for_threshold_detection = Clock.schedule_once(lambda dt: self.sb_has_travelled_or_detected(expected_pos), 2)
 
 
@@ -1084,7 +1091,7 @@ class StallJigScreen(Screen):
 
 
     def full_calibration_check(self):
-        if (not self.m.state().startswith("Idle")) or self.test_stopped:
+        if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll for ready to check calibration")
             self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 2)
             return
@@ -1097,9 +1104,7 @@ class StallJigScreen(Screen):
 
     def ready_to_run_tests(self, dt):
 
-        if (self.m.checking_calibration_in_progress or \
-            (not self.m.state().startswith("Idle")) or \
-            self.test_stopped):
+        if self.m.checking_calibration_in_progress or self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll for ready to run tests")
             self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 3)
             return
@@ -1120,14 +1125,15 @@ class StallJigScreen(Screen):
             self.limits_acceleration_event = Clock.schedule_once(lambda dt: self.set_grbl_settings_for_experiment(), 0.5)
             return
 
-        soft_limits_and_max_acceleration_values = [
+        disable_soft_limits_and_max_acceleration_values = [
 
                 '$20=0',        # Disable soft limits
                 '$120=1300.0',  # X Acceleration, mm/sec^2
                 '$121=1300.0'   # Y Acceleration, mm/sec^2
                 ]
 
-        self.m.s.start_sequential_stream(soft_limits_and_max_acceleration_values)
+        self.m.s.start_sequential_stream(disable_soft_limits_and_max_acceleration_values)
+        log("Disabling soft limits")
         log("Maxing out acceleration values for X and Y (to 1300)")
         log("Move to start position")
         # go to absolute start position (relative to true home)
@@ -1159,7 +1165,6 @@ class StallJigScreen(Screen):
             return
 
         log("Set up axis for test")
-
         log("Home against the magnets that give fake home position")
         self.start_homing()
 
@@ -1245,6 +1250,7 @@ class StallJigScreen(Screen):
 
     def test_did_pass(self):
 
+        log("TEST PASSED")
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS"
@@ -1252,6 +1258,7 @@ class StallJigScreen(Screen):
 
     def test_did_fail(self):
 
+        log("TEST FAILED")
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
         self.test_status_label.text = "TEST FAILED"
