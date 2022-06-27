@@ -623,6 +623,7 @@ class StallJigScreen(Screen):
 
     def on_pre_enter(self):
         log("Opening stall experiment wizard")
+        self.m.toggle_reset_pin()
 
     # STALL/LIMIT EVENT DETECTION -----------------------------------------------------------------
 
