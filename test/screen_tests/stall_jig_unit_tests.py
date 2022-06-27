@@ -51,11 +51,13 @@ class StallJigUnitTests(unittest.TestCase):
 
     # GENERAL TESTS
 
+
+
     def test_is_100_greater_than_0(self):
-        assert self.stall_jig_screen.if_less_than_coord(100), "Not working :("
+        assert self.stall_jig_screen.if_less_than_expected_pos(100), "Not working :("
 
     def test_is_minus_100_less_than_0(self):
-        assert self.stall_jig_screen.if_more_than_coord(-100), "Not working :("
+        assert self.stall_jig_screen.if_more_than_expected_pos(-100), "Not working :("
 
     def test_is_100_greater_than_0_using_function_dict(self):
         assert self.stall_jig_screen.detection_too_late[self.stall_jig_screen.current_axis()](-100), "Not working :("

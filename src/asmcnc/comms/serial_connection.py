@@ -712,7 +712,7 @@ class SerialConnection(object):
     stall_Y = False
 
     # Is GRBL locked due to an alarm? 
-    grbl_locked = False
+    grbl_waiting_for_reset = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -778,7 +778,7 @@ class SerialConnection(object):
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
             # Let sw know that grbl is unlocked now that statuses are being received
-            if self.grbl_locked: self.grbl_locked = False
+            if self.grbl_waiting_for_reset: self.grbl_waiting_for_reset = False
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
@@ -1238,7 +1238,7 @@ class SerialConnection(object):
                                            self.serial_blocks_available, self.serial_chars_available)
  
         elif message.startswith('ALARM:'):
-            self.grbl_locked = True
+            self.grbl_waiting_for_reset = True
             log('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
