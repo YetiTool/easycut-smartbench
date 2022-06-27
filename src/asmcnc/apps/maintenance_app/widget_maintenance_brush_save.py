@@ -140,6 +140,12 @@ class BrushSaveWidget(Widget):
             # write new values to file
             if self.m.write_spindle_brush_values(use, lifetime):
 
+                try:
+                    if self.m.s.setting_51 and use == 0:
+                        self.m.p.ResetDigitalSpindleBrushTime()
+                except:
+                    pass
+
                 saved_success = self.l.get_str("Settings saved!")
                 popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
 

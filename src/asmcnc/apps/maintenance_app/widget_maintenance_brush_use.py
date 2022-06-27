@@ -152,7 +152,7 @@ class BrushUseWidget(Widget):
     def restore(self):
         try:
             if self.m.s.setting_51:
-                self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                self.m.s.write_command('M3 S0')
                 Clock.schedule_once(self.get_restore_info, 1)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
                 return
@@ -161,9 +161,15 @@ class BrushUseWidget(Widget):
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
 
     def get_restore_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        Clock.schedule_once(self.read_restore_info, 1)
+
+    def read_restore_info(self, dt):
+        self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        # If info was obtained successfully, spindle production year should have a value
-        if self.m.s.spindle_production_year:
+        # If info was not obtained successfully, spindle production year will equal 99
+        # Update this code if the year is 2099
+        if self.m.s.spindle_production_year != 99:
             self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
         else:
             popup_info.PopupError(self.sm, self.l, "Could not get info - spindle not plugged in!")

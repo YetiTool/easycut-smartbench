@@ -552,7 +552,7 @@ class MaintenanceScreenClass(Screen):
         self.laser_switch_widget.toggle_laser()
 
         # BRUSHES
-        self.brush_use_widget.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600))
+        self.brush_use_widget.restore()
         self.brush_life_widget.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
 
         value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
