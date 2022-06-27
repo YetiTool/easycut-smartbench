@@ -15,7 +15,7 @@ from  kivy.uix.button import Button
 from kivy.clock import Clock
 import sys, os
 from functools import partial
-from time import sleep
+from time import sleep, time
 from datetime import datetime
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
@@ -370,6 +370,7 @@ class StallJigScreen(Screen):
     poll_to_finish_procedure = None
     data_send_event = None
     resume_from_alarm_event = None
+    threshold_reached = None
 
     ## DATABASE OBJECTS
 
@@ -488,7 +489,7 @@ class StallJigScreen(Screen):
         if self.poll_to_finish_procedure != None: Clock.unschedule(self.poll_to_finish_procedure)
         if self.data_send_event != None: Clock.unschedule(self.data_send_event)
         if self.resume_from_alarm_event != None: Clock.unschedule(self.resume_from_alarm_event)
-
+        if self.threshold_reached != None: Clock.unschedule(self.threshold_reached)
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -680,9 +681,23 @@ class StallJigScreen(Screen):
 
     def register_threshold_detection(self):
 
-        self.threshold_reached = True
+        limit_found_at_time = time()
         self.alert_user_to_detection()
+        self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.smartbench_is_not_ready_for_next_command(limit_found_at_time), 1)
         log("Threshold reached (imminent stall detected)")
+
+    def set_threshold_reached_flag(self, limit_found_at_time):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
+                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
+                limit_found_at_time = time()
+            if self.VERBOSE: log("Poll for setting threshold reached flag")
+            self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.smartbench_is_not_ready_for_next_command(limit_found_at_time), 1)
+            return
+
+        self.threshold_reached = True
+        log("Set threshold reached flag")
 
     def expected_limit_alarm(self):
 
@@ -700,13 +715,17 @@ class StallJigScreen(Screen):
 
         if self.VERBOSE: log("Expected limit found!")
         self.test_status_label.text = "LIMIT FOUND"
-        self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
+        limit_found_at_time = time()
+        self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
 
-    def set_expected_limit_found_flag(self, dt):
+    def set_expected_limit_found_flag(self, limit_found_at_time):
 
         if self.smartbench_is_not_ready_for_next_command():
+            if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
+                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
+                limit_found_at_time = time()
             if self.VERBOSE: log("Poll for setting expected limit found flag")
-            self.set_expected_limit_found_flag_event = Clock.schedule_once(self.set_expected_limit_found_flag, 1)
+            self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
             return
 
         self.expected_limit_found = True
