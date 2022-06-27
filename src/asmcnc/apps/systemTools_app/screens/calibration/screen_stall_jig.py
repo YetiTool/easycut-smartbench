@@ -301,7 +301,7 @@ class StallJigScreen(Screen):
     limit_pull_off = {
 
         "X": 5,
-        "Y": 3,
+        "Y": 5,
         "Z": -2
 
     }
@@ -623,7 +623,6 @@ class StallJigScreen(Screen):
 
     def on_pre_enter(self):
         log("Opening stall experiment wizard")
-        self.m.toggle_reset_pin()
 
     # STALL/LIMIT EVENT DETECTION -----------------------------------------------------------------
 
@@ -1103,6 +1102,7 @@ class StallJigScreen(Screen):
 
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
+        self.m.toggle_reset_pin()
 
         self.choose_test(0,0,0)
         self.start_homing()
