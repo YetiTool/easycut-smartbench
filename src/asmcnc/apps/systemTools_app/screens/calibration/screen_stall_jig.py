@@ -369,6 +369,7 @@ class StallJigScreen(Screen):
     restore_settings_event = None
     poll_to_finish_procedure = None
     data_send_event = None
+    resume_from_alarm_event = None
 
     ## DATABASE OBJECTS
 
@@ -486,6 +487,8 @@ class StallJigScreen(Screen):
         if self.restore_settings_event != None: Clock.unschedule(self.restore_settings_event)
         if self.poll_to_finish_procedure != None: Clock.unschedule(self.poll_to_finish_procedure)
         if self.data_send_event != None: Clock.unschedule(self.data_send_event)
+        if self.resume_from_alarm_event != None: Clock.unschedule(self.resume_from_alarm_event)
+
         log("Unschedule all events")
 
     # RESET FLAGS -------------------------------------------------------------------------------------------
@@ -655,7 +658,7 @@ class StallJigScreen(Screen):
             self.hard_limit_found_event = Clock.schedule_once(lambda dt: self.register_hard_limit_found(), 0.5)
 
         log("Resume from alarm")
-        self.m.resume_from_alarm()
+        self.resume_from_alarm_event = Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 2)
 
 
     ## FUNCTIONS TO ANALYSE TRIGGERS AND UPDATE FOLLOWING FLAGS: 
