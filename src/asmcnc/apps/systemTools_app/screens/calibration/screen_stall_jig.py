@@ -639,7 +639,7 @@ class StallJigScreen(Screen):
         self.get_alarm_info_event = Clock.schedule_once(self.get_alarm_info, 0.5)
         log("Stall jig has registered an alarm")
 
-    def get_alarm_info(self):
+    def get_alarm_info(self, dt):
 
         if self.m.is_grbl_waiting_for_reset():
             if self.VERBOSE: log("GRBL locked, can't get alarm info yet")
