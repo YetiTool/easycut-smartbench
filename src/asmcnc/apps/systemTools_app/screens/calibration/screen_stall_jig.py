@@ -797,16 +797,16 @@ class StallJigScreen(Screen):
 
     def smartbench_is_not_ready_for_next_command(self):
 
-        if self.m.state().startswith("Idle"):
-            return False
+        if not self.m.state().startswith("Idle"):
+            return True
 
-        if not self.test_stopped:
-            return False
+        if self.test_stopped:
+            return True
 
-        if not self.m.s.is_sequential_streaming:
-            return False
+        if self.m.s.is_sequential_streaming:
+            return True
 
-        return True
+        return False
 
     ## RESET CURRENT SUB-TEST (DOESN'T RESTART THOUGH - WAITS FOR USER INPUT)
 
