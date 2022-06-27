@@ -683,7 +683,7 @@ class StallJigScreen(Screen):
 
         limit_found_at_time = time()
         self.alert_user_to_detection()
-        self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.smartbench_is_not_ready_for_next_command(limit_found_at_time), 1)
+        self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.set_threshold_reached_flag(limit_found_at_time), 1)
         log("Threshold reached (imminent stall detected)")
 
     def set_threshold_reached_flag(self, limit_found_at_time):
@@ -693,7 +693,7 @@ class StallJigScreen(Screen):
                 self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
                 limit_found_at_time = time()
             if self.VERBOSE: log("Poll for setting threshold reached flag")
-            self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.smartbench_is_not_ready_for_next_command(limit_found_at_time), 1)
+            self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.set_threshold_reached_flag(limit_found_at_time), 1)
             return
 
         self.threshold_reached = True
