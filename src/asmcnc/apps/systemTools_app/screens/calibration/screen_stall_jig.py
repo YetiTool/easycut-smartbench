@@ -300,9 +300,9 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": 5,
-        "Y": 5,
-        "Z": -5
+        "X": 1,
+        "Y": 1,
+        "Z": -1
 
     }
 
