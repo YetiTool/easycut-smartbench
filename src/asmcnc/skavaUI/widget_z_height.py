@@ -23,37 +23,41 @@ Builder.load_string("""
     z_clear:z_clear
     z_bit:z_bit
 
-    Image:
-        id: z_range
-        source: './asmcnc/skavaUI/img/zRange.png'
-        allow_stretch: True
-        keep_ratio: False
+    StencilView:
         size: self.parent.size
         pos: self.parent.pos
-    Image:
-        id:z_cut
-        source: './asmcnc/skavaUI/img/zCut.png'
-        allow_stretch: True
-        keep_ratio: False
-        size: self.parent.width, 0
-        pos: self.parent.pos
-        opacity: 1
-    Image:
-        id:z_clear
-        source: './asmcnc/skavaUI/img/zClear.png'
-        allow_stretch: True
-        keep_ratio: False
-        size: self.parent.width, 0
-        pos: self.parent.pos
-        opacity: 1
-    Image:
-        id: z_bit
-        source: './asmcnc/skavaUI/img/zBit.png'
-        allow_stretch: True
-        keep_ratio: False
-        size: self.parent.width/2, self.parent.height
-        x: self.parent.x+(self.parent.width/4)
-        y: self.parent.y
+
+        Image:
+            id: z_range
+            source: './asmcnc/skavaUI/img/zRange.png'
+            allow_stretch: True
+            keep_ratio: False
+            size: self.parent.size
+            pos: self.parent.pos
+        Image:
+            id:z_cut
+            source: './asmcnc/skavaUI/img/zCut.png'
+            allow_stretch: True
+            keep_ratio: False
+            size: self.parent.width, 0
+            pos: self.parent.pos
+            opacity: 1
+        Image:
+            id:z_clear
+            source: './asmcnc/skavaUI/img/zClear.png'
+            allow_stretch: True
+            keep_ratio: False
+            size: self.parent.width, 0
+            pos: self.parent.pos
+            opacity: 1
+        Image:
+            id: z_bit
+            source: './asmcnc/skavaUI/img/zBit.png'
+            allow_stretch: True
+            keep_ratio: False
+            size: self.parent.width/2, self.parent.height
+            x: self.parent.x+(self.parent.width/4)
+            y: self.parent.y
      
         
 """)

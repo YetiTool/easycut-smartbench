@@ -5,8 +5,6 @@ Builder.load_string("""
 
 <XYMoveRecovery>
 
-    jogModeButtonImage:jogModeButtonImage
-
     BoxLayout:
 
         size: self.parent.size
@@ -72,24 +70,7 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
-            Button:
-                background_color: hex('#F4433600')
-                on_release:
-                    self.background_color = hex('#F4433600')
-                on_press:
-                    root.jogModeCycled()
-                    self.background_color = hex('#F44336FF')
-                BoxLayout:
-                    padding: 0
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: jogModeButtonImage
-                        source: "./asmcnc/skavaUI/img/jog_mode_infinity.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+            BoxLayout
             Button:
                 background_color: hex('#F4433600')
                 always_release: True
@@ -152,36 +133,13 @@ class XYMoveRecovery(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
-    feedSpeedJogX = 1200
-    feedSpeedJogY = 1200
-    feedSpeedJogZ = 150
-
     jogMode = 'free'
-    jog_mode_button_press_counter = 0
-
-    def jogModeCycled(self):
-
-        self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 5 == 0:
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 5 == 1:
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 5 == 2:
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 5 == 3:
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
 
     def buttonJogXY(self, case):
 
-        x_feed_speed = self.feedSpeedJogX
-        y_feed_speed = self.feedSpeedJogY
+        x_feed_speed = self.sm.get_screen('nudge').nudge_speed_widget.feedSpeedJogX
+        y_feed_speed = self.sm.get_screen('nudge').nudge_speed_widget.feedSpeedJogY
+        self.jogMode = self.sm.get_screen('nudge').nudge_speed_widget.jogMode
 
         if self.jogMode == 'free':
             if case == 'X-': self.m.jog_absolute_single_axis('X',
@@ -220,16 +178,6 @@ class XYMoveRecovery(Widget):
             if case == 'X-': self.m.jog_relative('X', -10, x_feed_speed)
             if case == 'Y+': self.m.jog_relative('Y', 10, y_feed_speed)
             if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
-
-        elif self.jogMode == 'job':
-            job_box = self.sm.get_screen('home').job_box
-            job_x_range = job_box.range_x[1] - job_box.range_x[0]
-            job_y_range = job_box.range_y[1] - job_box.range_y[0]
-
-            if case == 'X+': self.m.jog_relative('X', job_x_range, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', job_y_range, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -job_y_range, y_feed_speed)
 
     def cancelXYJog(self):
         if self.jogMode == 'free':

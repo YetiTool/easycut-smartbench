@@ -2,8 +2,9 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
-from asmcnc.skavaUI import widget_z_move_recovery
+from asmcnc.skavaUI import widget_z_move_nudge
 from asmcnc.skavaUI import widget_xy_move_recovery
+from asmcnc.skavaUI import widget_nudge_speed
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -11,6 +12,7 @@ Builder.load_string("""
     status_container:status_container
     xy_move_container:xy_move_container
     z_move_container:z_move_container
+    nudge_speed_container:nudge_speed_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -76,10 +78,10 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 size_hint_y: 3
                 padding: [dp(100), dp(0)]
-                spacing: dp(100)
+                spacing: dp(30)
 
                 BoxLayout:
-                    size_hint_x: 1.4
+                    size_hint_x: 2.5
                     padding: [(self.size[0] - dp(275)) / 2, (self.size[1] - dp(275)) / 2]
                     canvas:
                         Color:
@@ -95,7 +97,17 @@ Builder.load_string("""
                         width: dp(275)
 
                 BoxLayout:
+                    id: nudge_speed_container
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
+                BoxLayout:
                     id: z_move_container
+                    size_hint_x: 2
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -124,19 +136,10 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
 
-                Button:
-                    on_press: root.popup_help()
-                    background_color: [0,0,0,0]
+                BoxLayout:
                     size_hint: (None, None)
                     height: dp(67)
                     width: dp(67)
-                    BoxLayout:
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/skavaUI/img/help_btn_orange_round.png"
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
 
                 Button:
                     on_press: root.next_screen()
@@ -193,10 +196,14 @@ class NudgeScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
         # Z move widget
-        self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
+        self.z_move_container.add_widget(widget_z_move_nudge.ZMoveNudge(machine=self.m, screen_manager=self.sm, job=self.jd))
 
         # XY move widget
         self.xy_move_container.add_widget(widget_xy_move_recovery.XYMoveRecovery(machine=self.m, screen_manager=self.sm))
+
+        # Nudge speed widget
+        self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=self.m, screen_manager=self.sm)
+        self.nudge_speed_container.add_widget(self.nudge_speed_widget)
 
     def get_info(self):
 
