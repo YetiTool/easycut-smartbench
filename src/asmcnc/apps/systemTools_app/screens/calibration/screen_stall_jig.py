@@ -237,7 +237,7 @@ class StallJigScreen(Screen):
 
         "X": -1300,
         "Y": -2501,
-        "Z": -44
+        "Z": -70
 
     }
 
@@ -245,7 +245,7 @@ class StallJigScreen(Screen):
 
         "X": -1210,
         "Y": -2502,
-        "Z": -44
+        "Z": -70
 
     }
 
@@ -294,14 +294,14 @@ class StallJigScreen(Screen):
 
         "X": -400,
         "Y": -70,
-        "Z": 50
+        "Z": 76
 
     }
 
     limit_pull_off = {
 
         "X": 5,
-        "Y": 5,
+        "Y": 5
         "Z": -2
 
     }
@@ -310,7 +310,7 @@ class StallJigScreen(Screen):
 
         "X": 381,
         "Y": 65,
-        "Z": -44
+        "Z": -70
 
     }
 
