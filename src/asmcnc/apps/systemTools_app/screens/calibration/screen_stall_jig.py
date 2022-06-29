@@ -285,7 +285,7 @@ class StallJigScreen(Screen):
     stall_tolerance = {
 
         "X": 3,
-        "Y": 3,
+        "Y": 30,
         "Z": -1
 
     }
