@@ -205,6 +205,11 @@ class NudgeScreen(Screen):
         self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=self.m, screen_manager=self.sm)
         self.nudge_speed_container.add_widget(self.nudge_speed_widget)
 
+    def on_pre_enter(self):
+        self.initial_x = self.m.mpos_x()
+        self.initial_y = self.m.mpos_y()
+        self.initial_z = self.m.mpos_z()
+
     def get_info(self):
 
         info = ('"Nudging" is using a manual movement to micro-position your cutting tool into the position you selected in the previous gcode viewer screen.\n\n'
@@ -232,6 +237,17 @@ class NudgeScreen(Screen):
     def next_screen(self):
         wait_popup = popup_info.PopupWait(self.sm, self.l)
 
+        diff_x = (self.m.mpos_x() - self.initial_x)
+        diff_y = (self.m.mpos_y() - self.initial_y)
+        diff_z = (self.m.mpos_z() - self.initial_z)
+
+        # If user nudged, update datum
+        if diff_x or diff_y or diff_z:
+            new_x = float(self.m.s.g54_x) + diff_x
+            new_y = float(self.m.s.g54_y) + diff_y
+            new_z = float(self.m.s.g54_z) + diff_z
+            self.m.s.write_command('G10 L2 X%s Y%s Z%s' % (new_x, new_y, new_z))
+
         def generate_gcode():
             success, message = self.jd.generate_recovery_gcode()
             wait_popup.popup.dismiss()
@@ -240,4 +256,5 @@ class NudgeScreen(Screen):
                 self.jd.reset_recovery()
             self.sm.current = 'home'
 
+        # Give time for wait popup to appear
         Clock.schedule_once(lambda dt: generate_gcode(), 0.5)
