@@ -392,7 +392,7 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 700, info)
 
     def go_xy(self):
-        self.m.jog_absolute_xy(self.pos_x, self.pos_y, 8000)
+        self.m.s.write_command('G90 G0 X%s Y%s Z%s' % (self.pos_x, self.pos_y, self.pos_z))
 
     def back_to_home(self):
         self.jd.reset_recovery()
