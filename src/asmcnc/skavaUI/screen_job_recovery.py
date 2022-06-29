@@ -306,7 +306,8 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
-        self.m.jog_absolute_single_axis('Z', -10, 750)
+        self.m.s.write_command('$#') # In preparation for nudge screen
+        self.m.s.write_command('G90 G0 Z0')
 
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
@@ -401,9 +402,8 @@ class JobRecoveryScreen(Screen):
 
     def next_screen(self):
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-        self.m.s.write_command('$#') # In preparation for nudge screen
         self.jd.job_recovery_selected_line = self.selected_line_index
-        self.m.jog_absolute_single_axis('Z', -10, 750)
+        self.m.s.write_command('G90 G0 Z0')
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
         self.m.s.write_command('G90 G0 Z%s' % self.pos_z)
         Clock.schedule_once(self.proceed_to_next_screen, 0.4)
