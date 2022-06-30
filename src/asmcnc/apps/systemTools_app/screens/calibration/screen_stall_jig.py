@@ -285,7 +285,7 @@ class StallJigScreen(Screen):
     stall_tolerance = {
 
         "X": 3,
-        "Y": 100, # 3
+        "Y": 3, # 3
         "Z": -1
 
     }
@@ -309,7 +309,7 @@ class StallJigScreen(Screen):
     crash_distance = {
 
         "X": 381,
-        "Y": 165, #65
+        "Y": 65, #65
         "Z": -70
 
     }
