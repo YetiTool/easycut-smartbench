@@ -347,31 +347,31 @@ class JobRecoveryScreen(Screen):
         self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
 
         # Recover most recent spindle speed
-        spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'S' in s), None)
+        spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'S' in s), None)
         if spindle_speed_line:
             self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
         else:
             self.speed = "Undefined"
 
         # Recover most recent feedrate
-        feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'F' in s), None)
+        feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'F' in s), None)
         if feedrate_line:
             self.feed = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
         else:
             self.feed = "Undefined"
 
         # Recover most recent position
-        x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'X' in s), None)
+        x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'X' in s), None)
         if x_line:
             self.pos_x = float(re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1])
         else:
             self.pos_x = 0.0
-        y_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Y' in s), None)
+        y_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'Y' in s), None)
         if y_line:
             self.pos_y = float(re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1])
         else:
             self.pos_y = 0.0
-        z_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index]) if 'Z' in s), None)
+        z_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'Z' in s), None)
         if z_line:
             self.pos_z = float(re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1])
         else:
@@ -402,7 +402,7 @@ class JobRecoveryScreen(Screen):
 
     def next_screen(self):
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-        self.jd.job_recovery_selected_line = self.selected_line_index
+        self.jd.job_recovery_selected_line = self.selected_line_index + 1
         self.m.s.write_command('G90 G0 Z0')
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
         self.m.s.write_command('G90 G0 Z%s' % self.pos_z)
