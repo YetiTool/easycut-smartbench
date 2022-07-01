@@ -159,6 +159,7 @@ class BrushUseWidget(Widget):
         except:
             pass
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
+        self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
@@ -171,6 +172,7 @@ class BrushUseWidget(Widget):
         # Update this code if the year is 2099
         if self.m.s.spindle_production_year != 99:
             self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
+            self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
         else:
             popup_info.PopupError(self.sm, self.l, "Could not get info - spindle not plugged in!")
 

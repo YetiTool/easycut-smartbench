@@ -77,6 +77,17 @@ class BrushMonitorWidget(Widget):
         self.update_monitor()
 
 
+    def update_percentage(self):
+        try:
+            if self.m.s.setting_51:
+                value = 1 - float(self.m.s.spindle_brush_run_time_seconds/self.m.spindle_brush_lifetime_seconds)
+            else:
+                value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        except:
+            value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        self.set_percentage(value)
+
+
     def set_percentage(self, value):
         self.monitor_percentage = float(value)
         self.x_pos_modifier = 1 - self.monitor_percentage

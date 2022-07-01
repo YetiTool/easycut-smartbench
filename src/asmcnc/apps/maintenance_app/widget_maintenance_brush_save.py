@@ -8,6 +8,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
@@ -85,6 +86,11 @@ class BrushSaveWidget(Widget):
 
     def save(self):
 
+        # Machine must be idle if a spindle brush reset is attempted
+        if not self.m.state().startswith('Idle'):
+            popup_info.PopupError(self.sm, self.l, "Please ensure the machine is idle before attempting to save.")
+            return
+
         # TIME FOR DATA VALIDATION
 
         # Read from screen
@@ -140,14 +146,14 @@ class BrushSaveWidget(Widget):
             # write new values to file
             if self.m.write_spindle_brush_values(use, lifetime):
 
-                try:
-                    if self.m.s.setting_51 and use == 0:
-                        self.m.p.ResetDigitalSpindleBrushTime()
-                except:
-                    pass
-
                 saved_success = self.l.get_str("Settings saved!")
                 popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+
+                try:
+                    if self.m.s.setting_51 and use == 0:
+                        self.reset_brush_time()
+                except:
+                    pass
 
             else:
                 warning_message = (
@@ -159,8 +165,7 @@ class BrushSaveWidget(Widget):
 
 
             # Update the monitor :)
-            value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
-            self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
+            self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
 
         except:
             # throw popup, return without saving
@@ -171,3 +176,40 @@ class BrushSaveWidget(Widget):
                 )
             popup_info.PopupError(self.sm, self.l, warning_message)
             return
+
+    def reset_brush_time(self):
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.m.s.write_command('M3 S0')
+        self.brush_reset_test_count = 0
+        self.attempt_reset()
+
+    def attempt_reset(self):
+        def read_info(dt):
+            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            Clock.schedule_once(get_info, 1)
+
+        def get_info(dt):
+            self.initial_run_time = self.m.s.spindle_brush_run_time_seconds
+            self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
+            Clock.schedule_once(read_info_again, 3)
+
+        def read_info_again(dt):
+            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            Clock.schedule_once(compare_info, 1)
+
+        def compare_info(dt):
+            if self.m.s.spindle_brush_run_time_seconds != 0:
+                if self.brush_reset_test_count == 5:
+                    self.m.s.write_command('M5')
+                    self.wait_popup.popup.dismiss()
+                    popup_info.PopupError(self.sm, self.l, "Could not reset brush timer! Please try again.")
+                else:
+                    self.attempt_reset()
+            else:
+                self.m.s.write_command('M5')
+                self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
+                self.wait_popup.popup.dismiss()
+
+        self.brush_reset_test_count += 1
+
+        Clock.schedule_once(read_info, 0.1)
