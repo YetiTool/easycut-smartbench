@@ -1405,7 +1405,7 @@ class StallJigScreen(Screen):
 
     def reset_tmcs(self):
 
-        self.reset_tmc_regs.background_normal: ""
+        self.reset_tmc_regs.background_normal = ""
 
         if self.m.toggle_reset_pin(): self.reset_tmc_regs.background_color = self.bright_pass_green
         else: self.reset_tmc_regs.background_color = self.fail_orange
