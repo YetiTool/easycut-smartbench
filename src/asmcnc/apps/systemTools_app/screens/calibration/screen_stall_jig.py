@@ -187,7 +187,7 @@ def log(message):
 
 class StallJigScreen(Screen):
 
-    dev_mode = True
+    dev_mode = False
 
     # ALL NUMBERS ARE DECLARED HERE, SO THAT THEY CAN BE EASILY EDITED AS/WHEN REQUIRED
 
@@ -205,6 +205,8 @@ class StallJigScreen(Screen):
 
     # Min threshold, Max threshold, Step between thresholds
 
+    # FILTERED
+
     threshold_dict = {
 
         "X": range(150, 350, 25),
@@ -212,6 +214,17 @@ class StallJigScreen(Screen):
         "Z": range(100, 240, 20) 
 
     }
+
+    # UNFILTERED
+
+    # threshold_dict = {
+
+    #     "X": range(200, 375, 25),
+    #     "Y": range(250, 425, 25),
+    #     "Z": range(160, 300, 20) 
+
+    # }
+
 
     ## INDEX DICTIONARY
 
@@ -243,6 +256,7 @@ class StallJigScreen(Screen):
 
     ### START POSITIONS WHEN HOMED AGAINST THE MAGNET JIG
     ### (SO NOT TRUE MACHINE COORDS)
+
     start_pos_x_test = {
 
         "X": -1300,
