@@ -187,7 +187,7 @@ def log(message):
 
 class StallJigScreen(Screen):
 
-    dev_mode = False
+    dev_mode = True
 
     # ALL NUMBERS ARE DECLARED HERE, SO THAT THEY CAN BE EASILY EDITED AS/WHEN REQUIRED
 
@@ -207,23 +207,23 @@ class StallJigScreen(Screen):
 
     # FILTERED
 
-    threshold_dict = {
+    # threshold_dict = {
 
-        "X": range(150, 350, 25),
-        "Y": range(150, 350, 25),
-        "Z": range(100, 240, 20) 
+    #     "X": range(150, 350, 25),
+    #     "Y": range(150, 350, 25),
+    #     "Z": range(100, 240, 20) 
 
-    }
+    # }
 
     # UNFILTERED
 
-    # threshold_dict = {
+    threshold_dict = {
 
-    #     "X": range(200, 375, 25),
-    #     "Y": range(250, 425, 25),
-    #     "Z": range(160, 300, 20) 
+        "X": range(200, 375, 25),
+        "Y": range(250, 425, 25),
+        "Z": range(160, 300, 20) 
 
-    # }
+    }
 
 
     ## INDEX DICTIONARY
