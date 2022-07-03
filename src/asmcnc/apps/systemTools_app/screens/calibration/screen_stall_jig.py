@@ -310,15 +310,15 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": 300,
-        "Y": 5,
-        "Z": -2
+        "X": 300,   # 5
+        "Y": 5,     # 5
+        "Z": -2     # 5
 
     }
 
     crash_distance = {
 
-        "X": 401,   # 381
+        "X": 101,   # 381
         "Y": 85,   # 65
         "Z": -75    # -70
 
@@ -805,10 +805,20 @@ class StallJigScreen(Screen):
     ## THE EXPECTED STALL POSITION
 
     def if_less_than_expected_pos(self, expected_pos):
+
+        log("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
+        log("EXPECTED POS: " + str(expected_pos))
+        log("DIFFERENCE: " + str(self.current_position[self.current_axis()]() - expected_pos))
+
         if self.current_position[self.current_axis()]() < expected_pos: return True
         else: return False
 
     def if_more_than_expected_pos(self, expected_pos):
+
+        log("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
+        log("EXPECTED POS: " + str(expected_pos))
+        log("DIFFERENCE: " + str(self.current_position[self.current_axis()]() - expected_pos))
+
         if self.current_position[self.current_axis()]() > expected_pos: return True
         else: return False
 
