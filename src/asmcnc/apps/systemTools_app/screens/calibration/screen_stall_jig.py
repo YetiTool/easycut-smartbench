@@ -333,8 +333,8 @@ class StallJigScreen(Screen):
     crash_distance = {
 
         "X": 101,   # 381
-        "Y": 85,   # 65
-        "Z": -75    # -70
+        "Y": 75,   # 65
+        "Z": -73    # -70
 
     }
 
