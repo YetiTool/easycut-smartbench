@@ -37,6 +37,7 @@ Builder.load_string("""
     test_status_label : test_status_label
 
     stop_button : stop_button
+    reset_tmc_regs : reset_tmc_regs
     move_container : move_container
     home_button : home_button
     grbl_reset_button : grbl_reset_button
@@ -110,13 +111,22 @@ Builder.load_string("""
                 size_hint_x: 0.35
                 orientation: "vertical"
 
-                Button:
-                    id: stop_button
+                BoxLayout: 
                     size_hint_y: 1
-                    text: "STOP"
-                    background_normal: ""
-                    background_color: root.stop_red
-                    on_press: root.stop()
+                    orientation: "horizontal"
+
+                    Button:
+                        id: stop_button
+                        # size_hint_y: 1
+                        text: "STOP"
+                        background_normal: ""
+                        background_color: root.stop_red
+                        on_press: root.stop()
+
+                    Button: 
+                        id: reset_tmc_regs
+                        text: "RESET TMCS"
+                        on_press: root.reset_tmcs()
 
                 BoxLayout:
                     size_hint_y: 4
@@ -284,17 +294,17 @@ class StallJigScreen(Screen):
 
     stall_tolerance = {
 
-        "X": 3,
-        "Y": 20, # 3
-        "Z": -1
+        "X": 10,     # 3
+        "Y": 10,    # 3
+        "Z": -3     # -1
 
     }
 
     back_off = {
 
-        "X": -400,
-        "Y": -70,
-        "Z": 76
+        "X": -430,  #  -400, 
+        "Y": -100,   #  -70,
+        "Z": 80     #  76
 
     }
 
@@ -308,9 +318,9 @@ class StallJigScreen(Screen):
 
     crash_distance = {
 
-        "X": 381,
-        "Y": 100, #65
-        "Z": -70
+        "X": 401,   # 381
+        "Y": 85,   # 65
+        "Z": -75    # -70
 
     }
 
@@ -1390,6 +1400,15 @@ class StallJigScreen(Screen):
             self.data_send_event = Clock.schedule_once(lambda dt: self.do_data_send, 1)
 
             return True
+
+
+
+    def reset_tmcs(self):
+
+        self.reset_tmc_regs.background_normal: ""
+
+        if self.m.toggle_reset_pin(): self.reset_tmc_regs.background_color = self.bright_pass_green
+        else: self.reset_tmc_regs.background_color = self.fail_orange
 
 
 
