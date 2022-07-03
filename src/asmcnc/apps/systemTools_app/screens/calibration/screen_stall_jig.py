@@ -364,7 +364,7 @@ class StallJigScreen(Screen):
     poll_to_prepare_to_find_stall_pos = None
     tell_user_ready_event = None
     poll_to_move_to_axis_start = None
-    set_threshold_reached_flag_event = None
+    ensure_alarm_resumed_event = None
     threshold_detection_event = None
     hard_limit_found_event = None
     set_expected_limit_found_flag_event = None
@@ -483,7 +483,7 @@ class StallJigScreen(Screen):
         if self.poll_to_prepare_to_find_stall_pos != None: Clock.unschedule(self.poll_to_prepare_to_find_stall_pos)
         if self.tell_user_ready_event != None: Clock.unschedule(self.tell_user_ready_event)
         if self.poll_to_move_to_axis_start != None: Clock.unschedule(self.poll_to_move_to_axis_start)
-        if self.set_threshold_reached_flag_event != None: Clock.unschedule(self.set_threshold_reached_flag_event)
+        if self.ensure_alarm_resumed_event != None: Clock.unschedule(self.ensure_alarm_resumed_event)
         if self.threshold_detection_event != None: Clock.unschedule(self.threshold_detection_event)
         if self.hard_limit_found_event != None: Clock.unschedule(self.hard_limit_found_event)
         if self.set_expected_limit_found_flag_event != None: Clock.unschedule(self.set_expected_limit_found_flag_event)
@@ -687,27 +687,26 @@ class StallJigScreen(Screen):
         log("Imminent stall detected: " + self.m.s.alarm.stall_axis)
         self.m.s.alarm.sg_alarm = False
         self.m.s.alarm.stall_axis = "W"
+        self.threshold_reached = True
+        log("Set threshold reached flag")
         return True
 
     def register_threshold_detection(self):
 
         limit_found_at_time = time()
         self.alert_user_to_detection()
-        self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.set_threshold_reached_flag(limit_found_at_time), 1)
+        self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
         log("Threshold reached (imminent stall detected)")
 
-    def set_threshold_reached_flag(self, limit_found_at_time):
+    def ensure_alarm_resumed(self, limit_found_at_time):
 
         if self.smartbench_is_not_ready_for_next_command():
             if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
                 self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
                 limit_found_at_time = time()
             if self.VERBOSE: log("Poll for setting threshold reached flag")
-            self.set_threshold_reached_flag_event = Clock.schedule_once(lambda dt: self.set_threshold_reached_flag(limit_found_at_time), 1)
+            self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
             return
-
-        self.threshold_reached = True
-        log("Set threshold reached flag")
 
     def expected_limit_alarm(self):
 
