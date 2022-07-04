@@ -306,7 +306,6 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
-        self.m.s.write_command('$#') # In preparation for nudge screen
         self.m.s.write_command('G90 G0 Z0')
 
         if self.jd.job_recovery_selected_line == -1:
@@ -410,6 +409,7 @@ class JobRecoveryScreen(Screen):
 
     def proceed_to_next_screen(self, dt):
         if self.m.state().startswith("Idle"):
+            self.m.s.write_command('$#') # In preparation for nudge screen
             self.wait_popup.popup.dismiss()
             self.sm.current = 'nudge'
         else:
