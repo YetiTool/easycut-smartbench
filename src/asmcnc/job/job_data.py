@@ -83,6 +83,7 @@ class JobData(object):
     job_recovery_cancel_line = 0
     job_recovery_selected_line = -1
     job_recovery_gcode = []
+    job_recovery_offset = 0 # How many lines the software added to the start of the file
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']

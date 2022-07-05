@@ -598,10 +598,12 @@ class GoScreen(Screen):
         # Also inject zUp-on-pause code if needed
 
         modified_job_gcode = []
+        self.jd.job_recovery_offset = 0
 
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
+            self.jd.job_recovery_offset += 1
 
         # If job recovery is being performed, use job recovery gcode instead
         if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
@@ -613,6 +615,7 @@ class GoScreen(Screen):
                 modified_job_gcode.extend(self.jd.job_recovery_gcode)
                 modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
                 modified_job_gcode.append("AF")  # turns vac off
+                self.jd.job_recovery_offset += 2
             else:
                 modified_job_gcode.extend(self.jd.job_recovery_gcode)
         else:
@@ -624,6 +627,7 @@ class GoScreen(Screen):
                 modified_job_gcode.extend(self.jd.job_gcode)
                 modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
                 modified_job_gcode.append("AF")  # turns vac off
+                self.jd.job_recovery_offset += 2
             else:
                 modified_job_gcode.extend(self.jd.job_gcode)
 

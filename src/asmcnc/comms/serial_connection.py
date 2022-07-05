@@ -612,11 +612,7 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Write recovery info
-            try:
-                difference = self.jd.job_gcode_modified.index(self.jd.job_gcode[0]) # Account for lines added by software
-                self.jd.write_to_recovery_file(self.l_count - 35 - difference)
-            except:
-                log("Could not save recovery info")
+            self.jd.write_to_recovery_file(self.l_count - 35 - self.jd.job_recovery_offset)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
