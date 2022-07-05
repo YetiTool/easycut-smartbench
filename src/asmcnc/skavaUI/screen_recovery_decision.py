@@ -58,7 +58,7 @@ Builder.load_string("""
                 background_down: "./asmcnc/skavaUI/img/blank_green_button.png"
 
             Button:
-                text: "Recover job after cancellation"
+                text: "Recover job"
                 font_size: dp(30)
                 valign: "middle"
                 halign: "center"
