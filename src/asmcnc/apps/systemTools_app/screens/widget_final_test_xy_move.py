@@ -351,9 +351,9 @@ class FinalTestXYMove(Widget):
 
         self.m.set_led_colour('BLUE')
 
-        feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
+        feed_speed = self.feedSpeedJogZ
         
-        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
+        if self.jogMode == 'free':
             if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
                                                              self.m.z_min_jog_abs_limit,
                                                              feed_speed)
@@ -361,23 +361,23 @@ class FinalTestXYMove(Widget):
                                                              self.m.z_max_jog_abs_limit,
                                                              feed_speed)
 
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-01':
+        elif self.jogMode == 'plus_0-01':
             if case == 'Z+': self.m.jog_relative('Z', 0.01, feed_speed)
             if case == 'Z-': self.m.jog_relative('Z', -0.01, feed_speed)
         
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-1':
+        elif self.jogMode == 'plus_0-1':
             if case == 'Z+': self.m.jog_relative('Z', 0.1, feed_speed)
             if case == 'Z-': self.m.jog_relative('Z', -0.1, feed_speed)
         
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_1':
+        elif self.jogMode == 'plus_1':
             if case == 'Z+': self.m.jog_relative('Z', 1, feed_speed)
             if case == 'Z-': self.m.jog_relative('Z', -1, feed_speed)
         
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_10':
+        elif self.jogMode == 'plus_10':
             if case == 'Z+': self.m.jog_relative('Z', 10, feed_speed)
             if case == 'Z-': self.m.jog_relative('Z', -10, feed_speed)
         
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job':
+        elif self.jogMode == 'job':
             if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
                                                              self.m.z_min_jog_abs_limit,
                                                              feed_speed)
@@ -386,8 +386,8 @@ class FinalTestXYMove(Widget):
                                                              feed_speed)
 
     def quit_jog_z(self):
-        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free': self.m.quit_jog()
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job': self.m.quit_jog()
+        if self.jogMode == 'free': self.m.quit_jog()
+        elif self.jogMode == 'job': self.m.quit_jog()
 
 
     def y_home_x_mid(self):

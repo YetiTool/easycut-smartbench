@@ -1198,6 +1198,8 @@ class SerialConnection(object):
             elif setting == '$31': self.setting_31 = value;  # Min spindle speed, RPM
             elif setting == '$32': self.setting_32 = value;  # Laser mode, boolean
             elif setting == '$50': self.setting_50 = value; # Serial number and product code
+            elif setting == '$51': self.setting_51 = value; # Enable digital feedback spindle, boolean
+            elif setting == '$53': self.setting_53 = value; # Enable stall guard alarm operation, boolean
             elif setting == '$100': self.setting_100 = value;  # X steps/mm
             elif setting == '$101': self.setting_101 = value;  # Y steps/mm
             elif setting == '$102': self.setting_102 = value;  # Z steps/mm
