@@ -730,7 +730,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = False
+    mini_run_dev_mode = True
 
     sn_for_db = ''
 
@@ -824,11 +824,6 @@ class OvernightTesting(Screen):
         self.get_sub_serials_from_database()
         self.m.s.FINAL_TEST = True
         self.stop_button.disabled = False
-
-        for i in range(0, 200000):
-            self.measure()
-
-        self.send_data("OvernightWearIn")
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
