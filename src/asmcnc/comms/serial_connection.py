@@ -612,7 +612,7 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Write recovery info
-            self.jd.write_to_recovery_file(self.l_count - 35 - self.jd.job_recovery_offset)
+            self.jd.write_to_recovery_file(self.g_count - 35 - self.jd.job_recovery_offset)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
