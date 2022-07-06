@@ -1509,7 +1509,7 @@ class OvernightTesting(Screen):
 
             j_obj = self.status_data_dict[stage]
 
-            response = publisher.publish(j_obj)
+            response = threading.Thread(target=publisher.publish(j_obj)).start()
 
             if response == b'Done':
                 log("Successful")  # add more verbose output to user & update consumer's response

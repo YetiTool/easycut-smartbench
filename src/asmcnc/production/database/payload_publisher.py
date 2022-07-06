@@ -1,9 +1,12 @@
-import pika
-import random
 import datetime
 import json
+import random
 import uuid
-from asmcnc.production.database import credentials as creds
+
+import pika
+
+# from asmcnc.production.database
+import credentials as creds
 
 QUEUE = 'calibration_data'
 
@@ -67,13 +70,15 @@ class Publisher(object):
             body=data
         )
 
+        print('Sent message')
+
         while self.response is None:
             self.connection.process_data_events()
 
         return self.response
 
     def publish(self, j_obj):
-        self._publish(j_obj)
+        return self._publish(j_obj)
 
 
 def gfloat(a, b):
@@ -87,7 +92,7 @@ def gint(a, b):
 def generate_status():
     return {
         "Id": "",
-        "FTID": gint(10000, 60000),
+        "FTID": gint(1000, 6000),
         "XCoordinate": gfloat(0, 3000), "YCoordinate": gfloat(0, 3000), "ZCoordinate": gfloat(0, 3000),
         "XDirection": gint(0, 1), "YDirection": gint(0, 1), "ZDirection": gint(0, 1),
         "XSG": gint(0, 250), "YSG": gint(0, 250), "Y1SG": gint(0, 250), "Y2SG": gint(0, 250), "ZSG": gint(0, 250),
@@ -101,13 +106,15 @@ def generate_status():
 def generate_payload():
     return [generate_status() for _ in range(0, 200000)]
 
-#
-# if __name__ == '__main__':
-#     publisher = Publisher()
-#
-#     payload = get_full_payload("FinalTestStatuses")
-#
-#     response = publisher.publish(payload)
-#
-#     if len(response) < 100:
-#         print(response)
+
+if __name__ == '__main__':
+    publisher = Publisher()
+
+    payload = get_full_payload(generate_payload(), "FinalTestStatuses")
+
+    response = publisher.publish(payload)
+
+    if len(response) > 100:
+        print('Response timed out - data can still be intact')
+    else:
+        print(response)
