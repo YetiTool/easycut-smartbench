@@ -1504,10 +1504,7 @@ class OvernightTesting(Screen):
 
             j_obj = self.status_data_dict[stage]
 
-            response = threading.Thread(target=publisher.publish(j_obj)).start()
-
-            if response == b'Done':
-                log("Successful")  # add more verbose output to user & update consumer's response
+            response = publisher.publish(j_obj)
 
             log("Received %s from consumer" % response)
 
@@ -1515,8 +1512,7 @@ class OvernightTesting(Screen):
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             # self.calibration_db.insert_final_test_statistics(*statistics)
-            log("Finish data send")
-            return True
+            return response == b'Done'
 
         except:
             log("Failed to send data to DB!!")
