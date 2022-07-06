@@ -858,7 +858,7 @@ class OvernightTesting(Screen):
             log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
 
-        self.status_data_dict[self.stage] = []
+        self.status_data_dict[self.stage]["Statuses"] = []
         log("Overnight test, stage: " + str(self.stage))
 
         # Function called from serial comms to record SG values
@@ -878,25 +878,25 @@ class OvernightTesting(Screen):
 
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
-        if len(self.status_data_dict[self.stage]) > 0:
+        if len(self.status_data_dict[self.stage]["Statuses"]) > 0:
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][1] < self.m.mpos_x():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][1] < self.m.mpos_x():
                 x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][1] > self.m.mpos_x():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][1] > self.m.mpos_x():
                 x_dir = 1
             else:
                 x_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][2] < self.m.mpos_y():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][2] < self.m.mpos_y():
                 y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][2] > self.m.mpos_y():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][2] > self.m.mpos_y():
                 y_dir = 1
             else:
                 y_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][3] < self.m.mpos_z():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][3] < self.m.mpos_z():
                 z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage]) - 1][3] > self.m.mpos_z():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][3] > self.m.mpos_z():
                 z_dir = -1
             else:
                 z_dir = 0
@@ -932,10 +932,7 @@ class OvernightTesting(Screen):
             "ZWeight": 2
         }
 
-        stage_obj = self.status_data_dict[self.stage]
-        statuses_obj = stage_obj["Statuses"]
-
-        self.status_data_dict["OvernightWearIn"]["Statuses"].append(status)
+        self.status_data_dict[self.stage]["Statuses"].append(status)
 
         # Record raw values for statistics calculations
 
