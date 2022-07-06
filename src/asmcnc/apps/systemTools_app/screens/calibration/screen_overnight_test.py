@@ -932,7 +932,10 @@ class OvernightTesting(Screen):
             "ZWeight": 2
         }
 
-        self.status_data_dict[self.stage]["Statuses"].append(status)
+        stage_obj = self.status_data_dict[self.stage]
+        statuses_obj = stage_obj["Statuses"]
+
+        self.status_data_dict["OvernightWearIn"]["Statuses"].append(status)
 
         # Record raw values for statistics calculations
 
