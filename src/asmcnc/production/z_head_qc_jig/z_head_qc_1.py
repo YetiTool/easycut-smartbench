@@ -593,13 +593,13 @@ class ZHeadQC1(Screen):
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
-        if 4800 < self.m.s.LED_mV < 5200:
+        if 4500 < self.m.s.LED_mV < 5500:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
-            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+            fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
         if 22000 < self.m.s.PSU_mV < 26000:
             pass_fail = pass_fail*(True)
