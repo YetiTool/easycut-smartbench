@@ -211,7 +211,7 @@ class StallJigScreen(Screen):
 
         "X": range(250, 450, 25),
         "Y": range(200, 400, 25),
-        "Z": range(100, 260, 20) 
+        "Z": range(160, 320, 20) 
 
     }
 
