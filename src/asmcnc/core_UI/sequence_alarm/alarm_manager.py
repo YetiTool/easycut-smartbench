@@ -223,7 +223,7 @@ class AlarmSequenceManager(object):
 
 	def get_stall_info(self):
 
-		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Pre-stall event")
+		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Motor overload event!")
 		stall_list = []
 		
 		if self.m.s.stall_X: 
