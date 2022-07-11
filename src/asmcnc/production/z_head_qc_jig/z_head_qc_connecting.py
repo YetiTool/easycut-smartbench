@@ -56,8 +56,11 @@ class ZHeadQCConnecting(Screen):
 
     def on_enter(self):
 
-        log("Set X current to 22 if it is not set already...")
-    	self.get_and_set_current()
+     #    log("Set X current to 22 if it is not set already...")
+    	# self.get_and_set_current()
+
+        log("Would set current here, but leave as default for now")
+        self.progress_to_next_screen()
 
     
     def progress_to_next_screen(self):
