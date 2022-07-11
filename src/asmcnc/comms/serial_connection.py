@@ -612,7 +612,10 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Write recovery info
-            self.jd.write_to_recovery_file(self.g_count - 35 - self.jd.job_recovery_offset)
+            # g_count represents the number of OKs issued by grbl which are sent when a line enters the line buffer
+            # The line buffer has a capacity of 35 lines
+            # So the currently executing command is the one 35 lines before the last one received by the buffer
+            self.jd.write_to_recovery_file(self.g_count - 35)
 
             # Update time for maintenance reminders
             time.sleep(0.4)

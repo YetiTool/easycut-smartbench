@@ -416,6 +416,9 @@ class JobData(object):
 
     def write_to_recovery_file(self, cancel_line):
         try:
+            # Account for number of lines added in by the software when running file
+            cancel_line -= self.job_recovery_offset
+
             with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
                 job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
 
