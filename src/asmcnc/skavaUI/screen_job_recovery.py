@@ -310,11 +310,12 @@ class JobRecoveryScreen(Screen):
 
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
-            self.initial_line_index = self.jd.job_recovery_cancel_line
+            # Take away 1 so that user can't move to the position that was the target during cancellation
+            self.initial_line_index = self.jd.job_recovery_cancel_line - 1
             self.selected_line_index = self.initial_line_index
             self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.initial_line_index + 1)] + ["" for _ in range (6)]
 
-            self.stopped_on_label.text = "Job stopped on line " + str(self.initial_line_index)
+            self.stopped_on_label.text = "Job stopped after line " + str(self.initial_line_index)
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
             self.update_display()
 
