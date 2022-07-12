@@ -706,6 +706,10 @@ class SerialConnection(object):
     probe = False
     dust_shoe_cover = False
     spare_door = False
+    limit_Y_axis = False
+    stall_X = False
+    stall_Z = False
+    stall_Y = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -734,6 +738,17 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+
+    # STALL GUARD WARNING
+    last_stall_tmc_index = None
+    last_stall_motor_step_size = None
+    last_stall_load = None
+    last_stall_threshold = None
+    last_stall_travel_distance = None
+    last_stall_x_coord = None
+    last_stall_y_coord = None
+    last_stall_z_coord = None
+    last_stall_status = None
 
     # FOR CALIBRATION TUNING
     record_sg_values_flag = False
@@ -852,20 +867,9 @@ class SerialConnection(object):
                     
                     pins_info = part.split(':')[1]
                     
-                    if 'x' in pins_info: self.limit_x = True
-                    else: self.limit_x = False
-                    
-                    if 'X' in pins_info: self.limit_X = True
-                    else: self.limit_X = False
-                    
-                    if 'y' in pins_info: self.limit_y = True
-                    else: self.limit_y = False
-                    
-                    if 'Y' in pins_info: self.limit_Y = True
-                    else: self.limit_Y = False
-                    
-                    if 'Z' in pins_info: self.limit_z = True
-                    else: self.limit_z = False
+                    self.limit_x = 'x' in pins_info
+                    self.limit_X = 'X' in pins_info
+                    self.limit_z = 'Z' in pins_info
 
                     if 'P' in pins_info: self.probe = True
                     else: self.probe = False
@@ -875,6 +879,33 @@ class SerialConnection(object):
                     
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
+
+                    if 'Y' or 'y' in pins_info:
+
+                        # Depending on the firmware version (and the alarm type), 
+                        # Y pin means either Y max limit OR Y stall
+                        # and little y could be y home OR y limit
+                        if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
+
+                            self.limit_y = 'y' in pins_info
+                            self.limit_Y = 'Y' in pins_info
+
+                        else:
+
+                            self.limit_Y_axis = 'y' in pins_info
+                            self.stall_Y = 'Y' in pins_info
+
+                    else:
+                        self.limit_y = False
+                        self.limit_Y = False
+                        self.limit_Y_axis = False
+                        self.stall_Y = False
+
+                    self.stall_X = 'S' in pins_info
+                    self.stall_Z = 'z' in pins_info
+
+                    if self.stall_X or self.stall_Y or self.stall_Z:
+                        self.alarm.sg_alarm = True
 
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
@@ -1052,6 +1083,35 @@ class SerialConnection(object):
                         if self.sm.has_screen('current_adjustment'):
                             self.sm.get_screen('current_adjustment').measure()
 
+                # SG ALARM
+                elif part.startswith('SGALARM:'):
+
+                    sg_alarm_parts = part[8:].split(',')
+
+                    try:
+                        int(sg_alarm_parts[0])
+                        int(sg_alarm_parts[1])
+                        int(sg_alarm_parts[2])
+                        int(sg_alarm_parts[3])
+                        int(sg_alarm_parts[4])
+                        float(sg_alarm_parts[5])
+                        float(sg_alarm_parts[6])
+                        float(sg_alarm_parts[7])
+
+                    except:
+                        log("ERROR status parse: SGALARM pins_info invalid: " + message)
+                        return
+
+                    self.last_stall_tmc_index = int(sg_alarm_parts[0])
+                    self.last_stall_motor_step_size = int(sg_alarm_parts[1])
+                    self.last_stall_load = int(sg_alarm_parts[2])
+                    self.last_stall_threshold = int(sg_alarm_parts[3])
+                    self.last_stall_travel_distance = int(sg_alarm_parts[4])
+                    self.last_stall_x_coord = float(sg_alarm_parts[5])
+                    self.last_stall_y_coord = float(sg_alarm_parts[6])
+                    self.last_stall_z_coord = float(sg_alarm_parts[7])
+                    self.last_stall_status = message
+
                 elif part.startswith('Sp:'):
 
                     spindle_statistics = part[3:].split(',')
@@ -1153,13 +1213,9 @@ class SerialConnection(object):
                     except:
                         log("Could not print calibration output")
 
-                # else:
-                #     continue
-                # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
-
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
