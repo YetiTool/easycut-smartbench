@@ -8,7 +8,7 @@ import traceback
 from time import sleep
 import threading
 from datetime import datetime
-from asmcnc.production.database.payload_publisher import Publisher
+from asmcnc.production.database.payload_publisher import DataPublisher
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
@@ -1500,7 +1500,7 @@ class OvernightTesting(Screen):
                 stage_id
             )
 
-            publisher = Publisher()
+            publisher = DataPublisher()
 
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
