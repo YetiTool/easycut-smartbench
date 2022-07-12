@@ -5,7 +5,7 @@ import pysftp
 import csv
 import json
 
-CSV_PATH = 'csvs/'
+CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS'
 
