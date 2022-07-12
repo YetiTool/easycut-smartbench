@@ -867,14 +867,9 @@ class SerialConnection(object):
                     
                     pins_info = part.split(':')[1]
                     
-                    if 'x' in pins_info: self.limit_x = True
-                    else: self.limit_x = False
-                    
-                    if 'X' in pins_info: self.limit_X = True
-                    else: self.limit_X = False                
-                    
-                    if 'Z' in pins_info: self.limit_z = True
-                    else: self.limit_z = False
+                    self.limit_x = 'x' in pins_info
+                    self.limit_X = 'X' in pins_info
+                    self.limit_z = 'Z' in pins_info
 
                     if 'P' in pins_info: self.probe = True
                     else: self.probe = False
@@ -892,19 +887,13 @@ class SerialConnection(object):
                         # and little y could be y home OR y limit
                         if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
 
-                            if 'y' in pins_info: self.limit_y = True
-                            else: self.limit_y = False
-
-                            if 'Y' in pins_info: self.limit_Y = True
-                            else: self.limit_Y = False
+                            self.limit_y = 'y' in pins_info
+                            self.limit_Y = 'Y' in pins_info
 
                         else:
 
-                            if 'y' in pins_info: self.limit_Y_axis = True
-                            else: self.limit_Y_axis = False      
-
-                            if 'Y' in pins_info: self.stall_Y = True
-                            else: self.stall_Y = False
+                            self.limit_Y_axis = 'y' in pins_info
+                            self.stall_Y = 'Y' in pins_info
 
                     else:
                         self.limit_y = False
@@ -912,11 +901,8 @@ class SerialConnection(object):
                         self.limit_Y_axis = False
                         self.stall_Y = False
 
-                    if 'S' in pins_info: self.stall_X = True
-                    else: self.stall_X = False
-
-                    if 'z' in pins_info: self.stall_Z = True
-                    else: self.stall_Z = False
+                    self.stall_X = 'S' in pins_info
+                    self.stall_Z = 'z' in pins_info
 
                     if self.stall_X or self.stall_Y or self.stall_Z:
                         self.alarm.sg_alarm = True

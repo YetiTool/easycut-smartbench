@@ -59,12 +59,12 @@ class ScreenTest(App):
     fw_version = "2.4.2"
 
     # STALL ALARMS
-    stall_pin = "YSz"
+    stall_pin = "z"
 
     # LIMIT ALARMS
-    alarm_pin = "yx"
+    alarm_pin = "y"
 
-    alarm_number = 0
+    alarm_number = 1
 
     stall_alarm_test = True
 
