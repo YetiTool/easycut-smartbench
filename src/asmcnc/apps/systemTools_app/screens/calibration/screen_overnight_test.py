@@ -1500,7 +1500,7 @@ class OvernightTesting(Screen):
                 stage_id
             )
 
-            publisher = DataPublisher()
+            publisher = DataPublisher(self.sn_for_db)
 
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
