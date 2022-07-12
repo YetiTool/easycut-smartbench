@@ -2,6 +2,7 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 import datetime
+import traceback
 
 from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
@@ -44,6 +45,9 @@ class AlarmSequenceManager(object):
 	report_setup_event = None
 
 	db = None
+
+	sg_alarm = False
+	stall_axis = "W"
 	
 	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
@@ -87,21 +91,28 @@ class AlarmSequenceManager(object):
 					self.return_to_screen = self.sm.current
 
 
-				self.alarm_code = message
-				self.alarm_description = ALARM_CODES_DICT.get(message, "")
-				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-					self.sm.get_screen('alarm_1').description_label.text = (
-						self.l.get_str(self.alarm_description) + \
-						"\n" + \
-						self.l.get_str("Getting details...")
-						)
-				else:
-					self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
+				if not self.sg_alarm:
+
+					self.alarm_code = message
+					self.alarm_description = ALARM_CODES_DICT.get(message, "")
+					if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+						self.sm.get_screen('alarm_1').description_label.text = (
+							self.l.get_str(self.alarm_description) + \
+							"\n" + \
+							self.l.get_str("Getting details...")
+							)
+					else:
+						self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
+
+				else: 
+					self.get_stall_info()
+
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
 
 		except:
 			print("Kivy fail happened, try everything again")
+			print(traceback.format_exc())
 			self.refire_screen()
 
 		self.handle_alarm_state()
@@ -117,7 +128,11 @@ class AlarmSequenceManager(object):
 
 
 	def determine_screen_sequence(self):
-		if ((self.alarm_code).endswith('4') or (self.alarm_code).endswith('5') or (self.alarm_code).endswith('6') or (self.alarm_code).endswith('7')):
+		if ((self.alarm_code).endswith('4') or \
+			(self.alarm_code).endswith('5') or \
+			(self.alarm_code).endswith('6') or \
+			(self.alarm_code).endswith('7') or \
+			self.sg_alarm):
 			self.support_sequence = False
 		else:
 			self.support_sequence = True
@@ -125,6 +140,7 @@ class AlarmSequenceManager(object):
 
 	def exit_sequence(self):
 		
+		self.sg_alarm = False
 		self.m.resume_from_alarm()
 		
 		if self.sm.has_screen(self.return_to_screen):
@@ -182,6 +198,9 @@ class AlarmSequenceManager(object):
 		if self.m.s.limit_Y: 
 			limit_list.append(self.l.get_str('Y max'))
 
+		if self.m.s.limit_Y_axis:
+			limit_list.append(self.l.get_str('Y home or Y max'))
+
 		if self.m.s.limit_z: 
 			limit_list.append(self.l.get_str('Z home'))
 
@@ -193,10 +212,42 @@ class AlarmSequenceManager(object):
 
 	def get_status_info(self):
 
+		if self.sg_alarm and self.m.s.last_stall_status: 
+			self.status_cache = self.m.s.last_stall_status
+			return
+
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
 		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 
+
+	def get_stall_info(self):
+
+		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Motor overload event!")
+		stall_list = []
+		
+		if self.m.s.stall_X: 
+			stall_list.append("X")
+
+		if self.m.s.stall_Y: 
+			stall_list.append("Y")
+
+		if self.m.s.stall_Z: 
+			stall_list.append("Z")
+
+		self.stall_axis = (', ').join(stall_list)
+
+		self.sm.get_screen('alarm_1').description_label.text = (
+			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
+			" " + \
+			self.l.get_str("SmartBench has paused the job, to prevent further damage.")
+			)
+
+		self.sm.get_screen('alarm_5').description_label.text = (
+				self.l.get_str("SmartBench will now cancel the job.") + \
+				" " + \
+				self.l.get_str("This job can be restarted at the point of cancellation using the recovery button.")
+		)
 
 	def get_version_data(self):
 
@@ -210,8 +261,10 @@ class AlarmSequenceManager(object):
 	def update_screens(self):
 
 		self.get_version_data()
-		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-			self.get_suspected_trigger()
+
+		if not self.sg_alarm: 
+			if (self.alarm_code).endswith('1') or (self.alarm_code).endswith('8'):
+				self.get_suspected_trigger()
 
 		if self.trigger_description != '':
 			self.sm.get_screen('alarm_1').description_label.text = (
@@ -220,7 +273,6 @@ class AlarmSequenceManager(object):
 					self.trigger_description
 				)
 		self.report_setup_event = Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
-
 
 
 	def reset_variables(self):
@@ -270,6 +322,8 @@ class AlarmSequenceManager(object):
 		except:
 			alarm_number = ""
 
+		description = (self.l.get_str("The N axis was overloaded during a move.")).replace("N", self.stall_axis) if self.sg_alarm \
+		else self.l.get_str(self.alarm_description)
 
 		self.report_string = (
 
@@ -282,7 +336,7 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			self.l.get_str("Alarm code:") + " " + alarm_number + \
 			"\n" + \
-			self.l.get_str("Alarm description:") + " " + self.l.get_str(self.alarm_description) + \
+			self.l.get_str("Alarm description:") + " " + description + \
 			"\n" + \
 			self.trigger_description + \
 			"\n\n" + \

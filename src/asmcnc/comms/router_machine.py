@@ -58,6 +58,8 @@ class RouterMachine(object):
     # empty dictionary to hold TMC motors
     TMC_motor = {}
 
+    # SG threshold
+    default_stall_guard_threshold = 250 # 250
 
     starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
 
@@ -980,8 +982,8 @@ class RouterMachine(object):
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
         Clock.schedule_once(lambda dt: self.tmc_handshake(), 3)
 
+
     # TMC MOTOR CONTROLLER HANDSHAKE
-    ## NEEDS TESTING
     handshake_event = None
 
     def tmc_handshake(self):
@@ -996,6 +998,7 @@ class RouterMachine(object):
         else: 
             # In case handshake is too soon, it tries one more time to see if it can read a FW version
             self.handshake_event = Clock.schedule_once(lambda dt: self.tmc_handshake(), 10)
+
 
 # CRITICAL START/STOP
 
@@ -2813,6 +2816,13 @@ class RouterMachine(object):
         try: abs_max_idx = max(just_idx_sgs, key=abs)
         except: self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
         return abs_max_idx
+
+
+    ## SET SMART FEATURES
+    def set_sg_threshold(self, motor, threshold):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
+            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + motor + ", THR: " + threshold
+            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
 
 
     ## FIRMWARE UPDATES
