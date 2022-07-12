@@ -19,7 +19,7 @@ def json_to_csv(data, machine_serial):
 
     keys = data[0].keys()
 
-    with open(file_path, 'w', newline='') as data_file:
+    with open(file_path, 'w') as data_file:
         dict_writer = csv.DictWriter(data_file, keys)
         dict_writer.writeheader()
         dict_writer.writerows(data)
