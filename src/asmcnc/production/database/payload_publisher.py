@@ -1,28 +1,36 @@
-import datetime
-import json
-import random
-import uuid
-
 import pika
+from asmcnc.production.database import credentials as creds
+import uuid
+import pysftp
+import csv
+import json
 
-# from asmcnc.production.database
-import credentials as creds
-
+CSV_PATH = 'csvs/'
 QUEUE = 'calibration_data'
+WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS'
 
 
-def get_full_payload(data, table):
-    return {
-        "Table": table,
-        "Statuses": data
-    }
+def get_unique_file_name(machine_serial):
+    return machine_serial + str(uuid.uuid4()) + '.csv'
 
 
-class Publisher(object):
-    def __init__(self):
-        self.create_channel_connection()
+def json_to_csv(data, machine_serial):
+    file_path = CSV_PATH + get_unique_file_name(machine_serial)
 
-    def create_channel_connection(self):
+    keys = data[0].keys()
+
+    with open(file_path, 'w', newline='') as data_file:
+        dict_writer = csv.DictWriter(data_file, keys)
+        dict_writer.writeheader()
+        dict_writer.writerows(data)
+
+    return file_path
+
+
+class DataPublisher(object):
+    def __init__(self, machine_serial):
+        self.machine_serial = machine_serial
+
         credentials = pika.PlainCredentials(
             username='calibration',
             password=creds.password
@@ -50,15 +58,9 @@ class Publisher(object):
             auto_ack=True
         )
 
-    def _on_response(self, ch, method, props, body):
-        if self.correlation_id == props.correlation_id:
-            self.response = body
-
-    def _publish(self, data):
+    def publish(self, data):
         self.response = None
         self.correlation_id = str(uuid.uuid4())
-
-        data = json.dumps(data)
 
         self.channel.basic_publish(
             exchange='',
@@ -67,7 +69,7 @@ class Publisher(object):
                 reply_to=self.callback_queue,
                 correlation_id=self.correlation_id
             ),
-            body=data
+            body=json.dumps(data)
         )
 
         print('Sent message')
@@ -77,44 +79,65 @@ class Publisher(object):
 
         return self.response
 
-    def publish(self, j_obj):
-        return self._publish(j_obj)
+    def _on_response(self, ch, method, props, body):
+        if body['Inserted']:
+            print('Inserted successfully')
+        else:
+            print('Failed to insert')
+
+    def send_file_ftp(self, file_path):
+        with pysftp.Connection(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password) as ftp:
+            with ftp.cd(WORKING_DIR):
+                ftp.put(file_path)
+
+    def run_data_send(self, statuses, table):
+        csv_name = json_to_csv(statuses, self.machine_serial)
+        self.send_file_ftp(csv_name)
+
+        raw_file_name = csv_name.split('/')[-1]
+
+        payload = {
+            'MachineSerial': self.machine_serial,
+            'FileName': raw_file_name,
+            'Table': table
+        }
+
+        return self.publish(payload)
 
 
-def gfloat(a, b):
-    return random.uniform(a, b)
-
-
-def gint(a, b):
-    return random.randint(a, b)
-
-
-def generate_status():
-    return {
-        "Id": "",
-        "FTID": gint(1000, 6000),
-        "XCoordinate": gfloat(0, 3000), "YCoordinate": gfloat(0, 3000), "ZCoordinate": gfloat(0, 3000),
-        "XDirection": gint(0, 1), "YDirection": gint(0, 1), "ZDirection": gint(0, 1),
-        "XSG": gint(0, 250), "YSG": gint(0, 250), "Y1SG": gint(0, 250), "Y2SG": gint(0, 250), "ZSG": gint(0, 250),
-        "TMCTemperature": gint(30, 80), "PCBTemperature": gint(30, 80), "MOTTemperature": gint(30, 80),
-        "Timestamp": datetime.datetime.now().strftime('%d/%m/%Y %H:%M'),
-        "Feedrate": gint(0, 1500),
-        "XWeight": gint(0, 10), "YWeight": gint(0, 10), "ZWeight": gint(0, 10)
-    }
-
-
-def generate_payload():
-    return [generate_status() for _ in range(0, 200000)]
-
-
-if __name__ == '__main__':
-    publisher = Publisher()
-
-    payload = get_full_payload(generate_payload(), "FinalTestStatuses")
-
-    response = publisher.publish(payload)
-
-    if len(response) > 100:
-        print('Response timed out - data can still be intact')
-    else:
-        print(response)
+# import datetime
+# import random
+#
+#
+# def gfloat(a, b):
+#     return random.uniform(a, b)
+#
+#
+# def gint(a, b):
+#     return random.randint(a, b)
+#
+#
+# def generate_status():
+#     return {
+#         "Id": "",
+#         "FTID": gint(1000, 6000),
+#         "XCoordinate": gfloat(0, 3000), "YCoordinate": gfloat(0, 3000), "ZCoordinate": gfloat(0, 3000),
+#         "XDirection": gint(0, 1), "YDirection": gint(0, 1), "ZDirection": gint(0, 1),
+#         "XSG": gint(0, 250), "YSG": gint(0, 250), "Y1SG": gint(0, 250), "Y2SG": gint(0, 250), "ZSG": gint(0, 250),
+#         "TMCTemperature": gint(30, 80), "PCBTemperature": gint(30, 80), "MOTTemperature": gint(30, 80),
+#         "Timestamp": datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+#         "Feedrate": gint(0, 1500),
+#         "XWeight": gint(0, 10), "YWeight": gint(0, 10), "ZWeight": gint(0, 10)
+#     }
+#
+#
+# def generate_payload():
+#     return [generate_status() for _ in range(0, 10)]
+#
+#
+# if __name__ == '__main__':
+#     serial = 'YS6139'
+#
+#     publisher = DataPublisher(serial)
+#
+#     publisher.run_data_send(generate_payload(), "FinalTestStatuses")
