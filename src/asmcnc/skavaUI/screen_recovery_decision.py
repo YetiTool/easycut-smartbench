@@ -84,11 +84,15 @@ class RecoveryDecisionScreen(Screen):
         self.info_label.text = "[b]Last job:[/b]\n" + self.jd.job_name + "\nSmartBench did not finish the last job"
 
     def go_to_recovery(self):
-        self.sm.current = 'job_recovery'
+        self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
+        self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
+        self.sm.current = 'homing_decision'
 
     def repeat_job(self):
         self.jd.reset_recovery()
-        self.sm.current = 'home'
+        self.sm.get_screen('homing_decision').return_to_screen = 'home'
+        self.sm.get_screen('homing_decision').cancel_to_screen = 'home'
+        self.sm.current = 'homing_decision'
 
     def back_to_home(self):
         self.sm.current = 'home'
