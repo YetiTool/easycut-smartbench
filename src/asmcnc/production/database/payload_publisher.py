@@ -1,5 +1,4 @@
 import pika
-from asmcnc.production.database import credentials as creds
 import uuid
 import pysftp
 import csv
@@ -29,6 +28,11 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
+        try:
+            from asmcnc.production.database import credentials as creds
+        except:
+            print("Can't find credentials file")
+
         self.machine_serial = machine_serial
 
         credentials = pika.PlainCredentials(
