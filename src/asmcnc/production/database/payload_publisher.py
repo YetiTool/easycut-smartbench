@@ -35,6 +35,10 @@ class DataPublisher(object):
 
         self.machine_serial = machine_serial
 
+        self.ftp_server = credentials.ftp_server
+        self.ftp_username = credentials.ftp_username
+        self.ftp_password = credentials.password
+
         pika_credentials = pika.PlainCredentials(
             username='calibration',
             password=credentials.password
@@ -90,7 +94,7 @@ class DataPublisher(object):
             print('Failed to insert')
 
     def send_file_ftp(self, file_path):
-        with pysftp.Connection(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password) as ftp:
+        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password) as ftp:
             with ftp.cd(WORKING_DIR):
                 ftp.put(file_path)
 
