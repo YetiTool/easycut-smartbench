@@ -29,21 +29,21 @@ def json_to_csv(data, machine_serial):
 class DataPublisher(object):
     def __init__(self, machine_serial):
         try:
-            from asmcnc.production.database import credentials as creds
+            from asmcnc.production.database import credentials
         except:
             print("Can't find credentials file")
 
         self.machine_serial = machine_serial
 
-        credentials = pika.PlainCredentials(
+        pika_credentials = pika.PlainCredentials(
             username='calibration',
-            password=creds.password
+            password=credentials.password
         )
 
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(
                 host='51.68.204.96',
-                credentials=credentials
+                credentials=pika_credentials
             )
         )
 
@@ -90,7 +90,7 @@ class DataPublisher(object):
             print('Failed to insert')
 
     def send_file_ftp(self, file_path):
-        with pysftp.Connection(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password) as ftp:
+        with pysftp.Connection(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password) as ftp:
             with ftp.cd(WORKING_DIR):
                 ftp.put(file_path)
 
