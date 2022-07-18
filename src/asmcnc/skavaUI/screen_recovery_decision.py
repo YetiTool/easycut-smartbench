@@ -47,6 +47,10 @@ Builder.load_string("""
                 id: job_name_label
                 color: hex('#333333ff')
                 font_size: dp(25)
+                text_size: self.size
+                halign: "center"
+                valign: "middle"
+                size_hint_y: 3
 
             Label:
                 text: "SmartBench did not finish the last job"
