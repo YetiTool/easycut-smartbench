@@ -5,7 +5,7 @@ Builder.load_string("""
 
 <RecoveryDecisionScreen>:
 
-    info_label:info_label
+    job_name_label:job_name_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -33,13 +33,25 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 
-        Label:
-            id: info_label
+        BoxLayout:
             size_hint_y: 1.25
-            text: "[b]Last job:[/b]"
-            markup: True
-            color: hex('#333333ff')
-            font_size: dp(35)
+            orientation: 'vertical'
+
+            Label:
+                text: "[b]Last job:[/b]"
+                color: hex('#333333ff')
+                markup: True
+                font_size: dp(30)
+
+            Label:
+                id: job_name_label
+                color: hex('#333333ff')
+                font_size: dp(25)
+
+            Label:
+                text: "SmartBench did not finish the last job"
+                color: hex('#333333ff')
+                font_size: dp(30)
 
         BoxLayout:
             orientation: 'horizontal'
@@ -81,7 +93,7 @@ class RecoveryDecisionScreen(Screen):
         self.l=kwargs['localization']
 
     def on_pre_enter(self):
-        self.info_label.text = "[b]Last job:[/b]\n" + self.jd.job_name + "\nSmartBench did not finish the last job"
+        self.job_name_label.text = self.jd.job_name
 
     def go_to_recovery(self):
         self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
