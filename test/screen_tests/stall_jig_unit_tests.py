@@ -14,7 +14,7 @@ from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
 
-
+from kivy.clock import Clock
 
 ########################################################
 # IMPORTANT!!
@@ -45,13 +45,11 @@ class StallJigUnitTests(unittest.TestCase):
         jd.job_name = ""
         jd.gcode_summary_string = ""
 
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        self.m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
-        self.stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l)
+        self.stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = self.m, job = jd, settings = sett, localization = l)
 
     # GENERAL TESTS
-
-
 
     def test_is_100_greater_than_0(self):
         assert self.stall_jig_screen.if_less_than_expected_pos(100), "Not working :("
@@ -69,6 +67,17 @@ class StallJigUnitTests(unittest.TestCase):
     def test_determine_test_result_false(self):
         self.stall_jig_screen.threshold_reached = True
         self.assertFalse(self.stall_jig_screen.determine_test_result(-100)), "Determine test result func failed"
+
+    def test_unschedule_all_events(self):
+        self.stall_jig_screen.poll_for_homing_completion_loop = Clock.schedule_once(lambda dt: str("ahh"), 100)
+        self.stall_jig_screen.unschedule_all_events()
+
+    def test_record_stall_event(self):
+        self.m.s.setting_100 = 5
+        self.m.s.last_stall_motor_step_size = 5
+        self.stall_jig_screen.record_stall_event()
+        self.stall_jig_screen.record_stall_event()
+        print(self.stall_jig_screen.stall_test_events)
 
 if __name__ == "__main__":
     unittest.main()

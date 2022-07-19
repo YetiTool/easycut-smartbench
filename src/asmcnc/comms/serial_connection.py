@@ -786,7 +786,7 @@ class SerialConnection(object):
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
             # Let sw know that grbl is unlocked now that statuses are being received
-            if self.grbl_waiting_for_reset: self.grbl_waiting_for_reset = False
+            self.grbl_waiting_for_reset = False
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
