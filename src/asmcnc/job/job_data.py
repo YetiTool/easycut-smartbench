@@ -418,6 +418,7 @@ class JobData(object):
         try:
             # Account for number of lines added in by the software when running file
             cancel_line -= self.job_recovery_offset
+            self.job_recovery_offset = 0
 
             with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
                 job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
@@ -427,6 +428,7 @@ class JobData(object):
             self.job_recovery_cancel_line = cancel_line
             self.job_recovery_selected_line = -1
             self.job_recovery_gcode = []
+            self.job_recovery_offset = 0
         
         except:
             print("Could not write recovery info")
@@ -441,6 +443,7 @@ class JobData(object):
             self.job_recovery_cancel_line = 0
             self.job_recovery_selected_line = -1
             self.job_recovery_gcode = []
+            self.job_recovery_offset = 0
         
         except:
             print("Could not clear recovery info")
@@ -450,6 +453,7 @@ class JobData(object):
     def reset_recovery(self):
         self.job_recovery_selected_line = -1
         self.job_recovery_gcode = []
+        self.job_recovery_offset = 0
 
     def generate_recovery_gcode(self):
         try:
@@ -587,6 +591,11 @@ class JobData(object):
                             recovery_gcode += ['M7', 'M8']
                         else:
                             recovery_gcode.append('M8')
+
+            # Recovery gcode now contains scraped modal gcode, not in the original file
+            # Selected line represents the number of lines of the original file that will be skipped
+            # Both need to be accounted for in the offset in case of repeat cancellation while running recovered code
+            self.job_recovery_offset = len(recovery_gcode) - self.job_recovery_selected_line
 
             recovery_gcode += self.job_gcode[self.job_recovery_selected_line:]
             self.job_recovery_gcode = recovery_gcode
