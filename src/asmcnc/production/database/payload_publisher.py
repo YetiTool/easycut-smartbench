@@ -96,6 +96,7 @@ class DataPublisher(object):
 
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(self.ftp_server, username=self.ftp_username, password=self.ftp_password)
 
         sftp = ssh.open_sftp()
