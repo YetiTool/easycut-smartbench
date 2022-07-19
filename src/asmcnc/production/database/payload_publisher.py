@@ -3,6 +3,7 @@ import uuid
 import pysftp
 import csv
 import json
+import paramiko
 
 CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
@@ -93,6 +94,14 @@ class DataPublisher(object):
         else:
             print('Failed to insert')
 
+    def send_file_paramiko_sftp(self, file_path):
+        ssh = paramiko.SSHClient()
+        ssh.connect(self.ftp_server, username=self.ftp_username, password=self.ftp_password)
+
+        sftp = ssh.open_sftp()
+
+        sftp.put(file_path, WORKING_DIR)
+
     def send_file_ftp(self, file_path):
         with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password) as ftp:
             with ftp.cd(WORKING_DIR):
@@ -100,7 +109,7 @@ class DataPublisher(object):
 
     def run_data_send(self, statuses, table):
         csv_name = json_to_csv(statuses, self.machine_serial)
-        self.send_file_ftp(csv_name)
+        self.send_file_paramiko_sftp(csv_name)
 
         raw_file_name = csv_name.split('/')[-1]
 
