@@ -4,6 +4,9 @@ import pysftp
 import csv
 import json
 
+cnopts = pysftp.CnOpts()
+cnopts.hostkeys = None
+
 CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS'
@@ -94,7 +97,7 @@ class DataPublisher(object):
             print('Failed to insert')
 
     def send_file_ftp(self, file_path):
-        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password) as ftp:
+        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password, cnopts=cnopts) as ftp:
             with ftp.cd(WORKING_DIR):
                 ftp.put(file_path)
 
