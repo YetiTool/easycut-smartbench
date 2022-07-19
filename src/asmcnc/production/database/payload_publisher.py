@@ -97,7 +97,7 @@ class DataPublisher(object):
             print('Failed to insert')
 
     def send_file_ftp(self, file_path):
-        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password, cnopts=cnopts) as ftp:
+        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password, cnopts=cnopts, port=22) as ftp:
             with ftp.cd(WORKING_DIR):
                 ftp.put(file_path)
 
