@@ -46,18 +46,27 @@ Cmport = 'COM3'
 class ScreenTest(App):
 
     lang_idx = 0
+
+    # 0 - English (y)
+    # 1 - Italian (y)
+    # 2 - Finnish (y)
+    # 3 - German (y)
+    # 4 - French (y)
+    # 5 - Polish (y)
+    # 6 - Danish (y)
+
     
     fw_version = "2.4.2"
 
     # STALL ALARMS
-    stall_pin = ""
+    stall_pin = "z"
 
     # LIMIT ALARMS
-    alarm_pin = "yx"
+    alarm_pin = "y"
 
-    alarm_number = 7
+    alarm_number = 1
 
-    stall_alarm_test = False
+    stall_alarm_test = True
 
     motor_id = 0
     step_size = 75

@@ -224,7 +224,7 @@ class AlarmSequenceManager(object):
 
 	def get_stall_info(self):
 
-		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Pre-stall event")
+		self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold("Alarm: Motor overload event!")
 		stall_list = []
 		
 		if self.m.s.stall_X: 
@@ -264,7 +264,7 @@ class AlarmSequenceManager(object):
 		self.get_version_data()
 
 		if not self.sg_alarm: 
-			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+			if (self.alarm_code).endswith('1') or (self.alarm_code).endswith('8'):
 				self.get_suspected_trigger()
 
 		if self.trigger_description != '':
@@ -323,8 +323,8 @@ class AlarmSequenceManager(object):
 		except:
 			alarm_number = ""
 
-		if not self.sg_alarm: description = self.l.get_str(self.alarm_description)
-		else: description = (self.l.get_str("The N axis was overloaded during a move.")).replace("N", self.stall_axis)
+		description = (self.l.get_str("The N axis was overloaded during a move.")).replace("N", self.stall_axis) if self.sg_alarm \
+		else self.l.get_str(self.alarm_description)
 
 		self.report_string = (
 

@@ -70,8 +70,8 @@ class SerialConnection(object):
         self.FINAL_TEST = False
 
     def __del__(self):
-        self.s.close()
-        print 'Destructor'
+        if self.s: self.s.close()
+        log('Serial connection destructor')
 
     def get_serial_screen(self, serial_error):
 
@@ -289,11 +289,11 @@ class SerialConnection(object):
     VERBOSE_STATUS = False
 
 
-    def grbl_scanner(self):
+    def grbl_scanner(self, run_grbl_scanner_once = False):
         
         log('Running grbl_scanner thread')
 
-        while self.grbl_scanner_running:
+        while self.grbl_scanner_running or run_grbl_scanner_once:
 
                          
             if self.FLUSH_FLAG == True:
@@ -326,6 +326,8 @@ class SerialConnection(object):
                 protocol_command = self.write_protocol_buffer[0]
                 self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
                 del self.write_protocol_buffer[0]
+
+
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
@@ -380,6 +382,12 @@ class SerialConnection(object):
                     else: 
                         if self.g_count == self.l_count:
                             self.end_stream()
+
+                # Sets off sequential streaming from this grbl scanner thread:
+                if self._ready_to_send_first_sequential_stream and self.is_buffer_clear():
+                    self._send_next_sequential_stream()
+
+            run_grbl_scanner_once = False
                     
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
@@ -396,7 +404,7 @@ class SerialConnection(object):
 
     # streaming variables
     GRBL_BLOCK_SIZE = 35    # max number of gcode lines which GRBL can put in its 'BLOCK' or look ahead buffer
-    RX_BUFFER_SIZE = 256    # serial buffer which gets filled by EasyCut. GRBL grabs from this when there is block space
+    RX_BUFFER_SIZE = 255    # serial buffer which gets filled by EasyCut. GRBL grabs from this when there is block space
 
     is_job_streaming = False
     is_stream_lines_remaining = False
@@ -547,7 +555,7 @@ class SerialConnection(object):
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
-        if self.is_sequential_streaming:
+        if self._process_oks_from_sequential_streaming:
             self._send_next_sequential_stream()
             
         elif self.is_job_streaming:
@@ -873,14 +881,9 @@ class SerialConnection(object):
                     
                     pins_info = part.split(':')[1]
                     
-                    if 'x' in pins_info: self.limit_x = True
-                    else: self.limit_x = False
-                    
-                    if 'X' in pins_info: self.limit_X = True
-                    else: self.limit_X = False                
-                    
-                    if 'Z' in pins_info: self.limit_z = True
-                    else: self.limit_z = False
+                    self.limit_x = 'x' in pins_info
+                    self.limit_X = 'X' in pins_info
+                    self.limit_z = 'Z' in pins_info
 
                     if 'P' in pins_info: self.probe = True
                     else: self.probe = False
@@ -898,19 +901,13 @@ class SerialConnection(object):
                         # and little y could be y home OR y limit
                         if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
 
-                            if 'y' in pins_info: self.limit_y = True
-                            else: self.limit_y = False
-
-                            if 'Y' in pins_info: self.limit_Y = True
-                            else: self.limit_Y = False
+                            self.limit_y = 'y' in pins_info
+                            self.limit_Y = 'Y' in pins_info
 
                         else:
 
-                            if 'y' in pins_info: self.limit_Y_axis = True
-                            else: self.limit_Y_axis = False      
-
-                            if 'Y' in pins_info: self.stall_Y = True
-                            else: self.stall_Y = False
+                            self.limit_Y_axis = 'y' in pins_info
+                            self.stall_Y = 'Y' in pins_info
 
                     else:
                         self.limit_y = False
@@ -918,11 +915,8 @@ class SerialConnection(object):
                         self.limit_Y_axis = False
                         self.stall_Y = False
 
-                    if 'S' in pins_info: self.stall_X = True
-                    else: self.stall_X = False
-
-                    if 'z' in pins_info: self.stall_Z = True
-                    else: self.stall_Z = False
+                    self.stall_X = 'S' in pins_info
+                    self.stall_Z = 'z' in pins_info
 
                     if self.stall_X or self.stall_Y or self.stall_Z:
                         self.alarm.sg_alarm = True
@@ -1275,6 +1269,8 @@ class SerialConnection(object):
             elif setting == '$31': self.setting_31 = value;  # Min spindle speed, RPM
             elif setting == '$32': self.setting_32 = value;  # Laser mode, boolean
             elif setting == '$50': self.setting_50 = value; # Serial number and product code
+            elif setting == '$51': self.setting_51 = value; # Enable digital feedback spindle, boolean
+            elif setting == '$53': self.setting_53 = value; # Enable stall guard alarm operation, boolean
             elif setting == '$100': self.setting_100 = value;  # X steps/mm
             elif setting == '$101': self.setting_101 = value;  # Y steps/mm
             elif setting == '$102': self.setting_102 = value;  # Z steps/mm
@@ -1402,39 +1398,58 @@ class SerialConnection(object):
     # It does not stuff the grbl buffer
     # It is for:
     ## Anything sending EEPROM settings (which require special attention, due to writing of values)
-    ## Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
     
     is_sequential_streaming = False
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
+    _ready_to_send_first_sequential_stream = False
+    _process_oks_from_sequential_streaming = False
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
-        log("start_sequential_stream")
+        self.is_sequential_streaming = True
+        log("Start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
-        self._send_next_sequential_stream()
-        
+        self._ready_to_send_first_sequential_stream = True
                 
     def _send_next_sequential_stream(self):
+
+        if self._ready_to_send_first_sequential_stream:
+            self._ready_to_send_first_sequential_stream = False
+            self._process_oks_from_sequential_streaming = True
+
         if self._sequential_stream_buffer:
-            self.is_sequential_streaming = True
             self.write_direct(self._sequential_stream_buffer[0])
             del self._sequential_stream_buffer[0]
-        else:
-            self.is_sequential_streaming = False
-            log("sequential stream ended")
-            if self._reset_grbl_after_stream:
-                self.m.reset_after_sequential_stream()
-                log("GRBL Reset after sequential stream ended")
 
+        else:
+            self._process_oks_from_sequential_streaming = False
+            log("Sequential stream ended")
+            if self._reset_grbl_after_stream:
+                self._reset_grbl_after_stream = False
+                self.m._grbl_soft_reset()
+                log("GRBL Reset after sequential stream ended")
+            self.is_sequential_streaming = False
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
-        self.is_sequential_streaming = False
-        _sequential_stream_buffer = []
-        if reset_grbl_after_cancel:
-            self.m.reset_after_sequential_stream()
+        
+        self._sequential_stream_buffer = []
+        self._process_oks_from_sequential_streaming = False
+        self._ready_to_send_first_sequential_stream = False
+        if reset_grbl_after_cancel or self._reset_grbl_after_stream:
+            self._reset_grbl_after_stream = False
+            self.m._grbl_soft_reset()
             print "GRBL Reset after sequential stream cancelled"
+        self.is_sequential_streaming = False
+
+    def is_buffer_clear(self):
+
+        if int(self.serial_chars_available) == self.RX_BUFFER_SIZE \
+        and int(self.serial_blocks_available) == self.GRBL_BLOCK_SIZE:
+            return True
+
+        return False
 
 
 ## WRITE-----------------------------------------------------------------------------

@@ -763,6 +763,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             self.sm.get_screen('qc2').reset_checkboxes()
             self.sm.get_screen('qcW136').reset_checkboxes()
             self.sm.get_screen('qcW112').reset_checkboxes()
+            self.sm.get_screen('qc3').reset_timer()
             Clock.unschedule(self.poll_for_temps_power)
             self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, TEMP_POWER_POLL)
 
