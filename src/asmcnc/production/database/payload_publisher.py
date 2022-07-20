@@ -94,6 +94,7 @@ class DataPublisher(object):
         return self.response
 
     def _on_response(self, ch, method, props, body):
+        body = json.loads(body)
         if body['Inserted']:
             print('Inserted successfully')
         else:
