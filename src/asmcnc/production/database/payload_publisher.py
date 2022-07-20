@@ -28,7 +28,7 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
-        from asmcnc.production.database import credentials
+        self.import_credentials()
 
         print(credentials.password)
 
@@ -61,6 +61,18 @@ class DataPublisher(object):
             auto_ack=True
         )
 
+    def import_credentials(self):
+        from asmcnc.production.database import credentials
+
+    def send_file_paramiko_sftp(self, file_path):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password)
+        sftp = ssh.open_sftp()
+
+        file_name = file_path.split('/')[-1]
+        sftp.put(file_path, WORKING_DIR + file_name)
+
     def publish(self, data):
         self.response = None
         self.correlation_id = str(uuid.uuid4())
@@ -88,16 +100,8 @@ class DataPublisher(object):
         else:
             print('Failed to insert')
 
-    def send_file_paramiko_sftp(self, file_path):
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password)
-        sftp = ssh.open_sftp()
-
-        file_name = file_path.split('/')[-1]
-        sftp.put(file_path, WORKING_DIR + file_name)
-
     def run_data_send(self, statuses, table):
+        print(credentials.password)
         csv_name = json_to_csv(statuses, self.machine_serial)
         self.send_file_paramiko_sftp(csv_name)
 
