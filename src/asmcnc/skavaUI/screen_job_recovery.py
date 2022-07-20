@@ -403,7 +403,6 @@ class JobRecoveryScreen(Screen):
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
         self.jd.job_recovery_selected_line = self.selected_line_index + 1
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
-        self.m.s.write_command('G90 G0 Z%s' % self.pos_z)
         Clock.schedule_once(self.proceed_to_next_screen, 0.4)
 
     def proceed_to_next_screen(self, dt):
