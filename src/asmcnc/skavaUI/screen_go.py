@@ -599,13 +599,20 @@ class GoScreen(Screen):
 
         modified_job_gcode = []
 
+        # Check if job recovery is being performed
+        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+            job_recovery_active = True
+        else:
+            job_recovery_active = False
+            self.jd.job_recovery_offset = 0
+
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
             self.jd.job_recovery_offset += 1 # number of lines added to start of job
 
         # If job recovery is being performed, use job recovery gcode instead
-        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+        if job_recovery_active:
             # Turn vac on if spindle gets turned on during job
             if ((str(self.jd.job_recovery_gcode).count("M3") > str(self.jd.job_recovery_gcode).count("M30")) or (
                     str(self.jd.job_recovery_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
