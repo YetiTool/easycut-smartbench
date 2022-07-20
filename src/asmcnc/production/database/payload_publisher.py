@@ -29,7 +29,8 @@ def json_to_csv(data, machine_serial):
 class DataPublisher(object):
     def __init__(self, machine_serial):
         from asmcnc.production.database import credentials
-        import credentials
+
+        print(credentials.password)
 
         self.machine_serial = machine_serial
 
