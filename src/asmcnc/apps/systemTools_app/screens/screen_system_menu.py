@@ -254,7 +254,8 @@ class SystemMenuScreen(Screen):
         popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
 
     def factory_settings(self):
-        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
+        self.systemtools_sm.open_factory_settings_screen()
+        # popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
 
     # def update_testing(self):
     #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
