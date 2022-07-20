@@ -100,7 +100,6 @@ class DataPublisher(object):
             print('Failed to insert')
 
     def run_data_send(self, statuses, table):
-        print(credentials.password)
         csv_name = json_to_csv(statuses, self.machine_serial)
         self.send_file_paramiko_sftp(csv_name)
 
