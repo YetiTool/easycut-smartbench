@@ -28,15 +28,17 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
-        self.import_credentials()
+        from asmcnc.production.database import credentials as creds
 
-        print(credentials.password)
+        self.ftp_server = creds.ftp_server
+        self.ftp_username = creds.ftp_username
+        self.ftp_password = creds.ftp_password
 
         self.machine_serial = machine_serial
 
         pika_credentials = pika.PlainCredentials(
             username='calibration',
-            password=credentials.password
+            password=creds.password
         )
 
         self.connection = pika.BlockingConnection(
@@ -61,13 +63,10 @@ class DataPublisher(object):
             auto_ack=True
         )
 
-    def import_credentials(self):
-        from asmcnc.production.database import credentials
-
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password)
+        ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
         sftp = ssh.open_sftp()
 
         file_name = file_path.split('/')[-1]
