@@ -2882,7 +2882,10 @@ class RouterMachine(object):
 
     def set_threshold_for_axis(self, axis, threshold):
 
-        if axis == "X": self.set_sg_threshold(TMC_X1, threshold)
+        if axis == "X": 
+            self.set_sg_threshold(TMC_X1, threshold)
+            self.set_sg_threshold(TMC_X2, threshold)
+
         if axis == "Z": self.set_sg_threshold(TMC_Z, threshold)
         if axis == "Y":
             self.set_sg_threshold(TMC_Y1, threshold)
