@@ -189,8 +189,8 @@ class HomingScreenActive(Screen):
     def cancel_homing(self):
 
         print('Cancelling homing...')
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        if self.start_homing_event != None: self.start_homing_event.cancel()
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        if self.start_homing_event: self.start_homing_event.cancel()
         # ... will trigger an alarm screen
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.reset_on_cancel_homing()
@@ -198,7 +198,7 @@ class HomingScreenActive(Screen):
 
     
     def on_leave(self):
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
         self.homing_label.text = self.l.get_str('Homing') + '...'
