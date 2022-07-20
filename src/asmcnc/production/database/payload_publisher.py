@@ -1,6 +1,5 @@
 import pika
 import uuid
-import pysftp
 import csv
 import json
 import paramiko
@@ -29,16 +28,9 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
-        try:
-            from asmcnc.production.database import credentials
-        except:
-            print("Can't find credentials file")
+        from asmcnc.production.database import credentials
 
         self.machine_serial = machine_serial
-
-        self.ftp_server = credentials.ftp_server
-        self.ftp_username = credentials.ftp_username
-        self.ftp_password = credentials.password
 
         pika_credentials = pika.PlainCredentials(
             username='calibration',
@@ -97,16 +89,11 @@ class DataPublisher(object):
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(self.ftp_server, username=self.ftp_username, password=self.ftp_password)
+        ssh.connect(credentials.ftp_server, username=credentials.ftp_username, password=credentials.ftp_password)
         sftp = ssh.open_sftp()
 
         file_name = file_path.split('/')[-1]
         sftp.put(file_path, WORKING_DIR + file_name)
-
-    def send_file_ftp(self, file_path):
-        with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password) as ftp:
-            with ftp.cd(WORKING_DIR):
-                ftp.put(file_path)
 
     def run_data_send(self, statuses, table):
         csv_name = json_to_csv(statuses, self.machine_serial)
