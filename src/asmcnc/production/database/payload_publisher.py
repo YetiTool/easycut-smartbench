@@ -7,7 +7,7 @@ import paramiko
 
 CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
-WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS'
+WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
 
 def get_unique_file_name(machine_serial):
@@ -98,10 +98,10 @@ class DataPublisher(object):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(self.ftp_server, username=self.ftp_username, password=self.ftp_password)
-
         sftp = ssh.open_sftp()
 
-        sftp.put(file_path, WORKING_DIR)
+        file_name = file_path.split('/')[-1]
+        sftp.put(file_path, WORKING_DIR + file_name)
 
     def send_file_ftp(self, file_path):
         with pysftp.Connection(self.ftp_server, username=self.ftp_username, password=self.ftp_password) as ftp:
