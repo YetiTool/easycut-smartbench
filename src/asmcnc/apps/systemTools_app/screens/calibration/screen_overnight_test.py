@@ -1540,7 +1540,7 @@ class OvernightTesting(Screen):
 
         text_layout = BoxLayout(orientation='vertical', spacing=20, padding=0)
 
-        machine_serial_label = Label(markup=True, halign='center', text='SmartBench Serial: YS' + self.sn_for_db,
+        machine_serial_label = Label(markup=True, halign='center', text='SmartBench Serial: ' + self.sn_for_db.upper(),
                                      color=[0, 0, 0, 1])
 
         # lb_serial_label = Label(markup=True, halign='center', text='LowerBeam Serial: ' + self.xl_serial,
