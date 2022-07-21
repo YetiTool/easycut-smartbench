@@ -773,6 +773,9 @@ class SerialConnection(object):
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
+    # DETECT SOFT RESET
+    grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -784,9 +787,6 @@ class SerialConnection(object):
             # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
-
-            # Let sw know that grbl is unlocked now that statuses are being received
-            self.grbl_waiting_for_reset = False
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
@@ -1353,6 +1353,10 @@ class SerialConnection(object):
                     log('HW version: ' + str(self.hw_version))
                 except: 
                     log("Could not retrieve HW version")
+
+        elif re.match(self.grbl_initialisation_message, message):
+            # Let sw know that grbl is unlocked now that statuses are being received
+            self.grbl_waiting_for_reset = False
 
 
     def check_for_sustained_max_overload(self, dt):

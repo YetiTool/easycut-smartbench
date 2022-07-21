@@ -1166,6 +1166,7 @@ class RouterMachine(object):
 
     def _grbl_soft_reset(self):
         log('grbl realtime cmd sent: \\x18 soft reset')
+        self.s.grbl_waiting_for_reset = True
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def _grbl_door(self):

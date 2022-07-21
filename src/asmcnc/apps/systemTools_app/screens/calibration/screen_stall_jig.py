@@ -900,6 +900,9 @@ class StallJigScreen(Screen):
         if int(self.m.s.serial_chars_available) != self.m.s.RX_BUFFER_SIZE:
             return True
 
+        if self.m.s.grbl_waiting_for_reset:
+            return True
+
         return False
 
     ## RESET CURRENT SUB-TEST (DOESN'T RESTART THOUGH - WAITS FOR USER INPUT)
@@ -992,7 +995,7 @@ class StallJigScreen(Screen):
 
                 ]
 
-        self.m.s.start_sequential_stream(default_acceleration_values)
+        self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
         log("Disabling stall guard")
         log("Restoring acceleration values for X and Y (to 130)")
@@ -1007,7 +1010,7 @@ class StallJigScreen(Screen):
                 '$121=1300.0'   # Y Acceleration, mm/sec^2
                 ]
 
-        self.m.s.start_sequential_stream(settings_list_to_stream)
+        self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
         log("Enabling stall guard")
         log("Maxing out acceleration values for X and Y (to 1300)")

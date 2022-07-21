@@ -128,3 +128,13 @@ def test_that_seq_streaming_does_not_start_if_grbl_buffer_occupied(sc):
     sc._send_next_sequential_stream = Mock()
     sc.grbl_scanner(run_grbl_scanner_once = True)
     sc._send_next_sequential_stream.assert_not_called()
+
+def test_process_grbl_push_detects_reset_has_happened(sc):
+    sc.grbl_waiting_for_reset = True
+    sc.process_grbl_push("Grbl 1.1f ['$' for help]")
+    assert not sc.grbl_waiting_for_reset
+
+def test_process_grbl_push_detects_reset_has_not_happened(sc):
+    sc.grbl_waiting_for_reset = True
+    sc.process_grbl_push("Grbl needs some help]")
+    assert sc.grbl_waiting_for_reset
