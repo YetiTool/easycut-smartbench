@@ -1517,16 +1517,15 @@ class OvernightTesting(Screen):
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            response = publisher.run_data_send(statuses, table)
+            response = threading.Thread(publisher.run_data_send(statuses, table)).start()
 
             log("Received %s from consumer" % response)
-            self.handle_response(response)
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             # self.calibration_db.insert_final_test_statistics(*statistics)
-            return response['Inserted']
+            return self.handle_response(response)
 
         except:
             log("Failed to send data to DB!!")
@@ -1594,7 +1593,7 @@ class OvernightTesting(Screen):
             popup.title = title
 
             popup.open()
-            return
+            return False
 
         response = json.loads(response)
         received = response['Received']
@@ -1611,6 +1610,8 @@ class OvernightTesting(Screen):
             text_layout.add_widget(received_inserted_label)
 
             popup.open()
+            return False
+        return True
 
     def send_all_calibration_coefficients(self):
 
