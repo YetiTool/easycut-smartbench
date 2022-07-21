@@ -13,10 +13,36 @@ def get_unique_file_name(machine_serial):
     return machine_serial + str(uuid.uuid4()) + '.csv'
 
 
+status_order = {
+    "Id": 1,
+    "FTID": 2,
+    "XCoordinate": 3,
+    "YCoordinate": 4,
+    "ZCoordinate": 5,
+    "XDirection": 6,
+    "YDirection": 7,
+    "ZDirection": 8,
+    "XSG": 9,
+    "YSG": 10,
+    "Y1SG": 11,
+    "Y2SG": 12,
+    "ZSG": 13,
+    "TMCTemperature": 14,
+    "PCBTemperature": 15,
+    "MOTTemperature": 16,
+    "Timestamp": 17,
+    "Feedrate": 18,
+    "XWeight": 19,
+    "YWeight": 20,
+    "ZWeight": 21
+}
+
+
 def json_to_csv(data, machine_serial):
     file_path = CSV_PATH + get_unique_file_name(machine_serial)
 
     keys = data[0].keys()
+    keys.sort(key=lambda i: status_order[i])
 
     with open(file_path, 'w') as data_file:
         dict_writer = csv.DictWriter(data_file, keys)
@@ -107,7 +133,6 @@ class DataPublisher(object):
         }
 
         return self.publish(payload)
-
 
 # import datetime
 # import random
