@@ -733,7 +733,6 @@ class StallJigScreen(Screen):
         limit_found_at_time = time()
         self.alert_user_to_detection()
         self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
-        log("Threshold reached (imminent stall detected)")
 
     def ensure_alarm_resumed(self, limit_found_at_time):
 
@@ -741,7 +740,7 @@ class StallJigScreen(Screen):
             if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
                 self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
                 limit_found_at_time = time()
-            if self.VERBOSE: log("Poll for setting threshold reached flag")
+            if self.VERBOSE: log("Poll for resuming alarm")
             self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
             return
 
@@ -781,6 +780,7 @@ class StallJigScreen(Screen):
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.highlight_yellow
         self.test_status_label.text = "ANALYSING"
+        log("Threshold reached (imminent stall detected)")
 
     ## LIMITS
 
