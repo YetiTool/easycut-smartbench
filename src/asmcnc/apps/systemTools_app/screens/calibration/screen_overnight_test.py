@@ -1517,7 +1517,7 @@ class OvernightTesting(Screen):
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            response = threading.Thread(publisher.run_data_send(statuses, table)).start()
+            response = publisher.run_data_send(statuses, table)
 
             log("Received %s from consumer" % response)
 
