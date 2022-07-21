@@ -1565,7 +1565,7 @@ class OvernightTesting(Screen):
         contact_software_label = Label(markup=True, halign='center', text='Please take a photo of this screen and '
                                                                           'send it to either Archie or Lettie on '
                                                                           'Slack', color=[0, 0, 0, 1])
-        text_layout.add_Widget(contact_software_label)
+        text_layout.add_widget(contact_software_label)
 
         button_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 10, 150, 0], size_hint_y=0.3)
 
