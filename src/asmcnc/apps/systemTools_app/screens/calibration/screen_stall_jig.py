@@ -697,8 +697,8 @@ class StallJigScreen(Screen):
             self.get_alarm_info_event = Clock.schedule_once(self.get_alarm_info, 0.5)
             return
 
-        log("GRBL unlocked, getting alarm info")
-
+        log("GRBL reset, getting alarm info")
+ 
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(lambda dt: self.register_threshold_detection(), 0.5)
 
@@ -1355,18 +1355,31 @@ class StallJigScreen(Screen):
 
     def stall_position_found(self, axis, start_pos):
 
-        # NB: THIS TEST WILL NOT TIME OUT IF IT DOES NOT REACH THRESHOLD
-        # THE USER WILL HAVE TO MANUALLY STOP IN THIS INSTANCE AND TRY AGAIN. 
-
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll for finding stall position")
             self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 0.5)
             return
 
-        self.test_status_label.text = "STALL POS FOUND"
-        log("Stall position found")
-        self.travel_to_stall_pos[axis] = self.current_position[axis]() - start_pos
-        self.back_off_and_find_position()
+        if self.threshold_reached: 
+            self.threshold_reached = False
+            self.test_status_label.text = "STALL POS FOUND"
+            log("Stall position found")
+            self.travel_to_stall_pos[axis] = self.current_position[axis]() - start_pos
+            self.back_off_and_find_position()
+            return
+
+        maximum_pos = float(start_pos) + float(self.crash_distance[axis]) - 0.05 # 0.05mm tolerance for positional error
+        if self.detection_too_late[self.current_axis()](maximum_pos):
+            self.test_status_label.text = "NO STALL POS?"
+            self.m.stop_from_soft_stop_cancel()
+            self.unschedule_all_events()
+            self.restore_acceleration_and_soft_limits()
+            self.enable_all_buttons_except_run()
+            return
+
+        self.poll_for_stall_position_found = Clock.schedule_once(lambda dt: self.stall_position_found(axis, start_pos), 0.5)
+        self.test_status_label.text = "NO DETECT YET"
+
 
     # PARSE RESULTS OF EXPERIMENT ------------------------------------------------------------------------------------------
 
@@ -1386,8 +1399,15 @@ class StallJigScreen(Screen):
 
     def determine_test_result(self, expected_pos):
 
-        if self.threshold_reached and not self.detection_too_late[self.current_axis()](expected_pos): return self.test_did_pass()
-        else: return self.test_did_fail()
+        if self.detection_too_late[self.current_axis()](expected_pos):
+            return self.test_did_fail()
+
+        if self.threshold_reached: 
+            return self.test_did_pass()
+        
+        # If threshold not reached, but hasn't travelled too far, maybe just haven't registered alarm result yet: 
+        self.poll_for_threshold_detection = Clock.schedule_once(lambda dt: self.sb_has_travelled_or_detected(expected_pos), 0.5)
+        self.test_status_label.text = "NO DETECT YET"
 
     def test_did_pass(self):
 
