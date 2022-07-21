@@ -3,7 +3,6 @@ import uuid
 import csv
 import json
 import paramiko
-from asmcnc.production.database import credentials as creds
 
 CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
@@ -29,9 +28,8 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
-        # self.ftp_server = creds.ftp_server
-        # self.ftp_username = creds.ftp_username
-        # self.ftp_password = creds.ftp_password
+        from asmcnc.production.database import credentials as creds
+        self.creds = creds
 
         self.machine_serial = machine_serial
 
@@ -65,7 +63,7 @@ class DataPublisher(object):
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
+        ssh.connect(self.creds.ftp_server, username=self.creds.ftp_username, password=self.creds.ftp_password)
         sftp = ssh.open_sftp()
 
         file_name = file_path.split('/')[-1]
