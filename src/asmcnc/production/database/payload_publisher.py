@@ -3,6 +3,7 @@ import uuid
 import csv
 import json
 import paramiko
+from asmcnc.production.database import credentials as creds
 
 CSV_PATH = '/home/pi/easycut-smartbench/src/asmcnc/production/database/csvs/'
 QUEUE = 'calibration_data'
@@ -28,11 +29,9 @@ def json_to_csv(data, machine_serial):
 
 class DataPublisher(object):
     def __init__(self, machine_serial):
-        from asmcnc.production.database import credentials as creds
-
-        self.ftp_server = creds.ftp_server
-        self.ftp_username = creds.ftp_username
-        self.ftp_password = creds.ftp_password
+        # self.ftp_server = creds.ftp_server
+        # self.ftp_username = creds.ftp_username
+        # self.ftp_password = creds.ftp_password
 
         self.machine_serial = machine_serial
 
@@ -66,7 +65,7 @@ class DataPublisher(object):
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(self.ftp_server, username=self.ftp_username, password=self.ftp_password)
+        ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
         sftp = ssh.open_sftp()
 
         file_name = file_path.split('/')[-1]
@@ -94,11 +93,8 @@ class DataPublisher(object):
         return self.response
 
     def _on_response(self, ch, method, props, body):
-        body = json.loads(body)
-        if body['Inserted']:
-            print('Inserted successfully')
-        else:
-            print('Failed to insert')
+        if props.correlation_id == self.correlation_id:
+            self.response = body
 
     def run_data_send(self, statuses, table):
         csv_name = json_to_csv(statuses, self.machine_serial)

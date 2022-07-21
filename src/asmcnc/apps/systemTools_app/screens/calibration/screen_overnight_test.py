@@ -8,12 +8,17 @@ import traceback
 from time import sleep
 import threading
 from datetime import datetime
+import json
 from asmcnc.production.database.payload_publisher import DataPublisher
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopOvernightTest
-from asmcnc.skavaUI import popup_info
+from kivy.uix.popup import Popup
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.widget import Widget
+from kivy.uix.label import Label
+from kivy.uix.button import Button
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -880,23 +885,29 @@ class OvernightTesting(Screen):
 
         if len(self.status_data_dict[self.stage]["Statuses"]) > 0:
 
-            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["XCoordinate"] < self.m.mpos_x():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "XCoordinate"] < self.m.mpos_x():
                 x_dir = -1
-            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["XCoordinate"] > self.m.mpos_x():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "XCoordinate"] > self.m.mpos_x():
                 x_dir = 1
             else:
                 x_dir = 0
 
-            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["YCoordinate"] < self.m.mpos_y():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "YCoordinate"] < self.m.mpos_y():
                 y_dir = -1
-            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["YCoordinate"] > self.m.mpos_y():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "YCoordinate"] > self.m.mpos_y():
                 y_dir = 1
             else:
                 y_dir = 0
 
-            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["ZCoordinate"] < self.m.mpos_z():
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "ZCoordinate"] < self.m.mpos_z():
                 z_dir = 1
-            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1]["ZCoordinate"] > self.m.mpos_z():
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "ZCoordinate"] > self.m.mpos_z():
                 z_dir = -1
             else:
                 z_dir = 0
@@ -1509,17 +1520,97 @@ class OvernightTesting(Screen):
             response = publisher.run_data_send(statuses, table)
 
             log("Received %s from consumer" % response)
+            self.handle_response(response)
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             # self.calibration_db.insert_final_test_statistics(*statistics)
-            return response == b'Done'
+            return response['Inserted']
 
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
             return False
+
+    def handle_response(self, response):
+        # sometimes if the consumer isn't running, the body sent will be returned as the response
+        real_reply = len(response) < 50
+
+        popup_layout = BoxLayout(orientation='vertical', spacing=10, padding=[10, 10, 10, 10])
+
+        text_layout = BoxLayout(orientation='vertical', spacing=20, padding=0)
+
+        machine_serial_label = Label(markup=True, halign='center', text='SmartBench Serial: YS' + self.sn_for_db,
+                                     color=[0, 0, 0, 1])
+
+        lb_serial_label = Label(markup=True, halign='center', text='LowerBeam Serial: ' + self.xl_serial,
+                                color=[0, 0, 0, 1])
+
+        zh_serial_label = Label(markup=True, halign='center', text='ZHead Serial: ' + self.zh_serial,
+                                color=[0, 0, 0, 1])
+
+        text_layout.add_widget(machine_serial_label)
+        text_layout.add_widget(lb_serial_label)
+        text_layout.add_widget(zh_serial_label)
+
+        response_header = Label(markup=True, halign='center', text='See response below (50 chars):',
+                                color=[0, 0, 0, 1])
+        short_response = Label(markup=True, halign='center', text=response[:50],
+                               color=[0, 0, 0, 1])
+
+        text_layout.add_widget(response_header)
+        text_layout.add_widget(short_response)
+
+        contact_software_label = Label(markup=True, halign='center', text='Please take a photo of this screen and '
+                                                                          'send it to either Archie or Lettie on '
+                                                                          'Slack', color=[0, 0, 0, 1])
+        text_layout.add_Widget(contact_software_label)
+
+        button_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 10, 150, 0], size_hint_y=0.3)
+
+        ok_button = Button(text='[b]Ok[/b]', markup=True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        button_layout.add_widget(ok_button)
+
+        popup = Popup(title='',
+                      title_color=[0, 0, 0, 1],
+                      title_font='Roboto-Bold',
+                      title_size='20sp',
+                      content=popup_layout,
+                      size_hint=(None, None),
+                      size=(700, 400),
+                      auto_dismiss=False)
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup_layout.add_widget(text_layout)
+        popup_layout.add_widget(button_layout)
+
+        if not real_reply:
+            title = 'Check status of consumer'
+            popup.title = title
+
+            popup.open()
+            return
+
+        response = json.loads(response)
+        received = response['Received']
+        inserted = response['Inserted']
+
+        if not received or not inserted:
+            title = 'Tried to send ' + str(len(self.status_data_dict['Statuses'])) + ' statuses and failed. '
+            popup.title = title
+
+            received_inserted_label = Label(markup=True, halign='center',
+                                            text='Received: ' + received + ' Inserted: ' + inserted,
+                                            color=[0, 0, 0, 1])
+
+            text_layout.add_widget(received_inserted_label)
+
+            popup.open()
 
     def send_all_calibration_coefficients(self):
 
