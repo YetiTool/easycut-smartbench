@@ -1535,7 +1535,7 @@ class OvernightTesting(Screen):
 
     def handle_response(self, response):
         # sometimes if the consumer isn't running, the body sent will be returned as the response
-        real_reply = len(response) < 50
+        real_reply = 'FileName' not in json.loads(response)
 
         popup_layout = BoxLayout(orientation='vertical', spacing=10, padding=[10, 10, 10, 10])
 
@@ -1544,15 +1544,15 @@ class OvernightTesting(Screen):
         machine_serial_label = Label(markup=True, halign='center', text='SmartBench Serial: YS' + self.sn_for_db,
                                      color=[0, 0, 0, 1])
 
-        lb_serial_label = Label(markup=True, halign='center', text='LowerBeam Serial: ' + self.xl_serial,
-                                color=[0, 0, 0, 1])
-
-        zh_serial_label = Label(markup=True, halign='center', text='ZHead Serial: ' + self.zh_serial,
-                                color=[0, 0, 0, 1])
+        # lb_serial_label = Label(markup=True, halign='center', text='LowerBeam Serial: ' + self.xl_serial,
+        #                         color=[0, 0, 0, 1])
+        #
+        # zh_serial_label = Label(markup=True, halign='center', text='ZHead Serial: ' + self.zh_serial,
+        #                         color=[0, 0, 0, 1])
 
         text_layout.add_widget(machine_serial_label)
-        text_layout.add_widget(lb_serial_label)
-        text_layout.add_widget(zh_serial_label)
+        # text_layout.add_widget(lb_serial_label)
+        # text_layout.add_widget(zh_serial_label)
 
         response_header = Label(markup=True, halign='center', text='See response below (50 chars):',
                                 color=[0, 0, 0, 1])
