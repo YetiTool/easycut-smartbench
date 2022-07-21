@@ -22,7 +22,6 @@ from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
 
-
 # Kivy UI bsystemTools_sm.uilder:
 Builder.load_string("""
 
@@ -874,9 +873,9 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "GRBL RESET"
         log("GRBL RESET")
 
-    def smartbench_is_not_ready_for_next_command(self):
+    def smartbench_is_not_ready_for_next_command(self, ignore_alarm = False):
 
-        if not self.m.state().startswith("Idle"):
+        if not self.m.state().startswith("Idle") and not ignore_alarm:
             return True
 
         if self.test_stopped:
@@ -939,6 +938,11 @@ class StallJigScreen(Screen):
     def run(self):
 
         if self.smartbench_is_not_ready_for_next_command():
+
+            if self.run_button.disabled:
+                self.test_status_label.text = "CAN'T START"
+                return
+
             if self.VERBOSE: log("Poll to start next run")
             self.run_event = Clock.schedule_once(lambda dt: self.run(), 2)
             return
@@ -1296,7 +1300,7 @@ class StallJigScreen(Screen):
         self.setting_up_axis_for_test = True
         self.test_status_label.text = "SET UP AXIS"
 
-        if self.smartbench_is_not_ready_for_next_command():
+        if self.smartbench_is_not_ready_for_next_command(ignore_alarm = True):
             if self.VERBOSE: log("Poll for setting up axis for test")
             self.poll_for_setting_up_axis_for_test = Clock.schedule_once(lambda dt: self.set_up_axis_for_test(), 0.5)
             return
