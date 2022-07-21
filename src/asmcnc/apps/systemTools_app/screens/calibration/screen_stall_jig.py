@@ -989,6 +989,7 @@ class StallJigScreen(Screen):
         default_acceleration_values = [
 
                 '$20=1',        # Soft limits
+                '$21=1',        # Enable hard limits
                 '$53=0',        # Disable stall guard
                 '$120=130.0',   # X Acceleration, mm/sec^2
                 '$121=130.0'    #Y Acceleration, mm/sec^2
@@ -1005,6 +1006,7 @@ class StallJigScreen(Screen):
         settings_list_to_stream = [
 
                 '$20=0',        # Disable soft limits
+                '$21=1',        # Enable hard limits
                 '$53=1',        # Enable stall guard
                 '$120=1300.0',  # X Acceleration, mm/sec^2
                 '$121=1300.0'   # Y Acceleration, mm/sec^2
