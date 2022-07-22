@@ -792,10 +792,12 @@ class OvernightTesting(Screen):
         self.status_data_dict = {
             "OvernightWearIn": {
                 "Table": "FinalTestStatuses",
+                "MachineSerial": self.sn_for_db,
                 "Statuses": []
             },
             "FullyCalibratedTest": {
                 "Table": "FinalTestStatuses",
+                "MachineSerial": self.sn_for_db,
                 "Statuses": []
             }
 
