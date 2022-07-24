@@ -623,6 +623,12 @@ class FactorySettingsScreen(Screen):
         except:
             pass
 
+    def remove_csv_files(self):
+        try:
+            os.system("rm -r ./asmcnc/production/database/csvs")
+        except:
+            pass
+
     def factory_reset(self):
 
         def nested_factory_reset():
@@ -635,6 +641,7 @@ class FactorySettingsScreen(Screen):
 
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
+                self.remove_csv_files()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
