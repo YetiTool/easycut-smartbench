@@ -186,7 +186,7 @@ def log(message):
 
 class StallJigScreen(Screen):
 
-    dev_mode = True
+    dev_mode = False
 
     # ALL NUMBERS ARE DECLARED HERE, SO THAT THEY CAN BE EASILY EDITED AS/WHEN REQUIRED
 
