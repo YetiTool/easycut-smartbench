@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging, threading, re
+import logging, threading, re, traceback
 
 try: 
     import pigpio
@@ -2870,8 +2870,11 @@ class RouterMachine(object):
     def get_abs_maximums_from_sg_array(self, sub_array, index):
 
         just_idx_sgs = [sg_arr[index] for sg_arr in sub_array if sg_arr[index] != -999]
-        try: abs_max_idx = max(just_idx_sgs, key=abs)
-        except: self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
+        try: 
+            abs_max_idx = max(just_idx_sgs, key=abs)
+        except: 
+            log(traceback.format_exc())
+            self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
         return abs_max_idx
 
 
