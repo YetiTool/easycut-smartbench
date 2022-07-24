@@ -1501,7 +1501,6 @@ class OvernightTesting(Screen):
             self.tick_checkbox(checkbox_id, False)
 
     def send_data(self, stage):
-
         try:
             log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
@@ -1524,8 +1523,13 @@ class OvernightTesting(Screen):
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
-            # self.calibration_db.insert_final_test_statistics(*statistics)
-            return self.handle_response(response)
+            self.calibration_db.insert_final_test_statistics(*statistics)
+            log("Finished statistics data send")
+
+            data_send_successful = self.handle_response(response)
+            log('Status data sent successfully: ' + data_send_successful)
+
+            return data_send_successful
 
         except:
             log("Failed to send data to DB!!")
