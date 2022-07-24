@@ -736,10 +736,11 @@ class StallJigScreen(Screen):
 
     def ensure_alarm_resumed(self, limit_found_at_time):
 
-        if self.smartbench_is_not_ready_for_next_command():
-            if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
+        if self.m.state().startswith('Alarm'):
+            if time() > limit_found_at_time + 15: 
                 self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
                 limit_found_at_time = time()
+
             if self.VERBOSE: log("Poll for resuming alarm")
             self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
             return
@@ -1065,6 +1066,7 @@ class StallJigScreen(Screen):
         start_pos = self.current_position[axis]()
 
         log("Setting threshold to " + str(threshold) + " for " + axis + ", and drive into barrier at feed: " + str(feed))
+        self.test_status_label.text = "THR: " + str(threshold)
         self.m.set_threshold_for_axis(axis, threshold)
         self.drive_into_barrier_event = Clock.schedule_once(lambda dt: self.drive_into_barrier(axis, feed, start_pos), 1)
 
@@ -1079,6 +1081,7 @@ class StallJigScreen(Screen):
         except: pass
 
         log("Drive into barrier")
+        self.test_status_label.text = "CRASH TIME!"
         move_sequence = ["G01 G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
         self.m.s.start_sequential_stream(move_sequence)
 
