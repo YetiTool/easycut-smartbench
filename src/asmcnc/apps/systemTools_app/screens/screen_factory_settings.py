@@ -428,7 +428,7 @@ class FactorySettingsScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
-    dev_mode = True
+    dev_mode = False
 
     poll_for_creds_file = None
 
@@ -509,6 +509,7 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
+        self.remove_csv_files()
 
     def set_toggle_buttons(self):
 
