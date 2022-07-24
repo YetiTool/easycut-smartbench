@@ -487,8 +487,6 @@ class FactorySettingsScreen(Screen):
         except:
             print("No /media/usb/ folder found")
 
-            self.calibration_db.set_up_connection()
-
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -711,7 +709,7 @@ class FactorySettingsScreen(Screen):
     def full_console_update(self):
 
         self.console_update_button.text = "Doing update,\nplease wait..."
-
+        self.remove_csv_files()
         self.remove_creds_file()
 
         def nested_full_console_update(dt):
