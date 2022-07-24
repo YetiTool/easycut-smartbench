@@ -510,6 +510,11 @@ class FactorySettingsScreen(Screen):
         self.set_toggle_buttons()
         self.get_smartbench_model()
 
+        csv_path = './asmcnc/production/database/csvs'
+
+        if not os.path.exists(csv_path):
+            os.mkdir(csv_path)
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
