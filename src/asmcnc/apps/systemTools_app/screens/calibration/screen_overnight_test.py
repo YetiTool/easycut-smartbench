@@ -792,12 +792,10 @@ class OvernightTesting(Screen):
         self.status_data_dict = {
             "OvernightWearIn": {
                 "Table": "FinalTestStatuses",
-                "MachineSerial": self.sn_for_db,
                 "Statuses": []
             },
             "FullyCalibratedTest": {
                 "Table": "FinalTestStatuses",
-                "MachineSerial": self.sn_for_db,
                 "Statuses": []
             }
 
@@ -1519,7 +1517,7 @@ class OvernightTesting(Screen):
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            response = publisher.run_data_send(statuses, table)
+            response = publisher.run_data_send(statuses, table, stage)
 
             log("Received %s from consumer" % response)
 
@@ -1536,7 +1534,11 @@ class OvernightTesting(Screen):
 
     def handle_response(self, response):
         # sometimes if the consumer isn't running, the body sent will be returned as the response
-        real_reply = 'FileName' not in json.loads(response)
+        json_response = json.loads(response)
+
+        real_reply = 'FileName' not in json_response
+
+        already_exists_reply = json_response['Exists']
 
         popup_layout = BoxLayout(orientation='vertical', spacing=10, padding=[10, 10, 10, 10])
 
@@ -1559,9 +1561,6 @@ class OvernightTesting(Screen):
                                 color=[0, 0, 0, 1])
         short_response = Label(markup=True, halign='center', text=response[:50],
                                color=[0, 0, 0, 1])
-
-        text_layout.add_widget(response_header)
-        text_layout.add_widget(short_response)
 
         contact_software_label = Label(markup=True, halign='center', text='Please take a photo of this screen and '
                                                                           'send it to either Archie or Lettie on '
@@ -1594,12 +1593,22 @@ class OvernightTesting(Screen):
             title = 'Check status of consumer'
             popup.title = title
 
+            text_layout.add_widget(response_header)
+            text_layout.add_widget(short_response)
+
             popup.open()
             return False
 
         response = json.loads(response)
         received = response['Received']
         inserted = response['Inserted']
+
+        if already_exists_reply:
+            title = 'Data already exists in database a previous failed send attempt may have been automatically re-sent'
+            popup.title = title
+
+            popup.open()
+            return True
 
         if not received or not inserted:
             title = 'Tried to send ' + str(len(self.status_data_dict['Statuses'])) + ' statuses and failed. '

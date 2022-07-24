@@ -9,8 +9,8 @@ QUEUE = 'calibration_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
 
-def get_unique_file_name(machine_serial):
-    return machine_serial + str(uuid.uuid4()) + '.csv'
+def get_unique_file_name(machine_serial, table, stage):
+    return machine_serial + '-' + table + '-' + stage + '-' + str(uuid.uuid4()) + '.csv'
 
 
 status_order = {
@@ -38,8 +38,8 @@ status_order = {
 }
 
 
-def json_to_csv(data, machine_serial):
-    file_path = CSV_PATH + get_unique_file_name(machine_serial)
+def json_to_csv(data, machine_serial, table, stage):
+    file_path = CSV_PATH + get_unique_file_name(machine_serial, table, stage)
 
     keys = data[0].keys()
     keys.sort(key=lambda i: status_order[i])
@@ -120,13 +120,14 @@ class DataPublisher(object):
         if props.correlation_id == self.correlation_id:
             self.response = body
 
-    def run_data_send(self, statuses, table):
-        csv_name = json_to_csv(statuses, self.machine_serial)
+    def run_data_send(self, statuses, table, stage):
+        csv_name = json_to_csv(statuses, self.machine_serial, table, stage)
         self.send_file_paramiko_sftp(csv_name)
 
         raw_file_name = csv_name.split('/')[-1]
 
         payload = {
+            'Stage': stage,
             'MachineSerial': self.machine_serial,
             'FileName': raw_file_name,
             'Table': table
