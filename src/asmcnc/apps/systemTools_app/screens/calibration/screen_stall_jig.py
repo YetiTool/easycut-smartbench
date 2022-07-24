@@ -208,9 +208,9 @@ class StallJigScreen(Screen):
 
     threshold_dict = {
 
-        "X": range(250, 450, 25),
-        "Y": range(200, 400, 25),
-        "Z": range(160, 320, 20) 
+        "X": range(100, 350, 25),
+        "Y": range(100, 350, 25),
+        "Z": range(100, 200, 20) 
 
     }
 
