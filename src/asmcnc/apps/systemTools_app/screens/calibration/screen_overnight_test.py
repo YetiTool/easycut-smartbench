@@ -1506,10 +1506,10 @@ class OvernightTesting(Screen):
             log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
 
-            self.calibration_db.insert_final_test_stage(
-                self.sn_for_db,
-                stage_id
-            )
+            # self.calibration_db.insert_final_test_stage(
+            #     self.sn_for_db,
+            #     stage_id
+            # )
 
             publisher = DataPublisher(self.sn_for_db)
 
