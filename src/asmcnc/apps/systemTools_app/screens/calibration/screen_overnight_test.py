@@ -1527,7 +1527,7 @@ class OvernightTesting(Screen):
             log("Finished statistics data send")
 
             data_send_successful = self.handle_response(response)
-            log('Status data sent successfully: ' + data_send_successful)
+            log('Status data sent successfully: ' + str(data_send_successful))
 
             return data_send_successful
 
