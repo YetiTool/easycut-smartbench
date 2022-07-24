@@ -509,7 +509,6 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
-        self.remove_csv_files()
 
     def set_toggle_buttons(self):
 
