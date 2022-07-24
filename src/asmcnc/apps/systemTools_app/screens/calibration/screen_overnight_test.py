@@ -1604,8 +1604,14 @@ class OvernightTesting(Screen):
         inserted = response['Inserted']
 
         if already_exists_reply:
-            title = 'Data already exists in database a previous failed send attempt may have been automatically re-sent'
+            title = 'Data already existed in the database but has been replaced with latest data'
             popup.title = title
+
+            unexpected_label = Label(markup=True, halign='center',
+                                            text="If this wasn't expected, contact Archie or Lettie",
+                                            color=[0, 0, 0, 1])
+
+            text_layout.add_widget(unexpected_label)
 
             popup.open()
             return True
