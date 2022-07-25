@@ -2968,3 +2968,28 @@ class RouterMachine(object):
         else:
             return False
 
+
+## MEASURING STATUS DATA
+
+    def measured_running_data(self): 
+        if not self.s.measure_running_data and self.s.running_data:
+            return self.s.running_data
+
+        else:
+            return False
+
+    def start_measuring_running_data(self):
+        self.s.running_data = []
+        self.s.measure_running_data = True
+
+    def stop_measuring_running_data(self):
+        self.s.measure_running_data = False
+
+
+
+
+
+
+
+
+

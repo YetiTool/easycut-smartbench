@@ -776,6 +776,10 @@ class SerialConnection(object):
     # DETECT SOFT RESET
     grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
 
+    # IF NEED TO MEASURE RUNNING DATA
+    measure_running_data = False
+    running_data = []
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -1357,6 +1361,25 @@ class SerialConnection(object):
         elif re.match(self.grbl_initialisation_message, message):
             # Let sw know that grbl is unlocked now that statuses are being received
             self.grbl_waiting_for_reset = False
+
+        elif self.measure_running_data:
+
+            self.running_data.append([
+
+                float(self.m_x),
+                float(self.m_y),
+                float(self.m_z),
+                int(self.sg_x_motor_axis),
+                int(self.sg_y_axis),
+                int(self.sg_y1_motor),
+                int(self.sg_y2_motor),
+                int(self.sg_z_motor_axis),
+                int(self.motor_driver_temp),
+                int(self.pcb_temp),
+                int(self.transistor_heatsink_temp),
+                datetime.now(),
+                self.feed_rate,
+            ])
 
 
     def check_for_sustained_max_overload(self, dt):

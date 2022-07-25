@@ -316,3 +316,85 @@ class CalibrationDatabase(object):
             data = cursor.fetchone()
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
+
+
+    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, stage_id, x_weight=0, y_weight=0, z_weight=2):
+
+        FTID = int(sn_for_db[2:] + str(stage_id))
+
+        self.        
+
+        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, FTID, x_weight, y_weight, z_weight))
+        processing_running_data_thread.daemon = True
+        processing_running_data_thread.start()
+
+
+    def _process_running_data(self, unprocessed_status_data, FTID, x_weight=0, y_weight=0, z_weight=2):
+
+        for idx, element in enumerate(unprocessed_status_data): 
+
+            x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
+
+        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+
+            status = {
+                "Id": "",
+                "FTID": FTID,
+                "XCoordinate": element[0],
+                "YCoordinate": element[1],
+                "ZCoordinate": element[2],
+                "XDirection": x_dir,
+                "YDirection": y_dir,
+                "ZDirection": z_dir,
+                "XSG": element[3],
+                "YSG": element[4],
+                "Y1SG": element[5],
+                "Y2SG":element[6],
+                "ZSG":element[7],
+                "TMCTemperature":element[8],
+                "PCBTemperature":element[9],
+                "MOTTemperature":element[10],
+                "Timestamp": element[11].strftime('%Y-%m-%d %H:%M:%S'),
+                "Feedrate": element[12],
+                "XWeight": x_weight,
+                "YWeight": y_weight,
+                "ZWeight": z_weight
+            }
+
+            all_statuses.append(status)
+
+        return all_statuses
+
+
+    def generate_directions(self, unprocessed_status_data, idx):
+
+        if idx > 0:
+
+            if unprocessed_status_data[idx-1][0] < element[0]:
+                x_dir = -1
+            elif unprocessed_status_data[idx-1][0] > element[0]:
+                x_dir = 1
+            else:
+                x_dir = 0
+
+            if unprocessed_status_data[idx-1][1] < element[1]:
+                y_dir = -1
+            elif unprocessed_status_data[idx-1][1] > element[1]:
+                y_dir = 1
+            else:
+                y_dir = 0
+
+            if unprocessed_status_data[idx-1][2] < element[2]:
+                z_dir = 1
+            elif unprocessed_status_data[idx-1][2] > element[2]:
+                z_dir = -1
+            else:
+                z_dir = 0
+
+        else:
+            x_dir = 0
+            y_dir = 0
+            z_dir = 0 
+
+        return x_dir, y_dir, z_dir
+
