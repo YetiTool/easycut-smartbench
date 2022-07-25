@@ -36,7 +36,7 @@ Builder.load_string("""
     test_status_label : test_status_label
 
     stop_button : stop_button
-    # reset_tmc_regs : reset_tmc_regs
+    reset_tmc_regs : reset_tmc_regs
     move_container : move_container
     home_button : home_button
     grbl_reset_button : grbl_reset_button
@@ -121,11 +121,11 @@ Builder.load_string("""
                         background_color: root.stop_red
                         on_press: root.stop()
 
-                    # Button: 
-                    #     id: reset_tmc_regs
-                    #     text: "RESET FW SETTINGS"
-                    #     on_press: root.reset_tmcs()
-                    #     font_size: '12sp'
+                    Button: 
+                        id: reset_tmc_regs
+                        text: "RESET FW SETTINGS"
+                        on_press: root.reset_tmcs()
+                        font_size: '12sp'
 
                 BoxLayout:
                     size_hint_y: 4
@@ -1535,8 +1535,12 @@ class StallJigScreen(Screen):
 
         self.reset_tmc_regs.background_normal = ""
 
-        if self.m.toggle_reset_pin(): self.reset_tmc_regs.background_color = self.bright_pass_green
-        else: self.reset_tmc_regs.background_color = self.fail_orange
+        # if self.m.toggle_reset_pin(): self.reset_tmc_regs.background_color = self.bright_pass_green
+        # else: self.reset_tmc_regs.background_color = self.fail_orange
+
+        self.m.stop_serial_comms()
+        Clock.schedule_once(lambda dt: self.m.toggle_reset_pin(), 1)
+        Clock.schedule_once(lambda dt: self.m.do_connection(), 5)
 
 
 

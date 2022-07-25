@@ -2919,6 +2919,26 @@ class RouterMachine(object):
             return False
 
 
+    def stop_serial_comms(self):
+
+        self.s.grbl_scanner_running = False
+
+        if self.state().startswith("Off"):
+            self.close_serial_connection()
+
+        else:
+            Clock.schedule_once(lambda dt: self.stop_serial_comms, 0.1)
+
+    def do_connection(self):
+
+        self.reconnect_serial_connection()
+        self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 0.4)
+
+    def try_start_services(self, dt):
+        if self.s.is_connected():
+            Clock.unschedule(self.poll_for_reconnection)
+            Clock.schedule_once(self.m.s.start_services, 1)
+
 
     def set_motor_current(self, axis, current):
 
