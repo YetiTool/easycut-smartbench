@@ -6,6 +6,7 @@ from datetime import datetime
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Builder.load_string("""
 <ZHeadQC1>:
@@ -452,6 +453,7 @@ class ZHeadQC1(Screen):
 
     def try_start_motor_chips_test(self, dt):
         if self.m.s.m_state == "Idle":
+            self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
             self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
             Clock.schedule_once(self.check_sg_values, 3)
         elif self.m.s.m_state == "Jog":
@@ -462,21 +464,21 @@ class ZHeadQC1(Screen):
         pass_fail = True
         fail_report = []
 
-        if -300 <= self.m.s.sg_x_motor_axis <= 300:
+        if 200 <= self.m.s.sg_x_motor_axis <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between 200 and 800.")
 
-        if -300 <= self.m.s.sg_z_motor_axis <= 300:
+        if 200 <= self.m.s.sg_z_motor_axis <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Z motor/axis SG value: " + str(self.m.s.sg_z_motor_axis))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between 200 and 800.")
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
@@ -485,6 +487,8 @@ class ZHeadQC1(Screen):
 
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
 
 
     def home(self):
