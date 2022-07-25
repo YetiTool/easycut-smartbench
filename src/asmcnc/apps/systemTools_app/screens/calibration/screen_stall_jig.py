@@ -550,6 +550,11 @@ class StallJigScreen(Screen):
 
         self.disable_most_buttons(False)
 
+    def enable_all_buttons(self):
+
+        self.disable_run(False)
+        self.disable_most_buttons(False)
+
     def disable_run(self, disable_bool):
 
         self.run_button.disabled = disable_bool
@@ -931,6 +936,7 @@ class StallJigScreen(Screen):
     def do_data_send(self):
         self.test_status_label.text = "SENDING DATA"
         log("Sending data...")
+        self.enable_all_buttons()
 
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
