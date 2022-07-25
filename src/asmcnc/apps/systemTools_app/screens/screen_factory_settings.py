@@ -517,6 +517,11 @@ class FactorySettingsScreen(Screen):
         self.set_toggle_buttons()
         self.get_smartbench_model()
 
+        csv_path = './asmcnc/production/database/csvs'
+
+        if not os.path.exists(csv_path):
+            os.mkdir(csv_path)
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
@@ -630,6 +635,12 @@ class FactorySettingsScreen(Screen):
         except:
             pass
 
+    def remove_csv_files(self):
+        try:
+            os.system("rm -r ./asmcnc/production/database/csvs")
+        except:
+            pass
+
     def factory_reset(self):
 
         def nested_factory_reset():
@@ -642,6 +653,7 @@ class FactorySettingsScreen(Screen):
 
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
+                self.remove_csv_files()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -706,7 +718,7 @@ class FactorySettingsScreen(Screen):
     def full_console_update(self):
 
         self.console_update_button.text = "Doing update,\nplease wait..."
-
+        self.remove_csv_files()
         self.remove_creds_file()
 
         def nested_full_console_update(dt):
