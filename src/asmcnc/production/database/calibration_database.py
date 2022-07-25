@@ -29,6 +29,7 @@ class CalibrationDatabase(object):
         "FullyCalibratedTest": 8
     }
 
+    #ODBC Driver 17 for SQL Server ON WINDOWS
     connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
     def __init__(self):
