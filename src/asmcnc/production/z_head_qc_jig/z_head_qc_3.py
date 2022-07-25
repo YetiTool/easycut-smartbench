@@ -40,7 +40,7 @@ Builder.load_string("""
             
             Label:
                 id: calibrate_time
-                text: '00:30:00'
+                text: '0:30:00'
                 font_size: dp(50)
 
 """)
@@ -84,20 +84,27 @@ class ZHeadQC3(Screen):
         seconds = time_left
 
         def count_down(seconds):
-            if seconds == 0:
-                if self.sm.current == self.name:
-                    self.sm.current = 'qc4'
-                    return
-            
-            if seconds > 0:
-                seconds -= 1
-                self.seconds = seconds
+            if self.timer_started:
+                if seconds == 0:
+                    if self.sm.current == self.name:
+                        self.sm.current = 'qc4'
+                        return
+                
+                if seconds > 0:
+                    seconds -= 1
+                    self.seconds = seconds
 
-            self.calibrate_time.text = str(datetime.timedelta(seconds=seconds))
+                self.calibrate_time.text = str(datetime.timedelta(seconds=seconds))
 
-            Clock.schedule_once(lambda dt: count_down(seconds), 1)
+                Clock.schedule_once(lambda dt: count_down(seconds), 1)
 
         Clock.schedule_once(lambda dt: count_down(seconds), 0)
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
+
+    def reset_timer(self):
+        self.seconds = self.one_minute * 30
+        self.timer_started = False
+        self.user_text.text = "Getting ready..."
+        self.calibrate_time.text = '0:30:00'
