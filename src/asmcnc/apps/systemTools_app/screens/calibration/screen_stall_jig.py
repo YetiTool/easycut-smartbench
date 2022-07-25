@@ -1539,7 +1539,7 @@ class StallJigScreen(Screen):
         # else: self.reset_tmc_regs.background_color = self.fail_orange
 
         self.m.stop_serial_comms()
-        Clock.schedule_once(lambda dt: self.m.toggle_reset_pin(), 1)
+        # Clock.schedule_once(lambda dt: self.m.toggle_reset_pin(), 1)
         Clock.schedule_once(lambda dt: self.m.do_connection(), 5)
 
 

@@ -2937,7 +2937,7 @@ class RouterMachine(object):
     def try_start_services(self, dt):
         if self.s.is_connected():
             Clock.unschedule(self.poll_for_reconnection)
-            Clock.schedule_once(self.m.s.start_services, 1)
+            Clock.schedule_once(self.s.start_services, 1)
 
 
     def set_motor_current(self, axis, current):
