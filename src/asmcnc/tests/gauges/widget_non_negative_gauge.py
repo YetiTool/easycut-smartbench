@@ -136,7 +136,7 @@ class PositiveLoadGauge(Widget):
 
     def start_pulling_values(self, dt):
         if self.m.s.m_state == "Run":
-            self.value = self.m.s.gauge_values[self.key][0]
+            self.value = float(self.m.s.gauge_values[self.key][0])
 
     def set_key(self, key):
         self.key = key
@@ -174,10 +174,8 @@ class PositiveLoadGauge(Widget):
         self.upper_bound = upper_bound
 
     def set_value(self, dt=None):
-        self.value = self.m.s.gauge_values[self.key]
-
         if self.value == -999 or self.value < 0:
-            value = 0
+            self.value = 0
 
         width = ((self.outer_box.width / self.max_value) * self.value)
 
