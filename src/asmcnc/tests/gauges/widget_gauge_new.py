@@ -1,5 +1,6 @@
 from __future__ import division
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
@@ -16,7 +17,7 @@ def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse
         return (120 / 360, 1, 1) if inverse else (0, 1, 1)
 
     # logic behind gradient?
-    percentage = float(value) / float(max_value) 
+    percentage = float(value) / float(max_value)
 
     return get_hsl_by_percentage(percentage)
 
@@ -129,9 +130,20 @@ class LoadGauge(Widget):
         self.inverse_boundaries = False
         self.unit = ''
         self.factor = 1
+        self.key = ''
+        self.value = 0
 
         # max of 10 values
         self.value_stack = []
+
+        Clock.schedule_interval(self.start_pulling_values, 0.1)
+
+    def start_pulling_values(self):
+        if self.m.s.m_state == "Run":
+            self.value = self.m.s.gauge_values[self.key]
+
+    def set_key(self, key):
+        self.key = key
 
     def set_unit(self, unit):
         self.unit = unit
@@ -141,7 +153,9 @@ class LoadGauge(Widget):
         self.peak_line.canvas.clear()
         with self.peak_line.canvas:
             Color(0, 0, 0, 1)
-            Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height), self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)), close=True)
+            Line(points=(self.outer_box.center_x + peak_value, self.outer_box.center_y - (0.5 * self.inner_box.height),
+                         self.outer_box.center_x + peak_value, self.outer_box.center_y + (0.5 * self.inner_box.height)),
+                         close=True)
 
     def set_title(self, title):
         self.title_label.text = title
@@ -165,24 +179,24 @@ class LoadGauge(Widget):
     def set_factor(self, factor):
         self.factor = factor
 
-    def set_value(self, value, dt=None):
-        if value == -999:
+    def set_value(self, dt=None):
+        self.value = self.m.s.gauge_values[self.key]
+
+        if self.value == -999:
             value = 0
 
-        value = value / self.factor
+        self.value = self.value / self.factor
 
-        width = ((self.outer_box.width / self.max_value) * value) / 2
+        width = ((self.outer_box.width / self.max_value) * self.value) / 2
 
-        if value > self.max_value:
+        if self.value > self.max_value:
             width = ((self.outer_box.width / self.max_value) * self.max_value)
 
-        self.add_value_to_stack(width)
-
-        self.value_label.text = str(value) + ' ' + self.unit
+        self.value_label.text = str(self.value) + ' ' + self.unit
 
         self.inner_box.width = width
 
-        colour = get_gradient(abs(value), self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
+        colour = get_gradient(abs(self.value), self.max_value, inverse=self.inverse_boundaries, upper_boundary=self.upper_bound,
                               lower_boundary=self.lower_bound)
 
         self.h = colour[0]
@@ -193,12 +207,12 @@ class LoadGauge(Widget):
         with self.inner_box.canvas:
             Color(self.h, self.s, self.l, 1)
 
-    def add_value_to_stack(self, value):
-        if len(self.value_stack) == 10:
-            self.value_stack.pop(0)
-            self.value_stack.append(value)
-        else:
-            self.value_stack.append(value)
-
-        peak_value = max(self.value_stack, key=abs)
-        self.peak_value = peak_value
+    # def add_value_to_stack(self, value):
+    #     if len(self.value_stack) == 10:
+    #         self.value_stack.pop(0)
+    #         self.value_stack.append(value)
+    #     else:
+    #         self.value_stack.append(value)
+    #
+    #     peak_value = max(self.value_stack, key=abs)
+    #     self.peak_value = peak_value

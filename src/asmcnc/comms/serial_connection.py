@@ -79,6 +79,21 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
+        self.gauge_value_count = 10
+        self.gauge_values = {
+            "SpindleLoad": [],
+            "SpindleTemp": [],
+            "SpindleKilltime": [],
+            "XSG": [],
+            "YSG": [],
+            "ZSG": []
+        }
+
+    def add_gauge_value(self, key, value):
+        if len(self.gauge_values[key]) == self.gauge_value_count:
+            self.gauge_values[key].pop()
+        self.gauge_values[key].insert(0, value)
+
     def __del__(self):
         self.s.close()
         print 'Destructor'
@@ -126,9 +141,9 @@ class SerialConnection(object):
 
                     stripped_input = map(strip_and_log, self.s.readlines())
 
-                    # Is this device a SmartBench? 
+                    # Is this device a SmartBench?
                     if any('SmartBench' in ele for ele in stripped_input):
-                        # Found SmartBench! 
+                        # Found SmartBench!
                         SmartBench_port = available_port
                         return SmartBench_port
 
@@ -250,7 +265,7 @@ class SerialConnection(object):
                             lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
 
             except:
-                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
+                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway.
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'),
                                     5)  # necessary bc otherwise screens not initialised yet
 
@@ -311,7 +326,7 @@ class SerialConnection(object):
                 self.s.flushInput()
                 self.FLUSH_FLAG = False
 
-            # Polling 
+            # Polling
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime=True, show_in_sys=False, show_in_console=False)
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
@@ -351,7 +366,7 @@ class SerialConnection(object):
             else:
                 rec_temp = ''
 
-            # If something received from serial buffer, process it. 
+            # If something received from serial buffer, process it.
             if len(rec_temp):
 
                 # if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
@@ -380,7 +395,7 @@ class SerialConnection(object):
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise  # HACK allow error to cause serial comms thread to exit
-                    # What happens here? 
+                    # What happens here?
                     # - this bit grinds to a halt
 
                 # Job streaming: stuff butter
@@ -462,8 +477,8 @@ class SerialConnection(object):
         self.jd.job_gcode_running = job_object
 
         log('Job starting...')
-        # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)    
+        # SET UP FOR BUFFER STUFFING ONLY:
+        ### (if not initialised - come back to this one later w/ pausing functionality)
 
         if self.initialise_job() and self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
@@ -489,8 +504,8 @@ class SerialConnection(object):
         self.jd.job_gcode_running = gcode_obj
 
         log('Skeleton buffer stuffing starting...')
-        # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)    
+        # SET UP FOR BUFFER STUFFING ONLY:
+        ### (if not initialised - come back to this one later w/ pausing functionality)
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = False
@@ -610,7 +625,7 @@ class SerialConnection(object):
             # Flush
             self.FLUSH_FLAG = True
 
-            # Move head up        
+            # Move head up
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
@@ -649,7 +664,7 @@ class SerialConnection(object):
 
         ## UPDATE MAINTENANCE TRACKING
 
-        # Add time taken in seconds to brush use: 
+        # Add time taken in seconds to brush use:
         if self.m.stylus_router_choice == 'router':
             self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
@@ -944,12 +959,16 @@ class SerialConnection(object):
                                                                            self.digital_spindle_ld_qdA))
 
                         try:
-                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_load_gauge.set_value,
-                                                int(digital_spindle_ld_watts)))
-                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
-                                                self.digital_spindle_temperature))
-                            Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge.set_value,
-                                                self.digital_spindle_kill_time))
+                            self.add_gauge_value("SpindleLoad", int(digital_spindle_ld_watts))
+                            self.add_gauge_value("SpindleTemp", int(self.digital_spindle_temperature))
+                            self.add_gauge_value("SpindleKilltime", int(self.digital_spindle_kill_time))
+
+                            # Clock.schedule_once(partial(self.sm.get_screen('go').spindle_load_gauge.set_value,
+                            #                     int(digital_spindle_ld_watts)))
+                            # Clock.schedule_once(partial(self.sm.get_screen('go').spindle_temp_gauge.set_value,
+                            #                     self.digital_spindle_temperature))
+                            # Clock.schedule_once(partial(self.sm.get_screen('go').spindle_killtime_gauge.set_value,
+                            #                     self.digital_spindle_kill_time))
                         except:
                             log("Can't set spindle value gauges")
                             log(traceback.format_exc())
@@ -1075,12 +1094,15 @@ class SerialConnection(object):
                     self.sg_y2_motor = int(sg_values[4])
 
                     try:
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').x_load_gauge.set_value, self.sg_x_motor_axis))
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis))
-                        Clock.schedule_once(
-                            partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis))
+                        self.add_gauge_value("XSG", self.sg_x_motor_axis)
+                        self.add_gauge_value("YSG", self.sg_y_axis)
+                        self.add_gauge_value("ZSG", self.sg_z_motor_axis)
+                        # Clock.schedule_once(
+                        #     partial(self.sm.get_screen('go').x_load_gauge.set_value, self.sg_x_motor_axis))
+                        # Clock.schedule_once(
+                        #     partial(self.sm.get_screen('go').y_load_gauge.set_value, self.sg_y_axis))
+                        # Clock.schedule_once(
+                        #     partial(self.sm.get_screen('go').z_load_gauge.set_value, self.sg_z_motor_axis))
                     except:
                         pass
 
@@ -1444,7 +1466,7 @@ class SerialConnection(object):
     def write_direct(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None, realtime=False,
                      protocol=False):
 
-        # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
+        # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle.
         if not serialCommand and not isinstance(serialCommand, str):
             serialCommand = str(serialCommand)
 
@@ -1466,7 +1488,7 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # Finally issue the command        
+        # Finally issue the command
         if self.s:
             try:
 
@@ -1551,7 +1573,7 @@ class SerialConnection(object):
     #                 log('Serial Error: ' + str(serialError))
     ## -----------------------------------------------------------------------------------------------------
 
-    # Many realtime commands are non-printables, and cause the gcode console to crash. 
+    # Many realtime commands are non-printables, and cause the gcode console to crash.
     # GCode console with therefore print 'altDisplayText' arg instead
     def write_realtime(self, serialCommand, altDisplayText=None):
 
@@ -1564,7 +1586,7 @@ class SerialConnection(object):
 
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
-# 
+#
 #         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
 #         try:
 #             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -1572,22 +1594,22 @@ class SerialConnection(object):
 #             if not serialCommand.startswith('?'):
 #                 log('> ' + serialCommand)
 #             if altDisplayText != None: print altDisplayText
-# 
+#
 #             # Print to console in the UI
 #             if show_in_console and altDisplayText == None:
 #                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
 #             if altDisplayText != None:
 #                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-# 
+#
 #         except:
 #             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
 #             log('Console display error: ' + str(consoleDisplayError))
-# 
+#
 #         # Finally issue the command
 #         if self.s:
 #             try:
 #                 self.s.write(serialCommand)
-# 
+#
 #             except SerialException as serialError:
 #                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
 #                 log('Serial Error: ' + str(serialError))
@@ -1595,19 +1617,19 @@ class SerialConnection(object):
 
 
 ##### Warning: WIP.
-# Dangerous conflicts. 
+# Dangerous conflicts.
 # E.g. cannot handle an 'M56' command, since it acts on it as if it was an M5!!!!!!
 
-# 
+#
 #     def maintenance_value_logging(self, serialCommand):
-#         
+#
 #         # Record spindle up time
-#         if serialCommand.find('M30') >= 0: 
+#         if serialCommand.find('M30') >= 0:
 #             pass
 #         elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
 #             log("Spindle timer started")
 #             self.spindle_start_time = time.time()
-#             
+#
 #         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
 #             log("Spindle timer stopped")
 #             self.spindle_finish_time = time.time()
@@ -1621,5 +1643,5 @@ class SerialConnection(object):
 #                 file.close
 #             except:
 #                 log("Unable to write to " + self.m.spindle_brush_use_file_path)
-# 
+#
 #
