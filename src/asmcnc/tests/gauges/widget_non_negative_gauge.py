@@ -140,7 +140,8 @@ class PositiveLoadGauge(Widget):
         Clock.schedule_interval(self.start_pulling_values, 0.1)
 
     def start_pulling_values(self, dt):
-        log(self.m.s.m_state)
+        log(str(self.m.s.m_state == "Run"))
+        log(str(len(self.m.s.gauge_values[self.key])))
         if self.m.s.m_state == "Run":
             if len(self.m.s.gauge_values[self.key]) > 0:
                 self.value = float(self.m.s.gauge_values[self.key][0])
