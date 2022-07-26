@@ -1236,22 +1236,27 @@ class SerialConnection(object):
                                            self.serial_blocks_available, self.serial_chars_available)
 
             if self.measure_running_data:
-                self.running_data.append([
 
-                    float(self.m_x),
-                    float(self.m_y),
-                    float(self.m_z),
-                    int(self.sg_x_motor_axis),
-                    int(self.sg_y_axis),
-                    int(self.sg_y1_motor),
-                    int(self.sg_y2_motor),
-                    int(self.sg_z_motor_axis),
-                    int(self.motor_driver_temp),
-                    int(self.pcb_temp),
-                    int(self.transistor_heatsink_temp),
-                    datetime.now(),
-                    int(self.feed_rate),
-                ])
+                try:
+                    self.running_data.append([
+
+                        float(self.m_x),
+                        float(self.m_y),
+                        float(self.m_z),
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
+                        int(self.motor_driver_temp),
+                        int(self.pcb_temp),
+                        int(self.transistor_heatsink_temp),
+                        datetime.now(),
+                        int(self.feed_rate),
+                    ])
+
+                except: 
+                    pass
  
         elif message.startswith('ALARM:'):
             self.grbl_waiting_for_reset = True
