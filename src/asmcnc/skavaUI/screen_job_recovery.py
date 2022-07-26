@@ -314,7 +314,7 @@ class JobRecoveryScreen(Screen):
             self.selected_line_index = self.initial_line_index
             self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.initial_line_index + 1)] + ["" for _ in range (6)]
 
-            self.stopped_on_label.text = "Job stopped after line " + str(self.initial_line_index)
+            self.stopped_on_label.text = "Job failed during line " + str(self.initial_line_index)
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
             self.update_display()
 
@@ -381,18 +381,18 @@ class JobRecoveryScreen(Screen):
 
     def get_info(self):
 
-        info = ('This screen allows you to choose where to start your recovery. '
+        info = ('This screen allows you to choose where to recover your job from.\n\n'
                 'Use the arrows to navigate through the lines of the job file, and select a point to recover the job from. '
                 'The red marker indicates where the stall event happened. We suggest starting a few lines before here.\n\n'
-                'To confirm this start point, use the "GO TO XY" button. This will move the ZHead over the selected start point. '
+                'To confirm this start point, use the "GO XY" button. This will move the Z Head over the selected start point. '
                 'You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane. '
                 'This XY position can be fine adjusted in the next screen. \n\n'
                 'Note: the Z position will be automatically calculated when the job recovery starts.\n\n'
-                'Note: when using Job Recovery for GCode containing G2 & G3 commands, '
+                'Note: when using job recovery for GCode containing G2 & G3 commands, '
                 'the recovery point may be highlighted earlier in the file than actual, due to file streaming protocols.'
         )
 
-        popup_info.PopupInfo(self.sm, self.l, 700, info)
+        popup_info.PopupBigInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))

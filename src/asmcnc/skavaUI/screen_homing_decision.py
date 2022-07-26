@@ -100,9 +100,9 @@ Builder.load_string("""
             size_hint_y: 3
 
             Button:
-                id: no_button
+                id: yes_button
                 size_hint_x: 1
-                on_press: root.already_homed()
+                on_press: root.rehome()
                 valign: "middle"
                 halign: "center"
                 markup: True
@@ -126,9 +126,9 @@ Builder.load_string("""
                         allow_stretch: True
 
             Button:
-                id: yes_button
+                id: no_button
                 size_hint_x: 1
-                on_press: root.rehome()
+                on_press: root.already_homed()
                 valign: "middle"
                 halign: "center"
                 markup: True

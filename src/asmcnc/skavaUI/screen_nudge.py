@@ -33,7 +33,7 @@ Builder.load_string("""
 
                 Label:
                     size_hint_x: 3.15
-                    text: 'Nudge:'
+                    text: 'Optional Nudge:'
                     bold: True
                     color: hex('#333333ff')
                     font_size: dp(25)
@@ -211,20 +211,19 @@ class NudgeScreen(Screen):
 
     def get_info(self):
 
-        info = ('"Nudging" is using a manual movement to micro-position your cutting tool into the position you selected in the previous gcode viewer screen.\n\n'
-                'Nudging is used to identify minor differences in machine position between homing cycles, or in the event of an axis stall in the previous operation. '
-                'By "nudging", SmartBench can compensate for this.\n\n'
-                'Now that you have selected a start point in your gcode, use the movement buttons to position the tool exactly where you think it should be.\n\n'
-                'Check each axis individually. Any adjustments you make should be minor (normally < 3 mm).'
+        info = ('"Nudging" is an optional manual adjustment in the XY plane. '
+                'It is only necessary if SmartBench has suffered any positional loss e.g. due to a stall, or a re-home.\n\n'
+                'Nudging allows the user to apply micro-corrections to the XY starting point of the tool, '
+                'allowing the tool to re-start in exact registration with previous cut paths.\n\n'
+                'The Z restart point cannot be adjusted using the nudge screen. '
+                'In the event of a Z datum reset (e.g. to correct for a stall in Z axis, or tool change), '
+                'please use the standard functions in the manual move screen.\n\n'
+                'Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) '
+                'could result in damage to your spindle, cutting tool and/or workpiece.\n\n'
+                'Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).'
         )
 
-        popup_info.PopupInfo(self.sm, self.l, 700, info)
-
-    def popup_help(self):
-
-        info = "Use buttons to move to a more accurate position."
-
-        popup_info.PopupInfo(self.sm, self.l, 700, info)   
+        popup_info.PopupBigInfo(self.sm, self.l, 760, info)
 
     def back_to_home(self):
         self.jd.reset_recovery()
