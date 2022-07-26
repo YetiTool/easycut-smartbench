@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import traceback
+import traceback, threading
 
 
 def log(message):
@@ -318,11 +318,14 @@ class CalibrationDatabase(object):
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
 
 
+    processing_running_data = False
+    processed_running_data = []
+
     def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, stage_id, x_weight=0, y_weight=0, z_weight=2):
 
-        FTID = int(sn_for_db[2:] + str(stage_id))
+        FTID = int(serial_number[2:] + str(stage_id))
 
-        self.        
+        self.processing_running_data = True
 
         processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, FTID, x_weight, y_weight, z_weight))
         processing_running_data_thread.daemon = True
@@ -331,11 +334,15 @@ class CalibrationDatabase(object):
 
     def _process_running_data(self, unprocessed_status_data, FTID, x_weight=0, y_weight=0, z_weight=2):
 
+        self.processed_running_data = []
+
         for idx, element in enumerate(unprocessed_status_data): 
 
             x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
 
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+
+            print element
 
             status = {
                 "Id": "",
@@ -361,32 +368,36 @@ class CalibrationDatabase(object):
                 "ZWeight": z_weight
             }
 
-            all_statuses.append(status)
+            self.processed_running_data.append(status)
 
-        return all_statuses
+        self.processing_running_data = True
 
 
     def generate_directions(self, unprocessed_status_data, idx):
 
+        # -1    FORWARDS/DOWN (AWAY FROM HOME)
+        # 0     NOT MOVING
+        # 1     BACKWARDS/UP (TOWARDS HOME)
+
         if idx > 0:
 
-            if unprocessed_status_data[idx-1][0] < element[0]:
+            if unprocessed_status_data[idx-1][0] < unprocessed_status_data[idx][0]:
                 x_dir = -1
-            elif unprocessed_status_data[idx-1][0] > element[0]:
+            elif unprocessed_status_data[idx-1][0] > unprocessed_status_data[idx][0]:
                 x_dir = 1
             else:
                 x_dir = 0
 
-            if unprocessed_status_data[idx-1][1] < element[1]:
+            if unprocessed_status_data[idx-1][1] < unprocessed_status_data[idx][1]:
                 y_dir = -1
-            elif unprocessed_status_data[idx-1][1] > element[1]:
+            elif unprocessed_status_data[idx-1][1] > unprocessed_status_data[idx][1]:
                 y_dir = 1
             else:
                 y_dir = 0
 
-            if unprocessed_status_data[idx-1][2] < element[2]:
+            if unprocessed_status_data[idx-1][2] < unprocessed_status_data[idx][2]:
                 z_dir = 1
-            elif unprocessed_status_data[idx-1][2] > element[2]:
+            elif unprocessed_status_data[idx-1][2] > unprocessed_status_data[idx][2]:
                 z_dir = -1
             else:
                 z_dir = 0

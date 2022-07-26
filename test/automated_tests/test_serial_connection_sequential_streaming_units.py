@@ -21,7 +21,7 @@ from asmcnc.comms import localization
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings test/comms_serial_connection_tests/test_serial_connection_units.py
+python -m pytest --show-capture=no --disable-pytest-warnings test/automated_tests/test_serial_connection_sequential_streaming_units.py
 ######################################
 '''
 

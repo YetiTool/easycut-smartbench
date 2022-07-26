@@ -46,13 +46,12 @@ class StallJigUnitTests(unittest.TestCase):
         jd.gcode_summary_string = ""
 
         self.m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-
         self.stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = self.m, job = jd, settings = sett, localization = l)
 
     # GENERAL TESTS
 
     def test_is_100_greater_than_0(self):
-        assert self.stall_jig_screen.if_less_than_expected_pos(100), "Not working :("
+        assert self.screen_stall_jig.StallJigScreen.if_less_than_expected_pos(100), "Not working :("
 
     def test_is_minus_100_less_than_0(self):
         assert self.stall_jig_screen.if_more_than_expected_pos(-100), "Not working :("
