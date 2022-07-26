@@ -318,6 +318,39 @@ class CalibrationDatabase(object):
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
 
 
+    def insert_stall_experiment_results(self, stall_events):
+
+        # # Example data: 
+        # # ["ID, "X", 6000, 150, 5999, 170, -1100.4 ]
+
+        # last_test_pass = [
+
+        #     self.id_stage,
+        #     self.current_axis(),
+        #     self.feed_dict[self.current_axis()][self.indices["feed"]],
+        #     self.threshold_dict[self.current_axis()][self.indices["threshold"]],
+        #     reported_feed,
+        #     self.m.s.last_stall_load,
+        #     stall_coord
+        # ]
+
+        print("Before insert stall events")
+
+        try:
+
+            with self.conn.cursor() as cursor:
+                query = "INSERT INTO StallTest (FTID, Axis, Feedrate, Threshold, FeedReported, " \
+                        "SGReported, CoordinateReported) VALUES (?, ?, ?, ?, ?, ?, ?)"
+
+                cursor.executemany(query, stall_events)
+                self.conn.commit()
+
+        except: 
+            print(traceback.format_exc())
+
+        print("After insert stall events")
+
+
     processing_running_data = False
     processed_running_data = []
 
@@ -341,8 +374,6 @@ class CalibrationDatabase(object):
             x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
 
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
-
-            print element
 
             status = {
                 "Id": "",
@@ -408,4 +439,34 @@ class CalibrationDatabase(object):
             z_dir = 0 
 
         return x_dir, y_dir, z_dir
+
+
+    status_response_handling_message = ""
+
+    def handle_response(self, response):
+
+        self.status_response_handling_message = ""
+
+        # sometimes if the consumer isn't running, the body sent will be returned as the response
+        json_response = json.loads(response)
+        real_reply = 'FileName' not in json_response
+        already_exists_reply = json_response['Exists']
+
+        if not real_reply:
+            self.status_response_handling_message = 'Check status of consumer'
+            return False
+
+        response = json.loads(response)
+        received = response['Received']
+        inserted = response['Inserted']
+
+        if already_exists_reply:
+            self.status_response_handling_message = 'Data already existed in the database but has been replaced with latest data'
+            return True
+
+        if not received or not inserted:
+            self.status_response_handling_message = 'Tried to send statuses and failed'
+            return False
+
+        return True
 

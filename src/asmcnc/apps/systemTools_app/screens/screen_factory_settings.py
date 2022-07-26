@@ -921,7 +921,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_stall_jig(self):
         if not self.systemtools_sm.sm.has_screen('stall_jig'):
-            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l)
+            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
             self.systemtools_sm.sm.add_widget(stall_jig_screen)
         
         self.systemtools_sm.sm.current = 'stall_jig'

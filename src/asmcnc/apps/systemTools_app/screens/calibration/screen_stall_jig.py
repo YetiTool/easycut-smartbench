@@ -23,6 +23,7 @@ from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
 from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase
+from asmcnc.skavaUI.popup_info import PopupInfo
 
 # Kivy UI bsystemTools_sm.uilder:
 Builder.load_string("""
@@ -97,7 +98,7 @@ Builder.load_string("""
                         size_hint_x: 2
                         disabled: True
                         text: "SEND DATA"
-                        on_press: root.do_data_send()
+                        on_press: root.do_stall_jig_data_send()
 
                     ToggleButton: 
                         id: unlock_button
@@ -415,6 +416,9 @@ class StallJigScreen(Screen):
             "Stall coordinate: "
     ]
 
+    stage_id = 9
+    
+
     ## STORE ALL THE GRID BUTTONS
 
     grid_button_objects = {}
@@ -437,6 +441,10 @@ class StallJigScreen(Screen):
         self.systemtools_sm = kwargs['systemtools']
         self.l=kwargs['localization']
         self.m=kwargs['machine']
+        self.calibration_db = kwargs['calibration_db']
+
+        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
+        self.combined_id = (self.sn_for_db + str(self.stage_id))[2:]
 
         # FUNCTION DICTIONARIES
 
@@ -935,9 +943,44 @@ class StallJigScreen(Screen):
 
     ## DO DATA SEND
 
-    def do_data_send(self):
-        self.test_status_label.text = "SENDING DATA"
+    def do_stall_jig_data_send(self):
+        self.test_status_label.text = "SENDING RESULTS"
         log("Sending data...")
+        
+        # STARTS A SEPARATE THREAD TO PROCESS STATUSES INTO DB READY FORMAT
+        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
+        
+        # SENDS STALL EXPERIMENT EVENTS
+        self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
+
+        # SEND STATUSES ONCE THEY HAVE BEEN PROCESSED
+        self.send_stall_jig_statuses_when_ready()
+
+
+    def send_stall_jig_statuses_when_ready(self):
+
+        if self.calibration_db.processing_running_data:
+            Clock.schedule_once(lambda dt: self.send_stall_jig_statuses_when_ready, 1)
+            return
+
+        self.test_status_label.text = "SENDING STATUSES"
+
+        publisher = DataPublisher(self.sn_for_db)
+        response = publisher.run_data_send(self.calibration_db.processed_running_data, "FinalTestStatuses", self.stage_id)
+        log("Received %s from consumer" % response)
+
+        data_send_successful = self.calibration_db.handle_response(response)
+        log('Status data sent successfully: ' + str(data_send_successful))
+
+        if self.status_response_handling_message:
+            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.status_response_handling_message)
+
+        if data_send_successful:
+            self.test_status_label.text = "DATA SENT!"
+
+        else: 
+            self.test_status_label.text = "DATA NOT SENT!"
+        
         self.enable_all_buttons()
 
 
@@ -1241,6 +1284,7 @@ class StallJigScreen(Screen):
         self.m.toggle_reset_pin()
 
         self.choose_test(0,0,0)
+        self.m.start_measuring_running_data()
         self.start_homing()
 
         # CALIBRATION CHECK
@@ -1464,7 +1508,7 @@ class StallJigScreen(Screen):
 
         last_test_pass = [
 
-            self.id_stage,
+            self.combined_id,
             self.current_axis(),
             self.feed_dict[self.current_axis()][self.indices["feed"]],
             self.threshold_dict[self.current_axis()][self.indices["threshold"]],
@@ -1531,10 +1575,11 @@ class StallJigScreen(Screen):
         if self.all_tests_completed:
 
             log("All tests completed!!")
+            self.m.stop_measuring_running_data()
             self.restore_acceleration_and_soft_limits()
             self.test_status_label.text = "TESTS COMPLETE"
             log("Send data")
-            self.data_send_event = Clock.schedule_once(lambda dt: self.do_data_send, 1)
+            self.data_send_event = Clock.schedule_once(lambda dt: self.do_stall_jig_data_send, 1)
 
             return True
 
