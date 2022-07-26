@@ -136,6 +136,7 @@ class LoadGauge(Widget):
         # max of 10 values
         self.value_stack = []
 
+    def setup_done(self):
         Clock.schedule_interval(self.start_pulling_values, 0.1)
 
     def start_pulling_values(self, dt):

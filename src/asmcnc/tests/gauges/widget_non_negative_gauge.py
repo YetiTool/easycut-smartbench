@@ -131,6 +131,7 @@ class PositiveLoadGauge(Widget):
 
         self.value_stack = []
 
+    def setup_done(self):
         Clock.schedule_interval(self.start_pulling_values, 0.1)
 
     def start_pulling_values(self, dt):
