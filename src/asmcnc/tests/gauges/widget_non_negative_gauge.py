@@ -6,6 +6,10 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
 def get_hsl_by_percentage(percentage):
     return (120 * (1 - percentage)) / 360, 1, 1
 
@@ -138,6 +142,7 @@ class PositiveLoadGauge(Widget):
         if self.m.s.m_state == "Run":
             if len(self.m.s.gauge_values[self.key]) > 0:
                 self.value = float(self.m.s.gauge_values[self.key][0])
+                log(str(self.value))
 
     def set_key(self, key):
         self.key = key
