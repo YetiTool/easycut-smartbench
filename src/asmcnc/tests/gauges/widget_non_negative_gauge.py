@@ -136,7 +136,7 @@ class PositiveLoadGauge(Widget):
 
     def start_pulling_values(self, dt):
         if self.m.s.m_state == "Run":
-            self.value = float(self.m.s.gauge_values[self.key][0])
+            self.value = float(self.m.s.gauge_values[self.key][0] or 0)
 
     def set_key(self, key):
         self.key = key
