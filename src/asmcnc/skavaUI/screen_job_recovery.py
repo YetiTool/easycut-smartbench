@@ -402,10 +402,13 @@ class JobRecoveryScreen(Screen):
         self.sm.current = 'home'
 
     def next_screen(self):
-        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-        self.jd.job_recovery_selected_line = self.selected_line_index + 1
-        self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
-        Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+        if self.m.state().startswith("Idle"):
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.jd.job_recovery_selected_line = self.selected_line_index + 1
+            self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
+            Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+        else:
+            popup_info.PopupError(self.sm, self.l, 'Please ensure machine is idle before continuing.')
 
     def proceed_to_next_screen(self, dt):
         if self.m.state().startswith("Idle"):
