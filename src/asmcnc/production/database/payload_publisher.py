@@ -114,6 +114,7 @@ class DataPublisher(object):
         while self.response is None:
             self.connection.process_data_events()
 
+        self.connection.close()
         return self.response
 
     def _on_response(self, ch, method, props, body):
