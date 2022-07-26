@@ -138,7 +138,7 @@ class LoadGauge(Widget):
 
         Clock.schedule_interval(self.start_pulling_values, 0.1)
 
-    def start_pulling_values(self):
+    def start_pulling_values(self, dt):
         if self.m.s.m_state == "Run":
             self.value = self.m.s.gauge_values[self.key]
 
