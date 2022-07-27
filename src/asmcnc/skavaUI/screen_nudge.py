@@ -227,7 +227,7 @@ class NudgeScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
 
     def back_to_home(self):
-        self.jd.reset_recovery()
+        self.jd.reset_values()
         self.sm.current = 'home'
 
     def previous_screen(self):
@@ -250,7 +250,8 @@ class NudgeScreen(Screen):
             wait_popup.popup.dismiss()
             if not success:
                 popup_info.PopupError(self.sm, self.l, message)
-                self.jd.reset_recovery()
+                self.jd.reset_values()
+            self.jd.job_recovery_from_beginning = False
             self.sm.current = 'home'
 
         # Give time for wait popup to appear

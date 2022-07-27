@@ -328,18 +328,6 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
-    
-        # File label at the top
-        if self.jd.job_gcode != []:
-
-            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
-            self.gcode_summary_widget.display_summary()
-
-            # Preview file as drawing
-            try: 
-                Clock.schedule_once(self.preview_job_file, 0.05)
-            except:
-                log('Unable to preview file')
 
     def on_pre_enter(self):
 
@@ -366,6 +354,17 @@ class HomeScreen(Screen):
 
             self.gcode_summary_widget.hide_summary()
 
+        else:
+            # File label at the top
+            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
+            self.gcode_summary_widget.display_summary()
+
+            # Preview file as drawing
+            try: 
+                Clock.schedule_once(self.preview_job_file, 0.05)
+            except:
+                log('Unable to preview file')
+
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line != None:
             self.job_recovery_button.disabled = False
@@ -377,11 +376,12 @@ class HomeScreen(Screen):
             else:
                 self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
 
-                # Line -1 being selected represents no selected line
-                if self.jd.job_recovery_selected_line == -1:
+            # Line -1 being selected represents no selected line
+            if self.jd.job_recovery_selected_line == -1:
+                if self.jd.job_recovery_from_beginning:
                     self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
-                else:
-                    self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
+            else:
+                self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
         else:
             self.job_recovery_button.disabled = True
             self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"

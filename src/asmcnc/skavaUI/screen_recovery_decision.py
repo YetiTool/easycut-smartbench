@@ -129,17 +129,15 @@ class RecoveryDecisionScreen(Screen):
             self.sm.current = 'homing_decision'
 
     def repeat_job(self):
-        self.jd.reset_recovery()
-
         if os.path.isfile(self.jd.job_recovery_filepath):
             self.jd.reset_values()
+            self.jd.job_recovery_from_beginning = True
             self.jd.set_job_filename(self.jd.job_recovery_filepath)
             self.manager.current = 'loading'
 
         else: 
             error_message = self.l.get_str('File selected does not exist!')
             popup_info.PopupError(self.sm, self.l, error_message)
-
 
     def back_to_home(self):
         self.sm.current = 'home'

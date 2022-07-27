@@ -398,7 +398,7 @@ class JobRecoveryScreen(Screen):
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
-        self.jd.reset_recovery()
+        self.jd.reset_values()
         self.sm.current = 'home'
 
     def next_screen(self):
