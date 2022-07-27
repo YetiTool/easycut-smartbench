@@ -341,20 +341,6 @@ class HomeScreen(Screen):
             except:
                 log('Unable to preview file')
 
-            # Check if job recovery is available
-            if self.jd.job_recovery_cancel_line > 0 and self.jd.job_recovery_filepath == self.jd.filename:
-                self.job_recovery_button.disabled = False
-                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
-
-                # Line -1 being selected represents no selected line
-                if self.jd.job_recovery_selected_line == -1:
-                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
-                else:
-                    self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
-            else:
-                self.job_recovery_button.disabled = True
-                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
-
     def on_pre_enter(self):
 
         if self.jd.job_gcode == []:
@@ -376,10 +362,29 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print('No G-code loaded.')
 
             self.gcode_summary_widget.hide_summary()
 
+        # Check if job recovery (or job redo) is available
+        if self.jd.job_recovery_cancel_line != None:
+            self.job_recovery_button.disabled = False
+
+            # Cancel on line -1 represents last job completing successfully
+            if self.jd.job_recovery_cancel_line == -1:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
+
+            else:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
+
+                # Line -1 being selected represents no selected line
+                if self.jd.job_recovery_selected_line == -1:
+                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
+                else:
+                    self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
+        else:
+            self.job_recovery_button.disabled = True
+            self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def preview_job_file(self, dt):
 
@@ -389,7 +394,7 @@ class HomeScreen(Screen):
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print('Unable to draw gcode')
 
         log('DONE')
 

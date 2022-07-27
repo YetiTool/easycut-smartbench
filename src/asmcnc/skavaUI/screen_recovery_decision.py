@@ -1,11 +1,18 @@
+import os, sys
+
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
 <RecoveryDecisionScreen>:
 
+    recover_job_button:recover_job_button
+
     job_name_label:job_name_label
+    completion_label:completion_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -53,7 +60,7 @@ Builder.load_string("""
                 size_hint_y: 3
 
             Label:
-                text: "SmartBench did not finish the last job"
+                id: completion_label
                 color: hex('#333333ff')
                 font_size: dp(30)
 
@@ -74,6 +81,7 @@ Builder.load_string("""
                 background_down: "./asmcnc/skavaUI/img/blank_green_button.png"
 
             Button:
+                id: recover_job_button
                 text: "Recover job"
                 font_size: dp(30)
                 valign: "middle"
@@ -97,18 +105,41 @@ class RecoveryDecisionScreen(Screen):
         self.l=kwargs['localization']
 
     def on_pre_enter(self):
-        self.job_name_label.text = self.jd.job_name
+        if sys.platform == 'win32':
+            job_name = self.jd.job_recovery_filepath.split("\\")[-1]
+        else:
+            job_name = self.jd.job_recovery_filepath.split("/")[-1]
+
+        self.job_name_label.text = job_name
+
+        # Cancel on line -1 represents last job completing successfully
+        if self.jd.job_recovery_cancel_line == -1:
+            self.completion_label.text = "SmartBench completed the last job 100%"
+            self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
+            self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
+        else:
+            self.completion_label.text = "SmartBench did not finish the last job"
+            self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
+            self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
 
     def go_to_recovery(self):
-        self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
-        self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
-        self.sm.current = 'homing_decision'
+        if self.jd.job_recovery_cancel_line != -1:
+            self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
+            self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
+            self.sm.current = 'homing_decision'
 
     def repeat_job(self):
         self.jd.reset_recovery()
-        self.sm.get_screen('homing_decision').return_to_screen = 'home'
-        self.sm.get_screen('homing_decision').cancel_to_screen = 'home'
-        self.sm.current = 'homing_decision'
+
+        if os.path.isfile(self.jd.job_recovery_filepath):
+            self.jd.reset_values()
+            self.jd.set_job_filename(self.jd.job_recovery_filepath)
+            self.manager.current = 'loading'
+
+        else: 
+            error_message = self.l.get_str('File selected does not exist!')
+            popup_info.PopupError(self.sm, self.l, error_message)
+
 
     def back_to_home(self):
         self.sm.current = 'home'
