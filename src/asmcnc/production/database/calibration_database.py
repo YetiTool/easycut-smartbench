@@ -53,6 +53,7 @@ class CalibrationDatabase(object):
 
         except ImportError:
             log("Can't import credentials")
+            import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
@@ -148,7 +149,6 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
-
         try:
             with self.conn.cursor() as cursor:
                 query = "SELECT Id FROM Stages WHERE Description = ?"
@@ -158,10 +158,8 @@ class CalibrationDatabase(object):
                 cursor.execute(query, params)
 
                 return cursor.fetchone()[0]
-
         except:
             log("Could not get stage ID from DB!!")
-            print(traceback.format_exc())
 
             # assign from list instead - this is a backup! 
             # BUT if anything in db changes, it may be wrong!! 
@@ -241,7 +239,7 @@ class CalibrationDatabase(object):
 
                 self.conn.commit()
 
-        except: 
+        except:
             print(traceback.format_exc())
 
         print("After insert ft status")
@@ -316,3 +314,17 @@ class CalibrationDatabase(object):
             data = cursor.fetchone()
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
+
+    # NEW
+
+    def insert_z_head_statistics(self):
+        pass
+
+def test_get_stage_id_by_description():
+    db = CalibrationDatabase()
+    db.set_up_connection()
+
+    print(db.get_stage_id_by_description('CalibrationQC'))
+
+test_get_stage_id_by_description()
+
