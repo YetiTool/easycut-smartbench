@@ -747,24 +747,6 @@ class RouterMachine(object):
         self.send_any_gcode_command("$$")
         self.send_any_gcode_command("$#")
 
-        try:
-            self.s.setting_50
-            setting_50_available = True
-        except:
-            setting_50_available = False
-
-        try:
-            self.s.setting_51
-            setting_51_available = True
-        except:
-            setting_51_available = False
-
-        try:
-            self.s.setting_53
-            setting_53_available = True
-        except:
-            setting_53_available = False
-
         grbl_settings_and_params = [
                     '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
                     '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
@@ -790,9 +772,13 @@ class RouterMachine(object):
                     '$32=' + str(self.s.setting_32)           #Laser mode, boolean
             ]
 
-        if setting_50_available: grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
-        if setting_51_available: grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
-        if setting_53_available: grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
+        try:
+            grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
+            grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
+            grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
+
+        except:
+            pass
 
         grbl_settings_and_params += [
                     '$100=' + str(self.s.setting_100),   #X steps/mm
