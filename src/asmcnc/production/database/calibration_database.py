@@ -316,16 +316,17 @@ class CalibrationDatabase(object):
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
 
     # NEW
-    # fw_version, hw_version, chip_id, cpu_v, led_v, main_v, spindle_load_2,
+    # zh_serial, fw_version, hw_version, chip_id, cpu_v, led_v, main_v, spindle_load_2,
     # spindle_load_3, spindle_load_4, spindle_load_5, max_spindle_speed_control,
     # cpu_temp, pcb_temp, tmc_temp, tmc_x_status_bits, tmc_z_status_bits,
-    # tmc_x_raw_sg, tmc_z_raw_sg, v_main, f_main, set_rpm, measured_rpm, idle_load
+    # tmc_x_raw_sg, tmc_x2_raw_sg, tmc_z_raw_sg, v_main, f_main, set_rpm, measured_rpm, idle_load
     def insert_z_head_statistics(self, params):
         with self.conn.cursor() as cursor:
-            query = """INSERT INTO ZHeadStatistics (FWVersion, HWVersion, ChipID, CPUV, LEDV, 24V, SpindleLoad2,
+            query = """INSERT INTO ZHeadStatistics (ZHeadSerial, FWVersion, HWVersion, ChipID, CPUV, LEDV, [24V], SpindleLoad2,
                     SpindleLoad3, SpindleLoad4, SpindleLoad5, MaxSpindleSpeedControl, CPUTemperature, PCBTemperature,
-                    TMCTemperature, SpindleVmain, SpindleFmain, SetRPM, MeasuredRPM, IdleLoad) VALUES (?, ?, ?, 
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                    TMCTemperature, TMCX1StatusBits, TMCX2StatusBits, TMCZStatusBits, TMCX1RawSG, TMCX2RawSG, TMCZRawSG,
+                    SpindleVmain, SpindleFmain, SetRPM, MeasuredRPM, IdleLoad) VALUES (?, ?, ?, ?, 
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
             cursor.execute(query, params)
         self.conn.commit()

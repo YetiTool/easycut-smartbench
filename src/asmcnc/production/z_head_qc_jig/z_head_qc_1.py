@@ -6,6 +6,8 @@ from datetime import datetime
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.production.database.models.z_head_statistic import ZHeadStatistic
+
 
 Builder.load_string("""
 <ZHeadQC1>:
@@ -398,6 +400,8 @@ class ZHeadQC1(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
+        self.z_head_statistic = ZHeadStatistic()
+
 
     # If polling starts while screens are being initialised, risks causing an instant fail! 
     # (as machine comms won't have started properly, causing nonsense value reads!)
@@ -429,6 +433,8 @@ class ZHeadQC1(Screen):
     def scrape_fw_version(self, dt):
         try:
             self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
+            self.z_head_statistic.fw_version = str(self.m.s.fw_version)
+            self.z_head_statistic.hw_version = int(self.m.s.hw_version)
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
         
         except:
@@ -469,6 +475,8 @@ class ZHeadQC1(Screen):
             pass_fail = pass_fail*(False)
             fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
             fail_report.append("Should be between -300 and 300.")
+
+        self.z_head_statistic.tmc_x_raw_sg =
 
         if -300 <= self.m.s.sg_z_motor_axis <= 300:
             pass_fail = pass_fail*(True)
