@@ -52,14 +52,12 @@ class ZHeadQCConnecting(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.connecting_label.text = "Connecting to Z Head..."
-        self.current = 22
+        self.current = 25
 
     def on_enter(self):
 
-     #    log("Set X current to 22 if it is not set already...")
-    	# self.get_and_set_current()
-
-        log("Would set current here, but leave as default for now")
+        log("Set Z current to 25 if it is not set already...")
+    	self.get_and_set_current()
         self.progress_to_next_screen()
 
     
@@ -76,13 +74,13 @@ class ZHeadQCConnecting(Screen):
     		return
 
     	# If current is already set to 22, carry onto QC home
-    	if 	self.m.TMC_motor[TMC_X1].ActiveCurrentScale == self.current or \
+    	if 	self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current or \
     		not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
 
     		self.progress_to_next_screen()
     		return
 
-    	elif self.m.TMC_motor[TMC_X1].ActiveCurrentScale == 0:
+    	elif self.m.TMC_motor[TMC_Z].ActiveCurrentScale == 0:
 
     		Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
     		return
@@ -90,7 +88,7 @@ class ZHeadQCConnecting(Screen):
     	else:
 			
 			self.connecting_label.text = "Setting current..."
-			if self.m.set_motor_current("X", self.current): Clock.schedule_once(lambda dt: self.progress_to_next_screen(), 0.5)
+			if self.m.set_motor_current("Z", self.current): Clock.schedule_once(lambda dt: self.progress_to_next_screen(), 0.5)
 			else: Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
 
 
