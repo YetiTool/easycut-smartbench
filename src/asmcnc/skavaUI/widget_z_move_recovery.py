@@ -143,22 +143,19 @@ class ZMoveRecovery(Widget):
     def jogModeCycled(self):
 
         self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 6 == 0: 
+        if self.jog_mode_button_press_counter % 5 == 0:
             self.jogMode = 'free'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 6 == 1: 
-            self.jogMode = 'job'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_box.png'
-        if self.jog_mode_button_press_counter % 6 == 2: 
+        if self.jog_mode_button_press_counter % 5 == 1:
             self.jogMode = 'plus_10'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 6 == 3: 
+        if self.jog_mode_button_press_counter % 5 == 2:
             self.jogMode = 'plus_1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 6 == 4: 
+        if self.jog_mode_button_press_counter % 5 == 3:
             self.jogMode = 'plus_0-1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 6 == 5: 
+        if self.jog_mode_button_press_counter % 5 == 4:
             self.jogMode = 'plus_0-01'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
 
@@ -191,15 +188,6 @@ class ZMoveRecovery(Widget):
         elif self.jogMode == 'plus_10':
             if case == 'Z+': self.m.jog_relative('Z', 10, feed_speed)
             if case == 'Z-': self.m.jog_relative('Z', -10, feed_speed)
-        
-        elif self.jogMode == 'job':
-            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_min_jog_abs_limit,
-                                                             feed_speed)
-            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_max_jog_abs_limit,
-                                                             feed_speed)
 
     def quit_jog_z(self):
         if self.jogMode == 'free': self.m.quit_jog()
-        elif self.jogMode == 'job': self.m.quit_jog()
