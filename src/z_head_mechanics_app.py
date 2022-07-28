@@ -43,10 +43,10 @@ class ZHeadMechanicsApp(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
-        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        home_screen = HomeScreen(name = 'home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
 
-        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
+        error_screen = screen_error.ErrorScreenClass(name = 'errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
         sm.add_widget(error_screen)
 
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
@@ -55,7 +55,7 @@ class ZHeadMechanicsApp(App):
         z_head_mechanics = ZHeadMechanics(name = 'mechanics', sm = sm, m = m)
         sm.add_widget(z_head_mechanics)
 
-        z_head_mechanics_monitor = ZHeadMechanicsMonitor(name = 'monitor', sm = sm, m = m)
+        z_head_mechanics_monitor = ZHeadMechanicsMonitor(name = 'monitor', sm = sm, m = m, l = l)
         sm.add_widget(z_head_mechanics_monitor)
 
         sm.current = 'mechanics'
