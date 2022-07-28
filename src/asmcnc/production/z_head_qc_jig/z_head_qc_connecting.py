@@ -58,7 +58,6 @@ class ZHeadQCConnecting(Screen):
 
         log("Set Z current to 25 if it is not set already...")
     	self.get_and_set_current()
-        self.progress_to_next_screen()
 
     
     def progress_to_next_screen(self):
