@@ -330,7 +330,7 @@ class JobRecoveryScreen(Screen):
 
     def jump_to_line(self, instance, value):
         if value:
-            if value == "-":
+            if value.startswith("-"):
                 # Stop user inputting negative values
                 instance.text = ""
             else:
