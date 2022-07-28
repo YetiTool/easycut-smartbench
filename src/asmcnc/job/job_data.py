@@ -459,57 +459,7 @@ class JobData(object):
         try:
             recovery_gcode = []
 
-            # Recover most recent spindle speed
-            spindle_speed_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'S' in s), None)
-            if spindle_speed_line:
-                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
-                recovery_gcode.append("S" + spindle_speed)
-
-            # Recover most recent feedrate
-            feedrate_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'F' in s), None)
-            if feedrate_line:
-                feedrate = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
-
-
-            # Recover most recent position
-            x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
-            if x_line:
-                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
-            else:
-                x = "0.000"
-            y_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
-            if y_line:
-                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
-            else:
-                y = "0.000"
-            z_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
-            if z_line:
-                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
-            else:
-                z = "0.000"
-
-
             # Recover modal gcodes
-
-            # Motion mode
-            motion_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G0?[0,1](\D|$)", s)), None)
-            if motion_line:
-                # Do G0 or G1 last depending on which happened latest
-                if re.search("G0?1(\D|$)", motion_line):
-                    recovery_gcode.append("G0 X" + x + " Y" + y)
-                    recovery_gcode.append("G0 Z" + z)
-                    if feedrate_line:
-                        recovery_gcode.append("G1 F" + feedrate)
-                else:
-                    if feedrate_line:
-                        recovery_gcode.append("G1 F" + feedrate)
-                    recovery_gcode.append("G0 X" + x + " Y" + y)
-                    recovery_gcode.append("G0 Z" + z)
-            else:
-                recovery_gcode.append("G0 X" + x + " Y" + y)
-                recovery_gcode.append("G0 Z" + z)
-                if feedrate_line:
-                    recovery_gcode.append("G1 F" + feedrate)
 
             # Coordinate System Select
             coord_system_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G5[4-9]", s)), None)
@@ -591,6 +541,57 @@ class JobData(object):
                             recovery_gcode += ['M7', 'M8']
                         else:
                             recovery_gcode.append('M8')
+
+
+            # Recover most recent spindle speed
+            spindle_speed_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'S' in s), None)
+            if spindle_speed_line:
+                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+                recovery_gcode.append("S" + spindle_speed)
+
+            # Recover most recent feedrate
+            feedrate_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'F' in s), None)
+            if feedrate_line:
+                feedrate = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
+
+
+            # Recover most recent position
+            x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
+            if x_line:
+                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
+            else:
+                x = "0.000"
+            y_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
+            if y_line:
+                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
+            else:
+                y = "0.000"
+            z_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
+            if z_line:
+                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
+            else:
+                z = "0.000"
+
+            # Motion mode
+            motion_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G0?[0,1](\D|$)", s)), None)
+            if motion_line:
+                # Do G0 or G1 last depending on which happened latest
+                if re.search("G0?1(\D|$)", motion_line):
+                    recovery_gcode.append("G0 X" + x + " Y" + y)
+                    recovery_gcode.append("G0 Z" + z)
+                    if feedrate_line:
+                        recovery_gcode.append("G1 F" + feedrate)
+                else:
+                    if feedrate_line:
+                        recovery_gcode.append("G1 F" + feedrate)
+                    recovery_gcode.append("G0 X" + x + " Y" + y)
+                    recovery_gcode.append("G0 Z" + z)
+            else:
+                recovery_gcode.append("G0 X" + x + " Y" + y)
+                recovery_gcode.append("G0 Z" + z)
+                if feedrate_line:
+                    recovery_gcode.append("G1 F" + feedrate)
+
 
             # Recovery gcode now contains scraped modal gcode, not in the original file
             # Selected line represents the number of lines of the original file that will be skipped
