@@ -13,6 +13,7 @@ from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_error
 from asmcnc.production.z_head_mechanics_jig.z_head_mechanics import ZHeadMechanics
 from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHeadMechanicsMonitor
+from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_booting import ZHeadMechanicsBooting
 
 from datetime import datetime
 
@@ -58,7 +59,10 @@ class ZHeadMechanicsApp(App):
         z_head_mechanics_monitor = ZHeadMechanicsMonitor(name = 'monitor', sm = sm, m = m, l = l)
         sm.add_widget(z_head_mechanics_monitor)
 
-        sm.current = 'mechanics'
+        z_head_mechanics_booting = ZHeadMechanicsBooting(name = 'booting', sm = sm, m = m)
+        sm.add_widget(z_head_mechanics_booting)
+
+        sm.current = 'booting'
         return sm
 
 if __name__ == '__main__':
