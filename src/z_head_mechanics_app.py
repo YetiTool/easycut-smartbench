@@ -53,7 +53,7 @@ class ZHeadMechanicsApp(App):
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(door_screen)
 
-        z_head_mechanics = ZHeadMechanics(name = 'mechanics', sm = sm, m = m)
+        z_head_mechanics = ZHeadMechanics(name = 'mechanics', sm = sm, m = m, l = l)
         sm.add_widget(z_head_mechanics)
 
         z_head_mechanics_monitor = ZHeadMechanicsMonitor(name = 'monitor', sm = sm, m = m, l = l)
