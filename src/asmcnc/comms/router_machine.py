@@ -169,11 +169,13 @@ class RouterMachine(object):
     def reconnect_serial_connection(self):
         if self.s.is_connected():
             self.s.s.close()
+        self.clear_motor_registers()
         self.s.establish_connection(self.win_serial_port)
 
     def close_serial_connection(self, dt):
         if self.s.is_connected():
             self.s.s.close()
+        self.clear_motor_registers()
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -957,6 +959,8 @@ class RouterMachine(object):
     handshake_event = None
 
     def tmc_handshake(self):
+
+        self.clear_motor_registers()
 
         if self.s.fw_version and self.state().startswith('Idle'):
 
@@ -2839,11 +2843,34 @@ class RouterMachine(object):
                 time.sleep(0.5)
 
             self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
-            time.sleep(0.5)
+            time.sleep(1)
             self.tmc_handshake()
-            time.sleep(0.5)
+            time.sleep(1)
             return True
 
         else:
             return False
+
+
+    def clear_motor_registers(self):
+
+        self.TMC_motor[TMC_X1].reset_registers()
+        self.TMC_motor[TMC_X2].reset_registers()
+        self.TMC_motor[TMC_Y1].reset_registers()
+        self.TMC_motor[TMC_Y2].reset_registers()
+        self.TMC_motor[TMC_Z].reset_registers()
+
+
+    def TMC_registers_have_been_read_in(self):
+
+        if not self.TMC_motor[TMC_X1].got_registers: return False
+        if not self.TMC_motor[TMC_X2].got_registers: return False
+        if not self.TMC_motor[TMC_Y1].got_registers: return False
+        if not self.TMC_motor[TMC_Y2].got_registers: return False
+        if not self.TMC_motor[TMC_Z].got_registers: return False
+        return True
+
+
+
+
 

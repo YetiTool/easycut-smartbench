@@ -57,37 +57,52 @@ class ZHeadQCConnecting(Screen):
     def on_enter(self):
 
         log("Set Z current to 25 if it is not set already...")
-    	self.get_and_set_current()
+        self.get_and_set_current()
 
     
     def progress_to_next_screen(self):
 
-    	self.sm.current = 'qchome'
+        self.sm.current = 'qchome'
+
+
+    def progress_after_all_registers_read_in(self):
+
+        if self.m.TMC_registers_have_been_read_in():
+            self.progress_to_next_screen()
+            return
+
+        Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
 
 
     def get_and_set_current(self):
 
-    	if not self.m.s.fw_version:
+        if not self.m.s.fw_version:
+            Clock.schedule_once(lambda dt: self.get_and_set_current(), 0.5)
+            return
 
-    		Clock.schedule_once(lambda dt: self.get_and_set_current(), 0.5)
-    		return
+        # If current is already set to 22, carry onto QC home
+        if not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
+            self.progress_to_next_screen()
+            return
 
-    	# If current is already set to 22, carry onto QC home
-    	if 	self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current or \
-    		not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
+        if not self.m.TMC_registers_have_been_read_in():
+            Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
+            return
 
-    		self.progress_to_next_screen()
-    		return
+        if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current:
+            self.progress_to_next_screen()
+            log("Current already set")
+            return
 
-    	elif self.m.TMC_motor[TMC_Z].ActiveCurrentScale == 0:
+        self.connecting_label.text = "Setting current..."
+        if self.m.set_motor_current("Z", self.current): Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
+        else: Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
 
-    		Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
-    		return
 
-    	else:
-			
-			self.connecting_label.text = "Setting current..."
-			if self.m.set_motor_current("Z", self.current): Clock.schedule_once(lambda dt: self.progress_to_next_screen(), 0.5)
-			else: Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
+
+
+
+
+
 
 

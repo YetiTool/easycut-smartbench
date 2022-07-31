@@ -6,11 +6,16 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 class motor_class(object):
 
-    got_registers              = False # this will update the first time that registers are read in
+    got_registers = False # this will update the first time that registers are read in
 
     def __init__(self, given_index):
 
         self.index = given_index # index of this motor in "all_units" dictionary
+        self.reset_registers()
+
+    def reset_registers(self):
+
+        self.got_registers = False
 
         # REGISTERS
         self.shadowRegisters         = [0,0,0,0,0]    
