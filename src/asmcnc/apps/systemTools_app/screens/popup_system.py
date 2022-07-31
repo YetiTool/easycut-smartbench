@@ -859,6 +859,7 @@ class PopupStopStallJig(Widget):
 
       def machine_resume(*args):
         self.m.resume_from_a_soft_door()
+        self.m.continue_measuring_running_data()
         self.sj.test_stopped = False
         
       stop_description = self.l.get_str("Is everything OK? You can resume the job, or cancel it completely.")

@@ -901,6 +901,7 @@ class StallJigScreen(Screen):
 
     def stop(self):
         self.test_stopped = True
+        self.m.stop_measuring_running_data()
         PopupStopStallJig(self.m, self.systemtools_sm.sm, self.l, self)
         log("Tests stopped")
 
@@ -969,6 +970,8 @@ class StallJigScreen(Screen):
     def do_stall_jig_data_send(self):
         self.test_status_label.text = "SENDING RESULTS"
         log("Sending data...")
+
+        self.m.stop_measuring_running_data()
         
         # STARTS A SEPARATE THREAD TO PROCESS STATUSES INTO DB READY FORMAT
         self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
@@ -1045,6 +1048,7 @@ class StallJigScreen(Screen):
         self.colour_current_grid_button(self.highlight_yellow)
         threshold_idx = self.indices["threshold"]
         feed_idx = self.indices["feed"]
+        self.m.continue_measuring_running_data()
         self.set_threshold_and_drive_into_barrier(self.current_axis(), threshold_idx, feed_idx)
 
 
@@ -1527,12 +1531,12 @@ class StallJigScreen(Screen):
         reported_feed = 3200.0 / float(step_rate) * float(rpm)
 
         # Example data: 
-        # ["ID, "X", 6000, 150, 5999, 170, -1100.4 ]
+        # ["ID, 0, 6000, 150, 5999, 170, -1100.4 ]
 
         last_test_pass = [
 
             self.combined_id,
-            self.current_axis(),
+            self.indices["axis"], # X = 0, Y = 1, Z = 3
             self.feed_dict[self.current_axis()][self.indices["feed"]],
             self.threshold_dict[self.current_axis()][self.indices["threshold"]],
             reported_feed,

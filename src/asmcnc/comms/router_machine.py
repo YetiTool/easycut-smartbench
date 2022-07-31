@@ -2985,6 +2985,13 @@ class RouterMachine(object):
     def stop_measuring_running_data(self):
         self.s.measure_running_data = False
 
+    def continue_measuring_running_data(self):
+        self.s.measure_running_data = True
+
+    def clear_measured_running_data(self):
+        self.s.measure_running_data = False
+        self.s.running_data = []
+
 
 
 
