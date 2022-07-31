@@ -170,12 +170,16 @@ class RouterMachine(object):
         if self.s.is_connected():
             self.s.s.close()
         self.clear_motor_registers()
+        self.s.fw_version = ''
+        self.s.hw_version = ''
         self.s.establish_connection(self.win_serial_port)
 
     def close_serial_connection(self, dt):
         if self.s.is_connected():
             self.s.s.close()
         self.clear_motor_registers()
+        self.s.fw_version = ''
+        self.s.hw_version = ''
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
