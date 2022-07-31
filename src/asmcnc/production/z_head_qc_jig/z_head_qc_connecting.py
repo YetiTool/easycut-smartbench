@@ -52,7 +52,7 @@ class ZHeadQCConnecting(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.connecting_label.text = "Connecting to Z Head..."
-        self.current = 31
+        self.current = 25
 
     def on_enter(self):
 
