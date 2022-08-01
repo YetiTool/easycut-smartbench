@@ -16,6 +16,11 @@ Builder.load_string("""
 
     test_progress_label:test_progress_label
 
+    load_up_peak:load_up_peak
+    load_down_peak:load_down_peak
+    load_up_average:load_up_average
+    load_down_average:load_down_average
+
     BoxLayout:
         orientation: 'vertical'
         padding: dp(5)
@@ -47,9 +52,41 @@ Builder.load_string("""
             orientation: 'horizontal'
             spacing: dp(5)
 
-            Label:
+            # Load value table
+            GridLayout:
                 size_hint_x: 4
-                text: 'info'
+                rows: 3
+                cols: 3
+
+                Label
+
+                Label:
+                    text: 'Up'
+
+                Label:
+                    text: 'Down'
+
+                Label:
+                    text: 'Peak load'
+
+                Label:
+                    id: load_up_peak
+                    text: '-'
+
+                Label:
+                    id: load_down_peak
+                    text: '-'
+
+                Label:
+                    text: 'Average load'
+
+                Label:
+                    id: load_up_average
+                    text: '-'
+
+                Label:
+                    id: load_down_average
+                    text: '-'
 
             Button:
                 text: 'GCODE Monitor'
@@ -154,6 +191,11 @@ class ZHeadMechanics(Screen):
     def begin_test(self):
         self.begin_test_button.disabled = True
         self.test_progress_label.text = 'Test running...\n[color=ff0000]WATCH FOR STALL THROUGHOUT ENTIRE TEST[/color]'
+
+        self.load_up_peak.text = '-'
+        self.load_down_peak.text = '-'
+        self.load_up_average.text = '-'
+        self.load_down_average.text = '-'
 
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=1)
 
