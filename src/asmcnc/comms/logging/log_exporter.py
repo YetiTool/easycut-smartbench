@@ -27,7 +27,7 @@ def generate_logs():
 def trim_logs(log_file_path, x_lines):
     with open(log_file_path, 'w+') as untrimmed_file:
         lines = untrimmed_file.readlines()
-        line_count = sum(1 for _ in untrimmed_file)
+        line_count = len(lines)
 
         lines_to_remove = line_count - x_lines
 
