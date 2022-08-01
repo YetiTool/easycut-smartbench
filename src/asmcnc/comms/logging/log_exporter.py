@@ -19,7 +19,7 @@ def trim_logs(log_file_path, x_lines):
 
         lines_to_remove = len(lines) - x_lines
 
-        print('Trimming ' + str(lines_to_remove) + ' lines')
+        print('Trimming ' + str(lines_to_remove) + ' lines of ' + len(lines) + ' lines')
 
         new_lines = lines[lines_to_remove:]
 
