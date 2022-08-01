@@ -986,10 +986,12 @@ class StallJigScreen(Screen):
     def send_stall_jig_statuses_when_ready(self):
 
         if self.calibration_db.processing_running_data:
+            log("Poll for sending stall jig statuses when ready")
             Clock.schedule_once(lambda dt: self.send_stall_jig_statuses_when_ready, 1)
             return
 
         self.test_status_label.text = "SENDING STATUSES"
+        log("Sending statuses")
 
         publisher = DataPublisher(self.sn_for_db)
         response = publisher.run_data_send(self.calibration_db.processed_running_data, "FinalTestStatuses", self.stage_id)

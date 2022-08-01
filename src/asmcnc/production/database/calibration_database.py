@@ -367,6 +367,7 @@ class CalibrationDatabase(object):
 
     def _process_running_data(self, unprocessed_status_data, FTID, x_weight=0, y_weight=0, z_weight=2):
 
+        self.processing_running_data = True
         self.processed_running_data = []
 
         for idx, element in enumerate(unprocessed_status_data): 
@@ -401,7 +402,7 @@ class CalibrationDatabase(object):
 
             self.processed_running_data.append(status)
 
-        self.processing_running_data = True
+        self.processing_running_data = False
 
 
     def generate_directions(self, unprocessed_status_data, idx):

@@ -328,15 +328,19 @@ def test_process_running_data(running_data_element_dict, running_data_element, s
     cdb._process_running_data(running_data_list, "FTID")
     assert cdb.processed_running_data[0] == running_data_element_dict
     assert cdb.processed_running_data[1] == second_pos_data_dict
+    assert not cdb.processing_running_data
 
 def test_process_status_running_data_for_database_insert(running_data_element, second_pos_data,):
     running_data_list = [running_data_element, second_pos_data]
     cdb = CalibrationDatabase()
     cdb.process_status_running_data_for_database_insert(running_data_list,"YS61111", 7)
-    assert cdb.processing_running_data
+    assert not cdb.processing_running_data
 
-
-
+@pytest.mark.skip(reason="Takes a lot of time, only test if needed")
+def test_process_many_statuses(running_data_element):
+    running_data_list = [running_data_element]*10000000
+    cdb = CalibrationDatabase()
+    cdb._process_running_data(running_data_list, 611117)
 
 
 
