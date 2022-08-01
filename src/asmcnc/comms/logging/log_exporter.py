@@ -1,12 +1,23 @@
 from datetime import datetime
 import os
 
+export_logs_folder = '/home/pi/exported_logs'
+
+
+def create_log_folder():
+    if not os.path.exists(export_logs_folder) or not os.path.isdir(export_logs_folder):
+        os.mkdir(export_logs_folder)
+
 
 def generate_logs():
+    create_log_folder()
+
     str_current_time = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
 
     log_name = "easycut-exported-logs-" + str_current_time + ".txt"
-    command = "journalctl > " + log_name
+    full_path = export_logs_folder + '/' + log_name
+
+    command = "journalctl > " + full_path
 
     os.system(command)
 
