@@ -109,7 +109,7 @@ class CalibrationDatabase(object):
             return cursor.fetchone() is not None
 
     def delete_z_head_coefficients(self, combined_id):
-        log("Deleting existing data from ZHeadCoefficients: " + combined_id)
+        log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM ZHeadCoefficients WHERE Id = ?"
 
@@ -120,7 +120,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def delete_coefficients(self, combined_id):
-        log("Deleting existing data from Coefficients: " + combined_id)
+        log("Deleting existing data from Coefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM Coefficients WHERE SubAssemblyId = ?"
 
@@ -129,7 +129,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def delete_lower_beam_coefficients(self, combined_id):
-        log("Deleting existing data from LowerBeamCoefficients: " + combined_id)
+        log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM LowerBeamCoefficients WHERE Id = ?"
 
@@ -334,7 +334,7 @@ class CalibrationDatabase(object):
                     "temp": data[131][0],
                 }
             except:
-                log('Database is empty or incomplete for ' + combined_id)
+                log('Database is empty or incomplete for ' + str(combined_id))
 
             return parameters
 
