@@ -29,16 +29,14 @@ def trim_logs(log_file_path, x_lines):
         lines = untrimmed_file.readlines()
         line_count = len(lines)
 
+    with open(log_file_path, 'w+') as trimmed_file:
         lines_to_remove = line_count - x_lines
 
         print('Trimming ' + str(lines_to_remove) + ' lines of ' + str(line_count) + ' lines')
-
         new_lines = lines[lines_to_remove:]
 
-        untrimmed_file.truncate()
-
-        untrimmed_file.writelines(new_lines)
-        untrimmed_file.close()
+        trimmed_file.writelines(new_lines)
+        trimmed_file.close()
 
 
 def send_logs(log_file_path):
