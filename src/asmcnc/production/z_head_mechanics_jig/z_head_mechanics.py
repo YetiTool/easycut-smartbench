@@ -86,8 +86,8 @@ class PopupStopTest(Widget):
         self.l = localization
             
         def machine_reset(*args):
-            self.m.stop_from_soft_stop_cancel()
             self.sm.get_screen('mechanics').reset_after_stop()
+            self.m.stop_from_soft_stop_cancel()
 
         def machine_resume(*args):
             self.m.resume_from_a_soft_door()
