@@ -167,11 +167,7 @@ class RouterMachine(object):
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
-        if self.s.is_connected():
-            self.s.s.close()
-        self.clear_motor_registers()
-        self.s.fw_version = ''
-        self.s.hw_version = ''
+        self.close_serial_connection(0)
         self.s.establish_connection(self.win_serial_port)
 
     def close_serial_connection(self, dt):

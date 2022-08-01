@@ -81,7 +81,6 @@ class ZHeadQCConnecting(Screen):
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 0.5)
             return
 
-        # If current is already set to 22, carry onto QC home
         if not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
             self.progress_to_next_screen()
             return
