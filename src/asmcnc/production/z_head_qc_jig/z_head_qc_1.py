@@ -435,6 +435,7 @@ class ZHeadQC1(Screen):
             self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
             self.z_head_statistic.fw_version = str(self.m.s.fw_version)
             self.z_head_statistic.hw_version = int(self.m.s.hw_version)
+            self.z_head_statistic.chip_id =
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
         
         except:
@@ -576,6 +577,8 @@ class ZHeadQC1(Screen):
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
+        self.z_head_statistic.pcb_temp = self.m.s.pcb_temp
+
         if 15 < self.m.s.motor_driver_temp < 100:
             pass_fail = pass_fail*(True)
 
@@ -583,6 +586,8 @@ class ZHeadQC1(Screen):
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
             fail_report.append("Should be greater than 15 and less than 100 deg C.")
+
+        self.z_head_statistic.tmc_temp = self.m.s.motor_driver_temp
 
         if 0 < self.m.s.transistor_heatsink_temp < 100:
             pass_fail = pass_fail*(True)
@@ -593,6 +598,8 @@ class ZHeadQC1(Screen):
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
+        self.z_head_statistic.cpu_temp = self.m.s.transistor_heatsink_temp
+
         if 4500 < self.m.s.microcontroller_mV < 5500:
             pass_fail = pass_fail*(True)
 
@@ -600,6 +607,8 @@ class ZHeadQC1(Screen):
             pass_fail = pass_fail*(False)
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4500 and less than 5500 mV.")
+
+        self.z_head_statistic.cpu_v = self.m.s.microcontroller_mV
 
         if 4500 < self.m.s.LED_mV < 5500:
             pass_fail = pass_fail*(True)
@@ -609,6 +618,8 @@ class ZHeadQC1(Screen):
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
             fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
+        self.z_head_statistic.led_v = self.m.s.LED_mV
+
         if 22000 < self.m.s.PSU_mV < 26000:
             pass_fail = pass_fail*(True)
 
@@ -616,6 +627,8 @@ class ZHeadQC1(Screen):
             pass_fail = pass_fail*(False)
             fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
             fail_report.append("Should be greater than 22000 and less than 26000 mV.")
+
+        self.z_head_statistic.main_v = self.m.s.PSU_mV
 
         if self.m.s.power_loss_detected == True:
             pass_fail = pass_fail*(True)
