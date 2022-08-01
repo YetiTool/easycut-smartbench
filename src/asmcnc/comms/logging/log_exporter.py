@@ -1,5 +1,9 @@
 from datetime import datetime
 import os
+from asmcnc.production.database import credentials as creds
+import paramiko
+
+WORKING_DIR = 'C:\\SBLogs\\'
 
 export_logs_folder = '/home/pi/exported_logs'
 
@@ -40,4 +44,10 @@ def trim_logs(log_file_path, x_lines):
 
 
 def send_logs(log_file_path):
-    pass
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
+    sftp = ssh.open_sftp()
+
+    file_name = log_file_path.split('/')[-1]
+    sftp.put(log_file_path, '' + file_name)
