@@ -8,6 +8,9 @@ from asmcnc.gauges.go_screen_gauge import GoScreenGauge
 from asmcnc.job.job_data import JobData
 from settings.settings_manager import Settings
 
+from kivy.graphics import Rectangle, Color
+
+
 Cmport = 'COM3'
 
 
@@ -54,6 +57,13 @@ class GaugeTestScreen(Screen):
         )
 
         self.add_widget(self.gauge)
+
+        with self.canvas:
+            Color(1, 1, 1, 1)
+            Rectangle(
+                pos=self.pos,
+                size=self.size
+            )
 
 
 if __name__ == '__main__':
