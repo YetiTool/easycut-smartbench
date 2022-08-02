@@ -40,13 +40,13 @@ class SerialConnection(object):
     response_log = []
     suppress_error_screens = False
     FLUSH_FLAG = False
-    
+
     write_command_buffer = []
     write_realtime_buffer = []
     write_protocol_buffer = []
 
     last_protocol_send_time = 0
-    
+
     monitor_text_buffer = ""
     overload_state = 0
     prev_overload_state = 0
@@ -65,7 +65,7 @@ class SerialConnection(object):
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
-        self.sett =settings_manager     
+        self.sett =settings_manager
         self.m = machine
         self.jd = job
         self.l = localization
@@ -109,7 +109,7 @@ class SerialConnection(object):
 
     def is_port_SmartBench(self, available_port):
 
-        try: 
+        try:
             log("Try to connect to: " + available_port)
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
@@ -153,20 +153,20 @@ class SerialConnection(object):
             except:
                 log("Could not communicate with that port at all")
 
-        except: 
+        except:
             log("Wow definitely not that port")
 
         return ''
 
     def quick_connect(self, available_port):
-        try: 
+        try:
             log("Try to connect to: " + available_port)
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
             self.s.flushInput()
             self.s.write("\x18")
             return available_port
-        
+
         except:
             log("Could not connect to given port.")
             return ''
@@ -200,8 +200,8 @@ class SerialConnection(object):
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
-                    
-                if not SmartBench_port: 
+
+                if not SmartBench_port:
                     log("No arduino connected")
 
         elif sys.platform == "darwin":
@@ -209,7 +209,7 @@ class SerialConnection(object):
 
             filesForDevice = listdir('/dev/') # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'): # look for... 
+                if line.startswith('tty.usbmodem'): # look for...
 
                     print("Mac port to try: ") # for debugging
                     print line
@@ -217,7 +217,7 @@ class SerialConnection(object):
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
 
-            if not SmartBench_port: 
+            if not SmartBench_port:
                 log("No arduino connected")
 
         else:
@@ -245,12 +245,12 @@ class SerialConnection(object):
 
                     first_port = list_of_available_ports[0]
                     last_port = list_of_available_ports[-1]
-                    try: 
+                    try:
                         if default_serial_port in first_port:
                             first_list_index = 1
                             self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                             SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + first_port
-                    except: 
+                    except:
                         if AMA_port in last_port:
                             last_list_index = -1
                             self.s = serial.Serial('/dev/' + last_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
@@ -261,24 +261,24 @@ class SerialConnection(object):
 
             except:
                 # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet
 
         log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
-        
-        try: 
+
+        try:
             if self.is_connected():
                 log('Initialising grbl...')
                 self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
         except:
-            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet
 
     # is serial port connected?
     def is_connected(self):
 
         if self.s != None:
             return True
-        else: 
+        else:
             return False
 
 
@@ -292,7 +292,7 @@ class SerialConnection(object):
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
         t.start()
-        
+
         # Clear any hard switch presses that may have happened during boot
         self.m.bootup_sequence()
 
@@ -312,16 +312,16 @@ class SerialConnection(object):
 
 
     def grbl_scanner(self, run_grbl_scanner_once = False):
-        
+
         log('Running grbl_scanner thread')
 
         while self.grbl_scanner_running or run_grbl_scanner_once:
 
-                         
+
             if self.FLUSH_FLAG == True:
                 self.s.flushInput()
                 self.FLUSH_FLAG = False
-            
+
             # Polling 
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
@@ -329,12 +329,12 @@ class SerialConnection(object):
 
             # Process anything in the write_command and write_realtime lists,
             # i.e. everything else.
-            
+
             command_counter = 0
             for command in self.write_command_buffer:
                 self.write_direct(*command)
                 command_counter += 1
-                
+
             del self.write_command_buffer[0:(command_counter)]
 
             realtime_counter = 0
@@ -361,26 +361,26 @@ class SerialConnection(object):
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
                     self.get_serial_screen('Could not read line from serial buffer.')
-            else: 
+            else:
                 rec_temp = ''
 
             # If something received from serial buffer, process it. 
-            if len(rec_temp):  
-            
+            if len(rec_temp):
+
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-                if self.VERBOSE_ALL_RESPONSE: 
+                if self.VERBOSE_ALL_RESPONSE:
                     if rec_temp.startswith('<'):
                         log(rec_temp)
                     else:
                         log('< ' + rec_temp)
-    
+
                 # Update the gcode monitor (may not be initialised) and console:
                 try:
                     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
                 except:
                     pass
-    
+
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
                 try:
@@ -396,12 +396,12 @@ class SerialConnection(object):
                     raise # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
                         # - this bit grinds to a halt
-    
+
                 # Job streaming: stuff butter
                 if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
-                    else: 
+                    else:
                         if self.g_count == self.l_count:
                             self.end_stream()
 
@@ -410,7 +410,7 @@ class SerialConnection(object):
                     self._send_next_sequential_stream()
 
             run_grbl_scanner_once = False
-                    
+
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 
@@ -434,7 +434,7 @@ class SerialConnection(object):
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
-    
+
     stream_start_time = 0
     stream_end_time = 0
 
@@ -443,10 +443,10 @@ class SerialConnection(object):
 
     check_streaming_started = False
 
-    NOT_SKELETON_STUFF = True # do buffer stuffing in "skeleton mode" - no go/job screens/spindle moves etc. 
-    
+    NOT_SKELETON_STUFF = True # do buffer stuffing in "skeleton mode" - no go/job screens/spindle moves etc.
+
     def check_job(self, job_object):
-        
+
         log('Checking job...')
 
         self.m.enable_check_mode()
@@ -461,7 +461,7 @@ class SerialConnection(object):
                 # Set up error logging
                 self.suppress_error_screens = True
                 self.response_log = []
-                
+
                 # run job as per normal
                 self.run_job(job_object)
 
@@ -479,7 +479,7 @@ class SerialConnection(object):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
-        
+
     def run_job(self, job_object):
 
         self.jd.job_gcode_running = job_object
@@ -490,17 +490,17 @@ class SerialConnection(object):
 
         if self.initialise_job() and self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
-                                       
+
         elif not self.jd.job_gcode_running:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
     def initialise_job(self):
-            
+
         if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
             self.m.zUp()
-  
+
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = True
         time.sleep(0.1)
@@ -526,7 +526,7 @@ class SerialConnection(object):
 
 
     def _reset_counters(self):
-        
+
         # Reset counters & flags
         self.l_count = 0
         self.g_count = 0
@@ -541,35 +541,35 @@ class SerialConnection(object):
         self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
         log('Job running')
 
-    
-    def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
+
+    def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room
 
         while self.l_count < len(self.jd.job_gcode_running):
-            
+
             line_to_go = self.jd.job_gcode_running[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-    
+
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
                 self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
                 self.write_direct(line_to_go, show_in_sys = True, show_in_console = False) # Send g-code block to grbl
-                self.l_count += 1 # lines sent to grbl           
+                self.l_count += 1 # lines sent to grbl
             else:
                 return
- 
+
         self.is_stream_lines_remaining = False
 
     # if 'ok' or 'error' rec'd from GRBL
-    def process_grbl_response(self, message):    
+    def process_grbl_response(self, message):
         if self.suppress_error_screens == True:
             self.response_log.append(message)
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            
+
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
-                
+
                 if self.sm.current == 'alarmScreen':
                     self.sm.get_screen('errorScreen').return_to_screen = self.sm.get_screen('alarmScreen').return_to_screen
                 else:
@@ -579,7 +579,7 @@ class SerialConnection(object):
         # This is a special condition, used only at startup to set EEPROM settings
         if self._process_oks_from_sequential_streaming:
             self._send_next_sequential_stream()
-            
+
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
             if self.c_line != []:
@@ -630,10 +630,10 @@ class SerialConnection(object):
         self.jd.job_gcode_running = []
 
         if self.m_state != "Check":
-            
+
             # Flush
             self.FLUSH_FLAG = True
-     
+
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
@@ -641,13 +641,13 @@ class SerialConnection(object):
             # Update time for maintenance reminders
             time.sleep(0.4)
             self.update_machine_runtime()
-            
+
 
         else:
             self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
-            
+
             # Flush
             self.FLUSH_FLAG = True
             self._reset_counters()
@@ -688,7 +688,7 @@ class SerialConnection(object):
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
         self._reset_counters()
-        
+
 
 # PUSH MESSAGE HANDLING
 
@@ -747,7 +747,7 @@ class SerialConnection(object):
 
 
     expecting_probe_result = False
-    
+
     fw_version = ''
     hw_version = ''
 
@@ -894,9 +894,9 @@ class SerialConnection(object):
 
                 # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith('Pn:'):
-                    
+
                     pins_info = part.split(':')[1]
-                    
+
                     self.limit_x = 'x' in pins_info
                     self.limit_X = 'X' in pins_info
                     self.limit_z = 'Z' in pins_info
@@ -906,7 +906,7 @@ class SerialConnection(object):
 
                     if 'g' in pins_info: self.spare_door = True
                     else: self.spare_door = False
-                    
+
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
@@ -946,7 +946,7 @@ class SerialConnection(object):
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
-                
+
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
                         pass
@@ -954,7 +954,7 @@ class SerialConnection(object):
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
                             log("Hard " + self.m_state)
-                            self.sm.get_screen('door').return_to_screen = self.sm.current 
+                            self.sm.get_screen('door').return_to_screen = self.sm.current
                             self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
@@ -965,7 +965,7 @@ class SerialConnection(object):
 
                         digital_spindle_feedback = spindle_feedback.split(',')
 
-                        try: 
+                        try:
                             int(digital_spindle_feedback[0])
                             int(digital_spindle_feedback[1])
                             int(digital_spindle_feedback[2])
@@ -980,7 +980,7 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
-                    else: 
+                    else:
 
                         try:
                             int(spindle_feedback)
@@ -1002,11 +1002,11 @@ class SerialConnection(object):
                         else: log("Overload value not recognised")
 
                         # update stuff if there's a change
-                        if overload_mV_equivalent_state != self.overload_state:  
+                        if overload_mV_equivalent_state != self.overload_state:
                             self.overload_state = overload_mV_equivalent_state
                             log("Overload state change: " + str(self.overload_state))
                             log("Load voltage: " + str(self.spindle_load_voltage))
-                        
+
                             try:
                                 self.sm.get_screen('go').update_overload_label(self.overload_state)
 
@@ -1017,7 +1017,7 @@ class SerialConnection(object):
 
                             except:
                                 log('Unable to update overload state on go screen')
-                        
+
                         # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                         if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                             self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
@@ -1032,7 +1032,7 @@ class SerialConnection(object):
                 elif part.startswith('TC:'):
                     temps = part[3:].split(',')
 
-                    try: 
+                    try:
                         float(temps[0])
                         float(temps[1])
                     except:
@@ -1056,7 +1056,7 @@ class SerialConnection(object):
                 # VOLTAGES
                 elif part.startswith('V:'):
                     voltages = part[2:].split(',')
-                    try: 
+                    try:
                         float(voltages[0])
                         float(voltages[1])
                         float(voltages[2])
@@ -1092,6 +1092,9 @@ class SerialConnection(object):
                     self.sg_y_axis = int(sg_values[2])
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
+
+                    if self.sm.has_screen('go'):
+                        self.add_value_to_gauge_stack('x_load', self.sg_x_motor_axis)
 
                     if self.record_sg_values_flag:
 
@@ -1146,7 +1149,7 @@ class SerialConnection(object):
 
                     spindle_statistics = part[3:].split(',')
 
-                    try: 
+                    try:
                         int(spindle_statistics[0])
                         int(spindle_statistics[1])
                         int(spindle_statistics[2])
@@ -1171,7 +1174,7 @@ class SerialConnection(object):
 
                     tmc_registers = part[5:].split(',')
 
-                    try: 
+                    try:
                         int(tmc_registers[0])
                         int(tmc_registers[1])
                         int(tmc_registers[2])
@@ -1211,10 +1214,10 @@ class SerialConnection(object):
                     [motor_index, all_cal_data] = part[6:].split(':')
                     all_cal_data_list = all_cal_data.strip(',').split(',')
 
-                    try: 
+                    try:
                         map(int, all_cal_data_list)
 
-                    except: 
+                    except:
                         log("ERROR status parse: TCAL registers invalid: " + message)
                         return
 
@@ -1225,7 +1228,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
 
 
-                    try: 
+                    try:
 
                         calibration_report_string = (
                         "-------------------------------------" + "\n" + \
@@ -1246,7 +1249,7 @@ class SerialConnection(object):
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
- 
+
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
@@ -1322,7 +1325,7 @@ class SerialConnection(object):
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
 
         elif message.startswith('['):
-                      
+
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
 
             if stripped_message.startswith('G28:'):
@@ -1331,9 +1334,9 @@ class SerialConnection(object):
                 self.g28_x = pos[0]
                 self.g28_y = pos[1]
                 self.g28_z = pos[2]
-                
+
             elif stripped_message.startswith('G54:'):
-                
+
                 pos = stripped_message[4:].split(',')
                 self.g54_x = pos[0]
                 self.g54_y = pos[1]
@@ -1345,7 +1348,7 @@ class SerialConnection(object):
                 log(stripped_message)
 
                 successful_probe = stripped_message.split(':')[2]
-                
+
                 if successful_probe:
 
                     z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
@@ -1354,19 +1357,19 @@ class SerialConnection(object):
 
 
                 self.expecting_probe_result = False # clear flag
-                
+
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
-                try: 
+                try:
                     self.fw_version = (fw_hw_versions[1]).split(':')[1]
                     log('FW version: ' + str(self.fw_version))
-                except: 
+                except:
                     log("Could not retrieve FW version")
 
-                try: 
+                try:
                     self.hw_version = (fw_hw_versions[2]).split(':')[1]
                     log('HW version: ' + str(self.hw_version))
-                except: 
+                except:
                     log("Could not retrieve HW version")
 
 
@@ -1375,7 +1378,7 @@ class SerialConnection(object):
         try:
 
             if self.overload_state == 100 and sys.platform != 'win32':  # if still at max overload, begin the spindle pause procedure
-                
+
                 self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
                 self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
                 self.sm.current = 'spindle_shutdown'
@@ -1387,14 +1390,14 @@ class SerialConnection(object):
                     log('Unable to update overload peak on go screen')
 
             else: # must have just been a noisy blip
-                
+
                 self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
 
         except:
 
             log("Could not display spindle overload - are you on diagnostics mode?")
 
-        
+
     def check_for_sustained_peak(self, dt):
 
         if self.overload_state >= self.prev_overload_state and self.overload_state != 100:
@@ -1414,7 +1417,7 @@ class SerialConnection(object):
     # It is for:
     ## Anything sending EEPROM settings (which require special attention, due to writing of values)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
-    
+
     is_sequential_streaming = False
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
@@ -1427,7 +1430,7 @@ class SerialConnection(object):
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
-                
+
     def _send_next_sequential_stream(self):
 
         if self._ready_to_send_first_sequential_stream:
@@ -1448,7 +1451,7 @@ class SerialConnection(object):
             self.is_sequential_streaming = False
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
-        
+
         self._sequential_stream_buffer = []
         self._process_oks_from_sequential_streaming = False
         self._ready_to_send_first_sequential_stream = False
@@ -1542,16 +1545,16 @@ class SerialConnection(object):
                 self.get_serial_screen('Could not write last command to serial buffer.')
 
     def write_command(self, serialCommand, **kwargs):
-        
-        self.write_command_buffer.append([serialCommand, kwargs])        
 
-    # Many realtime commands are non-printables, and cause the gcode console to crash. 
+        self.write_command_buffer.append([serialCommand, kwargs])
+
+    # Many realtime commands are non-printables, and cause the gcode console to crash.
     # GCode console with therefore print 'altDisplayText' arg instead
     def write_realtime(self, serialCommand, altDisplayText = None):
-        
+
         self.write_realtime_buffer.append([serialCommand, altDisplayText])
 
     def write_protocol(self, serialCommand, altDisplayText):
-        
+
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
