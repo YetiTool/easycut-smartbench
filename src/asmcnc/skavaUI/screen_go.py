@@ -17,6 +17,9 @@ from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
 
+from kivy.graphics import Color
+from asmcnc.gauges.go_screen_gauge import GoScreenGauge
+
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, \
@@ -34,7 +37,6 @@ Builder.load_string("""
 
     status_container:status_container
     z_height_container:z_height_container
-    job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_widget_container:speed_override_widget_container
     start_or_pause_button_image:start_or_pause_button_image
@@ -50,11 +52,15 @@ Builder.load_string("""
     speed_override_container: speed_override_container
     override_and_progress_container: override_and_progress_container
 
-    feed_label : feed_label
-    spindle_label : spindle_label
     job_time_label : job_time_label
     file_lines_streamed_label : file_lines_streamed_label
-    spindle_overload_label:spindle_overload_label
+    
+    gauge_container:gauge_container
+    gauge_container_spindle:gauge_container_spindle
+
+    autopilot_container:autopilot_container
+    autopilot_label:autopilot_label
+    feed_speed_wrapper:feed_speed_wrapper
     
     BoxLayout:
         padding: 0
@@ -83,11 +89,11 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.8
-                    spacing: 20
+                    spacing: 10
 
                     BoxLayout:
                         size_hint_y: 0.3
-                        padding: 20
+                        padding: 10
                         canvas:
                             Color:
                                 rgba: hex('#FFFFFFFF')
@@ -117,7 +123,6 @@ Builder.load_string("""
                                         allow_stretch: True
                             
                             Label:
-                                size_hint_x: 5
                                 text_size: self.size
                                 font_size: '20sp'
                                 markup: True
@@ -125,6 +130,53 @@ Builder.load_string("""
                                 valign: 'middle'
                                 id: file_data_label
                                 color: hex('#333333ff')
+                            
+                            BoxLayout:
+                                orientation: 'vertical'
+                            
+                                Label:
+                                    id: file_lines_streamed_label
+                                    # text: '[color=808080]% streamed:[/color]'
+                                    markup: True                           
+                                    font_size: '16px'
+                                    valign: 'top'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')    
+                                
+                                Label:
+                                    id: progress_percentage_label
+                                    color: hex('#333333ff')
+                                    text: '0 %'
+                                    valign: 'top'
+                                    halign: 'center'
+                                    markup: True                           
+                                    font_size: '30px' 
+                                    size:self.texture_size
+                                    text_size: self.size 
+                                    
+                            BoxLayout:
+                                orientation: 'vertical'
+                                
+                                Label:
+                                    id: job_time_label
+                                    markup: True                           
+                                    font_size: '16px' 
+                                    valign: 'top'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    id: run_time_label
+                                    markup: True                     
+                                    valign: 'top'
+                                    halign: 'center'      
+                                    font_size: '30px'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#333333ff')
                                 
                             Button:
                                 id: stop_start
@@ -156,101 +208,115 @@ Builder.load_string("""
 
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: [0, 0, 0, dp(5)]
                             spacing: 10
-                            size_hint_x: 0.2
-                            canvas:
-                                Color:
-                                    rgba: hex('#FFFFFFFF')
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
+                            size_hint_x: 0.4
 
                             BoxLayout:
-                                size_hint_y: 1.8
-                                orientation: 'vertical'
-                                padding: 00
-                                spacing: 00
+                                orientation: 'horizontal'
+                                size_hint_y: 0.3
+                                id: autopilot_container
+
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: root.autopilot_r, root.autopilot_g, root.autopilot_b, 1
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
+
                                 Label:
-                                    id: feed_label
+                                    id: autopilot_label
                                     markup: True
-                                    font_size: '16px' 
-                                    valign: 'middle'
-                                    halign: 'center'
-                                    size:self.texture_size
-                                    text_size: self.size
-                                    color: hex('#808080ff')
+                                    text: '[b]Autopilot:[/b]'
+                                    size_hint_x: 0.5
+                                    color: hex('#333333ff')
 
+                                Switch:
+                                    id: autopilot_switch
+                                    size_hint_x: 0.5
+                                    on_active: root.activate_autopilot()
+                                        
                             BoxLayout:
-                                id: feed_override_container
-                                padding: 0
-                                size_hint_y: 9
-                                canvas:
-                                    Color:
-                                        rgba: hex('#FFFFFFFF')
-                                    RoundedRectangle:
-                                        size: self.size
-                                        pos: self.pos
+                                id: feed_speed_wrapper
+                                orientation: 'horizontal'
+                                spacing: 10
+
+                                BoxLayout:
+                                    orientation: 'vertical'
+                                    padding: 10
+                                    spacing: 10
+                                    canvas:
+                                        Color:
+                                            rgba: hex('#FFFFFFFF')
+                                        RoundedRectangle:
+                                            size: self.size
+                                            pos: self.pos
+
+                                    # BoxLayout:
+                                    #     size_hint_y: 1.5
+                                    #     orientation: 'vertical'
+                                    #     padding: 00
+                                    #     spacing: 00
+                                    #     canvas:
+                                    #         Color:
+                                    #             rgba: hex('#FFFFFFFF')
+                                    #         RoundedRectangle:
+                                    #             size: self.size
+                                    #             pos: self.pos
+
+                                    BoxLayout:
+                                        id: feed_override_container
+                                        padding: 0
+                                        size_hint_y: 9
+                                        canvas:
+                                            Color:
+                                                rgba: hex('#FFFFFFFF')
+                                            RoundedRectangle:
+                                                size: self.size
+                                                pos: self.pos
+            
+
+                                BoxLayout:
+                                    id: speed_override_container
+                                    orientation: 'vertical'
+                                    padding: 10
+                                    spacing: 10
+                                    canvas:
+                                        Color:
+                                            rgba: hex('#FFFFFFFF')
+                                        RoundedRectangle:
+                                            size: self.size
+                                            pos: self.pos
+
+                                    # BoxLayout:
+                                    #     size_hint_y: 1.5
+                                    #     orientation: 'vertical'
+                                    #     padding: 00
+                                    #     spacing: 00
+                                    #     canvas:
+                                    #         Color:
+                                    #             rgba: hex('#FFFFFFFF')
+                                    #         RoundedRectangle:
+                                    #             size: self.size
+                                    #             pos: self.pos
+
+                                    BoxLayout:
+                                        id: speed_override_widget_container
+                                        padding: 0
+                                        size_hint_y: 9
+                                        canvas:
+                                            Color:
+                                                rgba: hex('#FFFFFFFF')
+                                            RoundedRectangle:
+                                                size: self.size
+                                                pos: self.pos
     
 
-                        BoxLayout:
-                            id: speed_override_container
-                            orientation: 'vertical'
-                            padding: [0, 0, 0, dp(5)]
-                            spacing: 10
-                            size_hint_x: 0.2
-                            canvas:
-                                Color:
-                                    rgba: hex('#FFFFFFFF')
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-
-                            BoxLayout:
-                                size_hint_y: 1.8
-                                orientation: 'vertical'
-                                padding: 00
-                                spacing: 00
-                                canvas:
-                                    Color:
-                                        rgba: hex('#FFFFFFFF')
-                                    RoundedRectangle:
-                                        size: self.size
-                                        pos: self.pos
-                                Label:
-                                    id: spindle_label
-                                    markup: True
-                                    font_size: '16px' 
-                                    valign: 'middle'
-                                    halign: 'center'
-                                    size:self.texture_size
-                                    text_size: self.size
-                                    color: hex('#808080ff')
-
-                            BoxLayout:
-                                id: speed_override_widget_container
-                                padding: 0
-                                size_hint_y: 9
-                                canvas:
-                                    Color:
-                                        rgba: hex('#FFFFFFFF')
-                                    RoundedRectangle:
-                                        size: self.size
-                                        pos: self.pos
-    
-
-                        BoxLayout:
-                            id: job_progress_container
-                            size_hint_x: 0.8
-                            orientation: 'vertical'
+                        GridLayout:
+                            id: gauge_container_spindle
+                            size_hint_x: 0.4
                             padding: 20
                             spacing: 00
+                            rows: 4
 
                             canvas:
                                 Color:
@@ -258,49 +324,32 @@ Builder.load_string("""
                                 RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
+                                    
+                            Label:
+                                markup: True
+                                text: '[b]Spindle[/b]'
+                                color: hex('#333333ff')
+                                size_hint_x: 0.5
+                                    
+                        GridLayout:
+                            id: gauge_container
+                            size_hint_x: 0.4
+                            padding: 20
+                            spacing: 00
+                            rows: 4
 
+                            canvas:
+                                Color:
+                                    rgba: hex('#FFFFFFFF')
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                            
                             Label:
-                                id: file_lines_streamed_label
-                                size_hint_y: 1
-                                # text: '[color=808080]File lines streamed:[/color]'
-                                markup: True                           
-                                font_size: '16px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 3
-                                id: progress_percentage_label
+                                markup: True
+                                text: '[b]Axes[/b]'
                                 color: hex('#333333ff')
-                                text: '0 %'
-                                markup: True                           
-                                font_size: '100px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size 
-                            Label:
-                                id: job_time_label
-                                size_hint_y: 0.9
-                                markup: True                           
-                                font_size: '16px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 1.1
-                                id: run_time_label
-                                markup: True                           
-                                font_size: '18px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#333333ff')
+                                size_hint_x: 0.5
 
                 BoxLayout:
                     id: spindle_widgets
@@ -329,7 +378,6 @@ Builder.load_string("""
                         spacing: 10
  
                         Label:
-                            id: spindle_overload_label
                             halign: 'center'
                             font_size: '16px' 
                             text: '[color=808080]Spindle\\noverload:[/color]'
@@ -345,7 +393,6 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
-
 """)
 
 
@@ -405,6 +452,45 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         self.update_strings()
+
+        self.bind(autopilot_r=self.redraw)
+
+    def redraw(self, *args):
+        with self.autopilot_container.canvas:
+            Color(self.autopilot_r, self.autopilot_g, self.autopilot_b, 1)
+
+    def activate_autopilot(self):
+        self.autopilot_enabled = not self.autopilot_enabled
+
+        if self.autopilot_enabled:
+            self.autopilot_r = 0
+            self.autopilot_g = 0.757
+            self.autopilot_b = 0
+            self.autopilot_label.color = 1, 1, 1, 1
+            self.speedOverride.up_5.opacity = 0.3
+            self.feedOverride.up_5.opacity = 0.3
+            self.speedOverride.down_5.opacity = 0.3
+            self.feedOverride.down_5.opacity = 0.3
+        else:
+            self.autopilot_r = 1
+            self.autopilot_g = 1
+            self.autopilot_b = 1
+            self.autopilot_label.color = 0, 0, 0, 1
+            self.speedOverride.up_5.opacity = 1.0
+            self.feedOverride.up_5.opacity = 1.0
+            self.speedOverride.down_5.opacity = 1.0
+            self.feedOverride.down_5.opacity = 1.0
+
+    def setup_gauges(self):
+        x_load_gauge = GoScreenGauge(
+            title='X Load',
+            key='x_load',
+            max_value=100,
+            m=self.m,
+            sm=self.sm
+        )
+
+        self.gauge_container.add_widget(x_load_gauge)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 

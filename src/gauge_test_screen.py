@@ -58,13 +58,6 @@ class GaugeTestScreen(Screen):
 
         self.add_widget(self.gauge)
 
-        with self.canvas:
-            Color(1, 1, 1, 1)
-            Rectangle(
-                pos=self.pos,
-                size=self.size
-            )
-
 
 if __name__ == '__main__':
     GaugeTestApp().run()
