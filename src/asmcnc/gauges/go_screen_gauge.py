@@ -139,6 +139,17 @@ class GoScreenGauge(Widget):
         self.peak_value = self.m.s.get_peak_value_from_gauge_stack(self.key)
         self.current_value = self.m.s.get_value_from_gauge_stack(self.key)
 
+    def set_sizes(self):
+        # clean this mess - need to be variable and more accurate
+        self.size_hint = None, None
+        self.outer_box.width = 150
+        self.height = 100 + 25
+        self.outer_box.height = 100
+        self.wrapper.height = 100 + 25
+        self.wrapper.width = 150
+        # 0.08 * 100 is probably not accurate for all values of height
+        self.inner_box.height = 100 - (0.08 * 100)
+
     def redraw_colour(self, *args):
         with self.inner_box.canvas:
             Color(self.hue, self.saturation, self.luminosity)
