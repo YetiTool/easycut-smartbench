@@ -64,7 +64,7 @@ Builder.load_string("""
 
                 canvas:
                     Color:
-                        hsv: root.h, root.s, root.l
+                        hsv: root.hue, root.saturation, root.luminosity
                         a: 1
 
                     Rectangle:
