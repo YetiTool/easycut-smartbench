@@ -126,6 +126,7 @@ class GoScreenGauge(Widget):
         self.factor = factor
 
         self.set_sizes()
+        self.begin_reading()
 
     def begin_reading(self):
         self.reading_clock = Clock.schedule_interval(self.update_reading, 0.1)
@@ -166,8 +167,6 @@ class GoScreenGauge(Widget):
                 close=True)
 
     def redraw_value(self, *args):
-        print('redraw_value')
-
         self.value_label.text = str(self.current_value) + ' ' + self.unit
 
         width = calculate_width(self.current_value, self.max_value, self.factor,
