@@ -49,4 +49,4 @@ class GaugeTestScreen(Screen):
 
 
 if __name__ == '__main__':
-    go_screen_app = GaugeTestApp()
+    GaugeTestApp().run()
