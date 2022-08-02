@@ -110,7 +110,7 @@ class GoScreenGauge(Widget):
     current_value = 0
 
     def __init__(self, title, key, max_value, lower_boundary=15, upper_boundary=15, inverse=False, unit='', factor=1, **kwargs):
-        super(GoScreenGauge, self).__init__(kwargs)
+        super(GoScreenGauge, self).__init__(**kwargs)
 
         self.bind(hue=self.redraw_colour)
         self.bind(peak_value=self.redraw_peak)

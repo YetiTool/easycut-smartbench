@@ -1,17 +1,12 @@
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, NoTransition, Screen
-from kivy.lang import Builder
-
-from asmcnc.comms.router_machine import RouterMachine
-from asmcnc.comms import server_connection
-from asmcnc.apps.app_manager import AppManagerClass
-from settings.settings_manager import Settings
-from asmcnc.job.job_data import JobData
-from asmcnc.comms.localization import Localization
 from kivy.clock import Clock
-from asmcnc.comms import smartbench_flurry_database_connection
+from kivy.uix.screenmanager import ScreenManager, NoTransition, Screen
 
+from asmcnc.comms.localization import Localization
+from asmcnc.comms.router_machine import RouterMachine
 from asmcnc.gauges.go_screen_gauge import GoScreenGauge
+from asmcnc.job.job_data import JobData
+from settings.settings_manager import Settings
 
 Cmport = 'COM3'
 
@@ -44,6 +39,10 @@ class GaugeTestApp(App):
 class GaugeTestScreen(Screen):
     def __init__(self, **kwargs):
         super(GaugeTestScreen, self).__init__(**kwargs)
+
+        self.sm = kwargs['sm']
+        self.m = kwargs['m']
+
         self.gauge = GoScreenGauge(
             title='Gauge Test',
             key='TEST',
@@ -53,8 +52,8 @@ class GaugeTestScreen(Screen):
             inverse=False,
             unit='',
             factor=1,
-            sm=kwargs['sm'],
-            m=kwargs['m']
+            sm=self.sm,
+            m=self.m
         )
 
         self.add_widget(self.gauge)
