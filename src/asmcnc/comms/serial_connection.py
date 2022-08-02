@@ -86,7 +86,7 @@ class SerialConnection(object):
         return self.gauge_values.get(key, 0)[0]
 
     def get_peak_value_from_gauge_stack(self, key):
-        return max(self.gauge_values.get(key, 0), key=abs)
+        return max(self.gauge_values.get(key, [0]), key=abs)
 
     def __del__(self):
         if self.s: self.s.close()
