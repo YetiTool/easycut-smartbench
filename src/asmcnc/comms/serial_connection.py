@@ -83,7 +83,10 @@ class SerialConnection(object):
         self.gauge_values[key].insert(0, value)
 
     def get_value_from_gauge_stack(self, key):
-        return self.gauge_values.get(key, 0)[0]
+        if self.gauge_values.get(key, 0) == 0:
+            return 0
+
+        return self.gauge_values[key][0]
 
     def get_peak_value_from_gauge_stack(self, key):
         return max(self.gauge_values.get(key, [0]), key=abs)
