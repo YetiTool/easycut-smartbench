@@ -156,7 +156,7 @@ class GoScreenGauge(Widget):
         self.wrapper.height = 50 + 25
         self.wrapper.width = 150
         # 0.08 * height is probably not accurate for all values of height
-        self.inner_box.height = 50 - (0.08 * 500)
+        self.inner_box.height = 50 - (0.08 * 50)
 
     def redraw_colour(self, *args):
         with self.inner_box.canvas:
