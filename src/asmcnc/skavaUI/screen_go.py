@@ -458,6 +458,7 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         self.update_strings()
+        self.setup_gauges()
 
         self.bind(autopilot_r=self.redraw)
 
