@@ -48,7 +48,7 @@ Builder.load_string("""
                         font_size: dp(25)
                         background_color: hex('#00C300FF')
                         background_normal: ''
-                        on_press: root.home_before_test()
+                        on_press: root.prepare_for_test()
 
                     Button:
                         text: 'STOP'
@@ -148,22 +148,12 @@ class ZHeadMechanics(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
 
-    def on_enter(self):
-        if self.test_waiting_to_start:
-            self.begin_test()
-
-    def home_before_test(self):
+    def prepare_for_test(self):
         self.test_waiting_to_start = True
         self.m.set_motor_current("Z", 25)
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=1)
 
-        self.m.is_machine_completed_the_initial_squaring_decision = True
-        self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('mechanics','mechanics')
-
-    def begin_test(self):
         self.test_running = True
-        self.test_waiting_to_start = False
         self.begin_test_button.disabled = True
         self.test_progress_label.text = 'Test running...\n[color=ff0000]WATCH FOR STALL THROUGHOUT ENTIRE TEST[/color]'
 
@@ -172,6 +162,16 @@ class ZHeadMechanics(Screen):
         self.load_up_average.text = '-'
         self.load_down_average.text = '-'
 
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('mechanics','mechanics')
+
+    def on_enter(self):
+        if self.test_waiting_to_start:
+            self.test_waiting_to_start = False
+            self.begin_test()
+
+    def begin_test(self):
         self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
         Clock.schedule_once(self.start_moving_down, 0.4)
 
