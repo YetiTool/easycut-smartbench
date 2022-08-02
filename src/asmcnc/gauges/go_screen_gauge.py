@@ -139,8 +139,13 @@ class GoScreenGauge(Widget):
         #     Clock.unschedule(self.reading_clock)
         #     return
 
+        print('Clock updating_reading')
+
         self.peak_value = self.m.s.get_peak_value_from_gauge_stack(self.key)
         self.current_value = self.m.s.get_value_from_gauge_stack(self.key)
+
+        print('Peak value: ' + str(self.peak_value))
+        print('Current value: ' + str(self.current_value))
 
     def set_sizes(self):
         # clean this mess - need to be variable and more accurate
