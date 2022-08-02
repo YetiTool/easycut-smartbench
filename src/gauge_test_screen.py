@@ -44,7 +44,19 @@ class GaugeTestApp(App):
 class GaugeTestScreen(Screen):
     def __init__(self, **kwargs):
         super(GaugeTestScreen, self).__init__(**kwargs)
-        self.gauge = GoScreenGauge(sm=kwargs['sm'], m=kwargs['m'])
+        self.gauge = GoScreenGauge(
+            title='Gauge Test',
+            key='TEST',
+            max_value=100,
+            lower_boundary=15,
+            upper_boundary=15,
+            inverse=False,
+            unit='',
+            factor=1,
+            sm=kwargs['sm'],
+            m=kwargs['m']
+        )
+
         self.add_widget(self.gauge)
 
 
