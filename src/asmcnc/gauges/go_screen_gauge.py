@@ -105,8 +105,8 @@ class GoScreenGauge(Widget):
 
     reading_clock = None
 
-    peak_value = 0
-    current_value = 0
+    peak_value = NumericProperty(0)
+    current_value = NumericProperty(0)
 
     def __init__(self, title, key, max_value, lower_boundary=15, upper_boundary=15, inverse=False, unit='', factor=1, **kwargs):
         super(GoScreenGauge, self).__init__(**kwargs)
