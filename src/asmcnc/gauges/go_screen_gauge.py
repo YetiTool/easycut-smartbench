@@ -143,12 +143,12 @@ class GoScreenGauge(Widget):
         # clean this mess - need to be variable and more accurate
         self.size_hint = None, None
         self.outer_box.width = 150
-        self.height = 100 + 25
-        self.outer_box.height = 100
-        self.wrapper.height = 100 + 25
+        self.height = 50 + 25
+        self.outer_box.height = 50
+        self.wrapper.height = 50 + 25
         self.wrapper.width = 150
-        # 0.08 * 100 is probably not accurate for all values of height
-        self.inner_box.height = 100 - (0.08 * 100)
+        # 0.08 * height is probably not accurate for all values of height
+        self.inner_box.height = 50 - (0.08 * 500)
 
     def redraw_colour(self, *args):
         with self.inner_box.canvas:
