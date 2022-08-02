@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -13,6 +15,9 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadMechanicsBooting(Screen):
 
@@ -26,7 +31,11 @@ class ZHeadMechanicsBooting(Screen):
         Clock.schedule_once(self.next_screen, 5)
 
     def next_screen(self, dt):
-        self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=0)
-        self.sm.get_screen('mechanics').z_axis_max_travel = self.m.s.setting_132
-        self.sm.get_screen('mechanics').z_axis_max_speed = self.m.s.setting_112
-        self.sm.current = 'mechanics'
+        try:
+            self.sm.get_screen('mechanics').z_axis_max_travel = -self.m.s.setting_132
+            self.sm.get_screen('mechanics').z_axis_max_speed = self.m.s.setting_112
+            self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=0)
+            self.sm.current = 'mechanics'
+        except:
+            Clock.schedule_once(self.next_screen, 1)
+            log('Failed to read grbl settings, retrying')
