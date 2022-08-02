@@ -424,6 +424,12 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
 
+    autopilot_r = NumericProperty(1)
+    autopilot_g = NumericProperty(1)
+    autopilot_b = NumericProperty(1)
+
+    autopilot_enabled = False
+
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
