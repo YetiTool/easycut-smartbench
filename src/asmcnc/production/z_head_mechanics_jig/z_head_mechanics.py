@@ -132,6 +132,8 @@ class ZHeadMechanics(Screen):
 
     sg_values_down = []
     sg_values_up = []
+    z_pos_values_down = []
+    z_pos_values_up = []
 
     test_running = False
     test_waiting_to_start = False
@@ -190,7 +192,8 @@ class ZHeadMechanics(Screen):
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_down.append([self.m.s.sg_z_motor_axis, self.m.mpos_z()])
+                    self.sg_values_down.append(self.m.s.sg_z_motor_axis)
+                    self.z_pos_values_down.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_down_values, 0.4)
 
     def record_up_values(self, dt):
@@ -199,7 +202,8 @@ class ZHeadMechanics(Screen):
                 self.phase_two()
             else:
                 if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_up.append([self.m.s.sg_z_motor_axis, self.m.mpos_z()])
+                    self.sg_values_up.append(self.m.s.sg_z_motor_axis)
+                    self.z_pos_values_up.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_up_values, 0.4)
 
 
@@ -221,9 +225,16 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.set_motor_current("Z", 25)
+                self.display_results()
                 self.reset_after_stop()
             else:
                 Clock.schedule_once(self.finish_test, 0.4)
+
+    def display_results(self):
+        self.load_up_peak.text = str(max(self.sg_values_up))
+        self.load_down_peak.text = str(max(self.sg_values_down))
+        self.load_up_average.text = str(sum(self.sg_values_up) / len(self.sg_values_up))
+        self.load_down_average.text = str(sum(self.sg_values_down) / len(self.sg_values_down))
 
 
     def stop(self):
@@ -240,6 +251,8 @@ class ZHeadMechanics(Screen):
 
         self.sg_values_down = []
         self.sg_values_up = []
+        self.z_pos_values_down = []
+        self.z_pos_values_up = []
 
 
     def go_to_monitor(self):
