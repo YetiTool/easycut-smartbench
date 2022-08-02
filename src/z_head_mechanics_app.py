@@ -1,14 +1,18 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.clock import Clock
 
-from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
+from asmcnc.comms.router_machine import RouterMachine
 from asmcnc.comms.localization import Localization
-from kivy.clock import Clock
 from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.skavaUI.screen_home import HomeScreen
+from asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
+from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
+from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
+from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_error
 from asmcnc.production.z_head_mechanics_jig.z_head_mechanics import ZHeadMechanics
@@ -46,6 +50,18 @@ class ZHeadMechanicsApp(App):
 
         home_screen = HomeScreen(name = 'home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
+
+        squaring_decision_screen = SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_decision_screen)
+
+        prepare_to_home_screen = HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(prepare_to_home_screen)
+
+        homing_active_screen = HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(homing_active_screen)
+
+        squaring_active_screen = SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_active_screen)
 
         error_screen = screen_error.ErrorScreenClass(name = 'errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
         sm.add_widget(error_screen)
