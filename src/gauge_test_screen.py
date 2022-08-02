@@ -33,8 +33,10 @@ class GaugeTestApp(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
-        gauge_test_screen = GaugeTestScreen(sm=sm, m=m, jd=jd, l=l)
+        gauge_test_screen = GaugeTestScreen(name='gauge_test', sm=sm, m=m, jd=jd, l=l)
         sm.add_widget(gauge_test_screen)
+
+        sm.current = 'gauge_test'
 
         return sm
 
