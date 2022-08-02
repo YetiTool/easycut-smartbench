@@ -166,6 +166,8 @@ class GoScreenGauge(Widget):
                 close=True)
 
     def redraw_value(self, *args):
+        print('redraw_value')
+
         self.value_label.text = str(self.current_value) + ' ' + self.unit
 
         width = calculate_width(self.current_value, self.max_value, self.factor,
