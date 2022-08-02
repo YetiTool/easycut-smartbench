@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from asmcnc.production.database import credentials as creds
 import paramiko
+import sys
 
 WORKING_DIR = 'C:\\SBLogs\\'
 
@@ -9,8 +10,16 @@ export_logs_folder = '/home/pi/exported_logs'
 
 
 def create_log_folder():
+    # remove all logs when creating new one
+    os.system("rm -r " + export_logs_folder)
+
     if not os.path.exists(export_logs_folder) or not os.path.isdir(export_logs_folder):
         os.mkdir(export_logs_folder)
+
+
+def create_and_send_logs(serial_number):
+    log_file_path = generate_logs(serial_number)
+    send_logs(log_file_path)
 
 
 def generate_logs(serial_number):
@@ -22,7 +31,7 @@ def generate_logs(serial_number):
     full_path = export_logs_folder + '/' + log_name
 
     command = "journalctl > " + full_path
-
+    sys.stdout.flush()
     os.system(command)
 
     return log_name

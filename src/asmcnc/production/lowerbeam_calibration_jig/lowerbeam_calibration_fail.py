@@ -1,5 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+from asmcnc.comms.logging import log_exporter
 
 import os, sys
 
@@ -61,5 +62,9 @@ class LBCalibrationFail(Screen):
     def retry_send(self):
         self.sm.current = 'lbc4'
 
+    def on_enter(self):
+        log_exporter.create_and_send_logs(self.serial)
+
     def set_serial_no(self, serial_no):
+        self.serial = serial_no
         self.success_label.text = 'Database update failed: ' + serial_no

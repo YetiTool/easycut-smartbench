@@ -1,7 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
-
+from asmcnc.comms.logging import log_exporter
 import os, sys
 
 import datetime
@@ -49,8 +49,12 @@ class ZHeadQCDBSuccess(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
+    def on_enter(self):
+        log_exporter.create_and_send_logs(self.serial)
+
     def enter_next_screen(self):
         self.sm.current = 'qc6'
 
     def set_serial_no(self, serial_no):
+        self.serial = serial_no
         self.success_label.text = 'Database updated for:\n' + serial_no
