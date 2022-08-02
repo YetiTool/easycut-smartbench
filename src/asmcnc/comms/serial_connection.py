@@ -58,6 +58,10 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+    gauge_values = {
+
+    }
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -68,6 +72,21 @@ class SerialConnection(object):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+
+    def add_value_to_gauge_stack(self, key, value):
+        if key not in self.gauge_values:
+            self.gauge_values[key] = []
+
+        if len(self.gauge_values[key]) == 10:
+            self.gauge_values[key].pop()
+
+        self.gauge_values[key].insert(0, value)
+
+    def get_value_from_gauge_stack(self, key):
+        return self.gauge_values.get(key, 0)[0]
+
+    def get_peak_value_from_gauge_stack(self, key):
+        return max(self.gauge_values.get(key, 0), key=abs)
 
     def __del__(self):
         if self.s: self.s.close()
