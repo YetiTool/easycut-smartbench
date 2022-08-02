@@ -1,8 +1,6 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from asmcnc.comms.logging import log_exporter
-
-import os, sys
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <LBCalibrationFail>:
