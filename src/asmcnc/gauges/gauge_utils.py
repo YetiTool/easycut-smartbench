@@ -14,7 +14,7 @@ def get_gradient(value, max_value, lower_boundary=15, upper_boundary=15, inverse
     return get_hsl_by_percentage(abs_percentage)
 
 
-def calculate_width(value, max_value, factor):
+def calculate_width(value, max_value, factor, outer_box_width):
     if value == -999:
         return 0
 
@@ -23,4 +23,4 @@ def calculate_width(value, max_value, factor):
     if value > max_value:
         return max_value
 
-    return value
+    return ((outer_box_width / max_value) * value) / 2
