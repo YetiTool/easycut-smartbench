@@ -125,6 +125,8 @@ class GoScreenGauge(Widget):
         self.unit = unit
         self.factor = factor
 
+        self.set_sizes()
+
     def begin_reading(self):
         self.reading_clock = Clock.schedule_interval(self.update_reading, 0.1)
 
