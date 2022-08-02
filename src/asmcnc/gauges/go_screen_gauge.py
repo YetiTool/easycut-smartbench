@@ -33,7 +33,6 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'middle'
                 color: 0, 0, 0, 1
-                text: root.title
 
             Label:
                 id: value_label
@@ -117,6 +116,7 @@ class GoScreenGauge(Widget):
         self.bind(current_value=self.redraw_value)
 
         self.title = title
+        self.title_label.text = title
         self.key = key
         self.max_value = max_value
         self.lower_boundary = lower_boundary
