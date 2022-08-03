@@ -1,20 +1,13 @@
-from kivy.uix.popup import Popup
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.button import  Button
-from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 
-from asmcnc.skavaUI import widget_status_bar
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
+import matplotlib.pyplot as plt
 
 Builder.load_string("""
 <ZHeadMechanics>:
-
-    status_container:status_container
 
     begin_test_button:begin_test_button
 
@@ -25,105 +18,103 @@ Builder.load_string("""
     load_up_average:load_up_average
     load_down_average:load_down_average
 
+    load_graph:load_graph
+
     BoxLayout:
         orientation: 'vertical'
+        padding: dp(5)
+        spacing: dp(5)
 
         BoxLayout:
-            orientation: 'vertical'
-            size_hint_y: 0.92
-            BoxLayout:
-                orientation: 'vertical'
-                padding: dp(5)
-                spacing: dp(5)
+            orientation: 'horizontal'
+            spacing: dp(5)
 
-                BoxLayout:
-                    orientation: 'horizontal'
-                    spacing: dp(5)
+            Button:
+                id: begin_test_button
+                size_hint_x: 2
+                text: 'Begin Test'
+                bold: True
+                font_size: dp(25)
+                background_color: hex('#00C300FF')
+                background_normal: ''
+                on_press: root.prepare_for_test()
 
-                    Button:
-                        id: begin_test_button
-                        size_hint_x: 2
-                        text: 'Begin Test'
-                        bold: True
-                        font_size: dp(25)
-                        background_color: hex('#00C300FF')
-                        background_normal: ''
-                        on_press: root.prepare_for_test()
+            Button:
+                text: 'STOP'
+                bold: True
+                font_size: dp(25)
+                background_color: [1,0,0,1]
+                background_normal: ''
+                on_press: root.stop()
 
-                    Button:
-                        text: 'STOP'
-                        bold: True
-                        font_size: dp(25)
-                        background_color: [1,0,0,1]
-                        background_normal: ''
-                        on_press: root.stop()
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(5)
 
-                BoxLayout:
-                    orientation: 'horizontal'
-                    spacing: dp(5)
+            # Load value table
+            GridLayout:
+                size_hint_x: 4
+                rows: 3
+                cols: 3
 
-                    # Load value table
-                    GridLayout:
-                        size_hint_x: 4
-                        rows: 3
-                        cols: 3
-
-                        Label
-
-                        Label:
-                            text: 'Up'
-
-                        Label:
-                            text: 'Down'
-
-                        Label:
-                            text: 'Peak load'
-
-                        Label:
-                            id: load_up_peak
-                            text: '-'
-
-                        Label:
-                            id: load_down_peak
-                            text: '-'
-
-                        Label:
-                            text: 'Average load'
-
-                        Label:
-                            id: load_up_average
-                            text: '-'
-
-                        Label:
-                            id: load_down_average
-                            text: '-'
-
-                    Button:
-                        text: 'GCODE Monitor'
-                        bold: True
-                        font_size: dp(25)
-                        text_size: self.size
-                        valign: 'middle'
-                        halign: 'center'
-                        on_press: root.go_to_monitor()
+                Label
 
                 Label:
-                    size_hint_y: 2
-                    id: test_progress_label
-                    text: 'Waiting...'
-                    font_size: dp(30)
-                    markup: True
-                    bold: True
-                    text_size: self.size
-                    valign: 'middle'
-                    halign: 'center'
+                    text: 'Up'
 
-        # GREEN STATUS BAR
+                Label:
+                    text: 'Down'
 
-        BoxLayout:
-            size_hint_y: 0.08
-            id: status_container 
-            pos: self.pos
+                Label:
+                    text: 'Peak load'
+
+                Label:
+                    id: load_up_peak
+                    text: '-'
+
+                Label:
+                    id: load_down_peak
+                    text: '-'
+
+                Label:
+                    text: 'Average load'
+
+                Label:
+                    id: load_up_average
+                    text: '-'
+
+                Label:
+                    id: load_down_average
+                    text: '-'
+
+            Button:
+                text: 'Serial Monitor'
+                bold: True
+                font_size: dp(25)
+                text_size: self.size
+                valign: 'middle'
+                halign: 'center'
+                on_press: root.go_to_monitor()
+
+        Label:
+            size_hint_y: 2
+            id: test_progress_label
+            text: 'Waiting...'
+            font_size: dp(30)
+            markup: True
+            bold: True
+            text_size: self.size
+            valign: 'middle'
+            halign: 'center'
+
+    FloatLayout:
+        Image:
+            id: load_graph
+            size_hint: None, None
+            height: 240
+            width: 800
+            allow_stretch: True
+            opacity: 0
 
 """)
 
@@ -145,10 +136,6 @@ class ZHeadMechanics(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
-        # Green status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        self.status_container.add_widget(self.status_bar_widget)
-
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
@@ -163,6 +150,7 @@ class ZHeadMechanics(Screen):
         self.load_down_peak.text = '-'
         self.load_up_average.text = '-'
         self.load_down_average.text = '-'
+        self.load_graph.opacity = 0
 
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
@@ -235,6 +223,27 @@ class ZHeadMechanics(Screen):
         self.load_down_peak.text = str(max(self.sg_values_down))
         self.load_up_average.text = str(sum(self.sg_values_up) / len(self.sg_values_up))
         self.load_down_average.text = str(sum(self.sg_values_down) / len(self.sg_values_down))
+
+        sg_values_min = min(self.sg_values_up + self.sg_values_down)
+        sg_values_down_adjusted = [(i - sg_values_min) for i in self.sg_values_down]
+        sg_values_up_adjusted = [(i - sg_values_min) for i in self.sg_values_up]
+
+        plt.rcParams["figure.figsize"] = (8,2.4)
+        plt.plot(self.z_pos_values_down, sg_values_down_adjusted, 'b', label='Z SG Down')
+        plt.plot(self.z_pos_values_up, sg_values_up_adjusted, 'r', label='Z SG Up')
+        plt.legend()
+        plt.title('Z motor load vs Z coordinate')
+        plt.xlabel('Z coordinate, mm')
+        plt.ylabel('Z load')
+        ax = plt.gca()
+        ax.set_ylim([0, 200])
+        ax.set_xlim([min(self.z_pos_values_down + self.z_pos_values_up), max(self.z_pos_values_down + self.z_pos_values_up)])
+        plt.grid()
+        plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
+        plt.close()
+        self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
+        self.load_graph.reload()
+        self.load_graph.opacity = 1
 
 
     def stop(self):
