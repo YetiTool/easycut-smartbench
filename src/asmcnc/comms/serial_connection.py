@@ -82,6 +82,8 @@ class SerialConnection(object):
 
         self.gauge_values[key].insert(0, value)
 
+        print(key + ' value stack now has: ' + str(len(self.gauge_values[key])))
+
     def get_value_from_gauge_stack(self, key):
         if self.gauge_values.get(key, 0) == 0:
             return 0

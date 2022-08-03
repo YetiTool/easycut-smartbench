@@ -22,7 +22,4 @@ def calculate_width(value, max_value, factor, outer_box_width):
 
     value = value / factor
 
-    if value > max_value:
-        return ((outer_box_width / max_value) * value) / 2
-
-    return ((outer_box_width / max_value) * value) / 2
+    return ((outer_box_width / max_value) * (value if value < max_value else max_value)) / 2
