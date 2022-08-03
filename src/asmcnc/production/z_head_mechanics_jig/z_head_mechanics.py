@@ -22,16 +22,14 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(5)
-        spacing: dp(5)
 
         BoxLayout:
             orientation: 'horizontal'
+            padding: dp(5)
             spacing: dp(5)
 
             Button:
                 id: begin_test_button
-                size_hint_x: 2
                 text: 'Begin Test'
                 bold: True
                 font_size: dp(25)
@@ -39,21 +37,9 @@ Builder.load_string("""
                 background_normal: ''
                 on_press: root.prepare_for_test()
 
-            Button:
-                text: 'STOP'
-                bold: True
-                font_size: dp(25)
-                background_color: [1,0,0,1]
-                background_normal: ''
-                on_press: root.stop()
-
-        BoxLayout:
-            orientation: 'horizontal'
-            spacing: dp(5)
-
             # Load value table
             GridLayout:
-                size_hint_x: 4
+                size_hint_x: 2
                 rows: 3
                 cols: 3
 
@@ -88,6 +74,7 @@ Builder.load_string("""
                     text: '-'
 
             Button:
+                size_hint_x: 0.7
                 text: 'Serial Monitor'
                 bold: True
                 font_size: dp(25)
@@ -96,8 +83,16 @@ Builder.load_string("""
                 halign: 'center'
                 on_press: root.go_to_monitor()
 
+            Button:
+                text: 'STOP'
+                bold: True
+                font_size: dp(25)
+                background_color: [1,0,0,1]
+                background_normal: ''
+                on_press: root.stop()
+
         Label:
-            size_hint_y: 2
+            size_hint_y: 3
             id: test_progress_label
             text: 'Waiting...'
             font_size: dp(30)
@@ -111,8 +106,8 @@ Builder.load_string("""
         Image:
             id: load_graph
             size_hint: None, None
-            height: 240
-            width: 800
+            height: dp(360)
+            width: dp(800)
             allow_stretch: True
             opacity: 0
 
@@ -228,7 +223,7 @@ class ZHeadMechanics(Screen):
         sg_values_down_adjusted = [(i - sg_values_min) for i in self.sg_values_down]
         sg_values_up_adjusted = [(i - sg_values_min) for i in self.sg_values_up]
 
-        plt.rcParams["figure.figsize"] = (8,2.4)
+        plt.rcParams["figure.figsize"] = (8,3.6)
         plt.plot(self.z_pos_values_down, sg_values_down_adjusted, 'b', label='Z SG Down')
         plt.plot(self.z_pos_values_up, sg_values_up_adjusted, 'r', label='Z SG Up')
         plt.legend()
@@ -238,6 +233,7 @@ class ZHeadMechanics(Screen):
         ax = plt.gca()
         ax.set_ylim([0, 200])
         ax.set_xlim([min(self.z_pos_values_down + self.z_pos_values_up), max(self.z_pos_values_down + self.z_pos_values_up)])
+        plt.tight_layout()
         plt.grid()
         plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
         plt.close()
