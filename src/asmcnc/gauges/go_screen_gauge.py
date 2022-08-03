@@ -108,7 +108,7 @@ class GoScreenGauge(Widget):
     peak_value = NumericProperty(0)
     current_value = NumericProperty(0)
 
-    peak_line_points = ObjectProperty((0,0,0,0))
+    peak_line_points = ObjectProperty((0, 0, 0, 0))
 
     def __init__(self, title, key, max_value, lower_boundary=15, upper_boundary=15, inverse=False, unit='', factor=1,
                  **kwargs):
@@ -161,10 +161,10 @@ class GoScreenGauge(Widget):
             Color(self.hue, self.saturation, self.luminosity)
 
     def redraw_peak(self, *args):
-        self.peak_line_points(self.outer_box.center_x + self.peak_value,
-                              self.outer_box.center_y - (0.5 * self.inner_box.height),
-                              self.outer_box.center_x + self.peak_value,
-                              self.outer_box.center_y + (0.5 * self.inner_box.height))
+        self.peak_line_points = (self.outer_box.center_x + self.peak_value,
+                                 self.outer_box.center_y - (0.5 * self.inner_box.height),
+                                 self.outer_box.center_x + self.peak_value,
+                                 self.outer_box.center_y + (0.5 * self.inner_box.height))
 
     def redraw_value(self, *args):
         self.value_label.text = str(self.current_value) + ' ' + self.unit
