@@ -353,23 +353,23 @@ class CalibrationDatabase(object):
 
 
     processing_running_data = False
-    processed_running_data = []
+    processed_running_data = {
 
-    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, stage_id, x_weight=0, y_weight=0, z_weight=2):
+        "9": ([], "FinalTestStatuses", "StallExperiment"),
+        "10": ([], "CalibrationCheckStatuses", "CalibrationCheckStall")
 
-        FTID = int(serial_number[2:] + str(stage_id))
+    }
+    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
 
         self.processing_running_data = True
 
-        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, FTID, x_weight, y_weight, z_weight))
+        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, serial_number, x_weight, y_weight, z_weight))
         processing_running_data_thread.daemon = True
         processing_running_data_thread.start()
 
-
-    def _process_running_data(self, unprocessed_status_data, FTID, x_weight=0, y_weight=0, z_weight=2):
+    def _process_running_data(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
 
         self.processing_running_data = True
-        self.processed_running_data = []
 
         for idx, element in enumerate(unprocessed_status_data): 
 
@@ -379,29 +379,29 @@ class CalibrationDatabase(object):
 
             status = {
                 "Id": "",
-                "FTID": FTID,
-                "XCoordinate": element[0],
-                "YCoordinate": element[1],
-                "ZCoordinate": element[2],
+                "FTID": int(serial_number[2:] + str(element[0])),
+                "XCoordinate": element[1],
+                "YCoordinate": element[2],
+                "ZCoordinate": element[3],
                 "XDirection": x_dir,
                 "YDirection": y_dir,
                 "ZDirection": z_dir,
-                "XSG": element[3],
-                "YSG": element[4],
-                "Y1SG": element[5],
-                "Y2SG":element[6],
-                "ZSG":element[7],
-                "TMCTemperature":element[8],
-                "PCBTemperature":element[9],
-                "MOTTemperature":element[10],
-                "Timestamp": element[11].strftime('%Y-%m-%d %H:%M:%S'),
-                "Feedrate": element[12],
+                "XSG": element[4],
+                "YSG": element[5],
+                "Y1SG": element[6],
+                "Y2SG":element[7],
+                "ZSG":element[8],
+                "TMCTemperature":element[9],
+                "PCBTemperature":element[10],
+                "MOTTemperature":element[11],
+                "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
+                "Feedrate": element[13],
                 "XWeight": x_weight,
                 "YWeight": y_weight,
                 "ZWeight": z_weight
             }
 
-            self.processed_running_data.append(status)
+            self.processed_running_data[str(element[0])][0].append(status)
 
         self.processing_running_data = False
 

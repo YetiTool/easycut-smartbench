@@ -779,6 +779,7 @@ class SerialConnection(object):
     # IF NEED TO MEASURE RUNNING DATA
     measure_running_data = False
     running_data = []
+    measurement_stage = 0
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1239,7 +1240,7 @@ class SerialConnection(object):
 
                 try:
                     self.running_data.append([
-
+                        int(self.measurement_stage)
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),

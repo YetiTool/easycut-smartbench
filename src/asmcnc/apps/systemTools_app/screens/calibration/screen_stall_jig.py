@@ -999,19 +999,29 @@ class StallJigScreen(Screen):
         log("Sending statuses")
 
         publisher = DataPublisher(self.sn_for_db)
-        response = publisher.run_data_send(self.calibration_db.processed_running_data, "FinalTestStatuses", "StallExperiment")
+        response_stall_data = publisher.run_data_send(*self.calibration_db.processed_running_data["9"])
+        response_check_data = publisher.run_data_send(*self.calibration_db.processed_running_data["10"])
         log("Received %s from consumer" % response)
 
-        data_send_successful = self.calibration_db.handle_response(response)
-        log('Status data sent successfully: ' + str(data_send_successful))
+        data_send_successful = self.calibration_db.handle_response(response_stall_data)
+        log('Stall status data sent successfully: ' + str(data_send_successful))
+
+        if self.calibration_db.status_response_handling_message:
+            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
+
+        cal_data_send_successful = self.calibration_db.handle_response(response_check_data)
+        log('Calibration status data sent successfully: ' + str(cal_data_send_successful))
 
         if self.calibration_db.status_response_handling_message:
             PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
 
         self.send_data_button.disabled = False
 
-        if data_send_successful:
+        if data_send_successful and cal_data_send_successful:
             self.test_status_label.text = "DATA SENT!"
+
+        elif data_send_successful or cal_data_send_successful:
+            self.test_status_label.text = "PARTIAL DATA SEND!"
 
         else: 
             self.test_status_label.text = "DATA NOT SENT!"
@@ -1318,9 +1328,7 @@ class StallJigScreen(Screen):
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
         self.m.toggle_reset_pin()
-
         self.choose_test(0,0,0)
-        self.m.start_measuring_running_data()
         self.start_homing()
 
         # CALIBRATION CHECK
@@ -1333,6 +1341,7 @@ class StallJigScreen(Screen):
             self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 0.5)
             return
 
+        self.m.start_measuring_running_data(10)
         log("Run a calibration check in all axes")
         self.test_status_label.text = "CHECK CALIBRATION"
         if not self.dev_mode: self.m.check_x_y_z_calibration()
@@ -1349,6 +1358,7 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "CAL CHECK FAIL"
             return
 
+        self.m.change_stage_measuring_running_data(9)
         log("Ready to run tests, disabling limits & maxing acceleration")
         self.set_grbl_settings_for_experiment(True)
 

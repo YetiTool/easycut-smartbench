@@ -2978,8 +2978,9 @@ class RouterMachine(object):
         else:
             return False
 
-    def start_measuring_running_data(self):
+    def start_measuring_running_data(self, stage = 0):
         self.s.running_data = []
+        self.s.measurement_stage = stage
         self.s.measure_running_data = True
 
     def stop_measuring_running_data(self):
@@ -2987,6 +2988,9 @@ class RouterMachine(object):
 
     def continue_measuring_running_data(self):
         self.s.measure_running_data = True
+
+    def change_stage_measuring_running_data(self, stage):
+        self.s.measurement_stage = stage
 
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
