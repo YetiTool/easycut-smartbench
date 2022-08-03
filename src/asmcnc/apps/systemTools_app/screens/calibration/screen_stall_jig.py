@@ -1307,7 +1307,7 @@ class StallJigScreen(Screen):
         ## IS GOING TO FAIL DUE TO DODGY CALIBRATION)
         ## DISABLE SOFT LIMITS
         ## MOVES
-        ## TELL USER TO FIX MAGNETS
+        ## TELL USER TO INSTALL JIGS
         ## USER WILL MANUALLY PRESS RUN
 
     def start_of_all_tests(self):
@@ -1379,7 +1379,7 @@ class StallJigScreen(Screen):
             return
 
         log("Tell user to put the magnets on to set up fake home")
-        self.test_status_label.text = "FIX MAGNETS"
+        self.test_status_label.text = "INSTALL JIGS"
         self.run_button.text = "RUN"
         self.enable_all_buttons_except_run()
         self.disable_run(False)
