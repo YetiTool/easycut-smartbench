@@ -994,7 +994,7 @@ class StallJigScreen(Screen):
         log("Sending statuses")
 
         publisher = DataPublisher(self.sn_for_db)
-        response = publisher.run_data_send(self.calibration_db.processed_running_data, "FinalTestStatuses", self.stage_id)
+        response = publisher.run_data_send(self.calibration_db.processed_running_data, "FinalTestStatuses", "StallExperiment")
         log("Received %s from consumer" % response)
 
         data_send_successful = self.calibration_db.handle_response(response)
