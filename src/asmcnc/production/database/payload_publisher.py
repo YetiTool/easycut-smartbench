@@ -10,7 +10,7 @@ WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
 
 def get_unique_file_name(machine_serial, table, stage):
-    return machine_serial + '-' + table + '-' + stage + '-' + str(uuid.uuid4()) + '.csv'
+    return str(machine_serial) + '-' + str(table) + '-' + str(stage) + '-' + str(uuid.uuid4()) + '.csv'
 
 
 status_order = {
