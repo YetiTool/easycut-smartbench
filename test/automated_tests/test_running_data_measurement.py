@@ -146,6 +146,7 @@ def status_string(m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg
 def running_data_element(sc, m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, motor_driver_temp, pcb_temp, transistor_heatsink_temp):
 
     running_data_single_list = [
+        0,
         m_x,
         m_y,
         m_z,
@@ -167,6 +168,7 @@ def running_data_element(sc, m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_mot
 def second_pos_data(m_x_2, m_y_2, m_z_2, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, motor_driver_temp, pcb_temp, transistor_heatsink_temp):
 
     data_list = [
+        0,
         m_x_2,
         m_y_2,
         m_z_2,
@@ -192,7 +194,7 @@ def running_data_element_dict(m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_mo
 
     status = {
         "Id": "",
-        "FTID": "FTID",
+        "FTID": 600000,
         "XCoordinate": m_x,
         "YCoordinate": m_y,
         "ZCoordinate": m_z,
@@ -223,7 +225,7 @@ def second_pos_data_dict(m_x_2, m_y_2, m_z_2, feed_rate, sg_z_motor_axis, sg_x_m
 
     status = {
         "Id": "",
-        "FTID": "FTID",
+        "FTID": 600000,
         "XCoordinate": m_x_2,
         "YCoordinate": m_y_2,
         "ZCoordinate": m_z_2,
@@ -262,9 +264,9 @@ def assert_running_data_lists(expected_list, output_list, idx=0):
     assert expected_list[8] == output_list[idx][8]
     assert expected_list[9] == output_list[idx][9]
     assert expected_list[10] == output_list[idx][10]
-    # assert expected_list[11] == output_list[0][11] # THIS IS DATETIME!!
-    assert expected_list[12] == output_list[idx][12]
-
+    assert expected_list[11] == output_list[idx][11] 
+    # assert expected_list[12] == output_list[idx][12] # THIS IS DATETIME!!
+    assert expected_list[13] == output_list[idx][13] 
 
 # TESTS
 
@@ -325,22 +327,22 @@ def test_generate_directions(running_data_element, second_pos_data):
 def test_process_running_data(running_data_element_dict, running_data_element, second_pos_data, second_pos_data_dict):
     running_data_list = [running_data_element, second_pos_data]
     cdb = CalibrationDatabase()
-    cdb._process_running_data(running_data_list, "FTID")
-    assert cdb.processed_running_data[0] == running_data_element_dict
-    assert cdb.processed_running_data[1] == second_pos_data_dict
+    cdb._process_running_data(running_data_list, "YS60000")
+    assert cdb.processed_running_data["0"][0][0] == running_data_element_dict
+    assert cdb.processed_running_data["0"][0][1] == second_pos_data_dict
     assert not cdb.processing_running_data
 
 def test_process_status_running_data_for_database_insert(running_data_element, second_pos_data,):
     running_data_list = [running_data_element, second_pos_data]
     cdb = CalibrationDatabase()
-    cdb.process_status_running_data_for_database_insert(running_data_list,"YS61111", 7)
+    cdb.process_status_running_data_for_database_insert(running_data_list,"YS61111")
     assert not cdb.processing_running_data
 
-@pytest.mark.skip(reason="Takes a lot of time, only test if needed")
+# @pytest.mark.skip(reason="Takes a lot of time, only test if needed")
 def test_process_many_statuses(running_data_element):
     running_data_list = [running_data_element]*10000000
     cdb = CalibrationDatabase()
-    cdb._process_running_data(running_data_list, 611117)
+    cdb._process_running_data(running_data_list, "YS61111")
 
 
 

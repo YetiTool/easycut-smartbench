@@ -1240,7 +1240,7 @@ class SerialConnection(object):
 
                 try:
                     self.running_data.append([
-                        int(self.measurement_stage)
+                        int(self.measurement_stage),
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),

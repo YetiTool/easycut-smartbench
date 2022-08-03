@@ -355,6 +355,7 @@ class CalibrationDatabase(object):
     processing_running_data = False
     processed_running_data = {
 
+        "0": ([], "Test", "Test"),
         "9": ([], "FinalTestStatuses", "StallExperiment"),
         "10": ([], "CalibrationCheckStatuses", "CalibrationCheckStall")
 
@@ -414,23 +415,23 @@ class CalibrationDatabase(object):
 
         if idx > 0:
 
-            if unprocessed_status_data[idx-1][0] < unprocessed_status_data[idx][0]:
+            if unprocessed_status_data[idx-1][1] < unprocessed_status_data[idx][1]:
                 x_dir = -1
-            elif unprocessed_status_data[idx-1][0] > unprocessed_status_data[idx][0]:
+            elif unprocessed_status_data[idx-1][1] > unprocessed_status_data[idx][1]:
                 x_dir = 1
             else:
                 x_dir = 0
 
-            if unprocessed_status_data[idx-1][1] < unprocessed_status_data[idx][1]:
+            if unprocessed_status_data[idx-1][2] < unprocessed_status_data[idx][2]:
                 y_dir = -1
-            elif unprocessed_status_data[idx-1][1] > unprocessed_status_data[idx][1]:
+            elif unprocessed_status_data[idx-1][2] > unprocessed_status_data[idx][2]:
                 y_dir = 1
             else:
                 y_dir = 0
 
-            if unprocessed_status_data[idx-1][2] < unprocessed_status_data[idx][2]:
+            if unprocessed_status_data[idx-1][3] < unprocessed_status_data[idx][3]:
                 z_dir = 1
-            elif unprocessed_status_data[idx-1][2] > unprocessed_status_data[idx][2]:
+            elif unprocessed_status_data[idx-1][3] > unprocessed_status_data[idx][3]:
                 z_dir = -1
             else:
                 z_dir = 0
