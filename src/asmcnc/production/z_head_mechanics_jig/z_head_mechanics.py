@@ -135,7 +135,7 @@ class ZHeadMechanics(Screen):
     def prepare_for_test(self):
         self.test_waiting_to_start = True
         self.m.set_motor_current("Z", 25)
-        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=1)
+        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
         self.test_running = True
         self.begin_test_button.disabled = True
@@ -252,7 +252,7 @@ class ZHeadMechanics(Screen):
         self.begin_test_button.disabled = False
         self.test_progress_label.text = 'Waiting...'
 
-        self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", command=SET_MOTOR_ENERGIZED, value=0)
+        self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
 
         self.sg_values_down = []
         self.sg_values_up = []
