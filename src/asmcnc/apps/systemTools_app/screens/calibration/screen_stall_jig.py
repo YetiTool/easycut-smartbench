@@ -98,7 +98,7 @@ Builder.load_string("""
                         size_hint_x: 2
                         disabled: True
                         text: "SEND DATA"
-                        on_press: root.do_stall_jig_data_send()
+                        on_press: root.start_stall_jig_data_send()
 
                     ToggleButton: 
                         id: unlock_button
@@ -967,11 +967,16 @@ class StallJigScreen(Screen):
 
     ## DO DATA SEND
 
-    def do_stall_jig_data_send(self):
+    def start_stall_jig_data_send(self):
+        
+        self.send_data_button.disabled = True
         self.test_status_label.text = "SENDING RESULTS"
         log("Sending data...")
-
         self.m.stop_measuring_running_data()
+
+        Clock.schedule_once(self.do_stall_jig_data_send, 0.5)
+
+    def do_stall_jig_data_send(self, dt):
         
         # STARTS A SEPARATE THREAD TO PROCESS STATUSES INTO DB READY FORMAT
         self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
@@ -1000,8 +1005,10 @@ class StallJigScreen(Screen):
         data_send_successful = self.calibration_db.handle_response(response)
         log('Status data sent successfully: ' + str(data_send_successful))
 
-        if self.status_response_handling_message:
-            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.status_response_handling_message)
+        if self.calibration_db.status_response_handling_message:
+            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
+
+        self.send_data_button.disabled = False
 
         if data_send_successful:
             self.test_status_label.text = "DATA SENT!"
@@ -1608,7 +1615,7 @@ class StallJigScreen(Screen):
             self.restore_acceleration_and_soft_limits()
             self.test_status_label.text = "TESTS COMPLETE"
             log("Send data")
-            self.data_send_event = Clock.schedule_once(lambda dt: self.do_stall_jig_data_send, 1)
+            self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send, 1)
 
             return True
 
