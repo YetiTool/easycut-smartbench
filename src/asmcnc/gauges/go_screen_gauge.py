@@ -5,6 +5,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.properties import NumericProperty, ObjectProperty
 from kivy.clock import Clock
+from random import randint
 
 from asmcnc.gauges.gauge_utils import get_gradient, calculate_width
 
@@ -142,8 +143,8 @@ class GoScreenGauge(Widget):
         #     self.stop_reading()
         #     return
 
-        self.peak_value = self.m.s.get_peak_value_from_gauge_stack(self.key) / 2
-        self.current_value = self.m.s.get_value_from_gauge_stack(self.key)
+        self.peak_value = randint(-300, 300)
+        self.current_value = randint(-300, 300)
 
     def set_sizes(self):
         # clean this mess - need to be variable and more accurate

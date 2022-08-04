@@ -1095,8 +1095,8 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
-                    if self.sm.has_screen('go'):
-                        self.add_value_to_gauge_stack('x_load', self.sg_x_motor_axis)
+                    # if self.sm.has_screen('go'):
+                    #     self.add_value_to_gauge_stack('x_load', self.sg_x_motor_axis)
 
                     if self.record_sg_values_flag:
 
