@@ -867,7 +867,8 @@ class StallJigScreen(Screen):
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
             log("Homing detected as success!")
-            self.test_status_label.text = "READY"
+            if self.test_status_label.text != "CHECK CALIBRATION":
+                self.test_status_label.text = "READY"
             return
 
         if self.VERBOSE: log("Poll for homing completion")
