@@ -1007,23 +1007,9 @@ class StallJigScreen(Screen):
             print(traceback.format_exc())
 
         publisher = DataPublisher(self.sn_for_db)
-        response_stall_data = publisher.run_data_send(*self.calibration_db.processed_running_data["9"])
-        log("Received %s from consumer" % response_stall_data)
 
-        response_check_data = publisher.run_data_send(*self.calibration_db.processed_running_data["10"])
-        log("Received %s from consumer" % response_check_data)
-
-        data_send_successful = self.calibration_db.handle_response(response_stall_data)
-        log('Stall status data sent successfully: ' + str(data_send_successful))
-
-        if self.calibration_db.status_response_handling_message:
-            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
-
-        cal_data_send_successful = self.calibration_db.handle_response(response_check_data)
-        log('Calibration status data sent successfully: ' + str(cal_data_send_successful))
-
-        if self.calibration_db.status_response_handling_message:
-            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
+        data_send_successful = self.send_data_through_publisher(publisher, 9)
+        cal_data_send_successful = self.send_data_through_publisher(publisher, 10)
 
         self.send_data_button.disabled = False
 
@@ -1038,6 +1024,22 @@ class StallJigScreen(Screen):
         
         self.enable_all_buttons()
 
+    def send_data_through_publisher(self, publisher, stage_id):
+
+        if not self.calibration_db.processed_running_data[str(stage_id)][0]:
+            log("No status data to send for stage id: " + str(stage_id))
+            return True
+
+        response = publisher.run_data_send(*self.calibration_db.processed_running_data[str(stage_id)])
+        log("Received %s from consumer" % response)
+
+        data_send_successful = self.calibration_db.handle_response(response)
+        log('Status data for stage ' + str(stage_id) + ' sent successfully: ' + str(data_send_successful))
+
+        if self.calibration_db.status_response_handling_message:
+            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
+
+        return data_send_successful
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST
