@@ -197,34 +197,13 @@ class StallJigScreen(Screen):
 
     axes = ["X","Y","Z"]
 
-
-    # MICRO TEST
-
-    feed_dict = {
-
-        "X": [8000,6000],
-        "Y": [6000,5000],
-        "Z": [750,600] 
-
-    }
-
-    # Min threshold, Max threshold, Step between thresholds
-
-    # FILTERED FW
-
-    threshold_dict = {
-
-        "X": range(200, 275, 25),
-        "Y": range(150, 225, 25),
-        "Z": range(100, 160, 20) 
-
-    }
+    # # MICRO TEST
 
     # feed_dict = {
 
-    #     "X": [8000,6000,4500,3000,2000,1200,600],
-    #     "Y": [6000,5000,4000,3000,2000,1200,600],
-    #     "Z": [750,600,500,400,300,150,75] 
+    #     "X": [8000,6000],
+    #     "Y": [6000,5000],
+    #     "Z": [750,600] 
 
     # }
 
@@ -234,11 +213,31 @@ class StallJigScreen(Screen):
 
     # threshold_dict = {
 
-    #     "X": range(100, 375, 25),
-    #     "Y": range(100, 375, 25),
-    #     "Z": range(100, 220, 20) 
+    #     "X": range(200, 275, 25),
+    #     "Y": range(150, 225, 25),
+    #     "Z": range(100, 160, 20) 
 
     # }
+
+    feed_dict = {
+
+        "X": [8000,6000,4500,3000,2000,1200,600],
+        "Y": [6000,5000,4000,3000,2000,1200,600],
+        "Z": [750,600,500,400,300,150,75] 
+
+    }
+
+    # Min threshold, Max threshold, Step between thresholds
+
+    # FILTERED FW
+
+    threshold_dict = {
+
+        "X": range(100, 375, 25),
+        "Y": range(100, 375, 25),
+        "Z": range(100, 220, 20) 
+
+    }
 
     # UNFILTERED FW
 
