@@ -982,7 +982,7 @@ class StallJigScreen(Screen):
         self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
         
         # SENDS STALL EXPERIMENT EVENTS
-        results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events):
+        results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
 
         # SEND STATUSES ONCE THEY HAVE BEEN PROCESSED
         self.send_stall_jig_statuses_when_ready()
