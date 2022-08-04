@@ -1638,7 +1638,7 @@ class StallJigScreen(Screen):
             self.restore_acceleration_and_soft_limits()
             self.test_status_label.text = "TESTS COMPLETE"
             log("Send data")
-            self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send, 1)
+            self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send(), 1)
 
             return True
 
