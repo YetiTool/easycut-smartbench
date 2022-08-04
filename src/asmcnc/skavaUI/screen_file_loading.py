@@ -414,6 +414,8 @@ class LoadingScreen(Screen):
         if stage == 'Loaded':
             if self.continuing_to_recovery:
                 self.continuing_to_recovery = False
+                self.jd.checked = False
+                self.sm.get_screen('home').z_datum_reminder_flag = True
                 self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
                 self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
                 self.sm.current = 'homing_decision'
