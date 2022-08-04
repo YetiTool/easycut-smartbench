@@ -139,7 +139,7 @@ class GoScreenGauge(Widget):
 
     def update_reading(self, dt):
         # if self.m.s.m_state == 'Idle':
-        #     Clock.unschedule(self.reading_clock)
+        #     self.stop_reading()
         #     return
 
         self.peak_value = self.m.s.get_peak_value_from_gauge_stack(self.key) / 2
