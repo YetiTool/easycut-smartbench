@@ -23,7 +23,7 @@ from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
 from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase
-from asmcnc.skavaUI.popup_info import PopupInfo
+from asmcnc.skavaUI.popup_info import PopupMiniInfo
 
 # Kivy UI bsystemTools_sm.uilder:
 Builder.load_string("""
@@ -1037,7 +1037,7 @@ class StallJigScreen(Screen):
         log('Status data for stage ' + str(stage_id) + ' sent successfully: ' + str(data_send_successful))
 
         if self.calibration_db.status_response_handling_message:
-            PopupInfo(self.systemtools_sm.sm, self.l, 300, self.calibration_db.status_response_handling_message)
+            PopupMiniInfo(self.systemtools_sm.sm, self.l, self.calibration_db.status_response_handling_message)
 
         return data_send_successful
 
