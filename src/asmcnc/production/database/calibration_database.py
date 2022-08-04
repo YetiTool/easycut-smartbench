@@ -2,6 +2,7 @@
 from datetime import datetime
 import traceback, threading
 import json
+import sys
 
 
 def log(message):
@@ -30,8 +31,14 @@ class CalibrationDatabase(object):
         "FullyCalibratedTest": 8
     }
 
-    #ODBC Driver 17 for SQL Server ON WINDOWS
-    connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+
+    if sys.platform == 'win32' or sys.platform == 'darwin':
+        # ODBC Driver 17 for SQL Server ON WINDOWS
+        connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+
+    else: 
+        # FreeTDS
+        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'        
 
     def __init__(self):
         self.conn = None
@@ -54,6 +61,7 @@ class CalibrationDatabase(object):
 
         except ImportError:
             log("Can't import credentials")
+            # from asmcnc.production.database import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
@@ -355,9 +363,8 @@ class CalibrationDatabase(object):
     processing_running_data = False
     processed_running_data = {
 
-        "0": ([], "Test", "Test"),
         "9": ([], "FinalTestStatuses", "StallExperiment"),
-        "10": ([], "CalibrationCheckStatuses", "CalibrationCheckStall")
+        "10": ([], "FinalTestStatuses", "CalibrationCheckStall")
 
     }
     def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):

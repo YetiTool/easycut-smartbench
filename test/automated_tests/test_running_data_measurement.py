@@ -3,8 +3,9 @@ Created on 25 Jan 2022
 @author: Letty
 '''
 
-import sys
+import sys, os
 sys.path.append('./src')
+os.chdir('./src')
 
 try: 
     import unittest
@@ -20,6 +21,7 @@ from asmcnc.comms import router_machine
 from asmcnc.comms import localization
 from datetime import datetime
 from asmcnc.production.database.calibration_database import CalibrationDatabase
+from asmcnc.production.database.payload_publisher import DataPublisher
 
 '''
 ######################################
@@ -146,7 +148,7 @@ def status_string(m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg
 def running_data_element(sc, m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, motor_driver_temp, pcb_temp, transistor_heatsink_temp):
 
     running_data_single_list = [
-        0,
+        9,
         m_x,
         m_y,
         m_z,
@@ -168,7 +170,7 @@ def running_data_element(sc, m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_mot
 def second_pos_data(m_x_2, m_y_2, m_z_2, feed_rate, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, motor_driver_temp, pcb_temp, transistor_heatsink_temp):
 
     data_list = [
-        0,
+        9,
         m_x_2,
         m_y_2,
         m_z_2,
@@ -194,7 +196,7 @@ def running_data_element_dict(m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_mo
 
     status = {
         "Id": "",
-        "FTID": 600000,
+        "FTID": 600009,
         "XCoordinate": m_x,
         "YCoordinate": m_y,
         "ZCoordinate": m_z,
@@ -225,7 +227,7 @@ def second_pos_data_dict(m_x_2, m_y_2, m_z_2, feed_rate, sg_z_motor_axis, sg_x_m
 
     status = {
         "Id": "",
-        "FTID": 600000,
+        "FTID": 600009,
         "XCoordinate": m_x_2,
         "YCoordinate": m_y_2,
         "ZCoordinate": m_z_2,
@@ -271,6 +273,7 @@ def assert_running_data_lists(expected_list, output_list, idx=0):
 # TESTS
 
 def test_process_grbl_push_parses_running_data(sc, status_string, running_data_element):
+    sc.measurement_stage = 9
     sc.measure_running_data = True
     sc.process_grbl_push(status_string)
     assert_running_data_lists(running_data_element, sc.running_data)
@@ -278,6 +281,7 @@ def test_process_grbl_push_parses_running_data(sc, status_string, running_data_e
 def test_process_grbl_push_parses_running_data_with_scanner_run(sc, running_data_element):
     sc.s.readline = Mock(return_value = status_string)
     sc.s.inWaiting = Mock(return_value = True)
+    sc.measurement_stage = 9
     sc.measure_running_data = True
     sc.grbl_scanner(run_grbl_scanner_once = True)
     assert_running_data_lists(running_data_element, sc.running_data)
@@ -286,7 +290,7 @@ def test_process_grbl_push_parses_running_data_with_scanner_run(sc, running_data
 def test_machine_starts_and_stops_measurement(m, status_string, running_data_element):
     m.s.s.readline = Mock(return_value = status_string)
     m.s.s.inWaiting = Mock(return_value = True)
-    m.start_measuring_running_data()
+    m.start_measuring_running_data(9)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
@@ -299,7 +303,7 @@ def test_machine_starts_and_stops_measurement(m, status_string, running_data_ele
 def test_indices_in_running_data(m, status_string, running_data_element):
     m.s.s.readline = Mock(return_value = status_string)
     m.s.s.inWaiting = Mock(return_value = True)
-    m.start_measuring_running_data()
+    m.start_measuring_running_data(9)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
@@ -328,26 +332,38 @@ def test_process_running_data(running_data_element_dict, running_data_element, s
     running_data_list = [running_data_element, second_pos_data]
     cdb = CalibrationDatabase()
     cdb._process_running_data(running_data_list, "YS60000")
-    assert cdb.processed_running_data["0"][0][0] == running_data_element_dict
-    assert cdb.processed_running_data["0"][0][1] == second_pos_data_dict
+    assert cdb.processed_running_data["9"][0][0] == running_data_element_dict
+    assert cdb.processed_running_data["9"][0][1] == second_pos_data_dict
     assert not cdb.processing_running_data
 
+@pytest.mark.skip(reason="Due to timings, sometimes just fails because thread has not finished yet")
 def test_process_status_running_data_for_database_insert(running_data_element, second_pos_data,):
     running_data_list = [running_data_element, second_pos_data]
     cdb = CalibrationDatabase()
     cdb.process_status_running_data_for_database_insert(running_data_list,"YS61111")
     assert not cdb.processing_running_data
 
-# @pytest.mark.skip(reason="Takes a lot of time, only test if needed")
+@pytest.mark.skip(reason="Takes a lot of time, only test if needed")
 def test_process_many_statuses(running_data_element):
     running_data_list = [running_data_element]*10000000
     cdb = CalibrationDatabase()
     cdb._process_running_data(running_data_list, "YS61111")
 
+@pytest.mark.skip(reason="Technically an integration test")
+def test_get_stage_id_by_description():
+    cdb = CalibrationDatabase()
+    cdb.set_up_connection()
+    output = cdb.get_stage_id_by_description("StallExperiment")
+    assert output == 9
 
-
-
-
+@pytest.mark.skip(reason="Technically an integration test")
+def test_publishing_sample_data(running_data_element):
+    running_data_list = [running_data_element]*10
+    cdb = CalibrationDatabase()
+    cdb._process_running_data(running_data_list, "ys60000")
+    publisher = DataPublisher("ys60000")
+    response_stall_data = publisher.run_data_send(*cdb.processed_running_data["9"])
+    assert cdb.handle_response(response_stall_data)
 
 
 

@@ -998,10 +998,23 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "SENDING STATUSES"
         log("Sending statuses")
 
+        try:
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, 9)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, 10)
+
+        except:
+            log("Could not insert final test stage into DB!!")
+            print(traceback.format_exc())
+
+        self.status_data_dict[self.stage]["Statuses"] = []
+        log("Overnight test, stage: " + str(self.stage))
+
         publisher = DataPublisher(self.sn_for_db)
         response_stall_data = publisher.run_data_send(*self.calibration_db.processed_running_data["9"])
+        log("Received %s from consumer" % response_stall_data)
+
         response_check_data = publisher.run_data_send(*self.calibration_db.processed_running_data["10"])
-        log("Received %s from consumer" % response)
+        log("Received %s from consumer" % response_check_data)
 
         data_send_successful = self.calibration_db.handle_response(response_stall_data)
         log('Stall status data sent successfully: ' + str(data_send_successful))
