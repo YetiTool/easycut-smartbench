@@ -39,7 +39,7 @@ Builder.load_string("""
     test_status_label : test_status_label
 
     stop_button : stop_button
-    reset_tmc_regs : reset_tmc_regs
+    # reset_tmc_regs : reset_tmc_regs
     move_container : move_container
     home_button : home_button
     grbl_reset_button : grbl_reset_button
@@ -124,11 +124,11 @@ Builder.load_string("""
                         background_color: root.stop_red
                         on_press: root.stop()
 
-                    Button: 
-                        id: reset_tmc_regs
-                        text: "RESET FW SETTINGS"
-                        on_press: root.reset_tmcs()
-                        font_size: '12sp'
+                    # Button: 
+                    #     id: reset_tmc_regs
+                    #     text: "RESET FW SETTINGS"
+                    #     on_press: root.reset_tmcs()
+                    #     font_size: '12sp'
 
                 BoxLayout:
                     size_hint_y: 4
