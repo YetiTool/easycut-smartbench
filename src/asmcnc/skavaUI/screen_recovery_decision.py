@@ -123,17 +123,20 @@ class RecoveryDecisionScreen(Screen):
             self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
 
     def go_to_recovery(self):
+        # Doing it this way because disabling the button causes visuals errors
         if self.jd.job_recovery_cancel_line != -1:
-            self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
-            self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
-            self.sm.current = 'homing_decision'
+            self.repeat_job(recovering=True)
 
-    def repeat_job(self):
+    def repeat_job(self, recovering=False):
         if os.path.isfile(self.jd.job_recovery_filepath):
             self.jd.reset_values()
             self.jd.job_recovery_from_beginning = True
             self.jd.set_job_filename(self.jd.job_recovery_filepath)
-            self.manager.current = 'loading'
+
+            if recovering:
+                self.sm.get_screen('loading').continuing_to_recovery = True
+
+            self.sm.current = 'loading'
 
         else: 
             error_message = self.l.get_str('File selected does not exist!')
