@@ -985,7 +985,7 @@ class StallJigScreen(Screen):
         results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
 
         # SEND STATUSES ONCE THEY HAVE BEEN PROCESSED
-        self.send_stall_jig_statuses_when_ready()
+        self.send_stall_jig_statuses_when_ready(results_send_successful)
 
 
     def send_stall_jig_statuses_when_ready(self, results_send_successful):
