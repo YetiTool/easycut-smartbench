@@ -1269,7 +1269,7 @@ class StallJigScreen(Screen):
 
     def energize_motors(self):
 
-        if self.smartbench_is_not_ready_for_next_command():
+        if self.smartbench_is_not_ready_for_next_command() and not self.test_stopped:
             if self.VERBOSE: log("Poll for energize motors")
             self.poll_to_energize_motors = Clock.schedule_once(lambda dt: self.energize_motors(), 0.5)
             return
