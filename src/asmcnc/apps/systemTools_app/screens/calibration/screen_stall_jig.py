@@ -1353,9 +1353,9 @@ class StallJigScreen(Screen):
             self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 0.5)
             return
 
+        self.test_status_label.text = "CHECK CALIBRATION"
         self.m.start_measuring_running_data(10)
         log("Run a calibration check in all axes")
-        self.test_status_label.text = "CHECK CALIBRATION"
         if not self.dev_mode: self.m.check_x_y_z_calibration()
         self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 1)
 

@@ -920,11 +920,17 @@ class FactorySettingsScreen(Screen):
 
 
     def enter_stall_jig(self):
-        if not self.systemtools_sm.sm.has_screen('stall_jig'):
-            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
-            self.systemtools_sm.sm.add_widget(stall_jig_screen)
-        
-        self.systemtools_sm.sm.current = 'stall_jig'
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('stall_jig'):
+                    stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
+                    self.systemtools_sm.sm.add_widget(stall_jig_screen)
+                
+                self.systemtools_sm.sm.current = 'stall_jig'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
 
 
 
