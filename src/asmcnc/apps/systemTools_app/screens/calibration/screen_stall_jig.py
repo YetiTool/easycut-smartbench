@@ -189,7 +189,7 @@ def log(message):
 
 class StallJigScreen(Screen):
 
-    dev_mode = True
+    dev_mode = False
 
     # ALL NUMBERS ARE DECLARED HERE, SO THAT THEY CAN BE EASILY EDITED AS/WHEN REQUIRED
 
@@ -982,17 +982,17 @@ class StallJigScreen(Screen):
         self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
         
         # SENDS STALL EXPERIMENT EVENTS
-        self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
+        results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events):
 
         # SEND STATUSES ONCE THEY HAVE BEEN PROCESSED
         self.send_stall_jig_statuses_when_ready()
 
 
-    def send_stall_jig_statuses_when_ready(self):
+    def send_stall_jig_statuses_when_ready(self, results_send_successful):
 
         if self.calibration_db.processing_running_data:
             log("Poll for sending stall jig statuses when ready")
-            Clock.schedule_once(lambda dt: self.send_stall_jig_statuses_when_ready, 1)
+            Clock.schedule_once(lambda dt: self.send_stall_jig_statuses_when_ready(results_send_successful), 1)
             return
 
         self.test_status_label.text = "SENDING STATUSES"
@@ -1013,10 +1013,10 @@ class StallJigScreen(Screen):
 
         self.send_data_button.disabled = False
 
-        if data_send_successful and cal_data_send_successful:
+        if data_send_successful and cal_data_send_successful and results_send_successful:
             self.test_status_label.text = "DATA SENT!"
 
-        elif data_send_successful or cal_data_send_successful:
+        elif data_send_successful or cal_data_send_successful or results_send_successful:
             self.test_status_label.text = "PARTIAL DATA SEND!"
 
         else: 
@@ -1028,7 +1028,7 @@ class StallJigScreen(Screen):
 
         if not self.calibration_db.processed_running_data[str(stage_id)][0]:
             log("No status data to send for stage id: " + str(stage_id))
-            return True
+            return False
 
         response = publisher.run_data_send(*self.calibration_db.processed_running_data[str(stage_id)])
         log("Received %s from consumer" % response)

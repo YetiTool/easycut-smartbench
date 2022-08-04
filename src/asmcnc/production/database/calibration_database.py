@@ -61,7 +61,6 @@ class CalibrationDatabase(object):
 
         except ImportError:
             log("Can't import credentials")
-            # from asmcnc.production.database import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
@@ -353,9 +352,11 @@ class CalibrationDatabase(object):
 
                 cursor.executemany(query, stall_events)
                 self.conn.commit()
+                return True
 
         except: 
             print(traceback.format_exc())
+            return False
 
         print("After insert stall events")
 
@@ -379,37 +380,42 @@ class CalibrationDatabase(object):
 
         self.processing_running_data = True
 
-        for idx, element in enumerate(unprocessed_status_data): 
+        try: 
 
-            x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
+            for idx, element in enumerate(unprocessed_status_data): 
 
-        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+                x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
 
-            status = {
-                "Id": "",
-                "FTID": int(serial_number[2:] + str(element[0])),
-                "XCoordinate": element[1],
-                "YCoordinate": element[2],
-                "ZCoordinate": element[3],
-                "XDirection": x_dir,
-                "YDirection": y_dir,
-                "ZDirection": z_dir,
-                "XSG": element[4],
-                "YSG": element[5],
-                "Y1SG": element[6],
-                "Y2SG":element[7],
-                "ZSG":element[8],
-                "TMCTemperature":element[9],
-                "PCBTemperature":element[10],
-                "MOTTemperature":element[11],
-                "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
-                "Feedrate": element[13],
-                "XWeight": x_weight,
-                "YWeight": y_weight,
-                "ZWeight": z_weight
-            }
+            # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-            self.processed_running_data[str(element[0])][0].append(status)
+                status = {
+                    "Id": "",
+                    "FTID": int(serial_number[2:] + str(element[0])),
+                    "XCoordinate": element[1],
+                    "YCoordinate": element[2],
+                    "ZCoordinate": element[3],
+                    "XDirection": x_dir,
+                    "YDirection": y_dir,
+                    "ZDirection": z_dir,
+                    "XSG": element[4],
+                    "YSG": element[5],
+                    "Y1SG": element[6],
+                    "Y2SG":element[7],
+                    "ZSG":element[8],
+                    "TMCTemperature":element[9],
+                    "PCBTemperature":element[10],
+                    "MOTTemperature":element[11],
+                    "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
+                    "Feedrate": element[13],
+                    "XWeight": x_weight,
+                    "YWeight": y_weight,
+                    "ZWeight": z_weight
+                }
+
+                self.processed_running_data[str(element[0])][0].append(status)
+
+        except:
+            print(traceback.format_exc())
 
         self.processing_running_data = False
 
