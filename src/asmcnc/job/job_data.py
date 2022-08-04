@@ -531,16 +531,18 @@ class JobData(object):
                     # M7 and M8 can be enabled simultaneously according to documentation
                     if 'M7' in coolant_line or 'M07' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[8,9](\D|$)", s)), None)
-                        if 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
-                            recovery_gcode += ['M8', 'M7']
-                        else:
-                            recovery_gcode.append('M7')
+                        if previous_coolant_line:
+                            if 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
+                                recovery_gcode += ['M8', 'M7']
+                            else:
+                                recovery_gcode.append('M7')
                     elif 'M8' in coolant_line or 'M08' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
-                        if 'M7' in previous_coolant_line or 'M07' in previous_coolant_line:
-                            recovery_gcode += ['M7', 'M8']
-                        else:
-                            recovery_gcode.append('M8')
+                        if previous_coolant_line:
+                            if 'M7' in previous_coolant_line or 'M07' in previous_coolant_line:
+                                recovery_gcode += ['M7', 'M8']
+                            else:
+                                recovery_gcode.append('M8')
 
 
             # Recover most recent spindle speed
