@@ -1007,10 +1007,9 @@ class StallJigScreen(Screen):
             log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
 
-        publisher = DataPublisher(self.sn_for_db)
 
-        data_send_successful = self.send_data_through_publisher(publisher, 9)
-        cal_data_send_successful = self.send_data_through_publisher(publisher, 10)
+        data_send_successful = self.send_data_through_publisher(9)
+        cal_data_send_successful = self.send_data_through_publisher(10)
 
         self.send_data_button.disabled = False
 
@@ -1025,7 +1024,9 @@ class StallJigScreen(Screen):
         
         self.enable_all_buttons()
 
-    def send_data_through_publisher(self, publisher, stage_id):
+    def send_data_through_publisher(self, stage_id):
+        
+        publisher = DataPublisher(self.sn_for_db)
 
         if not self.calibration_db.processed_running_data[str(stage_id)][0]:
             log("No status data to send for stage id: " + str(stage_id))
