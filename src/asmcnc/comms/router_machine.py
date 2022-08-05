@@ -167,13 +167,15 @@ class RouterMachine(object):
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
-        if self.s.is_connected():
-            self.s.s.close()
+        self.close_serial_connection(0)
         self.s.establish_connection(self.win_serial_port)
 
     def close_serial_connection(self, dt):
         if self.s.is_connected():
             self.s.s.close()
+        self.clear_motor_registers()
+        self.s.fw_version = ''
+        self.s.hw_version = ''
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -747,84 +749,54 @@ class RouterMachine(object):
         self.send_any_gcode_command("$$")
         self.send_any_gcode_command("$#")
 
-        try: self.s.setting_50
+        grbl_settings_and_params = [
+                    '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
+                    '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
+                    '$2=' + str(self.s.setting_2),           #Step port invert, mask
+                    '$3=' + str(self.s.setting_3),           #Direction port invert, mask
+                    '$4=' + str(self.s.setting_4),           #Step enable invert, boolean
+                    '$5=' + str(self.s.setting_5),           #Limit pins invert, boolean
+                    '$6=' + str(self.s.setting_6),           #Probe pin invert, boolean
+                    '$10=' + str(self.s.setting_10),          #Status report, mask <----------------------
+                    '$11=' + str(self.s.setting_11),      #Junction deviation, mm
+                    '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
+                    '$13=' + str(self.s.setting_13),          #Report inches, boolean
+                    '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------                        
+                    '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
+                    '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
+                    '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
+                    '$24=' + str(self.s.setting_24),     #Homing feed, mm/min
+                    '$25=' + str(self.s.setting_25),    #Homing seek, mm/min
+                    '$26=' + str(self.s.setting_26),        #Homing debounce, milliseconds
+                    '$27=' + str(self.s.setting_27),      #Homing pull-off, mm
+                    '$30=' + str(self.s.setting_30),      #Max spindle speed, RPM
+                    '$31=' + str(self.s.setting_31),         #Min spindle speed, RPM
+                    '$32=' + str(self.s.setting_32)           #Laser mode, boolean
+            ]
+
+        try:
+            grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
+            grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
+            grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
+
         except:
-            grbl_settings_and_params = [
-                        '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
-                        '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
-                        '$2=' + str(self.s.setting_2),           #Step port invert, mask
-                        '$3=' + str(self.s.setting_3),           #Direction port invert, mask
-                        '$4=' + str(self.s.setting_4),           #Step enable invert, boolean
-                        '$5=' + str(self.s.setting_5),           #Limit pins invert, boolean
-                        '$6=' + str(self.s.setting_6),           #Probe pin invert, boolean
-                        '$10=' + str(self.s.setting_10),          #Status report, mask <----------------------
-                        '$11=' + str(self.s.setting_11),      #Junction deviation, mm
-                        '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
-                        '$13=' + str(self.s.setting_13),          #Report inches, boolean
-                        '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------
-                        '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
-                        '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
-                        '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
-                        '$24=' + str(self.s.setting_24),     #Homing feed, mm/min
-                        '$25=' + str(self.s.setting_25),    #Homing seek, mm/min
-                        '$26=' + str(self.s.setting_26),        #Homing debounce, milliseconds
-                        '$27=' + str(self.s.setting_27),      #Homing pull-off, mm
-                        '$30=' + str(self.s.setting_30),      #Max spindle speed, RPM
-                        '$31=' + str(self.s.setting_31),         #Min spindle speed, RPM
-                        '$32=' + str(self.s.setting_32),           #Laser mode, boolean
-                        '$100=' + str(self.s.setting_100),   #X steps/mm
-                        '$101=' + str(self.s.setting_101),   #Y steps/mm
-                        '$102=' + str(self.s.setting_102),   #Z steps/mm
-                        '$110=' + str(self.s.setting_110),   #X Max rate, mm/min
-                        '$111=' + str(self.s.setting_111),   #Y Max rate, mm/min
-                        '$112=' + str(self.s.setting_112),   #Z Max rate, mm/min
-                        '$120=' + str(self.s.setting_120),    #X Acceleration, mm/sec^2
-                        '$121=' + str(self.s.setting_121),    #Y Acceleration, mm/sec^2
-                        '$122=' + str(self.s.setting_122),    #Z Acceleration, mm/sec^2
-                        '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
-                        '$131=' + str(self.s.setting_131),   #Y Max travel, mm
-                        '$132=' + str(self.s.setting_132)   #Z Max travel, mm
-                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
-                ]
-        else:
-            grbl_settings_and_params = [
-                        '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
-                        '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
-                        '$2=' + str(self.s.setting_2),           #Step port invert, mask
-                        '$3=' + str(self.s.setting_3),           #Direction port invert, mask
-                        '$4=' + str(self.s.setting_4),           #Step enable invert, boolean
-                        '$5=' + str(self.s.setting_5),           #Limit pins invert, boolean
-                        '$6=' + str(self.s.setting_6),           #Probe pin invert, boolean
-                        '$10=' + str(self.s.setting_10),          #Status report, mask <----------------------
-                        '$11=' + str(self.s.setting_11),      #Junction deviation, mm
-                        '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
-                        '$13=' + str(self.s.setting_13),          #Report inches, boolean
-                        '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------                        
-                        '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
-                        '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
-                        '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
-                        '$24=' + str(self.s.setting_24),     #Homing feed, mm/min
-                        '$25=' + str(self.s.setting_25),    #Homing seek, mm/min
-                        '$26=' + str(self.s.setting_26),        #Homing debounce, milliseconds
-                        '$27=' + str(self.s.setting_27),      #Homing pull-off, mm
-                        '$30=' + str(self.s.setting_30),      #Max spindle speed, RPM
-                        '$31=' + str(self.s.setting_31),         #Min spindle speed, RPM
-                        '$32=' + str(self.s.setting_32),           #Laser mode, boolean
-                        '$50=' + str(self.s.setting_50),     #Yeti custom serial number
-                        '$100=' + str(self.s.setting_100),   #X steps/mm
-                        '$101=' + str(self.s.setting_101),   #Y steps/mm
-                        '$102=' + str(self.s.setting_102),   #Z steps/mm
-                        '$110=' + str(self.s.setting_110),   #X Max rate, mm/min
-                        '$111=' + str(self.s.setting_111),   #Y Max rate, mm/min
-                        '$112=' + str(self.s.setting_112),   #Z Max rate, mm/min
-                        '$120=' + str(self.s.setting_120),    #X Acceleration, mm/sec^2
-                        '$121=' + str(self.s.setting_121),    #Y Acceleration, mm/sec^2
-                        '$122=' + str(self.s.setting_122),    #Z Acceleration, mm/sec^2
-                        '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
-                        '$131=' + str(self.s.setting_131),   #Y Max travel, mm
-                        '$132=' + str(self.s.setting_132)   #Z Max travel, mm
-                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
-                ]
+            pass
+
+        grbl_settings_and_params += [
+                    '$100=' + str(self.s.setting_100),   #X steps/mm
+                    '$101=' + str(self.s.setting_101),   #Y steps/mm
+                    '$102=' + str(self.s.setting_102),   #Z steps/mm
+                    '$110=' + str(self.s.setting_110),   #X Max rate, mm/min
+                    '$111=' + str(self.s.setting_111),   #Y Max rate, mm/min
+                    '$112=' + str(self.s.setting_112),   #Z Max rate, mm/min
+                    '$120=' + str(self.s.setting_120),    #X Acceleration, mm/sec^2
+                    '$121=' + str(self.s.setting_121),    #Y Acceleration, mm/sec^2
+                    '$122=' + str(self.s.setting_122),    #Z Acceleration, mm/sec^2
+                    '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                    '$131=' + str(self.s.setting_131),   #Y Max travel, mm
+                    '$132=' + str(self.s.setting_132)   #Z Max travel, mm
+                    # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+            ]
 
         f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
         f.write(('\n').join(grbl_settings_and_params))
@@ -987,6 +959,8 @@ class RouterMachine(object):
     handshake_event = None
 
     def tmc_handshake(self):
+
+        self.clear_motor_registers()
 
         if self.s.fw_version and self.state().startswith('Idle'):
 
@@ -2879,6 +2853,7 @@ class RouterMachine(object):
 
 
     ## SET SMART FEATURES
+
     def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
             display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + str(motor) + ", THR: " + str(threshold)
@@ -2898,7 +2873,57 @@ class RouterMachine(object):
 
         if axis == "Z": self.set_sg_threshold(TMC_Z, threshold)
 
+
+    def set_motor_current(self, axis, current):
+
+        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle'):
+
+            if "X" in axis: motors = [TMC_X1, TMC_X2]
+            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
+            if "Z" in axis: motors = [TMC_Z]
+
+            for motor in motors: 
+
+                altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
+                time.sleep(0.5)
+
+                altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
+                time.sleep(0.5)
+
+            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+            time.sleep(1)
+            self.tmc_handshake()
+            time.sleep(1)
+            return True
+
+        else:
+            return False
+
+
+    def clear_motor_registers(self):
+
+        self.TMC_motor[TMC_X1].reset_registers()
+        self.TMC_motor[TMC_X2].reset_registers()
+        self.TMC_motor[TMC_Y1].reset_registers()
+        self.TMC_motor[TMC_Y2].reset_registers()
+        self.TMC_motor[TMC_Z].reset_registers()
+
+
+    def TMC_registers_have_been_read_in(self):
+
+        if not self.TMC_motor[TMC_X1].got_registers: return False
+        if not self.TMC_motor[TMC_X2].got_registers: return False
+        if not self.TMC_motor[TMC_Y1].got_registers: return False
+        if not self.TMC_motor[TMC_Y2].got_registers: return False
+        if not self.TMC_motor[TMC_Z].got_registers: return False
+        return True
+
+
     ## FIRMWARE UPDATES
+
     def toggle_reset_pin(self):
 
         try: 
@@ -2942,36 +2967,7 @@ class RouterMachine(object):
             Clock.schedule_once(self.s.start_services, 1)
 
 
-    def set_motor_current(self, axis, current):
-
-        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
-            self.state().startswith('Idle'):
-
-            if "X" in axis: motors = [TMC_X1, TMC_X2]
-            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
-            if "Z" in axis: motors = [TMC_Z]
-
-            for motor in motors: 
-
-                altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
-                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
-                time.sleep(0.5)
-
-                altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
-                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
-                time.sleep(0.5)
-
-            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
-            time.sleep(0.5)
-            self.tmc_handshake()
-            time.sleep(0.5)
-            return True
-
-        else:
-            return False
-
-
-## MEASURING STATUS DATA
+    ## MEASURING STATUS DATA
 
     def measured_running_data(self): 
         if not self.s.measure_running_data and self.s.running_data:
@@ -2997,12 +2993,3 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
-
-
-
-
-
-
-
-
-

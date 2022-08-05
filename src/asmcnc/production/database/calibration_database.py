@@ -60,7 +60,8 @@ class CalibrationDatabase(object):
             from asmcnc.production.database import credentials
 
         except ImportError:
-            log("Can't import credentials")
+            log("Can't import credentials (trying to get local folder creds)")
+            import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
@@ -99,8 +100,58 @@ class CalibrationDatabase(object):
 
         self.conn.commit()
 
+    def do_z_head_coefficients_exist(self, combined_id):
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM ZHeadCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            return cursor.fetchone() is not None
+
+    def do_lower_beam_coefficients_exist(self, combined_id):
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            return cursor.fetchone() is not None
+
+    def delete_z_head_coefficients(self, combined_id):
+        log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM ZHeadCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            self.delete_coefficients(combined_id)
+
+        self.conn.commit()
+
+    def delete_coefficients(self, combined_id):
+        log("Deleting existing data from Coefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM Coefficients WHERE SubAssemblyId = ?"
+
+            cursor.execute(query, combined_id)
+
+        self.conn.commit()
+
+    def delete_lower_beam_coefficients(self, combined_id):
+        log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM LowerBeamCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            self.delete_coefficients(combined_id)
+
+        self.conn.commit()
+
     def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
         combined_id = (zh_serial + str(motor_index) + str(calibration_stage_id))[2:]
+
+        if self.do_z_head_coefficients_exist(combined_id):
+            self.delete_z_head_coefficients(combined_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
@@ -114,6 +165,9 @@ class CalibrationDatabase(object):
 
     def setup_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id):
         combined_id = (lb_serial + str(motor_index) + str(calibration_stage_id))[2:]
+
+        if self.do_lower_beam_coefficients_exist(combined_id):
+            self.delete_lower_beam_coefficients(combined_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO LowerBeamCoefficients (Id, LowerBeamSerialNumber, MotorIndex, CalibrationStageId) " \
@@ -156,24 +210,25 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
+        return self.stage_id_dict.get(description)
 
-        try:
-            with self.conn.cursor() as cursor:
-                query = "SELECT Id FROM Stages WHERE Description = ?"
-
-                params = description
-
-                cursor.execute(query, params)
-
-                return cursor.fetchone()[0]
-
-        except:
-            log("Could not get stage ID from DB!!")
-            print(traceback.format_exc())
-
-            # assign from list instead - this is a backup! 
-            # BUT if anything in db changes, it may be wrong!! 
-            return self.stage_id_dict.get(description)
+        # try:
+        #     with self.conn.cursor() as cursor:
+        #         query = "SELECT Id FROM Stages WHERE Description = ?"
+        #
+        #         params = description
+        #
+        #         cursor.execute(query, params)
+        #
+        #         return cursor.fetchone()[0]
+        #
+        # except:
+        #     log("Could not get stage ID from DB!!")
+        #     print(traceback.format_exc())
+        #
+        #     # assign from list instead - this is a backup!
+        #     # BUT if anything in db changes, it may be wrong!!
+        #     return self.stage_id_dict.get(description)
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 
@@ -288,7 +343,7 @@ class CalibrationDatabase(object):
                     "temp": data[131][0],
                 }
             except:
-                log('Database is empty or incomplete for ' + combined_id)
+                log('Database is empty or incomplete for ' + str(combined_id))
 
             return parameters
 
