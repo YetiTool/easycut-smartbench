@@ -1569,7 +1569,7 @@ class StallJigScreen(Screen):
         last_test_pass = [
 
             self.combined_id,
-            self.indices["axis"], # X = 0, Y = 1, Z = 3
+            self.indices["axis"], # X = 0, Y = 1, Z = 2
             self.feed_dict[self.current_axis()][self.indices["feed"]],
             self.threshold_dict[self.current_axis()][self.indices["threshold"]],
             reported_feed,

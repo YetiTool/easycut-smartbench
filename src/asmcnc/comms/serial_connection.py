@@ -756,6 +756,7 @@ class SerialConnection(object):
     last_stall_load = None
     last_stall_threshold = None
     last_stall_travel_distance = None
+    last_stall_temperature = None
     last_stall_x_coord = None
     last_stall_y_coord = None
     last_stall_z_coord = None
@@ -1126,9 +1127,10 @@ class SerialConnection(object):
                     self.last_stall_load = int(sg_alarm_parts[2])
                     self.last_stall_threshold = int(sg_alarm_parts[3])
                     self.last_stall_travel_distance = int(sg_alarm_parts[4])
-                    self.last_stall_x_coord = float(sg_alarm_parts[5])
-                    self.last_stall_y_coord = float(sg_alarm_parts[6])
-                    self.last_stall_z_coord = float(sg_alarm_parts[7])
+                    self.last_stall_temperature = int(sg_alarm_parts[5])
+                    self.last_stall_x_coord = float(sg_alarm_parts[6])
+                    self.last_stall_y_coord = float(sg_alarm_parts[7])
+                    self.last_stall_z_coord = float(sg_alarm_parts[8])
                     self.last_stall_status = message
 
                 elif part.startswith('Sp:'):
