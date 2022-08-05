@@ -852,6 +852,7 @@ class PopupStopStallJig(Widget):
       def machine_reset(*args):
         self.m.stop_from_soft_stop_cancel()
         self.sj.unschedule_all_events()
+        self.sj.set_default_thresholds()
         self.sj.test_stopped = False
         self.sj.restore_acceleration_and_soft_limits()
         self.sj.enable_all_buttons_except_run()

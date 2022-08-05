@@ -698,6 +698,7 @@ class StallJigScreen(Screen):
 
     def back_to_fac_settings(self):
 
+        self.set_default_thresholds()
         self.restore_acceleration_and_soft_limits()
         self.systemtools_sm.open_factory_settings_screen()
         log("Return to factory settings")
@@ -1046,6 +1047,7 @@ class StallJigScreen(Screen):
 
     def run(self):
 
+        self.disable_all_buttons_except_stop()
         if self.smartbench_is_not_ready_for_next_command():
 
             if self.run_button.disabled:
@@ -1056,7 +1058,6 @@ class StallJigScreen(Screen):
             self.run_event = Clock.schedule_once(lambda dt: self.run(), 2)
             return
 
-        self.disable_all_buttons_except_stop()
         self.test_passed = False
         self.threshold_reached = False
         self.result_label.text = ""
@@ -1634,24 +1635,17 @@ class StallJigScreen(Screen):
 
             log("All tests completed!!")
             self.m.stop_measuring_running_data()
+            self.set_default_thresholds()
             self.restore_acceleration_and_soft_limits()
             self.test_status_label.text = "TESTS COMPLETE"
             log("Send data")
             self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send(), 1)
-
             return True
 
-
-    def reset_tmcs(self):
-
-        self.reset_tmc_regs.background_normal = ""
-
-        # if self.m.toggle_reset_pin(): self.reset_tmc_regs.background_color = self.bright_pass_green
-        # else: self.reset_tmc_regs.background_color = self.fail_orange
-
-        self.m.stop_serial_comms()
-        Clock.schedule_once(lambda dt: self.m.toggle_reset_pin(), 1)
-        Clock.schedule_once(lambda dt: self.m.do_connection(), 5)
+    def set_default_thresholds(self):
+        self.m.set_threshold_for_axis("X", 250)
+        self.m.set_threshold_for_axis("Y", 250)
+        self.m.set_threshold_for_axis("Z", 175)
 
 
 

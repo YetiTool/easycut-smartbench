@@ -2889,12 +2889,14 @@ class RouterMachine(object):
         if axis == "X": 
             self.set_sg_threshold(TMC_X1, threshold)
             self.set_sg_threshold(TMC_X2, threshold)
+            return
 
-        if axis == "Z": self.set_sg_threshold(TMC_Z, threshold)
         if axis == "Y":
             self.set_sg_threshold(TMC_Y1, threshold)
             self.set_sg_threshold(TMC_Y2, threshold)
+            return
 
+        if axis == "Z": self.set_sg_threshold(TMC_Z, threshold)
 
     ## FIRMWARE UPDATES
     def toggle_reset_pin(self):
