@@ -2764,6 +2764,7 @@ class RouterMachine(object):
 
     def stream_calibration_check_files(self, axes):
 
+
         # Toggle FW reset pin before starting 
         if not self.toggle_reset_pin():
             self.checking_calibration_fail_info = "Pin toggle fail"
@@ -2781,6 +2782,7 @@ class RouterMachine(object):
 
         log("Checking calibration...")
 
+        self.checking_calibration_fail_info = ""
         self.temp_sg_array = []
         self.s.record_sg_values_flag = True
 
