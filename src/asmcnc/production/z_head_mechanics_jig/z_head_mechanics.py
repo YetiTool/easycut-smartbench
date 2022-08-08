@@ -17,6 +17,7 @@ Builder.load_string("""
     load_down_peak:load_down_peak
     load_up_average:load_up_average
     load_down_average:load_down_average
+    load_realtime:load_realtime
 
     load_graph:load_graph
 
@@ -49,41 +50,66 @@ Builder.load_string("""
                     background_normal: ''
                     on_press: root.prepare_for_test()
 
-            # Load value table
-            GridLayout:
+            BoxLayout:
                 size_hint_x: 2
-                rows: 3
-                cols: 3
+                orientation: 'horizontal'
 
-                Label
+                # Load value table
+                GridLayout:
+                    size_hint_x: 3
+                    rows: 3
+                    cols: 3
 
-                Label:
-                    text: 'Up'
+                    Label
 
-                Label:
-                    text: 'Down'
+                    Label:
+                        text: 'Up'
 
-                Label:
-                    text: 'Peak load'
+                    Label:
+                        text: 'Down'
 
-                Label:
-                    id: load_up_peak
-                    text: '-'
+                    Label:
+                        text: 'Peak load'
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
 
-                Label:
-                    id: load_down_peak
-                    text: '-'
+                    Label:
+                        id: load_up_peak
+                        text: '-'
 
-                Label:
-                    text: 'Average load'
+                    Label:
+                        id: load_down_peak
+                        text: '-'
 
-                Label:
-                    id: load_up_average
-                    text: '-'
+                    Label:
+                        text: 'Average load'
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
 
-                Label:
-                    id: load_down_average
-                    text: '-'
+                    Label:
+                        id: load_up_average
+                        text: '-'
+
+                    Label:
+                        id: load_down_average
+                        text: '-'
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    Label:
+                        text: 'Realtime load'
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+
+                    Label:
+                        id: load_realtime
+                        size_hint_y: 2
+                        text: '-'
+                        font_size: dp(25)
 
             Button:
                 size_hint_x: 0.7
@@ -104,8 +130,8 @@ Builder.load_string("""
                 on_press: root.stop()
 
         Label:
-            size_hint_y: 3
             id: test_progress_label
+            size_hint_y: 3
             text: 'Waiting...'
             font_size: dp(30)
             markup: True
@@ -143,6 +169,7 @@ class ZHeadMechanics(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
+        Clock.schedule_interval(self.update_realtime_load, 0.1)
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
@@ -270,6 +297,12 @@ class ZHeadMechanics(Screen):
 
     def calibrate_motor(self):
         self.m.calibrate_Z()
+
+    def update_realtime_load(self, dt):
+        if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
+            self.load_realtime.text = '-'
+        else:
+            self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
 
 
     def go_to_monitor(self):
