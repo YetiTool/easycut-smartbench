@@ -64,15 +64,18 @@ Builder.load_string("""
 
                     Label:
                         text: 'Up'
+                        bold: True
 
                     Label:
                         text: 'Down'
+                        bold: True
 
                     Label:
                         text: 'Peak load'
                         text_size: self.size
                         halign: 'center'
                         valign: 'middle'
+                        bold: True
 
                     Label:
                         id: load_up_peak
@@ -87,6 +90,7 @@ Builder.load_string("""
                         text_size: self.size
                         halign: 'center'
                         valign: 'middle'
+                        bold: True
 
                     Label:
                         id: load_up_average
@@ -101,6 +105,7 @@ Builder.load_string("""
 
                     Label:
                         text: 'Realtime load'
+                        bold: True
                         text_size: self.size
                         halign: 'center'
                         valign: 'middle'
@@ -111,15 +116,32 @@ Builder.load_string("""
                         text: '-'
                         font_size: dp(25)
 
-            Button:
+            BoxLayout:
                 size_hint_x: 0.7
-                text: 'Serial Monitor'
-                bold: True
-                font_size: dp(20)
-                text_size: self.size
-                valign: 'middle'
-                halign: 'center'
-                on_press: root.go_to_monitor()
+                orientation: 'vertical'
+                spacing: dp(5)
+
+                Button:
+                    text: 'Serial Monitor'
+                    bold: True
+                    font_size: dp(20)
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
+                    background_color: hex('#888888FF')
+                    background_normal: ''
+                    on_press: root.go_to_monitor()
+
+                Button:
+                    text: 'Manual Move'
+                    bold: True
+                    font_size: dp(20)
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
+                    background_color: hex('#F1C232FF')
+                    background_normal: ''
+                    on_press: root.go_to_manual_move()
 
             Button:
                 text: 'STOP'
@@ -309,3 +331,6 @@ class ZHeadMechanics(Screen):
 
     def go_to_monitor(self):
         self.sm.current = 'monitor'
+
+    def go_to_manual_move(self):
+        self.sm.current = 'manual_move'
