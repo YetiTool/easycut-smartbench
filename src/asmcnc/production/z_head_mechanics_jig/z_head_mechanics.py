@@ -197,13 +197,13 @@ class ZHeadMechanics(Screen):
 
     def begin_test(self):
         self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
-        Clock.schedule_once(self.start_moving_down, 0.1)
+        Clock.schedule_once(self.start_moving_down, 1)
 
     def start_moving_down(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed / 5)
-                Clock.schedule_once(self.record_down_values, 0.1)
+                Clock.schedule_once(self.record_down_values, 0.4)
             else:
                 Clock.schedule_once(self.start_moving_down, 0.1)
 
@@ -211,7 +211,7 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed / 5)
-                Clock.schedule_once(self.record_up_values, 0.1)
+                Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
                     self.sg_values_down.append(self.m.s.sg_z_motor_axis)
@@ -233,13 +233,13 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             self.m.set_motor_current("Z", 13)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
-            Clock.schedule_once(self.continue_phase_two, 0.1)
+            Clock.schedule_once(self.continue_phase_two, 0.4)
 
     def continue_phase_two(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
-                Clock.schedule_once(self.finish_test, 0.1)
+                Clock.schedule_once(self.finish_test, 0.4)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
 
