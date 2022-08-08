@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging, threading, re
+import logging, threading, re, traceback
 
 try: 
     import pigpio
@@ -1140,6 +1140,7 @@ class RouterMachine(object):
 
     def _grbl_soft_reset(self):
         log('grbl realtime cmd sent: \\x18 soft reset')
+        self.s.grbl_waiting_for_reset = True
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def _grbl_door(self):
@@ -1157,7 +1158,10 @@ class RouterMachine(object):
     def is_job_streaming(self): return self.s.is_job_streaming
     def state(self): return self.s.m_state
     def buffer_capacity(self): return self.s.serial_blocks_available
+    def is_grbl_waiting_for_reset(self): return self.s.grbl_waiting_for_reset
 
+
+# GRBL STATES AND SETTINGS
 
     def set_state(self, temp_state):
         grbl_state_words = ['Idle', 'Run', 'Hold', 'Jog', 'Alarm', 'Door', 'Check', 'Home', 'Sleep']
@@ -1215,6 +1219,59 @@ class RouterMachine(object):
         print 'switching soft limits & hard limts ON'
         settings = ['$22=1','$20=1','$21=1']
         self.s.start_sequential_stream(settings)
+
+    def disable_only_hard_limits(self):
+
+        log("TURNING OFF HARD LIMITS")
+        settings = ['$21=0']
+        self.s.start_sequential_stream(settings)
+
+    def enable_only_hard_limits(self):
+
+        log("TURNING ON HARD LIMITS")
+        settings = ['$21=1']
+        self.s.start_sequential_stream(settings)
+
+    def disable_only_soft_limits(self):
+
+        log("TURNING OFF SOFT LIMITS")
+        settings = ['$20=0']
+        self.s.start_sequential_stream(settings)
+
+    def enable_only_soft_limits(self):
+
+        log("TURNING ON SOFT LIMITS")
+        settings = ['$20=1']
+        self.s.start_sequential_stream(settings)
+
+    # settings for v1.3 and above
+
+    def disable_x_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable x motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_x_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable x motors'):
+            self.send_command_to_motor("Disable X motors", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=1)
+
+    def disable_y_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable y motors'):
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=0)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_y_motors(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable y motors'):
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Disable Y motors", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
+
+    def disable_z_motor(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable z motor'):
+            self.send_command_to_motor("Disable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+
+    def enable_z_motor(self):
+        if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable z motor'):
+            self.send_command_to_motor("Disable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+
 
 # SETTINGS GETTERS
     def serial_number(self): 
@@ -2707,6 +2764,7 @@ class RouterMachine(object):
 
     def stream_calibration_check_files(self, axes):
 
+
         # Toggle FW reset pin before starting 
         if not self.toggle_reset_pin():
             self.checking_calibration_fail_info = "Pin toggle fail"
@@ -2724,6 +2782,7 @@ class RouterMachine(object):
 
         log("Checking calibration...")
 
+        self.checking_calibration_fail_info = ""
         self.temp_sg_array = []
         self.s.record_sg_values_flag = True
 
@@ -2787,40 +2846,34 @@ class RouterMachine(object):
     def get_abs_maximums_from_sg_array(self, sub_array, index):
 
         just_idx_sgs = [sg_arr[index] for sg_arr in sub_array if sg_arr[index] != -999]
-        try: abs_max_idx = max(just_idx_sgs, key=abs)
-        except: self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
+        try: 
+            abs_max_idx = max(just_idx_sgs, key=abs)
+        except: 
+            log(traceback.format_exc())
+            self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
         return abs_max_idx
 
 
     ## SET SMART FEATURES
+
     def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
-            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + motor + ", THR: " + threshold
+            display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + str(motor) + ", THR: " + str(threshold)
             self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
 
+    def set_threshold_for_axis(self, axis, threshold):
 
-    ## FIRMWARE UPDATES
-    def toggle_reset_pin(self):
+        if axis == "X": 
+            self.set_sg_threshold(TMC_X1, threshold)
+            self.set_sg_threshold(TMC_X2, threshold)
+            return
 
-        try: 
-            # Toggle reset pin
-            pi = pigpio.pi()
-            pi.set_mode(17, pigpio.ALT3)
-            new_pin_setting = int(pi.get_mode(17))
-            pi.stop()
+        if axis == "Y":
+            self.set_sg_threshold(TMC_Y1, threshold)
+            self.set_sg_threshold(TMC_Y2, threshold)
+            return
 
-            log("Toggled FW reset pin: mode " + str(new_pin_setting))
-
-            if new_pin_setting == 7:
-                return True
-
-            else:
-                return False
-
-        except: 
-            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
-            return False
-
+        if axis == "Z": self.set_sg_threshold(TMC_Z, threshold)
 
 
     def set_motor_current(self, axis, current):
@@ -2871,6 +2924,74 @@ class RouterMachine(object):
         return True
 
 
+    ## FIRMWARE UPDATES
+
+    def toggle_reset_pin(self):
+
+        try: 
+            # Toggle reset pin
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            new_pin_setting = int(pi.get_mode(17))
+            pi.stop()
+
+            log("Toggled FW reset pin: mode " + str(new_pin_setting))
+
+            if new_pin_setting == 7:
+                return True
+
+            else:
+                return False
+
+        except: 
+            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            return False
 
 
+    def stop_serial_comms(self):
 
+        self.s.grbl_scanner_running = False
+
+        if self.state().startswith("Off"):
+            self.close_serial_connection()
+
+        else:
+            Clock.schedule_once(lambda dt: self.stop_serial_comms, 0.1)
+
+    def do_connection(self):
+
+        self.reconnect_serial_connection()
+        self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 0.4)
+
+    def try_start_services(self, dt):
+        if self.s.is_connected():
+            Clock.unschedule(self.poll_for_reconnection)
+            Clock.schedule_once(self.s.start_services, 1)
+
+
+    ## MEASURING STATUS DATA
+
+    def measured_running_data(self): 
+        if not self.s.measure_running_data and self.s.running_data:
+            return self.s.running_data
+
+        else:
+            return False
+
+    def start_measuring_running_data(self, stage = 0):
+        self.s.running_data = []
+        self.s.measurement_stage = stage
+        self.s.measure_running_data = True
+
+    def stop_measuring_running_data(self):
+        self.s.measure_running_data = False
+
+    def continue_measuring_running_data(self):
+        self.s.measure_running_data = True
+
+    def change_stage_measuring_running_data(self, stage):
+        self.s.measurement_stage = stage
+
+    def clear_measured_running_data(self):
+        self.s.measure_running_data = False
+        self.s.running_data = []
