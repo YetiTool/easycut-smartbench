@@ -1913,11 +1913,14 @@ class RouterMachine(object):
 
     time_to_check_for_tuning_prep = 0
 
-    temp_toff = 2
-    temp_sgt = 0
+    toff_min = 4 # 2
+    sgt_min = 4 # 0
 
     toff_max = 10 # 10
-    sgt_max = 20 # 20
+    sgt_max = 10 # 20
+
+    temp_toff = toff_min
+    temp_sgt = sgt_min
 
     reference_temp = 55.0
     temp_tolerance = 20.0
@@ -1942,8 +1945,8 @@ class RouterMachine(object):
 
         self.temp_sg_array = []
 
-        self.temp_toff = 2
-        self.temp_sgt = 0
+        self.temp_toff = self.toff_min
+        self.temp_sgt = self.sgt_min
 
     def motor_driver_temp_in_range(self, temp_to_assess):
         return (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit)
@@ -2258,7 +2261,7 @@ class RouterMachine(object):
 
                 self.temp_sgt = self.temp_sgt + 1
 
-            self.temp_sgt = 0
+            self.temp_sgt = self.sgt_min
             self.temp_toff = self.temp_toff + 1
 
         try:
@@ -2280,8 +2283,8 @@ class RouterMachine(object):
         # toff, sgt, dsg
         prev_best = [None, None, None]
 
-        for toff in range(2,self.toff_max + 1):
-            for sgt in range(0,self.sgt_max + 1):
+        for toff in range(self.toff_min, self.toff_max + 1):
+            for sgt in range(self.sgt_min, self.sgt_max + 1):
 
                 try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
 
