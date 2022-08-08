@@ -28,14 +28,26 @@ Builder.load_string("""
             padding: dp(5)
             spacing: dp(5)
 
-            Button:
-                id: begin_test_button
-                text: 'Begin Test'
-                bold: True
-                font_size: dp(25)
-                background_color: hex('#00C300FF')
-                background_normal: ''
-                on_press: root.prepare_for_test()
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(5)
+
+                Button:
+                    text: 'Calibrate Motor'
+                    bold: True
+                    font_size: dp(20)
+                    background_color: hex('#FF9900FF')
+                    background_normal: ''
+                    on_press: root.calibrate_motor()
+
+                Button:
+                    id: begin_test_button
+                    text: 'Begin Test'
+                    bold: True
+                    font_size: dp(20)
+                    background_color: hex('#00C300FF')
+                    background_normal: ''
+                    on_press: root.prepare_for_test()
 
             # Load value table
             GridLayout:
@@ -77,7 +89,7 @@ Builder.load_string("""
                 size_hint_x: 0.7
                 text: 'Serial Monitor'
                 bold: True
-                font_size: dp(25)
+                font_size: dp(20)
                 text_size: self.size
                 valign: 'middle'
                 halign: 'center'
@@ -86,7 +98,7 @@ Builder.load_string("""
             Button:
                 text: 'STOP'
                 bold: True
-                font_size: dp(25)
+                font_size: dp(20)
                 background_color: [1,0,0,1]
                 background_normal: ''
                 on_press: root.stop()
@@ -254,6 +266,10 @@ class ZHeadMechanics(Screen):
         self.sg_values_up = []
         self.z_pos_values_down = []
         self.z_pos_values_up = []
+
+
+    def calibrate_motor(self):
+        self.m.calibrate_Z()
 
 
     def go_to_monitor(self):
