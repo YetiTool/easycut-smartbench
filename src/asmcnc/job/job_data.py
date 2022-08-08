@@ -476,7 +476,7 @@ class JobData(object):
             if distance_line:
                 # Recovery not allowed if G91 is used
                 if re.search("G91([A-Z]|\s|$)", distance_line):
-                    return False, 'This job contains the G91 g-code, so it cannot be recovered.'
+                    return False, 'The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.'
                 recovery_gcode.append("G90")
 
             # Arc IJK distance mode
