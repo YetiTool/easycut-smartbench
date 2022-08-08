@@ -877,9 +877,9 @@ class OvernightTesting(Screen):
 
         # GET DIRECTIONS
 
-        # -1    BACKWARDS/UP (TOWARDS HOME)
+        # -1    FORWARDS/DOWN (AWAY FROM HOME)
         # 0     NOT MOVING
-        # 1     FORWARDS/DOWN (AWAY FROM HOME)
+        # 1     BACKWARDS/UP (TOWARDS HOME)
 
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
