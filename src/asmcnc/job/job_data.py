@@ -471,7 +471,7 @@ class JobData(object):
             if plane_line:
                 recovery_gcode.append(re.search("G1[7-9]", plane_line).group(0))
 
-            # Distance mode
+            # Absolute or incremental distance mode
             distance_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]([A-Z]|\s|$)", s)), None)
             if distance_line:
                 # Recovery not allowed if G91 is used
