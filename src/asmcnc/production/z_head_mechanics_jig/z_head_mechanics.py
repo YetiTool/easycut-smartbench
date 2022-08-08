@@ -144,8 +144,10 @@ Builder.load_string("""
         Image:
             id: load_graph
             size_hint: None, None
-            height: dp(360)
-            width: dp(800)
+            height: dp(355)
+            width: dp(790)
+            x: dp(5)
+            y: dp(5)
             allow_stretch: True
             opacity: 0
 
@@ -258,7 +260,7 @@ class ZHeadMechanics(Screen):
         self.load_up_average.text = str(sum(self.sg_values_up) / len(self.sg_values_up))
         self.load_down_average.text = str(sum(self.sg_values_down) / len(self.sg_values_down))
 
-        plt.rcParams["figure.figsize"] = (8,3.6)
+        plt.rcParams["figure.figsize"] = (7.9,3.55)
         plt.plot(self.z_pos_values_down, self.sg_values_down, 'b', label='Z SG Down')
         plt.plot(self.z_pos_values_up, self.sg_values_up, 'r', label='Z SG Up')
         plt.legend()
