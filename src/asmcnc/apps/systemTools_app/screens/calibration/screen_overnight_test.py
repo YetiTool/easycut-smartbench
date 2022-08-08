@@ -1269,7 +1269,7 @@ class OvernightTesting(Screen):
         self.setup_arrays()
         self.overnight_running = False
         self.stage = ""
-        self.m.send_any_gcode_command('M3 S20000')
+        # self.m.send_any_gcode_command('M3 S20000')
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 10, self.m.y_min_jog_abs_limit + 10, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 10, 750)
         self.stop_button.disabled = True
