@@ -158,26 +158,26 @@ class ZHeadMechanics(Screen):
 
     def begin_test(self):
         self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
-        Clock.schedule_once(self.start_moving_down, 0.4)
+        Clock.schedule_once(self.start_moving_down, 0.1)
 
     def start_moving_down(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed / 5)
-                Clock.schedule_once(self.record_down_values, 0.4)
+                Clock.schedule_once(self.record_down_values, 0.1)
             else:
-                Clock.schedule_once(self.start_moving_down, 0.4)
+                Clock.schedule_once(self.start_moving_down, 0.1)
 
     def record_down_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed / 5)
-                Clock.schedule_once(self.record_up_values, 0.4)
+                Clock.schedule_once(self.record_up_values, 0.1)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
                     self.sg_values_down.append(self.m.s.sg_z_motor_axis)
                     self.z_pos_values_down.append(self.m.mpos_z())
-                Clock.schedule_once(self.record_down_values, 0.4)
+                Clock.schedule_once(self.record_down_values, 0.1)
 
     def record_up_values(self, dt):
         if self.test_running:
@@ -187,22 +187,22 @@ class ZHeadMechanics(Screen):
                 if self.m.s.sg_z_motor_axis != -999:
                     self.sg_values_up.append(self.m.s.sg_z_motor_axis)
                     self.z_pos_values_up.append(self.m.mpos_z())
-                Clock.schedule_once(self.record_up_values, 0.4)
+                Clock.schedule_once(self.record_up_values, 0.1)
 
 
     def phase_two(self):
         if self.test_running:
             self.m.set_motor_current("Z", 13)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
-            Clock.schedule_once(self.continue_phase_two, 0.4)
+            Clock.schedule_once(self.continue_phase_two, 0.1)
 
     def continue_phase_two(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
-                Clock.schedule_once(self.finish_test, 0.4)
+                Clock.schedule_once(self.finish_test, 0.1)
             else:
-                Clock.schedule_once(self.continue_phase_two, 0.4)
+                Clock.schedule_once(self.continue_phase_two, 0.1)
 
     def finish_test(self, dt):
         if self.test_running:
@@ -211,7 +211,7 @@ class ZHeadMechanics(Screen):
                 self.display_results()
                 self.reset_after_stop()
             else:
-                Clock.schedule_once(self.finish_test, 0.4)
+                Clock.schedule_once(self.finish_test, 0.1)
 
     def display_results(self):
         self.load_up_peak.text = str(max(self.sg_values_up))
@@ -219,13 +219,9 @@ class ZHeadMechanics(Screen):
         self.load_up_average.text = str(sum(self.sg_values_up) / len(self.sg_values_up))
         self.load_down_average.text = str(sum(self.sg_values_down) / len(self.sg_values_down))
 
-        sg_values_min = min(self.sg_values_up + self.sg_values_down)
-        sg_values_down_adjusted = [(i - sg_values_min) for i in self.sg_values_down]
-        sg_values_up_adjusted = [(i - sg_values_min) for i in self.sg_values_up]
-
         plt.rcParams["figure.figsize"] = (8,3.6)
-        plt.plot(self.z_pos_values_down, sg_values_down_adjusted, 'b', label='Z SG Down')
-        plt.plot(self.z_pos_values_up, sg_values_up_adjusted, 'r', label='Z SG Up')
+        plt.plot(self.z_pos_values_down, self.sg_values_down, 'b', label='Z SG Down')
+        plt.plot(self.z_pos_values_up, self.sg_values_up, 'r', label='Z SG Up')
         plt.legend()
         plt.title('Z motor load vs Z coordinate')
         plt.xlabel('Z coordinate, mm')
