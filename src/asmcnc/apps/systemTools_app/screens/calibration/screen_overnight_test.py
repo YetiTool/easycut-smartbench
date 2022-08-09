@@ -1519,9 +1519,7 @@ class OvernightTesting(Screen):
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            response = publisher.run_data_send(statuses, table, stage)
-
-            log("Received %s from consumer" % response)
+            done_send = publisher.run_data_send(statuses, table, stage)
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
@@ -1529,10 +1527,7 @@ class OvernightTesting(Screen):
             self.calibration_db.insert_final_test_statistics(*statistics)
             log("Finished statistics data send")
 
-            data_send_successful = self.handle_response(response)
-            log('Status data sent successfully: ' + str(data_send_successful))
-
-            return data_send_successful
+            return done_send
 
         except:
             log("Failed to send data to DB!!")
