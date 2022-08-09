@@ -3,12 +3,15 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.production.z_head_mechanics_jig import widget_z_move_mechanics
 
 Builder.load_string("""
 <ZHeadMechanicsManualMove>:
 
     load_label:load_label
     pos_label:pos_label
+
+    z_move_container:z_move_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -99,7 +102,18 @@ Builder.load_string("""
                     background_normal: ''
                     on_press: root.home()
 
-            BoxLayout
+            BoxLayout:
+                padding: [dp(0), dp(50)]
+
+                BoxLayout:
+                    id: z_move_container
+
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
 
 """)
 
@@ -111,6 +125,9 @@ class ZHeadMechanicsManualMove(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+
+        z_move_widget = widget_z_move_mechanics.ZMoveMechanics(machine=self.m, screen_manager=self.sm)
+        self.z_move_container.add_widget(z_move_widget)
 
         Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
