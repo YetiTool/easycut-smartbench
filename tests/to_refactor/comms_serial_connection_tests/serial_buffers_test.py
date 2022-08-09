@@ -31,7 +31,7 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 ########################################################
 # IMPORTANT!!
 # Run from easycut-smartbench folder, with 
-# python -m test.comms_serial_connection_tests.serial_buffers_test
+# python -m tests.to_refactor.comms_serial_connection_tests.serial_buffers_test
 
 Cmport = 'COM3'
 

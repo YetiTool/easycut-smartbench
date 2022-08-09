@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+'''
+@author: Letty
+'''
+
+import sys
+sys.path.append('./src')
+
+
 try: 
     import unittest
     from mock import Mock
@@ -5,22 +14,22 @@ try:
 except:
     print("Can't import mocking packages, are you on a dev machine?")
 
-import sys
-sys.path.append('./src')
 
 from datetime import datetime
-from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.comms import localization
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.comms import router_machine
 from settings import settings_manager
 
 from kivy.clock import Clock
 
-########################################################
-# IMPORTANT!!
-# Run from easycut-smartbench folder, with 
-# python -m test.screen_tests.stall_jig_unit_tests
 
+'''
+########################################################
+IMPORTANT!!
+Run from easycut-smartbench folder, with 
+python -m test.automated_unit_tests.screens.test_stall_jig_units
+'''
 
 class StallJigUnitTests(unittest.TestCase):
     """Testing stall jig functions"""
@@ -34,6 +43,7 @@ class StallJigUnitTests(unittest.TestCase):
         systemtools_sm = Mock()
         systemtools_sm.sm = Mock()
         sm = Mock()
+        db = Mock()
 
         Cmport = Mock()
 
@@ -46,12 +56,12 @@ class StallJigUnitTests(unittest.TestCase):
         jd.gcode_summary_string = ""
 
         self.m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        self.stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = self.m, job = jd, settings = sett, localization = l)
+        self.stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = self.m, job = jd, settings = sett, localization = l, calibration_db = db)
 
     # GENERAL TESTS
 
     def test_is_100_greater_than_0(self):
-        assert self.screen_stall_jig.StallJigScreen.if_less_than_expected_pos(100), "Not working :("
+        assert self.stall_jig_screen.if_less_than_expected_pos(100), "Not working :("
 
     def test_is_minus_100_less_than_0(self):
         assert self.stall_jig_screen.if_more_than_expected_pos(-100), "Not working :("
