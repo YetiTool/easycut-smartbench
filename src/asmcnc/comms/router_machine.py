@@ -1914,10 +1914,10 @@ class RouterMachine(object):
     time_to_check_for_tuning_prep = 0
 
     toff_min = 4 # 2
-    sgt_min = 4 # 0
+    sgt_min = 0 # 0
 
     toff_max = 10 # 10
-    sgt_max = 10 # 20
+    sgt_max = 20 # 20
 
     temp_toff = toff_min
     temp_sgt = sgt_min
