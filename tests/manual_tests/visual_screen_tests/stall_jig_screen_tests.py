@@ -9,13 +9,12 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-
+'''
 ########################################################
-# IMPORTANT!!
-# Run from easycut-smartbench folder, with 
-# python -m test.screen_tests.alarm_screen_tests
-
-# Would be good to make this more of a unit test system
+IMPORTANT!!
+Run from easycut-smartbench folder, with 
+python -m tests.manual_tests.visual_screen_tests.stall_jig_screen_tests
+'''
 
 import sys, os
 sys.path.append('./src')
@@ -28,7 +27,9 @@ from kivy.core.window import Window
 from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
-from asmcnc.skavaUI import screen_home
+
+
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 
 try: 
     from mock import Mock, MagicMock
@@ -46,42 +47,24 @@ Cmport = 'COM3'
 class ScreenTest(App):
 
     lang_idx = 0
-
-    # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
-    # 5 - Polish (y)
-    # 6 - Danish (y)
-
     
     fw_version = "2.4.2"
+    alarm_pin = "Y"
 
-    # STALL ALARMS
-    stall_pin = "z"
-
-    # LIMIT ALARMS
-    alarm_pin = "y"
-
-    alarm_number = 1
-
-    stall_alarm_test = True
-
+    stall_pin = "S"
     motor_id = 0
     step_size = 75
     sg_val = 151
     thresh = 150
     distance = 42103020
-    temperature = 50
     x_coord = -1084.997
     y_coord = -2487.003
     z_coord = -99.954
 
 
-    alarm_message = "ALARM:" + str(alarm_number) + "\n"
+    alarm_message = "ALARM:1\n"
 
-    limit_status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>\n"
+    status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
     sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
         stall_pin + \
         "|SGALARM:" + \
@@ -90,15 +73,14 @@ class ScreenTest(App):
         str(sg_val) + "," + \
         str(thresh) + "," + \
         str(distance) + "," + \
-        str(temperature) + "," + \
         str(x_coord) + "," + \
         str(y_coord) + "," + \
         str(z_coord) + ">\n"
 
     def give_status(self):
 
-        if self.stall_alarm_test: status = self.sg_alarm_status
-        else: status = self.limit_status
+        status = self.sg_alarm_status
+        # status = self.status
         return status
 
     def give_me_a_PCB(outerSelf):
@@ -134,6 +116,8 @@ class ScreenTest(App):
         jd.job_name = ""
         jd.gcode_summary_string = ""
 
+        db = Mock()
+
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
@@ -141,9 +125,10 @@ class ScreenTest(App):
         m.s.s.fd = 1 # this is needed to force it to run
         m.s.fw_version = self.fw_version
 
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
-        sm.add_widget(home_screen)
-        sm.current = 'home'
+        # CHANGE ME
+        stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+        sm.add_widget(stall_jig_screen)
+        sm.current = 'stall_jig'
         
         Clock.schedule_once(m.s.start_services, 0.1)
 
