@@ -81,8 +81,7 @@ class DataPublisher(object):
         self.channel = self.connection.channel()
 
         self.channel.queue_declare(
-            queue=QUEUE,
-            durable=True
+            queue=QUEUE
         )
 
     def send_file_paramiko_sftp(self, file_path):
