@@ -512,32 +512,3 @@ class CalibrationDatabase(object):
         return x_dir, y_dir, z_dir
 
 
-    status_response_handling_message = ""
-
-    def handle_response(self, response):
-
-        self.status_response_handling_message = ""
-
-        # sometimes if the consumer isn't running, the body sent will be returned as the response
-        json_response = json.loads(response)
-        real_reply = 'FileName' not in json_response
-        already_exists_reply = json_response['Exists']
-
-        if not real_reply:
-            self.status_response_handling_message = 'Check status of consumer'
-            return False
-
-        response = json.loads(response)
-        received = response['Received']
-        inserted = response['Inserted']
-
-        if already_exists_reply:
-            self.status_response_handling_message = 'Data already existed in the database but has been replaced with latest data'
-            return True
-
-        if not received or not inserted:
-            self.status_response_handling_message = 'Tried to send statuses and failed'
-            return False
-
-        return True
-
