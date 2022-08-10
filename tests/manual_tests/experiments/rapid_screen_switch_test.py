@@ -9,11 +9,13 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-
+'''
 ########################################################
-# IMPORTANT!!
-# Run from easycut-smartbench folder, with 
-# python -m test.screen_tests.rapid_screen_switch_test
+IMPORTANT!!
+Run from easycut-smartbench folder, with 
+python -m tests.manual_tests.experiments.rapid_screen_switch_test
+
+'''
 
 import kivy
 from kivy.app import App
