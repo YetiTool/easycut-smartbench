@@ -3,10 +3,17 @@ import uuid
 import csv
 import json
 import paramiko
+import traceback
+from datetime import datetime
 
 CSV_PATH = './asmcnc/production/database/csvs/'
-QUEUE = 'calibration_data'
+QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
+
+
+def log(message):
+    timestamp = datetime.now()
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 def get_unique_file_name(machine_serial, table, stage):
@@ -73,17 +80,8 @@ class DataPublisher(object):
 
         self.channel = self.connection.channel()
 
-        result = self.channel.queue_declare(
-            queue=QUEUE,
-            durable=True
-        )
-
-        self.callback_queue = result.method.queue
-
-        self.channel.basic_consume(
-            queue=self.callback_queue,
-            on_message_callback=self._on_response,
-            auto_ack=True
+        self.channel.queue_declare(
+            queue=QUEUE
         )
 
     def send_file_paramiko_sftp(self, file_path):
@@ -96,30 +94,16 @@ class DataPublisher(object):
         sftp.put(file_path, WORKING_DIR + file_name)
 
     def publish(self, data):
-        self.response = None
-        self.correlation_id = str(uuid.uuid4())
-
-        self.channel.basic_publish(
-            exchange='',
-            routing_key=QUEUE,
-            properties=pika.BasicProperties(
-                reply_to=self.callback_queue,
-                correlation_id=self.correlation_id
-            ),
-            body=json.dumps(data)
-        )
-
-        print('Sent message')
-
-        while self.response is None:
-            self.connection.process_data_events()
-
-        self.connection.close()
-        return self.response
-
-    def _on_response(self, ch, method, props, body):
-        if props.correlation_id == self.correlation_id:
-            self.response = body
+        try:
+            self.channel.basic_publish(
+                exchange='',
+                routing_key=QUEUE,
+                body=json.dumps(data)
+            )
+            return True
+        except:
+            print(traceback.format_exc())
+            return False
 
     def run_data_send(self, statuses, table, stage):
         csv_name = json_to_csv(statuses, self.machine_serial, table, stage)

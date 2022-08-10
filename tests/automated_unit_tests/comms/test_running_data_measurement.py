@@ -365,7 +365,7 @@ def test_publishing_sample_data(running_data_element):
     cdb._process_running_data(running_data_list, "ys60000")
     publisher = DataPublisher("ys60000")
     response_stall_data = publisher.run_data_send(*cdb.processed_running_data["9"])
-    assert cdb.handle_response(response_stall_data)
+    assert response_stall_data
 
 
 
