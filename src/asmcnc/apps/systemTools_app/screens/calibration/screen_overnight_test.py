@@ -1520,6 +1520,7 @@ class OvernightTesting(Screen):
             table = j_obj["Table"]
 
             done_send = publisher.run_data_send(statuses, table, stage)
+            log("Data send status: " + str(done_send))
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
@@ -1533,105 +1534,6 @@ class OvernightTesting(Screen):
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
             return False
-
-    def handle_response(self, response):
-        # sometimes if the consumer isn't running, the body sent will be returned as the response
-        json_response = json.loads(response)
-
-        real_reply = 'FileName' not in json_response
-
-        already_exists_reply = json_response['Exists']
-
-        popup_layout = BoxLayout(orientation='vertical', spacing=10, padding=[10, 10, 10, 10])
-
-        text_layout = BoxLayout(orientation='vertical', spacing=20, padding=0)
-
-        machine_serial_label = Label(markup=True, halign='center', text='SmartBench Serial: ' + self.sn_for_db.upper(),
-                                     color=[0, 0, 0, 1])
-
-        # lb_serial_label = Label(markup=True, halign='center', text='LowerBeam Serial: ' + self.xl_serial,
-        #                         color=[0, 0, 0, 1])
-        #
-        # zh_serial_label = Label(markup=True, halign='center', text='ZHead Serial: ' + self.zh_serial,
-        #                         color=[0, 0, 0, 1])
-
-        text_layout.add_widget(machine_serial_label)
-        # text_layout.add_widget(lb_serial_label)
-        # text_layout.add_widget(zh_serial_label)
-
-        response_header = Label(markup=True, halign='center', text='See response below (50 chars):',
-                                color=[0, 0, 0, 1])
-        short_response = Label(markup=True, halign='center', text=response[:50],
-                               color=[0, 0, 0, 1])
-
-        contact_software_label = Label(markup=True, halign='center', text='Please take a photo of this screen and '
-                                                                          'send it to either Archie or Lettie on '
-                                                                          'Slack', color=[0, 0, 0, 1])
-        text_layout.add_widget(contact_software_label)
-
-        button_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 10, 150, 0], size_hint_y=0.3)
-
-        ok_button = Button(text='[b]Ok[/b]', markup=True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-
-        button_layout.add_widget(ok_button)
-
-        popup = Popup(title='',
-                      title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
-                      title_size='20sp',
-                      content=popup_layout,
-                      size_hint=(None, None),
-                      size=(700, 400),
-                      auto_dismiss=False)
-
-        ok_button.bind(on_press=popup.dismiss)
-
-        popup_layout.add_widget(text_layout)
-        popup_layout.add_widget(button_layout)
-
-        if not real_reply:
-            title = 'Check status of consumer'
-            popup.title = title
-
-            text_layout.add_widget(response_header)
-            text_layout.add_widget(short_response)
-
-            popup.open()
-            return False
-
-        response = json.loads(response)
-        received = response['Received']
-        inserted = response['Inserted']
-
-        if already_exists_reply:
-            title = 'Data already existed in the database but has been replaced with latest data'
-            popup.title = title
-
-            unexpected_label = Label(markup=True, halign='center',
-                                            text="If this wasn't expected, contact Archie or Lettie",
-                                            color=[0, 0, 0, 1])
-
-            text_layout.add_widget(unexpected_label)
-
-            popup.open()
-            return True
-
-        if not received or not inserted:
-            title = 'Tried to send ' + str(len(self.status_data_dict['Statuses'])) + ' statuses and failed. '
-            popup.title = title
-
-            received_inserted_label = Label(markup=True, halign='center',
-                                            text='Received: ' + received + ' Inserted: ' + inserted,
-                                            color=[0, 0, 0, 1])
-
-            text_layout.add_widget(received_inserted_label)
-
-            popup.open()
-            return False
-
-        return True
 
     def send_all_calibration_coefficients(self):
 
