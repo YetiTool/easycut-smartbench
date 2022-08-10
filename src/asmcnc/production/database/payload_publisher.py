@@ -7,7 +7,7 @@ import traceback
 from datetime import datetime
 
 CSV_PATH = './asmcnc/production/database/csvs/'
-QUEUE = 'calibration_data'
+QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
 
