@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
 
 Builder.load_string("""
 <CurrentAdjustment>:
@@ -146,6 +147,10 @@ Builder.load_string("""
                         text: 'Show raw'
                         on_press: root.toggle_raw_sg_values()
 
+                    Button:
+                        text: 'STORE PARAMS'
+                        on_press: root.confirm_store_values()
+
 
 """)
 
@@ -243,3 +248,7 @@ class CurrentAdjustment(Screen):
         
         else:
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+
+    def confirm_store_values(self):
+        PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l)

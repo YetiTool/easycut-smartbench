@@ -1034,14 +1034,7 @@ class StallJigScreen(Screen):
 
         response = publisher.run_data_send(*self.calibration_db.processed_running_data[str(stage_id)])
         log("Received %s from consumer" % response)
-
-        data_send_successful = self.calibration_db.handle_response(response)
-        log('Status data for stage ' + str(stage_id) + ' sent successfully: ' + str(data_send_successful))
-
-        if self.calibration_db.status_response_handling_message:
-            PopupMiniInfo(self.systemtools_sm.sm, self.l, self.calibration_db.status_response_handling_message)
-
-        return data_send_successful
+        return response
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST
