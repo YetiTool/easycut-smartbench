@@ -2927,6 +2927,11 @@ class RouterMachine(object):
         return True
 
 
+    def store_tmc_params_in_eeprom(self):
+        self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+        time.sleep(1)
+
+
     ## FIRMWARE UPDATES
 
     def toggle_reset_pin(self):
