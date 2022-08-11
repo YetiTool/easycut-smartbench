@@ -434,6 +434,8 @@ class LobbyScreen(Screen):
         self.update_strings()
 
     def on_enter(self):
+        self.m.get_tmc_status()
+
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
