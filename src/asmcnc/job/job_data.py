@@ -423,15 +423,17 @@ class JobData(object):
             # Account for number of lines added in by the software when running file
             cancel_line -= self.job_recovery_offset
 
-            with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
-                job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
+            # If job was cancelled before it started, no need to store recovery info
+            if cancel_line >= 0:
 
-            # Simultaneously update variables
-            self.job_recovery_filepath = self.filename
-            self.job_recovery_cancel_line = cancel_line
-            self.job_recovery_selected_line = -1
-            self.job_recovery_gcode = []
-            self.job_recovery_offset = 0
+                with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
+                    job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
+
+                # Simultaneously update variables
+                self.job_recovery_filepath = self.filename
+                self.job_recovery_cancel_line = cancel_line
+
+            self.reset_recovery()
         
         except:
             print("Could not write recovery info")
@@ -448,9 +450,7 @@ class JobData(object):
             # Simultaneously update variables
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
-            self.job_recovery_selected_line = -1
-            self.job_recovery_gcode = []
-            self.job_recovery_offset = 0
+            self.reset_recovery()
         
         except:
             print("Could not write recovery info")
