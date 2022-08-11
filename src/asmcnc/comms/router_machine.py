@@ -1726,9 +1726,9 @@ class RouterMachine(object):
         map(log, TMC_registers_report_string.split("\n"))
 
     def get_tmc_status(self):
-        out = self.send_command_to_motor('SENDING GET_TMC_STATUS', motor=TOTAL_TMCS, command=GET_TMC_STATUS)
+        out = self.send_command_to_motor('SENDING GET_TMC_STATUS', command=GET_TMC_STATUS)
 
-        print(out)
+        log(out)
 
     #####################################################################
     # PROTOCOL MOTOR FUNCTIONS - USE THIS TO SEND ANY MOTOR COMMANDS
