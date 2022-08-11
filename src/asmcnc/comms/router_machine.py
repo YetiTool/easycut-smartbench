@@ -1746,7 +1746,7 @@ class RouterMachine(object):
         if command == REPORT_STALLS         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         if command == UPLOAD_CALIBR_VALUE   :   cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value
         if command == REPORT_RAW_SG         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
-        
+        if command == GET_TMC_STATUS        :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         
 
         # individual motor commands 
