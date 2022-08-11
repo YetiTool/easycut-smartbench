@@ -170,8 +170,7 @@ class ZHeadQC(App):
         z_head_qc_db_fail = ZHeadQCDBFail(name='qcDB4', sm = sm, m = m)
         sm.add_widget(z_head_qc_db_fail)
 
-        # sm.current = 'qcconnecting'
-        sm.current = 'qc8'
+        sm.current = 'qcconnecting'
         return sm
 
 if __name__ == '__main__':
