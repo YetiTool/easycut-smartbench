@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ### definitiions shared with C code
 
+GET_TMC_STATUS = 0x67
 
 
 # Controller types. 
