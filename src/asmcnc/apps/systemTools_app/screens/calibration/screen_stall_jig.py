@@ -350,8 +350,8 @@ class StallJigScreen(Screen):
     back_off = {
 
         "X": -430,  #  -400, 
-        "Y": -100,   #  -70,
-        "Z": 80     #  76
+        "Y": -120,   #  -70,
+        "Z": 100     #  76
 
     }
 
