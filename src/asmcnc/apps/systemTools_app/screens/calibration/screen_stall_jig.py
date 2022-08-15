@@ -266,9 +266,6 @@ class StallJigScreen(Screen):
 
     }
 
-    threshold_index_modifier = 0
-
-
     minimum_threshold_index = {
 
         "X": 0,
@@ -394,6 +391,7 @@ class StallJigScreen(Screen):
     setting_up_axis_for_test = False
     expected_limit_found = False
     threshold_reached = False
+    false_stall_happened = False
     all_tests_completed = False
     test_stopped = False
     test_passed = False
@@ -1253,10 +1251,28 @@ class StallJigScreen(Screen):
 
     def back_off_completed(self):
 
-        if self.smartbench_is_not_ready_for_next_command() or not self.expected_limit_found:
+        if self.smartbench_is_not_ready_for_next_command():
+
             if self.VERBOSE: log("Poll for back off completion")
             self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 0.5)
             return
+
+        if self.threshold_reached:
+
+            self.false_stall_happened = True
+            if self.VERBOSE: log("FALSE STALL DETECTED!! Temporarily increasing threshold")
+            self.result_label.text = "FALSE STALL"
+            self.result_label.background_color = self.highlight_yellow
+            self.test_status_label.text = "REFIND POS"
+            self.m.set_threshold_for_axis(self.current_axis(), 300) # set the threshold high so that it completes the move
+            self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 1)
+            return
+
+        if not self.expected_limit_found:
+
+            if self.VERBOSE: log("Expected limit not found, no threshold exceeded. Confused :(")
+            self.test_status_label.text = "POS LOST :("
+            return    
 
         log("Position found")
         self.test_status_label.text = "POS FOUND"
@@ -1327,6 +1343,11 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "AXIS READY"
             log("Axis set up")
             self.setting_up_axis_for_test = False
+
+        elif self.false_stall_happened: 
+            log("False stall happened - test failed")
+            self.colour_current_grid_button(self.fail_orange)
+            self.go_to_next_threshold()
 
         elif self.test_passed:
             log("Recording stall detection event - test passed")
