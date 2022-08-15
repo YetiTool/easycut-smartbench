@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from  kivy.uix.boxlayout import BoxLayout
 from  kivy.uix.label import Label
 from  kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.clock import Clock
 import sys, os
 from functools import partial
@@ -262,6 +263,17 @@ class StallJigScreen(Screen):
         "axis": 0,
         "threshold": 0,
         "feed": 0
+
+    }
+
+    threshold_index_modifier = 0
+
+
+    minimum_threshold_index = {
+
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
 
     }
 
@@ -619,7 +631,8 @@ class StallJigScreen(Screen):
 
         for tidx, i in enumerate(self.threshold_dict[self.axes[axis]]): 
             rows.append(BoxLayout(orientation = "horizontal"))
-            rows[tidx].add_widget(Label(text = str(i), size_hint_x = 1))
+            min_threshold_func = partial(self.increase_min_threshold, tidx, self.axes[axis])
+            rows[tidx].add_widget(ToggleButton(text = str(i), size_hint_x = 1, group = self.axes[axis], on_press = min_threshold_func))
 
             for fidx, j in enumerate(self.feed_dict[self.axes[axis]]):
 
@@ -645,13 +658,14 @@ class StallJigScreen(Screen):
 
         return self.grid_button_objects[self.generate_grid_key(aidx, tidx, fidx)]
 
-    def colour_current_grid_button(self, colour):
+    def colour_current_grid_button(self, colour, button_object = None):
 
-        aidx = self.indices["axis"]
-        tidx = self.indices["threshold"]
-        fidx = self.indices["feed"]
+        if not button_object: 
+            aidx = self.indices["axis"]
+            tidx = self.indices["threshold"]
+            fidx = self.indices["feed"]
+            button_object = self.get_grid_button(aidx, tidx, fidx)
 
-        button_object = self.get_grid_button(aidx, tidx, fidx)
         button_object.background_normal = ''
         button_object.background_color = colour
         button_object.background_disabled_normal = ''
@@ -690,7 +704,21 @@ class StallJigScreen(Screen):
         for key in self.grid_button_objects:
             self.grey_out_given_grid_button_if_yellow(self.grid_button_objects[key])
 
-        self.colour_current_grid_button(self.highlight_yellow)
+        self.colour_current_grid_button(self.highlight_yellow, button_object=instance)
+
+    ## FUNCTION TO INCREASE MINIMUM THRESHOLD
+
+    def increase_min_threshold(self, tidx, axis, instance=None):
+
+        if instance.state == "down":
+            self.minimum_threshold_index[axis] = tidx
+
+        else: 
+            self.minimum_threshold_index[axis] = 0
+
+        log("Minimum threshold set for " + str(axis) + ": " + \
+            str(self.threshold_dict[axis][self.minimum_threshold_index[axis]]))
+
 
     # SCREEN MISC -------------------------------------------------------------------------------
 
@@ -1594,7 +1622,7 @@ class StallJigScreen(Screen):
 
         if self.indices["feed"] + 1 < len(self.feed_dict[self.current_axis()]):
             self.indices["feed"] = self.indices["feed"] + 1
-            self.indices["threshold"] = 0
+            self.indices["threshold"] = self.minimum_threshold_index[self.current_axis()]
 
             log("Next feed index: " + str(self.indices["feed"]))
             log("Next threshold index: " + str(self.indices["threshold"]))
@@ -1606,6 +1634,8 @@ class StallJigScreen(Screen):
     ## IF ALL FEED SETS AND AXES ARE COMPLETED, 
 
     def go_to_next_axis(self):
+
+        self.threshold_index_modifier = 0
 
         if self.indices["axis"] + 1 < len(self.axes):
             self.indices["axis"] = self.indices["axis"] + 1
