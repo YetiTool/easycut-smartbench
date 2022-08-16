@@ -1244,6 +1244,7 @@ class StallJigScreen(Screen):
         if self.threshold_reached:
 
             self.false_stall_happened = True
+            self.threshold_reached = False
             if self.VERBOSE: log("FALSE STALL DETECTED!! Temporarily increasing threshold")
             self.result_label.text = "FALSE STALL"
             self.result_label.background_color = self.highlight_yellow
