@@ -1550,7 +1550,7 @@ class StallJigScreen(Screen):
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
         self.test_passed = self.determine_test_result(expected_pos)
-        self.back_off_and_find_position()
+        if self.test_passed is not None: self.back_off_and_find_position()
 
     ## WORK OUT AND DELIVER TEST RESULTS
 
@@ -1656,12 +1656,11 @@ class StallJigScreen(Screen):
 
     def go_to_next_axis(self):
 
-        self.threshold_index_modifier = 0
-
         if self.indices["axis"] + 1 < len(self.axes):
             self.indices["axis"] = self.indices["axis"] + 1
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
+            self.travel_to_stall_pos[self.current_axis()] = None
 
             log("Next feed index: " + str(self.indices["feed"]))
             log("Next threshold index: " + str(self.indices["threshold"]))
