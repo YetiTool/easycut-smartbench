@@ -1529,7 +1529,7 @@ class StallJigScreen(Screen):
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
         self.test_passed = self.determine_test_result(expected_pos)
-        self.back_off_and_find_position()
+        if self.test_passed is not None: self.back_off_and_find_position()
 
     ## WORK OUT AND DELIVER TEST RESULTS
 
