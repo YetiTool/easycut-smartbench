@@ -427,7 +427,6 @@ class StallJigScreen(Screen):
     poll_to_finish_procedure = None           
     data_send_event = None                    
     resume_from_alarm_event = None            
-    threshold_reached = None
     poll_to_deenergize_motors = None
     poll_to_energize_motors = None
     poll_to_reenable_hard_limits_and_go_to_next_test = None
@@ -556,7 +555,6 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_finish_procedure)
         self.unschedule_event_if_it_exists(self.data_send_event)
         self.unschedule_event_if_it_exists(self.resume_from_alarm_event)
-        self.unschedule_event_if_it_exists(self.threshold_reached)
         self.unschedule_event_if_it_exists(self.poll_to_deenergize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_energize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
@@ -1555,6 +1553,7 @@ class StallJigScreen(Screen):
     def test_did_pass(self):
 
         log("TEST PASSED")
+        self.threshold_reached = False
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS"
@@ -1563,6 +1562,7 @@ class StallJigScreen(Screen):
     def test_did_fail(self):
 
         log("TEST FAILED")
+        self.threshold_reached = False
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
         self.test_status_label.text = "TEST FAILED"
