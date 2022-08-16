@@ -455,6 +455,7 @@ class StallJigScreen(Screen):
 
     ## COLOURS: 
 
+    false_stall_amber = [245./255, 183./255, 23./255, 1]
     fail_orange = [245./255, 127./255, 23./255, 1]
     pass_green = [0./255, 204./255, 51./255, 1]
     bright_pass_green = [51./255, 255./255, 0./255, 1]
@@ -1249,7 +1250,7 @@ class StallJigScreen(Screen):
             self.threshold_reached = False
             if self.VERBOSE: log("FALSE STALL DETECTED!! Temporarily increasing threshold")
             self.result_label.text = "FALSE STALL"
-            self.result_label.background_color = self.highlight_yellow
+            self.result_label.background_color = self.false_stall_amber
             self.test_status_label.text = "REFIND POS"
             self.m.set_threshold_for_axis(self.current_axis(), 300) # set the threshold high so that it completes the move
             self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 1)
@@ -1331,10 +1332,10 @@ class StallJigScreen(Screen):
             log("Axis set up")
             self.setting_up_axis_for_test = False
 
-        elif self.false_stall_happened:
+        elif self.false_stall_happened and self.test_passed:
             self.false_stall_happened = False
             log("False stall happened - test failed")
-            self.colour_current_grid_button(self.fail_orange)
+            self.colour_current_grid_button(self.false_stall_amber)
             self.go_to_next_threshold()
 
         elif self.test_passed:
