@@ -414,8 +414,7 @@ class StallJigScreen(Screen):
     poll_to_move_to_axis_start = None         
     ensure_alarm_resumed_event = None         
     threshold_detection_event = None          
-    hard_limit_found_event = None             
-    set_expected_limit_found_flag_event = None
+    hard_limit_found_event = None
     poll_to_start_back_off = None             
     drive_into_barrier_event = None           
     move_all_axes_event = None                
@@ -545,7 +544,6 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.ensure_alarm_resumed_event)
         self.unschedule_event_if_it_exists(self.threshold_detection_event)
         self.unschedule_event_if_it_exists(self.hard_limit_found_event)
-        self.unschedule_event_if_it_exists(self.set_expected_limit_found_flag_event)
         self.unschedule_event_if_it_exists(self.poll_to_start_back_off)
         self.unschedule_event_if_it_exists(self.drive_into_barrier_event)
         self.unschedule_event_if_it_exists(self.move_all_axes_event)
@@ -777,6 +775,17 @@ class StallJigScreen(Screen):
     ## - THRESHOLD_REACHED 
     ## - EXPECTED_LIMIT_FOUND
 
+    def ensure_alarm_resumed(self, limit_found_at_time):
+
+        if self.m.state().startswith('Alarm'):
+            if time() > limit_found_at_time + 15: 
+                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
+                limit_found_at_time = time()
+
+            if self.VERBOSE: log("Poll for resuming alarm")
+            self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
+            return
+
     def expected_stall_alarm_detected(self):
 
         if not (
@@ -798,17 +807,6 @@ class StallJigScreen(Screen):
         self.alert_user_to_detection()
         self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
 
-    def ensure_alarm_resumed(self, limit_found_at_time):
-
-        if self.m.state().startswith('Alarm'):
-            if time() > limit_found_at_time + 15: 
-                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
-                limit_found_at_time = time()
-
-            if self.VERBOSE: log("Poll for resuming alarm")
-            self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
-            return
-
     def expected_limit_alarm(self):
 
         if self.m.s.alarm.alarm_code != "ALARM:1":
@@ -823,23 +821,11 @@ class StallJigScreen(Screen):
         if not self.current_axis() in self.get_limits():
             return False
 
+        self.expected_limit_found = True
         if self.VERBOSE: log("Expected limit found!")
         self.test_status_label.text = "LIMIT FOUND"
         limit_found_at_time = time()
-        self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
-
-    def set_expected_limit_found_flag(self, limit_found_at_time):
-
-        if self.smartbench_is_not_ready_for_next_command():
-            if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
-                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
-                limit_found_at_time = time()
-            if self.VERBOSE: log("Poll for setting expected limit found flag")
-            self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
-            return
-
-        self.expected_limit_found = True
-        log("Hard limit found, position known")
+        self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
 
     def alert_user_to_detection(self):
         self.result_label.text = "THRESHOLD REACHED"
@@ -1272,7 +1258,7 @@ class StallJigScreen(Screen):
 
             if self.VERBOSE: log("Expected limit not found, no threshold exceeded. Confused :(")
             self.test_status_label.text = "POS LOST :("
-            return    
+            return
 
         log("Position found")
         self.test_status_label.text = "POS FOUND"
