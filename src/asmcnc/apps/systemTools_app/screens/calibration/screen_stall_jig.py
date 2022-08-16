@@ -266,8 +266,6 @@ class StallJigScreen(Screen):
 
     }
 
-    threshold_index_modifier = 0
-
 
     minimum_threshold_index = {
 
@@ -1635,12 +1633,11 @@ class StallJigScreen(Screen):
 
     def go_to_next_axis(self):
 
-        self.threshold_index_modifier = 0
-
         if self.indices["axis"] + 1 < len(self.axes):
             self.indices["axis"] = self.indices["axis"] + 1
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
+            self.travel_to_stall_pos[self.current_axis()] = None
 
             log("Next feed index: " + str(self.indices["feed"]))
             log("Next threshold index: " + str(self.indices["threshold"]))
