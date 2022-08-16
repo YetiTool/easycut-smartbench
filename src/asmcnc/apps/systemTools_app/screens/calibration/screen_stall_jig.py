@@ -1329,7 +1329,8 @@ class StallJigScreen(Screen):
             log("Axis set up")
             self.setting_up_axis_for_test = False
 
-        elif self.false_stall_happened: 
+        elif self.false_stall_happened:
+            self.false_stall_happened = False 
             log("False stall happened - test failed")
             self.colour_current_grid_button(self.fail_orange)
             self.go_to_next_threshold()
