@@ -41,7 +41,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print ('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadQCConnecting(Screen):
 
@@ -62,13 +62,14 @@ class ZHeadQCConnecting(Screen):
 
     
     def progress_to_next_screen(self):
-
+        log("Progress to next screen")
         self.sm.current = 'qchome'
 
 
     def progress_after_all_registers_read_in(self):
 
         if self.m.TMC_registers_have_been_read_in():
+            log("Registers have been read in")
             self.progress_to_next_screen()
             return
 
@@ -78,25 +79,32 @@ class ZHeadQCConnecting(Screen):
     def get_and_set_current(self):
 
         if not self.m.s.fw_version:
+            log("Waiting to get FW version")
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 0.5)
             return
 
         if not self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current'):
+            log("FW version too low - not setting current")
             self.progress_to_next_screen()
             return
 
         if not self.m.TMC_registers_have_been_read_in():
+            log("TMC registers have not been read in yet")
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
             return
 
         if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current:
+            log("Current already set at 25")
             self.progress_to_next_screen()
-            log("Current already set")
             return
 
         self.connecting_label.text = "Setting current..."
-        if self.m.set_motor_current("Z", self.current): Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
-        else: Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
+        log("Setting current to 25...")
+        if self.m.set_motor_current("Z", self.current): 
+            Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
+        else: 
+            log("Z Head not Idle yet, waiting...")
+            Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
 
 
 
