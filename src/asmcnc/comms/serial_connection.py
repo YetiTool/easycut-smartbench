@@ -749,6 +749,8 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+    sg_x1_motor = None
+    sg_x2_motor = None
 
     # STALL GUARD WARNING
     last_stall_tmc_index = None
@@ -1082,6 +1084,21 @@ class SerialConnection(object):
                     self.sg_y_axis = int(sg_values[2])
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
+
+                    try:
+                        int(sg_values[5])
+                        int(sg_values[6])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    else:
+                        self.sg_x1_motor = int(sg_values[5])
+                        self.sg_x2_motor = int(sg_values[6]) 
 
                     if self.record_sg_values_flag:
 
