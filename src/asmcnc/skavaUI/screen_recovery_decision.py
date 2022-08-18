@@ -153,6 +153,8 @@ class RecoveryDecisionScreen(Screen):
 
                 if recovering:
                     self.sm.get_screen('loading').continuing_to_recovery = True
+                else:
+                    self.sm.get_screen('loading').skip_check_decision = True
 
                 self.sm.current = 'loading'
 

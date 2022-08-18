@@ -177,6 +177,8 @@ class LoadingScreen(Screen):
 
     default_font_size = '30sp'
 
+    skip_check_decision = False
+
     continuing_to_recovery = False
 
     def __init__(self, **kwargs):
@@ -419,6 +421,10 @@ class LoadingScreen(Screen):
                 self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
                 self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
                 self.sm.current = 'homing_decision'
+
+            if self.skip_check_decision:
+                self.skip_check_decision = False
+                self.quit_to_home()
 
             self.progress_value = self.l.get_bold('Job loaded')
             self.warning_body_label.text = (
