@@ -216,7 +216,6 @@ Builder.load_string("""
                                     background_color: hex('#F4433600')
                                     on_press:
                                         root.manager.current = 'recovery_decision'
-                                    disabled: True
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
@@ -367,7 +366,6 @@ class HomeScreen(Screen):
 
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line != None:
-            self.job_recovery_button.disabled = False
 
             # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
@@ -383,7 +381,6 @@ class HomeScreen(Screen):
             else:
                 self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
         else:
-            self.job_recovery_button.disabled = True
             self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def preview_job_file(self, dt):

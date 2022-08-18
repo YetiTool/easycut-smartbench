@@ -10,6 +10,7 @@ Builder.load_string("""
 <RecoveryDecisionScreen>:
 
     recover_job_button:recover_job_button
+    repeat_job_button:repeat_job_button
 
     job_name_label:job_name_label
     completion_label:completion_label
@@ -71,6 +72,7 @@ Builder.load_string("""
             spacing: dp(50)
 
             Button:
+                id: repeat_job_button
                 text: "Repeat job from the beginning"
                 font_size: dp(30)
                 valign: "middle"
@@ -105,22 +107,37 @@ class RecoveryDecisionScreen(Screen):
         self.l=kwargs['localization']
 
     def on_pre_enter(self):
-        if sys.platform == 'win32':
-            job_name = self.jd.job_recovery_filepath.split("\\")[-1]
-        else:
-            job_name = self.jd.job_recovery_filepath.split("/")[-1]
+        # Check if job recovery (or job redo) is available
+        if self.jd.job_recovery_cancel_line == None:
+            self.job_name_label.text = ''
+            self.completion_label.text = "No file loaded!"
 
-        self.job_name_label.text = job_name
+            self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
+            self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
 
-        # Cancel on line -1 represents last job completing successfully
-        if self.jd.job_recovery_cancel_line == -1:
-            self.completion_label.text = "SmartBench completed the last job 100%"
             self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
             self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
+
         else:
-            self.completion_label.text = "SmartBench did not finish the last job"
-            self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
-            self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
+            if sys.platform == 'win32':
+                job_name = self.jd.job_recovery_filepath.split("\\")[-1]
+            else:
+                job_name = self.jd.job_recovery_filepath.split("/")[-1]
+
+            self.job_name_label.text = job_name
+
+            self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_green_button.png"
+            self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_green_button.png"
+
+            # Cancel on line -1 represents last job completing successfully
+            if self.jd.job_recovery_cancel_line == -1:
+                self.completion_label.text = "SmartBench completed the last job 100%"
+                self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
+                self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
+            else:
+                self.completion_label.text = "SmartBench did not finish the last job"
+                self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
+                self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
 
     def go_to_recovery(self):
         # Doing it this way because disabling the button causes visuals errors
@@ -128,19 +145,20 @@ class RecoveryDecisionScreen(Screen):
             self.repeat_job(recovering=True)
 
     def repeat_job(self, recovering=False):
-        if os.path.isfile(self.jd.job_recovery_filepath):
-            self.jd.reset_values()
-            self.jd.job_recovery_from_beginning = True
-            self.jd.set_job_filename(self.jd.job_recovery_filepath)
+        if self.jd.job_recovery_cancel_line != None:
+            if os.path.isfile(self.jd.job_recovery_filepath):
+                self.jd.reset_values()
+                self.jd.job_recovery_from_beginning = True
+                self.jd.set_job_filename(self.jd.job_recovery_filepath)
 
-            if recovering:
-                self.sm.get_screen('loading').continuing_to_recovery = True
+                if recovering:
+                    self.sm.get_screen('loading').continuing_to_recovery = True
 
-            self.sm.current = 'loading'
+                self.sm.current = 'loading'
 
-        else: 
-            error_message = self.l.get_str('File selected does not exist!')
-            popup_info.PopupError(self.sm, self.l, error_message)
+            else: 
+                error_message = self.l.get_str('File selected does not exist!')
+                popup_info.PopupError(self.sm, self.l, error_message)
 
     def back_to_home(self):
         self.sm.current = 'home'
