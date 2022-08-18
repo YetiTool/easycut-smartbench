@@ -320,7 +320,16 @@ class ZHeadMechanics(Screen):
 
 
     def calibrate_motor(self):
+        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
         self.m.calibrate_Z()
+
+        Clock.schedule_once(self.wait_for_calibration_end, 1)
+
+    def wait_for_calibration_end(self, dt):
+        if not self.m.run_calibration:
+            self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+        else:
+            Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def update_realtime_load(self, dt):
         if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
