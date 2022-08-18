@@ -1107,7 +1107,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
