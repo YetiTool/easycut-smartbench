@@ -95,16 +95,35 @@ class ZHeadQCConnecting(Screen):
 
         if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current:
             log("Current already set at 25")
-            self.progress_to_next_screen()
+            self.set_thermal_coefficients()
             return
 
         self.connecting_label.text = "Setting current..."
         log("Setting current to 25...")
         if self.m.set_motor_current("Z", self.current): 
-            Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
+            Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
         else: 
             log("Z Head not Idle yet, waiting...")
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
+
+
+    def set_thermal_coefficients(self):
+        self.connecting_label.text = "Setting thermal coeffs..."
+
+        x_coeff, y_coeff, z_coeff = 5000, 5000, 10000
+
+        self.m.send_command_to_motor("SET THERMAL COEFF X " + str(x_coeff), motor = TMC_X1, command = SET_THERMAL_COEFF, value = x_coeff)
+        self.m.send_command_to_motor("SET THERMAL COEFF Y1 " + str(y_coeff), motor = TMC_Y1, command = SET_THERMAL_COEFF, value = y_coeff)
+        self.m.send_command_to_motor("SET THERMAL COEFF Y2 " + str(y_coeff), motor = TMC_Y2, command = SET_THERMAL_COEFF, value = y_coeff)
+        self.m.send_command_to_motor("SET THERMAL COEFF Z " + str(z_coeff), motor = TMC_Z, command = SET_THERMAL_COEFF, value = z_coeff)
+
+        Clock.schedule_once(lambda dt: self.store_tmc_params(), 0.5)
+
+    def store_tmc_params(self):
+        self.m.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+
+        Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 1)
+
 
 
 
