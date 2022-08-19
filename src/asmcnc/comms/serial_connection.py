@@ -579,7 +579,8 @@ class SerialConnection(object):
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
 
-                self.jd.write_to_recovery_file_after_completion()
+                if not self.jd.job_recovery_skip_recovery:
+                    self.jd.write_to_recovery_file_after_completion()
 
             else:
                 self.check_streaming_started = False
@@ -614,7 +615,8 @@ class SerialConnection(object):
             # g_count represents the number of OKs issued by grbl which are sent when a line enters the line buffer
             # The line buffer has a capacity of 35 lines
             # So the currently executing command is the one 35 lines before the last one received by the buffer
-            self.jd.write_to_recovery_file_after_cancel(self.g_count - 35)
+            if not self.jd.job_recovery_skip_recovery:
+                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35)
 
             # Update time for maintenance reminders
             time.sleep(0.4)

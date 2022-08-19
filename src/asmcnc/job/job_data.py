@@ -85,6 +85,7 @@ class JobData(object):
     job_recovery_gcode = []
     job_recovery_offset = 0 # How many lines the software added to the start of the file
     job_recovery_from_beginning = False
+    job_recovery_skip_recovery = False
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
@@ -170,6 +171,7 @@ class JobData(object):
         self.comments_string = ''
 
         self.job_recovery_from_beginning = False
+        self.job_recovery_skip_recovery = False
         self.reset_recovery()
 
     def set_job_filename(self, job_path_and_name):

@@ -995,6 +995,7 @@ class ScreenManagerShapeCutter(object):
         self.jd.job_gcode = self.j.gcode_lines
         self.jd.filename  = self.j.gcode_filename
         self.jd.job_name = self.j.gcode_job_name
+        self.jd.job_recovery_skip_recovery = True # No recovery for shapecutter
         
         def auto_go(dt):
             self.sm.get_screen('go').start_or_pause_button_press()
