@@ -3,7 +3,6 @@ from kivy.lang import Builder
 from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
 
 Builder.load_string("""
 <CurrentAdjustment>:
@@ -11,11 +10,14 @@ Builder.load_string("""
     xy_move_container:xy_move_container
     current_adjustment_container:current_adjustment_container
 
-    rt_x_sg:rt_x_sg
+    rt_x1_sg:rt_x1_sg
+    rt_x2_sg:rt_x2_sg
     rt_y1_sg:rt_y1_sg
     rt_y2_sg:rt_y2_sg
     rt_z_sg:rt_z_sg
-    peak_x_sg:peak_x_sg
+
+    peak_x1_sg:peak_x1_sg
+    peak_x2_sg:peak_x2_sg
     peak_y1_sg:peak_y1_sg
     peak_y2_sg:peak_y2_sg
     peak_z_sg:peak_z_sg
@@ -79,12 +81,15 @@ Builder.load_string("""
                 # SG value status box
                 GridLayout:
                     rows: 3
-                    cols: 5
+                    cols: 6
 
                     Label
 
                     Label:
-                        text: 'SG X'
+                        text: 'SG X1'
+
+                    Label:
+                        text: 'SG X2'
 
                     Label:
                         text: 'SG Y1'
@@ -99,7 +104,11 @@ Builder.load_string("""
                         text: 'Realtime'
 
                     Label:
-                        id: rt_x_sg
+                        id: rt_x1_sg
+                        text: '-'
+
+                    Label:
+                        id: rt_x2_sg
                         text: '-'
 
                     Label:
@@ -118,7 +127,11 @@ Builder.load_string("""
                         text: 'Peak'
 
                     Label:
-                        id: peak_x_sg
+                        id: peak_x1_sg
+                        text: '-'
+
+                    Label:
+                        id: peak_x2_sg
                         text: '-'
 
                     Label:
@@ -147,10 +160,6 @@ Builder.load_string("""
                         text: 'Show raw'
                         on_press: root.toggle_raw_sg_values()
 
-                    Button:
-                        text: 'STORE PARAMS'
-                        on_press: root.confirm_store_values()
-
 
 """)
 
@@ -167,8 +176,11 @@ class CurrentAdjustment(Screen):
         self.xy_move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
         # Current adjustment widgets
-        self.x_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
-        self.current_adjustment_container.add_widget(self.x_current_adjustment_widget)
+        self.x1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.x1_current_adjustment_widget)
+
+        self.x2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X2, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.x2_current_adjustment_widget)
 
         self.y1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y1, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y1_current_adjustment_widget)
@@ -199,10 +211,15 @@ class CurrentAdjustment(Screen):
         self.m.request_homing_procedure('current_adjustment','current_adjustment')
 
     def measure(self):
-        if self.m.s.sg_x_motor_axis != -999:
-            self.x_vals.append(self.m.s.sg_x_motor_axis)
-            self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
-            self.peak_x_sg.text = str(max(self.x_vals))
+        if self.m.s.sg_x1_motor != -999:
+            self.x1_vals.append(self.m.s.sg_x1_motor)
+            self.rt_x1_sg.text = str(self.m.s.sg_x1_motor)
+            self.peak_x1_sg.text = str(max(self.x1_vals))
+
+        if self.m.s.sg_x2_motor != -999:
+            self.x2_vals.append(self.m.s.sg_x2_motor)
+            self.rt_x2_sg.text = str(self.m.s.sg_x2_motor)
+            self.peak_x2_sg.text = str(max(self.x2_vals))
 
         if self.m.s.sg_y1_motor != -999:
             self.y1_vals.append(self.m.s.sg_y1_motor)
@@ -220,23 +237,27 @@ class CurrentAdjustment(Screen):
             self.peak_z_sg.text = str(max(self.z_vals))
 
     def clear_sg_vals(self):
-        self.x_vals = []
+        self.x1_vals = []
+        self.x2_vals = []
         self.y1_vals = []
         self.y2_vals = []
         self.z_vals = []
 
-        self.rt_x_sg.text = '-'
+        self.rt_x1_sg.text = '-'
+        self.rt_x2_sg.text = '-'
         self.rt_y1_sg.text = '-'
         self.rt_y2_sg.text = '-'
         self.rt_z_sg.text = '-'
-        self.peak_x_sg.text = '-'
+        self.peak_x1_sg.text = '-'
+        self.peak_x2_sg.text = '-'
         self.peak_y1_sg.text = '-'
         self.peak_y2_sg.text = '-'
         self.peak_z_sg.text = '-'
 
 
     def reset_currents(self):
-        self.x_current_adjustment_widget.reset_current()
+        self.x1_current_adjustment_widget.reset_current()
+        self.x2_current_adjustment_widget.reset_current()
         self.y1_current_adjustment_widget.reset_current()
         self.y2_current_adjustment_widget.reset_current()
         self.z_current_adjustment_widget.reset_current()
@@ -248,7 +269,3 @@ class CurrentAdjustment(Screen):
         
         else:
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
-
-
-    def confirm_store_values(self):
-        PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l)
