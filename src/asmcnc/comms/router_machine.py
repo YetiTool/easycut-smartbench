@@ -1347,6 +1347,8 @@ class RouterMachine(object):
     def y1_sg(self): return self.s.sg_y1_motor
     def y2_sg(self): return self.s.sg_y2_motor
     def z_sg(self): return self.s.sg_z_motor_axis
+    def x1_sg(self): return self.s.sg_x1_motor
+    def x2_sg(self): return self.s.sg_x2_motor
 
 # POSITIONAL SETTERS
 

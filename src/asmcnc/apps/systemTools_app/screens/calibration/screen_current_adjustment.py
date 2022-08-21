@@ -9,13 +9,15 @@ Builder.load_string("""
 
     xy_move_container:xy_move_container
     current_adjustment_container:current_adjustment_container
-
+    
+    rt_x_sg:rt_x_sg
     rt_x1_sg:rt_x1_sg
     rt_x2_sg:rt_x2_sg
     rt_y1_sg:rt_y1_sg
     rt_y2_sg:rt_y2_sg
     rt_z_sg:rt_z_sg
-
+    
+    peak_x_sg:peak_x_sg
     peak_x1_sg:peak_x1_sg
     peak_x2_sg:peak_x2_sg
     peak_y1_sg:peak_y1_sg
@@ -81,9 +83,12 @@ Builder.load_string("""
                 # SG value status box
                 GridLayout:
                     rows: 3
-                    cols: 6
+                    cols: 7
 
                     Label
+
+                    Label:
+                        text: 'SG X'
 
                     Label:
                         text: 'SG X1'
@@ -102,6 +107,10 @@ Builder.load_string("""
 
                     Label:
                         text: 'Realtime'
+
+                    Label:
+                        id: rt_x_sg
+                        text: '-'
 
                     Label:
                         id: rt_x1_sg
@@ -125,6 +134,10 @@ Builder.load_string("""
 
                     Label:
                         text: 'Peak'
+
+                    Label:
+                        id: peak_x_sg
+                        text: '-'
 
                     Label:
                         id: peak_x1_sg
@@ -211,6 +224,12 @@ class CurrentAdjustment(Screen):
         self.m.request_homing_procedure('current_adjustment','current_adjustment')
 
     def measure(self):
+        
+        if self.m.s.sg_x_motor_axis != -999:
+            self.x_vals.append(self.m.s.sg_x_motor_axis)
+            self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
+            self.peak_x_sg.text = str(max(self.x_vals))
+
         if self.m.s.sg_x1_motor != -999:
             self.x1_vals.append(self.m.s.sg_x1_motor)
             self.rt_x1_sg.text = str(self.m.s.sg_x1_motor)
@@ -237,17 +256,20 @@ class CurrentAdjustment(Screen):
             self.peak_z_sg.text = str(max(self.z_vals))
 
     def clear_sg_vals(self):
+        self.x_vals = []
         self.x1_vals = []
         self.x2_vals = []
         self.y1_vals = []
         self.y2_vals = []
         self.z_vals = []
 
+        self.rt_x_sg.text = '-'
         self.rt_x1_sg.text = '-'
         self.rt_x2_sg.text = '-'
         self.rt_y1_sg.text = '-'
         self.rt_y2_sg.text = '-'
         self.rt_z_sg.text = '-'
+        self.peak_x_sg.text = '-'
         self.peak_x1_sg.text = '-'
         self.peak_x2_sg.text = '-'
         self.peak_y1_sg.text = '-'
