@@ -1924,7 +1924,7 @@ class RouterMachine(object):
     temp_toff = toff_min
     temp_sgt = sgt_min
 
-    reference_temp = 55.0
+    reference_temp = 45.0
     temp_tolerance = 20.0
     upper_temp_limit = reference_temp + temp_tolerance
     lower_temp_limit = reference_temp - temp_tolerance
@@ -1986,7 +1986,7 @@ class RouterMachine(object):
         elif Y: SG_to_check = self.s.sg_y1_motor
 
 
-        if 200 < SG_to_check < 950:
+        if 125 < SG_to_check < 875:
 
             self.quit_jog()
 
