@@ -1255,8 +1255,8 @@ class RouterMachine(object):
 
     def enable_x_motors(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable x motors'):
-            self.send_command_to_motor("Disable X1 motor", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=1)
-            self.send_command_to_motor("Disable X2 motor", motor=TMC_X2, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Enable X1 motor", motor=TMC_X1, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Enable X2 motor", motor=TMC_X2, command=SET_MOTOR_ENERGIZED, value=1)
 
     def disable_y_motors(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable y motors'):
@@ -1265,8 +1265,8 @@ class RouterMachine(object):
 
     def enable_y_motors(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable y motors'):
-            self.send_command_to_motor("Disable Y1 motor", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
-            self.send_command_to_motor("Disable Y2 motor", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Enable Y1 motor", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Enable Y2 motor", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
 
     def disable_z_motor(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable z motor'):
@@ -1274,7 +1274,7 @@ class RouterMachine(object):
 
     def enable_z_motor(self):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable z motor'):
-            self.send_command_to_motor("Disable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+            self.send_command_to_motor("Enable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
 
 # SETTINGS GETTERS
