@@ -110,7 +110,7 @@ class RecoveryDecisionScreen(Screen):
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
             self.job_name_label.text = ''
-            self.completion_label.text = "No file loaded!"
+            self.completion_label.text = "No file available!"
 
             self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
             self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
