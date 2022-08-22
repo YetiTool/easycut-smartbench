@@ -487,7 +487,10 @@ class JobData(object):
             # Feed rate mode
             feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[3-5]", s)), None)
             if feedrate_mode_line:
-                recovery_gcode.append(re.search("G9[3-5]", feedrate_mode_line).group(0))
+                if re.search("G94", feedrate_mode_line):
+                    recovery_gcode.append('G94')
+                else:
+                    return False, 'Job recovery only supports feed rate mode G94. This job contains [G93/G95], and therefore cannot be recovered.'
 
             # Units
             unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G2[0,1]", s)), None)
