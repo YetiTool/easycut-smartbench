@@ -21,6 +21,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test impor
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -298,7 +299,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 8
+                        rows: 9
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -345,6 +346,10 @@ Builder.load_string("""
                             Button:
                                 text: 'Stall Jig'
                                 on_press: root.enter_stall_jig()
+
+                        Button:
+                            text: 'Set SG thresholds'
+                            on_press: root.enter_set_thresholds()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -931,6 +936,14 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+
+    def enter_set_thresholds(self):
+        if not self.systemtools_sm.sm.has_screen('set_thresholds'):
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            self.systemtools_sm.sm.add_widget(set_thresholds_screen)
+        
+        self.systemtools_sm.sm.current = 'set_thresholds'
 
 
 
