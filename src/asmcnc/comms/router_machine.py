@@ -1936,8 +1936,10 @@ class RouterMachine(object):
 
         self.toff_and_sgt_found = False
         self.tuning_poll = None
-        self.x_toff_tuned = None
-        self.x_sgt_tuned = None
+        self.x1_toff_tuned = None
+        self.x1_sgt_tuned = None
+        self.x2_toff_tuned = None
+        self.x2_sgt_tuned = None
         self.y1_toff_tuned = None
         self.y1_sgt_tuned = None
         self.y2_toff_tuned = None
@@ -2149,6 +2151,10 @@ class RouterMachine(object):
         # self.sg_y1_motor = int(sg_values[3])
         # self.sg_y2_motor = int(sg_values[4])
 
+        # AND for 5 driver PCBS:
+        # self.sg_x1_motor = int(sg_values[5])
+        # self.sg_x2_motor = int(sg_values[6])
+
         time.sleep(0.5)
 
         self.print_tmc_registers(0)
@@ -2157,7 +2163,6 @@ class RouterMachine(object):
         self.print_tmc_registers(3)
         self.print_tmc_registers(4)
 
-
         try: 
 
             tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
@@ -2165,7 +2170,12 @@ class RouterMachine(object):
 
             if X: 
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
-                self.x_toff_tuned, self.x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
+                if (self.s.sg_x1_motor != None) and (self.s.sg_x2_motor != None):
+                    self.x1_toff_tuned, self.x1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 5)
+                    self.x2_toff_tuned, self.x2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 6)
+
+                else:
+                    self.x1_toff_tuned, self.x1_sgt_tuned = self.x2_toff_tuned, self.x2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
 
             if Y: 
                 Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
@@ -2206,8 +2216,9 @@ class RouterMachine(object):
             # Commands have to be sent at least 0.05 s apart, so sleeps after commands are sent give time for each command to be sent and recieved
 
             if X: 
-                self.send_command_to_motor("SET TOFF X " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
-                time.sleep(0.1)
+                self.send_command_to_motor("SET TOFF X1 " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
+                self.send_command_to_motor("SET TOFF X2 " + str(self.temp_toff), motor = TMC_X2, command = SET_TOFF, value = self.temp_toff)
+                time.sleep(0.2)
             if Y: 
                 self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
                 self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
@@ -2219,8 +2230,9 @@ class RouterMachine(object):
             while self.temp_sgt <= self.sgt_max:
 
                 if X: 
-                    self.send_command_to_motor("SET SGT X " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
-                    time.sleep(0.1)
+                    self.send_command_to_motor("SET SGT X1 " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
+                    self.send_command_to_motor("SET SGT X2 " + str(self.temp_sgt), motor = TMC_X2, command = SET_SGT, value = self.temp_sgt)
+                    time.sleep(0.2)
                 if Y: 
                     self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
                     self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
@@ -2365,8 +2377,10 @@ class RouterMachine(object):
             # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
 
             if X: 
-                self.send_command_to_motor("SET TOFF X " + str(self.x_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x_toff_tuned)
-                self.send_command_to_motor("SET SGT X " + str(self.x_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x_sgt_tuned)
+                self.send_command_to_motor("SET TOFF X1 " + str(self.x1_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x1_toff_tuned)
+                self.send_command_to_motor("SET TOFF X2 " + str(self.x2_toff_tuned), motor = TMC_X2, command = SET_TOFF, value = self.x2_toff_tuned)
+                self.send_command_to_motor("SET SGT X1 " + str(self.x1_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x1_sgt_tuned)
+                self.send_command_to_motor("SET SGT X2 " + str(self.x2_sgt_tuned), motor = TMC_X2, command = SET_SGT, value = self.x2_sgt_tuned)
             if Y: 
                 self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
                 self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
@@ -2815,38 +2829,60 @@ class RouterMachine(object):
 
     def are_sg_values_in_range_after_calibration(self, axes):
 
+        x_both_max = None
+        x1_max = None
+        x2_max = None
+        y_both_max = None
+        y1_max = None
+        y2_max = None
+        z_both_max = None
+
         try:
 
             if 'X' in axes:
-                if not (self.cal_check_threshold_x_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1) < self.cal_check_threshold_x_max):
-                    self.checking_calibration_fail_info = "X SG values out of expected range, max: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1))
-                    log(self.checking_calibration_fail_info)
+
+                x_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1)
+                x1_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 5) if self.temp_sg_array[0][5] else 0
+                x2_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 6) if self.temp_sg_array[0][6] else 0
+
+                x_both_max_passed = self.cal_check_threshold_x_min < x_both_max < self.cal_check_threshold_x_max
+                x1_max_passed = self.cal_check_threshold_x_min < x1_max < self.cal_check_threshold_x_max
+                x2_max_passed = self.cal_check_threshold_x_min < x2_max < self.cal_check_threshold_x_max
+
+                if not x_both_max_passed or not x1_max_passed or not x2_max_passed:
+                    self.checking_calibration_fail_info += "X SG values out of expected range: " + \
+                                "X axis: " + str(x_both_max) + "; " + \
+                                "X1: " + str(x1_max) + "; " + \
+                                "X2: " + str(x2_max) + "|"
 
             if 'Y' in axes:
 
-                if (not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2) < self.cal_check_threshold_y_max) or
-                    not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3) < self.cal_check_threshold_y_max) or
-                    not (self.cal_check_threshold_y_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4) < self.cal_check_threshold_y_max)):
+                y_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)
+                y1_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)
+                y2_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)
 
-                    self.checking_calibration_fail_info = "Y SG values out of expected range: " + \
-                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)) + ", " + \
-                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)) + ", " + \
-                                str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4))
+                y_both_max_passed = self.cal_check_threshold_y_min < y_both_max < self.cal_check_threshold_y_max
+                y1_max_passed = self.cal_check_threshold_y_min < y1_max < self.cal_check_threshold_y_max
+                y2_max_passed = self.cal_check_threshold_y_min < y2_max < self.cal_check_threshold_y_max
 
-                    log(self.checking_calibration_fail_info)
-                    log("Y axis: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)))
-                    log("Y1: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)))
-                    log("Y2: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)))
-
+                if not y_both_max_passed or not y1_max_passed or not y2_max_passed:
+                    self.checking_calibration_fail_info += "Y SG values out of expected range: " + \
+                                "Y axis:" + str(y_both_max) + "; " + \
+                                "Y1:" + str(y1_max) + "; " + \
+                                "Y2:" + str(y2_max) + "|"
 
             if 'Z' in axes:
-                if not (self.cal_check_threshold_z_min < self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0) < self.cal_check_threshold_z_max):
-                    self.checking_calibration_fail_info = "Z SG values out of expected range, max: " + str(self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0))
-                    log(self.checking_calibration_fail_info)
+
+                z_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0)
+                z_both_max_passed = self.cal_check_threshold_z_min < z_both_max < self.cal_check_threshold_z_max
+
+                if not z_both_max_passed:
+                    self.checking_calibration_fail_info += "Z SG values out of expected range, max: " + str(z_both_max) + "|"
 
         except:
-            if not self.checking_calibration_fail_info: self.checking_calibration_fail_info = "Unexpected error"
+            if not self.checking_calibration_fail_info: self.checking_calibration_fail_info += "Unexpected error"
 
+        return x_both_max, x1_max, x2_max, y_both_max, y1_max, y2_max, z_both_max
 
     def get_abs_maximums_from_sg_array(self, sub_array, index):
 
