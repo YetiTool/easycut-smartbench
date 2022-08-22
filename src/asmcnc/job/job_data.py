@@ -482,7 +482,7 @@ class JobData(object):
             # Arc IJK distance mode
             arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]\.1", s)), None)
             if arc_mode_line:
-                recovery_gcode.append(re.search("G9[0,1]\.1", arc_mode_line).group(0))
+                return False, 'Job recovery does not currently support arc distance modes. This job contains [G90.1/G91.1], and therefore cannot be recovered.'
 
             # Feed rate mode
             feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[3-5]", s)), None)
