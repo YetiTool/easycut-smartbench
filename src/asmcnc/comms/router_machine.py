@@ -2174,7 +2174,7 @@ class RouterMachine(object):
 
             if X: 
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
-                if self.s.sg_x1_motor and self.s.sg_x2_motor:
+                if (self.s.sg_x1_motor != None) and (self.s.sg_x2_motor != None):
                     self.x1_toff_tuned, self.x1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 5)
                     self.x2_toff_tuned, self.x2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 6)
 
