@@ -1107,7 +1107,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
@@ -1263,16 +1265,18 @@ class SerialConnection(object):
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),
-                        int(self.sg_x_motor_axis),
-                        int(self.sg_y_axis),
-                        int(self.sg_y1_motor),
-                        int(self.sg_y2_motor),
-                        int(self.sg_z_motor_axis),
+                        self.sg_x_motor_axis,
+                        self.sg_y_axis,
+                        self.sg_y1_motor,
+                        self.sg_y2_motor,
+                        self.sg_z_motor_axis,
                         int(self.motor_driver_temp),
                         int(self.pcb_temp),
                         int(self.transistor_heatsink_temp),
                         datetime.now(),
                         int(self.feed_rate),
+                        self.sg_x1_motor,
+                        self.sg_x2_motor,
                     ])
 
                 except: 
