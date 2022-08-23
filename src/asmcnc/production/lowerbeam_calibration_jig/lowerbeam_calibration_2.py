@@ -34,6 +34,7 @@ Builder.load_string("""
 class LBCalibration2(Screen):
 
     poll_for_tuning_completion = None
+    poll_for_calibration_check = None
     poll_for_calibration_completion = None
 
     def __init__(self, **kwargs):
@@ -61,21 +62,31 @@ class LBCalibration2(Screen):
 
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_Y()
+                self.poll_for_calibration_check = Clock.schedule_interval(self.check_calibration, 5)
+
+            else:
+                self.calibration_label.text = self.m.calibration_tuning_fail_info
+
+    def check_calibration(self, dt):
+        if not self.m.run_calibration:
+            Clock.unschedule(self.poll_for_calibration_check)
+
+            if not self.m.calibration_tuning_fail_info:        
+                self.m.check_y_calibration()
                 self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 5)
 
             else:
                 self.calibration_label.text = self.m.calibration_tuning_fail_info
 
-
     def finish_calibrating(self, dt):
-        if not self.m.run_calibration:
+        if not self.m.checking_calibration_in_progress:
             Clock.unschedule(self.poll_for_calibration_completion)
 
-            if not self.m.calibration_tuning_fail_info:
+            if not self.m.checking_calibration_fail_info:
                 self.enter_next_screen()
 
             else:
-                self.calibration_label.text = self.m.calibration_tuning_fail_info
+                self.calibration_label.text = self.m.checking_calibration_fail_info
 
 
     def enter_next_screen(self):
@@ -87,4 +98,5 @@ class LBCalibration2(Screen):
 
     def on_leave(self):
         if self.poll_for_tuning_completion != None: Clock.unschedule(self.poll_for_tuning_completion)
+        if self.poll_for_calibration_check != None: Clock.unschedule(self.poll_for_calibration_check)
         if self.poll_for_calibration_completion != None: Clock.unschedule(self.poll_for_calibration_completion)

@@ -833,3 +833,138 @@ class PopupFSCKInfo(Widget):
         ok_button.bind(on_press=popup.dismiss)
 
         popup.open()
+
+
+
+class PopupStopStallJig(Widget):
+
+    def __init__(self, machine, screen_manager, localization, stall_jig_class):
+        
+      self.m = machine
+      self.m.soft_stop()
+      self.test_stopped = True
+
+      self.sm = screen_manager
+      self.l = localization
+
+      self.sj = stall_jig_class
+        
+      def machine_reset(*args):
+        self.m.stop_from_soft_stop_cancel()
+        self.sj.unschedule_all_events()
+        self.sj.set_default_thresholds()
+        self.sj.test_stopped = False
+        self.sj.restore_acceleration_and_soft_limits()
+        self.sj.enable_all_buttons_except_run()
+        self.sj.test_status_label.text = "STOPPED"
+
+      def machine_resume(*args):
+        self.m.resume_from_a_soft_door()
+        self.m.continue_measuring_running_data()
+        self.sj.test_stopped = False
+        
+      stop_description = self.l.get_str("Is everything OK? You can resume the job, or cancel it completely.")
+      resume_string = self.l.get_bold("Resume")
+      cancel_string = self.l.get_bold("Cancel")
+      title_string = self.l.get_str("Warning!")
+      
+      img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
+      
+      resume_button = Button(text=resume_string, markup = True)
+      resume_button.background_normal = ''
+      resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+      cancel_button = Button(text=cancel_string, markup = True)
+      cancel_button.background_normal = ''
+      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+     
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+      btn_layout.add_widget(cancel_button)
+      btn_layout.add_widget(resume_button)
+      
+      layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
+      layout_plan.add_widget(img)
+      layout_plan.add_widget(label)
+      layout_plan.add_widget(btn_layout)
+      
+      popup = Popup(title=title_string,
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(400, 300),
+                    auto_dismiss= False
+                    )
+      
+      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_height = '4dp'
+      popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+      
+      cancel_button.bind(on_press=machine_reset)
+      cancel_button.bind(on_press=popup.dismiss)
+      resume_button.bind(on_press=machine_resume)
+      resume_button.bind(on_press=popup.dismiss)
+      
+      popup.open()
+
+
+class PopupConfirmStoreCurrentValues(Widget):
+
+    def __init__(self, machine, screen_manager, localization):
+        
+        self.m = machine
+        self.m.soft_stop()
+        self.test_stopped = True
+
+        self.sm = screen_manager
+        self.l = localization
+
+        def store_tmc_values(*args):
+            self.m.store_tmc_params_in_eeprom()
+
+        stop_description = self.l.get_str("THIS WILL STORE ALL MODIFIED TMC PARAMS IN EEPROM. Only continue if you know what you're doing.")
+        resume_string = self.l.get_bold("DANGER: Store")
+        cancel_string = self.l.get_bold("Cancel")
+        title_string = self.l.get_str("Warning!")
+      
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
+      
+        resume_button = Button(text=resume_string, markup = True)
+        resume_button.background_normal = ''
+        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        cancel_button = Button(text=cancel_string, markup = True)
+        cancel_button.background_normal = ''
+        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+     
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+        btn_layout.add_widget(cancel_button)
+        btn_layout.add_widget(resume_button)
+      
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+      
+        popup = Popup(title=title_string,
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(400, 500),
+                    auto_dismiss= False
+                    )
+      
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+      
+        cancel_button.bind(on_press=popup.dismiss)
+        resume_button.bind(on_press=store_tmc_values)
+        resume_button.bind(on_press=popup.dismiss)
+      
+        popup.open()
