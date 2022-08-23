@@ -328,7 +328,26 @@ class HomeScreen(Screen):
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
 
+        if self.jd.job_gcode != []:
+
+            self.gcode_summary_widget.display_summary()
+
+            # Preview file as drawing
+            try: 
+                Clock.schedule_once(self.preview_job_file, 0.05)
+            except:
+                log('Unable to preview file')
+
+    def on_pre_enter(self):
+
         if self.jd.job_gcode == []:
+
+            # File label at the top
+            self.file_data_label.text = ('[color=333333]' + \
+                self.l.get_str('Load a file') + '...' + '[/color]'
+                )
+            self.job_filename = ''
+
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
             self.job_box.range_y[0] = 0
@@ -344,24 +363,6 @@ class HomeScreen(Screen):
                 print('No G-code loaded.')
 
             self.gcode_summary_widget.hide_summary()
-
-        else:
-            self.gcode_summary_widget.display_summary()
-
-            # Preview file as drawing
-            try: 
-                Clock.schedule_once(self.preview_job_file, 0.05)
-            except:
-                log('Unable to preview file')
-
-    def on_pre_enter(self):
-
-        if self.jd.job_gcode == []:
-
-            self.file_data_label.text = ('[color=333333]' + \
-                self.l.get_str('Load a file') + '...' + '[/color]'
-                )
-            self.job_filename = ''
 
         else:
             # File label at the top
