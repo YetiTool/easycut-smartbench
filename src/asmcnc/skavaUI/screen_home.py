@@ -216,7 +216,6 @@ Builder.load_string("""
                                     background_color: hex('#F4433600')
                                     on_press:
                                         root.manager.current = 'recovery_decision'
-                                    disabled: True
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
@@ -328,11 +327,9 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
-    
-        # File label at the top
+
         if self.jd.job_gcode != []:
 
-            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
             self.gcode_summary_widget.display_summary()
 
             # Preview file as drawing
@@ -341,29 +338,16 @@ class HomeScreen(Screen):
             except:
                 log('Unable to preview file')
 
-            # Check if job recovery is available
-            if self.jd.job_recovery_cancel_line > 0 and self.jd.job_recovery_filepath == self.jd.filename:
-                self.job_recovery_button.disabled = False
-                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
-
-                # Line -1 being selected represents no selected line
-                if self.jd.job_recovery_selected_line == -1:
-                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
-                else:
-                    self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
-            else:
-                self.job_recovery_button.disabled = True
-                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
-
     def on_pre_enter(self):
 
         if self.jd.job_gcode == []:
 
+            # File label at the top
             self.file_data_label.text = ('[color=333333]' + \
                 self.l.get_str('Load a file') + '...' + '[/color]'
                 )
             self.job_filename = ''
-  
+
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
             self.job_box.range_y[0] = 0
@@ -376,10 +360,32 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print('No G-code loaded.')
 
             self.gcode_summary_widget.hide_summary()
 
+        else:
+            # File label at the top
+            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
+
+        # Check if job recovery (or job redo) is available
+        if self.jd.job_recovery_cancel_line != None:
+
+            # Cancel on line -1 represents last job completing successfully
+            if self.jd.job_recovery_cancel_line == -1:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
+
+            else:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
+
+            # Line -1 being selected represents no selected line
+            if self.jd.job_recovery_selected_line == -1:
+                if self.jd.job_recovery_from_beginning:
+                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
+            else:
+                self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
+        else:
+            self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def preview_job_file(self, dt):
 
@@ -389,7 +395,7 @@ class HomeScreen(Screen):
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print('Unable to draw gcode')
 
         log('DONE')
 
