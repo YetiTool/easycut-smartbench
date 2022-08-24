@@ -10,6 +10,8 @@ Builder.load_string("""
 <ZHeadMechanics>:
 
     begin_test_button:begin_test_button
+    stop_button:stop_button
+    calibrate_button:calibrate_button
 
     test_progress_label:test_progress_label
 
@@ -34,6 +36,7 @@ Builder.load_string("""
                 spacing: dp(5)
 
                 Button:
+                    id: calibrate_button
                     text: 'Calibrate Motor'
                     bold: True
                     font_size: dp(20)
@@ -144,6 +147,7 @@ Builder.load_string("""
                     on_press: root.go_to_manual_move()
 
             Button:
+                id: stop_button
                 text: 'STOP'
                 bold: True
                 font_size: dp(20)
@@ -202,6 +206,7 @@ class ZHeadMechanics(Screen):
 
         self.test_running = True
         self.begin_test_button.disabled = True
+        self.calibrate_button.disabled = True
         self.test_progress_label.text = 'Test running...\n[color=ff0000]WATCH FOR STALL THROUGHOUT ENTIRE TEST[/color]'
 
         self.load_up_peak.text = '-'
@@ -313,6 +318,7 @@ class ZHeadMechanics(Screen):
     def reset_after_stop(self):
         self.test_running = False
         self.begin_test_button.disabled = False
+        self.calibrate_button.disabled = False
         self.test_progress_label.text = 'Waiting...'
 
         self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
@@ -324,6 +330,10 @@ class ZHeadMechanics(Screen):
 
 
     def calibrate_motor(self):
+        self.begin_test_button.disabled = True
+        self.stop_button.disabled = True
+        self.test_progress_label.text = 'Calibrating...'
+
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
         self.m.calibrate_Z()
 
@@ -332,6 +342,10 @@ class ZHeadMechanics(Screen):
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
             self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+
+            self.begin_test_button.disabled = False
+            self.stop_button.disabled = False
+            self.test_progress_label.text = 'Waiting...'
         else:
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
