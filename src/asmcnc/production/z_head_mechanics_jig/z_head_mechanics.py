@@ -217,7 +217,7 @@ class ZHeadMechanics(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            Clock.schedule_once(self.begin_test(), 1)
+            Clock.schedule_once(self.begin_test, 1)
 
     def begin_test(self, dt):
         if self.test_running:
