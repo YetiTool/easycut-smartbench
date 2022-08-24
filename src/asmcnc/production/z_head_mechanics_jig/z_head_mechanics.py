@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.skavaUI import popup_info
 
 import matplotlib.pyplot as plt
 
@@ -330,7 +331,9 @@ class ZHeadMechanics(Screen):
 
 
     def calibrate_motor(self):
+        self.load_graph.opacity = 0
         self.begin_test_button.disabled = True
+        self.calibrate_button.disabled = True
         self.stop_button.disabled = True
         self.test_progress_label.text = 'Calibrating...'
 
@@ -343,7 +346,10 @@ class ZHeadMechanics(Screen):
         if not self.m.run_calibration:
             self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
 
+            popup_info.PopupInfo(self.sm, self.l, 500, 'Calibration complete!')
+
             self.begin_test_button.disabled = False
+            self.calibrate_button.disabled = False
             self.stop_button.disabled = False
             self.test_progress_label.text = 'Waiting...'
         else:
