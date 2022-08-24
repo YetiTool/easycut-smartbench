@@ -217,11 +217,15 @@ class ZHeadMechanics(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            self.begin_test()
+            Clock.schedule_once(self.begin_test(), 1)
 
-    def begin_test(self):
-        self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
-        Clock.schedule_once(self.start_moving_down, 1)
+    def begin_test(self, dt):
+        if self.test_running:
+            if self.m.state().startswith('Idle'):
+                self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
+                Clock.schedule_once(self.start_moving_down, 1)
+            else:
+                Clock.schedule_once(self.begin_test, 0.1)
 
     def start_moving_down(self, dt):
         if self.test_running:
