@@ -2798,7 +2798,7 @@ class RouterMachine(object):
 
         for axis in axes: 
 
-            with open(self.construct_calibration_file_path(axis)) as f:
+            with open(self.construct_calibration_check_file_path(axis)) as f:
                 check_calibration_gcode_pre_scrubbed.extend(f.readlines())
 
         check_calibration_gcode = [self.quick_scrub(line) for line in check_calibration_gcode_pre_scrubbed]
@@ -2827,8 +2827,8 @@ class RouterMachine(object):
                 self.checking_calibration_in_progress = False
 
 
-    def construct_calibration_file_path(self, axis):
-        return './asmcnc/production/calibration_gcode_files/' + str(axis) + '_cal.gc'
+    def construct_calibration_check_file_path(self, axis):
+        return './asmcnc/production/calibration_check_gcode_files/' + str(axis) + '_cal_check.gc'
 
 
     def are_sg_values_in_range_after_calibration(self, axes):
