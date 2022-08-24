@@ -242,7 +242,8 @@ class ZHeadMechanics(Screen):
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_down.append(self.m.s.sg_z_motor_axis)
+                    # self.sg_values_down.append(self.m.s.sg_z_motor_axis)
+                    self.sg_values_down.append(50)
                     self.z_pos_values_down.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_down_values, 0.1)
 
@@ -252,7 +253,8 @@ class ZHeadMechanics(Screen):
                 self.phase_two()
             else:
                 if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_up.append(self.m.s.sg_z_motor_axis)
+                    # self.sg_values_up.append(self.m.s.sg_z_motor_axis)
+                    self.sg_values_up.append(100)
                     self.z_pos_values_up.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_up_values, 0.1)
 
