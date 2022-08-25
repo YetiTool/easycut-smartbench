@@ -110,19 +110,12 @@ class ZHeadQCConnecting(Screen):
     def set_thermal_coefficients(self):
         self.connecting_label.text = "Setting thermal coeffs..."
 
-        x_coeff, y_coeff, z_coeff = 5000, 5000, 10000
+        if self.m.set_thermal_coefficients("X", 5000) and self.m.set_thermal_coefficients("Y", 5000) and self.m.set_thermal_coefficients("Z", 10000):
+            Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 1)
 
-        self.m.send_command_to_motor("SET THERMAL COEFF X " + str(x_coeff), motor = TMC_X1, command = SET_THERMAL_COEFF, value = x_coeff)
-        self.m.send_command_to_motor("SET THERMAL COEFF Y1 " + str(y_coeff), motor = TMC_Y1, command = SET_THERMAL_COEFF, value = y_coeff)
-        self.m.send_command_to_motor("SET THERMAL COEFF Y2 " + str(y_coeff), motor = TMC_Y2, command = SET_THERMAL_COEFF, value = y_coeff)
-        self.m.send_command_to_motor("SET THERMAL COEFF Z " + str(z_coeff), motor = TMC_Z, command = SET_THERMAL_COEFF, value = z_coeff)
+        else:
+            Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
 
-        Clock.schedule_once(lambda dt: self.store_tmc_params(), 0.5)
-
-    def store_tmc_params(self):
-        self.m.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
-
-        Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 1)
 
 
 
