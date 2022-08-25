@@ -170,6 +170,7 @@ class UploadSerialNumbersScreen(Screen):
     machine_serial_number = ''
     fw_version = ''
     sw_version = ''
+    hw_version = ''
 
     poll_for_end_of_upload = None
 
@@ -200,7 +201,8 @@ class UploadSerialNumbersScreen(Screen):
     def on_enter(self):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.get_software_version_before_release()
-        self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
+        self.fw_version = str(self.m.firmware_version())
+        self.hw_version = str(self.m.s.hw_version)
         self.already_in_database = self.check_for_duplicates_and_autofill()
 
         if self.dev_mode:
@@ -259,7 +261,8 @@ class UploadSerialNumbersScreen(Screen):
                                     self.spindle_serial_input.text,
                                     self.sw_version,
                                     self.fw_version,
-                                    self.squareness_input.text
+                                    self.squareness_input.text,
+                                    self.hw_version
                 ]
 
             self.calibration_db.insert_serial_numbers(*all_serial_numbers)

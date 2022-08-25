@@ -9,6 +9,10 @@ def log(message):
     timestamp = datetime.now()
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
+def flush_logs():
+    log("Flushing logs")
+    sys.stdout.flush()
+
 
 try:
     import pyodbc
@@ -36,9 +40,9 @@ class CalibrationDatabase(object):
         # ODBC Driver 17 for SQL Server ON WINDOWS
         connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
-    else: 
+    else:
         # FreeTDS
-        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'        
+        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
     def __init__(self):
         self.conn = None
@@ -84,23 +88,29 @@ class CalibrationDatabase(object):
 
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                               console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
-                              squareness):
+                              squareness, hardware_version):
+        log("Inserting serial numbers")
+        sys.stdout.flush()
+
         date = datetime.now().strftime('%d/%m/%Y %H:%M')
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO Machines (MachineSerialNumber, ZHeadSerialNumber, LowerBeamSerialNumber, " \
                     "UpperBeamSerialNumber, ConsoleSerialNumber, YBenchSerialNumber, SpindleSerialNumber, " \
-                    "SoftwareVersion, FirmwareVersion, Squareness, DateProduced) VALUES (?, ?, ?, ?, " \
-                    "?, ?, ?, ?, ?, ?, ?)"
+                    "SoftwareVersion, FirmwareVersion, Squareness, DateProduced, HardwareVersion) VALUES (?, ?, ?, ?, " \
+                    "?, ?, ?, ?, ?, ?, ?, ?)"
 
             params = (machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial, console_serial,
-                      y_bench_serial, spindle_serial, software_version, firmware_version, squareness, date)
+                      y_bench_serial, spindle_serial, software_version, firmware_version, squareness, date,
+                      hardware_version)
 
             cursor.execute(query, params)
 
         self.conn.commit()
 
     def do_z_head_coefficients_exist(self, combined_id):
+        log("Checking if ZHeadCoefficients exist")
+        sys.stdout.flush()
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM ZHeadCoefficients WHERE Id = ?"
 
@@ -109,6 +119,8 @@ class CalibrationDatabase(object):
             return cursor.fetchone() is not None
 
     def do_lower_beam_coefficients_exist(self, combined_id):
+        log("Checking if LowerBeamCoefficients exist")
+        sys.stdout.flush()
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = ?"
 
@@ -118,6 +130,7 @@ class CalibrationDatabase(object):
 
     def delete_z_head_coefficients(self, combined_id):
         log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
+        sys.stdout.flush()
         with self.conn.cursor() as cursor:
             query = "DELETE FROM ZHeadCoefficients WHERE Id = ?"
 
@@ -129,6 +142,7 @@ class CalibrationDatabase(object):
 
     def delete_coefficients(self, combined_id):
         log("Deleting existing data from Coefficients: " + str(combined_id))
+        sys.stdout.flush()
         with self.conn.cursor() as cursor:
             query = "DELETE FROM Coefficients WHERE SubAssemblyId = ?"
 
@@ -138,6 +152,7 @@ class CalibrationDatabase(object):
 
     def delete_lower_beam_coefficients(self, combined_id):
         log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
+        sys.stdout.flush()
         with self.conn.cursor() as cursor:
             query = "DELETE FROM LowerBeamCoefficients WHERE Id = ?"
 
@@ -148,6 +163,8 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
+        log("Setting up ZHeadCoefficients")
+        sys.stdout.flush()
         combined_id = (zh_serial + str(motor_index) + str(calibration_stage_id))[2:]
 
         if self.do_z_head_coefficients_exist(combined_id):
@@ -164,6 +181,8 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def setup_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id):
+        log("Setting up LowerBeamCoefficients")
+        sys.stdout.flush()
         combined_id = (lb_serial + str(motor_index) + str(calibration_stage_id))[2:]
 
         if self.do_lower_beam_coefficients_exist(combined_id):
@@ -180,6 +199,9 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def insert_calibration_coefficients(self, sub_serial, motor_index, calibration_stage_id, coefficients):
+        log("Inserting calibration coefficients")
+        sys.stdout.flush()
+
         combined_id = (sub_serial + str(motor_index) + str(calibration_stage_id))[2:]
         temp = self.get_ambient_temperature()
 
@@ -200,6 +222,9 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def insert_stage(self, description):
+        log("Inserting stage")
+        sys.stdout.flush()
+
         with self.conn.cursor() as cursor:
             query = "INSERT INTO Stages (Description) VALUES (?)"
 
@@ -210,6 +235,8 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
+        log("Getting stage id by description")
+        sys.stdout.flush()
         return self.stage_id_dict.get(description)
 
         # try:
@@ -231,6 +258,9 @@ class CalibrationDatabase(object):
         #     return self.stage_id_dict.get(description)
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
+        log("Inserting final test stage")
+        sys.stdout.flush()
+
 
         try:
             combined_id = (machine_serial + str(ft_stage_id))[2:]
@@ -252,6 +282,8 @@ class CalibrationDatabase(object):
             log("Final test stage already exists for this SN")
 
     def does_final_test_stage_already_exist(self, combined_id_only_ints):
+        log("Checking if final test stage already exists")
+        sys.stdout.flush()
 
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM FinalTestStage WHERE Id = ?"
@@ -271,6 +303,9 @@ class CalibrationDatabase(object):
                                      y1_backw_avg, y1_backw_peak, y2_forw_avg, y2_forw_peak, y2_backw_avg,
                                      y2_backw_peak,
                                      z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak):
+        log("Inserting final test statistics")
+        sys.stdout.flush()
+
         combined_id = (machine_serial + str(ft_stage_id))[2:]
 
         with self.conn.cursor() as cursor:
@@ -290,8 +325,8 @@ class CalibrationDatabase(object):
 
     # @lettie please ensure data is input in the correct order according to below
     def insert_final_test_statuses(self, statuses):
-
-        print("Before insert ft status")
+        log("Inserting final test statuses")
+        sys.stdout.flush()
 
         try:
             with self.conn.cursor() as cursor:
@@ -304,12 +339,15 @@ class CalibrationDatabase(object):
 
                 self.conn.commit()
 
-        except: 
+        except:
             print(traceback.format_exc())
 
         print("After insert ft status")
 
     def get_serials_by_machine_serial(self, machine_serial):
+        log("Getting serials by machine serial")
+        sys.stdout.flush()
+
         with self.conn.cursor() as cursor:
             query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = ?"
 
@@ -321,6 +359,9 @@ class CalibrationDatabase(object):
             return [data[0], data[1]]
 
     def get_lower_beam_coefficents(self, lb_serial, motor_index, stage_id):
+        log("Getting lower beam coefficents")
+        sys.stdout.flush()
+
         combined_id = (lb_serial + str(motor_index) + str(stage_id))[2:]
 
         with self.conn.cursor() as cursor:
@@ -348,6 +389,8 @@ class CalibrationDatabase(object):
             return parameters
 
     def get_ambient_temperature(self):
+        log("Getting ambient temperature")
+        sys.stdout.flush()
 
         try:
 
@@ -361,6 +404,9 @@ class CalibrationDatabase(object):
             return None
 
     def get_all_serials_by_machine_serial(self, machine_serial):
+        log("Getting all serials by machine serial")
+        sys.stdout.flush()
+
         with self.conn.cursor() as cursor:
             query = "SELECT + \
                     ZHeadSerialNumber, \
@@ -397,7 +443,8 @@ class CalibrationDatabase(object):
         #     stall_coord
         # ]
 
-        print("Before insert stall events")
+        log("Inserting stall experiment results")
+        sys.stdout.flush()
 
         try:
 
@@ -409,7 +456,7 @@ class CalibrationDatabase(object):
                 self.conn.commit()
                 return True
 
-        except: 
+        except:
             print(traceback.format_exc())
             return False
 
@@ -435,13 +482,13 @@ class CalibrationDatabase(object):
 
         self.processing_running_data = True
 
-        try: 
+        try:
 
-            for idx, element in enumerate(unprocessed_status_data): 
+            for idx, element in enumerate(unprocessed_status_data):
 
                 x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
 
-            # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+                # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
                 status = {
                     "Id": "",
@@ -507,7 +554,7 @@ class CalibrationDatabase(object):
         else:
             x_dir = 0
             y_dir = 0
-            z_dir = 0 
+            z_dir = 0
 
         return x_dir, y_dir, z_dir
 
