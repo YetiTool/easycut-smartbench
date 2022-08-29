@@ -109,11 +109,13 @@ class ZHeadQCConnecting(Screen):
 
     def set_thermal_coefficients(self):
         self.connecting_label.text = "Setting thermal coeffs..."
+        log("Setting thermal coeffs...")
 
         if self.m.set_thermal_coefficients("X", 5000) and self.m.set_thermal_coefficients("Y", 5000) and self.m.set_thermal_coefficients("Z", 10000):
             Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 1)
 
         else:
+            log("Z Head not Idle yet, waiting...")
             Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
 
 
