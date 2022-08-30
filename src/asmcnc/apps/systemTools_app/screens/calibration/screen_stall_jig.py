@@ -22,7 +22,6 @@ from datetime import datetime
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
-from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 from asmcnc.skavaUI.popup_info import PopupMiniInfo
 
@@ -991,7 +990,7 @@ class StallJigScreen(Screen):
     def do_stall_jig_data_send(self, dt):
         
         # STARTS A SEPARATE THREAD TO PROCESS STATUSES INTO DB READY FORMAT
-        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
+        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db)
         
         # SENDS STALL EXPERIMENT EVENTS
         results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
@@ -1019,8 +1018,8 @@ class StallJigScreen(Screen):
             print(traceback.format_exc())
 
 
-        data_send_successful = self.send_data_through_publisher(9)
-        cal_data_send_successful = self.send_data_through_publisher(10)
+        data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 9)
+        cal_data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 10)
 
         self.send_data_button.disabled = False
 
@@ -1034,18 +1033,6 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "DATA NOT SENT!"
         
         self.enable_all_buttons()
-
-    def send_data_through_publisher(self, stage_id):
-        
-        publisher = DataPublisher(self.sn_for_db)
-
-        if not self.calibration_db.processed_running_data[str(stage_id)][0]:
-            log("No status data to send for stage id: " + str(stage_id))
-            return False
-
-        response = publisher.run_data_send(*self.calibration_db.processed_running_data[str(stage_id)])
-        log("Received %s from consumer" % response)
-        return response
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST

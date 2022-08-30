@@ -3,7 +3,7 @@ from datetime import datetime
 import traceback, threading
 import json
 import sys
-
+from asmcnc.production.database.payload_publisher import DataPublisher
 
 def log(message):
     timestamp = datetime.now()
@@ -230,6 +230,41 @@ class CalibrationDatabase(object):
         #     # BUT if anything in db changes, it may be wrong!!
         #     return self.stage_id_dict.get(description)
 
+    def insert_calibration_check_stage(self, sub_serial, stage_id):
+        try:
+            
+            combined_id = str(sub_serial)[2:] + str(stage_id)
+
+            if self.does_calibration_check_stage_already_exist(combined_id):
+                log("Calibration check stage already exists for this SN")
+                return
+
+            with self.conn.cursor() as cursor:
+                query = "INSERT INTO CalibrationCheckStages (Id, SubSerialNumber, StageId) VALUES (?, ?, ?)"
+
+                params = (combined_id, sub_serial, stage_id)
+
+                cursor.execute(query, params)
+
+            self.conn.commit()
+
+        except:
+            log(traceback.format_exc())
+
+    def does_calibration_check_stage_already_exist(self, combined_id_only_ints):
+
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM CalibrationCheckStages WHERE Id = ?"
+
+            params = combined_id_only_ints
+
+            cursor.execute(query, params)
+            data = cursor.fetchone()
+
+        return data
+
+        ### check whether tuple is empty
+
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 
         try:
@@ -419,6 +454,7 @@ class CalibrationDatabase(object):
     processing_running_data = False
     processed_running_data = {
 
+        "2": ([], "CalibrationCheckStatuses", "CalibrationCheckQC"),
         "9": ([], "FinalTestStatuses", "StallExperiment"),
         "10": ([], "FinalTestStatuses", "CalibrationCheckStall")
 
@@ -512,3 +548,14 @@ class CalibrationDatabase(object):
         return x_dir, y_dir, z_dir
 
 
+    def send_data_through_publisher(self, sn_for_db, stage_id):
+        
+        publisher = DataPublisher(sn_for_db)
+
+        if not self.processed_running_data[str(stage_id)][0]:
+            log("No status data to send for stage id: " + str(stage_id))
+            return False
+
+        response = publisher.run_data_send(*self.processed_running_data[str(stage_id)])
+        log("Received %s from consumer" % response)
+        return response

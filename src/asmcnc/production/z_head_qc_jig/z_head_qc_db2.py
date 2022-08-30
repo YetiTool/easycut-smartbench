@@ -39,17 +39,33 @@ class ZHeadQCDB2(Screen):
 
         Clock.schedule_once(self.do_data_send, 0.2)
 
-    def do_data_send(self, dt):
 
-        try:
-            self.send_calibration_payload(TMC_Z)
-            self.send_calibration_payload(TMC_X1)
-            self.send_calibration_payload(TMC_X2)
-            self.sm.current = 'qcDB3'
+    def prep_data_send(self, dt):
 
-        except:
-            self.sm.current = 'qcDB4'
-            print(traceback.format_exc())
+        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.serial_number)
+        self.calibration_db.insert_calibration_check_stage(self.serial_number, 2)
+        self.do_data_send_when_ready()
+
+    def do_data_send_when_ready(self):
+
+        if self.calibration_db.processing_running_data:
+            log("Poll for sending stall jig statuses when ready")
+            Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
+            return
+
+        if self.calibration_db.send_data_through_publisher(self.serial_number, 2):
+
+            try:
+                self.send_calibration_payload(TMC_Z)
+                self.send_calibration_payload(TMC_X1)
+                self.send_calibration_payload(TMC_X2)
+                self.sm.current = 'qcDB3'
+                return
+
+            except:
+                print(traceback.format_exc())
+
+        self.sm.current = 'qcDB4'
 
     def set_serial_no(self, serial_number):
         self.serial_number = serial_number
