@@ -442,7 +442,7 @@ class ZHeadQC1(Screen):
 
     def test_motor_chips(self):
 
-        self.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
+        self.m.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
 
         # I think its fine to run both at the same time, but check on HW
         # self.m.jog_relative('Z', -63, 750) # move for 5 seconds at 750 mm/min
