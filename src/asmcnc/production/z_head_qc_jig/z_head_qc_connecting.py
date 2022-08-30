@@ -113,8 +113,9 @@ class ZHeadQCConnecting(Screen):
           (self.m.TMC_motor[TMC_Y1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_Y2].temperatureCoefficient == 5000) and \
           (self.m.TMC_motor[TMC_X1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_X2].temperatureCoefficient == 5000):
 
-            log("Thermal coeffs already set...")
+            log("Thermal coeffs already set")
             self.progress_after_all_registers_read_in()
+            return
 
         self.connecting_label.text = "Setting thermal coeffs..."
         log("Setting thermal coeffs...")
