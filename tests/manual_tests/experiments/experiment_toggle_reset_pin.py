@@ -117,10 +117,9 @@ Builder.load_string("""
 # Declare both screens
 class TestScreen(Screen):
 
+    common_move_widget = Mock()
+
     def __init__(self, **kwargs):
-
-        common_move_widget = Mock()
-
         super(TestScreen, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
