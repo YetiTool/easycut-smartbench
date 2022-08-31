@@ -185,6 +185,7 @@ class ScreenTest(App):
         m.s.alarm = Mock()
 
         sm.add_widget(TestScreen(name='door', sm=sm, m=m, db=db))
+        sm.add_widget(TestScreen(name='home', sm=sm, m=m, db=db))
 
         if "darwin" in sys.platform: m.s.s = Mock()
         m.s.start_services(0)
