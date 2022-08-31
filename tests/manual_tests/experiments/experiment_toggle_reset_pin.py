@@ -63,13 +63,18 @@ Builder.load_string("""
             GridLayout:
                 cols:2
 
+                Label: 
+                    id: register_label
+                    text: "X1 threshold"
+
+
+                Button:
+                    text: "GRBL reset"
+                    on_press: root.grbl_reset()
 
                 BoxLayout: 
                     orientation: 'horizontal'
     
-                    Label: 
-                        id: register_label
-                        text: "X1 threshold"
 
                     TextInput: 
                         id: threshold_to_set
@@ -147,6 +152,9 @@ class TestScreen(Screen):
 
     def set_threshold(self):
         self.m.set_threshold_for_axis("X", self.threshold_to_set.text)
+
+    def grbl_reset(self):
+        self.m.resume_from_alarm()
 
 class ScreenTest(App):
 
