@@ -120,35 +120,34 @@ def test_get_abs_maximums_from_sg_array(m):
 	assert m.get_abs_maximums_from_sg_array(m.temp_sg_array,6) == 9
 
 def test_are_sg_values_in_range_after_calibration_5_drivers(m):
-	build_tuning_array(m,1,2,3,4,5,6,7)
-	build_tuning_array(m,3,4,5,6,7,8,9)
+	build_tuning_array(m,1,2,3,4000,5,6,7)
+	build_tuning_array(m,3,4,5,6,7,8000,9)
 	build_tuning_array(m,2,3,4,5,6,7,8)
 	values = m.are_sg_values_in_range_after_calibration(["X", "Y"])
 	assert values[0] == 4
-	assert values[6] == None
-	assert values[4] == 6
+	assert values[1] == 5
+	assert values[2] == None
 	assert not m.checking_calibration_fail_info
 
 def test_are_sg_values_in_range_after_calibration_4_drivers(m):
 	build_tuning_array(m,3,4,5,6,7)
-	build_tuning_array(m,1,2,3,4,5)
+	build_tuning_array(m,1,2,3,4000,5)
 	build_tuning_array(m,2,3,4,5,6)
 	values = m.are_sg_values_in_range_after_calibration(["X", "Y", "Z"])
-	assert values[1] == 0
 	assert values[0] == 4
-	assert values[6] == 3
+	assert values[1] == 5
+	assert values[2] == 3
 	assert not m.checking_calibration_fail_info
 
 def test_are_sg_values_in_range_after_calibration_fails_as_expected(m):
 	build_tuning_array(m,1,2,3,4,5,1000,7)
 	build_tuning_array(m,2000,3,4,5,6,7,8)
-	build_tuning_array(m,3,4,5,6,7,8,9)
+	build_tuning_array(m,3,4000,5,6,7,8,9)
 	values = m.are_sg_values_in_range_after_calibration(["X", "Y", "Z"])
-	assert values[0] == 4
-	assert values[6] == 2000
-	assert values[4] == 6
-	assert values[1] == 1000
-	assert m.checking_calibration_fail_info == ("X SG values out of expected range: X axis: 4; X1: 1000; X2: 9|" + \
+	assert values[0] == 4000
+	assert values[1] == 5
+	assert values[2] == 2000
+	assert m.checking_calibration_fail_info == ("X SG values out of expected range: 4000| " + \
                                 "Z SG values out of expected range, max: 2000|")
 
 

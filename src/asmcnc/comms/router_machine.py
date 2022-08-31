@@ -2846,47 +2846,28 @@ class RouterMachine(object):
             if 'X' in axes:
 
                 x_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 1)
-                x1_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 5) if self.temp_sg_array[0][5] else 0
-                x2_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 6) if self.temp_sg_array[0][6] else 0
 
-                x_both_max_passed = self.cal_check_threshold_x_min < x_both_max < self.cal_check_threshold_x_max
-                x1_max_passed = self.cal_check_threshold_x_min < x1_max < self.cal_check_threshold_x_max
-                x2_max_passed = self.cal_check_threshold_x_min < x2_max < self.cal_check_threshold_x_max
-
-                if not x_both_max_passed or not x1_max_passed or not x2_max_passed:
-                    self.checking_calibration_fail_info += "X SG values out of expected range: " + \
-                                "X axis: " + str(x_both_max) + "; " + \
-                                "X1: " + str(x1_max) + "; " + \
-                                "X2: " + str(x2_max) + "|"
+                if not self.cal_check_threshold_x_min < x_both_max < self.cal_check_threshold_x_max:
+                    self.checking_calibration_fail_info += "X SG values out of expected range: " + str(x_both_max) + "| "
 
             if 'Y' in axes:
 
                 y_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 2)
-                y1_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 3)
-                y2_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 4)
 
-                y_both_max_passed = self.cal_check_threshold_y_min < y_both_max < self.cal_check_threshold_y_max
-                y1_max_passed = self.cal_check_threshold_y_min < y1_max < self.cal_check_threshold_y_max
-                y2_max_passed = self.cal_check_threshold_y_min < y2_max < self.cal_check_threshold_y_max
-
-                if not y_both_max_passed or not y1_max_passed or not y2_max_passed:
-                    self.checking_calibration_fail_info += "Y SG values out of expected range: " + \
-                                "Y axis:" + str(y_both_max) + "; " + \
-                                "Y1:" + str(y1_max) + "; " + \
-                                "Y2:" + str(y2_max) + "|"
+                if not self.cal_check_threshold_y_min < y_both_max < self.cal_check_threshold_y_max:
+                    self.checking_calibration_fail_info += "Y SG values out of expected range: " + str(y_both_max) + "| "
 
             if 'Z' in axes:
 
                 z_both_max = self.get_abs_maximums_from_sg_array(self.temp_sg_array, 0)
-                z_both_max_passed = self.cal_check_threshold_z_min < z_both_max < self.cal_check_threshold_z_max
 
-                if not z_both_max_passed:
+                if not self.cal_check_threshold_z_min < z_both_max < self.cal_check_threshold_z_max:
                     self.checking_calibration_fail_info += "Z SG values out of expected range, max: " + str(z_both_max) + "|"
 
         except:
             if not self.checking_calibration_fail_info: self.checking_calibration_fail_info += "Unexpected error"
 
-        return x_both_max, x1_max, x2_max, y_both_max, y1_max, y2_max, z_both_max
+        return x_both_max, y_both_max, z_both_max
 
     def get_abs_maximums_from_sg_array(self, sub_array, index):
 
