@@ -134,7 +134,7 @@ class TestScreen(Screen):
         self.m.stop_serial_comms()
 
     def comms_on(self):
-        self.m.reconnect_serial_connection()
+        self.m.do_connection()
 
     def get_registers(self):
         self.m.tmc_handshake()
