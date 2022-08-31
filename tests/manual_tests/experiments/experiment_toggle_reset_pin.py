@@ -164,6 +164,7 @@ class ScreenTest(App):
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
+        sm.get_screen('door').db.send_event = Mock()
 
         # Localization/language object
         l = localization.Localization()
