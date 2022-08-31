@@ -2886,7 +2886,7 @@ class RouterMachine(object):
     def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
             display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + str(motor) + ", THR: " + str(threshold)
-            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
+            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=int(threshold))
 
     def set_threshold_for_axis(self, axis, threshold):
 

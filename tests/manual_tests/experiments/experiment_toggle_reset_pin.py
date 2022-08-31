@@ -153,7 +153,7 @@ class TestScreen(Screen):
         self.update_label()
 
     def set_threshold(self):
-        self.m.set_threshold_for_axis("X", str(self.threshold_to_set.text))
+        self.m.set_threshold_for_axis("X", self.threshold_to_set.text)
 
     def grbl_reset(self):
         self.m.resume_from_alarm()
