@@ -123,6 +123,7 @@ class TestScreen(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.db = kwargs['db']
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.sm))
 
     def toggle_pin(self):
@@ -164,7 +165,6 @@ class ScreenTest(App):
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
-        sm.get_screen('door').db.send_event = Mock()
 
         # Localization/language object
         l = localization.Localization()
@@ -184,12 +184,12 @@ class ScreenTest(App):
         m.s.alarm.db = db
         m.s.alarm = Mock()
 
-        sm.add_widget(TestScreen(name='test', sm=sm, m=m))
+        sm.add_widget(TestScreen(name='door', sm=sm, m=m, db=db))
 
         if "darwin" in sys.platform: m.s.s = Mock()
         m.s.start_services(0)
 
-        sm.current = "test"
+        sm.current = "door"
 
         return sm
 
