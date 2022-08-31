@@ -95,7 +95,17 @@ class ZHeadQCConnecting(Screen):
 
         if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current:
             log("Current already set at 25")
-            self.set_thermal_coefficients()
+
+            if self.m.TMC_motor[TMC_Z].temperatureCoefficient == 10000 and \
+              (self.m.TMC_motor[TMC_Y1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_Y2].temperatureCoefficient == 5000) and \
+              (self.m.TMC_motor[TMC_X1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_X2].temperatureCoefficient == 5000):
+
+                log("Thermal coeffs already set")
+                self.progress_after_all_registers_read_in()
+            
+            else:
+                self.set_thermal_coefficients()
+
             return
 
         self.connecting_label.text = "Setting current..."
