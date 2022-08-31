@@ -2748,7 +2748,7 @@ class RouterMachine(object):
     checking_calibration_fail_info = ''
 
     cal_check_threshold_x_min = -201
-    cal_check_threshold_x_max = 201
+    cal_check_threshold_x_max = 401
 
     cal_check_threshold_y_min = -201
     cal_check_threshold_y_max = 201
@@ -2776,7 +2776,7 @@ class RouterMachine(object):
 
     def reset_cal_check_pass_thresholds(self):
         self.cal_check_threshold_x_min = -201
-        self.cal_check_threshold_x_max = 201
+        self.cal_check_threshold_x_max = 401
 
         self.cal_check_threshold_y_min = -201
         self.cal_check_threshold_y_max = 201
