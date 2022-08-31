@@ -2940,10 +2940,27 @@ class RouterMachine(object):
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
                 time.sleep(0.5)
 
-            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
-            time.sleep(1)
-            self.tmc_handshake()
-            time.sleep(1)
+            return True
+
+        else:
+            return False
+
+
+    def set_thermal_coefficients(self, axis, value):
+
+        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting thermal coefficients') and \
+            self.state().startswith('Idle'):
+
+            if "X" in axis: motors = [TMC_X1, TMC_X2]
+            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
+            if "Z" in axis: motors = [TMC_Z]
+
+            for motor in motors: 
+
+                altDisplayText = 'SET THERMAL COEFF: ' + axis + ': ' + "TMC: " + str(motor) + ", " + str(value)
+                self.send_command_to_motor(altDisplayText, motor=motor, command=SET_THERMAL_COEFF, value=value)
+                time.sleep(0.5)
+
             return True
 
         else:
@@ -2971,6 +2988,11 @@ class RouterMachine(object):
 
     def store_tmc_params_in_eeprom(self):
         self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+        time.sleep(1)
+
+    def store_tmc_params_in_eeprom_and_handshake(self):
+        self.store_tmc_params_in_eeprom()
+        self.tmc_handshake()
         time.sleep(1)
 
 
