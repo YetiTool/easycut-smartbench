@@ -36,9 +36,7 @@ class ZHeadQCDB2(Screen):
         self.calibration_db.insert_calibration_coefficients(self.serial_number, motor_index, stage, coefficients)
 
     def on_enter(self):
-
-        Clock.schedule_once(self.do_data_send, 0.2)
-
+        Clock.schedule_once(self.prep_data_send, 0.2)
 
     def prep_data_send(self, dt):
 
