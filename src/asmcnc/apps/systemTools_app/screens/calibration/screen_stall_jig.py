@@ -1376,7 +1376,14 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "CHECK CALIBRATION"
         self.m.start_measuring_running_data(10)
         log("Run a calibration check in all axes")
-        if not self.dev_mode: self.m.check_x_y_z_calibration()
+        if not self.dev_mode: 
+            self.m.cal_check_threshold_x_min = -2001
+            self.m.cal_check_threshold_x_max = 2001
+            self.m.cal_check_threshold_y_min = -2001
+            self.m.cal_check_threshold_y_max = 2001
+            self.m.cal_check_threshold_z_min = -2001
+            self.m.cal_check_threshold_z_max = 2001
+            self.m.check_x_y_z_calibration()
         self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 1)
 
     def ready_to_run_tests(self, dt):

@@ -60,8 +60,9 @@ class CalibrationDatabase(object):
             from asmcnc.production.database import credentials
 
         except ImportError:
-            log("Can't import credentials (trying to get local folder creds)")
-            import credentials
+            if sys.platform != 'win32':
+                log("Can't import credentials (trying to get local folder creds)")
+                import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
