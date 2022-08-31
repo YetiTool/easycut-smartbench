@@ -80,10 +80,12 @@ class JobData(object):
     # Job recovery
     job_recovery_info_filepath = './asmcnc/job/job_recovery.txt'
     job_recovery_filepath = ''
-    job_recovery_cancel_line = 0
+    job_recovery_cancel_line = None
     job_recovery_selected_line = -1
     job_recovery_gcode = []
     job_recovery_offset = 0 # How many lines the software added to the start of the file
+    job_recovery_from_beginning = False
+    job_recovery_skip_recovery = False
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
@@ -167,6 +169,10 @@ class JobData(object):
         self.feeds_speeds_and_boundaries_string = ''
         self.check_info_string = ''    
         self.comments_string = ''
+
+        self.job_recovery_from_beginning = False
+        self.job_recovery_skip_recovery = False
+        self.reset_recovery()
 
     def set_job_filename(self, job_path_and_name):
 
@@ -414,11 +420,31 @@ class JobData(object):
             print("Could not read recovery info")
             print(str(traceback.format_exc()))
 
-    def write_to_recovery_file(self, cancel_line):
+    def write_to_recovery_file_after_cancel(self, cancel_line):
         try:
             # Account for number of lines added in by the software when running file
             cancel_line -= self.job_recovery_offset
-            self.job_recovery_offset = 0
+
+            # If job was cancelled before it started, no need to store recovery info
+            if cancel_line >= 0:
+
+                with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
+                    job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
+
+                # Simultaneously update variables
+                self.job_recovery_filepath = self.filename
+                self.job_recovery_cancel_line = cancel_line
+
+            self.reset_recovery()
+        
+        except:
+            print("Could not write recovery info")
+            print(str(traceback.format_exc()))
+
+    def write_to_recovery_file_after_completion(self):
+        try:
+            # Cancel on line -1 represents last job completing successfully
+            cancel_line = -1
 
             with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
                 job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
@@ -426,27 +452,10 @@ class JobData(object):
             # Simultaneously update variables
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
-            self.job_recovery_selected_line = -1
-            self.job_recovery_gcode = []
-            self.job_recovery_offset = 0
+            self.reset_recovery()
         
         except:
             print("Could not write recovery info")
-            print(str(traceback.format_exc()))
-
-    def clear_recovery_file(self):
-        try:
-            open(self.job_recovery_info_filepath, 'w').close()
-
-            # Simultaneously update variables
-            self.job_recovery_filepath = ''
-            self.job_recovery_cancel_line = 0
-            self.job_recovery_selected_line = -1
-            self.job_recovery_gcode = []
-            self.job_recovery_offset = 0
-        
-        except:
-            print("Could not clear recovery info")
             print(str(traceback.format_exc()))
 
 
@@ -471,23 +480,26 @@ class JobData(object):
             if plane_line:
                 recovery_gcode.append(re.search("G1[7-9]", plane_line).group(0))
 
-            # Distance mode
+            # Absolute or incremental distance mode
             distance_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]([A-Z]|\s|$)", s)), None)
             if distance_line:
                 # Recovery not allowed if G91 is used
                 if re.search("G91([A-Z]|\s|$)", distance_line):
-                    return False, 'This job contains the G91 g-code, so it cannot be recovered.'
+                    return False, 'The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.'
                 recovery_gcode.append("G90")
 
             # Arc IJK distance mode
             arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]\.1", s)), None)
             if arc_mode_line:
-                recovery_gcode.append(re.search("G9[0,1]\.1", arc_mode_line).group(0))
+                return False, 'Job recovery does not currently support arc distance modes. This job contains %s, and therefore cannot be recovered.' % re.search("G9[0,1]\.1", arc_mode_line).group(0)
 
             # Feed rate mode
             feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[3-5]", s)), None)
             if feedrate_mode_line:
-                recovery_gcode.append(re.search("G9[3-5]", feedrate_mode_line).group(0))
+                if re.search("G94", feedrate_mode_line):
+                    recovery_gcode.append('G94')
+                else:
+                    return False, 'Job recovery only supports feed rate mode G94. This job contains %s, and therefore cannot be recovered.' % re.search("G9[3-5]", feedrate_mode_line).group(0)
 
             # Units
             unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G2[0,1]", s)), None)
@@ -531,16 +543,18 @@ class JobData(object):
                     # M7 and M8 can be enabled simultaneously according to documentation
                     if 'M7' in coolant_line or 'M07' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[8,9](\D|$)", s)), None)
-                        if 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
-                            recovery_gcode += ['M8', 'M7']
-                        else:
-                            recovery_gcode.append('M7')
+                        if previous_coolant_line:
+                            if 'M8' in previous_coolant_line or 'M08' in previous_coolant_line:
+                                recovery_gcode += ['M8', 'M7']
+                            else:
+                                recovery_gcode.append('M7')
                     elif 'M8' in coolant_line or 'M08' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
-                        if 'M7' in previous_coolant_line or 'M07' in previous_coolant_line:
-                            recovery_gcode += ['M7', 'M8']
-                        else:
-                            recovery_gcode.append('M8')
+                        if previous_coolant_line:
+                            if 'M7' in previous_coolant_line or 'M07' in previous_coolant_line:
+                                recovery_gcode += ['M7', 'M8']
+                            else:
+                                recovery_gcode.append('M8')
 
 
             # Recover most recent spindle speed
