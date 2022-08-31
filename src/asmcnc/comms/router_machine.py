@@ -167,6 +167,7 @@ class RouterMachine(object):
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
+        self.starting_serial_connection = True
         self.close_serial_connection(0)
         log("Reconnect serial connection")
         self.s.establish_connection(self.win_serial_port)
@@ -2987,14 +2988,10 @@ class RouterMachine(object):
             pi.set_mode(17, pigpio.ALT3)
             new_pin_setting = int(pi.get_mode(17))
             pi.stop()
-
             log("Toggled FW reset pin: mode " + str(new_pin_setting))
 
-            if new_pin_setting == 7:
-                return True
-
-            else:
-                return False
+            if new_pin_setting == 7: return True
+            else: return False
 
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
