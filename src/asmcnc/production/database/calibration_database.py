@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import traceback
+import traceback, threading
+import json
+import sys
 
 
 def log(message):
@@ -29,7 +31,14 @@ class CalibrationDatabase(object):
         "FullyCalibratedTest": 8
     }
 
-    connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+
+    if sys.platform == 'win32' or sys.platform == 'darwin':
+        # ODBC Driver 17 for SQL Server ON WINDOWS
+        connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+
+    else: 
+        # FreeTDS
+        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'        
 
     def __init__(self):
         self.conn = None
@@ -51,7 +60,8 @@ class CalibrationDatabase(object):
             from asmcnc.production.database import credentials
 
         except ImportError:
-            log("Can't import credentials")
+            log("Can't import credentials (trying to get local folder creds)")
+            import credentials
 
         try:
             self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
@@ -90,8 +100,58 @@ class CalibrationDatabase(object):
 
         self.conn.commit()
 
+    def do_z_head_coefficients_exist(self, combined_id):
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM ZHeadCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            return cursor.fetchone() is not None
+
+    def do_lower_beam_coefficients_exist(self, combined_id):
+        with self.conn.cursor() as cursor:
+            query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            return cursor.fetchone() is not None
+
+    def delete_z_head_coefficients(self, combined_id):
+        log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM ZHeadCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            self.delete_coefficients(combined_id)
+
+        self.conn.commit()
+
+    def delete_coefficients(self, combined_id):
+        log("Deleting existing data from Coefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM Coefficients WHERE SubAssemblyId = ?"
+
+            cursor.execute(query, combined_id)
+
+        self.conn.commit()
+
+    def delete_lower_beam_coefficients(self, combined_id):
+        log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM LowerBeamCoefficients WHERE Id = ?"
+
+            cursor.execute(query, combined_id)
+
+            self.delete_coefficients(combined_id)
+
+        self.conn.commit()
+
     def setup_z_head_coefficients(self, zh_serial, motor_index, calibration_stage_id):
         combined_id = (zh_serial + str(motor_index) + str(calibration_stage_id))[2:]
+
+        if self.do_z_head_coefficients_exist(combined_id):
+            self.delete_z_head_coefficients(combined_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
@@ -105,6 +165,9 @@ class CalibrationDatabase(object):
 
     def setup_lower_beam_coefficients(self, lb_serial, motor_index, calibration_stage_id):
         combined_id = (lb_serial + str(motor_index) + str(calibration_stage_id))[2:]
+
+        if self.do_lower_beam_coefficients_exist(combined_id):
+            self.delete_lower_beam_coefficients(combined_id)
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO LowerBeamCoefficients (Id, LowerBeamSerialNumber, MotorIndex, CalibrationStageId) " \
@@ -147,24 +210,25 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def get_stage_id_by_description(self, description):
+        return self.stage_id_dict.get(description)
 
-        try:
-            with self.conn.cursor() as cursor:
-                query = "SELECT Id FROM Stages WHERE Description = ?"
-
-                params = description
-
-                cursor.execute(query, params)
-
-                return cursor.fetchone()[0]
-
-        except:
-            log("Could not get stage ID from DB!!")
-            print(traceback.format_exc())
-
-            # assign from list instead - this is a backup! 
-            # BUT if anything in db changes, it may be wrong!! 
-            return self.stage_id_dict.get(description)
+        # try:
+        #     with self.conn.cursor() as cursor:
+        #         query = "SELECT Id FROM Stages WHERE Description = ?"
+        #
+        #         params = description
+        #
+        #         cursor.execute(query, params)
+        #
+        #         return cursor.fetchone()[0]
+        #
+        # except:
+        #     log("Could not get stage ID from DB!!")
+        #     print(traceback.format_exc())
+        #
+        #     # assign from list instead - this is a backup!
+        #     # BUT if anything in db changes, it may be wrong!!
+        #     return self.stage_id_dict.get(description)
 
     def insert_final_test_stage(self, machine_serial, ft_stage_id):
 
@@ -279,7 +343,7 @@ class CalibrationDatabase(object):
                     "temp": data[131][0],
                 }
             except:
-                log('Database is empty or incomplete for ' + combined_id)
+                log('Database is empty or incomplete for ' + str(combined_id))
 
             return parameters
 
@@ -315,3 +379,136 @@ class CalibrationDatabase(object):
             data = cursor.fetchone()
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
+
+
+    def insert_stall_experiment_results(self, stall_events):
+
+        # # Example data: 
+        # # ["ID, "X", 6000, 150, 5999, 170, -1100.4 ]
+
+        # last_test_pass = [
+
+        #     self.id_stage,
+        #     self.current_axis(),
+        #     self.feed_dict[self.current_axis()][self.indices["feed"]],
+        #     self.threshold_dict[self.current_axis()][self.indices["threshold"]],
+        #     reported_feed,
+        #     self.m.s.last_stall_load,
+        #     stall_coord
+        # ]
+
+        print("Before insert stall events")
+
+        try:
+
+            with self.conn.cursor() as cursor:
+                query = "INSERT INTO StallTest (FTID, Axis, Feedrate, Threshold, FeedReported, " \
+                        "SGReported, CoordinateReported) VALUES (?, ?, ?, ?, ?, ?, ?)"
+
+                cursor.executemany(query, stall_events)
+                self.conn.commit()
+                return True
+
+        except: 
+            print(traceback.format_exc())
+            return False
+
+        print("After insert stall events")
+
+
+    processing_running_data = False
+    processed_running_data = {
+
+        "9": ([], "FinalTestStatuses", "StallExperiment"),
+        "10": ([], "FinalTestStatuses", "CalibrationCheckStall")
+
+    }
+    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
+
+        self.processing_running_data = True
+
+        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, serial_number, x_weight, y_weight, z_weight))
+        processing_running_data_thread.daemon = True
+        processing_running_data_thread.start()
+
+    def _process_running_data(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
+
+        self.processing_running_data = True
+
+        try: 
+
+            for idx, element in enumerate(unprocessed_status_data): 
+
+                x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
+
+            # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+
+                status = {
+                    "Id": "",
+                    "FTID": int(serial_number[2:] + str(element[0])),
+                    "XCoordinate": element[1],
+                    "YCoordinate": element[2],
+                    "ZCoordinate": element[3],
+                    "XDirection": x_dir,
+                    "YDirection": y_dir,
+                    "ZDirection": z_dir,
+                    "XSG": element[4],
+                    "YSG": element[5],
+                    "Y1SG": element[6],
+                    "Y2SG":element[7],
+                    "ZSG":element[8],
+                    "TMCTemperature":element[9],
+                    "PCBTemperature":element[10],
+                    "MOTTemperature":element[11],
+                    "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
+                    "Feedrate": element[13],
+                    "XWeight": x_weight,
+                    "YWeight": y_weight,
+                    "ZWeight": z_weight
+                }
+
+                self.processed_running_data[str(element[0])][0].append(status)
+
+        except:
+            print(traceback.format_exc())
+
+        self.processing_running_data = False
+
+
+    def generate_directions(self, unprocessed_status_data, idx):
+
+        # -1    FORWARDS/DOWN (AWAY FROM HOME)
+        # 0     NOT MOVING
+        # 1     BACKWARDS/UP (TOWARDS HOME)
+
+        if idx > 0:
+
+            if unprocessed_status_data[idx-1][1] < unprocessed_status_data[idx][1]:
+                x_dir = -1
+            elif unprocessed_status_data[idx-1][1] > unprocessed_status_data[idx][1]:
+                x_dir = 1
+            else:
+                x_dir = 0
+
+            if unprocessed_status_data[idx-1][2] < unprocessed_status_data[idx][2]:
+                y_dir = -1
+            elif unprocessed_status_data[idx-1][2] > unprocessed_status_data[idx][2]:
+                y_dir = 1
+            else:
+                y_dir = 0
+
+            if unprocessed_status_data[idx-1][3] < unprocessed_status_data[idx][3]:
+                z_dir = 1
+            elif unprocessed_status_data[idx-1][3] > unprocessed_status_data[idx][3]:
+                z_dir = -1
+            else:
+                z_dir = 0
+
+        else:
+            x_dir = 0
+            y_dir = 0
+            z_dir = 0 
+
+        return x_dir, y_dir, z_dir
+
+

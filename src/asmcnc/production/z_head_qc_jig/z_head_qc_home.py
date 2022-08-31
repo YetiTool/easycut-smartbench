@@ -8,7 +8,7 @@ from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 import subprocess
 
-import sys, os
+import sys, os, re, glob
 
 try: 
     import pigpio
@@ -47,6 +47,8 @@ Builder.load_string("""
                     text: 'NO - Update FW now! (For v1.3)'
                     font_size: dp(20)
                     on_press: root.test_fw_update()
+                    markup: True
+                    halign: "center"
 
                 Button:
                     text: 'YES - Take me to QC! (For v1.3)'
@@ -71,6 +73,9 @@ Builder.load_string("""
 
 
 class ZHeadQCHome(Screen):
+
+    fw_button_string = 'NO - Update FW now! (For v1.3)'
+
     def __init__(self, **kwargs):
         super(ZHeadQCHome, self).__init__(**kwargs)
 
@@ -78,22 +83,21 @@ class ZHeadQCHome(Screen):
         self.m = kwargs['m']
         self.usb = kwargs['usb']
 
+    def on_enter(self):
+        self.update_usb_button_label()
+
+    def update_usb_button_label(self):
+        try: 
+            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
+            self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+
+        except: 
+            self.test_fw_update_button.text = "Looking for USB"
+            self.usb.enable()
+            Clock.schedule_once(lambda dt: self.update_usb_button_label(), 2)
+
     def enter_qc(self):
         self.sm.current = 'qc1'
-
-    def load_usb_stick_with_hex_file(self):
-
-        if not self.usb.stick_enabled:
-            self.usb.enable()
-
-        if self.usb.is_available():
-            if os.path.exists("/media/usb/GRBL*.hex"):
-                print("GRBL file found on USB, start update...")
-                self.test_fw_update()
-                return
-
-        Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file, 1)
-
 
     def test_fw_update(self):
 
@@ -119,12 +123,6 @@ class ZHeadQCHome(Screen):
 
         def connect():
             self.m.starting_serial_connection = True
-            # Have to delete these screens manually, as they are created again upon serial comms startup, causing errors
-            self.sm.remove_widget(self.sm.get_screen('alarm_1'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_2'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_3'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_4'))
-            self.sm.remove_widget(self.sm.get_screen('alarm_5'))
             Clock.schedule_once(do_connection, 0.1)
 
         def do_connection(dt):
@@ -146,7 +144,13 @@ class ZHeadQCHome(Screen):
                 did_fw_update_succeed = "Update failed."
 
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
-            self.test_fw_update_button.text = "NO - Update FW now! (For v1.3)"
+            self.update_usb_button_label()
+
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
+            self.sm.get_screen('qc3').reset_timer()
 
         disconnect_and_update()
 

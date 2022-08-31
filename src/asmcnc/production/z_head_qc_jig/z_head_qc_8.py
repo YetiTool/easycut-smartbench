@@ -67,11 +67,13 @@ class ZHeadQC8(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
     def disconnect(self):
+        print("Disconnect button pressed")
         self.m.s.grbl_scanner_running = False
         Clock.schedule_once(self.m.close_serial_connection, 0.1)
         self.connect_button.disabled = False
 
     def connect_and_restart(self):
+        print("Connect button pressed")
         if not self.m.starting_serial_connection:
             self.m.starting_serial_connection = True
             self.m.s.grbl_scanner_running = False
@@ -91,7 +93,12 @@ class ZHeadQC8(Screen):
             Clock.schedule_once(self.back_to_start, 2)
 
     def back_to_start(self, dt):
-        self.sm.current = 'qchome'
+        self.sm.get_screen('qc1').reset_checkboxes()
+        self.sm.get_screen('qc2').reset_checkboxes()
+        self.sm.get_screen('qcW136').reset_checkboxes()
+        self.sm.get_screen('qcW112').reset_checkboxes()
+        self.sm.get_screen('qc3').reset_timer()
+        self.sm.current = 'qcconnecting'
         self.connect_button.text = 'Connect and Restart'
 
     def enter_prev_screen(self):

@@ -5,3 +5,4 @@ sb_values/
 .vscode/
 src/asmcnc/production/database/credentials.py
 src/asmcnc/job/job_recovery.txt
+src/asmcnc/production/database/csvs/

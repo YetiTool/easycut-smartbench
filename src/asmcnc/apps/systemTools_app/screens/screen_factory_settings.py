@@ -20,6 +20,8 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -297,7 +299,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 8
+                        rows: 9
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -333,9 +335,21 @@ Builder.load_string("""
                         Button:
                             text: 'Overnight test'
                             on_press: root.enter_overnight_test()
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+
+                            Button:
+                                text: 'Current'
+                                on_press: root.enter_current_adjustment()
+
+                            Button:
+                                text: 'Stall Jig'
+                                on_press: root.enter_stall_jig()
+
                         Button:
-                            text: 'Current Adjustment'
-                            on_press: root.enter_current_adjustment()
+                            text: 'Set SG thresholds'
+                            on_press: root.enter_set_thresholds()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -508,6 +522,11 @@ class FactorySettingsScreen(Screen):
         self.set_toggle_buttons()
         self.get_smartbench_model()
 
+        csv_path = './asmcnc/production/database/csvs'
+
+        if not os.path.exists(csv_path):
+            os.mkdir(csv_path)
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
@@ -621,6 +640,12 @@ class FactorySettingsScreen(Screen):
         except:
             pass
 
+    def remove_csv_files(self):
+        try:
+            os.system("rm -r ./asmcnc/production/database/csvs")
+        except:
+            pass
+
     def factory_reset(self):
 
         def nested_factory_reset():
@@ -633,6 +658,7 @@ class FactorySettingsScreen(Screen):
 
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
+                self.remove_csv_files()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -697,7 +723,7 @@ class FactorySettingsScreen(Screen):
     def full_console_update(self):
 
         self.console_update_button.text = "Doing update,\nplease wait..."
-
+        self.remove_csv_files()
         self.remove_creds_file()
 
         def nested_full_console_update(dt):
@@ -896,3 +922,36 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
+
+
+    def enter_stall_jig(self):
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('stall_jig'):
+                    stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
+                    self.systemtools_sm.sm.add_widget(stall_jig_screen)
+                
+                self.systemtools_sm.sm.current = 'stall_jig'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+
+    def enter_set_thresholds(self):
+        if not self.systemtools_sm.sm.has_screen('set_thresholds'):
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            self.systemtools_sm.sm.add_widget(set_thresholds_screen)
+        
+        self.systemtools_sm.sm.current = 'set_thresholds'
+
+
+
+
+
+
+
+
+
+
+
