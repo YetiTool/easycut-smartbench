@@ -128,7 +128,7 @@ class ZHeadQC(App):
         z_head_qc_3 = ZHeadQC3(name='qc3', sm = sm, m = m)
         sm.add_widget(z_head_qc_3)
 
-        z_head_qc_4 = ZHeadQC4(name='qc4', sm = sm, m = m, calibration_db = calibration_db)
+        z_head_qc_4 = ZHeadQC4(name='qc4', sm = sm, m = m)
         sm.add_widget(z_head_qc_4)
 
         z_head_qc_5 = ZHeadQC5(name='qc5', sm = sm, m = m, calibration_db = calibration_db)
