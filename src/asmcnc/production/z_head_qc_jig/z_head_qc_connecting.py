@@ -114,18 +114,24 @@ class ZHeadQCConnecting(Screen):
           (self.m.TMC_motor[TMC_X1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_X2].temperatureCoefficient == 5000):
 
             log("Thermal coeffs already set")
-            self.progress_after_all_registers_read_in()
+            self.store_params_and_progress()
             return
 
         self.connecting_label.text = "Setting thermal coeffs..."
         log("Setting thermal coeffs...")
 
         if self.m.set_thermal_coefficients("X", 5000) and self.m.set_thermal_coefficients("Y", 5000) and self.m.set_thermal_coefficients("Z", 10000):
-            Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 1)
+            Clock.schedule_once(lambda dt: self.store_params_and_progress(), 1)
 
         else:
             log("Z Head not Idle yet, waiting...")
             Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
+
+
+    def store_params_and_progress(self):
+        log("Storing TMC params...")
+        self.m.store_tmc_params_in_eeprom_and_handshake()
+        self.progress_after_all_registers_read_in()
 
 
 

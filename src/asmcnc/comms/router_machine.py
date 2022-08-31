@@ -2900,7 +2900,6 @@ class RouterMachine(object):
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
                 time.sleep(0.5)
 
-            self.store_tmc_params_in_eeprom_and_handshake()
             return True
 
         else:
@@ -2922,7 +2921,6 @@ class RouterMachine(object):
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_THERMAL_COEFF, value=value)
                 time.sleep(0.5)
 
-            self.store_tmc_params_in_eeprom_and_handshake()
             return True
 
         else:
