@@ -59,4 +59,4 @@ def send_logs(log_file_path):
     sftp = ssh.open_sftp()
 
     file_name = log_file_path.split('/')[-1]
-    sftp.put(log_file_path, WORKING_DIR + file_name)
+    sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
