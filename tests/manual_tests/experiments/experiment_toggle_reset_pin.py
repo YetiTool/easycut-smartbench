@@ -197,6 +197,7 @@ class TestScreen(Screen):
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
 
+
             connect()
 
         def connect():
@@ -222,6 +223,7 @@ class TestScreen(Screen):
                 did_fw_update_succeed = "Update failed."
 
             print(did_fw_update_succeed)
+            print(str(self.stdout))
 
         disconnect_and_update()
 
