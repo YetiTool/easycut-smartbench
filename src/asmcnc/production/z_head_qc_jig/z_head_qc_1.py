@@ -453,7 +453,8 @@ class ZHeadQC1(Screen):
 
     def try_start_motor_chips_test(self, dt):
         if self.m.s.m_state == "Idle":
-            self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+            self.m.send_command_to_motor("REPORT RAW SG X SET", motor = TMC_X1, command=REPORT_RAW_SG, value=1)
+            self.m.send_command_to_motor("REPORT RAW SG Z SET", motor = TMC_Z, command=REPORT_RAW_SG, value=1)
             self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
             Clock.schedule_once(self.check_sg_values, 3)
         elif self.m.s.m_state == "Jog":
@@ -488,8 +489,8 @@ class ZHeadQC1(Screen):
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
-
+        self.m.send_command_to_motor("REPORT RAW SG X UNSET", motor = TMC_X1, command=REPORT_RAW_SG, value=0)
+        self.m.send_command_to_motor("REPORT RAW SG Z UNSET", motor = TMC_Z, command=REPORT_RAW_SG, value=0)
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True

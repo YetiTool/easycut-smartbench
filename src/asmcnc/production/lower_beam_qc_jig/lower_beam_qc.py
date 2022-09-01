@@ -254,7 +254,8 @@ class LowerBeamQC(Screen):
             pass
 
     def test_motor_chips(self):
-        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+        self.m.send_command_to_motor("REPORT RAW SG Y1 SET", motor = TMC_Y1, command=REPORT_RAW_SG, value=1)
+        self.m.send_command_to_motor("REPORT RAW SG Y2 SET", motor = TMC_Y2, command=REPORT_RAW_SG, value=1)
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
@@ -296,7 +297,8 @@ class LowerBeamQC(Screen):
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+        self.m.send_command_to_motor("REPORT RAW SG Y1 UNSET", motor = TMC_Y1, command=REPORT_RAW_SG, value=0)
+        self.m.send_command_to_motor("REPORT RAW SG Y2 UNSET", motor = TMC_Y2, command=REPORT_RAW_SG, value=0)
 
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
