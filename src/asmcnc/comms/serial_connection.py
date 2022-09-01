@@ -1260,16 +1260,17 @@ class SerialConnection(object):
             if self.measure_running_data:
 
                 try:
+
                     self.running_data.append([
                         int(self.measurement_stage),
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),
-                        self.sg_x_motor_axis,
-                        self.sg_y_axis,
-                        self.sg_y1_motor,
-                        self.sg_y2_motor,
-                        self.sg_z_motor_axis,
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
                         int(self.motor_driver_temp),
                         int(self.pcb_temp),
                         int(self.transistor_heatsink_temp),
