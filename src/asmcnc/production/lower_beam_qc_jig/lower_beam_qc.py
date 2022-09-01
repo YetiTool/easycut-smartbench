@@ -254,7 +254,7 @@ class LowerBeamQC(Screen):
             pass
 
     def test_motor_chips(self):
-        # self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
@@ -277,7 +277,7 @@ class LowerBeamQC(Screen):
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y1_motor))
+            fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y1_motor))
             fail_report.append("Should be between 200 and 800.")
 
         if 200 <= self.m.s.sg_y2_motor <= 800:
@@ -285,7 +285,7 @@ class LowerBeamQC(Screen):
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y2_motor))
+            fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y2_motor))
             fail_report.append("Should be between 200 and 800.")
 
         if not pass_fail:
