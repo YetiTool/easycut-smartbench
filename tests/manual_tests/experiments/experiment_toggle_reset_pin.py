@@ -109,6 +109,14 @@ Builder.load_string("""
                     text: 'Store params'
                     on_press: root.store_params()
 
+                Button:
+                    text: 'Test FW update W toggle'
+                    on_press: root.fw_update_w_toggle()
+
+                Button:
+                    text: 'Test FW update WO toggle'
+                    on_press: root.fw_update_wo_toggle()
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -118,6 +126,7 @@ Builder.load_string("""
 class TestScreen(Screen):
 
     common_move_widget = Mock()
+    do_toggle = False
 
     def __init__(self, **kwargs):
         super(TestScreen, self).__init__(**kwargs)
@@ -157,6 +166,92 @@ class TestScreen(Screen):
 
     def grbl_reset(self):
         self.m.resume_from_alarm()
+
+    def fw_update_w_toggle(self):
+        self.do_toggle = True
+        self.test_fw_update()
+
+    def fw_update_wo_toggle(self):
+        self.do_toggle = False
+        self.test_fw_update()
+
+    def test_fw_update(self):
+
+        self.test_fw_update_button.text = "  Updating..."
+
+        def disconnect_and_update():
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            Clock.schedule_once(nested_do_fw_update, 1)
+
+        def nested_do_fw_update(dt):
+            # pi = pigpio.pi()
+            # pi.set_mode(17, pigpio.ALT3)
+            # print(pi.get_mode(17))
+            # pi.stop()
+
+            if self.do_toggle: self.m.toggle_reset_pin()
+
+            cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            self.stdout, stderr = proc.communicate()
+            self.exit_code = int(proc.returncode)
+
+            connect()
+
+        def connect():
+            self.m.starting_serial_connection = True
+            Clock.schedule_once(do_connection, 0.1)
+
+        def do_connection(dt):
+            self.m.reconnect_serial_connection()
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+
+        def try_start_services(dt):
+            if self.m.s.is_connected():
+                Clock.unschedule(self.poll_for_reconnection)
+                Clock.schedule_once(self.m.s.start_services, 1)
+                # hopefully 1 second should always be enough to start services
+                Clock.schedule_once(update_complete, 2)
+
+        def update_complete(dt):
+            if self.exit_code == 0: 
+                did_fw_update_succeed = "Success!"
+
+            else: 
+                did_fw_update_succeed = "Update failed."
+
+            print(did_fw_update_succeed)
+
+        disconnect_and_update()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ScreenTest(App):
 
