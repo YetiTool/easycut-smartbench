@@ -264,28 +264,28 @@ class LowerBeamQC(Screen):
         pass_fail = True
         fail_report = []
 
-        if 200 <= self.m.s.y_axis <= 800:
+        if 200 <= self.m.s.sg_y_axis <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y axis SG value: " + str(self.m.s.y_axis))
+            fail_report.append("Y axis SG value: " + str(self.m.s.sg_y_axis))
             fail_report.append("Should be between 200 and 800.")
 
-        if 200 <= self.m.s.y1_motor <= 800:
+        if 200 <= self.m.s.sg_y1_motor <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y2 motor SG value: " + str(self.m.s.y1_motor))
+            fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y1_motor))
             fail_report.append("Should be between 200 and 800.")
 
-        if 200 <= self.m.s.y2_motor <= 800:
+        if 200 <= self.m.s.sg_y2_motor <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y1 motor SG value: " + str(self.m.s.y2_motor))
+            fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y2_motor))
             fail_report.append("Should be between 200 and 800.")
 
         if not pass_fail:
