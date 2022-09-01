@@ -117,6 +117,10 @@ Builder.load_string("""
                     text: 'Test FW update WO toggle'
                     on_press: root.fw_update_wo_toggle()
 
+                Button:
+                    text: "Test FW update WO comms break"
+                    on_press: root.fw_update_wo_comms_break()
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -174,6 +178,23 @@ class TestScreen(Screen):
     def fw_update_wo_toggle(self):
         self.do_toggle = False
         self.test_fw_update()
+
+    def fw_update_wo_comms_break(self):
+
+        cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+        proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        stdout, stderr = proc.communicate()
+        exit_code = int(proc.returncode)
+
+        if exit_code == 0: 
+            did_fw_update_succeed = "Success!"
+
+        else: 
+            did_fw_update_succeed = "Update failed."
+
+        print(did_fw_update_succeed)
+        print(str(stdout))
+
 
     def test_fw_update(self):
 
