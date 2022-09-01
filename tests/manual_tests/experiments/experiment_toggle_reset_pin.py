@@ -177,8 +177,6 @@ class TestScreen(Screen):
 
     def test_fw_update(self):
 
-        self.test_fw_update_button.text = "  Updating..."
-
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.1)
