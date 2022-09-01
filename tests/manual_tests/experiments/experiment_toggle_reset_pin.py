@@ -7,7 +7,7 @@ Run from easycut-smartbench folder, with
 python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 '''
 
-import sys, os
+import sys, os, subprocess
 sys.path.append('./src')
 os.chdir('./src')
 
