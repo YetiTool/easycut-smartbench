@@ -18,6 +18,8 @@ def create_log_folder():
 
 
 def create_and_send_logs(serial_number):
+    create_log_folder()
+
     log_file_path = generate_logs(serial_number)
     send_logs(log_file_path)
 
