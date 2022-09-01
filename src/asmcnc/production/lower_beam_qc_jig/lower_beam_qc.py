@@ -254,7 +254,7 @@ class LowerBeamQC(Screen):
             pass
 
     def test_motor_chips(self):
-        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+        # self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
