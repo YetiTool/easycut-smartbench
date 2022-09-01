@@ -9,6 +9,7 @@ from kivy.uix.button import  Button
 
 from asmcnc.skavaUI import widget_status_bar, popup_info
 from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 import sys, os
 
@@ -253,6 +254,7 @@ class LowerBeamQC(Screen):
             pass
 
     def test_motor_chips(self):
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
@@ -262,29 +264,29 @@ class LowerBeamQC(Screen):
         pass_fail = True
         fail_report = []
 
-        if -300 <= self.m.s.y_axis <= 300:
+        if 200 <= self.m.s.y_axis <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Y axis SG value: " + str(self.m.s.y_axis))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between 200 and 800.")
 
-        if -300 <= self.m.s.y1_motor <= 300:
+        if 200 <= self.m.s.y1_motor <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Y2 motor SG value: " + str(self.m.s.y1_motor))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between 200 and 800.")
 
-        if -300 <= self.m.s.y2_motor <= 300:
+        if 200 <= self.m.s.y2_motor <= 800:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Y1 motor SG value: " + str(self.m.s.y2_motor))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between 200 and 800.")
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
@@ -293,6 +295,8 @@ class LowerBeamQC(Screen):
 
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
 
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
