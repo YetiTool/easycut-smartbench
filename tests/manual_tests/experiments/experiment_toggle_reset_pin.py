@@ -104,6 +104,10 @@ Builder.load_string("""
                 Button:
                     text: 'Toggle pin'
                     on_press: root.toggle_pin()
+
+                Button:
+                    text: 'Set pin mode'
+                    on_press: root.set_pin_mode()
                 
                 Button:
                     text: 'Store params'
@@ -142,6 +146,9 @@ class TestScreen(Screen):
 
     def toggle_pin(self):
         self.m.toggle_reset_pin()
+
+    def set_pin_mode(self):
+        self.m.set_mode_of_reset_pin()
 
     def comms_off(self):
         self.m.stop_serial_comms()

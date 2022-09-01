@@ -2980,21 +2980,41 @@ class RouterMachine(object):
 
     ## FIRMWARE UPDATES
 
+
     def toggle_reset_pin(self):
+
+        try:
+
+            pi = pigpio.pi()
+            original_setting = pi.read(17)
+            pi.write(17,int(not original_setting))
+            new_setting = pi.read(17)
+            pi.write(17,int(original_setting))
+            restored_setting = pi.read(17)
+            log("Toggled 17 to " + str(int(not original_setting)) + " and back to " + str(int(original_setting)))
+            pi.stop()
+
+            if int(original_setting) == int(restored_setting) == int(not new_setting): return True
+
+        except: 
+            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            return False
+
+    def set_mode_of_reset_pin(self):
 
         try: 
             # Toggle reset pin
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            new_pin_setting = int(pi.get_mode(17))
+            new_pin_mode = int(pi.get_mode(17))
+            log("Set GPIO 17 to mode ALT3: " + str(new_pin_mode))
             pi.stop()
-            log("Toggled FW reset pin: mode " + str(new_pin_setting))
 
-            if new_pin_setting == 7: return True
+            if new_pin_mode == 7: return True
             else: return False
 
         except: 
-            log("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            log("Couldn't set mode of reset pin, maybe check the pigio daemon?")
             return False
 
 
