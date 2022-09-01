@@ -2983,6 +2983,8 @@ class RouterMachine(object):
 
     def toggle_reset_pin(self):
 
+        if int(pi.get_mode(17)) != 7: self.set_mode_of_reset_pin()
+
         try:
 
             pi = pigpio.pi()
