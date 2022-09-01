@@ -464,21 +464,24 @@ class ZHeadQC1(Screen):
         pass_fail = True
         fail_report = []
 
-        if 200 <= self.m.s.sg_x_motor_axis <= 800:
+        lower_sg_limit = 200
+        upper_sg_limit = 800
+
+        if lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
-            fail_report.append("Should be between 200 and 800.")
+            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
-        if 200 <= self.m.s.sg_z_motor_axis <= 800:
+        if lower_sg_limit <= self.m.s.sg_z_motor_axis <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Z motor/axis SG value: " + str(self.m.s.sg_z_motor_axis))
-            fail_report.append("Should be between 200 and 800.")
+            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
