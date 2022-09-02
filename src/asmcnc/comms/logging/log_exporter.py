@@ -8,6 +8,9 @@ WORKING_DIR = 'C:\\SBLogs\\'
 
 export_logs_folder = '/home/pi/exported_logs'
 
+def log(message):
+    timestamp = datetime.now()
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 def create_log_folder():
     # remove all logs when creating new one
@@ -53,6 +56,7 @@ def trim_logs(log_file_path, x_lines):
 
 
 def send_logs(log_file_path):
+    log("Sending logs to server")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
@@ -60,3 +64,4 @@ def send_logs(log_file_path):
 
     file_name = log_file_path.split('/')[-1]
     sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
+    log("Done sending logs to server")
