@@ -91,12 +91,11 @@ class ZHeadQCHome(Screen):
             return "/media/usb/GRBL*5.hex"
 
         elif int(self.m.s.hw_version) >= 20:
-            try:
-                glob.glob("/media/usb/GRBL*4.hex")[0]
+            if glob.glob("/media/usb/GRBL*4.hex"):
                 return "/media/usb/GRBL*4.hex"
-            except:
-                # Allow for older FW versions, starting in 2 but not ending in 4
-                return "/media/usb/GRBL2*.hex"
+
+            # Allow for older FW versions, starting in 2 but not ending in 4
+            return "/media/usb/GRBL23*.hex"
 
         return "/media/usb/GRBL*.hex"
 
