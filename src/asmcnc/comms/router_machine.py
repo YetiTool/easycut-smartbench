@@ -2990,6 +2990,7 @@ class RouterMachine(object):
             if int(pi.get_mode(17)) != 7: self.set_mode_of_reset_pin()
             original_setting = pi.read(17)
             pi.write(17,int(not original_setting))
+            time.sleep(1)
             # pi.write(17,1)
             new_setting = pi.read(17)
             pi.write(17,int(original_setting))
