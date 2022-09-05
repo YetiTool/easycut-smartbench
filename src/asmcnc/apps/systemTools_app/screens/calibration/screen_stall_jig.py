@@ -1372,7 +1372,6 @@ class StallJigScreen(Screen):
 
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
-        # self.m.toggle_reset_pin()
         self.choose_test(0,0,0)
         self.start_homing()
 

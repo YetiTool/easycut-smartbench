@@ -125,6 +125,20 @@ Builder.load_string("""
                     text: "Test FW update WO comms break"
                     on_press: root.fw_update_wo_comms_break()
 
+
+                Button: 
+                    text: "Check all"
+                    on_press: root.check_all()
+                Button: 
+                    text: "Check ZH"
+                    on_press: root.check_zh()
+                Button: 
+                    text: "Check Y"
+                    on_press: root.check_y()
+
+
+
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -143,6 +157,11 @@ class TestScreen(Screen):
         self.m = kwargs['m']
         self.db = kwargs['db']
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.sm))
+
+    def check_all(self): self.m.check_x_y_z_calibration()
+    def check_zh(self): self.m.check_x_z_calibration()
+    def check_y(self): self.m.check_y_calibration()
+
 
     def toggle_pin(self):
         self.m.toggle_reset_pin()
@@ -213,12 +232,8 @@ class TestScreen(Screen):
             Clock.schedule_once(nested_do_fw_update, 1)
 
         def nested_do_fw_update(dt):
-            # pi = pigpio.pi()
-            # pi.set_mode(17, pigpio.ALT3)
-            # print(pi.get_mode(17))
-            # pi.stop()
 
-            if self.do_toggle: self.m.toggle_reset_pin()
+            if self.do_toggle: self.m.set_mode_of_reset_pin()
 
             cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)

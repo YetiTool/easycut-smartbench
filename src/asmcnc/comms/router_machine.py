@@ -2760,19 +2760,13 @@ class RouterMachine(object):
     poll_end_of_calibration_check = None
 
     def check_x_y_z_calibration(self):
-
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['X', 'Y', 'Z'])
+        self.do_calibration_check(['X', 'Y', 'Z'])
 
     def check_x_z_calibration(self):
-
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['X', 'Z'])
+        self.do_calibration_check(['X', 'Z'])
 
     def check_y_calibration(self):
-
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['Y'])
+        self.do_calibration_check(['Y'])
 
 
     def reset_cal_check_pass_thresholds(self):
@@ -2786,14 +2780,35 @@ class RouterMachine(object):
         self.cal_check_threshold_z_max = 201
 
 
-    def stream_calibration_check_files(self, axes):
+    def do_calibration_check(self, axes):
 
+        if not self.prep_calibration_check(axes):
+            return
+
+        if not self.state().startswith('Idle') or not self.TMC_registers_have_been_read_in():
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes), 3)
+            return
+
+        self.stream_calibration_check_files(axes)        
+
+
+    def prep_calibration_check(self, axes):
+
+        if self.checking_calibration_in_progress: 
+            return True
+
+        self.checking_calibration_in_progress = True
 
         # Toggle FW reset pin before starting 
-        if not self.toggle_reset_pin():
-            self.checking_calibration_fail_info = "Pin toggle fail"
-            self.post_calibration_check(axes)
-            return
+        if self.hard_reset_pcb_sequence(): 
+            return True
+
+        self.checking_calibration_fail_info = "Pin toggle fail"
+        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+        return False
+
+
+    def stream_calibration_check_files(self, axes):
 
         check_calibration_gcode_pre_scrubbed = []
 
@@ -2816,7 +2831,7 @@ class RouterMachine(object):
 
     def post_calibration_check(self, axes):
 
-        if self.state().startswith('Idle'):
+        if self.state().startswith('Idle') and self.TMC_registers_have_been_read_in():
 
             if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
                 if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
@@ -2980,27 +2995,40 @@ class RouterMachine(object):
 
     ## FIRMWARE UPDATES
 
+    def hard_reset_pcb_sequence(self):
+
+        try: 
+            pi = pigpio.pi()
+            pi.stop()
+        
+        except: 
+            log("Check pigpio daemon!")
+            return False
+
+        # Functions that use this function will need to check that serial comms has finished reconnecting after
+        self.stop_serial_comms()
+        toggle_outcome = self.toggle_reset_pin()
+        self.do_connection()
+        return toggle_outcome
 
     def toggle_reset_pin(self):
-
 
         try:
 
             pi = pigpio.pi()
-            if int(pi.get_mode(17)) != 7: self.set_mode_of_reset_pin()
+            if int(pi.get_mode(17)) != 7: 
+                if not self.set_mode_of_reset_pin(): return False
+            time.sleep(0.5)
             original_setting = pi.read(17)
             pi.write(17,int(not original_setting))
             time.sleep(1)
-            # pi.write(17,1)
             new_setting = pi.read(17)
             pi.write(17,int(original_setting))
-            # pi.write(17,0)
             restored_setting = pi.read(17)
             log("Toggled 17 to " + str(int(not original_setting)) + " and back to " + str(int(original_setting)))
             pi.stop()
-
-            # if int(original_setting) == int(restored_setting) == int(not new_setting): return True
-            return True
+            time.sleep(1)
+            return int(original_setting) == int(restored_setting) == int(not new_setting)
 
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
@@ -3026,13 +3054,11 @@ class RouterMachine(object):
 
     def stop_serial_comms(self):
 
-        self.s.grbl_scanner_running = False
-
-        if self.state().startswith("Off"):
-            self.close_serial_connection()
-
-        else:
-            Clock.schedule_once(lambda dt: self.stop_serial_comms, 0.1)
+        while self.m.state() != "Off": # yes, this is naughty.
+            self.s.grbl_scanner_running = False
+            time.sleep(0.2)
+        self.close_serial_connection()
+        time.sleep(0.5)
 
     def do_connection(self):
 
