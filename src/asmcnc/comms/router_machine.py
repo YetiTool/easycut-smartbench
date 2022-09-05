@@ -3054,7 +3054,7 @@ class RouterMachine(object):
 
     def stop_serial_comms(self):
 
-        while self.m.state() != "Off": # yes, this is naughty.
+        while self.state() != "Off": # yes, this is naughty.
             self.s.grbl_scanner_running = False
             time.sleep(0.2)
         self.close_serial_connection()
