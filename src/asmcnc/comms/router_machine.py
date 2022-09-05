@@ -3057,7 +3057,7 @@ class RouterMachine(object):
         while self.state() != "Off": # yes, this is naughty.
             self.s.grbl_scanner_running = False
             time.sleep(0.2)
-        self.close_serial_connection()
+        self.close_serial_connection(0)
         time.sleep(0.5)
 
     def do_connection(self):
