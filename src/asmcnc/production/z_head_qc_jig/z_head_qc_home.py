@@ -97,7 +97,7 @@ class ZHeadQCHome(Screen):
             # Allow for older FW versions, starting in 2 but not ending in 4
             return "/media/usb/GRBL23*.hex"
 
-        return "/media/usb/GRBL*.hex"
+        return "/media/usb/GRBL1*.hex"
 
     def update_usb_button_label(self):
         try:
