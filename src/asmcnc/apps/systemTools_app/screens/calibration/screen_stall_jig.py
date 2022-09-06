@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from  kivy.uix.boxlayout import BoxLayout
 from  kivy.uix.label import Label
 from  kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.clock import Clock
 import sys, os
 from functools import partial
@@ -21,7 +22,6 @@ from datetime import datetime
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
-from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 from asmcnc.skavaUI.popup_info import PopupMiniInfo
 
@@ -265,6 +265,14 @@ class StallJigScreen(Screen):
 
     }
 
+    minimum_threshold_index = {
+
+        "X": 0,
+        "Y": 0,
+        "Z": 0,
+
+    }
+
     ## POSITIONS
 
     ### ABSOLUTE START POSITION OF ALL TESTS 
@@ -341,8 +349,8 @@ class StallJigScreen(Screen):
     back_off = {
 
         "X": -430,  #  -400, 
-        "Y": -100,   #  -70,
-        "Z": 80     #  76
+        "Y": -120,   #  -70,
+        "Z": 100     #  76
 
     }
 
@@ -382,6 +390,7 @@ class StallJigScreen(Screen):
     setting_up_axis_for_test = False
     expected_limit_found = False
     threshold_reached = False
+    false_stall_happened = False
     all_tests_completed = False
     test_stopped = False
     test_passed = False
@@ -404,8 +413,7 @@ class StallJigScreen(Screen):
     poll_to_move_to_axis_start = None         
     ensure_alarm_resumed_event = None         
     threshold_detection_event = None          
-    hard_limit_found_event = None             
-    set_expected_limit_found_flag_event = None
+    hard_limit_found_event = None
     poll_to_start_back_off = None             
     drive_into_barrier_event = None           
     move_all_axes_event = None                
@@ -418,7 +426,6 @@ class StallJigScreen(Screen):
     poll_to_finish_procedure = None           
     data_send_event = None                    
     resume_from_alarm_event = None            
-    threshold_reached = None
     poll_to_deenergize_motors = None
     poll_to_energize_motors = None
     poll_to_reenable_hard_limits_and_go_to_next_test = None
@@ -447,6 +454,7 @@ class StallJigScreen(Screen):
 
     ## COLOURS: 
 
+    false_stall_amber = [245./255, 183./255, 23./255, 1]
     fail_orange = [245./255, 127./255, 23./255, 1]
     pass_green = [0./255, 204./255, 51./255, 1]
     bright_pass_green = [51./255, 255./255, 0./255, 1]
@@ -535,7 +543,6 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.ensure_alarm_resumed_event)
         self.unschedule_event_if_it_exists(self.threshold_detection_event)
         self.unschedule_event_if_it_exists(self.hard_limit_found_event)
-        self.unschedule_event_if_it_exists(self.set_expected_limit_found_flag_event)
         self.unschedule_event_if_it_exists(self.poll_to_start_back_off)
         self.unschedule_event_if_it_exists(self.drive_into_barrier_event)
         self.unschedule_event_if_it_exists(self.move_all_axes_event)
@@ -548,7 +555,6 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_finish_procedure)
         self.unschedule_event_if_it_exists(self.data_send_event)
         self.unschedule_event_if_it_exists(self.resume_from_alarm_event)
-        self.unschedule_event_if_it_exists(self.threshold_reached)
         self.unschedule_event_if_it_exists(self.poll_to_deenergize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_energize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
@@ -619,7 +625,8 @@ class StallJigScreen(Screen):
 
         for tidx, i in enumerate(self.threshold_dict[self.axes[axis]]): 
             rows.append(BoxLayout(orientation = "horizontal"))
-            rows[tidx].add_widget(Label(text = str(i), size_hint_x = 1))
+            min_threshold_func = partial(self.increase_min_threshold, tidx, self.axes[axis])
+            rows[tidx].add_widget(ToggleButton(text = str(i), size_hint_x = 1, group = self.axes[axis], on_press = min_threshold_func))
 
             for fidx, j in enumerate(self.feed_dict[self.axes[axis]]):
 
@@ -645,13 +652,14 @@ class StallJigScreen(Screen):
 
         return self.grid_button_objects[self.generate_grid_key(aidx, tidx, fidx)]
 
-    def colour_current_grid_button(self, colour):
+    def colour_current_grid_button(self, colour, button_object = None):
 
-        aidx = self.indices["axis"]
-        tidx = self.indices["threshold"]
-        fidx = self.indices["feed"]
+        if not button_object: 
+            aidx = self.indices["axis"]
+            tidx = self.indices["threshold"]
+            fidx = self.indices["feed"]
+            button_object = self.get_grid_button(aidx, tidx, fidx)
 
-        button_object = self.get_grid_button(aidx, tidx, fidx)
         button_object.background_normal = ''
         button_object.background_color = colour
         button_object.background_disabled_normal = ''
@@ -690,7 +698,21 @@ class StallJigScreen(Screen):
         for key in self.grid_button_objects:
             self.grey_out_given_grid_button_if_yellow(self.grid_button_objects[key])
 
-        self.colour_current_grid_button(self.highlight_yellow)
+        self.colour_current_grid_button(self.highlight_yellow, button_object=instance)
+
+    ## FUNCTION TO INCREASE MINIMUM THRESHOLD
+
+    def increase_min_threshold(self, tidx, axis, instance=None):
+
+        if instance.state == "down":
+            self.minimum_threshold_index[axis] = tidx
+
+        else: 
+            self.minimum_threshold_index[axis] = 0
+
+        log("Minimum threshold set for " + str(axis) + ": " + \
+            str(self.threshold_dict[axis][self.minimum_threshold_index[axis]]))
+
 
     # SCREEN MISC -------------------------------------------------------------------------------
 
@@ -751,6 +773,17 @@ class StallJigScreen(Screen):
     ## - THRESHOLD_REACHED 
     ## - EXPECTED_LIMIT_FOUND
 
+    def ensure_alarm_resumed(self, limit_found_at_time):
+
+        if self.m.state().startswith('Alarm'):
+            if time() > limit_found_at_time + 15: 
+                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
+                limit_found_at_time = time()
+
+            if self.VERBOSE: log("Poll for resuming alarm")
+            self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
+            return
+
     def expected_stall_alarm_detected(self):
 
         if not (
@@ -772,17 +805,6 @@ class StallJigScreen(Screen):
         self.alert_user_to_detection()
         self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
 
-    def ensure_alarm_resumed(self, limit_found_at_time):
-
-        if self.m.state().startswith('Alarm'):
-            if time() > limit_found_at_time + 15: 
-                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
-                limit_found_at_time = time()
-
-            if self.VERBOSE: log("Poll for resuming alarm")
-            self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
-            return
-
     def expected_limit_alarm(self):
 
         if self.m.s.alarm.alarm_code != "ALARM:1":
@@ -797,23 +819,11 @@ class StallJigScreen(Screen):
         if not self.current_axis() in self.get_limits():
             return False
 
+        self.expected_limit_found = True
         if self.VERBOSE: log("Expected limit found!")
         self.test_status_label.text = "LIMIT FOUND"
         limit_found_at_time = time()
-        self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
-
-    def set_expected_limit_found_flag(self, limit_found_at_time):
-
-        if self.smartbench_is_not_ready_for_next_command():
-            if time() > limit_found_at_time + 15 and self.m.state().startswith('Alarm'): 
-                self.m.resume_from_alarm() # For some reason, GRBL did not unlock properly, so try again
-                limit_found_at_time = time()
-            if self.VERBOSE: log("Poll for setting expected limit found flag")
-            self.set_expected_limit_found_flag_event = Clock.schedule_once(lambda dt: self.set_expected_limit_found_flag(limit_found_at_time), 1)
-            return
-
-        self.expected_limit_found = True
-        log("Hard limit found, position known")
+        self.ensure_alarm_resumed_event = Clock.schedule_once(lambda dt: self.ensure_alarm_resumed(limit_found_at_time), 1)
 
     def alert_user_to_detection(self):
         self.result_label.text = "THRESHOLD REACHED"
@@ -980,7 +990,7 @@ class StallJigScreen(Screen):
     def do_stall_jig_data_send(self, dt):
         
         # STARTS A SEPARATE THREAD TO PROCESS STATUSES INTO DB READY FORMAT
-        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db, self.stage_id)
+        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.sn_for_db)
         
         # SENDS STALL EXPERIMENT EVENTS
         results_send_successful = self.calibration_db.insert_stall_experiment_results(self.stall_test_events)
@@ -1008,8 +1018,8 @@ class StallJigScreen(Screen):
             print(traceback.format_exc())
 
 
-        data_send_successful = self.send_data_through_publisher(9)
-        cal_data_send_successful = self.send_data_through_publisher(10)
+        data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 9)
+        cal_data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 10)
 
         self.send_data_button.disabled = False
 
@@ -1023,18 +1033,6 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "DATA NOT SENT!"
         
         self.enable_all_buttons()
-
-    def send_data_through_publisher(self, stage_id):
-        
-        publisher = DataPublisher(self.sn_for_db)
-
-        if not self.calibration_db.processed_running_data[str(stage_id)][0]:
-            log("No status data to send for stage id: " + str(stage_id))
-            return False
-
-        response = publisher.run_data_send(*self.calibration_db.processed_running_data[str(stage_id)])
-        log("Received %s from consumer" % response)
-        return response
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST
@@ -1054,6 +1052,8 @@ class StallJigScreen(Screen):
 
         self.test_passed = False
         self.threshold_reached = False
+        self.false_stall_happened = False
+        self.expected_limit_found = False
         self.result_label.text = ""
         self.result_label.background_color = [0,0,0,1]
 
@@ -1225,9 +1225,28 @@ class StallJigScreen(Screen):
 
     def back_off_completed(self):
 
-        if self.smartbench_is_not_ready_for_next_command() or not self.expected_limit_found:
+        if self.smartbench_is_not_ready_for_next_command():
+
             if self.VERBOSE: log("Poll for back off completion")
             self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 0.5)
+            return
+
+        if self.threshold_reached:
+
+            self.false_stall_happened = True
+            self.threshold_reached = False
+            if self.VERBOSE: log("FALSE STALL DETECTED!! Temporarily increasing threshold")
+            self.result_label.text = "FALSE STALL"
+            self.result_label.background_color = self.false_stall_amber
+            self.test_status_label.text = "REFIND POS"
+            self.m.set_threshold_for_axis(self.current_axis(), 300) # set the threshold high so that it completes the move
+            self.poll_to_start_back_off = Clock.schedule_once(lambda dt: self.back_off_and_find_position(), 1)
+            return
+
+        if not self.expected_limit_found:
+
+            if self.VERBOSE: log("Expected limit not found, no threshold exceeded. Confused :(")
+            self.test_status_label.text = "POS LOST :("
             return
 
         log("Position found")
@@ -1300,6 +1319,12 @@ class StallJigScreen(Screen):
             log("Axis set up")
             self.setting_up_axis_for_test = False
 
+        elif self.false_stall_happened and self.test_passed:
+            self.false_stall_happened = False
+            log("False stall happened - test failed")
+            self.colour_current_grid_button(self.false_stall_amber)
+            self.go_to_next_threshold()
+
         elif self.test_passed:
             log("Recording stall detection event - test passed")
             self.colour_current_grid_button(self.pass_green)
@@ -1351,7 +1376,14 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "CHECK CALIBRATION"
         self.m.start_measuring_running_data(10)
         log("Run a calibration check in all axes")
-        if not self.dev_mode: self.m.check_x_y_z_calibration()
+        if not self.dev_mode: 
+            self.m.cal_check_threshold_x_min = -2001
+            self.m.cal_check_threshold_x_max = 2001
+            self.m.cal_check_threshold_y_min = -2001
+            self.m.cal_check_threshold_y_max = 2001
+            self.m.cal_check_threshold_z_min = -2001
+            self.m.cal_check_threshold_z_max = 2001
+            self.m.check_x_y_z_calibration()
         self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 1)
 
     def ready_to_run_tests(self, dt):
@@ -1501,7 +1533,7 @@ class StallJigScreen(Screen):
 
         log("SB has either completed its move command, or it has detected that a limit has been reached!")
         self.test_passed = self.determine_test_result(expected_pos)
-        self.back_off_and_find_position()
+        if self.test_passed is not None: self.back_off_and_find_position()
 
     ## WORK OUT AND DELIVER TEST RESULTS
 
@@ -1520,6 +1552,7 @@ class StallJigScreen(Screen):
     def test_did_pass(self):
 
         log("TEST PASSED")
+        self.threshold_reached = False
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
         self.test_status_label.text = "PASS"
@@ -1528,6 +1561,7 @@ class StallJigScreen(Screen):
     def test_did_fail(self):
 
         log("TEST FAILED")
+        self.threshold_reached = False
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
         self.test_status_label.text = "TEST FAILED"
@@ -1594,7 +1628,7 @@ class StallJigScreen(Screen):
 
         if self.indices["feed"] + 1 < len(self.feed_dict[self.current_axis()]):
             self.indices["feed"] = self.indices["feed"] + 1
-            self.indices["threshold"] = 0
+            self.indices["threshold"] = self.minimum_threshold_index[self.current_axis()]
 
             log("Next feed index: " + str(self.indices["feed"]))
             log("Next threshold index: " + str(self.indices["threshold"]))
@@ -1611,6 +1645,7 @@ class StallJigScreen(Screen):
             self.indices["axis"] = self.indices["axis"] + 1
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
+            self.travel_to_stall_pos[self.current_axis()] = None
 
             log("Next feed index: " + str(self.indices["feed"]))
             log("Next threshold index: " + str(self.indices["threshold"]))

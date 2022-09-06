@@ -206,6 +206,7 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('overnight_testing')
         self.destroy_screen('current_adjustment')
         self.destroy_screen('stall_jig')
+        self.destroy_screen('set_thresholds')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):

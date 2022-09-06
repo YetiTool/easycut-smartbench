@@ -749,6 +749,8 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+    sg_x1_motor = None
+    sg_x2_motor = None
 
     # STALL GUARD WARNING
     last_stall_tmc_index = None
@@ -1083,6 +1085,21 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
+                    try:
+                        int(sg_values[5])
+                        int(sg_values[6])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    else:
+                        self.sg_x1_motor = int(sg_values[5])
+                        self.sg_x2_motor = int(sg_values[6]) 
+
                     if self.record_sg_values_flag:
 
                         self.m.temp_sg_array.append([
@@ -1090,7 +1107,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
@@ -1241,6 +1260,7 @@ class SerialConnection(object):
             if self.measure_running_data:
 
                 try:
+
                     self.running_data.append([
                         int(self.measurement_stage),
                         float(self.m_x),
@@ -1256,6 +1276,8 @@ class SerialConnection(object):
                         int(self.transistor_heatsink_temp),
                         datetime.now(),
                         int(self.feed_rate),
+                        self.sg_x1_motor,
+                        self.sg_x2_motor,
                     ])
 
                 except: 

@@ -3,7 +3,7 @@ Created on 1 Aug 2022
 @author: Letty
 '''
 
-import sys
+import sys, os
 sys.path.append('./src')
 
 try: 
@@ -49,3 +49,20 @@ def test_close_serial_connection(m):
 def test_reconnect_serial_connection(m):
     m.reconnect_serial_connection()
     m.clear_motor_registers.assert_called()
+
+def test_construct_calibration_check_file_path(m):
+    X_file = m.construct_calibration_check_file_path("X")
+    Y_file = m.construct_calibration_check_file_path("Y")
+    Z_file = m.construct_calibration_check_file_path("Z")
+    assert os.path.exists("./src/" + X_file.strip("."))
+    assert os.path.exists("./src/" + Y_file.strip("."))
+    assert os.path.exists("./src/" + Z_file.strip("."))
+
+
+
+
+
+
+
+
+
