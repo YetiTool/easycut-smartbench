@@ -5,6 +5,7 @@ import json
 import paramiko
 import traceback
 from datetime import datetime
+import os
 
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
@@ -46,6 +47,9 @@ status_order = {
 
 
 def json_to_csv(data, machine_serial, table, stage):
+
+    if not os.path.exists(CSV_PATH): os.mkdir(CSV_PATH)
+
     file_path = CSV_PATH + get_unique_file_name(machine_serial, table, stage)
 
     keys = data[0].keys()

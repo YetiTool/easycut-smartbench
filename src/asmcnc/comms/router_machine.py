@@ -1928,7 +1928,7 @@ class RouterMachine(object):
     temp_toff = toff_min
     temp_sgt = sgt_min
 
-    reference_temp = 55.0
+    reference_temp = 45.0
     temp_tolerance = 20.0
     upper_temp_limit = reference_temp + temp_tolerance
     lower_temp_limit = reference_temp - temp_tolerance
@@ -2344,15 +2344,15 @@ class RouterMachine(object):
         reference_SG = 500
 
         if motor == 'X':
-            gradient_per_Celsius = 4000.0
+            gradient_per_Celsius = 5000.0
             rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Y':
-            gradient_per_Celsius = 1500.0
+            gradient_per_Celsius = 5000.0
             rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Z':
-            gradient_per_Celsius = 4000.0
+            gradient_per_Celsius = 10000.0
             rpm = 30.0/(3200/(1066.67))
 
         delta_to_current_temperature = self.reference_temp - current_temperature
