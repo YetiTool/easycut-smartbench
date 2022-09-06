@@ -75,6 +75,7 @@ Builder.load_string("""
 class ZHeadQCHome(Screen):
 
     fw_button_string = 'NO - Update FW now! (For v1.3)'
+    hw_version = 0
 
     def __init__(self, **kwargs):
         super(ZHeadQCHome, self).__init__(**kwargs)
@@ -84,13 +85,15 @@ class ZHeadQCHome(Screen):
         self.usb = kwargs['usb']
 
     def on_enter(self):
+        self.hw_version = int(self.m.s.hw_version)
         self.update_usb_button_label()
 
     def get_fw_filepath(self):
-        if int(self.m.s.hw_version) >= 34:
+
+        if int(self.hw_version) >= 34:
             return "/media/usb/GRBL*5.hex"
 
-        elif int(self.m.s.hw_version) >= 20:
+        elif int(self.hw_version) >= 20:
             if glob.glob("/media/usb/GRBL*4.hex"):
                 return "/media/usb/GRBL*4.hex"
 
