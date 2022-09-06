@@ -1859,7 +1859,7 @@ class RouterMachine(object):
     sgt_max = 20 # 20
 
     reference_temp = 55.0
-    temp_tolerance = 20.0
+    temp_tolerance = 30.0
     upper_temp_limit = reference_temp + temp_tolerance
     lower_temp_limit = reference_temp - temp_tolerance
 
