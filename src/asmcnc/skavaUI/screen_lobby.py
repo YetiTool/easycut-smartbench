@@ -434,10 +434,6 @@ class LobbyScreen(Screen):
         self.update_strings()
 
     def on_enter(self):
-        from asmcnc.comms.logging import log_exporter
-
-        log_exporter.create_and_send_logs('riggy')
-
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 

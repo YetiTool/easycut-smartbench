@@ -1421,7 +1421,6 @@ class OvernightTesting(Screen):
 
     ## This function only runs if full suite of overnight tests is carried out together (i.e. by pressing START) and completed
     def overnight_test_completed(self, dt):
-        log_exporter.create_and_send_logs(self.sn_for_db)
 
         if self._not_ready_to_stream():
             return
@@ -1535,12 +1534,16 @@ class OvernightTesting(Screen):
             data_send_successful = self.handle_response(response)
             log('Status data sent successfully: ' + str(data_send_successful))
 
+
+
             return data_send_successful
 
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
             return False
+
+        log_exporter.create_and_send_logs(self.sn_for_db)
 
     def handle_response(self, response):
         # sometimes if the consumer isn't running, the body sent will be returned as the response

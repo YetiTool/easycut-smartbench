@@ -1677,6 +1677,8 @@ class CalibrationTesting(Screen):
         self.data_send_label.text = "Sent data?"
         self.data_send_button.disabled = False
 
+        log_exporter.create_and_send_logs(self.sn_for_db)
+
 
     def send_data_for_each_stage(self, stage):
 
