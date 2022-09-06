@@ -17,13 +17,13 @@ class ZHeadStatistic(object):
     tmc_x_status_bits = None
     tmc_x2_status_bits = None
     tmc_z_status_bits = None
-    tmc_x_raw_sg = None
+    tmc_x_raw_sg = None #
     tmc_x2_raw_sg = None
-    tmc_z_raw_sg = None
+    tmc_z_raw_sg = None #
     v_main = None
     f_main = None
-    set_rpm = None
-    measured_rpm = None
+    set_rpm = None #
+    measured_rpm = None #
     idle_load = None
 
     def get_params(self):

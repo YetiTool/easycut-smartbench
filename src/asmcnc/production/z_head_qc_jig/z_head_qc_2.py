@@ -217,6 +217,9 @@ class ZHeadQC2(Screen):
         # Status monitor widget
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
 
+    def set_z_head_statistic(self, z_head_statistic):
+        self.z_head_statistic = z_head_statistic
+
     def on_enter(self):
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
 
@@ -288,14 +291,19 @@ class ZHeadQC2(Screen):
         Clock.schedule_once(read_info, 1)
 
     def test_rpm(self, fail_report):
+        set_rpm = 10000
+
         def read_rpm(dt):
-            if self.m.spindle_speed() < 8000 or self.m.spindle_speed() > 12000:
-                fail_report.append("Spindle RPM was " + str(self.m.spindle_speed()) + ". Should be 8000-12000")
+            measured_rpm = self.m.spindle_speed()
+            if self.m.spindle_speed() < 8000 or measured_rpm > 12000:
+                fail_report.append("Spindle RPM was " + str(measured_rpm) + ". Should be 8000-12000")
 
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
+            self.z_head_statistic.measured_rpm = measured_rpm
+            self.z_head_statistic.set_rpm = set_rpm
 
-        self.m.s.write_command('M3 S10000')
+        self.m.s.write_command('M3 S' + str(set_rpm))
 
         Clock.schedule_once(read_rpm, 3)
 

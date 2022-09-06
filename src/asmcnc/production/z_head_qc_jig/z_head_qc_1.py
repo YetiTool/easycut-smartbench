@@ -435,7 +435,6 @@ class ZHeadQC1(Screen):
             self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
             self.z_head_statistic.fw_version = str(self.m.s.fw_version)
             self.z_head_statistic.hw_version = int(self.m.s.hw_version)
-            self.z_head_statistic.chip_id =
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
         
         except:
@@ -469,23 +468,29 @@ class ZHeadQC1(Screen):
         pass_fail = True
         fail_report = []
 
-        if -300 <= self.m.s.sg_x_motor_axis <= 300:
+        sg_x_value = self.m.s.sg_x_motor_axis
+
+        if -300 <= sg_x_value <= 300:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
+            fail_report.append("X motor/axis SG value: " + str(sg_x_value))
             fail_report.append("Should be between -300 and 300.")
 
-        self.z_head_statistic.tmc_x_raw_sg =
+        self.z_head_statistic.tmc_x_raw_sg = sg_x_value
 
-        if -300 <= self.m.s.sg_z_motor_axis <= 300:
+        sg_z_value = self.m.s.sg_z_motor_axis
+
+        if -300 <= sg_z_value <= 300:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Z motor/axis SG value: " + str(self.m.s.sg_z_motor_axis))
+            fail_report.append("Z motor/axis SG value: " + str(sg_z_value))
             fail_report.append("Should be between -300 and 300.")
+
+        self.z_head_statistic.tmc_z_raw_sg = sg_z_value
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
@@ -672,6 +677,7 @@ class ZHeadQC1(Screen):
 
     def enter_next_screen(self):
         self.sm.current = 'qc2'
+        self.sm.get_screen('qc2').set_z_head_statistic(self.z_head_statistic)
 
     def reset_checkboxes(self):
         self.motor_chips_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -679,3 +685,6 @@ class ZHeadQC1(Screen):
         self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         self.bake_grbl_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
+    def get_tmc_status(self):
+

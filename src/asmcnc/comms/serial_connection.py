@@ -54,6 +54,8 @@ class SerialConnection(object):
 
     power_loss_detected = False
 
+    get_tmc_status_values = []
+
     # Flag to kill grbl scanner (used in zhead cycle app)
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
@@ -1220,6 +1222,22 @@ class SerialConnection(object):
 
                     except:
                         log("Could not print calibration output")
+                elif part.startswith('TM:'):
+                    try:
+                        values = part.split(':')[1]
+                        values = values.split(',')
+
+                        self.get_tmc_status_values.append({
+                            'motor_id': int(values[0]),
+                            'stall_guard_current_value': int(values[1]),
+                            'current_scale': int(values[2]),
+                            'status_bits': int(values[3]),
+                            'diagnostic_bits': int(values[4]),
+                            'm_step_current_value': int(values[5])
+                        })
+                    except Exception as e:
+                        log("ERROR status parse: TM invalid: " + e.message)
+
 
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
