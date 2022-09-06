@@ -1986,7 +1986,7 @@ class RouterMachine(object):
         elif Y: SG_to_check = self.s.sg_y1_motor
 
 
-        if 125 < SG_to_check < 875:
+        if 200 < SG_to_check < 950:
 
             self.quit_jog()
 
@@ -2328,15 +2328,15 @@ class RouterMachine(object):
         reference_SG = 500
 
         if motor == 'X':
-            gradient_per_Celsius = 4000.0
+            gradient_per_Celsius = 5000.0
             rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Y':
-            gradient_per_Celsius = 1500.0
+            gradient_per_Celsius = 5000.0
             rpm = 300.0/(3200/(170/3))
 
         elif motor == 'Z':
-            gradient_per_Celsius = 4000.0
+            gradient_per_Celsius = 10000.0
             rpm = 30.0/(3200/(1066.67))
 
         delta_to_current_temperature = self.reference_temp - current_temperature
