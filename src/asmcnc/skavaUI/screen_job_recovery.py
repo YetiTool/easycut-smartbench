@@ -16,7 +16,12 @@ Builder.load_string("""
     speed_label:speed_label
     stopped_on_label:stopped_on_label
 
+    line_input_header:line_input_header
+    pos_label_header:pos_label_header
+
     line_input:line_input
+
+    go_xy_button:go_xy_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -48,9 +53,11 @@ Builder.load_string("""
                             orientation: 'vertical'
 
                             Label:
-                                text: "[b][color=333333]Go to line:[/color][/b]"
+                                id: line_input_header
+                                text: "Go to line:"
+                                color: hex('#333333FF')
+                                bold: True
                                 font_size: dp(25)
-                                markup: True
 
                             BoxLayout:
                                 padding: dp(5)
@@ -105,6 +112,7 @@ Builder.load_string("""
                                         allow_stretch: True
 
                     Button:
+                        id: go_xy_button
                         valign: "middle"
                         halign: "center"
                         markup: True
@@ -176,9 +184,11 @@ Builder.load_string("""
                                 pos: self.pos
 
                         Label:
+                            id: pos_label_header
                             size_hint_y: 0.75
-                            text: "[b][color=333333]Job resumes at:[/color][/b]"
-                            markup: True
+                            text: "Job resumes at:"
+                            color: hex('#333333FF')
+                            bold: True
                             font_size: dp(15)
                             halign: 'left'
                             valign: 'middle'
@@ -304,6 +314,8 @@ class JobRecoveryScreen(Screen):
         # Z move widget
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
 
+        self.update_strings()
+
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
 
@@ -314,7 +326,7 @@ class JobRecoveryScreen(Screen):
             self.selected_line_index = self.initial_line_index
             self.display_list = ["" for _ in range (6)] + [str(i) + ": " + self.jd.job_gcode[i] for i in range(self.initial_line_index + 1)] + ["" for _ in range (6)]
 
-            self.stopped_on_label.text = "Job failed during line " + str(self.initial_line_index)
+            self.stopped_on_label.text = self.l.get_str("Job failed during line N").replace('N', str(self.initial_line_index))
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
             self.update_display()
 
@@ -381,16 +393,16 @@ class JobRecoveryScreen(Screen):
 
     def get_info(self):
 
-        info = ('This screen allows you to choose where to recover your job from.\n\n'
-                'Use the arrows to navigate through the lines of the job file, and select a point to recover the job from. '
-                'The red marker indicates where the stall event happened. We suggest starting a few lines before here.\n\n'
-                'To confirm this start point, use the "GO XY" button. This will move the Z Head over the selected start point. '
-                'You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane. '
-                'This XY position can be fine adjusted in the next screen. \n\n'
-                'Note: the Z position will be automatically calculated when the job recovery starts.\n\n'
-                'Note: when using job recovery for GCode containing G2 & G3 commands, '
-                'the recovery point may be highlighted earlier in the file than actual, due to file streaming protocols.'
-        )
+        info = self.l.get_str('This screen allows you to choose where to recover your job from.') + '\n\n' + \
+               self.l.get_str('Use the arrows to navigate through the lines of the job file, and select a point to recover the job from.') + ' ' + \
+               self.l.get_str('The red marker indicates where the stall event happened.') + ' ' + \
+               self.l.get_str('We suggest starting a few lines before here.') + '\n\n' + \
+               self.l.get_str('To confirm this start point, use the "GO XY" button.') + ' ' + \
+               self.l.get_str('This will move the Z Head over the selected start point.') + ' ' + \
+               self.l.get_str('You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane.') + ' ' + \
+               self.l.get_str('This XY position can be fine adjusted in the next screen.') + '\n\n' + \
+               self.l.get_str('Note: the Z position will be automatically calculated when the job recovery starts.') + '\n\n' + \
+               self.l.get_str('Note: when using job recovery for GCode containing G2 & G3 commands, the recovery point may be highlighted earlier in the file than actual, due to file streaming protocols.')
 
         popup_info.PopupBigInfo(self.sm, self.l, 760, info)
 
@@ -408,7 +420,8 @@ class JobRecoveryScreen(Screen):
             self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
             Clock.schedule_once(self.proceed_to_next_screen, 0.4)
         else:
-            popup_info.PopupError(self.sm, self.l, 'Please ensure machine is idle before continuing.')
+            error_message = self.l.get_str('Please ensure machine is idle before continuing.')
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def proceed_to_next_screen(self, dt):
         if self.m.state().startswith("Idle"):
@@ -417,3 +430,9 @@ class JobRecoveryScreen(Screen):
             self.sm.current = 'nudge'
         else:
             Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+
+    def update_strings(self):
+        self.line_input_header.text = self.l.get_str('Go to line:')
+        self.line_input.hint_text = self.l.get_str('Enter #')
+        self.go_xy_button.text = self.l.get_str('GO XY')
+        self.pos_label_header.text = self.l.get_str('Job resumes at:')

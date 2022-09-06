@@ -14,6 +14,7 @@ Builder.load_string("""
 
     job_name_label:job_name_label
     completion_label:completion_label
+
     job_name_header:job_name_header
 
     BoxLayout:
