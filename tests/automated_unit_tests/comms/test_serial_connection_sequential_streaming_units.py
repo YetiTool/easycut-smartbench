@@ -79,8 +79,22 @@ def test_process_grbl_response_calls_send_next_seq_stream(sc):
     sc.grbl_scanner(run_grbl_scanner_once = True)
     sc._send_next_sequential_stream.assert_called()
 
-def test_clean_up_after_buffer_is_empty(sc):
+def test_dwell_appended_at_end_of_seq_stream_with_reset_requested(sc):
     sc.start_sequential_stream(['a'], True)
+    sc.grbl_scanner(run_grbl_scanner_once = True)
+    sc.s.inWaiting = Mock(return_value = True)
+    sc.s.readline = Mock(return_value = 'ok')
+    assert sc._sequential_stream_buffer == ["G4 P1"]
+    assert sc.is_sequential_streaming == True
+    assert sc._reset_grbl_after_stream == True
+    assert sc._ready_to_send_first_sequential_stream == False
+    assert sc._process_oks_from_sequential_streaming == True
+
+def test_clean_up_after_buffer_is_empty_after_reset_requested(sc):
+    sc.start_sequential_stream(['a'], True)
+    sc.grbl_scanner(run_grbl_scanner_once = True)
+    sc.s.inWaiting = Mock(return_value = True)
+    sc.s.readline = Mock(return_value = 'ok')
     sc.grbl_scanner(run_grbl_scanner_once = True)
     sc.s.inWaiting = Mock(return_value = True)
     sc.s.readline = Mock(return_value = 'ok')
