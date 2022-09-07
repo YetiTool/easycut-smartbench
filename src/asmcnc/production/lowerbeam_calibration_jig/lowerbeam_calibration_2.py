@@ -72,7 +72,7 @@ class LBCalibration2(Screen):
             Clock.unschedule(self.poll_for_calibration_check)
 
             if not self.m.calibration_tuning_fail_info:
-                self.m.start_measuring_running_data(stage=2)        
+                self.m.start_measuring_running_data(stage=12)        
                 self.m.check_y_calibration()
                 self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 5)
 
