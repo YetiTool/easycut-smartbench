@@ -13,16 +13,15 @@ except:
 import sys
 sys.path.append('./src')
 
-
+'''
 ########################################################
-# IMPORTANT!!
-# Run from easycut-smartbench folder, with 
-# python -m test.protocol_tests.construct_tmc_test
-
+IMPORTANT!!
+Run from easycut-smartbench folder, with 
+python -m tests.automated_unit_tests.comms.test_construct_tmc_commands
+'''
 
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
 
 
 class ConstructTMCCommandTest(unittest.TestCase):

@@ -141,6 +141,7 @@ class AlarmSequenceManager(object):
 	def exit_sequence(self):
 		
 		self.sg_alarm = False
+		self.stall_axis = "W"
 		self.m.resume_from_alarm()
 		
 		if self.sm.has_screen(self.return_to_screen):

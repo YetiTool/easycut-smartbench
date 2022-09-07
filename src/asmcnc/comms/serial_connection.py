@@ -719,13 +719,16 @@ class SerialConnection(object):
     stall_Z = False
     stall_Y = False
 
+    # Is GRBL locked due to an alarm? 
+    grbl_waiting_for_reset = False
+
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
     print_buffer_status = True
 
-
     expecting_probe_result = False
     
+    # VERSIONS
     fw_version = ''
     hw_version = ''
 
@@ -746,6 +749,8 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+    sg_x1_motor = None
+    sg_x2_motor = None
 
     # STALL GUARD WARNING
     last_stall_tmc_index = None
@@ -753,6 +758,7 @@ class SerialConnection(object):
     last_stall_load = None
     last_stall_threshold = None
     last_stall_travel_distance = None
+    last_stall_temperature = None
     last_stall_x_coord = None
     last_stall_y_coord = None
     last_stall_z_coord = None
@@ -769,6 +775,14 @@ class SerialConnection(object):
     spindle_total_run_time_seconds = None
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
+
+    # DETECT SOFT RESET
+    grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
+
+    # IF NEED TO MEASURE RUNNING DATA
+    measure_running_data = False
+    running_data = []
+    measurement_stage = 0
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1071,6 +1085,21 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
+                    try:
+                        int(sg_values[5])
+                        int(sg_values[6])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    else:
+                        self.sg_x1_motor = int(sg_values[5])
+                        self.sg_x2_motor = int(sg_values[6]) 
+
                     if self.record_sg_values_flag:
 
                         self.m.temp_sg_array.append([
@@ -1078,7 +1107,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
@@ -1115,9 +1146,10 @@ class SerialConnection(object):
                     self.last_stall_load = int(sg_alarm_parts[2])
                     self.last_stall_threshold = int(sg_alarm_parts[3])
                     self.last_stall_travel_distance = int(sg_alarm_parts[4])
-                    self.last_stall_x_coord = float(sg_alarm_parts[5])
-                    self.last_stall_y_coord = float(sg_alarm_parts[6])
-                    self.last_stall_z_coord = float(sg_alarm_parts[7])
+                    self.last_stall_temperature = int(sg_alarm_parts[5])
+                    self.last_stall_x_coord = float(sg_alarm_parts[6])
+                    self.last_stall_y_coord = float(sg_alarm_parts[7])
+                    self.last_stall_z_coord = float(sg_alarm_parts[8])
                     self.last_stall_status = message
 
                 elif part.startswith('Sp:'):
@@ -1224,8 +1256,35 @@ class SerialConnection(object):
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
+
+            if self.measure_running_data:
+
+                try:
+
+                    self.running_data.append([
+                        int(self.measurement_stage),
+                        float(self.m_x),
+                        float(self.m_y),
+                        float(self.m_z),
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
+                        int(self.motor_driver_temp),
+                        int(self.pcb_temp),
+                        int(self.transistor_heatsink_temp),
+                        datetime.now(),
+                        int(self.feed_rate),
+                        self.sg_x1_motor,
+                        self.sg_x2_motor,
+                    ])
+
+                except: 
+                    pass
  
         elif message.startswith('ALARM:'):
+            self.grbl_waiting_for_reset = True
             log('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
@@ -1346,6 +1405,10 @@ class SerialConnection(object):
                     log('HW version: ' + str(self.hw_version))
                 except: 
                     log("Could not retrieve HW version")
+
+        elif re.match(self.grbl_initialisation_message, message):
+            # Let sw know that grbl is unlocked now that statuses are being received
+            self.grbl_waiting_for_reset = False
 
 
     def check_for_sustained_max_overload(self, dt):

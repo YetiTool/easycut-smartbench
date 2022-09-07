@@ -5,3 +5,4 @@ sb_values/
 .vscode/
 src/asmcnc/production/database/credentials.py
 src/asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png
+src/asmcnc/production/database/csvs/

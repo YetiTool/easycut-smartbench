@@ -9,11 +9,12 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-
+'''
 ########################################################
-# IMPORTANT!!
-# Run from easycut-smartbench folder, with 
-# python -m test.screen_tests.alarm_screen_tests
+IMPORTANT!!
+Run from easycut-smartbench folder, with 
+python -m tests.manual_tests.visual_screen_tests.alarm_screen_tests
+'''
 
 # Would be good to make this more of a unit test system
 
@@ -73,6 +74,7 @@ class ScreenTest(App):
     sg_val = 151
     thresh = 150
     distance = 42103020
+    temperature = 50
     x_coord = -1084.997
     y_coord = -2487.003
     z_coord = -99.954
@@ -89,6 +91,7 @@ class ScreenTest(App):
         str(sg_val) + "," + \
         str(thresh) + "," + \
         str(distance) + "," + \
+        str(temperature) + "," + \
         str(x_coord) + "," + \
         str(y_coord) + "," + \
         str(z_coord) + ">\n"
