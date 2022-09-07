@@ -6,6 +6,7 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as plticker
 
 Builder.load_string("""
 <ZHeadMechanics>:
@@ -300,8 +301,10 @@ class ZHeadMechanics(Screen):
         plt.xlabel('Z coordinate, mm')
         plt.ylabel('Z load')
         ax = plt.gca()
-        ax.set_ylim([0, 200])
+        ax.set_ylim([0, 100])
         ax.set_xlim([min(self.z_pos_values_down + self.z_pos_values_up), max(self.z_pos_values_down + self.z_pos_values_up)])
+        loc = plticker.MultipleLocator(base=5)
+        ax.yaxis.set_major_locator(loc)
         plt.tight_layout()
         plt.grid()
         plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
