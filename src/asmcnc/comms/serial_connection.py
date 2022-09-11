@@ -1479,13 +1479,12 @@ class SerialConnection(object):
         if self._sequential_stream_buffer:
             try: 
                 self.write_direct(self._sequential_stream_buffer[0])
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                else: del self._sequential_stream_buffer[0]
 
             except IndexError: 
                 log("Sequential streaming buffer empty")
                 return
-
-            if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
-            else: del self._sequential_stream_buffer[0]
 
         else:
             self._process_oks_from_sequential_streaming = False
