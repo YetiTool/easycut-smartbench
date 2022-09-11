@@ -10,6 +10,7 @@ pkgs:
 - freetds-dev
 - tdsodbc
 - python-pyodbc
+- python-mysqldb
 
 
 exim_dc_eximconfig_configtype: internet
