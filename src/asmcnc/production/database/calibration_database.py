@@ -11,7 +11,7 @@ def log(message):
 
 
 try:
-    import pyodbc
+    import MySQLdb
     from influxdb import InfluxDBClient
 
 except:
@@ -32,13 +32,13 @@ class CalibrationDatabase(object):
     }
 
 
-    if sys.platform == 'win32' or sys.platform == 'darwin':
-        # ODBC Driver 17 for SQL Server ON WINDOWS
-        connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
-
-    else: 
-        # FreeTDS
-        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'        
+    # if sys.platform == 'win32' or sys.platform == 'darwin':
+    #     # ODBC Driver 17 for SQL Server ON WINDOWS
+    #     connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+    #
+    # else:
+    #     # FreeTDS
+    #     connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
     def __init__(self):
         self.conn = None
@@ -65,9 +65,8 @@ class CalibrationDatabase(object):
                 import credentials
 
         try:
-            self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
-                                                                 credentials.database, credentials.username,
-                                                                 credentials.password))
+            self.conn = MySQLdb.connect(host=credentials.server, db=credentials.database, user=credentials.username,
+                                        passwd=credentials.password)
             log("Connected to database")
 
         except:
