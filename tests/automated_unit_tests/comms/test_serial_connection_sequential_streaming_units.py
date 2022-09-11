@@ -193,6 +193,30 @@ def test_dwell_inserted_into_mixed_block(sc_write_spy):
 
     assert written_gcodes_list == expected_dwells
 
+def test_dwell_inserted_into_mixed_block_with_reset(sc_write_spy):
+
+    stream = ["G90","$1=1","$2=2","$3=3","G91","$2=6","XYZ","$6=8"]
+    expected_dwells = ["G90","$1=1","$2=2","$3=3","G4 P1","G91","$2=6","G4 P1","XYZ","$6=8","G4 P1"]
+    global written_gcodes_list
+    written_gcodes_list = []
+
+    sc_write_spy.start_sequential_stream(stream, True)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+    run_scanner(sc_write_spy)
+
+    assert written_gcodes_list == expected_dwells
+
 @pytest.fixture
 def sc_test_index_error():
 

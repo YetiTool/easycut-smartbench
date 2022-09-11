@@ -1499,7 +1499,8 @@ class SerialConnection(object):
 
         if self._sequential_stream_buffer[0].startswith('$'):
             try: 
-                if not self._sequential_stream_buffer[1].startswith('$'): 
+                if not self._sequential_stream_buffer[1].startswith('$') \
+                and not self._sequential_stream_buffer[1] == "G4 P1":
                     return True
             except: 
                 return True
