@@ -12,6 +12,5 @@ pkgs:
 - python-pyodbc
 - python-mysqldb
 
-
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
