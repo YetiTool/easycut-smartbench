@@ -1382,7 +1382,7 @@ class StallJigScreen(Screen):
             self.m.cal_check_threshold_y_max = 2001
             self.m.cal_check_threshold_z_min = -2001
             self.m.cal_check_threshold_z_max = 2001
-            self.m.check_x_y_z_calibration()
+            self.m.check_x_y_z_calibration(do_reset=True)
         self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 1)
 
     def ready_to_run_tests(self, dt):
