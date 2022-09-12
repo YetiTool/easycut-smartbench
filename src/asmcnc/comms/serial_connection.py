@@ -1465,6 +1465,7 @@ class SerialConnection(object):
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
+        if reset_grbl_after_stream: list_to_stream.append("G4 P1")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
@@ -1476,8 +1477,14 @@ class SerialConnection(object):
             self._process_oks_from_sequential_streaming = True
 
         if self._sequential_stream_buffer:
-            self.write_direct(self._sequential_stream_buffer[0])
-            del self._sequential_stream_buffer[0]
+            try: 
+                self.write_direct(self._sequential_stream_buffer[0])
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                else: del self._sequential_stream_buffer[0]
+
+            except IndexError: 
+                log("Sequential streaming buffer empty")
+                return
 
         else:
             self._process_oks_from_sequential_streaming = False
@@ -1487,6 +1494,19 @@ class SerialConnection(object):
                 self.m._grbl_soft_reset()
                 log("GRBL Reset after sequential stream ended")
             self.is_sequential_streaming = False
+
+    def _after_grbl_settings_insert_dwell(self):
+
+        if self._sequential_stream_buffer[0].startswith('$'):
+            try: 
+                if not self._sequential_stream_buffer[1].startswith('$') \
+                and not self._sequential_stream_buffer[1] == "G4 P1":
+                    return True
+            except: 
+                return True
+
+        return False
+
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
         
@@ -1509,8 +1529,8 @@ class SerialConnection(object):
 
 
 ## WRITE-----------------------------------------------------------------------------
-
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
+
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
