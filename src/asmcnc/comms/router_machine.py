@@ -1569,6 +1569,10 @@ class RouterMachine(object):
         
 # HOMING
 
+    def start_homing(self):
+        self.set_state('Home') 
+        self.s.start_sequential_stream(['$H'])
+
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
 
@@ -2757,17 +2761,19 @@ class RouterMachine(object):
     cal_check_threshold_z_min = -201
     cal_check_threshold_z_max = 201
 
+    refind_position_after_reset = False
+
     poll_end_of_calibration_check = None
 
-    def check_x_y_z_calibration(self):
-        self.do_calibration_check(['X', 'Y', 'Z'])
+    def check_x_y_z_calibration(self, do_reset=False, assembled=True):
+        self.do_calibration_check(['X', 'Y', 'Z'], do_reset, assembled)
 
-    def check_x_z_calibration(self):
-        self.do_calibration_check(['X', 'Z'])
+    def check_x_z_calibration(self, do_reset=True, assembled=False):
+        self.do_calibration_check(['X', 'Z'], do_reset, assembled)
 
-    def check_y_calibration(self):
-        self.do_calibration_check(['Y'])
-
+    def check_y_calibration(self, do_reset=True, assembled=False):
+        self.do_calibration_check(['Y'], do_reset, assembled)
+        
 
     def reset_cal_check_pass_thresholds(self):
         self.cal_check_threshold_x_min = -201
@@ -2780,32 +2786,60 @@ class RouterMachine(object):
         self.cal_check_threshold_z_max = 201
 
 
-    def do_calibration_check(self, axes):
+    def do_calibration_check(self, axes, do_reset, assembled):
 
-        if not self.prep_calibration_check(axes):
+        if not self.prep_calibration_check(axes, do_reset):
             return
 
-        if not self.state().startswith('Idle') or not self.TMC_registers_have_been_read_in():
-            Clock.schedule_once(lambda dt: self.do_calibration_check(axes), 3)
+        if self.state().startswith('Alarm'):
+            self.checking_calibration_fail_info = "Stuck in alarm state"
+            self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+            return
+
+        if not self.state().startswith('Idle') or not self.TMC_registers_have_been_read_in() or \
+            self.s.is_sequential_streaming or not self.s.setting_132:
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
+            return
+
+        if self.refind_position_after_reset:
+            self.refind_position_after_reset = False
+            if assembled: self.start_homing()
+            else: self.free_travel_to_home_positions(axes)
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
             return
 
         self.stream_calibration_check_files(axes)        
 
 
-    def prep_calibration_check(self, axes):
+    def prep_calibration_check(self, axes, do_reset):
 
         if self.checking_calibration_in_progress: 
             return True
 
         self.checking_calibration_in_progress = True
 
+        if not do_reset:
+            self.refind_position_after_reset = False
+            return True
+
         # Toggle FW reset pin before starting 
-        if self.hard_reset_pcb_sequence(): 
+        if self.hard_reset_pcb_sequence():
+            self.refind_position_after_reset = True
             return True
 
         self.checking_calibration_fail_info = "Pin toggle fail"
         self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
         return False
+
+    def free_travel_to_home_positions(self, axes):
+
+        free_travel_seq = []
+
+        if "X" in axes: free_travel_seq.append("G53 " + "X" + str(float(-1*self.s.setting_130) + float(self.limit_switch_safety_distance))) #X Max travel
+        if "Y" in axes: free_travel_seq.append("G53 " + "Y" + str(float(-1*self.s.setting_131) + float(self.limit_switch_safety_distance))) #Y Max travel
+        if "Z" in axes: free_travel_seq.append("G53 " + "Z" + str(-1)) #Z Max travel
+
+        self.s.start_sequential_stream(free_travel_seq)
 
 
     def stream_calibration_check_files(self, axes):
