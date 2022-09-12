@@ -1399,6 +1399,7 @@ class StallJigScreen(Screen):
         # GET REGISTERS
         self.m.tmc_handshake()
         self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
+        return True
     
     def start_moving(self):
 
@@ -1411,7 +1412,6 @@ class StallJigScreen(Screen):
 
         # CALIBRATION CHECK
         self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 1)
-        return True
 
     def full_calibration_check(self):
         if self.smartbench_is_not_ready_for_next_command():
