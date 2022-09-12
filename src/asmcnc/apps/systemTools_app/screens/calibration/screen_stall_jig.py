@@ -1394,14 +1394,15 @@ class StallJigScreen(Screen):
 
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
-        # self.m.toggle_reset_pin()
         self.choose_test(0,0,0)
+
+        # GET REGISTERS
         self.m.tmc_handshake()
         self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
     
     def start_moving(self):
 
-        if self.smartbench_is_not_ready_for_next_command() and not self.m.TMC_registers_have_been_read_in():
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll for registers having been read in, and ready to move")
             self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
             return
