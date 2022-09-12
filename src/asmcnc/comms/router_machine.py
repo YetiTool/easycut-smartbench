@@ -2773,7 +2773,7 @@ class RouterMachine(object):
 
     def check_y_calibration(self, do_reset=True, assembled=False):
         self.do_calibration_check(['Y'], do_reset, assembled)
-        
+
 
     def reset_cal_check_pass_thresholds(self):
         self.cal_check_threshold_x_min = -201
@@ -2875,6 +2875,7 @@ class RouterMachine(object):
                 self.reset_cal_check_pass_thresholds()
                 if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
                 self.checking_calibration_in_progress = False
+                log("Calibration check complete")
 
 
     def construct_calibration_check_file_path(self, axis):
