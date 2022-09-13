@@ -429,6 +429,9 @@ class StallJigScreen(Screen):
     poll_to_deenergize_motors = None
     poll_to_energize_motors = None
     poll_to_reenable_hard_limits_and_go_to_next_test = None
+    poll_ready_to_start_moving = None
+    populate_and_transfer_logs_event = None
+    send_logs_event = None
 
     ## DATABASE OBJECTS
 
@@ -446,8 +449,10 @@ class StallJigScreen(Screen):
     ]
 
     stage_id = 9
-    
 
+    data_send_complete = False
+    log_send_complete = False
+    
     ## STORE ALL THE GRID BUTTONS
 
     grid_button_objects = {}
@@ -558,6 +563,9 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_deenergize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_energize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
+        self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
+        self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
+        self.unschedule_event_if_it_exists(self.send_logs_event)        
 
         log("Unschedule all events")
 
@@ -983,9 +991,12 @@ class StallJigScreen(Screen):
         self.send_data_button.disabled = True
         self.test_status_label.text = "SENDING RESULTS"
         log("Sending data...")
+        self.data_send_complete = False
+        self.log_send_complete = False
         self.m.stop_measuring_running_data()
-
         Clock.schedule_once(self.do_stall_jig_data_send, 0.5)
+        self.populate_and_transfer_logs_event = Clock.schedule_once(lambda dt: self.populate_and_transfer_logs(), 1)
+
 
     def do_stall_jig_data_send(self, dt):
         
@@ -1033,6 +1044,30 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "DATA NOT SENT!"
         
         self.enable_all_buttons()
+
+
+    def populate_and_transfer_logs(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to get registers for logs")
+            self.populate_and_transfer_logs_event = Clock.schedule_once(lambda dt: self.populate_and_transfer_logs(), 1)
+            return
+
+        log("Get registers into logs")
+        self.m.tmc_handshake()
+        self.send_logs()
+
+
+    def send_logs(self):
+
+        if self.smartbench_is_not_ready_for_next_command() and not self.m.TMC_registers_have_been_read_in():
+            if self.VERBOSE: log("Poll to send logs once registers are in")
+            self.send_logs_event = Clock.schedule_once(lambda dt: self.send_logs(), 1)
+            return
+
+        log("Registers are in, ready to send logs")
+
+
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST
@@ -1360,11 +1395,23 @@ class StallJigScreen(Screen):
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
         self.choose_test(0,0,0)
+
+        # GET REGISTERS
+        self.m.tmc_handshake()
+        self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
+        return True
+    
+    def start_moving(self):
+
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
+            if self.VERBOSE: log("Poll for registers having been read in, and ready to move")
+            self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
+            return
+
         self.start_homing()
 
         # CALIBRATION CHECK
         self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 1)
-        return True
 
     def full_calibration_check(self):
         if self.smartbench_is_not_ready_for_next_command():
