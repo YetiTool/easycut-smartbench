@@ -35,7 +35,7 @@ python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_uni
 
 # SERIAL CONNECTION
 @pytest.fixture
-def sc():
+def sc(scope="module"):
 
     l = localization.Localization()
     machine = Mock()
@@ -49,7 +49,7 @@ def sc():
     return sc_obj
 
 @pytest.fixture
-def m():
+def m(scope="module"):
     l = localization.Localization()
 
     screen_manager = Mock()
@@ -153,6 +153,9 @@ def running_data_element(sc, m_x, m_y, m_z, feed_rate, sg_z_motor_axis, sg_x_mot
         m_x,
         m_y,
         m_z,
+        0,
+        0,
+        0,
         sg_x_motor_axis,
         sg_y_axis,
         sg_y1_motor,
@@ -175,6 +178,9 @@ def second_pos_data(m_x_2, m_y_2, m_z_2, feed_rate, sg_z_motor_axis, sg_x_motor_
         m_x_2,
         m_y_2,
         m_z_2,
+        0,
+        0,
+        0,
         sg_x_motor_axis,
         sg_y_axis,
         sg_y1_motor,
@@ -268,8 +274,8 @@ def assert_running_data_lists(expected_list, output_list, idx=0):
     assert expected_list[9] == output_list[idx][9]
     assert expected_list[10] == output_list[idx][10]
     assert expected_list[11] == output_list[idx][11] 
-    # assert expected_list[12] == output_list[idx][12] # THIS IS DATETIME!!
-    assert expected_list[13] == output_list[idx][13] 
+    assert expected_list[12] == output_list[idx][12] 
+    # assert expected_list[13] == output_list[idx][13] # THIS IS DATETIME!!
 
 # TESTS
 
@@ -277,7 +283,8 @@ def test_process_grbl_push_parses_running_data(sc, status_string, running_data_e
     sc.measurement_stage = 9
     sc.measure_running_data = True
     sc.process_grbl_push(status_string)
-    assert_running_data_lists(running_data_element, sc.running_data)
+    sc.process_grbl_push(status_string)
+    assert_running_data_lists(running_data_element, sc.running_data, 1)
 
 def test_process_grbl_push_parses_running_data_with_scanner_run(sc, running_data_element):
     sc.s.readline = Mock(return_value = status_string)
@@ -285,7 +292,8 @@ def test_process_grbl_push_parses_running_data_with_scanner_run(sc, running_data
     sc.measurement_stage = 9
     sc.measure_running_data = True
     sc.grbl_scanner(run_grbl_scanner_once = True)
-    assert_running_data_lists(running_data_element, sc.running_data)
+    sc.grbl_scanner(run_grbl_scanner_once = True)
+    assert_running_data_lists(running_data_element, sc.running_data, 1)
 
 
 def test_machine_starts_and_stops_measurement(m, status_string, running_data_element):
@@ -296,7 +304,6 @@ def test_machine_starts_and_stops_measurement(m, status_string, running_data_ele
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.s.grbl_scanner(run_grbl_scanner_once = True)
     m.stop_measuring_running_data()
-    assert_running_data_lists(running_data_element, m.measured_running_data())
     assert_running_data_lists(running_data_element, m.measured_running_data(), idx=1)
     assert_running_data_lists(running_data_element, m.measured_running_data(), idx=2)
 

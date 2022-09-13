@@ -834,6 +834,7 @@ class SerialConnection(object):
                         log("ERROR status parse: Position invalid: " + message)
                         return
 
+                    # Get travel directions based on position (used in analyis)
                     self.x_dir = 0 if self.m_x == pos[0] else -1 if float(self.m_x) < float(pos[0]) else 1
                     self.y_dir = 0 if self.m_y == pos[1] else -1 if float(self.m_y) < float(pos[1]) else 1
                     self.z_dir = 0 if self.m_z == pos[2] else 1 if float(self.m_z) < float(pos[2]) else -1
@@ -1126,7 +1127,14 @@ class SerialConnection(object):
                                                 ])
 
                     if self.record_sg_peaks_flag: 
+
+                        # self.x_dir
+                        # self.y_dir
+                        # self.z_dir
                         pass
+
+
+
 
                     if self.FINAL_TEST:
                         if self.sm.has_screen('calibration_testing'):
@@ -1282,6 +1290,9 @@ class SerialConnection(object):
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),
+                        int(self.x_dir),
+                        int(self.y_dir),
+                        int(self.z_dir),
                         int(self.sg_x_motor_axis),
                         int(self.sg_y_axis),
                         int(self.sg_y1_motor),

@@ -41,6 +41,29 @@ def assert_positions_equal(sc_obj, x_pos=0.0, y_pos=0.0, z_pos=0.0):
 	assert sc_obj.m_y == str(y_pos)
 	assert sc_obj.m_z == str(z_pos)
 
+@pytest.fixture
+def m_x():
+    return -100.0
+
+@pytest.fixture    
+def m_y():
+    return -200.0
+
+@pytest.fixture    
+def m_z():
+    return -300.0
+
+@pytest.fixture
+def m_x_2():
+    return -101.0
+        
+@pytest.fixture
+def m_y_2():
+    return -199.0
+
+@pytest.fixture
+def m_z_2():
+    return -305.0
 
 @pytest.fixture
 def sc(scope="module"):
@@ -65,3 +88,61 @@ def test_directions_are_zero(sc):
     assert sc.x_dir == 0
     assert sc.y_dir == 0
     assert sc.z_dir == 0
+
+def test_directions(sc, m_x, m_y, m_z, m_x_2, m_y_2, m_z_2):
+    status = construct_status(m_x, m_y, m_z)
+    sc.process_grbl_push(status)
+
+    # test one way
+    status = construct_status(m_x_2, m_y_2, m_z_2)    
+    sc.process_grbl_push(status)
+    assert sc.x_dir == 1
+    assert sc.y_dir == -1
+    assert sc.z_dir == -1
+
+    # test opposite way
+    status = construct_status(m_x, m_y, m_z)
+    sc.process_grbl_push(status)
+    assert sc.x_dir == -1
+    assert sc.y_dir == 1
+    assert sc.z_dir == 1
+
+    # test zero when stationary
+    sc.process_grbl_push(status)
+    assert sc.x_dir == 0
+    assert sc.y_dir == 0
+    assert sc.z_dir == 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

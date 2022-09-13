@@ -474,9 +474,7 @@ class CalibrationDatabase(object):
 
         try: 
 
-            for idx, element in enumerate(unprocessed_status_data): 
-
-                x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
+            for idx, element in enumerate(unprocessed_status_data):
 
             # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
@@ -486,19 +484,19 @@ class CalibrationDatabase(object):
                     "XCoordinate": element[1],
                     "YCoordinate": element[2],
                     "ZCoordinate": element[3],
-                    "XDirection": x_dir,
-                    "YDirection": y_dir,
-                    "ZDirection": z_dir,
-                    "XSG": element[4],
-                    "YSG": element[5],
-                    "Y1SG": element[6],
-                    "Y2SG":element[7],
-                    "ZSG":element[8],
-                    "TMCTemperature":element[9],
-                    "PCBTemperature":element[10],
-                    "MOTTemperature":element[11],
-                    "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
-                    "Feedrate": element[13],
+                    "XDirection": element[5],
+                    "YDirection": element[6],
+                    "ZDirection": element[7],
+                    "XSG": element[8],
+                    "YSG": element[9],
+                    "Y1SG": element[10],
+                    "Y2SG":element[11],
+                    "ZSG":element[12],
+                    "TMCTemperature":element[13],
+                    "PCBTemperature":element[14],
+                    "MOTTemperature":element[15],
+                    "Timestamp": element[16].strftime('%Y-%m-%d %H:%M:%S'),
+                    "Feedrate": element[17],
                     "XWeight": x_weight,
                     "YWeight": y_weight,
                     "ZWeight": z_weight
