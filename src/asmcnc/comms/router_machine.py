@@ -167,6 +167,7 @@ class RouterMachine(object):
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
+        self.starting_serial_connection = True
         self.close_serial_connection(0)
         log("Reconnect serial connection")
         self.s.establish_connection(self.win_serial_port)
@@ -1568,6 +1569,10 @@ class RouterMachine(object):
         
 # HOMING
 
+    def start_homing(self):
+        self.set_state('Home') 
+        self.s.start_sequential_stream(['$H'])
+
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
 
@@ -2756,22 +2761,18 @@ class RouterMachine(object):
     cal_check_threshold_z_min = -201
     cal_check_threshold_z_max = 201
 
+    refind_position_after_reset = False
+
     poll_end_of_calibration_check = None
 
-    def check_x_y_z_calibration(self):
+    def check_x_y_z_calibration(self, do_reset=False, assembled=True):
+        self.do_calibration_check(['X', 'Y', 'Z'], do_reset, assembled)
 
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['X', 'Y', 'Z'])
+    def check_x_z_calibration(self, do_reset=True, assembled=False):
+        self.do_calibration_check(['X', 'Z'], do_reset, assembled)
 
-    def check_x_z_calibration(self):
-
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['X', 'Z'])
-
-    def check_y_calibration(self):
-
-        self.checking_calibration_in_progress = True
-        self.stream_calibration_check_files(['Y'])
+    def check_y_calibration(self, do_reset=True, assembled=False):
+        self.do_calibration_check(['Y'], do_reset, assembled)
 
 
     def reset_cal_check_pass_thresholds(self):
@@ -2785,14 +2786,63 @@ class RouterMachine(object):
         self.cal_check_threshold_z_max = 201
 
 
-    def stream_calibration_check_files(self, axes):
+    def do_calibration_check(self, axes, do_reset, assembled):
 
+        if not self.prep_calibration_check(axes, do_reset):
+            return
+
+        if self.state().startswith('Alarm'):
+            self.checking_calibration_fail_info = "Stuck in alarm state"
+            self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+            return
+
+        if not self.state().startswith('Idle') or not self.TMC_registers_have_been_read_in() or \
+            self.s.is_sequential_streaming or not self.s.setting_132:
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
+            return
+
+        if self.refind_position_after_reset:
+            self.refind_position_after_reset = False
+            if assembled: self.start_homing()
+            else: self.free_travel_to_home_positions(axes)
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
+            return
+
+        self.stream_calibration_check_files(axes)        
+
+
+    def prep_calibration_check(self, axes, do_reset):
+
+        if self.checking_calibration_in_progress: 
+            return True
+
+        self.checking_calibration_in_progress = True
+
+        if not do_reset:
+            self.refind_position_after_reset = False
+            return True
 
         # Toggle FW reset pin before starting 
-        if not self.toggle_reset_pin():
-            self.checking_calibration_fail_info = "Pin toggle fail"
-            self.post_calibration_check(axes)
-            return
+        if self.hard_reset_pcb_sequence():
+            self.refind_position_after_reset = True
+            return True
+
+        self.checking_calibration_fail_info = "Pin toggle fail"
+        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+        return False
+
+    def free_travel_to_home_positions(self, axes):
+
+        free_travel_seq = []
+
+        if "X" in axes: free_travel_seq.append("G53 " + "X" + str(float(-1*self.s.setting_130) + float(self.limit_switch_safety_distance))) #X Max travel
+        if "Y" in axes: free_travel_seq.append("G53 " + "Y" + str(float(-1*self.s.setting_131) + float(self.limit_switch_safety_distance))) #Y Max travel
+        if "Z" in axes: free_travel_seq.append("G53 " + "Z" + str(-1)) #Z Max travel
+
+        self.s.start_sequential_stream(free_travel_seq)
+
+
+    def stream_calibration_check_files(self, axes):
 
         check_calibration_gcode_pre_scrubbed = []
 
@@ -2815,7 +2865,7 @@ class RouterMachine(object):
 
     def post_calibration_check(self, axes):
 
-        if self.state().startswith('Idle'):
+        if self.state().startswith('Idle') and self.TMC_registers_have_been_read_in():
 
             if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
                 if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
@@ -2825,6 +2875,7 @@ class RouterMachine(object):
                 self.reset_cal_check_pass_thresholds()
                 if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
                 self.checking_calibration_in_progress = False
+                log("Calibration check complete")
 
 
     def construct_calibration_check_file_path(self, axis):
@@ -2885,7 +2936,7 @@ class RouterMachine(object):
     def set_sg_threshold(self, motor, threshold):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'set SG alarm threshold'):
             display_text = "SET SG ALARM THRESHOLD, " + "MTR: " + str(motor) + ", THR: " + str(threshold)
-            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=threshold)
+            self.send_command_to_motor(display_text, motor=motor, command=SET_SG_ALARM_TRSHLD, value=int(threshold))
 
     def set_threshold_for_axis(self, axis, threshold):
 
@@ -2979,37 +3030,70 @@ class RouterMachine(object):
 
     ## FIRMWARE UPDATES
 
-    def toggle_reset_pin(self):
+    def hard_reset_pcb_sequence(self):
 
         try: 
-            # Toggle reset pin
             pi = pigpio.pi()
-            pi.set_mode(17, pigpio.ALT3)
-            new_pin_setting = int(pi.get_mode(17))
             pi.stop()
+        
+        except: 
+            log("Check pigpio daemon!")
+            return False
 
-            log("Toggled FW reset pin: mode " + str(new_pin_setting))
+        # Functions that use this function will need to check that serial comms has finished reconnecting after
+        self.stop_serial_comms()
+        toggle_outcome = self.toggle_reset_pin()
+        self.do_connection()
+        return toggle_outcome
 
-            if new_pin_setting == 7:
-                return True
+    def toggle_reset_pin(self):
 
-            else:
-                return False
+        try:
+
+            pi = pigpio.pi()
+            if int(pi.get_mode(17)) != 7: 
+                if not self.set_mode_of_reset_pin(): return False
+            time.sleep(0.5)
+            original_setting = pi.read(17)
+            pi.write(17,int(not original_setting))
+            time.sleep(1)
+            new_setting = pi.read(17)
+            pi.write(17,int(original_setting))
+            restored_setting = pi.read(17)
+            log("Toggled 17 to " + str(int(not original_setting)) + " and back to " + str(int(original_setting)))
+            pi.stop()
+            time.sleep(1)
+            return int(original_setting) == int(restored_setting) == int(not new_setting)
 
         except: 
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
 
+    def set_mode_of_reset_pin(self):
+
+        try: 
+            # Toggle reset pin
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            new_pin_mode = int(pi.get_mode(17))
+            log("Set GPIO 17 to mode ALT3: " + str(new_pin_mode))
+            pi.stop()
+
+            if new_pin_mode == 7: return True
+            else: return False
+
+        except: 
+            log("Couldn't set mode of reset pin, maybe check the pigio daemon?")
+            return False
+
 
     def stop_serial_comms(self):
 
-        self.s.grbl_scanner_running = False
-
-        if self.state().startswith("Off"):
-            self.close_serial_connection()
-
-        else:
-            Clock.schedule_once(lambda dt: self.stop_serial_comms, 0.1)
+        while self.state() != "Off": # yes, this is naughty.
+            self.s.grbl_scanner_running = False
+            time.sleep(0.2)
+        self.close_serial_connection(0)
+        time.sleep(0.5)
 
     def do_connection(self):
 
