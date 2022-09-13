@@ -692,6 +692,11 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # Machine travel directions
+    x_dir = 0
+    y_dir = 0
+    z_dir = 0
+
     # Feeds and speeds
     spindle_speed = 0
     feed_rate = 0
@@ -764,9 +769,6 @@ class SerialConnection(object):
     last_stall_z_coord = None
     last_stall_status = None
 
-    # FOR CALIBRATION TUNING
-    record_sg_values_flag = False
-
     # SPINDLE STATISTICS
     spindle_serial_number = None
     spindle_production_year = None
@@ -779,10 +781,16 @@ class SerialConnection(object):
     # DETECT SOFT RESET
     grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
 
+    # FOR CALIBRATION TUNING
+    record_sg_values_flag = False
+
     # IF NEED TO MEASURE RUNNING DATA
     measure_running_data = False
     running_data = []
     measurement_stage = 0
+
+    # FOR RECORDING STATS
+    record_sg_peaks_flag = False
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -826,9 +834,14 @@ class SerialConnection(object):
                         log("ERROR status parse: Position invalid: " + message)
                         return
 
+                    self.x_dir = 0 if self.m_x == pos[0] else -1 if float(self.m_x) < float(pos[0]) else 1
+                    self.y_dir = 0 if self.m_y == pos[1] else -1 if float(self.m_y) < float(pos[1]) else 1
+                    self.z_dir = 0 if self.m_z == pos[2] else 1 if float(self.m_z) < float(pos[2]) else -1
+
                     self.m_x = pos[0]
                     self.m_y = pos[1]
                     self.m_z = pos[2]
+
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
@@ -1111,6 +1124,9 @@ class SerialConnection(object):
                                                     self.sg_x1_motor,
                                                     self.sg_x2_motor
                                                 ])
+
+                    if self.record_sg_peaks_flag: 
+                        pass
 
                     if self.FINAL_TEST:
                         if self.sm.has_screen('calibration_testing'):

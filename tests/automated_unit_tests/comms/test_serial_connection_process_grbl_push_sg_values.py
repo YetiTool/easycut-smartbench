@@ -22,7 +22,7 @@ from asmcnc.comms import localization
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push.py
+python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push_sg_values.py
 ######################################
 '''
 
@@ -173,6 +173,9 @@ def test_temp_sg_array_append_4_drivers(m):
     m.s.record_sg_values_flag = True
     m.s.process_grbl_push(status)
     assert m.temp_sg_array[0] == four_driver_list
+
+
+
 
 
 
