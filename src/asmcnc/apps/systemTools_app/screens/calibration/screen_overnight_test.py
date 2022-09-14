@@ -697,11 +697,9 @@ MAX_Z_DISTANCE = 149
 MAX_X_DISTANCE = 1299
 MAX_Y_DISTANCE = 2501
 
-
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
-
 
 class OvernightTesting(Screen):
     # STAGES ARE:

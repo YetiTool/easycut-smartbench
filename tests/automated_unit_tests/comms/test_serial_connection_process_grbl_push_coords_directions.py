@@ -165,8 +165,8 @@ def test_peak_sg_values(sc,m_x,m_y,m_z,m_x_2,m_y_2,m_z_2,\
     sg_y1_2,sg_x2,sg_y2,sg_x2_2,sg_y2_2):
     
     # This is all testing same code block, just playing with forward and back and dual driver x values
-    sc.record_sg_peaks_flag = True
-    default = None
+    sc.record_live_sg_peaks_flag = True
+    default = -999
 
     # Drive each axis one way
     status = construct_status_single_x_driver(m_x, m_y, m_z, sg_z, sg_x, sg_y, sg_y1, sg_y2)
@@ -232,4 +232,43 @@ def test_peak_sg_values(sc,m_x,m_y,m_z,m_x_2,m_y_2,m_z_2,\
     assert sc.bw_peak_sg_x1_motor == 0
     assert sc.bw_peak_sg_x2_motor == 0
 
+
+def test_min_sg_values(sc,m_x,m_y,m_z,m_x_2,m_y_2,m_z_2,\
+    sg_x,sg_y,sg_z,sg_x_2,sg_y_2,sg_z_2,sg_x1,sg_y1,sg_x1_2,\
+    sg_y1_2,sg_x2,sg_y2,sg_x2_2,sg_y2_2):
+    
+    # This is all testing same code block, just playing with forward and back and dual driver x values
+    sc.record_live_sg_peaks_flag = True
+    default = 1023
+
+    # Drive each axis one way
+    status = construct_status_single_x_driver(m_x_2, m_y_2, m_z_2, sg_z_2, sg_x_2, sg_y_2, sg_y1_2, sg_y2_2)
+    sc.process_grbl_push(status)
+    
+    assert sc.fw_min_sg_x_motor_axis == default
+    
+    status = construct_status_single_x_driver(m_x, m_y, m_z, sg_z, sg_x, sg_y, sg_y1, sg_y2)
+    sc.process_grbl_push(status)
+
+    assert sc.bw_min_sg_z_motor_axis == sg_z
+    assert sc.fw_min_sg_z_motor_axis == sg_z_2
+    assert sc.fw_min_sg_x_motor_axis == sg_x
+    assert sc.fw_min_sg_y_axis == default
+    assert sc.fw_min_sg_y1_motor == default
+    assert sc.fw_min_sg_y2_motor == default
+    assert sc.fw_min_sg_x1_motor == default
+    assert sc.fw_min_sg_x2_motor == default
+    assert sc.fw_min_sg_z_motor_axis == sg_z_2
+    assert sc.bw_min_sg_x_motor_axis == sg_x_2
+    assert sc.bw_min_sg_y_axis == sg_y
+    assert sc.bw_min_sg_y1_motor == sg_y1
+    assert sc.bw_min_sg_y2_motor == sg_y2
+    assert sc.bw_min_sg_x1_motor == default
+    assert sc.bw_min_sg_x2_motor == default
+
+    status = construct_status(m_x_2, m_y_2, m_z_2, sg_z_2, sg_x_2, sg_y_2, sg_y1_2, sg_y2_2)
+    sc.process_grbl_push(status)
+    
+    assert sc.bw_min_sg_x1_motor == 0
+    assert sc.bw_min_sg_x2_motor == 0
 
