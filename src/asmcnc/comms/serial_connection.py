@@ -791,6 +791,7 @@ class SerialConnection(object):
 
     # FOR RECORDING STATS
     record_live_sg_peaks_flag = False
+    record_sg_averages = False
 
     # PEAK SG VALUES, FOR FW AND BW TRAVEL
     # Travel == -1
@@ -823,6 +824,25 @@ class SerialConnection(object):
     bw_min_sg_y2_motor = 1023
     bw_min_sg_x1_motor = 1023
     bw_min_sg_x2_motor = 1023
+
+    # AVERAGE SG VALUES, FOR FW AND BW TRAVEL
+    # Travel == -1
+    fw_avg_sg_z_motor_axis = [0,0]
+    fw_avg_sg_x_motor_axis = [0,0]
+    fw_avg_sg_y_axis = [0,0]
+    fw_avg_sg_y1_motor = [0,0]
+    fw_avg_sg_y2_motor = [0,0]
+    fw_avg_sg_x1_motor = [0,0]
+    fw_avg_sg_x2_motor = [0,0]
+
+    # Travel == 1
+    bw_avg_sg_z_motor_axis = [0,0]
+    bw_avg_sg_x_motor_axis = [0,0]
+    bw_avg_sg_y_axis = [0,0]
+    bw_avg_sg_y1_motor = [0,0]
+    bw_avg_sg_y2_motor = [0,0]
+    bw_avg_sg_x1_motor = [0,0]
+    bw_avg_sg_x2_motor = [0,0]
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1189,6 +1209,37 @@ class SerialConnection(object):
                         if self.sg_y2_motor != -999 and self.sg_y2_motor < self.bw_min_sg_y2_motor and self.y_dir == 1: self.bw_min_sg_y2_motor = self.sg_y2_motor
                         if self.sg_x1_motor != None and self.sg_x1_motor != -999 and self.sg_x1_motor < self.bw_min_sg_x1_motor and self.x_dir == 1: self.bw_min_sg_x1_motor = self.sg_x1_motor
                         if self.sg_x2_motor != None and self.sg_x2_motor != -999 and self.sg_x2_motor < self.bw_min_sg_x2_motor and self.x_dir == 1: self.bw_min_sg_x2_motor = self.sg_x2_motor
+
+                    if self.record_sg_averages:
+
+                        self.fw_avg_sg_z_motor_axis[0] = self.fw_avg_sg_z_motor_axis[0]*(self.fw_avg_sg_z_motor_axis[0]/(self.fw_avg_sg_z_motor_axis[0]+1)) + self.sg_z_motor_axis/self.fw_avg_sg_z_motor_axis[0]
+                        self.fw_avg_sg_z_motor_axis[1]+=1
+                        self.fw_avg_sg_x_motor_axis[0] = self.fw_avg_sg_x_motor_axis[0]*(self.fw_avg_sg_x_motor_axis[0]/(self.fw_avg_sg_x_motor_axis[0]+1)) + self.sg_x_motor_axis/self.fw_avg_sg_x_motor_axis[0]
+                        self.fw_avg_sg_x_motor_axis[1]+=1
+                        self.fw_avg_sg_y_axis[0] = self.fw_avg_sg_y_axis[0]*(self.fw_avg_sg_y_axis[0]/(self.fw_avg_sg_y_axis[0]+1)) + self.sg_y_axis/self.fw_avg_sg_y_axis[0]
+                        self.fw_avg_sg_y_axis[1]+=1
+                        self.fw_avg_sg_y1_motor[0] = self.fw_avg_sg_y1_motor[0]*(self.fw_avg_sg_y1_motor[0]/(self.fw_avg_sg_y1_motor[0]+1)) + self.sg_y1_motor/self.fw_avg_sg_y1_motor[0]
+                        self.fw_avg_sg_y1_motor[1]+=1
+                        self.fw_avg_sg_y2_motor[0] = self.fw_avg_sg_y2_motor[0]*(self.fw_avg_sg_y2_motor[0]/(self.fw_avg_sg_y2_motor[0]+1)) + self.sg_y2_motor/self.fw_avg_sg_y2_motor[0]
+                        self.fw_avg_sg_y2_motor[1]+=1
+                        self.fw_avg_sg_x1_motor[0] = self.fw_avg_sg_x1_motor[0]*(self.fw_avg_sg_x1_motor[0]/(self.fw_avg_sg_x1_motor[0]+1)) + self.sg_x1_motor/self.fw_avg_sg_x1_motor[0]
+                        self.fw_avg_sg_x1_motor[1]+=1
+                        self.fw_avg_sg_x2_motor[0] = self.fw_avg_sg_x2_motor[0]*(self.fw_avg_sg_x2_motor[0]/(self.fw_avg_sg_x2_motor[0]+1)) + self.sg_x2_motor/self.fw_avg_sg_x2_motor[0]
+                        self.fw_avg_sg_x2_motor[1]+=1
+                        self.bw_avg_sg_z_motor_axis[0] = self.bw_avg_sg_z_motor_axis[0]*(self.bw_avg_sg_z_motor_axis[0]/(self.bw_avg_sg_z_motor_axis[0]+1)) + self.sg_z_motor_axis/self.bw_avg_sg_z_motor_axis[0]
+                        self.bw_avg_sg_z_motor_axis[1]+=1
+                        self.bw_avg_sg_x_motor_axis[0] = self.bw_avg_sg_x_motor_axis[0]*(self.bw_avg_sg_x_motor_axis[0]/(self.bw_avg_sg_x_motor_axis[0]+1)) + self.sg_x_motor_axis/self.bw_avg_sg_x_motor_axis[0]
+                        self.bw_avg_sg_x_motor_axis[1]+=1
+                        self.bw_avg_sg_y_axis[0] = self.bw_avg_sg_y_axis[0]*(self.bw_avg_sg_y_axis[0]/(self.bw_avg_sg_y_axis[0]+1)) + self.sg_y_axis/self.bw_avg_sg_y_axis[0]
+                        self.bw_avg_sg_y_axis[1]+=1
+                        self.bw_avg_sg_y1_motor[0] = self.bw_avg_sg_y1_motor[0]*(self.bw_avg_sg_y1_motor[0]/(self.bw_avg_sg_y1_motor[0]+1)) + self.sg_y1_motor/self.bw_avg_sg_y1_motor[0]
+                        self.bw_avg_sg_y1_motor[1]+=1
+                        self.bw_avg_sg_y2_motor[0] = self.bw_avg_sg_y2_motor[0]*(self.bw_avg_sg_y2_motor[0]/(self.bw_avg_sg_y2_motor[0]+1)) + self.sg_y2_motor/self.bw_avg_sg_y2_motor[0]
+                        self.bw_avg_sg_y2_motor[1]+=1
+                        self.bw_avg_sg_x1_motor[0] = self.bw_avg_sg_x1_motor[0]*(self.bw_avg_sg_x1_motor[0]/(self.bw_avg_sg_x1_motor[0]+1)) + self.sg_x1_motor/self.bw_avg_sg_x1_motor[0]
+                        self.bw_avg_sg_x1_motor[1]+=1
+                        self.bw_avg_sg_x2_motor[0] = self.bw_avg_sg_x2_motor[0]*(self.bw_avg_sg_x2_motor[0]/(self.bw_avg_sg_x2_motor[0]+1)) + self.sg_x2_motor/self.bw_avg_sg_x2_motor[0]
+                        self.bw_avg_sg_x2_motor[1]+=1
 
 
                     if self.FINAL_TEST:
