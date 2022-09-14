@@ -2,7 +2,7 @@
 
 New languages! 
 ==============
-Core apps in the console software can now be used in Deutsche (DE), Français (FR), Polskie (PL) and Dansk (DK).
+Core apps in the console software can now be used in Deutsch (DE), Français (FR), Polski (PL) and Dansk (DK).
 
 The core apps include PRO, Wi-Fi, Maintenance, Update, and System Tools. 
 
