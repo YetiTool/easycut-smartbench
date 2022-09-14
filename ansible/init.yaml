@@ -28,10 +28,6 @@
     pip:
       name: pytz
     ignore_errors: yes
-  - name: Install matplotlib
-    pip:
-      name: matplotlib
-    ignore_errors: yes
   - name: Copying the odbcinst ini script
     template:
       src: odbcinst.ini
