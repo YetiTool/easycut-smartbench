@@ -1873,6 +1873,11 @@ class RouterMachine(object):
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
 
+    def calibrate_Z(self):
+        self.run_calibration = True
+        log("Calibrating Z...")
+        self.initialise_calibration(X = False, Y = False, Z = True)
+
     def calibrate_X_and_Z(self):
 
         self.run_calibration = True
