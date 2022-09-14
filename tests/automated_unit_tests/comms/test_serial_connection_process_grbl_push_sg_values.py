@@ -71,7 +71,7 @@ def assert_all_sg_values_equal(serial_comms, z_motor_axis = None, x_motor_axis =
 
 
 @pytest.fixture
-def sc():
+def sc(scope="module"):
 
     l = localization.Localization()
     machine = Mock()
@@ -84,7 +84,7 @@ def sc():
 
 
 @pytest.fixture
-def m():
+def m(scope="module"):
     l = localization.Localization()
     screen_manager = Mock()
     settings_manager = Mock()

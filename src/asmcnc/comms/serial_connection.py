@@ -792,6 +792,24 @@ class SerialConnection(object):
     # FOR RECORDING STATS
     record_sg_peaks_flag = False
 
+    # PEAK SG VALUES, FOR FW AND BW TRAVEL
+    # Travel == -1
+    fw_peak_sg_z_motor_axis = None
+    fw_peak_sg_x_motor_axis = None
+    fw_peak_sg_y_axis = None
+    fw_peak_sg_y1_motor = None
+    fw_peak_sg_y2_motor = None
+    fw_peak_sg_x1_motor = None
+    fw_peak_sg_x2_motor = None
+    # Travel == 1
+    bw_peak_sg_z_motor_axis = None
+    bw_peak_sg_x_motor_axis = None
+    bw_peak_sg_y_axis = None
+    bw_peak_sg_y1_motor = None
+    bw_peak_sg_y2_motor = None
+    bw_peak_sg_x1_motor = None
+    bw_peak_sg_x2_motor = None
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -1128,13 +1146,20 @@ class SerialConnection(object):
 
                     if self.record_sg_peaks_flag: 
 
-                        # self.x_dir
-                        # self.y_dir
-                        # self.z_dir
-                        pass
-
-
-
+                        if self.sg_z_motor_axis > self.fw_peak_sg_z_motor_axis and self.z_dir == -1: self.fw_peak_sg_z_motor_axis = self.sg_z_motor_axis
+                        if self.sg_x_motor_axis > self.fw_peak_sg_x_motor_axis and self.x_dir == -1: self.fw_peak_sg_x_motor_axis = self.sg_x_motor_axis
+                        if self.sg_y_axis > self.fw_peak_sg_y_axis and self.y_dir == -1: self.fw_peak_sg_y_axis = self.sg_y_axis
+                        if self.sg_y1_motor > self.fw_peak_sg_y1_motor and self.y_dir == -1: self.fw_peak_sg_y1_motor = self.sg_y1_motor
+                        if self.sg_y2_motor > self.fw_peak_sg_y2_motor and self.y_dir == -1: self.fw_peak_sg_y2_motor = self.sg_y2_motor
+                        if self.sg_x1_motor > self.fw_peak_sg_x1_motor and self.x_dir == -1: self.fw_peak_sg_x1_motor = self.sg_x1_motor
+                        if self.sg_x2_motor > self.fw_peak_sg_x2_motor and self.x_dir == -1: self.fw_peak_sg_x2_motor = self.sg_x2_motor
+                        if self.sg_z_motor_axis > self.bw_peak_sg_z_motor_axis and self.z_dir == 1: self.bw_peak_sg_z_motor_axis = self.sg_z_motor_axis
+                        if self.sg_x_motor_axis > self.bw_peak_sg_x_motor_axis and self.x_dir == 1: self.bw_peak_sg_x_motor_axis = self.sg_x_motor_axis
+                        if self.sg_y_axis > self.bw_peak_sg_y_axis and self.y_dir == 1: self.bw_peak_sg_y_axis = self.sg_y_axis
+                        if self.sg_y1_motor > self.bw_peak_sg_y1_motor and self.y_dir == 1: self.bw_peak_sg_y1_motor = self.sg_y1_motor
+                        if self.sg_y2_motor > self.bw_peak_sg_y2_motor and self.y_dir == 1: self.bw_peak_sg_y2_motor = self.sg_y2_motor
+                        if self.sg_x1_motor > self.bw_peak_sg_x1_motor and self.x_dir == 1: self.bw_peak_sg_x1_motor = self.sg_x1_motor
+                        if self.sg_x2_motor > self.bw_peak_sg_x2_motor and self.x_dir == 1: self.bw_peak_sg_x2_motor = self.sg_x2_motor
 
                     if self.FINAL_TEST:
                         if self.sm.has_screen('calibration_testing'):
