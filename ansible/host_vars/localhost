@@ -10,7 +10,7 @@ pkgs:
 - freetds-dev
 - tdsodbc
 - python-pyodbc
-- matplotlib
+- python-matplotlib
 
 
 exim_dc_eximconfig_configtype: internet
