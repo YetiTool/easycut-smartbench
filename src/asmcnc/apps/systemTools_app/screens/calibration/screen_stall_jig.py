@@ -221,9 +221,13 @@ class StallJigScreen(Screen):
 
     feed_dict = {
 
-        "X": [8000,6000,4500,3000,2000,1200,600],
-        "Y": [6000,5000,4000,3000,2000,1200,600],
-        "Z": [750,600,500,400,300,150,75] 
+        # "X": [8000,6000,4500,3000,2000,1200,600],
+        # "Y": [6000,5000,4000,3000,2000,1200,600],
+        # "Z": [750,600,500,400,300,150,75] 
+
+        "X": [8000,2000,6000,600,4500,1200,3000],
+        "Y": [6000,600,4000,2000,3000,1200,5000],
+        "Z": [750,75,500,300,150,600,400]
 
     }
 
@@ -1134,9 +1138,9 @@ class StallJigScreen(Screen):
 
                 '$20=1',        # Soft limits
                 '$21=1',        # Enable hard limits
-                '$53=0'#,        # Disable stall guard
+                '$53=0',        # Disable stall guard
                 # '$120=130.0',   # X Acceleration, mm/sec^2
-                # '$121=130.0'    #Y Acceleration, mm/sec^2
+                '$121=130.0'    #Y Acceleration, mm/sec^2
 
                 ]
 
@@ -1151,9 +1155,9 @@ class StallJigScreen(Screen):
 
                 '$20=0',        # Disable soft limits
                 '$21=1',        # Enable hard limits
-                '$53=1'#,        # Enable stall guard
+                '$53=1',        # Enable stall guard
                 # '$120=1300.0',  # X Acceleration, mm/sec^2
-                # '$121=1300.0'   # Y Acceleration, mm/sec^2
+                '$121=250.0'   # Y Acceleration, mm/sec^2
                 ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
