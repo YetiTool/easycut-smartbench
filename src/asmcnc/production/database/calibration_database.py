@@ -112,7 +112,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             return cursor.fetchone() is not None
 
@@ -132,7 +132,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "DELETE FROM Coefficients WHERE SubAssemblyId = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
         self.conn.commit()
 
@@ -141,7 +141,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "DELETE FROM LowerBeamCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             self.delete_coefficients(combined_id)
 
@@ -397,15 +397,8 @@ class CalibrationDatabase(object):
 
     def get_all_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
-            query = "SELECT + \
-                    ZHeadSerialNumber, \
-                    LowerBeamSerialNumber, \
-                    UpperBeamSerialNumber, \
-                    ConsoleSerialNumber, \
-                    YBenchSerialNumber, \
-                    SpindleSerialNumber, \
-                    Squareness \
-                    FROM Machines WHERE MachineSerialNumber = %s"
+            query = """SELECT ZHeadSerialNumber, LowerBeamSerialNumber, UpperBeamSerialNumber, ConsoleSerialNumber,
+            YBenchSerialNumber, SpindleSerialNumber, Squareness FROM Machines WHERE MachineSerialNumber = %s"""
 
             params = [machine_serial]
 
