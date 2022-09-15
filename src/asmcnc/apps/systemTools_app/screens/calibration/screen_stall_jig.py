@@ -356,16 +356,16 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": 300,   # 5
-        "Y": 5,     # 5
+        "X": 250,   # 5
+        "Y": 4,     # 5
         "Z": -2     # 5
 
     }
 
     crash_distance = {
 
-        "X": 101,   # 381
-        "Y": 75,   # 65
+        "X": 151,   # 381
+        "Y": 76,   # 65
         "Z": -73    # -70
 
     }
@@ -1134,16 +1134,16 @@ class StallJigScreen(Screen):
 
                 '$20=1',        # Soft limits
                 '$21=1',        # Enable hard limits
-                '$53=0',        # Disable stall guard
-                '$120=130.0',   # X Acceleration, mm/sec^2
-                '$121=130.0'    #Y Acceleration, mm/sec^2
+                '$53=0'#,        # Disable stall guard
+                # '$120=130.0',   # X Acceleration, mm/sec^2
+                # '$121=130.0'    #Y Acceleration, mm/sec^2
 
                 ]
 
         self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
         log("Disabling stall guard")
-        log("Restoring acceleration values for X and Y (to 130)")
+        # log("Restoring acceleration values for X and Y (to 130)")
 
     def disable_soft_limits_and_max_acceleration_values(self):
 
@@ -1151,15 +1151,15 @@ class StallJigScreen(Screen):
 
                 '$20=0',        # Disable soft limits
                 '$21=1',        # Enable hard limits
-                '$53=1',        # Enable stall guard
-                '$120=1300.0',  # X Acceleration, mm/sec^2
-                '$121=1300.0'   # Y Acceleration, mm/sec^2
+                '$53=1'#,        # Enable stall guard
+                # '$120=1300.0',  # X Acceleration, mm/sec^2
+                # '$121=1300.0'   # Y Acceleration, mm/sec^2
                 ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
         log("Enabling stall guard")
-        log("Maxing out acceleration values for X and Y (to 1300)")
+        # log("Maxing out acceleration values for X and Y (to 1300)")
         log("Move to start position")
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
