@@ -1147,7 +1147,7 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
         log("Disabling stall guard")
-        # log("Restoring acceleration values for X and Y (to 130)")
+        log("Restoring acceleration values for Y (to 130)")
 
     def disable_soft_limits_and_max_acceleration_values(self):
 
@@ -1163,7 +1163,7 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
         log("Enabling stall guard")
-        # log("Maxing out acceleration values for X and Y (to 1300)")
+        log("Maxing out acceleration values for Y (to 250)")
         log("Move to start position")
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
