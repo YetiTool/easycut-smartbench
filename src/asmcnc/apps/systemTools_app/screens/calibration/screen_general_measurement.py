@@ -130,9 +130,7 @@ class GeneralMeasurementScreen(Screen):
         super(GeneralMeasurementScreen, self).__init__(**kwargs)
 
         self.systemtools_sm = kwargs['systemtools']
-        self.l=kwargs['localization']
         self.m=kwargs['machine']
-        self.calibration_db = kwargs['calibration_db']
 
     def start_measurment(self):
         self.m.start_measuring_running_data('999')

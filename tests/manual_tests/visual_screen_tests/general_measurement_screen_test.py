@@ -79,7 +79,7 @@ class ScreenTest(App):
             ]
 
         # CHANGE ME
-        test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+        test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
         sm.add_widget(test_screen)
         sm.current = 'test'
 
