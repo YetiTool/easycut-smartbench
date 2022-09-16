@@ -104,7 +104,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "SELECT Id FROM ZHeadCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             return cursor.fetchone() is not None
 
@@ -121,7 +121,7 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "DELETE FROM ZHeadCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             self.delete_coefficients(combined_id)
 
