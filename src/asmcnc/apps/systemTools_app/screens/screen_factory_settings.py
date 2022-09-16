@@ -957,7 +957,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_general_measurement(self):
         if not self.systemtools_sm.sm.has_screen('general_measurement'):
-            general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         self.systemtools_sm.sm.current = 'general_measurement'
