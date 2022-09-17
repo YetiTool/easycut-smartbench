@@ -781,6 +781,7 @@ class RouterMachine(object):
             grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
             grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
             grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
+            grbl_settings_and_params.append('$54=' + str(self.s.setting_54))     #Motor load (SG) values reporting type
 
         except:
             pass
