@@ -41,6 +41,7 @@ Builder.load_string("""
     machine_touchplate_thickness: machine_touchplate_thickness
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
+    setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
 
@@ -299,7 +300,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 9
+                        rows: 10
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -310,6 +311,10 @@ Builder.load_string("""
                             id: show_spindle_overload_toggle
                             text: 'Show spindle overload'
                             on_press: root.toggle_spindle_mode()
+                        ToggleButton:
+                            id: setting_54_toggle
+                            text: 'Set $54=1'
+                            on_press: root.toggle_setting_54()
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
@@ -762,6 +767,18 @@ class FactorySettingsScreen(Screen):
         elif self.show_spindle_overload_toggle.state == 'down':
             self.systemtools_sm.sm.get_screen('go').show_spindle_overload = True
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
+
+    def toggle_setting_54(self):
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
+            if self.setting_54_toggle.state == 'normal':
+                self.m.send_any_gcode_command("$54=0")
+                self.setting_54_toggle.text = 'Set $54=1'
+            else:
+                self.m.send_any_gcode_command("$54=1")
+                self.setting_54_toggle.text = 'Set $54=0'
+        else:
+            self.setting_54_toggle.state = 'normal'
+            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
