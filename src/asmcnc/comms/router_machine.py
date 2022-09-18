@@ -694,7 +694,7 @@ class RouterMachine(object):
                             ]
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
-    def bake_default_grbl_settings(self):
+    def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
         grbl_settings = [
                     '$0=10',          #Step pulse, microseconds
@@ -740,6 +740,13 @@ class RouterMachine(object):
                     '$53=0'           #Enable stall guard alarm operation, boolean
                     ]
 
+            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'send $54 setting'):
+
+                if z_head_qc_bake:
+                    version_one_three_grbl_settings.append('$54=1')           #Motor load (SG) values reporting type, boolean
+                else:
+                    version_one_three_grbl_settings.append('$54=0')           #Motor load (SG) values reporting type, boolean
+
             grbl_settings.extend(version_one_three_grbl_settings)
 
         grbl_settings.append('$$')     # Echo grbl settings, which will be read by sw, and internal parameters sync'd
@@ -781,7 +788,7 @@ class RouterMachine(object):
             grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
             grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
             grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
-            grbl_settings_and_params.append('$54=' + str(self.s.setting_54))     #Motor load (SG) values reporting type
+            grbl_settings_and_params.append('$54=' + str(self.s.setting_54))     #Motor load (SG) values reporting type, boolean
 
         except:
             pass
