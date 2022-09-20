@@ -779,10 +779,10 @@ class FactorySettingsScreen(Screen):
     def toggle_setting_54(self):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
             if self.setting_54_toggle.state == 'normal':
-                self.m.send_any_gcode_command("$54=0")
+                self.m.write_dollar_54_setting(0)
                 self.setting_54_toggle.text = 'Set $54=1'
             else:
-                self.m.send_any_gcode_command("$54=1")
+                self.m.write_dollar_54_setting(1)
                 self.setting_54_toggle.text = 'Set $54=0'
         else:
             self.setting_54_toggle.state = 'normal'
