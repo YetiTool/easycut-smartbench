@@ -687,6 +687,14 @@ class FactorySettingsScreen(Screen):
 
         else:
 
+            try:
+                if self.m.s.setting_54:
+                    warning_message = 'Please ensure $54 is set to 0 before doing a factory reset.'
+                    popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                    return
+            except:
+                pass
+
             if self.smartbench_model.text == 'Choose model':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
