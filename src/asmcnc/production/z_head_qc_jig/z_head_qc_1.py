@@ -442,6 +442,8 @@ class ZHeadQC1(Screen):
 
     def test_motor_chips(self):
 
+        self.m.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
+
         # I think its fine to run both at the same time, but check on HW
         # self.m.jog_relative('Z', -63, 750) # move for 5 seconds at 750 mm/min
         # self.m.jog_relative('X', -700, 8000) # move for 5 seconds at 8000 mm/min
@@ -454,6 +456,7 @@ class ZHeadQC1(Screen):
     def try_start_motor_chips_test(self, dt):
         if self.m.s.m_state == "Idle":
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+            self.m.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
             self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
             Clock.schedule_once(self.check_sg_values, 3)
         elif self.m.s.m_state == "Jog":
