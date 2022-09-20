@@ -9,9 +9,8 @@ pkgs:
 - freetds-bin
 - freetds-dev
 - tdsodbc
-- python-pyodbc
 - python-mysqldb
-- python-matplotlib
+- python-pyodbc
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
