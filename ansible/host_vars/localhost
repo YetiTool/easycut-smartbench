@@ -11,6 +11,7 @@ pkgs:
 - tdsodbc
 - python-pyodbc
 - python-mysqldb
+- python-matplotlib
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
