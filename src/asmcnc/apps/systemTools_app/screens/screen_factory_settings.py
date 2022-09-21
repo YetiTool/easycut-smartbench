@@ -96,7 +96,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(210)
+                        height: dp(230)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -105,7 +105,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             cols: 0
-                            rows: 3
+                            rows: 4
                             padding: 10
                             spacing: 5
                             BoxLayout: 
@@ -128,7 +128,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
                                     Label:
                                         text: '[b]Serial number[/b]'
@@ -196,7 +196,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
 
                                     Label:
@@ -221,11 +221,17 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
+                        ToggleButton:
+                            size_hint_y: 0.3
+                            id: setting_54_toggle
+                            text: 'Set $54=1'
+                            on_press: root.toggle_setting_54()
+
 
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(100)
+                        height: dp(80)
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
@@ -300,7 +306,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 10
+                        rows: 9
                         padding: 10
                         spacing: 2
                         ToggleButton:
@@ -311,10 +317,6 @@ Builder.load_string("""
                             id: show_spindle_overload_toggle
                             text: 'Show spindle overload'
                             on_press: root.toggle_spindle_mode()
-                        ToggleButton:
-                            id: setting_54_toggle
-                            text: 'Set $54=1'
-                            on_press: root.toggle_setting_54()
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
@@ -531,6 +533,14 @@ class FactorySettingsScreen(Screen):
 
         if not os.path.exists(csv_path):
             os.mkdir(csv_path)
+
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Get $54 state'):
+            if self.m.s.setting_54:
+                self.setting_54_toggle.state = 'down'
+                self.setting_54_toggle.text = 'Set $54=0'
+            else:
+                self.setting_54_toggle.state = 'normal'
+                self.setting_54_toggle.text = 'Set $54=1'
 
     def set_toggle_buttons(self):
 
@@ -874,7 +884,7 @@ class FactorySettingsScreen(Screen):
             file.close()
 
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
 
         return str(serial_number_from_file)
 
