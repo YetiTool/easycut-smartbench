@@ -31,6 +31,7 @@ Builder.load_string("""
 
     software_version_label: software_version_label
     platform_version_label: platform_version_label
+    setting_54_label:setting_54_label
     latest_software_version: latest_software_version
     latest_platform_version: latest_platform_version
     z_touch_plate_entry: z_touch_plate_entry
@@ -221,11 +222,25 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
-                        ToggleButton:
+                        BoxLayout:
                             size_hint_y: 0.3
-                            id: setting_54_toggle
-                            text: 'Set $54=1'
-                            on_press: root.toggle_setting_54()
+                            orientation: 'horizontal'
+                            spacing: dp(10)
+
+                            Button:
+                                text: '$54 info'
+                                on_press: root.setting_54_info()
+
+                            ToggleButton:
+                                id: setting_54_toggle
+                                text: 'Set $54=1'
+                                on_press: root.toggle_setting_54()
+
+                            Label:
+                                id: setting_54_label
+                                size_hint_x: 0.7
+                                text: '$54 = N/A'
+                                color: [0,0,0,1]
 
 
                     BoxLayout:
@@ -536,11 +551,15 @@ class FactorySettingsScreen(Screen):
 
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Get $54 state'):
             if self.m.s.setting_54:
+                self.setting_54_label.text = '$54 = 1'
                 self.setting_54_toggle.state = 'down'
                 self.setting_54_toggle.text = 'Set $54=0'
             else:
+                self.setting_54_label.text = '$54 = 0'
                 self.setting_54_toggle.state = 'normal'
                 self.setting_54_toggle.text = 'Set $54=1'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
 
     def set_toggle_buttons(self):
 
@@ -789,14 +808,23 @@ class FactorySettingsScreen(Screen):
     def toggle_setting_54(self):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
             if self.setting_54_toggle.state == 'normal':
+                self.setting_54_label.text = '$54 = 0'
                 self.m.write_dollar_54_setting(0)
                 self.setting_54_toggle.text = 'Set $54=1'
             else:
+                self.setting_54_label.text = '$54 = 1'
                 self.m.write_dollar_54_setting(1)
                 self.setting_54_toggle.text = 'Set $54=0'
         else:
+            self.setting_54_label.text = '$54 = N/A'
             self.setting_54_toggle.state = 'normal'
             popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+
+    def setting_54_info(self):
+        info = '$54 available on FW 2.5 and up\n\n' + \
+               '$54 should be set to 1 for all final test procedures\n\n' + \
+               '$54 should be set to 0 when SB is ready to be factory reset and packed'
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
