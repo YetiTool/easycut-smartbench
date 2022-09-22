@@ -69,7 +69,7 @@ class CurrentAdjustmentWidget(Widget):
         if self.m.state().startswith('Idle'):
             if self.current_current != 31:
                 self.current_current += 1
-                self.m.set_motor_current("Z", self.current_current)
+                self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
                 self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
 
         else:
@@ -80,7 +80,7 @@ class CurrentAdjustmentWidget(Widget):
         if self.m.state().startswith('Idle'):
             if self.current_current != 0:
                 self.current_current -= 1
-                self.m.set_motor_current("Z", self.current_current)
+                self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
                 self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
 
         else:
@@ -88,5 +88,5 @@ class CurrentAdjustmentWidget(Widget):
 
     def reset_current(self):
         self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
-        self.m.set_motor_current("Z", self.current_current)
+        self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
         self.current_current_label.text = self.motor_name_dict[self.motor] + ' = ' + str(self.current_current)
