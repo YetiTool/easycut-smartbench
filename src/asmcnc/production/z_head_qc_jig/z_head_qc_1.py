@@ -437,7 +437,7 @@ class ZHeadQC1(Screen):
 
     def bake_grbl_settings(self):
 
-        self.m.bake_default_grbl_settings()
+        self.m.bake_default_grbl_settings(z_head_qc_bake=True)
         self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def test_motor_chips(self):
