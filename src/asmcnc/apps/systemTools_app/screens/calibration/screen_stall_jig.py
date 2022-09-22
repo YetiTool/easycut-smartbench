@@ -1336,11 +1336,23 @@ class StallJigScreen(Screen):
             return
 
         self.m.enable_only_hard_limits()
+        self.reset_entire_pcb()
+
+    # INSERT AXIS DISABLE HERE
+
+    def reset_entire_pcb(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to hard reset PCB before starting next test")
+            self.poll_to_reset_entire_pcb = Clock.schedule_once(lambda dt: self.reset_entire_pcb(), 0.5)
+            return
+
+        self.m.hard_reset_pcb_sequence()
         self.finish_procedure_and_start_next_test()
 
     def finish_procedure_and_start_next_test(self):
 
-        if self.smartbench_is_not_ready_for_next_command():
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll to finish procedure and start next test")
             self.poll_to_finish_procedure = Clock.schedule_once(lambda dt: self.finish_procedure_and_start_next_test(), 0.5)
             return
