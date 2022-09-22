@@ -1373,7 +1373,7 @@ class StallJigScreen(Screen):
             return
 
         self.start_homing()
-        self.reposition_after_reset()
+        self.poll_to_reposition_after_reset = Clock.schedule_once(lambda dt: self.reposition_after_reset(), 2)
 
     def reposition_after_reset(self):
 
