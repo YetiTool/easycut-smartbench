@@ -433,6 +433,8 @@ class StallJigScreen(Screen):
     populate_and_transfer_logs_event = None
     send_logs_event = None
     poll_to_reset_entire_pcb = None
+    poll_to_home_after_reset = None
+    poll_to_reposition_after_reset = None
 
     ## DATABASE OBJECTS
 
@@ -516,6 +518,14 @@ class StallJigScreen(Screen):
 
         }
 
+        self.not_pull_off = {
+
+            "X": -1*self.m.grbl_x_max_travel + self.limit_pull_off["X"],
+            "Y": -1*self.m.grbl_y_max_travel + self.limit_pull_off["Y"],
+            "Z": self.limit_pull_off["Z"]
+
+        }
+
         # GUI SET UP
 
         ## FEED/THRESHOLD GRIDS FOR EACH AXIS
@@ -567,7 +577,9 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
         self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
         self.unschedule_event_if_it_exists(self.send_logs_event)      
-        self.unschedule_event_if_it_exists(self.poll_to_reset_entire_pcb)  
+        self.unschedule_event_if_it_exists(self.poll_to_reset_entire_pcb)
+        self.unschedule_event_if_it_exists(self.poll_to_home_after_reset)
+        self.unschedule_event_if_it_exists(self.poll_to_reposition_after_reset)
 
         log("Unschedule all events")
 
@@ -1351,11 +1363,32 @@ class StallJigScreen(Screen):
 
         log("Reset PCB")
         self.m.hard_reset_pcb_sequence()
+        self.home_after_reset()
+
+    def home_after_reset(self):
+
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
+            if self.VERBOSE: log("Poll to home after PCB reset")
+            self.poll_to_home_after_reset = Clock.schedule_once(lambda dt: self.home_after_reset(), 0.5)
+            return
+
+        self.start_homing()
+        self.reposition_after_reset()
+
+    def reposition_after_reset(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to reposition_after_reset")
+            self.poll_to_reposition_after_reset = Clock.schedule_once(lambda dt: self.reposition_after_reset(), 0.5)
+            return
+
+        move_command = "G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
+        self.m.s.start_sequential_stream(move_command)
         self.finish_procedure_and_start_next_test()
 
     def finish_procedure_and_start_next_test(self):
 
-        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
+        if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll to finish procedure and start next test")
             self.poll_to_finish_procedure = Clock.schedule_once(lambda dt: self.finish_procedure_and_start_next_test(), 0.5)
             return
