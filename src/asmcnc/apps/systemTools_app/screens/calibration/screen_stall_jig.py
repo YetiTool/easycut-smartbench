@@ -432,6 +432,7 @@ class StallJigScreen(Screen):
     poll_ready_to_start_moving = None
     populate_and_transfer_logs_event = None
     send_logs_event = None
+    poll_to_prepare_to_find_stall_pos = None
 
     ## DATABASE OBJECTS
 
@@ -566,6 +567,7 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
         self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
         self.unschedule_event_if_it_exists(self.send_logs_event)        
+        self.unschedule_event_if_it_exists(self.poll_to_prepare_to_find_stall_pos)
 
         log("Unschedule all events")
 
