@@ -1382,7 +1382,7 @@ class StallJigScreen(Screen):
             self.poll_to_reposition_after_reset = Clock.schedule_once(lambda dt: self.reposition_after_reset(), 0.5)
             return
 
-        move_command = "G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
+        move_command = ["G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
         self.m.s.start_sequential_stream(move_command)
         self.finish_procedure_and_start_next_test()
 
