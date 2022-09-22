@@ -77,7 +77,7 @@ class DataPublisher(object):
 
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(
-                host='51.68.204.96',
+                host=creds.server,
                 credentials=pika_credentials
             )
         )

@@ -31,6 +31,7 @@ Builder.load_string("""
 
     software_version_label: software_version_label
     platform_version_label: platform_version_label
+    setting_54_label:setting_54_label
     latest_software_version: latest_software_version
     latest_platform_version: latest_platform_version
     z_touch_plate_entry: z_touch_plate_entry
@@ -41,6 +42,7 @@ Builder.load_string("""
     machine_touchplate_thickness: machine_touchplate_thickness
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
+    setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
 
@@ -95,7 +97,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(210)
+                        height: dp(230)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -104,7 +106,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             cols: 0
-                            rows: 3
+                            rows: 4
                             padding: 10
                             spacing: 5
                             BoxLayout: 
@@ -127,7 +129,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
                                     Label:
                                         text: '[b]Serial number[/b]'
@@ -195,7 +197,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
 
                                     Label:
@@ -220,11 +222,31 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
+                        BoxLayout:
+                            size_hint_y: 0.3
+                            orientation: 'horizontal'
+                            spacing: dp(10)
+
+                            Button:
+                                text: '$54 info'
+                                on_press: root.setting_54_info()
+
+                            ToggleButton:
+                                id: setting_54_toggle
+                                text: 'Set $54=1'
+                                on_press: root.toggle_setting_54()
+
+                            Label:
+                                id: setting_54_label
+                                size_hint_x: 0.7
+                                text: '$54 = N/A'
+                                color: [0,0,0,1]
+
 
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(100)
+                        height: dp(80)
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
@@ -527,6 +549,18 @@ class FactorySettingsScreen(Screen):
         if not os.path.exists(csv_path):
             os.mkdir(csv_path)
 
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Get $54 state'):
+            if self.m.s.setting_54:
+                self.setting_54_label.text = '$54 = 1'
+                self.setting_54_toggle.state = 'down'
+                self.setting_54_toggle.text = 'Set $54=0'
+            else:
+                self.setting_54_label.text = '$54 = 0'
+                self.setting_54_toggle.state = 'normal'
+                self.setting_54_toggle.text = 'Set $54=1'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
@@ -682,6 +716,14 @@ class FactorySettingsScreen(Screen):
 
         else:
 
+            try:
+                if self.m.s.setting_54:
+                    warning_message = 'Please ensure $54 is set to 0 before doing a factory reset.'
+                    popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                    return
+            except:
+                pass
+
             if self.smartbench_model.text == 'Choose model':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
@@ -762,6 +804,27 @@ class FactorySettingsScreen(Screen):
         elif self.show_spindle_overload_toggle.state == 'down':
             self.systemtools_sm.sm.get_screen('go').show_spindle_overload = True
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
+
+    def toggle_setting_54(self):
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
+            if self.setting_54_toggle.state == 'normal':
+                self.setting_54_label.text = '$54 = 0'
+                self.m.write_dollar_54_setting(0)
+                self.setting_54_toggle.text = 'Set $54=1'
+            else:
+                self.setting_54_label.text = '$54 = 1'
+                self.m.write_dollar_54_setting(1)
+                self.setting_54_toggle.text = 'Set $54=0'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
+            self.setting_54_toggle.state = 'normal'
+            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+
+    def setting_54_info(self):
+        info = '$54 available on FW 2.5 and up\n\n' + \
+               '$54 should be set to 1 for all final test procedures\n\n' + \
+               '$54 should be set to 0 when SB is ready to be factory reset and packed'
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
@@ -849,7 +912,7 @@ class FactorySettingsScreen(Screen):
             file.close()
 
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
 
         return str(serial_number_from_file)
 
