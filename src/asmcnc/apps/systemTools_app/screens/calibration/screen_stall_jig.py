@@ -1134,15 +1134,17 @@ class StallJigScreen(Screen):
 
         log("Enable soft limits and restore acceleration")
 
-        default_acceleration_values = [
+        default_acceleration_values = ['$21=1']
 
-                '$20=1',        # Soft limits
-                '$21=1',        # Enable hard limits
-                '$53=0',        # Disable stall guard
+        # default_acceleration_values = [
+
+                # '$20=1',        # Soft limits
+                # '$21=1',        # Enable hard limits
+                # '$53=0',        # Disable stall guard
                 # '$120=130.0',   # X Acceleration, mm/sec^2
-                '$121=130.0'    #Y Acceleration, mm/sec^2
+                # '$121=130.0'    #Y Acceleration, mm/sec^2
 
-                ]
+                # ]
 
         self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
@@ -1151,14 +1153,16 @@ class StallJigScreen(Screen):
 
     def disable_soft_limits_and_max_acceleration_values(self):
 
-        settings_list_to_stream = [
+        settings_list_to_stream = ['$21=1']
 
-                '$20=0',        # Disable soft limits
-                '$21=1',        # Enable hard limits
-                '$53=1',        # Enable stall guard
+        # settings_list_to_stream = [
+
+                # '$20=0',        # Disable soft limits
+                # '$21=1',        # Enable hard limits
+                # '$53=1',        # Enable stall guard
                 # '$120=1300.0',  # X Acceleration, mm/sec^2
-                '$121=250.0'   # Y Acceleration, mm/sec^2
-                ]
+                # '$121=250.0'   # Y Acceleration, mm/sec^2
+                # ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
