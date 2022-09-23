@@ -34,8 +34,12 @@ Builder.load_string("""
             
             GridLayout: 
                 size_hint_y: None
-                height: dp(80)
+                height: dp(100)
                 cols: 2
+
+                Button:
+                    text: "<< BACK"
+                    on_press: root.back_to_fac_settings()
 
                 Button:
                     text: "Start"
@@ -131,6 +135,9 @@ class GeneralMeasurementScreen(Screen):
 
         self.systemtools_sm = kwargs['systemtools']
         self.m=kwargs['machine']
+
+    def back_to_fac_settings(self):
+        self.systemtools_sm.open_factory_settings_screen()
 
     def start_measurment(self):
         self.m.start_measuring_running_data('999')
