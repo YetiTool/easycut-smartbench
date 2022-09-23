@@ -221,11 +221,12 @@ class ZHeadMechanics(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
-        Clock.schedule_interval(self.update_realtime_values, 0.1)
+        Clock.schedule_interval(self.update_realtime_load, 0.1)
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
         self.m.set_motor_current("Z", self.phase_one_current)
+        self.current_realtime.text = str(self.phase_one_current)
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
         self.test_running = True
@@ -246,13 +247,11 @@ class ZHeadMechanics(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            self.m.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
             Clock.schedule_once(self.begin_test, 1)
 
     def begin_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
                 Clock.schedule_once(self.start_moving_down, 1)
             else:
@@ -291,6 +290,7 @@ class ZHeadMechanics(Screen):
     def phase_two(self):
         if self.test_running:
             self.m.set_motor_current("Z", self.phase_two_current)
+            self.current_realtime.text = str(self.phase_two_current)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
@@ -306,6 +306,7 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.set_motor_current("Z", self.phase_one_current)
+                self.current_realtime.text = str(self.phase_one_current)
                 self.display_results()
                 self.reset_after_stop()
             else:
@@ -382,13 +383,11 @@ class ZHeadMechanics(Screen):
         else:
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
-    def update_realtime_values(self, dt):
+    def update_realtime_load(self, dt):
         if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
             self.load_realtime.text = '-'
         else:
             self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
-
-        self.current_realtime.text = str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale)
 
 
     def go_to_monitor(self):
