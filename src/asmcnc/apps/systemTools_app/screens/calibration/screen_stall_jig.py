@@ -356,8 +356,7 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        # "X": 300,   # 5
-        "X": 10,   # 5
+        "X": 300,   # 5
         "Y": 5,     # 5
         "Z": -2     # 5
 
@@ -521,7 +520,7 @@ class StallJigScreen(Screen):
 
         self.not_pull_off = {
 
-            "X": -1*self.m.grbl_x_max_travel + 300,
+            "X": -1*self.m.grbl_x_max_travel + self.limit_pull_off["X"],
             "Y": -1*self.m.grbl_y_max_travel + self.limit_pull_off["Y"],
             "Z": self.limit_pull_off["Z"]
 
@@ -1387,7 +1386,7 @@ class StallJigScreen(Screen):
         move_sequence = []
         move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
         move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
-        ove_sequence.append("G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()]))
+        move_sequence.append("G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()]))
         self.m.s.start_sequential_stream(move_command)
         self.finish_procedure_and_start_next_test()
 
