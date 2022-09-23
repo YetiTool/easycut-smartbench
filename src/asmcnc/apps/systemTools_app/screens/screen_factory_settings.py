@@ -354,8 +354,8 @@ Builder.load_string("""
                                 text: 'Set SG thresholds'
                                 on_press: root.enter_set_thresholds()
 
-                            Button:
-                                text: 'Measure'
+                            # Button:
+                            #     text: 'Measure'
                                 # on_press: root.enter_general_measurement()
                             
 
@@ -962,11 +962,6 @@ class FactorySettingsScreen(Screen):
         #     self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         # self.systemtools_sm.sm.current = 'general_measurement'
-
-
-
-
-
 
 
 
