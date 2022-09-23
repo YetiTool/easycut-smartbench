@@ -22,7 +22,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment i
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
-from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
+# from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -956,11 +956,13 @@ class FactorySettingsScreen(Screen):
 
 
     def enter_general_measurement(self):
-        if not self.systemtools_sm.sm.has_screen('general_measurement'):
-            general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
-            self.systemtools_sm.sm.add_widget(general_measurement_screen)
+        pass
+
+        # if not self.systemtools_sm.sm.has_screen('general_measurement'):
+        #     general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
+        #     self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
-        self.systemtools_sm.sm.current = 'general_measurement'
+        # self.systemtools_sm.sm.current = 'general_measurement'
 
 
 
