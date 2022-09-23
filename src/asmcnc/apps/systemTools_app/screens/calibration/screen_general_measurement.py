@@ -150,11 +150,11 @@ class GeneralMeasurementScreen(Screen):
         self.m.clear_measured_running_data()
 
     def get_x_axis(self):
-        new_list = [i[self.x_idx] for i in self.m.measured_running_data]
+        new_list = [i[self.x_idx] for i in self.m.measured_running_data()]
         return new_list
 
     def get_y_axis(self):
-        new_list = [i[self.y_idx] for i in self.m.measured_running_data]
+        new_list = [i[self.y_idx] for i in self.m.measured_running_data()]
         return new_list
 
     def set_index(self, axis, label):
