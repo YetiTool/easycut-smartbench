@@ -24,6 +24,7 @@ Builder.load_string("""
     load_up_average:load_up_average
     load_down_average:load_down_average
     load_realtime:load_realtime
+    current_realtime:current_realtime
 
     load_graph:load_graph
 
@@ -58,7 +59,7 @@ Builder.load_string("""
                     on_press: root.prepare_for_test()
 
             BoxLayout:
-                size_hint_x: 2
+                size_hint_x: 2.5
                 orientation: 'horizontal'
 
                 # Load value table
@@ -119,6 +120,22 @@ Builder.load_string("""
 
                     Label:
                         id: load_realtime
+                        size_hint_y: 2
+                        text: '-'
+                        font_size: dp(25)
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    Label:
+                        text: 'Realtime current'
+                        bold: True
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+
+                    Label:
+                        id: current_realtime
                         size_hint_y: 2
                         text: '-'
                         font_size: dp(25)
@@ -201,7 +218,7 @@ class ZHeadMechanics(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
-        Clock.schedule_interval(self.update_realtime_load, 0.1)
+        Clock.schedule_interval(self.update_realtime_values, 0.1)
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
@@ -360,11 +377,13 @@ class ZHeadMechanics(Screen):
         else:
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
-    def update_realtime_load(self, dt):
+    def update_realtime_values(self, dt):
         if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
             self.load_realtime.text = '-'
         else:
             self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
+
+        self.current_realtime.text = str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale)
 
 
     def go_to_monitor(self):
