@@ -221,9 +221,13 @@ class StallJigScreen(Screen):
 
     feed_dict = {
 
-        "X": [8000,6000,4500,3000,2000,1200,600],
-        "Y": [6000,5000,4000,3000,2000,1200,600],
-        "Z": [750,600,500,400,300,150,75] 
+        # "X": [8000,6000,4500,3000,2000,1200,600],
+        # "Y": [6000,5000,4000,3000,2000,1200,600],
+        # "Z": [750,600,500,400,300,150,75] 
+
+        "X": [8000,2000,6000,600,4500,1200,3000],
+        "Y": [6000,600,4000,2000,3000,1200,5000],
+        "Z": [750,75,500,300,150,600,400]
 
     }
 
@@ -352,24 +356,24 @@ class StallJigScreen(Screen):
 
     back_off = {
 
-        "X": -430,  #  -400, 
-        "Y": -120,   #  -70,
-        "Z": 100     #  76
+        # "X": -430,  #  -400, 
+        # "Y": -120,   #  -70,
+        # "Z": 100     #  76
 
     }
 
     limit_pull_off = {
 
-        "X": 300,   # 5
-        "Y": 5,     # 5
+        "X": 250,   # 5
+        "Y": 4,     # 5
         "Z": -2     # 5
 
     }
 
     crash_distance = {
 
-        "X": 101,   # 381
-        "Y": 75,   # 65
+        "X": 151,   # 381
+        "Y": 76,   # 65
         "Z": -73    # -70
 
     }
@@ -554,12 +558,18 @@ class StallJigScreen(Screen):
 
         }
 
-
         self.post_reset_start_positions = {
 
             "X": self.after_reset_x_pos,
             "Y": self.after_reset_y_pos,
             "Z": self.after_reset_z_pos
+
+        self.back_off = {
+
+            "X": -1*self.m.grbl_x_max_travel,
+            "Y": -1*self.m.grbl_y_max_travel,
+            "Z": 0.0
+
 
         }
 
@@ -1181,36 +1191,40 @@ class StallJigScreen(Screen):
 
         log("Enable soft limits and restore acceleration")
 
-        default_acceleration_values = [
+        default_acceleration_values = ['$21=1']
 
-                '$20=1',        # Soft limits
-                '$21=1',        # Enable hard limits
-                '$53=0',        # Disable stall guard
-                '$120=130.0',   # X Acceleration, mm/sec^2
-                '$121=130.0'    #Y Acceleration, mm/sec^2
+        # default_acceleration_values = [
 
-                ]
+                # '$20=1',        # Soft limits
+                # '$21=1',        # Enable hard limits
+                # '$53=0',        # Disable stall guard
+                # '$120=130.0',   # X Acceleration, mm/sec^2
+                # '$121=130.0'    #Y Acceleration, mm/sec^2
+
+                # ]
 
         self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
         log("Disabling stall guard")
-        log("Restoring acceleration values for X and Y (to 130)")
+        log("Restoring acceleration values for Y (to 130)")
 
     def disable_soft_limits_and_max_acceleration_values(self):
 
-        settings_list_to_stream = [
+        settings_list_to_stream = ['$21=1']
 
-                '$20=0',        # Disable soft limits
-                '$21=1',        # Enable hard limits
-                '$53=1',        # Enable stall guard
-                '$120=1300.0',  # X Acceleration, mm/sec^2
-                '$121=1300.0'   # Y Acceleration, mm/sec^2
-                ]
+        # settings_list_to_stream = [
+
+                # '$20=0',        # Disable soft limits
+                # '$21=1',        # Enable hard limits
+                # '$53=1',        # Enable stall guard
+                # '$120=1300.0',  # X Acceleration, mm/sec^2
+                # '$121=250.0'   # Y Acceleration, mm/sec^2
+                # ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
         log("Enabling stall guard")
-        log("Maxing out acceleration values for X and Y (to 1300)")
+        log("Maxing out acceleration values for Y (to 250)")
         log("Move to start position")
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
@@ -1304,7 +1318,7 @@ class StallJigScreen(Screen):
         log("Back off and find position")
         self.test_status_label.text = "REFIND POS"
         self.expected_limit_found = False
-        move_command = ["G01 G91 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
+        move_command = ["G01 G53 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
         self.m.s.start_sequential_stream(move_command)
         self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
 
