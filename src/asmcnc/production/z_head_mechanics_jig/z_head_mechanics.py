@@ -247,6 +247,7 @@ class ZHeadMechanics(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
+            self.m.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
             Clock.schedule_once(self.begin_test, 1)
 
     def begin_test(self, dt):
