@@ -24,6 +24,7 @@ Builder.load_string("""
     load_up_average:load_up_average
     load_down_average:load_down_average
     load_realtime:load_realtime
+    current_realtime:current_realtime
 
     load_graph:load_graph
 
@@ -58,7 +59,7 @@ Builder.load_string("""
                     on_press: root.prepare_for_test()
 
             BoxLayout:
-                size_hint_x: 2
+                size_hint_x: 2.5
                 orientation: 'horizontal'
 
                 # Load value table
@@ -119,6 +120,22 @@ Builder.load_string("""
 
                     Label:
                         id: load_realtime
+                        size_hint_y: 2
+                        text: '-'
+                        font_size: dp(25)
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    Label:
+                        text: 'Realtime current'
+                        bold: True
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+
+                    Label:
+                        id: current_realtime
                         size_hint_y: 2
                         text: '-'
                         font_size: dp(25)
@@ -194,6 +211,9 @@ class ZHeadMechanics(Screen):
     test_running = False
     test_waiting_to_start = False
 
+    phase_one_current = 25
+    phase_two_current = 13
+
     def __init__(self, **kwargs):
         super(ZHeadMechanics, self).__init__(**kwargs)
 
@@ -201,11 +221,11 @@ class ZHeadMechanics(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
-        Clock.schedule_interval(self.update_realtime_load, 0.1)
+        Clock.schedule_interval(self.update_realtime_values, 0.1)
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
-        self.m.set_motor_current("Z", 25)
+        self.m.set_motor_current("Z", self.phase_one_current)
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
         self.test_running = True
@@ -268,7 +288,7 @@ class ZHeadMechanics(Screen):
 
     def phase_two(self):
         if self.test_running:
-            self.m.set_motor_current("Z", 13)
+            self.m.set_motor_current("Z", self.phase_two_current)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
@@ -283,7 +303,7 @@ class ZHeadMechanics(Screen):
     def finish_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.set_motor_current("Z", 25)
+                self.m.set_motor_current("Z", self.phase_one_current)
                 self.display_results()
                 self.reset_after_stop()
             else:
@@ -360,11 +380,13 @@ class ZHeadMechanics(Screen):
         else:
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
-    def update_realtime_load(self, dt):
+    def update_realtime_values(self, dt):
         if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
             self.load_realtime.text = '-'
         else:
             self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
+
+        self.current_realtime.text = str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale)
 
 
     def go_to_monitor(self):
