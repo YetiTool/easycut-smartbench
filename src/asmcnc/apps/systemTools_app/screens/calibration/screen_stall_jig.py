@@ -313,7 +313,7 @@ class StallJigScreen(Screen):
 
         "X": -1299,
         "Y": -2405,
-        "Z": 0
+        "Z": -2
 
     }
 
