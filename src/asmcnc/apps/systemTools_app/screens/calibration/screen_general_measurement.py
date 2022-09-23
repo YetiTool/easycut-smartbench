@@ -38,9 +38,9 @@ Builder.load_string("""
                 height: dp(100)
                 cols: 2
 
-                # Button:
-                #     text: "BACK"
-                #     on_press: root.back_to_fac_settings()
+                Button:
+                    text: "BACK"
+                    on_press: root.back_to_fac_settings()
 
                 Button:
                     text: "Start"
@@ -162,16 +162,16 @@ class GeneralMeasurementScreen(Screen):
         if axis == "X": self.x_idx = value
         if axis == "Y": self.y_idx = value
 
-    # def display_results(self):
-    #     plt.rcParams["figure.figsize"] = (7,3.55)
-    #     plt.plot(self.get_x_axis(), self.get_y_axis(), 'b')
-    #     plt.xlabel(self.descriptors[self.x_idx])
-    #     plt.ylabel(self.descriptors[self.y_idx])
-    #     plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
-    #     plt.tight_layout()
-    #     plt.grid()
-    #     plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
-    #     plt.close()
-    #     self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-    #     self.load_graph.reload()
-    #     self.load_graph.opacity = 1
+    def display_results(self):
+        plt.rcParams["figure.figsize"] = (7,3.55)
+        plt.plot(self.get_x_axis(), self.get_y_axis(), 'b')
+        plt.xlabel(self.descriptors[self.x_idx])
+        plt.ylabel(self.descriptors[self.y_idx])
+        plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
+        plt.tight_layout()
+        plt.grid()
+        plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
+        plt.close()
+        self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
+        self.load_graph.reload()
+        self.load_graph.opacity = 1
