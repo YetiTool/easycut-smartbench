@@ -356,7 +356,8 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": 300,   # 5
+        # "X": 300,   # 5
+        "X": 5,   # 5
         "Y": 5,     # 5
         "Z": -2     # 5
 
@@ -520,7 +521,7 @@ class StallJigScreen(Screen):
 
         self.not_pull_off = {
 
-            "X": -1*self.m.grbl_x_max_travel + self.limit_pull_off["X"],
+            "X": -1*self.m.grbl_x_max_travel + 300,
             "Y": -1*self.m.grbl_y_max_travel + self.limit_pull_off["Y"],
             "Z": self.limit_pull_off["Z"]
 
