@@ -58,50 +58,50 @@ Builder.load_string("""
                 cols: 2
 
                 Label:
-                    text: "x axis"
+                    text: "y axis"
 
                 Label:
-                    text: "y axis"
+                    text: "x axis"
 
                 Button:
                     text: "t"
-                    on_press: root.set_index("Y", self)
+                    on_press: root.set_index("X", self)
 
                 Button:
                     text: "SG X"
-                    on_press: root.set_index("X", self)
+                    on_press: root.set_index("Y", self)
 
                 Button:
                     text: "F"
-                    on_press: root.set_index("Y", self)
+                    on_press: root.set_index("X", self)
 
                 Button:
                     text: "SG Y"
-                    on_press: root.set_index("X", self)
+                    on_press: root.set_index("Y", self)
 
                 Button:
                     text: "x pos"
-                    on_press: root.set_index("Y", self)
+                    on_press: root.set_index("X", self)
 
                 Button:
                     text: "SG Z"
-                    on_press: root.set_index("X", self)
+                    on_press: root.set_index("Y", self)
 
                 Button:
                     text: "y pos"
-                    on_press: root.set_index("Y", self)
+                    on_press: root.set_index("X", self)
 
                 Button:
                     text: "SG Y1"
-                    on_press: root.set_index("X", self)
-
-                Button:
-                    text: "z pos"
                     on_press: root.set_index("Y", self)
 
                 Button:
-                    text: "SG Y2"
+                    text: "z pos"
                     on_press: root.set_index("X", self)
+
+                Button:
+                    text: "SG Y2"
+                    on_press: root.set_index("Y", self)
 
             Button:
                 size_hint_y: None
@@ -164,7 +164,8 @@ class GeneralMeasurementScreen(Screen):
 
     def display_results(self):
         plt.rcParams["figure.figsize"] = (7,3.55)
-        plt.plot(self.get_x_axis(), self.get_y_axis(), 'bx')
+        xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(), self.get_y_axis()) if (y == -999 or y == None)))
+        plt.plot(xVar, yVar, 'bx')
         plt.xlabel(self.descriptors[self.x_idx])
         plt.ylabel(self.descriptors[self.y_idx])
         plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
