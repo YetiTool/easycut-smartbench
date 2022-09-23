@@ -352,9 +352,9 @@ class StallJigScreen(Screen):
 
     back_off = {
 
-        "X": -430,  #  -400, 
-        "Y": -120,   #  -70,
-        "Z": 100     #  76
+        # "X": -430,  #  -400, 
+        # "Y": -120,   #  -70,
+        # "Z": 100     #  76
 
     }
 
@@ -516,6 +516,14 @@ class StallJigScreen(Screen):
             "X": self.if_more_than_expected_pos,
             "Y": self.if_more_than_expected_pos,
             "Z": self.if_less_than_expected_pos
+
+        }
+
+        self.back_off = {
+
+            "X": -1*self.m.grbl_x_max_travel,
+            "Y": -1*self.m.grbl_y_max_travel,
+            "Z": 0.0
 
         }
 
@@ -1261,7 +1269,7 @@ class StallJigScreen(Screen):
         log("Back off and find position")
         self.test_status_label.text = "REFIND POS"
         self.expected_limit_found = False
-        move_command = ["G01 G91 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
+        move_command = ["G01 G53 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
         self.m.s.start_sequential_stream(move_command)
         self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
 
