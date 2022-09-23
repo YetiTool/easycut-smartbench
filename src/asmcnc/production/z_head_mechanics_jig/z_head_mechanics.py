@@ -247,13 +247,11 @@ class ZHeadMechanics(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            self.m.send_command_to_motor("SET TOFF Z 8", motor = TMC_Z, command = SET_TOFF, value = 8)
             Clock.schedule_once(self.begin_test, 1)
 
     def begin_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
                 self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
                 Clock.schedule_once(self.start_moving_down, 1)
             else:
