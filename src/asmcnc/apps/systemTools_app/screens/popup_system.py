@@ -603,13 +603,11 @@ class RebootAfterLanguageChange(Widget):
 
 
 class PopupCSVOnUSB(Widget):
-    def __init__(self, machine):
-        self.machine = machine
-
-        description = self.l.get_str('The final test data has been transferred to the USB stick, please hand it to '
-                                     'Archie or Lettie when possible.')
-        title_string = self.l.get_str('Transfer Failed')
-        ok_string = self.l.get_bold('Ok')
+    def __init__(self):
+        description = 'The final test data has been transferred to the USB stick, please hand it to Archie or Lettie ' \
+                      'when possible. '
+        title_string = 'Transfer Failed'
+        ok_string = 'Ok'
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.7, text_size=(260, None), halign='center', valign='middle', text=description,
