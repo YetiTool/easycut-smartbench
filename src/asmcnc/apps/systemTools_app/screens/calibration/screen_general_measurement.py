@@ -107,7 +107,7 @@ Builder.load_string("""
                 size_hint_y: None
                 height: dp(40)
                 text: "PLOT"
-                # on_press: root.display_results()
+                on_press: root.display_results()
 
 """)
 
