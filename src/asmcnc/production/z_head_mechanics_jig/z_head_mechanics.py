@@ -211,9 +211,6 @@ class ZHeadMechanics(Screen):
     test_running = False
     test_waiting_to_start = False
 
-    phase_one_current = 25
-    phase_two_current = 13
-
     def __init__(self, **kwargs):
         super(ZHeadMechanics, self).__init__(**kwargs)
 
@@ -225,7 +222,7 @@ class ZHeadMechanics(Screen):
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
-        self.m.set_motor_current("Z", self.phase_one_current)
+        self.m.set_motor_current("Z", 25)
         self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
         self.test_running = True
@@ -288,7 +285,7 @@ class ZHeadMechanics(Screen):
 
     def phase_two(self):
         if self.test_running:
-            self.m.set_motor_current("Z", self.phase_two_current)
+            self.m.set_motor_current("Z", 13)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
@@ -303,7 +300,7 @@ class ZHeadMechanics(Screen):
     def finish_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.set_motor_current("Z", self.phase_one_current)
+                self.m.set_motor_current("Z", 25)
                 self.display_results()
                 self.reset_after_stop()
             else:
