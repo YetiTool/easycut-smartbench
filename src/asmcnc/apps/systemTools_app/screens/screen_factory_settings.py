@@ -300,8 +300,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 9
-                        padding: 10
+                        padding: 5
                         spacing: 2
                         ToggleButton:
                             id: maintenance_reminder_toggle
@@ -357,7 +356,7 @@ Builder.load_string("""
 
                             Button:
                                 text: 'Measure'
-                                on_press: root.enter_general_measurement()
+                                # on_press: root.enter_general_measurement()
                             
 
             BoxLayout:
