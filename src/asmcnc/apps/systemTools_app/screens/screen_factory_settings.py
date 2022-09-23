@@ -300,6 +300,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
+                        rows: 9
                         padding: 5
                         spacing: 2
                         ToggleButton:
@@ -347,12 +348,12 @@ Builder.load_string("""
                                 text: 'Stall Jig'
                                 on_press: root.enter_stall_jig()
 
-                        BoxLayout: 
-                            orientation: 'horizontal'
+                        # BoxLayout: 
+                        #     orientation: 'horizontal'
 
-                            Button:
-                                text: 'Set SG thresholds'
-                                on_press: root.enter_set_thresholds()
+                        Button:
+                            text: 'Set SG thresholds'
+                            on_press: root.enter_set_thresholds()
 
                             # Button:
                             #     text: 'Measure'
@@ -954,8 +955,8 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm.sm.current = 'set_thresholds'
 
 
-    def enter_general_measurement(self):
-        pass
+    # def enter_general_measurement(self):
+    #     pass
 
         # if not self.systemtools_sm.sm.has_screen('general_measurement'):
         #     general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
