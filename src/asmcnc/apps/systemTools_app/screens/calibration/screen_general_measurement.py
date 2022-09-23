@@ -164,7 +164,7 @@ class GeneralMeasurementScreen(Screen):
 
     def display_results(self):
         plt.rcParams["figure.figsize"] = (7,3.55)
-        plt.plot(self.get_x_axis(), self.get_y_axis(), 'b')
+        plt.plot(self.get_x_axis(), self.get_y_axis(), 'bx')
         plt.xlabel(self.descriptors[self.x_idx])
         plt.ylabel(self.descriptors[self.y_idx])
         plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
