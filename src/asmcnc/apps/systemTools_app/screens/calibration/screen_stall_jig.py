@@ -526,6 +526,39 @@ class StallJigScreen(Screen):
 
         }
 
+        self.after_reset_x_pos = {
+
+            "X": self.not_pull_off["X"],
+            "Y": self.start_positions["X"]["Y"],
+            "Z": self.start_positions["X"]["Z"]
+
+        }
+
+        self.after_reset_y_pos = {
+
+            "X": self.start_positions["Y"]["X"],
+            "Y": self.not_pull_off["Y"],
+            "Z": self.start_positions["Y"]["Z"]
+
+        }
+
+        self.after_reset_z_pos = {
+
+            "X": self.start_positions["Z"]["X"],
+            "Y": self.not_pull_off["Y"],
+            "Z": self.start_positions["Z"]["Z"]
+
+        }
+
+
+        self.post_reset_start_positions = {
+
+            "X": self.after_reset_x_pos,
+            "Y": self.after_reset_y_pos,
+            "Z": self.after_reset_z_pos
+
+        }
+
         # GUI SET UP
 
         ## FEED/THRESHOLD GRIDS FOR EACH AXIS
@@ -1382,13 +1415,10 @@ class StallJigScreen(Screen):
             self.poll_to_reposition_after_reset = Clock.schedule_once(lambda dt: self.reposition_after_reset(), 0.5)
             return
 
-        pos_dict = self.start_positions[self.current_axis()]
+        pos_dict = self.post_reset_start_positions[self.current_axis()]
         move_sequence = []
-        move_sequence.append("$21=0")
         move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
         move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
-        move_sequence.append("G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()]))
-        move_sequence.append("$21=1")
         self.m.s.start_sequential_stream(move_sequence)
         self.finish_procedure_and_start_next_test()
 
