@@ -13,6 +13,9 @@ Builder.load_string("""
 
     z_move_container:z_move_container
 
+    phase_one_input:phase_one_input
+    phase_two_input:phase_two_input
+
     BoxLayout:
         orientation: 'vertical'
         padding: dp(10)
@@ -32,6 +35,44 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'vertical'
                 spacing: dp(10)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+
+                    TextInput:
+                        id: phase_one_input
+                        font_size: dp(25)
+                        input_filter: 'int'
+                        multiline: False
+
+                    Button:
+                        size_hint_x: 2
+                        text: 'Set phase 1 current (Default 25)'
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        bold: True
+                        on_press: root.set_phase_one_current()
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+
+                    TextInput:
+                        id: phase_two_input
+                        font_size: dp(25)
+                        input_filter: 'int'
+                        multiline: False
+
+                    Button:
+                        size_hint_x: 2
+                        text: 'Set phase 2 current (Default 13)'
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        bold: True
+                        on_press: root.set_phase_two_current()
 
                 Button:
                     text: 'Set power high'
@@ -131,6 +172,14 @@ class ZHeadMechanicsManualMove(Screen):
 
         Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
+
+    def set_phase_one_current(self):
+        if self.phase_one_input.text:
+            self.sm.get_screen('mechanics').phase_one_current = int(self.phase_one_input.text)
+
+    def set_phase_two_current(self):
+        if self.phase_two_input.text:
+            self.sm.get_screen('mechanics').phase_two_current = int(self.phase_two_input.text)
 
     def set_power_high(self):
         self.m.set_motor_current("Z", 25)
