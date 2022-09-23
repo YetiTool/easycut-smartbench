@@ -549,8 +549,8 @@ class StallJigScreen(Screen):
         self.after_reset_z_pos = {
 
             "X": self.start_positions["Z"]["X"],
-            "Y": self.not_pull_off["Y"],
-            "Z": self.start_positions["Z"]["Z"]
+            "Y": self.start_positions["Z"]["Y"],
+            "Z": self.not_pull_off["Z"]
 
         }
 
