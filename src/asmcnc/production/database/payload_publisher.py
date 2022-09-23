@@ -6,6 +6,7 @@ import paramiko
 import traceback
 from datetime import datetime
 import os
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
@@ -89,13 +90,23 @@ class DataPublisher(object):
         )
 
     def send_file_paramiko_sftp(self, file_path):
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(self.creds.ftp_server, username=self.creds.ftp_username, password=self.creds.ftp_password)
-        sftp = ssh.open_sftp()
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(self.creds.ftp_server, username=self.creds.ftp_username, password=self.creds.ftp_password)
+            sftp = ssh.open_sftp()
 
-        file_name = file_path.split('/')[-1]
-        sftp.put(file_path, WORKING_DIR + file_name)
+            file_name = file_path.split('/')[-1]
+            sftp.put(file_path, WORKING_DIR + file_name)
+        except:
+            log("Transferring file failed, copying to USB stick")
+
+            if os.path.exists('/media/usb0'):
+                os.system('cp ' + file_path + ' /media/usb0/')
+                PopupCSVOnUSB()
+            else:
+                log("USB stick not found")
+
 
     def publish(self, data):
         try:
