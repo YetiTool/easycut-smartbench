@@ -1384,9 +1384,11 @@ class StallJigScreen(Screen):
 
         pos_dict = self.start_positions[self.current_axis()]
         move_sequence = []
+        move_sequence.append("$21=0")
         move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
         move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
-        move_sequence.append("G01 G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()]))
+        move_sequence.append("G53 " + self.current_axis() + str(self.not_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()]))
+        move_sequence.append("$21=1")
         self.m.s.start_sequential_stream(move_sequence)
         self.finish_procedure_and_start_next_test()
 
