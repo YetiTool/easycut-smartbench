@@ -71,7 +71,7 @@ class DataPublisher(object):
         self.machine_serial = machine_serial
 
         pika_credentials = pika.PlainCredentials(
-            username=creds.username,
+            username='calibration',
             password=creds.password
         )
 
