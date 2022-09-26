@@ -5,28 +5,39 @@ from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.ticker as plticker
+try: 
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as plticker
+
+except: 
+    pass
 
 Builder.load_string("""
 <GeneralMeasurementScreen>:
 
     load_graph:load_graph
+    plot_title:plot_title
 
     BoxLayout: 
         orientation: "horizontal"
 
-        Image:
-            id: load_graph
-            size_hint: None, None
-            height: dp(355)
-            width: dp(700)
-            x: dp(5)
-            y: dp(5)
-            allow_stretch: True
-            opacity: 0
+        BoxLayout: 
+            orientation: "vertical"
+
+            Label: 
+                id: plot_title
+
+            Image:
+                id: load_graph
+                size_hint: None, None
+                height: dp(355)
+                width: dp(700)
+                x: dp(5)
+                y: dp(5)
+                allow_stretch: True
+                opacity: 0
 
         BoxLayout: 
             orientation: "vertical"
@@ -44,7 +55,7 @@ Builder.load_string("""
 
                 Button:
                     text: "Start"
-                    on_press: root.start_measurment()
+                    on_press: root.start_measurement()
 
                 Button:
                     text: "Stop"
@@ -140,7 +151,7 @@ class GeneralMeasurementScreen(Screen):
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
 
-    def start_measurment(self):
+    def start_measurement(self):
         self.m.start_measuring_running_data('999')
 
     def stop_measurement(self):
@@ -163,16 +174,22 @@ class GeneralMeasurementScreen(Screen):
         if axis == "Y": self.y_idx = value
 
     def display_results(self):
-        plt.rcParams["figure.figsize"] = (7,3.55)
-        xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(), self.get_y_axis()) if (y != -999 and y != None)))
-        plt.plot(xVar, yVar, 'bx')
-        plt.xlabel(self.descriptors[self.x_idx])
-        plt.ylabel(self.descriptors[self.y_idx])
-        plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
-        plt.tight_layout()
-        plt.grid()
-        plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
-        plt.close()
-        self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-        self.load_graph.reload()
-        self.load_graph.opacity = 1
+
+        try: 
+            plt.rcParams["figure.figsize"] = (7,3.55)
+            xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(), self.get_y_axis()) if (y != -999 and y != None)))
+            plt.plot(xVar, yVar, 'bx')
+            plt.xlabel(self.descriptors[self.x_idx])
+            plt.ylabel(self.descriptors[self.y_idx])
+            plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
+            plt.tight_layout()
+            plt.grid()
+            plt.savefig('./asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png')
+            plt.close()
+            self.load_graph.source = './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
+            self.load_graph.reload()
+            self.load_graph.opacity = 1
+            self.plot_title.text = ""
+
+        except: 
+            self.plot_title.text = "Can't plot :("
