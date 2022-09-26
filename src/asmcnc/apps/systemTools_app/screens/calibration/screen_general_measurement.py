@@ -55,7 +55,7 @@ Builder.load_string("""
 
                 Button:
                     text: "Start"
-                    on_press: root.start_measurment()
+                    on_press: root.start_measurement()
 
                 Button:
                     text: "Stop"
@@ -151,7 +151,7 @@ class GeneralMeasurementScreen(Screen):
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
 
-    def start_measurment(self):
+    def start_measurement(self):
         self.m.start_measuring_running_data('999')
 
     def stop_measurement(self):
@@ -184,9 +184,9 @@ class GeneralMeasurementScreen(Screen):
             plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
             plt.tight_layout()
             plt.grid()
-            plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
+            plt.savefig('./asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png')
             plt.close()
-            self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
+            self.load_graph.source = './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
             self.load_graph.reload()
             self.load_graph.opacity = 1
             self.plot_title.text = ""
