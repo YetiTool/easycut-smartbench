@@ -23,18 +23,21 @@ Builder.load_string("""
     BoxLayout: 
         orientation: "horizontal"
 
-        Label: 
-            id: plot_title
+        BoxLayout: 
+            orientation: "vertical"
 
-        Image:
-            id: load_graph
-            size_hint: None, None
-            height: dp(355)
-            width: dp(700)
-            x: dp(5)
-            y: dp(5)
-            allow_stretch: True
-            opacity: 0
+            Label: 
+                id: plot_title
+
+            Image:
+                id: load_graph
+                size_hint: None, None
+                height: dp(355)
+                width: dp(700)
+                x: dp(5)
+                y: dp(5)
+                allow_stretch: True
+                opacity: 0
 
         BoxLayout: 
             orientation: "vertical"
