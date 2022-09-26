@@ -5,18 +5,26 @@ from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.ticker as plticker
+try: 
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as plticker
+
+except: 
+    pass
 
 Builder.load_string("""
 <GeneralMeasurementScreen>:
 
     load_graph:load_graph
+    plot_title:plot_title
 
     BoxLayout: 
         orientation: "horizontal"
+
+        Label: 
+            id: plot_title
 
         Image:
             id: load_graph
@@ -163,16 +171,22 @@ class GeneralMeasurementScreen(Screen):
         if axis == "Y": self.y_idx = value
 
     def display_results(self):
-        plt.rcParams["figure.figsize"] = (7,3.55)
-        xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(), self.get_y_axis()) if (y != -999 and y != None)))
-        plt.plot(xVar, yVar, 'bx')
-        plt.xlabel(self.descriptors[self.x_idx])
-        plt.ylabel(self.descriptors[self.y_idx])
-        plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
-        plt.tight_layout()
-        plt.grid()
-        plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
-        plt.close()
-        self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-        self.load_graph.reload()
-        self.load_graph.opacity = 1
+
+        try: 
+            plt.rcParams["figure.figsize"] = (7,3.55)
+            xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(), self.get_y_axis()) if (y != -999 and y != None)))
+            plt.plot(xVar, yVar, 'bx')
+            plt.xlabel(self.descriptors[self.x_idx])
+            plt.ylabel(self.descriptors[self.y_idx])
+            plt.title(self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx])
+            plt.tight_layout()
+            plt.grid()
+            plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
+            plt.close()
+            self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
+            self.load_graph.reload()
+            self.load_graph.opacity = 1
+            self.plot_title.text = ""
+
+        except: 
+            self.plot_title.text = "Can't plot :("
