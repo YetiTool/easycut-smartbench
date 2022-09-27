@@ -1744,7 +1744,7 @@ class StallJigScreen(Screen):
         self.m.cal_check_threshold_z_max = 2001
         self.test_status_label.text = "POST CAL CHECK"
         self.m.check_x_y_z_calibration(do_reset=False)
-        self.send_data_after_final_calibration_check()
+        self.send_data_after_final_calibration_check(0)
 
     def send_data_after_final_calibration_check(self, dt):
 
