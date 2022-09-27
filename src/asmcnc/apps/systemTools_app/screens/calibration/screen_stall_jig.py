@@ -432,6 +432,9 @@ class StallJigScreen(Screen):
     poll_ready_to_start_moving = None
     populate_and_transfer_logs_event = None
     send_logs_event = None
+    poll_for_send_data_after_final_calibration_check = None
+    run_final_calibration_check_and_then_send_data_event = None
+
 
     ## DATABASE OBJECTS
 
@@ -565,7 +568,9 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
         self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
         self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
-        self.unschedule_event_if_it_exists(self.send_logs_event)        
+        self.unschedule_event_if_it_exists(self.send_logs_event)
+        self.unschedule_event_if_it_exists(self.poll_for_send_data_after_final_calibration_check)
+        self.unschedule_event_if_it_exists(self.run_final_calibration_check_and_then_send_data_event)   
 
         log("Unschedule all events")
 
@@ -1023,6 +1028,7 @@ class StallJigScreen(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 9)
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 10)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, 11)
 
         except:
             log("Could not insert final test stage into DB!!")
@@ -1031,6 +1037,7 @@ class StallJigScreen(Screen):
 
         data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 9)
         cal_data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 10)
+        cal_data_send_successful = self.calibration_db.send_data_through_publisher(self.sn_for_db, 11)
 
         self.send_data_button.disabled = False
 
@@ -1707,15 +1714,39 @@ class StallJigScreen(Screen):
     def end_of_all_tests(self):
 
         if self.all_tests_completed:
-
             log("All tests completed!!")
-            self.m.stop_measuring_running_data()
             self.set_default_thresholds()
             self.restore_acceleration_and_soft_limits()
             self.test_status_label.text = "TESTS COMPLETE"
-            log("Send data")
-            self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send(), 1)
+            self.run_final_calibration_check_and_then_send_data_event = Clock.schedule_once(self.run_final_calibration_check_and_then_send_data, 1)
             return True
+
+    def run_final_calibration_check_and_then_send_data(self, dt):
+        self.m.change_stage_measuring_running_data(11)
+        log("Run a calibration check in all axes")
+        self.m.cal_check_threshold_x_min = -2001
+        self.m.cal_check_threshold_x_max = 2001
+        self.m.cal_check_threshold_y_min = -2001
+        self.m.cal_check_threshold_y_max = 2001
+        self.m.cal_check_threshold_z_min = -2001
+        self.m.cal_check_threshold_z_max = 2001
+        self.test_status_label.text = "POST CAL CHECK"
+        self.m.check_x_y_z_calibration(do_reset=False)
+        self.send_data_after_final_calibration_check()
+
+    def send_data_after_final_calibration_check(self, dt):
+
+        if self.m.checking_calibration_in_progress or self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll for sending data after calibration check")
+            self.poll_for_send_data_after_final_calibration_check = Clock.schedule_once(self.send_data_after_final_calibration_check, 1)
+            return
+
+        if self.m.checking_calibration_fail_info:
+            self.test_status_label.text = "CAL CHECK FAIL"
+
+        self.m.stop_measuring_running_data()
+        log("Send data")
+        self.data_send_event = Clock.schedule_once(lambda dt: self.start_stall_jig_data_send(), 1)
 
     def set_default_thresholds(self):
         self.m.set_threshold_for_axis("X", 250)
