@@ -434,6 +434,7 @@ class StallJigScreen(Screen):
     send_logs_event = None
     poll_for_send_data_after_final_calibration_check = None
     run_final_calibration_check_and_then_send_data_event = None
+    print_registers_just_before_run_tests_starts_event = None
 
 
     ## DATABASE OBJECTS
@@ -571,6 +572,8 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.send_logs_event)
         self.unschedule_event_if_it_exists(self.poll_for_send_data_after_final_calibration_check)
         self.unschedule_event_if_it_exists(self.run_final_calibration_check_and_then_send_data_event)   
+        self.unschedule_event_if_it_exists(self.print_registers_just_before_run_tests_starts_event)     
+
 
         log("Unschedule all events")
 
@@ -1467,15 +1470,24 @@ class StallJigScreen(Screen):
 
         # go to absolute start position (relative to true home)
         if start_pos_bool:
-            self.move_to_start_pos_event = Clock.schedule_once(lambda dt: self.move_all_axes(self.absolute_start_pos, self.tell_user_that_SB_is_ready_to_run_tests), 0.5)
+            self.move_to_start_pos_event = Clock.schedule_once(lambda dt: self.move_all_axes(self.absolute_start_pos, self.print_registers_just_before_run_tests_starts), 0.5)
             return
 
         self.poll_for_setting_up_axis_for_test = Clock.schedule_once(lambda dt: self.set_up_axis_for_test(), 0.5)
 
+    def print_registers_just_before_run_tests_starts(self, dt):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to print registers just before running tests")
+            self.print_registers_just_before_run_tests_starts_event = Clock.schedule_once(self.print_registers_just_before_run_tests_starts, 0.5)
+            return
+
+        self.m.tmc_handshake()
+        self.tell_user_that_SB_is_ready_to_run_tests(0)
 
     def tell_user_that_SB_is_ready_to_run_tests(self, dt):
 
-        if self.smartbench_is_not_ready_for_next_command():
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll to tell user that SB is ready")
             self.tell_user_ready_event = Clock.schedule_once(self.tell_user_that_SB_is_ready_to_run_tests, 0.5)
             return
