@@ -101,7 +101,7 @@ class DataPublisher(object):
         except:
             log("Transferring file failed, copying to USB stick")
 
-            if os.path.exists('/media/usb0'):
+            if os.path.exists('/media/usb'):
                 os.system('cp ' + file_path + ' /media/usb0/')
                 PopupCSVOnUSB()
             else:
