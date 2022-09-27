@@ -1479,7 +1479,7 @@ class StallJigScreen(Screen):
 
     def tell_user_that_SB_is_ready_to_run_tests(self, dt):
 
-        if self.smartbench_is_not_ready_for_next_command() or not self.TMC_registers_have_been_read_in():
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll to tell user that SB is ready")
             self.tell_user_ready_event = Clock.schedule_once(self.tell_user_that_SB_is_ready_to_run_tests, 0.5)
             return
