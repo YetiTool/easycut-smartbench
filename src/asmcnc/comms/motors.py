@@ -7,6 +7,7 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 class motor_class(object):
 
     got_registers = False # this will update the first time that registers are read in
+    got_calibration_coefficients = False
 
     def __init__(self, given_index):
 
@@ -75,6 +76,8 @@ class motor_class(object):
         self.calibrated_at_sgt_setting       = 0
         self.calibrated_at_toff_setting      = 0
         self.calibrated_at_temperature       = 0
+
+        self.got_calibration_coefficients    = False
     
 
 

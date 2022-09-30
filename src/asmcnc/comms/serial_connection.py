@@ -1233,7 +1233,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
-
+                    self.m.TMC_motor[int(motor_index)].got_calibration_coefficients = True
 
                     try: 
 
