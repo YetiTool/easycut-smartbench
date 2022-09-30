@@ -234,7 +234,7 @@ class StallJigScreen(Screen):
     threshold_dict = {
 
         "X": range(100, 375, 25),
-        "Y": range(150, 375, 25),
+        "Y": range(100, 375, 25),
         "Z": range(100, 220, 20) 
 
     }
@@ -429,6 +429,10 @@ class StallJigScreen(Screen):
     poll_to_deenergize_motors = None
     poll_to_energize_motors = None
     poll_to_reenable_hard_limits_and_go_to_next_test = None
+    poll_ready_to_start_moving = None
+    populate_and_transfer_logs_event = None
+    send_logs_event = None
+    print_registers_just_before_run_tests_starts_event = None
 
     ## DATABASE OBJECTS
 
@@ -446,8 +450,10 @@ class StallJigScreen(Screen):
     ]
 
     stage_id = 9
-    
 
+    data_send_complete = False
+    log_send_complete = False
+    
     ## STORE ALL THE GRID BUTTONS
 
     grid_button_objects = {}
@@ -558,6 +564,10 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_deenergize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_energize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
+        self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
+        self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
+        self.unschedule_event_if_it_exists(self.send_logs_event)
+        self.unschedule_event_if_it_exists(self.print_registers_just_before_run_tests_starts_event)     
 
         log("Unschedule all events")
 
@@ -983,9 +993,12 @@ class StallJigScreen(Screen):
         self.send_data_button.disabled = True
         self.test_status_label.text = "SENDING RESULTS"
         log("Sending data...")
+        self.data_send_complete = False
+        self.log_send_complete = False
         self.m.stop_measuring_running_data()
-
         Clock.schedule_once(self.do_stall_jig_data_send, 0.5)
+        self.populate_and_transfer_logs_event = Clock.schedule_once(lambda dt: self.populate_and_transfer_logs(), 1)
+
 
     def do_stall_jig_data_send(self, dt):
         
@@ -1033,6 +1046,30 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "DATA NOT SENT!"
         
         self.enable_all_buttons()
+
+
+    def populate_and_transfer_logs(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to get registers for logs")
+            self.populate_and_transfer_logs_event = Clock.schedule_once(lambda dt: self.populate_and_transfer_logs(), 1)
+            return
+
+        log("Get registers into logs")
+        self.m.tmc_handshake()
+        self.send_logs()
+
+
+    def send_logs(self):
+
+        if self.smartbench_is_not_ready_for_next_command() and not self.m.TMC_registers_have_been_read_in():
+            if self.VERBOSE: log("Poll to send logs once registers are in")
+            self.send_logs_event = Clock.schedule_once(lambda dt: self.send_logs(), 1)
+            return
+
+        log("Registers are in, ready to send logs")
+
+
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST
@@ -1359,13 +1396,24 @@ class StallJigScreen(Screen):
 
         log("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
-        self.m.toggle_reset_pin()
         self.choose_test(0,0,0)
+
+        # GET REGISTERS
+        self.m.tmc_handshake()
+        self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
+        return True
+    
+    def start_moving(self):
+
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
+            if self.VERBOSE: log("Poll for registers having been read in, and ready to move")
+            self.poll_ready_to_start_moving = Clock.schedule_once(lambda dt: self.start_moving(), 1)
+            return
+
         self.start_homing()
 
         # CALIBRATION CHECK
         self.poll_for_ready_to_check_calibration = Clock.schedule_once(lambda dt: self.full_calibration_check(), 1)
-        return True
 
     def full_calibration_check(self):
         if self.smartbench_is_not_ready_for_next_command():
@@ -1383,7 +1431,7 @@ class StallJigScreen(Screen):
             self.m.cal_check_threshold_y_max = 2001
             self.m.cal_check_threshold_z_min = -2001
             self.m.cal_check_threshold_z_max = 2001
-            self.m.check_x_y_z_calibration()
+            self.m.check_x_y_z_calibration(do_reset=True)
         self.poll_for_ready_to_run_tests = Clock.schedule_once(self.ready_to_run_tests, 1)
 
     def ready_to_run_tests(self, dt):
@@ -1414,15 +1462,24 @@ class StallJigScreen(Screen):
 
         # go to absolute start position (relative to true home)
         if start_pos_bool:
-            self.move_to_start_pos_event = Clock.schedule_once(lambda dt: self.move_all_axes(self.absolute_start_pos, self.tell_user_that_SB_is_ready_to_run_tests), 0.5)
+            self.move_to_start_pos_event = Clock.schedule_once(lambda dt: self.move_all_axes(self.absolute_start_pos, self.print_registers_just_before_run_tests_starts), 0.5)
             return
 
         self.poll_for_setting_up_axis_for_test = Clock.schedule_once(lambda dt: self.set_up_axis_for_test(), 0.5)
 
+    def print_registers_just_before_run_tests_starts(self, dt):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to print registers just before running tests")
+            self.print_registers_just_before_run_tests_starts_event = Clock.schedule_once(self.print_registers_just_before_run_tests_starts, 0.5)
+            return
+
+        self.m.tmc_handshake()
+        self.tell_user_that_SB_is_ready_to_run_tests(0)
 
     def tell_user_that_SB_is_ready_to_run_tests(self, dt):
 
-        if self.smartbench_is_not_ready_for_next_command():
+        if self.smartbench_is_not_ready_for_next_command() or not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll to tell user that SB is ready")
             self.tell_user_ready_event = Clock.schedule_once(self.tell_user_that_SB_is_ready_to_run_tests, 0.5)
             return

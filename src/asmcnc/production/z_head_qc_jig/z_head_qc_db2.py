@@ -47,7 +47,7 @@ class ZHeadQCDB2(Screen):
     def do_data_send_when_ready(self):
 
         if self.calibration_db.processing_running_data:
-            log("Poll for sending stall jig statuses when ready")
+            log("Poll for sending ZH QC statuses when ready")
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
 

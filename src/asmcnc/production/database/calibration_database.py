@@ -11,7 +11,7 @@ def log(message):
 
 
 try:
-    import pyodbc
+    import MySQLdb
     from influxdb import InfluxDBClient
 
 except:
@@ -32,13 +32,13 @@ class CalibrationDatabase(object):
     }
 
 
-    if sys.platform == 'win32' or sys.platform == 'darwin':
-        # ODBC Driver 17 for SQL Server ON WINDOWS
-        connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
-
-    else: 
-        # FreeTDS
-        connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'        
+    # if sys.platform == 'win32' or sys.platform == 'darwin':
+    #     # ODBC Driver 17 for SQL Server ON WINDOWS
+    #     connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
+    #
+    # else:
+    #     # FreeTDS
+    #     connection_string = 'DRIVER={FreeTDS};SERVER=%s,%s;DATABASE=%s;UID=%s;PWD=%s;TDS_Version = 7.2'
 
     def __init__(self):
         self.conn = None
@@ -65,9 +65,8 @@ class CalibrationDatabase(object):
                 import credentials
 
         try:
-            self.conn = pyodbc.connect(self.connection_string % (credentials.server, credentials.port,
-                                                                 credentials.database, credentials.username,
-                                                                 credentials.password))
+            self.conn = MySQLdb.connect(host=credentials.server, db=credentials.database, user=credentials.username,
+                                        passwd=credentials.password)
             log("Connected to database")
 
         except:
@@ -91,11 +90,11 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
             query = "INSERT INTO Machines (MachineSerialNumber, ZHeadSerialNumber, LowerBeamSerialNumber, " \
                     "UpperBeamSerialNumber, ConsoleSerialNumber, YBenchSerialNumber, SpindleSerialNumber, " \
-                    "SoftwareVersion, FirmwareVersion, Squareness, DateProduced) VALUES (?, ?, ?, ?, " \
-                    "?, ?, ?, ?, ?, ?, ?)"
+                    "SoftwareVersion, FirmwareVersion, Squareness, DateProduced) VALUES (%s, %s, %s, %s, " \
+                    "%s, %s, %s, %s, %s, %s, %s)"
 
-            params = (machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial, console_serial,
-                      y_bench_serial, spindle_serial, software_version, firmware_version, squareness, date)
+            params = [machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial, console_serial,
+                      y_bench_serial, spindle_serial, software_version, firmware_version, squareness, date]
 
             cursor.execute(query, params)
 
@@ -103,26 +102,26 @@ class CalibrationDatabase(object):
 
     def do_z_head_coefficients_exist(self, combined_id):
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM ZHeadCoefficients WHERE Id = ?"
+            query = "SELECT Id FROM ZHeadCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             return cursor.fetchone() is not None
 
     def do_lower_beam_coefficients_exist(self, combined_id):
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = ?"
+            query = "SELECT Id FROM LowerBeamCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             return cursor.fetchone() is not None
 
     def delete_z_head_coefficients(self, combined_id):
         log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
-            query = "DELETE FROM ZHeadCoefficients WHERE Id = ?"
+            query = "DELETE FROM ZHeadCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             self.delete_coefficients(combined_id)
 
@@ -131,18 +130,18 @@ class CalibrationDatabase(object):
     def delete_coefficients(self, combined_id):
         log("Deleting existing data from Coefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
-            query = "DELETE FROM Coefficients WHERE SubAssemblyId = ?"
+            query = "DELETE FROM Coefficients WHERE SubAssemblyId = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
         self.conn.commit()
 
     def delete_lower_beam_coefficients(self, combined_id):
         log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
-            query = "DELETE FROM LowerBeamCoefficients WHERE Id = ?"
+            query = "DELETE FROM LowerBeamCoefficients WHERE Id = %s"
 
-            cursor.execute(query, combined_id)
+            cursor.execute(query, [combined_id])
 
             self.delete_coefficients(combined_id)
 
@@ -156,9 +155,9 @@ class CalibrationDatabase(object):
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO ZHeadCoefficients (Id, ZHeadSerialNumber, MotorIndex, CalibrationStageId) VALUES (" \
-                    "?, ?, ?, ?)"
+                    "%s, %s, %s, %s)"
 
-            params = (combined_id, zh_serial, motor_index, calibration_stage_id)
+            params = [combined_id, zh_serial, motor_index, calibration_stage_id]
 
             cursor.execute(query, params)
 
@@ -172,9 +171,9 @@ class CalibrationDatabase(object):
 
         with self.conn.cursor() as cursor:
             query = "INSERT INTO LowerBeamCoefficients (Id, LowerBeamSerialNumber, MotorIndex, CalibrationStageId) " \
-                    "VALUES (?, ?, ?, ?)"
+                    "VALUES (%s, %s, %s, %s)"
 
-            params = (combined_id, lb_serial, motor_index, calibration_stage_id)
+            params = [combined_id, lb_serial, motor_index, calibration_stage_id]
 
             cursor.execute(query, params)
 
@@ -187,24 +186,24 @@ class CalibrationDatabase(object):
         with self.conn.cursor() as cursor:
 
             if temp is not None:
-                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES (?, ?, ?)"
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient, AmbientTemperature) VALUES (%s, %s, %s)"
                 for coefficient in coefficients:
-                    params = (combined_id, coefficient, temp)
+                    params = [combined_id, coefficient, temp]
                     cursor.execute(query, params)
 
             else:
-                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES (?, ?)"
+                query = "INSERT INTO Coefficients (SubAssemblyId, Coefficient) VALUES (%s, %s)"
                 for coefficient in coefficients:
-                    params = (combined_id, coefficient)
+                    params = [combined_id, coefficient]
                     cursor.execute(query, params)
 
         self.conn.commit()
 
     def insert_stage(self, description):
         with self.conn.cursor() as cursor:
-            query = "INSERT INTO Stages (Description) VALUES (?)"
+            query = "INSERT INTO Stages (Description) VALUES (%s)"
 
-            params = description
+            params = [description]
 
             cursor.execute(query, params)
 
@@ -241,9 +240,9 @@ class CalibrationDatabase(object):
                 return
 
             with self.conn.cursor() as cursor:
-                query = "INSERT INTO CalibrationCheckStages (Id, SubSerialNumber, StageId) VALUES (?, ?, ?)"
+                query = "INSERT INTO CalibrationCheckStages (Id, SubSerialNumber, StageId) VALUES (%s, %s, %s)"
 
-                params = (combined_id, sub_serial, stage_id)
+                params = [combined_id, sub_serial, stage_id]
 
                 cursor.execute(query, params)
 
@@ -255,9 +254,9 @@ class CalibrationDatabase(object):
     def does_calibration_check_stage_already_exist(self, combined_id_only_ints):
 
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM CalibrationCheckStages WHERE Id = ?"
+            query = "SELECT Id FROM CalibrationCheckStages WHERE Id = %s"
 
-            params = combined_id_only_ints
+            params = [combined_id_only_ints]
 
             cursor.execute(query, params)
             data = cursor.fetchone()
@@ -276,9 +275,9 @@ class CalibrationDatabase(object):
                 return
 
             with self.conn.cursor() as cursor:
-                query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES (?, ?, ?)"
+                query = "INSERT INTO FinalTestStage (Id, MachineSerialNumber, FTStageId) VALUES (%s, %s, %s)"
 
-                params = (combined_id, machine_serial, ft_stage_id)
+                params = [combined_id, machine_serial, ft_stage_id]
 
                 cursor.execute(query, params)
 
@@ -290,9 +289,9 @@ class CalibrationDatabase(object):
     def does_final_test_stage_already_exist(self, combined_id_only_ints):
 
         with self.conn.cursor() as cursor:
-            query = "SELECT Id FROM FinalTestStage WHERE Id = ?"
+            query = "SELECT Id FROM FinalTestStage WHERE Id = %s"
 
-            params = combined_id_only_ints
+            params = [combined_id_only_ints]
 
             cursor.execute(query, params)
             data = cursor.fetchone()
@@ -313,12 +312,12 @@ class CalibrationDatabase(object):
             query = "INSERT INTO FinalTestStatistics (FTID, XForwardAvg, XForwardPeak, XBackwardAvg, XBackwardPeak, " \
                     "YForwardAvg, YForwardPeak, YBackwardAvg, YBackwardPeak, Y1ForwardAvg, Y1ForwardPeak, " \
                     "Y1BackwardAvg, Y1BackwardPeak, Y2ForwardAvg, Y2ForwardPeak, Y2BackwardAvg, Y2BackwardPeak, " \
-                    "ZForwardAvg, ZForwardPeak, ZBackwardAvg, ZBackwardPeak) VALUES (?, ?, ?, ?, ?, ?, ?, ?, " \
-                    "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    "ZForwardAvg, ZForwardPeak, ZBackwardAvg, ZBackwardPeak) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, " \
+                    "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-            params = (combined_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak, y_forw_avg, y_forw_peak,
+            params = [combined_id, x_forw_avg, x_forw_peak, x_backw_avg, x_backw_peak, y_forw_avg, y_forw_peak,
                       y_backw_avg, y_backw_peak, y1_forw_avg, y1_forw_peak, y1_backw_avg, y1_backw_peak, y2_forw_avg,
-                      y2_forw_peak, y2_backw_avg, y2_backw_peak, z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak)
+                      y2_forw_peak, y2_backw_avg, y2_backw_peak, z_forw_avg, z_forw_peak, z_backw_avg, z_backw_peak]
 
             cursor.execute(query, params)
 
@@ -333,8 +332,8 @@ class CalibrationDatabase(object):
             with self.conn.cursor() as cursor:
                 query = "INSERT INTO FinalTestStatuses (FTID, XCoordinate, YCoordinate, ZCoordinate, XDirection, " \
                         "YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, " \
-                        "MOTTemperature, Timestamp, Feedrate, XWeight, YWeight, ZWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?," \
-                        " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        "MOTTemperature, Timestamp, Feedrate, XWeight, YWeight, ZWeight) VALUES (%s, %s, %s, %s, %s, %s, %s, %s," \
+                        " %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 cursor.executemany(query, statuses)
 
@@ -347,9 +346,9 @@ class CalibrationDatabase(object):
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
-            query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = ?"
+            query = "SELECT ZHeadSerialNumber, LowerBeamSerialNumber FROM Machines WHERE MachineSerialNumber = %s"
 
-            params = machine_serial
+            params = [machine_serial]
             cursor.execute(query, params)
 
             data = cursor.fetchone()
@@ -360,9 +359,9 @@ class CalibrationDatabase(object):
         combined_id = (lb_serial + str(motor_index) + str(stage_id))[2:]
 
         with self.conn.cursor() as cursor:
-            query = "SELECT Coefficient FROM Coefficients WHERE SubAssemblyId = ?"
+            query = "SELECT Coefficient FROM Coefficients WHERE SubAssemblyId = %s"
 
-            params = combined_id
+            params = [combined_id]
 
             cursor.execute(query, params)
 
@@ -398,17 +397,10 @@ class CalibrationDatabase(object):
 
     def get_all_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
-            query = "SELECT + \
-                    ZHeadSerialNumber, \
-                    LowerBeamSerialNumber, \
-                    UpperBeamSerialNumber, \
-                    ConsoleSerialNumber, \
-                    YBenchSerialNumber, \
-                    SpindleSerialNumber, \
-                    Squareness \
-                    FROM Machines WHERE MachineSerialNumber = ?"
+            query = """SELECT ZHeadSerialNumber, LowerBeamSerialNumber, UpperBeamSerialNumber, ConsoleSerialNumber,
+            YBenchSerialNumber, SpindleSerialNumber, Squareness FROM Machines WHERE MachineSerialNumber = %s"""
 
-            params = machine_serial
+            params = [machine_serial]
 
             cursor.execute(query, params)
 
@@ -439,7 +431,7 @@ class CalibrationDatabase(object):
 
             with self.conn.cursor() as cursor:
                 query = "INSERT INTO StallTest (FTID, Axis, Feedrate, Threshold, FeedReported, " \
-                        "SGReported, CoordinateReported) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                        "SGReported, CoordinateReported) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
                 cursor.executemany(query, stall_events)
                 self.conn.commit()

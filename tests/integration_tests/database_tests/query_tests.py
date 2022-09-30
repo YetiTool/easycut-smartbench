@@ -80,8 +80,8 @@ class SQLQueryTests(unittest.TestCase):
     # # Serial numbers
 
     @unittest.skip("inserts test data into db")
-    # def test_insert_serial_numbers(self):
-    #     self.db.insert_serial_numbers('ys62222', 'zh2222', 'xl2222', 'xu2222','cs2222', 'yb2222', '123456Y', 'v9.9.9', '9.9.9', '0.0')
+    def test_insert_serial_numbers(self):
+        self.db.insert_serial_numbers('ys62222', 'zh2222', 'xl2222', 'xu2222','cs2222', 'yb2222', '123456Y', 'v9.9.9', '9.9.9', '0.0')
 
     @unittest.skip("tries to retrieve test data from db")
     def test_get_serials_by_machine_serial(self):
@@ -109,7 +109,7 @@ class SQLQueryTests(unittest.TestCase):
 
     @unittest.skip("inserts test data into db")
     def test_insert_final_test_statistics(self):
-        statistics_list = ['ys62222', 6, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        statistics_list = ['ys62222', 5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
         self.db.insert_final_test_statistics(*statistics_list)
 
     # # Statuses
