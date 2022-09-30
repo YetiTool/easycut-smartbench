@@ -2828,6 +2828,11 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
             return
 
+        if not self.calibration_coefficients_have_been_read_in():
+            self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 5)
+            return
+
         self.stream_calibration_check_files(axes)        
 
 
@@ -3037,6 +3042,13 @@ class RouterMachine(object):
         if not self.TMC_motor[TMC_Z].got_registers: return False
         return True
 
+    def calibration_coefficients_have_been_read_in(self):
+        if not self.TMC_motor[TMC_X1].got_calibration_coefficients: return False
+        if not self.TMC_motor[TMC_X2].got_calibration_coefficients: return False
+        if not self.TMC_motor[TMC_Y1].got_calibration_coefficients: return False
+        if not self.TMC_motor[TMC_Y2].got_calibration_coefficients: return False
+        if not self.TMC_motor[TMC_Z].got_calibration_coefficients: return False
+        return True
 
     def store_tmc_params_in_eeprom(self):
         self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
