@@ -450,8 +450,8 @@ class CalibrationDatabase(object):
         "2": ([], "CalibrationCheckStatuses", "CalibrationCheckQC"),
         "9": ([], "FinalTestStatuses", "StallExperiment"),
         "10": ([], "FinalTestStatuses", "CalibrationCheckStall"),
-        "11": ([], "CalibrationCheckStatuses", "CalibrationCheckZH"),
-        "12": ([], "CalibrationCheckStatuses", "CalibrationCheckLB")
+        "12": ([], "CalibrationCheckStatuses", "CalibrationCheckZH"),
+        "13": ([], "CalibrationCheckStatuses", "CalibrationCheckXL")
 
     }
     def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
