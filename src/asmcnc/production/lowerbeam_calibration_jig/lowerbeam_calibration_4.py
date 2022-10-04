@@ -96,6 +96,8 @@ class LBCalibration4(Screen):
 
     def do_data_send(self, dt):
 
+        self.calibration_db.set_up_connection()
+
         serial_number = self.serial_no_input.text.replace(' ', '').lower()
         validated = self.validate_serial_number(serial_number)
 
