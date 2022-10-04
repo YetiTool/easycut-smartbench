@@ -115,7 +115,7 @@ class LBCalibration4(Screen):
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
 
-        if self.calibration_db.send_data_through_publisher(self.serial_number, 2):
+        if self.calibration_db.send_data_through_publisher(self.serial_number, 13):
 
             try:
                 self.send_calibration_payload(TMC_Y1, self.serial_number)
