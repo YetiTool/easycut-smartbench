@@ -140,9 +140,11 @@
       name: paramiko==2.0.0
     ignore_errors: yes
   - name: Copying the wl file
-    template:
-      src: wl
+    copy:
+      src: /home/pi/easycut-smartbench/ansible/templates/wl
       dest: /home/pi/wl
+      owner: root
+      group: root
       mode: '0755'
   # - name: Copying the firmware file
   #   template:
