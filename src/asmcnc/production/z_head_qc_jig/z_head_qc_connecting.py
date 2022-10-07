@@ -52,8 +52,8 @@ class ZHeadQCConnecting(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.connecting_label.text = "Connecting to Z Head..."
-        self.z_current = 25
-        self.x_current = 26
+        self.z_current = 5
+        self.x_current = 5
 
     def on_enter(self):
 
@@ -116,7 +116,7 @@ class ZHeadQCConnecting(Screen):
         self.connecting_label.text = "Setting current..."
         log("Setting Z current to 25...")
         log("Setting X current to 26...")
-        if self.m.set_motor_current("Z", self.z_current) and self.m.set_motor_current("X", self.x_current): 
+        if self.m.set_motor_current("Z", self.z_current) and self.m.set_motor_current("X", self.x_current):
             Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
         else: 
             log("Z Head not Idle yet, waiting...")
