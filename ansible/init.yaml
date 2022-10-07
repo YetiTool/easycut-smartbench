@@ -146,8 +146,10 @@
       owner: root
       group: root
       mode: '0755'
-  # - name: Copying the firmware file
-  #   template:
-  #     src: brcmfmac43455-sdio.bin
-  #     dest: /lib/firmware/brcm/brcmfmac43455-sdio.bin
-  #     mode: '0644'
+  - name: Copying the firmware file
+    copy:
+      src: /home/pi/easycut-smartbench/ansible/templates/brcmfmac43455-sdio.bin
+      dest: /lib/firmware/brcm/brcmfmac43455-sdio.bin
+      owner: root
+      group: root
+      mode: '0644'
