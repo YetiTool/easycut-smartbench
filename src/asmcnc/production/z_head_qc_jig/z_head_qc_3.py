@@ -48,8 +48,8 @@ Builder.load_string("""
 class ZHeadQC3(Screen):
 
     timer_started = False
-    one_minute = 60 # 60 seconds
-    seconds = one_minute*0.1
+    one_minute = 1 # 60 seconds
+    seconds = one_minute*30
 
     def __init__(self, **kwargs):
         super(ZHeadQC3, self).__init__(**kwargs)
@@ -104,7 +104,7 @@ class ZHeadQC3(Screen):
         self.sm.current = 'qc2'
 
     def reset_timer(self):
-        self.seconds = self.one_minute * 0.1
+        self.seconds = self.one_minute * 30
         self.timer_started = False
         self.user_text.text = "Getting ready..."
         self.calibrate_time.text = '0:30:00'
