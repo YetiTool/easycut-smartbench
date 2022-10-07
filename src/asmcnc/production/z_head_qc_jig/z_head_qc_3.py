@@ -104,7 +104,7 @@ class ZHeadQC3(Screen):
         self.sm.current = 'qc2'
 
     def reset_timer(self):
-        self.seconds = self.one_minute * 30
+        self.seconds = self.one_minute * 0.1
         self.timer_started = False
         self.user_text.text = "Getting ready..."
         self.calibrate_time.text = '0:30:00'
