@@ -144,8 +144,8 @@
       src: wl
       dest: /home/pi/wl
       mode: '0755'
-  - name: Copying the firmware file
-    template:
-      src: brcmfmac43455-sdio.bin
-      dest: /lib/firmware/brcm/brcmfmac43455-sdio.bin
-      mode: '0644'
+  # - name: Copying the firmware file
+  #   template:
+  #     src: brcmfmac43455-sdio.bin
+  #     dest: /lib/firmware/brcm/brcmfmac43455-sdio.bin
+  #     mode: '0644'
