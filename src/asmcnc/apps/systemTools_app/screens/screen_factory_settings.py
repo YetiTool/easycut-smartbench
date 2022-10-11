@@ -773,6 +773,14 @@ class FactorySettingsScreen(Screen):
 
     def full_console_update(self):
 
+        try:
+            if self.m.s.setting_54:
+                warning_message = 'Please ensure $54 is set to 0 before doing an update.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                return
+        except:
+            pass
+
         self.console_update_button.text = "Doing update,\nplease wait..."
         self.remove_csv_files()
         self.remove_creds_file()
