@@ -153,3 +153,48 @@
       owner: root
       group: root
       mode: '0644'
+  - name: Copying test 2.4b
+    copy:
+      src: /home/pi/easycut-smartbench/src/2.4GHz_802.11b_1_mbs_ch_1.sh
+      dest: /home/pi/2.4GHz_802.11b_1_mbs_ch_1.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test 2.4g
+    copy:
+      src: /home/pi/easycut-smartbench/src/2.4GHz_802.11g_6_mbs_ch_1.sh
+      dest: /home/pi/2.4GHz_802.11g_6_mbs_ch_1.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test 2.4n
+    copy:
+      src: /home/pi/easycut-smartbench/src/2.4GHz_802.11n_20MHz_MCS0_ch_1.sh
+      dest: /home/pi/2.4GHz_802.11n_20MHz_MCS0_ch_1.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test 5180
+    copy:
+      src: /home/pi/easycut-smartbench/src/5GHz_5180MHz_200mW.sh
+      dest: /home/pi/5GHz_5180MHz_200mW.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test 5260
+    copy:
+      src: /home/pi/easycut-smartbench/src/5GHz_5260MHz_200mW.sh
+      dest: /home/pi/5GHz_5260MHz_200mW.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test 5755
+    copy:
+      src: /home/pi/easycut-smartbench/src/5GHz_5755MHz_4000mW.sh
+      dest: /home/pi/5GHz_5755MHz_4000mW.sh
+      owner: root
+      group: root
+      mode: '0644'
+
+
+      
