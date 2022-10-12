@@ -22,6 +22,7 @@ class ZHeadQCDB2(Screen):
         self.calibration_db = kwargs['calibration_db']
 
     def send_calibration_payload(self, motor_index):
+
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
 
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
@@ -41,17 +42,17 @@ class ZHeadQCDB2(Screen):
     def prep_data_send(self, dt):
 
         self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.serial_number)
-        self.calibration_db.insert_calibration_check_stage(self.serial_number, 2)
+        self.calibration_db.insert_calibration_check_stage(self.serial_number, 12)
         self.do_data_send_when_ready()
 
     def do_data_send_when_ready(self):
 
         if self.calibration_db.processing_running_data:
-            log("Poll for sending ZH QC statuses when ready")
+            print("Poll for sending ZH QC statuses when ready")
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
 
-        if self.calibration_db.send_data_through_publisher(self.serial_number, 2):
+        if self.calibration_db.send_data_through_publisher(self.serial_number, 12):
 
             try:
                 self.send_calibration_payload(TMC_Z)
