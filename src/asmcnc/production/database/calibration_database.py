@@ -450,6 +450,7 @@ class CalibrationDatabase(object):
         "2": ([], "CalibrationCheckStatuses", "CalibrationCheckQC"),
         "9": ([], "FinalTestStatuses", "StallExperiment"),
         "10": ([], "FinalTestStatuses", "CalibrationCheckStall"),
+        "11": ([], "FinalTestStatuses", "CalibrationCheckAfterStall"),
         "12": ([], "CalibrationCheckStatuses", "CalibrationCheckZH"),
         "13": ([], "CalibrationCheckStatuses", "CalibrationCheckXL")
 
