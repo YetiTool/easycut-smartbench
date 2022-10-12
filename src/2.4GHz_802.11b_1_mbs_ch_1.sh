@@ -33,6 +33,6 @@ sleep 5
 
 echo "Stopping test"
 
-sudo .wl/ -i wlan0 pkteng_stop
+sudo ./wl -i wlan0 pkteng_stop
 
 echo "End of test: "$TEST
