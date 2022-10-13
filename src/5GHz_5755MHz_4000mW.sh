@@ -28,7 +28,7 @@ echo "Begining test: "$TEST
 
 sudo ./wl -i wlan0 pkteng_start 00:11:22:33:44:55 tx 20 1500 0
 
-sleep 10
+sleep 120
 
 echo "Stopping test"
 
