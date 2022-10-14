@@ -210,6 +210,11 @@
       owner: root
       group: root
       mode: '0644'
+  - name: Delete bt disable 
+    lineinfile:
+      path: /boot/config.txt
+      line: 'dtoverlay=pi3-disable-bt '
+      state: absent
 
 
 
