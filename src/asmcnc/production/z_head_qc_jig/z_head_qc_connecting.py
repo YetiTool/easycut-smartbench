@@ -56,8 +56,8 @@ class ZHeadQCConnecting(Screen):
         self.x_current = 26
 
         # IMPORTANT: uncomment below to run z head qc on riggy
-        self.z_current = 5
-        self.x_current = 5
+        #self.z_current = 5
+        #self.x_current = 5
 
     def on_enter(self):
 
