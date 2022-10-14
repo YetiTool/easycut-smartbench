@@ -52,6 +52,10 @@ class ZHeadQCConnecting(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.connecting_label.text = "Connecting to Z Head..."
+        self.z_current = 25
+        self.x_current = 26
+
+        # IMPORTANT: uncomment below to run z head qc on riggy
         self.z_current = 5
         self.x_current = 5
 
