@@ -22,6 +22,7 @@ class ZHeadQCDB2(Screen):
         self.calibration_db = kwargs['calibration_db']
 
     def send_calibration_payload(self, motor_index):
+        self.calibration_db.set_up_connection()
 
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
 
