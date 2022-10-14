@@ -108,8 +108,12 @@ class LBCalibration4(Screen):
         self.calibration_db.insert_calibration_check_stage(self.serial_number, 2)
         self.do_data_send_when_ready()
 
-    def do_data_send_when_ready(self):
+        self.calibration_db.set_up_connection()
 
+        serial_number = self.serial_no_input.text.replace(' ', '').lower()
+        validated = self.validate_serial_number(serial_number)
+        
+    def do_data_send_when_ready(self):
         if self.calibration_db.processing_running_data:
             log("Poll for sending LB QC statuses when ready")
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
