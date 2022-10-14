@@ -189,6 +189,29 @@
       owner: root
       group: root
       mode: '0644'
+  - name: Copying test bt low
+    copy:
+      src: /home/pi/easycut-smartbench/src/bluetooth_low.sh
+      dest: /home/pi/bluetooth_low.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test bt med
+    copy:
+      src: /home/pi/easycut-smartbench/src/bluetooth_med.sh
+      dest: /home/pi/bluetooth_med.sh
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Copying test bt high
+    copy:
+      src: /home/pi/easycut-smartbench/src/bluetooth_high.sh
+      dest: /home/pi/bluetooth_high.sh
+      owner: root
+      group: root
+      mode: '0644'
+
+
 
 
       
