@@ -730,6 +730,7 @@ class OvernightTesting(Screen):
     start_last_rectangle = None
     run_event_after_datum_set = None
     start_tuning_event = None
+    _stream_overnight_file_event = None
 
     checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -1147,6 +1148,7 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.start_last_rectangle)
         self._unschedule_event(self.run_event_after_datum_set)
         self._unschedule_event(self.poll_for_tuning_completion)
+        self._unschedule_event(self._stream_overnight_file_event)
 
         # also stop measurement running
         self.overnight_running = False
@@ -1369,8 +1371,7 @@ class OvernightTesting(Screen):
             return
 
         self.setup_arrays()
-        self.m.set_workzone_to_pos_xy()
-        self.m.set_jobstart_z()
+        self._set_datums_in_xyz_without_leds()
         self.set_stage("FullyCalibratedTest")
         self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('spiral_file'), 3)
         log("Running fully calibrated final run...")
@@ -1394,8 +1395,7 @@ class OvernightTesting(Screen):
             self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 3)
             return
 
-        self.m.set_workzone_to_pos_xy()
-        self.m.set_jobstart_z()
+        self._set_datums_in_xyz_without_leds()
         self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('five_rectangles'),
                                                              3)
         log("Running last rectangle")
@@ -1443,13 +1443,16 @@ class OvernightTesting(Screen):
     # FILE STREAMING FUNCTIONS
 
     def _not_ready_to_stream(self):
-        if self.m.state().startswith('Idle') and not self.overnight_running:
+        if self.m.state().startswith('Idle') and not self.overnight_running and not self.m.s.is_sequential_streaming:
             return False
 
         else:
             return True
 
     def _stream_overnight_file(self, filename_end):
+
+        if self._not_ready_to_stream():
+            self._stream_overnight_file_event = Clock.schedule_once(lambda dt: self._stream_overnight_file(filename_end), 2)
 
         self.overnight_running = True
 
@@ -1476,6 +1479,16 @@ class OvernightTesting(Screen):
             return False
 
         return True
+
+    def _set_datums_in_xyz_without_leds(self):
+
+        list_to_stream = [
+                        'G10 L20 P1 X0 Y0',
+                        'G10 L20 P1 Z0',
+                        '$#'
+        ]
+
+        self.m.s.start_sequential_stream(list_to_stream)
 
     ## DATA SEND FUNCTIONS
 
