@@ -1395,7 +1395,7 @@ class OvernightTesting(Screen):
             self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 3)
             return
 
-        self.self._set_datums_in_xyz_without_leds()
+        self._set_datums_in_xyz_without_leds()
         self.run_event_after_datum_set = Clock.schedule_once(lambda dt: self._stream_overnight_file('five_rectangles'),
                                                              3)
         log("Running last rectangle")
