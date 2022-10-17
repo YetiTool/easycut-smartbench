@@ -49,7 +49,7 @@ Builder.load_string("""
                             halign: 'left'
                             valign: 'middle'
                             padding: [dp(10),0]
-                            on_press: root.test_motor_chips()
+                            on_press: root.new_test_motor_chips()
                         Image:
                             id: motor_chips_check
                             source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -258,6 +258,34 @@ class LowerBeamQC(Screen):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
+
+    def is_relative_move_safe(self, distance):
+        if self.m.mpos_y() + distance > self.m.y_max_jog_abs_limit:
+            return False
+        elif self.m.mpos_y() + distance < self.m.y_min_jog_abs_limit:
+            return False
+        else:
+            return True
+
+    def get_closest_limit(self, position):
+        if abs(position - self.m.y_min_jog_abs_limit) < abs(position - self.m.y_max_jog_abs_limit):
+            return self.m.y_min_jog_abs_limit
+        else:
+            return self.m.y_max_jog_abs_limit
+
+    def new_test_motor_chips(self):
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+        if self.is_relative_move_safe(500):
+            self.m.jog_relative('Y', 500, 6000)
+        elif self.is_relative_move_safe(-500):
+            self.m.jog_relative('Y', -500, 6000)
+        else:
+            self.m.jog_absolute_single_axis('Y', self.get_closest_limit(self.m.mpos_y()), 6000)
+            self.m.jog_relative('Y', 500, 6000)
+
+        Clock.schedule_once(self.check_sg_values, 3)
+
 
     def check_sg_values(self, dt):
 
