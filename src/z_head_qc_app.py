@@ -89,8 +89,8 @@ class ZHeadQC(App):
 
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
-        calibration_db = CalibrationDatabase()
-        calibration_db.set_up_connection()
+        # calibration_db = CalibrationDatabase()
+        # calibration_db.set_up_connection()
 
         usb_stick = usb_storage.USB_storage(sm, l)
         usb_stick.enable()
