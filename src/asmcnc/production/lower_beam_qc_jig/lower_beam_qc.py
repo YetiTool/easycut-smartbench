@@ -260,9 +260,9 @@ class LowerBeamQC(Screen):
         Clock.schedule_once(self.check_sg_values, 3)
 
     def is_relative_move_safe(self, distance):
-        if self.m.y_position + distance > self.m.y_max_jog_abs_limit:
+        if self.m.mpos_y() + distance > self.m.y_max_jog_abs_limit:
             return False
-        elif self.m.y_position + distance < self.m.y_min_jog_abs_limit:
+        elif self.m.mpos_y() + distance < self.m.y_min_jog_abs_limit:
             return False
         else:
             return True
