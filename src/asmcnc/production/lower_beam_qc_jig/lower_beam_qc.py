@@ -262,6 +262,9 @@ class LowerBeamQC(Screen):
     def new_test_motor_chips(self):
         self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
 
+        print(self.m.wpos_y())
+        print(self.m.y_min_jog_abs_limit)
+
         if self.m.wpos_y() + 500 < self.m.y_min_jog_abs_limit:
             self.m.jog_relative('Y', 500, 6000)
             self.m.jog_relative('Y', -500, 6000)
