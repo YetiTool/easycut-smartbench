@@ -259,13 +259,24 @@ class LowerBeamQC(Screen):
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
 
+    def is_relative_move_safe(self, distance):
+        if self.m.y_position + distance > self.m.y_max_jog_abs_limit:
+            return False
+        elif self.m.y_position + distance < self.m.y_min_jog_abs_limit:
+            return False
+        else:
+            return True
+
     def new_test_motor_chips(self):
         self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
 
-        if self.m.y_min_jog_abs_limit + 500 < self.m.wpos_y():
-            self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
-        elif self.m.y_max_jog_abs_limit - 500 > self.m.wpos_y():
+        if self.is_relative_move_safe(500):
+            self.m.jog_relative('Y', 500, 6000)
+        elif self.is_relative_move_safe(-500):
             self.m.jog_relative('Y', -500, 6000)
+        else:
+            self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
+            self.m.jog_relative('Y', 500, 6000)
 
         Clock.schedule_once(self.check_sg_values, 3)
 
