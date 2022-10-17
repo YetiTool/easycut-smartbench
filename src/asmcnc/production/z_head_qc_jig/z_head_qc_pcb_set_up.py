@@ -448,6 +448,7 @@ class ZHeadPCBSetUp(Screen):
         self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
         self.set_value_to_update_to(self.recommended_z_current_label, self.z_current, self.recommended_z_current_checkbox)
         self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
+        self.scrape_fw_version()
 
     def on_focus(self, value_to_set, radio_button, instance, value):
         if not value:
@@ -458,6 +459,17 @@ class ZHeadPCBSetUp(Screen):
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         print(value_to_set)
 
+    def scrape_fw_version(self):
+        # try:
+
+        fw_and_hw = str(self.m.s.fw_version).split('; HW:')
+
+        no_drivers = 3
+
+        self.hw_info_label.text = "HW version: " + fw_and_hw[1] + "\n" + "No. motor drivers: " + str(no_drivers) + "\n" + "FW version: " + fw_and_hw[0]
+        
+        # except:
+        #     pass
 
 
 

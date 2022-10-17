@@ -68,6 +68,8 @@ class ScreenTest(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
+        m.s.fw_version = "2.5.5; HW: 33"
+
         # CHANGE ME
         test_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='test', sm = sm, m = m)
         sm.add_widget(test_screen)
