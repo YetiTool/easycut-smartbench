@@ -264,11 +264,12 @@ class LowerBeamQC(Screen):
 
         print(self.m.wpos_y())
         print(self.m.y_min_jog_abs_limit)
+        print(self.m.y_max_jog_abs_limit)
 
-        if self.m.wpos_y() + 500 < abs(self.m.y_min_jog_abs_limit):
+        if self.m.wpos_y() < 500 + self.m.y_min_jog_abs_limit:
             self.m.jog_relative('Y', 500, 6000)
             self.m.jog_relative('Y', -500, 6000)
-        elif self.m.wpos_y() - 500 < abs(self.m.y_min_jog_abs_limit):
+        elif self.m.wpos_y() + 500 > self.m.y_min_jog_abs_limit:
             self.m.jog_relative('Y', -500, 6000)
             self.m.jog_relative('Y', 500, 6000)
 
