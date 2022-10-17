@@ -49,7 +49,7 @@ Builder.load_string("""
                             halign: 'left'
                             valign: 'middle'
                             padding: [dp(10),0]
-                            on_press: root.test_motor_chips()
+                            on_press: root.new_test_motor_chips()
                         Image:
                             id: motor_chips_check
                             source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -258,6 +258,19 @@ class LowerBeamQC(Screen):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
+
+    def new_test_motor_chips(self):
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+        if self.m.wpos_y() + 500 < self.m.y_min_jog_abs_limit:
+            self.m.jog_relative('Y', 500, 6000)
+            self.m.jog_relative('Y', -500, 6000)
+        elif self.m.wpos_y() - 500 < self.m.y_min_jog_abs_limit:
+            self.m.jog_relative('Y', -500, 6000)
+            self.m.jog_relative('Y', 500, 6000)
+
+        Clock.schedule_once(self.check_sg_values, 3)
+
 
     def check_sg_values(self, dt):
 
