@@ -17,6 +17,7 @@ python -m tests.manual_tests.visual_screen_tests.z_head_qc_pcb_set_up_screen_tes
 '''
 
 import sys, os
+path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
@@ -68,11 +69,12 @@ class ScreenTest(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
-        m.s.fw_version = "2.5.5; HW: 33"
+        m.s.fw_version = "2.5.5; HW: 35"
 
         # CHANGE ME
         test_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='test', sm = sm, m = m)
         sm.add_widget(test_screen)
+        sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
         sm.current = 'test'
 
         return sm

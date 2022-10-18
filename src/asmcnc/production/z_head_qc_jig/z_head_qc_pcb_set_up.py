@@ -1,5 +1,7 @@
 import re
 from functools import partial
+import glob
+import os
 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
@@ -15,6 +17,7 @@ Builder.load_string("""
 
     status_container : status_container
     hw_info_label : hw_info_label
+    connection_button : connection_button
     recommended_firmware_label : recommended_firmware_label
     recommended_firmware_checkbox : recommended_firmware_checkbox
     alt_v3_firmware_label :  alt_v3_firmware_label
@@ -67,13 +70,17 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
-                Button:
+
+                ToggleButton: 
+                    id: connection_button
                     text: 'Disconnect'
                     text_size: self.size
                     markup: 'True'
                     halign: 'center'
                     valign: 'middle'
                     padding: [dp(10),0]
+                    font_size: dp(20)
+                    on_press: root.toggle_connection_to_z_head()
 
             BoxLayout: 
                 orientation: 'horizontal'
@@ -124,7 +131,6 @@ Builder.load_string("""
                             Label:
                                 id: recommended_firmware_label
                                 size_hint_x: 0.8
-                                text: "2.5.5"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -150,7 +156,6 @@ Builder.load_string("""
                             Label:
                                 id: alt_v3_firmware_label
                                 size_hint_x: 0.3
-                                text: "2.5.4"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -164,7 +169,6 @@ Builder.load_string("""
                             Label:
                                 id: alt_v2_firmware_label
                                 size_hint_x: 0.3
-                                text: "1.4.0"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -419,12 +423,20 @@ def log(message):
 
 class ZHeadPCBSetUp(Screen):
 
+    usb_path = "/media/usb/"
+
     firmware_version = "2.5.5"
+    number_of_drivers = 4
     x_current = "20"
     z_current = "25"
     x_thermal_coefficient = "5000"
     y_thermal_coefficient = "5000"
     z_thermal_coefficient = "10000"
+
+    single_stack_single_driver_x_current = 26
+    double_stack_single_driver_x_current = 26
+    single_stack_dual_driver_x_current = 13
+    double_stack_dual_driver_x_current = 20
 
     def __init__(self, **kwargs):
 
@@ -437,6 +449,7 @@ class ZHeadPCBSetUp(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
+        # Ensure that textinputs are auto-validated when user presses away from keyboard
         self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.x_current, self.other_x_current_checkbox))
         self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.z_current, self.other_z_current_checkbox))
 
@@ -444,11 +457,26 @@ class ZHeadPCBSetUp(Screen):
         self.thermal_coeff_y_textinput.bind(focus=partial(self.on_focus, self.y_thermal_coefficient, None))
         self.thermal_coeff_z_textinput.bind(focus=partial(self.on_focus, self.z_thermal_coefficient, None))
 
-    def on_enter(self):
-        self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
-        self.set_value_to_update_to(self.recommended_z_current_label, self.z_current, self.recommended_z_current_checkbox)
-        self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
-        self.scrape_fw_version()
+    def on_pre_enter(self):
+    
+        try:
+            hw, fw = self.scrape_fw_version()
+            number_of_drivers = self.generate_no_drivers_based_on_hw_version(hw)
+            self.generate_hw_and_fw_info_label(hw, fw, number_of_drivers)
+            self.generate_recommended_x_currents(number_of_drivers)
+
+        except: self.hw_info_label.text = "Can't read HW version :("
+        else: 
+
+            try:
+                self.get_fw_options(self.usb_path)
+                self.choose_recommended_firmware_from_available(hw)
+
+            except: self.hw_info_label.text = "Problems getting FW :("
+            else: self.select_recommended_radio_buttons()
+
+
+    # BUTTON HANDLING
 
     def on_focus(self, value_to_set, radio_button, instance, value):
         if not value:
@@ -459,28 +487,95 @@ class ZHeadPCBSetUp(Screen):
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         print(value_to_set)
 
+    def select_recommended_radio_buttons(self):
+        self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
+        self.set_value_to_update_to(self.recommended_z_current_label, self.z_current, self.recommended_z_current_checkbox)
+        self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
+
+    # VERSION HANDLING
+
     def scrape_fw_version(self):
-        # try:
-
         fw_and_hw = str(self.m.s.fw_version).split('; HW:')
+        return int(fw_and_hw[1]), fw_and_hw[0]
 
-        no_drivers = 3
+    def generate_no_drivers_based_on_hw_version(self, hw_version):
+        """
+        HW versions from 34 and up have a driver for each X motor (5 drivers in total)
+        Hw versions 33 and under have a shared driver for both X motors (4 drivers in total)
+        """
+        if int(hw_version) > 33: return 5
+        else: return 4
 
-        self.hw_info_label.text = "HW version: " + fw_and_hw[1] + "\n" + "No. motor drivers: " + str(no_drivers) + "\n" + "FW version: " + fw_and_hw[0]
-        
-        # except:
-        #     pass
+    def generate_hw_and_fw_info_label(self, hw, fw, no_drivers):
+        self.hw_info_label.text =   "HW version: " + str(hw) + "\n" + \
+                                    "No. motor drivers: " + str(no_drivers) + "\n" + \
+                                    "FW version: " + str(fw)
+
+    def generate_recommended_x_currents(self, no_drivers):
+        if no_drivers < 5: 
+            self.single_stack_x_current_label.text = str(self.single_stack_single_driver_x_current)
+            self.double_stack_x_current_label.text = str(self.double_stack_single_driver_x_current)
+
+        else: 
+            self.single_stack_x_current_label.text = str(self.single_stack_dual_driver_x_current)
+            self.double_stack_x_current_label.text = str(self.double_stack_dual_driver_x_current)
+
+    def choose_recommended_firmware_from_available(self, hw):
+
+        if int(hw) > 33:
+            self.recommended_firmware_label.text = self.ver_2_5_drivers_string
+            self.alt_v3_firmware_label.text = self.ver_2_4_drivers_string
+
+        elif int(hw) > 19:
+            self.recommended_firmware_label.text = self.ver_2_4_drivers_string
+            self.alt_v3_firmware_label.text = self.ver_2_5_drivers_string
+
+        else: 
+            self.recommended_firmware_label.text = self.ver_1_string
+            self.alt_v3_firmware_label.text = self.ver_2_4_drivers_string
+
+        self.alt_v2_firmware_label.text = self.ver_1_string
+
+    def get_fw_options(self, usb_path):
+
+        self.ver_2_5_drivers_filename = glob.glob(usb_path + "GRBL2_*_5.hex")[0]
+        self.ver_2_4_drivers_filename = glob.glob(usb_path + "GRBL2_*_4.hex")[0]
+        self.ver_1_filename = glob.glob(usb_path + "GRBL1_*.hex")[0]
+
+        self.ver_2_5_drivers_string = self.generate_fw_string_from_path(self.ver_2_5_drivers_filename)
+        self.ver_2_4_drivers_string = self.generate_fw_string_from_path(self.ver_2_4_drivers_filename)
+        self.ver_1_string = self.generate_fw_string_from_path(self.ver_1_filename)
+
+    def generate_fw_string_from_path(self, fw_path):
+        just_numbers_and_underscores = re.findall('[0-9_]+', os.path.basename(fw_path))[0]
+        return (".".join(just_numbers_and_underscores.split("_")))
 
 
+    ## Z HEAD DISCONNECT/RECONNECT
 
+    def toggle_connection_to_z_head(self):
 
+        if self.connection_button.state == 'normal': 
+            self.connection_button.text = "Reconnecting..."
+            Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection(), 0.2)
+            self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 1)
 
+        else: 
+            self.connection_button.text = "Reconnect Z Head"
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.2)
 
-
-
-
-
-
+    def try_start_services(self, dt):
+        if self.m.s.is_connected():
+            Clock.unschedule(self.poll_for_reconnection)
+            Clock.schedule_once(self.m.s.start_services, 1)
+            self.connection_button.text = "Disconnect Z Head"
+            self.sm.get_screen('qc1').reset_checkboxes()
+            self.sm.get_screen('qc2').reset_checkboxes()
+            self.sm.get_screen('qcW136').reset_checkboxes()
+            self.sm.get_screen('qcW112').reset_checkboxes()
+            self.sm.get_screen('qc3').reset_timer()
+            self.sm.current = 'qcconnecting'
 
 
 
