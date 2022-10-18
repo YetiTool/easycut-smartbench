@@ -8,7 +8,6 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
-from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -61,6 +60,7 @@ Builder.load_string("""
                     halign: 'left'
                     valign: 'middle'
                     padding: [dp(10),0]
+                    on_press: root.go_to_qc_home()
 
                 Label: 
                     id : hw_info_label
@@ -410,6 +410,7 @@ Builder.load_string("""
                 text: 'OK'
                 font_size: dp(30)
                 size_hint_y: 0.2
+                on_press: root.do_pcb_update_and_set_settings()
 
         BoxLayout:
             size_hint_y: 0.08
@@ -425,18 +426,27 @@ class ZHeadPCBSetUp(Screen):
 
     usb_path = "/media/usb/"
 
-    firmware_version = "2.5.5"
-    number_of_drivers = 4
-    x_current = "20"
-    z_current = "25"
-    x_thermal_coefficient = "5000"
-    y_thermal_coefficient = "5000"
-    z_thermal_coefficient = "10000"
-
     single_stack_single_driver_x_current = 26
     double_stack_single_driver_x_current = 26
     single_stack_dual_driver_x_current = 13
     double_stack_dual_driver_x_current = 20
+
+    default_z_current = 25
+
+    default_x_thermal_coefficient = 5000
+    default_y_thermal_coefficient = 5000
+    default_z_thermal_coefficient = 10000
+
+    firmware_version = "2.5.5"
+    number_of_drivers = 4
+
+    x_current = str(double_stack_dual_driver_x_current)
+    z_current = str(default_z_current)
+
+    x_thermal_coefficient = str(default_x_thermal_coefficient)
+    y_thermal_coefficient = str(default_y_thermal_coefficient)
+    z_thermal_coefficient = str(default_z_thermal_coefficient)
+
 
     def __init__(self, **kwargs):
 
@@ -458,6 +468,12 @@ class ZHeadPCBSetUp(Screen):
         self.thermal_coeff_z_textinput.bind(focus=partial(self.on_focus, self.z_thermal_coefficient, None))
 
     def on_pre_enter(self):
+
+        self.z_current = str(self.default_z_current)
+    
+        self.x_thermal_coefficient = str(self.default_x_thermal_coefficient)
+        self.y_thermal_coefficient = str(self.default_y_thermal_coefficient)
+        self.z_thermal_coefficient = str(self.default_z_thermal_coefficient)
     
         try:
             hw, fw = self.scrape_fw_version()
@@ -473,8 +489,10 @@ class ZHeadPCBSetUp(Screen):
                 self.choose_recommended_firmware_from_available(hw)
 
             except: self.hw_info_label.text = "Problems getting FW :("
-            else: self.select_recommended_radio_buttons()
+            else: self.set_and_select_defaults()
 
+    def go_to_qc_home(self):
+        self.sm.current = "qchome"
 
     # BUTTON HANDLING
 
@@ -487,7 +505,7 @@ class ZHeadPCBSetUp(Screen):
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         print(value_to_set)
 
-    def select_recommended_radio_buttons(self):
+    def set_and_select_defaults(self):
         self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
         self.set_value_to_update_to(self.recommended_z_current_label, self.z_current, self.recommended_z_current_checkbox)
         self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
@@ -578,23 +596,26 @@ class ZHeadPCBSetUp(Screen):
             self.sm.current = 'qcconnecting'
 
 
+    ## DOING PCB FW UPDATE AND SETTINGS
 
+    def do_pcb_update_and_set_settings(self):
 
+        # DO FW UPDATE
 
+        # CONFIRM THAT IT WAS SUCCESSFUL & RECONNECT
 
+        # WAIT FOR REGISTERS
 
+        # SET CURRENTS AND THERMAL COEFFICIENTS
 
+        # STORE PARAMETERS
 
+        # CHECK REGISTERS
 
+        # PASS OUTCOMES TO NEXT SCREEN 
 
+        # TAKE USER TO OUTCOME SCREEN 
 
-
-
-
-
-
-
-
-
+        self.sm.current = "qcpcbsetupoutcome"
 
 

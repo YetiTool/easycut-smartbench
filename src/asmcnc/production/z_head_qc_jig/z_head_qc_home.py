@@ -44,9 +44,9 @@ Builder.load_string("""
 
                 Button:
                     id: test_fw_update_button 
-                    text: 'NO - Update FW now! (For v1.3)'
+                    text: 'NO - Set up PCB & Flash FW'
                     font_size: dp(20)
-                    on_press: root.test_fw_update()
+                    on_press: root.go_back_to_pcb_setup()
                     markup: True
                     halign: "center"
 
@@ -85,8 +85,15 @@ class ZHeadQCHome(Screen):
         self.usb = kwargs['usb']
 
     def on_enter(self):
-        self.hw_version = int(self.m.s.hw_version)
-        self.update_usb_button_label()
+        try: 
+            self.hw_version = int(self.m.s.hw_version)
+            self.update_usb_button_label()
+
+        except:
+            print("Can't get HW version or hex file")
+
+    def go_back_to_pcb_setup(self):
+        self.sm.current = "qcpcbsetup"  
 
     def get_fw_filepath(self):
 
