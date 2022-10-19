@@ -1,39 +1,4 @@
-<!-----
-
-You have some errors, warnings, or alerts. If you are using reckless mode, turn it off to see inline alerts.
-* ERRORs: 0
-* WARNINGs: 1
-* ALERTS: 5
-
-Conversion time: 2.007 seconds.
-
-
-Using this Markdown file:
-
-1. Paste this output into your source file.
-2. See the notes and action items below regarding this conversion run.
-3. Check the rendered output (headings, lists, code blocks, tables) for proper
-   formatting and use a linkchecker before you publish this page.
-
-Conversion notes:
-
-* Docs to Markdown version 1.0β33
-* Wed Oct 19 2022 03:51:59 GMT-0700 (PDT)
-* Source doc: V2! Raspberry Pi 3Bplus 3rd party radio testing 
-
-WARNING:
-Inline drawings not supported: look for ">>>>>  gd2md-html alert:  inline drawings..." in output.
-
-* This document has images: check for >>>>>  gd2md-html alert:  inline image link in generated source and store images to your server. NOTE: Images in exported zip file from Google Docs may not appear in  the same order as they do in your doc. Please check the images!
-
-
-WARNING:
-You have 5 H1 headings. You may want to use the "H1 -> H2" option to demote all headings by one level.
-
------>
-
-
-<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 0; WARNINGs: 2; ALERTS: 5.</p>
+<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 0; WARNINGs: 1; ALERTS: 5.</p>
 <ul style="color: red; font-weight: bold"><li>See top comment block for details on ERRORs and WARNINGs. <li>In the converted Markdown or HTML, search for inline alerts that start with >>>>>  gd2md-html alert:  for specific instances that need correction.</ul>
 
 <p style="color: red; font-weight: bold">Links to alert messages:</p><a href="#gdcalert1">alert1</a>
@@ -46,7 +11,7 @@ You have 5 H1 headings. You may want to use the "H1 -> H2" option to demote all 
 
 
 
-# Raspberry Pi 3B+: 3<sup>rd</sup> Party Radio compliance testing
+## Raspberry Pi 3B+: 3<sup>rd</sup> Party Radio compliance testing
 
 **VERSION 2**
 
@@ -57,7 +22,7 @@ You have 5 H1 headings. You may want to use the "H1 -> H2" option to demote all 
 
 
 
-# Introduction
+## Introduction
 
 For devices that incorporate Raspberry Pi 3 into the final product certain parts of the radio compliance testing will need to be completed.
 
@@ -74,15 +39,15 @@ _For conducted tests a UFL connector can be soldered on the board, along with a 
 
 
 
-# RasPi setup
+## RasPi setup
 
 
-## Connect Console to WiFi
+### Connect Console to WiFi
 
 [Click here](https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench1-console-operations-connecting-to-wifi-connecting-to-a-wireless-network-including-android-hotspot) to learn how to connect the console to your WiFi network
 
 
-## Access the console terminal
+### Access the console terminal
 
 You will need a USB keyboard, and will need to login to the terminal at the console
 
@@ -97,31 +62,31 @@ login: pi
 password: pi _(this won’t be visible)_
 
 
-## Switching branch
+### Switching branch
 
 At the terminal prompt, type the following, in order:
 
 
-## cd easycut-smartbench
+# cd easycut-smartbench
 
 
-## git pull
+# git pull
 
 
-## git checkout rf_testing
+# git checkout rf_testing
 
 
-## cd
+# cd
 
 (this line begins with a dot) 
 
 
-## ./easycut-smartbench/ansible/templates/ansible-start.sh
+# ./easycut-smartbench/ansible/templates/ansible-start.sh
 
 Once ansible has finished running and the prompt returns (approx. 2 minutes)
 
 
-## sudo reboot
+# sudo reboot
 
 Return to the command prompt **as before** via system tools > exit software, Alt+F2 and log in.
 
@@ -130,12 +95,12 @@ Setup is now complete!
 see document [conducting tests](https://docs.google.com/document/u/0/d/1DsyZU7npphEjtpr5yUsa7zDPyRel4QevcljHVNDHfYI/edit) to begin testing.
 
 
-# Debugging
+## Debugging
 
 If “unable to resolve host” error occurs at any stage see [this help document ](https://docs.google.com/document/u/0/d/1fAAgWdwLec6NE5DElLsTQUh9Obn43d_CnfrTA-b3ThI/edit)
 
 
-# Conducting tests
+## Conducting tests
 
 
 
@@ -221,6 +186,6 @@ _This process is depicted below for reference._
 * At this point, the next test can be run by following the same process, starting with typing “bash” into the terminal.
 
 
-# Appendix 
+## Appendix 
 
 Necessary files are available in the [test assets ZIP file](https://drive.google.com/file/d/1SLF3A6scniUfYDOROdYN7bHO59lG9we2/view?usp=sharing) (RP-00111-CF-1.zip). Note this is protected under NDA. This has been incorporated into the setup process through the “git” commands. You shouldn’t need the ZIP file unless otherwise instructed.
