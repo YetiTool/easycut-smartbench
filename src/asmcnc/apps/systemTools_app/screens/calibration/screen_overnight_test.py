@@ -1543,6 +1543,7 @@ class OvernightTesting(Screen):
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             log("Finished statistics data send")
+            log("test")
             self.show_failed_send_popup(self.get_most_recent_csv())
             return done_send
         except:
