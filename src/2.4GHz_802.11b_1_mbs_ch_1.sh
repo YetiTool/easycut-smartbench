@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TEST="2.4GHz 802.11b 1 mbs ch 1"
+TEST="2.4GHz 802.11b 1 mbs ch 1" #Name of the test that's presented to the user. Intention being to explain to the user in technical detail what this test is
 
-echo "Configuring test: "$TEST
+echo "Configuring test: "$TEST #Announce the start of configuration
 
 sudo ./wl -i wlan0 out
 sudo ./wl -i wlan0 down
@@ -23,16 +23,16 @@ sudo ./wl -i wlan0 phy_forcecal 1
 sudo ./wl -i wlan0 scansuppress 1
 sudo ./wl -i wlan0 txpwr1 -o -q 70
 
-echo "setup complete"
+echo "setup complete" #Announce the end of configuration
 
 echo "Begining test: "$TEST
 
-sudo ./wl -i wlan0 pkteng_start 00:11:22:33:44:55 tx 20 1500 0
+sudo ./wl -i wlan0 pkteng_start 00:11:22:33:44:55 tx 20 1500 0 #Command to begin transmitting packets
 
-sleep 120
+sleep 120 #Test runtime (in seconds)
 
 echo "Stopping test"
 
-sudo ./wl -i wlan0 pkteng_stop tx
+sudo ./wl -i wlan0 pkteng_stop tx #Ending transmition. This is a requirement at the end of all WiFi tests.
 
 echo "End of test: "$TEST
