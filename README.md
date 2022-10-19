@@ -19,12 +19,6 @@ _For conducted tests a UFL connector can be soldered on the board, along with a 
 
 **Please note all commands in these documents are case sensitive, space sensitive and must be typed exactly as specified. Please also note the different uses of the “.”, “-” and “_” characters as it is critical they are correct.**
 
-<span style="text-decoration:underline;">Contents</span>
-
-
-[TOC]
-
-
 
 ## RasPi setup
 
