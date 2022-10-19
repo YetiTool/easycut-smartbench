@@ -1,163 +1,226 @@
-# easycut-smartbench
-Console UI for YetiTool's SmartBench
+<!-----
 
+You have some errors, warnings, or alerts. If you are using reckless mode, turn it off to see inline alerts.
+* ERRORs: 0
+* WARNINGs: 1
+* ALERTS: 5
 
-Buffer logging:
-- Output of grbl serial char and line buffer now standard in 'go' screen.
-- To enable writing to file, tap "buffer log" toggle button in dev tab. (Blue=on)
-	- WARNING: File overwritten on the start of next stream job.
-	
-Virtual HW:
-- Designed for use of Arduino without any switches
-- Essential, before enabling: On arduino, to avoid door error, connect Analouge 11 to GND (think E must have inverted the setting in the config file, was surprised to see this error)
-- WARNING: toggle effects are persistent in grbl. So ensure to toggle state back to required status before powering down device to avoid unexpected results on startup (toggle state defaults to disabled, regardless of persistent settings. If this happens, just flick the toggle at least once to sync toggle with state)
-- WARNING: In virtual mode, Mpos will default to 0,0,0 so 
-	- Head will be at wrong end of bed to start with
-	- Running virtual hw with actual machine plugged in will cause plenty of conflict :-) Don't!
-- After clicking play button to enter the go screen, ignore popup errors and click on 'continue anyway'
+Conversion time: 2.007 seconds.
 
 
-# Build steps for Windows 
-Setup of tools that allow you to play with & test out the UI with ease. 
+Using this Markdown file:
 
-## Important notes: 
-* The following set-up is done on Windows.
-  * Make sure you are consistent in whether you choose to install x86 or x64 software, otherwise the different programs will fail to find each other (e.g. Eclipse and Java). 
-  * I have used x64 throughout this example. 
-* I personally installed everything in one "Yeti" folder, and all of the software was able to find all the other software with no issues. But you do you. 
-*If you do these steps out of order, you may get frustrated. Eclipse needs Java for its install, and PyDev and Kivy need Python. Save yourself the stress. 
+1. Paste this output into your source file.
+2. See the notes and action items below regarding this conversion run.
+3. Check the rendered output (headings, lists, code blocks, tables) for proper
+   formatting and use a linkchecker before you publish this page.
 
-### 1. Install Java Runtime Environment
+Conversion notes:
 
-Get JRE from [here]( 
-https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html).
+* Docs to Markdown version 1.0β33
+* Wed Oct 19 2022 03:51:59 GMT-0700 (PDT)
+* Source doc: V2! Raspberry Pi 3Bplus 3rd party radio testing 
 
-I downloaded and ran jre-8u202-windows-x64.exe. 
+WARNING:
+Inline drawings not supported: look for ">>>>>  gd2md-html alert:  inline drawings..." in output.
 
-The wizard takes you through the entire installation.
+* This document has images: check for >>>>>  gd2md-html alert:  inline image link in generated source and store images to your server. NOTE: Images in exported zip file from Google Docs may not appear in  the same order as they do in your doc. Please check the images!
 
-You'll want to make sure you have Java 8 or higher for Eclipse. 
 
+WARNING:
+You have 5 H1 headings. You may want to use the "H1 -> H2" option to demote all headings by one level.
 
-### 2. Install Python
+----->
 
-I used Windows x86-64 MSI installer from [here] (https://www.python.org/downloads/release/python-2715/).
 
-Download it and run it, as you did with the Java installer.
+<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 0; WARNINGs: 2; ALERTS: 5.</p>
+<ul style="color: red; font-weight: bold"><li>See top comment block for details on ERRORs and WARNINGs. <li>In the converted Markdown or HTML, search for inline alerts that start with >>>>>  gd2md-html alert:  for specific instances that need correction.</ul>
 
-Make sure you use a version of Python 2. I downloaded Python 2.7.15 because it comes with pip, which we'll need later. 
+<p style="color: red; font-weight: bold">Links to alert messages:</p><a href="#gdcalert1">alert1</a>
+<a href="#gdcalert2">alert2</a>
+<a href="#gdcalert3">alert3</a>
+<a href="#gdcalert4">alert4</a>
+<a href="#gdcalert5">alert5</a>
 
-Once again, the wizard is great and takes you through the entire installation. 
+<p style="color: red; font-weight: bold">>>>>> PLEASE check and correct alert issues and delete this message and the inline alerts.<hr></p>
 
-Make a note of where you installed Python, as you will need to know later on. 
 
 
-### 3. Install Eclipse
+# Raspberry Pi 3B+: 3<sup>rd</sup> Party Radio compliance testing
 
-Head to: https://www.eclipse.org/downloads/
+**VERSION 2**
 
-I am using Eclipse IDE 2018-12 
+<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image1.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
-Hit "Download", and then hit "Download" again. 
 
-It will tell you where it's downloading from - don't worry about this, you'll get the same stuff wherever it's from.
+![alt_text](images/image1.png "image_tooltip")
 
-When you run the installer, it will ask you to select and IDE. Select the **Eclipse IDE for Java Developers** 
 
-After that, the wizard will guide you. 
 
+# Introduction
 
-### 4. Install PyDev in Eclipse. 
+For devices that incorporate Raspberry Pi 3 into the final product certain parts of the radio compliance testing will need to be completed.
 
-Open Eclipse, and then go to the toolbar, and select Help > Eclipse MarketPlace. 
-  
-Under the "Search" tab, type "PyDev" in front of "Find:", and press enter. 
+To enable the various test modes you will need to follow the instructions in this doc
 
-Install the PyDev - Python IDE for Eclipse that comes up. 
+_For conducted tests a UFL connector can be soldered on the board, along with a change 0R resistor to allow for conducted testing, a small portion of the Ground plane will need to be uncovered for the second ground pad. Detailed instructions can be found in the ZIP above_
 
-As before, work through the wizard. 
+**Please note all commands in these documents are case sensitive, space sensitive and must be typed exactly as specified. Please also note the different uses of the “.”, “-” and “_” characters as it is critical they are correct.**
 
+<span style="text-decoration:underline;">Contents</span>
 
-### 5. Install Kivy
 
-Go to [Kivy's website](https://kivy.org/doc/stable/installation/installation-windows.html) for the installation instructions, which are fairly good. 
+[TOC]
 
-In order to work through them, you'll need to open your Command Line. 
 
-Open Command Line by using the shortcut windows+R, and then typing cmd in the box that comes up. Press ok. 
 
-You'll need to navigate via the command line to the folder you installed python in. 
+# RasPi setup
 
-If you need to change which drive you're in, you can do this by typing the driver letter and a colon, e.g. "d:".
 
-Then, use "cd" (which stands for "change directory") to jump to the relevant folder. 
+## Connect Console to WiFi
 
-For example, if you've installed Python in Yeti\Python27, you will want to enter:
+[Click here](https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench1-console-operations-connecting-to-wifi-connecting-to-a-wireless-network-including-android-hotspot) to learn how to connect the console to your WiFi network
 
-cd Yeti\Python27
 
-Once you're in the same folder as your Python installation, you can follow the instructions on [Kivy's website](https://kivy.org/doc/stable/installation/installation-windows.html). 
+## Access the console terminal
 
-Keep command line open for the next step. 
+You will need a USB keyboard, and will need to login to the terminal at the console
 
-### 6. Install the Serial module
+After the console has finished booting up, use the navigation arrows to locate **System tools**
 
-You'll need to install this module with python in order for the UI to run. 
+Click **System Tools **> **Exit Software**
 
-Stay in your command line as before (or open and navigate to your Python installation as in Step 5), and enter the following line: 
+Then on the keyboard, **Alt+F2**
 
-python -m pip install pyserial
+login: pi
 
-Watch some text scroll before your eyes. Bam. You're sorted. 
+password: pi _(this won’t be visible)_
 
-### 7. Tell Eclipse where to find your Python interpreter
 
-Open Eclipse (if you closed it). Go to the toolbar, and select Window > Preferences. Then, on the side-menu in Preferences, go to PyDev > Interpreters > Python. 
+## Switching branch
 
-Click on “Browse for python/pypy exe”, and find your python.exe file, in the folder you installed it.
+At the terminal prompt, type the following, in order:
 
-All of Kivy's libraries should automatically be loaded into Eclipse as well. 
 
-Click "Apply and Close". 
+## cd easycut-smartbench
 
-Awesome. Almost done. 
 
-### 8. Get easycut-smartbench from GitHub into Eclipse 
+## git pull
 
-In Eclipse, go to the toolbar and select Window > Show View > Other. 
 
-In the pop-up, expand the "Git" folder, and click on "Git Repositories". Click OK. 
+## git checkout rf_testing
 
-Then, in the Eclipse toolbar go to File > Import. 
 
-In the pop-up, select Projects from Git, and then Next. 
+## cd
 
-Click Clone from URI. 
+(this line begins with a dot) 
 
-Paste the following into the URI box: 
 
-https://github.com/YetiTool/easycut-smartbench.git
+## ./easycut-smartbench/ansible/templates/ansible-start.sh
 
-The other information should auto-fill, so click Next. Click Next again. Choose a directory to install it in, and click Next again. 
+Once ansible has finished running and the prompt returns (approx. 2 minutes)
 
-Select "Import existing projects", click Next, and then click Finish. 
 
-That should be you done! easycut-smartbench will show up under Git Repositorie.
+## sudo reboot
 
-Make sure you can also see Package Explorer in Eclipse - if you can't just go to Window > Show View > Package Explorer. 
+Return to the command prompt **as before** via system tools > exit software, Alt+F2 and log in.
 
-If you want to try running the UI, Open "main.py" and click Run (the green play button). And off you go ;).
+Setup is now complete!
 
+see document [conducting tests](https://docs.google.com/document/u/0/d/1DsyZU7npphEjtpr5yUsa7zDPyRel4QevcljHVNDHfYI/edit) to begin testing.
 
-### Basic hardware test (optional)
 
-If you have and Arduino Mega 2560, you can test comms right away by putting a basic grbl-Mega image onto the Arduino.
+# Debugging
 
-*Note: Due to lack of end switches, and therefore an inability to "home", some functionality will be unavailable, and EasyCut may crash unexpectedly.
-*Note: Currently points to standard grbl-Mega, not YetiGrbl
+If “unable to resolve host” error occurs at any stage see [this help document ](https://docs.google.com/document/u/0/d/1fAAgWdwLec6NE5DElLsTQUh9Obn43d_CnfrTA-b3ThI/edit)
 
-* Follow compilation instructions [here](https://github.com/grbl/grbl/wiki/Compiling-Grbl), with one modification:
-** When prompted to "Click the Download ZIP button on the Grbl home page" [download from grbl-Mega instead](https://github.com/gnea/grbl-Mega)
-* Once compliled, determine which COM port the arduino sits on and ammed that value in "main.py"
-* Run "main.py" :-)
 
+# Conducting tests
+
+
+
+* To conduct the tests listed below:
+    * WLAN 2.4GHz 802.11b
+    * WLAN 2.4GHz 802.11g
+    * WLAN 2.4GHz 802.11n 20MHz
+    * WLAN 5150 – 5250 MHz @ 200mW
+    * WLAN 5250 – 5350 MHz @ 200mW
+    * WLAN 5725 -5850 MHz @ 4000mW
+    * Bluetooth low frequency
+    * Bluetooth medium frequency
+    * Bluetooth high frequency
+* The following **.sh** files have been prepared:
+    * 2.4GHz_802.11b_1_mbs_ch_1.sh
+    * 2.4GHz_802.11g_6_mbs_ch_1.sh
+    * 2.4GHz_802.11n_20MHz_MCS0_ch_1.sh
+    * 5GHz_5180MHz_200mW.sh
+    * 5GHz_5260MHz_200mW.sh
+    * 5GHz_5755MHz_4000mW.sh
+    * bluetooth_low.sh
+    * bluetooth_med.sh
+    * bluetooth_high.sh
+* These **.sh **files are scripts that run a series of commands automatically. The goal being to configure the relevant test, begin the transmission and stop it after 2 minutes. All of this will happen concurrently once the test is started.
+
+_For reference, the “ls” (list) command lists the test files (among other things) in the terminal:_
+
+
+
+<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+
+
+![drawing](https://docs.google.com/drawings/d/12345/export/png)
+
+<span style="text-decoration:underline;">To run a test, do the following, in order:</span>
+
+
+
+* Into the terminal, type: bash
+* Followed by the name of the test you wish to run, separating it from “bash” with a space. (E.g. “bash 2.4GHz_802.11b_1_mbs_ch_1.sh”
+* To avoid typing long filenames, the use of the “tab” key on any keyboard will complete the rest of any given filename, if you’ve correctly typed the beginning of the given name. 
+* For example, if one were to type “2.4” and press tab, the terminal would type “2.4Ghz_802.11” for you. 
+* The terminal has not completely filled a filename because multiple files have names containing the “2.4” you provided the terminal with.
+* To continue, specify which test you are referring to. In this case, you would add “b”, “g”, or “n” to the filename.
+* Press tab again to have the terminal fully complete the filename.
+
+_This process is depicted below for reference._
+
+
+
+<p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline drawings not supported directly from Docs. You may want to copy the inline drawing to a standalone drawing and export by reference. See <a href="https://github.com/evbacher/gd2md-html/wiki/Google-Drawings-by-reference">Google Drawings by reference</a> for details. The img URL below is a placeholder. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+
+
+![drawing](https://docs.google.com/drawings/d/12345/export/png)
+
+
+
+* Once the filename is entered correctly, **press enter to run the test. **(note: each test ends in the extension “.sh”)
+* The test will begin and you will be greeted with prompts telling you the status of the test.
+
+
+
+<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+
+
+![alt_text](images/image2.png "image_tooltip")
+
+
+
+
+* After time has passed and the test has completed, additional prompts will appear to indicate the end of the test.
+
+
+
+<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image3.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+
+
+![alt_text](images/image3.png "image_tooltip")
+
+
+
+
+* At this point, the next test can be run by following the same process, starting with typing “bash” into the terminal.
+
+
+# Appendix 
+
+Necessary files are available in the [test assets ZIP file](https://drive.google.com/file/d/1SLF3A6scniUfYDOROdYN7bHO59lG9we2/view?usp=sharing) (RP-00111-CF-1.zip). Note this is protected under NDA. This has been incorporated into the setup process through the “git” commands. You shouldn’t need the ZIP file unless otherwise instructed.
