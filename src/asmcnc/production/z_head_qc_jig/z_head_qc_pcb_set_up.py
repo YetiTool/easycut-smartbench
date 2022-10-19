@@ -1,7 +1,7 @@
 import re
 from functools import partial
 import glob
-import os
+import os, subprocess
 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
@@ -41,6 +41,7 @@ Builder.load_string("""
     thermal_coeff_y_textinput :  thermal_coeff_y_textinput
     thermal_coeff_z_label : thermal_coeff_z_label
     thermal_coeff_z_textinput : thermal_coeff_z_textinput
+    OK_button : OK_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -406,7 +407,7 @@ Builder.load_string("""
                             size_hint_y: 0.4
 
             Button:
-                on_press: 
+                id: OK_button
                 text: 'OK'
                 font_size: dp(30)
                 size_hint_y: 0.2
@@ -447,6 +448,7 @@ class ZHeadPCBSetUp(Screen):
     y_thermal_coefficient = str(default_y_thermal_coefficient)
     z_thermal_coefficient = str(default_z_thermal_coefficient)
 
+    poll_for_reconnection = None
 
     def __init__(self, **kwargs):
 
@@ -600,22 +602,141 @@ class ZHeadPCBSetUp(Screen):
 
     def do_pcb_update_and_set_settings(self):
 
+        self.OK_button.text = "Updating firmware..."
+
         # DO FW UPDATE
+        def disconnect_and_update():
+            self.m.s.grbl_scanner_running = False
+            Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            Clock.schedule_once(nested_do_fw_update, 1)
 
-        # CONFIRM THAT IT WAS SUCCESSFUL & RECONNECT
+        def nested_do_fw_update(dt):
+            if self.m.set_mode_of_reset_pin():
 
-        # WAIT FOR REGISTERS
+                cmd =   "grbl_file=" + self.get_fw_path_from_string(self.firmware_version) + \
+                        " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+                proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+                self.stdout, stderr = proc.communicate()
+                self.exit_code = int(proc.returncode)
 
-        # SET CURRENTS AND THERMAL COEFFICIENTS
+                connect()
 
-        # STORE PARAMETERS
+        # RECONNECT
+        def connect():
+            self.m.starting_serial_connection = True
+            Clock.schedule_once(do_connection, 0.1)
+            self.OK_button.text = "Reconnecting..."
 
-        # CHECK REGISTERS
+        def do_connection(dt):
+            self.m.reconnect_serial_connection()
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
 
-        # PASS OUTCOMES TO NEXT SCREEN 
+        def try_start_services(dt):
+            if self.m.s.is_connected() and self.m.s.fw_version:
+                Clock.unschedule(self.poll_for_reconnection)
+                Clock.schedule_once(self.m.s.start_services, 1)
+                # 1 second should always be enough to start services
+                Clock.schedule_once(update_complete, 2)
 
+        # CONFIRM THAT IT WAS SUCCESSFUL
+        def update_complete(dt):
+            if self.exit_code == 0: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
+            else: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
+            self.reset_screens()
+            self.does_firmware_version_match()
+
+
+        # CHECK FW VERSION MATCHES
+        def does_firmware_version_match(self):
+            fw_components = self.firmware_version.rsplit('.', 1)
+            hw, fw = self.scrape_fw_version()
+            version = re.findall(fw_components[0] + ".\d." + fw_components[1], fw)
+            if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
+            else: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = False
+
+            if version.startswith("2"):
+                self.set_currents_and_coeffs()
+
+
+        def set_currents_and_coeffs(self):
+
+            if not self.m.TMC_registers_have_been_read_in():
+                Clock.schedule_once(lambda dt: self.set_currents_and_coeffs(), 1)
+                return
+
+            self.OK_button.text = "Setting currents and coefficients..."
+
+            # SET CURRENTS AND THERMAL COEFFICIENTS
+            if  self.m.set_thermal_coefficients("X", x_thermal_coefficient) and \
+                self.m.set_thermal_coefficients("Y", y_thermal_coefficient) and \
+                self.m.set_thermal_coefficients("Z", z_thermal_coefficient) and \
+                self.m.set_motor_current("Z", self.z_current) and \
+                self.m.set_motor_current("X", self.x_current):
+
+                # STORE PARAMETERS
+                Clock.schedule_once(lambda dt: self.store_params_and_progress(), 1)
+
+            else:
+                log("Z Head not Idle yet, waiting...")
+                Clock.schedule_once(lambda dt: self.set_currents_and_coeffs(), 0.5)
+
+
+        def store_params_and_progress(self):
+            log("Storing TMC params...")
+            self.m.store_tmc_params_in_eeprom_and_handshake()
+            self.check_registers_are_correct()
+
+
+        def check_registers_are_correct(self):
+
+            if not self.m.TMC_registers_have_been_read_in():
+                Clock.schedule_once(lambda dt: self.check_registers_are_correct(), 0.5)
+                return
+
+            # CHECK REGISTERS
+            if int(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+            if int(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+            if int(self.m.TMC_motor[TMC_X1].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+            if int(self.m.TMC_motor[TMC_X2].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+
+            if int(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
+            if int(self.m.TMC_motor[TMC_Z].standStillCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
+
+            if int(self.m.TMC_motor[TMC_X1].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            if int(self.m.TMC_motor[TMC_X2].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            if int(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            if int(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            if int(self.m.TMC_motor[TMC_Z].temperatureCoefficient) != int(self.z_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+
+            self.progress_to_next_screen()
+
+        disconnect_and_update()
+
+    def get_fw_path_from_string(self, fw_string):
+        return self.usb_path + "GRBL" + "_".join(fw_string.split(".")) + ".hex"
+
+    def reset_screens(self):
+        self.sm.get_screen('qc1').reset_checkboxes()
+        self.sm.get_screen('qc2').reset_checkboxes()
+        self.sm.get_screen('qcW136').reset_checkboxes()
+        self.sm.get_screen('qcW112').reset_checkboxes()
+        self.sm.get_screen('qc3').reset_timer()
+
+
+    def progress_to_next_screen(self):
         # TAKE USER TO OUTCOME SCREEN 
-
         self.sm.current = "qcpcbsetupoutcome"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
