@@ -1519,9 +1519,6 @@ class OvernightTesting(Screen):
 
         self.tick_checkbox(checkbox_id, sent_data)
 
-        if sent_data:
-            self.show_failed_send_popup(self.get_most_recent_csv())
-
     def send_data(self, stage):
         try:
             log("Doing data send...")
@@ -1546,11 +1543,12 @@ class OvernightTesting(Screen):
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             log("Finished statistics data send")
+            self.show_failed_send_popup(self.get_most_recent_csv())
             return done_send
-
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
+            self.show_failed_send_popup(self.get_most_recent_csv())
             return False
 
     def send_all_calibration_coefficients(self):
