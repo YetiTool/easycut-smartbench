@@ -1519,7 +1519,7 @@ class OvernightTesting(Screen):
 
         self.tick_checkbox(checkbox_id, sent_data)
 
-        if sent_data:
+        if not sent_data:
             self.show_failed_send_popup(self.get_most_recent_csv())
 
     def send_data(self, stage):
