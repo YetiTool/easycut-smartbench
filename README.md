@@ -1,16 +1,3 @@
-<p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 0; WARNINGs: 1; ALERTS: 5.</p>
-<ul style="color: red; font-weight: bold"><li>See top comment block for details on ERRORs and WARNINGs. <li>In the converted Markdown or HTML, search for inline alerts that start with >>>>>  gd2md-html alert:  for specific instances that need correction.</ul>
-
-<p style="color: red; font-weight: bold">Links to alert messages:</p><a href="#gdcalert1">alert1</a>
-<a href="#gdcalert2">alert2</a>
-<a href="#gdcalert3">alert3</a>
-<a href="#gdcalert4">alert4</a>
-<a href="#gdcalert5">alert5</a>
-
-<p style="color: red; font-weight: bold">>>>>> PLEASE check and correct alert issues and delete this message and the inline alerts.<hr></p>
-
-
-
 ## Raspberry Pi 3B+: 3<sup>rd</sup> Party Radio compliance testing
 
 **VERSION 2**
@@ -67,26 +54,26 @@ password: pi _(this won’t be visible)_
 At the terminal prompt, type the following, in order:
 
 
-# cd easycut-smartbench
+cd easycut-smartbench
 
 
-# git pull
+git pull
 
 
-# git checkout rf_testing
+git checkout rf_testing
 
 
-# cd
+cd
 
 (this line begins with a dot) 
 
 
-# ./easycut-smartbench/ansible/templates/ansible-start.sh
+./easycut-smartbench/ansible/templates/ansible-start.sh
 
 Once ansible has finished running and the prompt returns (approx. 2 minutes)
 
 
-# sudo reboot
+sudo reboot
 
 Return to the command prompt **as before** via system tools > exit software, Alt+F2 and log in.
 
