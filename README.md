@@ -54,32 +54,32 @@ password: pi _(this won’t be visible)_
 At the terminal prompt, type the following, in order:
 
 
-cd easycut-smartbench
+*cd easycut-smartbench
 
 
-git pull
+*git pull
 
 
-git checkout rf_testing
+*git checkout rf_testing
 
 
-cd
+*cd
 
 (this line begins with a dot) 
 
 
-./easycut-smartbench/ansible/templates/ansible-start.sh
+*(this line begins with a dot) ./easycut-smartbench/ansible/templates/ansible-start.sh
 
 Once ansible has finished running and the prompt returns (approx. 2 minutes)
 
 
-sudo reboot
+*sudo reboot
 
 Return to the command prompt **as before** via system tools > exit software, Alt+F2 and log in.
 
 Setup is now complete!
 
-see document [conducting tests](https://docs.google.com/document/u/0/d/1DsyZU7npphEjtpr5yUsa7zDPyRel4QevcljHVNDHfYI/edit) to begin testing.
+See below to begin testing!
 
 
 ## Debugging
