@@ -634,7 +634,7 @@ class ZHeadPCBSetUp(Screen):
             self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
 
         def try_start_services(dt):
-            if self.m.s.is_connected() and self.m.s.fw_version:
+            if self.m.s.is_connected():
                 Clock.unschedule(self.poll_for_reconnection)
                 Clock.schedule_once(self.m.s.start_services, 1)
                 # 1 second should always be enough to start services
@@ -650,6 +650,10 @@ class ZHeadPCBSetUp(Screen):
 
         # CHECK FW VERSION MATCHES
         def does_firmware_version_match(self):
+            if not self.m.s.fw_version:
+                Clock.schedule_once(lambda dt: self.does_firmware_version_match(), 1)
+                return
+
             fw_components = self.firmware_version.rsplit('.', 1)
             version = re.findall(fw_components[0] + ".\d." + fw_components[1] + ".\d", self.m.s.fw_version)
             if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
