@@ -645,13 +645,13 @@ class ZHeadPCBSetUp(Screen):
             if self.exit_code == 0: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
             else: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
             self.reset_screens()
-            self.does_firmware_version_match()
+            does_firmware_version_match()
 
 
         # CHECK FW VERSION MATCHES
         def does_firmware_version_match(self):
             if not self.m.s.fw_version:
-                Clock.schedule_once(lambda dt: self.does_firmware_version_match(), 1)
+                Clock.schedule_once(lambda dt: does_firmware_version_match(), 1)
                 return
 
             self.ok_button.text = "Checking FW version..."
@@ -662,7 +662,7 @@ class ZHeadPCBSetUp(Screen):
             else: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = False
 
             if version.startswith("2"):
-                self.set_currents_and_coeffs()
+                set_currents_and_coeffs()
 
             else:
                 self.progress_to_next_screen()
@@ -671,7 +671,7 @@ class ZHeadPCBSetUp(Screen):
         def set_currents_and_coeffs(self):
 
             if not self.m.TMC_registers_have_been_read_in():
-                Clock.schedule_once(lambda dt: self.set_currents_and_coeffs(), 1)
+                Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 1)
                 return
 
             self.ok_button.text = "Setting currents and coefficients..."
@@ -684,11 +684,11 @@ class ZHeadPCBSetUp(Screen):
                 self.m.set_motor_current("X", self.x_current):
 
                 # STORE PARAMETERS
-                Clock.schedule_once(lambda dt: self.store_params_and_progress(), 1)
+                Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
 
             else:
                 log("Z Head not Idle yet, waiting...")
-                Clock.schedule_once(lambda dt: self.set_currents_and_coeffs(), 0.5)
+                Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
 
         def store_params_and_progress(self):
@@ -696,13 +696,13 @@ class ZHeadPCBSetUp(Screen):
             self.ok_button.text = "Storing parameters..."
             log("Storing TMC params...")
             self.m.store_tmc_params_in_eeprom_and_handshake()
-            self.check_registers_are_correct()
+            check_registers_are_correct()
 
 
         def check_registers_are_correct(self):
 
             if not self.m.TMC_registers_have_been_read_in():
-                Clock.schedule_once(lambda dt: self.check_registers_are_correct(), 0.5)
+                Clock.schedule_once(lambda dt: check_registers_are_correct(), 0.5)
                 return
 
             self.ok_button.text = "Checking registers..."
