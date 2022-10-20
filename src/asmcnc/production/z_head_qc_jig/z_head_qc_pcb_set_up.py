@@ -41,7 +41,8 @@ Builder.load_string("""
     thermal_coeff_y_textinput :  thermal_coeff_y_textinput
     thermal_coeff_z_label : thermal_coeff_z_label
     thermal_coeff_z_textinput : thermal_coeff_z_textinput
-    OK_button : OK_button
+    ok_button : ok_button
+
 
     BoxLayout:
         orientation: 'vertical'
@@ -407,7 +408,7 @@ Builder.load_string("""
                             size_hint_y: 0.4
 
             Button:
-                id: OK_button
+                id: ok_button
                 text: 'OK'
                 font_size: dp(30)
                 size_hint_y: 0.2
@@ -602,7 +603,7 @@ class ZHeadPCBSetUp(Screen):
 
     def do_pcb_update_and_set_settings(self):
 
-        self.OK_button.text = "Updating firmware..."
+        self.ok_button.text = "Updating firmware..."
 
         # DO FW UPDATE
         def disconnect_and_update():
