@@ -627,7 +627,7 @@ class ZHeadPCBSetUp(Screen):
         def connect():
             self.m.starting_serial_connection = True
             Clock.schedule_once(do_connection, 0.1)
-            self.OK_button.text = "Reconnecting..."
+            self.ok_button.text = "Reconnecting..."
 
         def do_connection(dt):
             self.m.reconnect_serial_connection()
@@ -668,7 +668,7 @@ class ZHeadPCBSetUp(Screen):
                 Clock.schedule_once(lambda dt: self.set_currents_and_coeffs(), 1)
                 return
 
-            self.OK_button.text = "Setting currents and coefficients..."
+            self.ok_button.text = "Setting currents and coefficients..."
 
             # SET CURRENTS AND THERMAL COEFFICIENTS
             if  self.m.set_thermal_coefficients("X", x_thermal_coefficient) and \
