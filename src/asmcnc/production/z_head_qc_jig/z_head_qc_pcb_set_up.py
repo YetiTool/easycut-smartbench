@@ -654,6 +654,8 @@ class ZHeadPCBSetUp(Screen):
                 Clock.schedule_once(lambda dt: self.does_firmware_version_match(), 1)
                 return
 
+            self.ok_button.text = "Checking FW version..."
+
             fw_components = self.firmware_version.rsplit('.', 1)
             version = re.findall(fw_components[0] + ".\d." + fw_components[1] + ".\d", self.m.s.fw_version)
             if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
@@ -690,6 +692,8 @@ class ZHeadPCBSetUp(Screen):
 
 
         def store_params_and_progress(self):
+
+            self.ok_button.text = "Storing parameters..."
             log("Storing TMC params...")
             self.m.store_tmc_params_in_eeprom_and_handshake()
             self.check_registers_are_correct()
@@ -700,6 +704,8 @@ class ZHeadPCBSetUp(Screen):
             if not self.m.TMC_registers_have_been_read_in():
                 Clock.schedule_once(lambda dt: self.check_registers_are_correct(), 0.5)
                 return
+
+            self.ok_button.text = "Checking registers..."
 
             # CHECK REGISTERS
             if int(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
