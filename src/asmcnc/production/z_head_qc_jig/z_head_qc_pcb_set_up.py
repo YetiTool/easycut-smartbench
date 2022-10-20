@@ -525,15 +525,15 @@ class ZHeadPCBSetUp(Screen):
     # BUTTON HANDLING
 
     def on_focus(self, radio_button_group, instance, value):
-        # if not value: 
-        radio_button_group[0].state = "down"
-        try: 
-            radio_button_group[1].state = "normal"
-            radio_button_group[2].state = "normal"
-        except:
-            pass
+        if value: 
+            radio_button_group[0].state = "down"
+            try: 
+                radio_button_group[1].state = "normal"
+                radio_button_group[2].state = "normal"
+            except:
+                pass
 
-        self.set_value_to_update_to(instance, radio_button_group[0])
+        # self.set_value_to_update_to(instance, radio_button_group[0])
 
     def set_value_to_update_to(self, text_obj, radio_button):
         # if radio_button != None: 
