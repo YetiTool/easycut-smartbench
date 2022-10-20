@@ -724,6 +724,7 @@ class ZHeadPCBSetUp(Screen):
 
     def progress_to_next_screen(self):
         # TAKE USER TO OUTCOME SCREEN 
+        self.ok_button.text = "OK"
         self.sm.current = "qcpcbsetupoutcome"
 
 
