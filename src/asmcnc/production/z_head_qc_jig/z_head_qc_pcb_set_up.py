@@ -518,6 +518,7 @@ class ZHeadPCBSetUp(Screen):
     def scrape_fw_version(self):
         fw_and_hw = str(self.m.s.fw_version).split('; HW:')
         print("OBJ FROM SC: " + str(self.m.s.fw_version))
+        print("OBJ FROM SC: " + str(self.m.s.hw_version))
         print("FW AND HW: " + str(fw_and_hw))
         return int(fw_and_hw[1]), fw_and_hw[0]
 
