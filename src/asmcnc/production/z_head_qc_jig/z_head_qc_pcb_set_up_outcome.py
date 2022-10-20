@@ -164,7 +164,7 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.fw_update_label.text = "Firmware: " + str(self.m.s.fw_version)
         self.z_current_label.text =     "Z Current: " + \
                                         "active " + str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) + "; " + \
-                                        "idle " + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale)
+                                        "idle " + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale) +";"
 
         self.x_current_label.text =     "X Current: " + \
                                         "X1 active " + str(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) + "; " + \

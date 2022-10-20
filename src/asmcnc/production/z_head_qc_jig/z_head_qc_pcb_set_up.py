@@ -655,6 +655,7 @@ class ZHeadPCBSetUp(Screen):
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.1)
+            self.reset_screens()
             Clock.schedule_once(nested_do_fw_update, 1)
 
         def nested_do_fw_update(dt):
@@ -693,7 +694,15 @@ class ZHeadPCBSetUp(Screen):
                 self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
             else: 
                 self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
-            self.reset_screens()
+
+            set_settings_if_fw_version_high_enough()
+
+        # WAIT TO GET FW VERSION, THEN JUDGE IF PROTOCOL COMMANDS CAN BE SENT
+        def set_settings_if_fw_version_high_enough():
+
+            if not self.m.s.fw_version:
+                Clock.schedule_once(lambda dt: set_settings_if_fw_version_high_enough(), 1)
+                return
 
             if str(self.m.s.fw_version).startswith("2"):
                 set_currents_and_coeffs()
@@ -701,7 +710,7 @@ class ZHeadPCBSetUp(Screen):
             else:
                 self.progress_to_next_screen()
 
-
+        # SET CURRENTS AND THERMAL COEFFICIENTS
         def set_currents_and_coeffs():
 
             if not self.m.TMC_registers_have_been_read_in():
