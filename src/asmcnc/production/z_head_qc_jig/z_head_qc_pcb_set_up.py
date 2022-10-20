@@ -23,11 +23,6 @@ Builder.load_string("""
     alt_v3_firmware_checkbox :  alt_v3_firmware_checkbox
     alt_v2_firmware_label :  alt_v2_firmware_label
     alt_v2_firmware_checkbox :  alt_v2_firmware_checkbox
-    recommended_z_current_label : recommended_z_current_label
-    recommended_z_current_checkbox : recommended_z_current_checkbox
-    other_z_current_label :  other_z_current_label
-    other_z_current_checkbox :  other_z_current_checkbox
-    other_z_current_textinput :  other_z_current_textinput
     single_stack_x_current_label :  single_stack_x_current_label
     single_stack_x_current_checkbox :  single_stack_x_current_checkbox
     double_stack_x_current_label :  double_stack_x_current_label
@@ -35,6 +30,11 @@ Builder.load_string("""
     other_x_current_label :  other_x_current_label
     other_x_current_checkbox :  other_x_current_checkbox
     other_x_current_textinput :  other_x_current_textinput
+    recommended_z_current_label : recommended_z_current_label
+    recommended_z_current_checkbox : recommended_z_current_checkbox
+    other_z_current_label :  other_z_current_label
+    other_z_current_checkbox :  other_z_current_checkbox
+    other_z_current_textinput :  other_z_current_textinput
     thermal_coeff_x_label :  thermal_coeff_x_label
     thermal_coeff_x_textinput :  thermal_coeff_x_textinput
     thermal_coeff_y_label :  thermal_coeff_y_label
@@ -462,9 +462,17 @@ class ZHeadPCBSetUp(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
+
+        x_current_checkbox_group = [self.other_x_current_checkbox, 
+                                    self.single_stack_x_current_checkbox, 
+                                    self.double_stack_x_current_checkbox]
+
+        z_current_checkbox_group = [self.other_z_current_checkbox, 
+                                    self.recommended_z_current_checkbox]
+
         # # Ensure that textinputs are auto-validated when user presses away from keyboard
-        self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.other_x_current_checkbox))
-        self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.other_z_current_checkbox))
+        self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.x_current_checkbox_group))
+        self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.z_current_checkbox_group))
 
     def on_pre_enter(self):
 
@@ -516,13 +524,16 @@ class ZHeadPCBSetUp(Screen):
 
     # BUTTON HANDLING
 
-    def on_focus(self, radio_button, instance, value):
-        if not value: self.set_value_to_update_to(instance, radio_button)
+    def on_focus(self, radio_button_group, instance, value):
+        # if not value: 
+        [radio_button.state = "normal" for radio_button in radio_button_group]
+        radio_button_group[0] = "down"
+        self.set_value_to_update_to(instance, radio_button_group[0])
 
     def set_value_to_update_to(self, text_obj, radio_button):
-        if radio_button != None: 
-            radio_button.state ='down'
-            radio_button.active = True
+        # if radio_button != None: 
+        #     radio_button.state ='down'
+        #     radio_button.active = True
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         return value_to_set
 
