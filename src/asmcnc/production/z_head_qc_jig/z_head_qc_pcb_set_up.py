@@ -533,12 +533,10 @@ class ZHeadPCBSetUp(Screen):
             except:
                 pass
 
-        # self.set_value_to_update_to(instance, radio_button_group[0])
-
     def set_value_to_update_to(self, text_obj, radio_button):
-        # if radio_button != None: 
-        #     radio_button.state ='down'
-        #     radio_button.active = True
+        if radio_button != None: 
+            radio_button.state ='down'
+            radio_button.active = True
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         return value_to_set
 
