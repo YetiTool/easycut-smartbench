@@ -677,9 +677,9 @@ class ZHeadPCBSetUp(Screen):
             self.ok_button.text = "Setting currents and coefficients..."
 
             # SET CURRENTS AND THERMAL COEFFICIENTS
-            if  self.m.set_thermal_coefficients("X", x_thermal_coefficient) and \
-                self.m.set_thermal_coefficients("Y", y_thermal_coefficient) and \
-                self.m.set_thermal_coefficients("Z", z_thermal_coefficient) and \
+            if  self.m.set_thermal_coefficients("X", self.x_thermal_coefficient) and \
+                self.m.set_thermal_coefficients("Y", self.y_thermal_coefficient) and \
+                self.m.set_thermal_coefficients("Z", self.z_thermal_coefficient) and \
                 self.m.set_motor_current("Z", self.z_current) and \
                 self.m.set_motor_current("X", self.x_current):
 
