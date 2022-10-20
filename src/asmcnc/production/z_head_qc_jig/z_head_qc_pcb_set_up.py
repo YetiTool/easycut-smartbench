@@ -663,7 +663,7 @@ class ZHeadPCBSetUp(Screen):
 
 
             print("Versions to compare: ")
-            print(self.m.s.firmware_version)
+            print(self.m.s.fw_version)
             print(fw_components)
             print(version)
 
