@@ -487,14 +487,20 @@ class ZHeadPCBSetUp(Screen):
         else: 
 
             try:
-                self.get_fw_options(self.usb_path)
-                self.choose_recommended_firmware_from_available(hw)
+                self.get_fw_options_from_usb(self.usb_path)
+                self.choose_recommended_firmware_from_available(self.m.s.hw_version)
 
             except: self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
             else: self.set_and_select_defaults()
 
     def go_to_qc_home(self):
         self.sm.current = "qchome"
+
+    # SET DEFAULTS
+
+
+
+
 
     # BUTTON HANDLING
 
@@ -552,7 +558,7 @@ class ZHeadPCBSetUp(Screen):
 
         self.alt_v2_firmware_label.text = self.ver_1_string
 
-    def get_fw_options(self, usb_path):
+    def get_fw_options_from_usb(self, usb_path):
 
         self.ver_2_5_drivers_filename = glob.glob(usb_path + "GRBL2_*_5.hex")[0]
         self.ver_2_4_drivers_filename = glob.glob(usb_path + "GRBL2_*_4.hex")[0]
@@ -651,6 +657,9 @@ class ZHeadPCBSetUp(Screen):
 
             if version.startswith("2"):
                 self.set_currents_and_coeffs()
+
+            else:
+                self.progress_to_next_screen()
 
 
         def set_currents_and_coeffs(self):
