@@ -137,10 +137,10 @@ class ZHeadPCBSetUpOutcome(Screen):
     success_image = "./asmcnc/skavaUI/img/file_select_select.png"
     fail_image = "./asmcnc/skavaUI/img/template_cancel.png"
 
-    fw_update_success = False
-    z_current_correct = False
-    x_current_correct = False
-    thermal_coefficients_correct = False
+    fw_update_success = True
+    z_current_correct = True
+    x_current_correct = True
+    thermal_coefficients_correct = True
 
     def __init__(self, **kwargs):
 
@@ -195,10 +195,10 @@ class ZHeadPCBSetUpOutcome(Screen):
 
     def on_leave(self):
 
-        self.fw_update_success = False
-        self.z_current_correct = False
-        self.x_current_correct = False
-        self.thermal_coefficients_correct = False
+        self.fw_update_success = True
+        self.z_current_correct = True
+        self.x_current_correct = True
+        self.thermal_coefficients_correct = True
 
 
     # fw_update_image

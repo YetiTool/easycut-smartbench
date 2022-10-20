@@ -690,9 +690,7 @@ class ZHeadPCBSetUp(Screen):
 
         # CONFIRM THAT IT WAS SUCCESSFUL
         def update_complete(dt):
-            if self.exit_code == 0: 
-                self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
-            else: 
+            if self.exit_code != 0: 
                 self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
 
             set_settings_if_fw_version_high_enough()
