@@ -161,7 +161,7 @@ class ZHeadPCBSetUpOutcome(Screen):
 
     def on_enter(self):
 
-        self.fw_update_label.text = "Firmware: " + str(self.m.s.firmware_version)
+        self.fw_update_label.text = "Firmware: " + str(self.m.s.fw_version)
         self.z_current_label.text =     "Z Current: " + \
                                         "active " + str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) + "; " + \
                                         "idle " + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale)
