@@ -501,7 +501,6 @@ class ZHeadPCBSetUp(Screen):
         self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
 
     def set_default_x_current(self, number_of_drivers):
-        x_current = str(single_stack_dual_driver_x_current)
         self.generate_recommended_x_currents(number_of_drivers)
         self.other_x_current_textinput.text = str(self.x_current)
         self.x_current = self.set_value_to_update_to(self.single_stack_x_current_label, self.single_stack_x_current_checkbox)
