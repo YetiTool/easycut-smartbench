@@ -490,7 +490,7 @@ class ZHeadPCBSetUp(Screen):
                 self.get_fw_options(self.usb_path)
                 self.choose_recommended_firmware_from_available(hw)
 
-            except: self.hw_info_label.text = "Problems getting FW :("
+            except: self.hw_info_label.text = self.hw_info_label.text.append("\nProblems getting available FW :(")
             else: self.set_and_select_defaults()
 
     def go_to_qc_home(self):
