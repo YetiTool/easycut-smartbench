@@ -493,6 +493,8 @@ class ZHeadPCBSetUp(Screen):
             except: self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
             else: self.set_and_select_defaults()
 
+
+
     def go_to_qc_home(self):
         self.sm.current = "qchome"
 
@@ -512,6 +514,11 @@ class ZHeadPCBSetUp(Screen):
         if radio_button != None: radio_button.state ='down'
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
         print(value_to_set)
+
+        print("Class variables: ")
+        print(self.firmware_version)
+        print(self.x_current)
+        print(self.z_current)
 
     def set_and_select_defaults(self):
         self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
@@ -535,12 +542,12 @@ class ZHeadPCBSetUp(Screen):
 
     def generate_recommended_x_currents(self, no_drivers):
         if no_drivers < 5: 
-            self.single_stack_x_current_label.text = str(self.single_stack_single_driver_x_current)
-            self.double_stack_x_current_label.text = str(self.double_stack_single_driver_x_current)
+            self.single_stack_x_current_label.text = str(self.single_stack_single_driver_x_current) + " (single stack)"
+            self.double_stack_x_current_label.text = str(self.double_stack_single_driver_x_current) + " (double_stack)"
 
         else: 
-            self.single_stack_x_current_label.text = str(self.single_stack_dual_driver_x_current)
-            self.double_stack_x_current_label.text = str(self.double_stack_dual_driver_x_current)
+            self.single_stack_x_current_label.text = str(self.single_stack_dual_driver_x_current) + " (single stack)"
+            self.double_stack_x_current_label.text = str(self.double_stack_dual_driver_x_current) + " (double_stack)"
 
     def choose_recommended_firmware_from_available(self, hw):
 
