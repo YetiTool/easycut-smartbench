@@ -129,7 +129,7 @@ Builder.load_string("""
                                 id: recommended_firmware_checkbox
                                 size_hint_x: 0.2
                                 group: "firmware"
-                                on_press: root.set_value_to_update_to(recommended_firmware_label, root.firmware_version, self)
+                                on_press: root.firmware_version = root.set_value_to_update_to(recommended_firmware_label, self)
                             Label:
                                 id: recommended_firmware_label
                                 size_hint_x: 0.8
@@ -154,7 +154,7 @@ Builder.load_string("""
                                 id: alt_v3_firmware_checkbox
                                 size_hint_x: 0.2
                                 group: "firmware" 
-                                on_press: root.set_value_to_update_to(alt_v3_firmware_label, root.firmware_version, self)
+                                on_press: root.firmware_version = root.set_value_to_update_to(alt_v3_firmware_label, self)
                             Label:
                                 id: alt_v3_firmware_label
                                 size_hint_x: 0.3
@@ -167,7 +167,7 @@ Builder.load_string("""
                                 id: alt_v2_firmware_checkbox
                                 size_hint_x: 0.2
                                 group: "firmware" 
-                                on_press: root.set_value_to_update_to(alt_v2_firmware_label, root.firmware_version, self)
+                                on_press: root.firmware_version = root.set_value_to_update_to(alt_v2_firmware_label, self)
                             Label:
                                 id: alt_v2_firmware_label
                                 size_hint_x: 0.3
@@ -178,80 +178,6 @@ Builder.load_string("""
 
                         BoxLayout: 
                             size_hint_y: 0.2
-
-                BoxLayout: 
-                    orientation: 'vertical'
-                    padding: [dp(5),dp(10)]
-
-                    BoxLayout: 
-                        size_hint_y: 0.2
-                        canvas:
-                            Color: 
-                                rgba: hex('#566573')
-                            Rectangle: 
-                                size: self.size
-                                pos: self.pos
-
-                        Label: 
-                            text: "Z current (v1.3)"
-                            text_size: self.size
-                            markup: 'True'
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-
-                    BoxLayout: 
-                        orientation: 'vertical'
-                        size_hint_y: 0.8
-                        padding: [dp(5),0]
-
-                        BoxLayout: 
-                            orientation: 'horizontal'
-                            size_hint_y: 0.2
-                            CheckBox:
-                                id: recommended_z_current_checkbox
-                                size_hint_x: 0.2
-                                group: "z_current" 
-                                on_press: root.set_value_to_update_to(recommended_z_current_label, root.z_current, self)
-                            Label:
-                                id: recommended_z_current_label
-                                size_hint_x: 0.8
-                                text: "25"
-                                text_size: self.size
-                                markup: 'True'
-                                halign: 'left'
-                                valign: 'middle'
-
-                        BoxLayout: 
-                            orientation: 'horizontal'
-                            size_hint_y: 0.2
-                            CheckBox:
-                                id: other_z_current_checkbox
-                                size_hint_x: 0.2
-                                group: "z_current" 
-                                on_press: root.set_value_to_update_to(other_z_current_textinput, root.z_current, self)
-                            Label:
-                                id: other_z_current_label
-                                size_hint_x: 0.4
-                                text: "Other"
-                                text_size: self.size
-                                markup: 'True'
-                                halign: 'left'
-                                valign: 'middle'
-
-                            TextInput:
-                                id: other_z_current_textinput
-                                size_hint_x: 0.4
-                                text: "25"
-                                input_filter: "int"
-                                multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
-                        
-                        BoxLayout: 
-                            size_hint_y: 0.6
-
-
 
                 BoxLayout: 
                     orientation: 'vertical'
@@ -286,11 +212,10 @@ Builder.load_string("""
                                 id: single_stack_x_current_checkbox
                                 size_hint_x: 0.2
                                 group: "x_current" 
-                                on_press: root.set_value_to_update_to(single_stack_x_current_label, root.x_current, self)
+                                on_press: root.x_current = root.set_value_to_update_to(single_stack_x_current_label, self)
                             Label:
                                 id: single_stack_x_current_label
                                 size_hint_x: 0.8
-                                text: "26 (single stack)"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -303,11 +228,10 @@ Builder.load_string("""
                                 id: double_stack_x_current_checkbox
                                 size_hint_x: 0.2
                                 group: "x_current"
-                                on_press: root.set_value_to_update_to(double_stack_x_current_label, root.x_current, self)
+                                on_press: root.x_current = root.set_value_to_update_to(double_stack_x_current_label, self)
                             Label:
                                 id: double_stack_x_current_label
                                 size_hint_x: 0.8
-                                text: "20 (double stack)"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -320,7 +244,7 @@ Builder.load_string("""
                                 id: other_x_current_checkbox
                                 size_hint_x: 0.2
                                 group: "x_current" 
-                                on_press: root.set_value_to_update_to(other_x_current_textinput, root.x_current, self)
+                                on_press: root.x_current = root.set_value_to_update_to(other_x_current_textinput, self)
                             Label:
                                 id: other_x_current_label
                                 size_hint_x: 0.4
@@ -333,14 +257,88 @@ Builder.load_string("""
                             TextInput:
                                 id: other_x_current_textinput
                                 size_hint_x: 0.4
+                                input_filter: "int"
+                                multiline: False
+                                font_size: "22sp"
+                                padding: [dp(5), dp(5)]
+                                on_text_validate: root.x_current = root.set_value_to_update_to(other_x_current_textinput, self)
+
+                        BoxLayout: 
+                            size_hint_y: 0.4
+
+
+                BoxLayout: 
+                    orientation: 'vertical'
+                    padding: [dp(5),dp(10)]
+
+                    BoxLayout: 
+                        size_hint_y: 0.2
+                        canvas:
+                            Color: 
+                                rgba: hex('#566573')
+                            Rectangle: 
+                                size: self.size
+                                pos: self.pos
+
+                        Label: 
+                            text: "Z current (v1.3)"
+                            text_size: self.size
+                            markup: 'True'
+                            halign: 'left'
+                            valign: 'middle'
+                            padding: [dp(10),0]
+
+                    BoxLayout: 
+                        orientation: 'vertical'
+                        size_hint_y: 0.8
+                        padding: [dp(5),0]
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+                            size_hint_y: 0.2
+                            CheckBox:
+                                id: recommended_z_current_checkbox
+                                size_hint_x: 0.2
+                                group: "z_current" 
+                                on_press: root.z_current = root.set_value_to_update_to(recommended_z_current_label, self)
+                            Label:
+                                id: recommended_z_current_label
+                                size_hint_x: 0.8
+                                text: "25"
+                                text_size: self.size
+                                markup: 'True'
+                                halign: 'left'
+                                valign: 'middle'
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+                            size_hint_y: 0.2
+                            CheckBox:
+                                id: other_z_current_checkbox
+                                size_hint_x: 0.2
+                                group: "z_current" 
+                                on_press: root.z_current = root.set_value_to_update_to(other_z_current_textinput, self)
+                            Label:
+                                id: other_z_current_label
+                                size_hint_x: 0.4
+                                text: "Other"
+                                text_size: self.size
+                                markup: 'True'
+                                halign: 'left'
+                                valign: 'middle'
+
+                            TextInput:
+                                id: other_z_current_textinput
+                                size_hint_x: 0.4
                                 text: "25"
                                 input_filter: "int"
                                 multiline: False
                                 font_size: "22sp"
                                 padding: [dp(5), dp(5)]
-
+                                on_text_validate: root.z_current = root.set_value_to_update_to(other_z_current_textinput, self)
+                        
                         BoxLayout: 
-                            size_hint_y: 0.4
+                            size_hint_y: 0.6
 
                 BoxLayout: 
                     orientation: 'vertical'
@@ -382,6 +380,7 @@ Builder.load_string("""
                                 multiline: False
                                 font_size: "22sp"
                                 padding: [dp(5), dp(5)]
+                                on_text_validate: root.x_thermal_coefficient = root.set_value_to_update_to(self)
                             Label:
                                 id: thermal_coeff_y_label
                                 text: "Y"
@@ -392,6 +391,7 @@ Builder.load_string("""
                                 multiline: False
                                 font_size: "22sp"
                                 padding: [dp(5), dp(5)]
+                                on_text_validate: root.y_thermal_coefficient = root.set_value_to_update_to(self)
                             Label:
                                 id: thermal_coeff_z_label
                                 text: "Z"
@@ -402,7 +402,7 @@ Builder.load_string("""
                                 multiline: False
                                 font_size: "22sp"
                                 padding: [dp(5), dp(5)]
-                                on_text_validate: root.set_value_to_update_to(self, root.z_thermal_coefficient)
+                                on_text_validate: root.z_thermal_coefficient = root.set_value_to_update_to(self)
 
                         BoxLayout: 
                             size_hint_y: 0.4
@@ -442,7 +442,7 @@ class ZHeadPCBSetUp(Screen):
     firmware_version = "2.5.5"
     number_of_drivers = 4
 
-    x_current = str(double_stack_dual_driver_x_current)
+    x_current = str(single_stack_dual_driver_x_current)
     z_current = str(default_z_current)
 
     x_thermal_coefficient = str(default_x_thermal_coefficient)
@@ -462,68 +462,68 @@ class ZHeadPCBSetUp(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-        # Ensure that textinputs are auto-validated when user presses away from keyboard
-        self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.x_current, self.other_x_current_checkbox))
-        self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.z_current, self.other_z_current_checkbox))
-
-        self.thermal_coeff_x_textinput.bind(focus=partial(self.on_focus, self.x_thermal_coefficient, None))
-        self.thermal_coeff_y_textinput.bind(focus=partial(self.on_focus, self.y_thermal_coefficient, None))
-        self.thermal_coeff_z_textinput.bind(focus=partial(self.on_focus, self.z_thermal_coefficient, None))
+        # # Ensure that textinputs are auto-validated when user presses away from keyboard
+        self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.other_x_current_checkbox))
+        self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.other_z_current_checkbox))
 
     def on_pre_enter(self):
 
-        self.z_current = str(self.default_z_current)
-    
-        self.x_thermal_coefficient = str(self.default_x_thermal_coefficient)
-        self.y_thermal_coefficient = str(self.default_y_thermal_coefficient)
-        self.z_thermal_coefficient = str(self.default_z_thermal_coefficient)
-    
-        try:
-            number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
-            self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, number_of_drivers)
-            self.generate_recommended_x_currents(number_of_drivers)
+        self.set_default_thermal_coefficients()
+        self.set_default_z_current()
 
-        except: self.hw_info_label.text = "Can't read HW version :("
-        else: 
+        if not self.m.s.hw_version:
+            self.hw_info_label.text = "Can't read HW version :("
+            return
 
-            try:
-                self.get_fw_options_from_usb(self.usb_path)
-                self.choose_recommended_firmware_from_available(self.m.s.hw_version)
-
-            except: self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
-            else: self.set_and_select_defaults()
-
-
+        number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
+        self.set_default_x_current(number_of_drivers)
+        self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, number_of_drivers)
+        self.set_default_firmware_version()
 
     def go_to_qc_home(self):
         self.sm.current = "qchome"
 
     # SET DEFAULTS
 
+    def set_default_thermal_coefficients(self):
 
+        self.x_thermal_coefficient = str(self.default_x_thermal_coefficient)
+        self.y_thermal_coefficient = str(self.default_y_thermal_coefficient)
+        self.z_thermal_coefficient = str(self.default_z_thermal_coefficient)
 
+        self.thermal_coeff_x_textinput.text = str(self.x_thermal_coefficient)
+        self.thermal_coeff_y_textinput.text = str(self.y_thermal_coefficient)
+        self.thermal_coeff_z_textinput.text = str(self.z_thermal_coefficient)
 
+    def set_default_z_current(self):
+        self.z_current = str(self.default_z_current)
+        self.other_z_current_textinput.text = str(self.z_current)
+        self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
+
+    def set_default_x_current(self, number_of_drivers):
+        x_current = str(single_stack_dual_driver_x_current)
+        self.generate_recommended_x_currents(number_of_drivers)
+        self.other_x_current_textinput.text = str(self.x_current)
+        self.x_current = self.set_value_to_update_to(self.single_stack_x_current_label, self.single_stack_x_current_checkbox)
+
+    def set_default_firmware_version(self):
+        try:
+            self.get_fw_options_from_usb(self.usb_path)
+            self.choose_recommended_firmware_from_available(self.m.s.hw_version)
+            self.firmware_version = self.set_value_to_update_to(self.recommended_firmware_label, self.recommended_firmware_checkbox)
+
+        except: 
+            self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
 
     # BUTTON HANDLING
 
-    def on_focus(self, value_to_set, radio_button, instance, value):
-        if not value:
-            self.set_value_to_update_to(instance, value_to_set, radio_button)
+    def on_focus(self, radio_button, instance, value):
+        self.set_value_to_update_to(instance, radio_button)
 
-    def set_value_to_update_to(self, text_obj, value_to_set, radio_button = None):
+    def set_value_to_update_to(self, text_obj, radio_button):
         if radio_button != None: radio_button.state ='down'
         value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
-        print(value_to_set)
-
-        print("Class variables: ")
-        print(self.firmware_version)
-        print(self.x_current)
-        print(self.z_current)
-
-    def set_and_select_defaults(self):
-        self.set_value_to_update_to(self.recommended_firmware_label, self.firmware_version, self.recommended_firmware_checkbox)
-        self.set_value_to_update_to(self.recommended_z_current_label, self.z_current, self.recommended_z_current_checkbox)
-        self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
+        return value_to_set
 
     # VERSION HANDLING
 
@@ -579,6 +579,25 @@ class ZHeadPCBSetUp(Screen):
         just_numbers_and_underscores = re.findall('[0-9_]+', os.path.basename(fw_path))[0]
         return (".".join(just_numbers_and_underscores.split("_")))
 
+    def set_textinput_values(self):
+
+        self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
+        self.y_thermal_coefficient = int(self.thermal_coeff_y_textinput.text)
+        self.z_thermal_coefficient = int(self.thermal_coeff_z_textinput.text)
+        if self.other_x_current_checkbox.state == "down": self.x_current = int(self.other_x_current_textinput.text)
+        if self.other_z_current_checkbox.state == "down": self.z_current = int(self.other_z_current_textinput.text)
+
+    def print_settings_to_set(self):
+
+        print("FW version " + str(self.firmware_version))
+
+        print("X current: " + str(self.x_current))
+        print("Z current: " + str(self.z_current))
+
+        print("X thermal coefficient: " + str(self.x_thermal_coefficient))
+        print("Y thermal coefficient: " + str(self.y_thermal_coefficient))
+        print("Z thermal coefficient: " + str(self.z_thermal_coefficient))
+
 
     ## Z HEAD DISCONNECT/RECONNECT
 
@@ -613,6 +632,10 @@ class ZHeadPCBSetUp(Screen):
 
         self.ok_button.text = "Updating firmware..."
 
+        # ENSURE VALUES ARE SET
+        self.set_textinput_values()
+        self.print_settings_to_set()
+
         # DO FW UPDATE
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -621,14 +644,16 @@ class ZHeadPCBSetUp(Screen):
 
         def nested_do_fw_update(dt):
             if self.m.set_mode_of_reset_pin():
-
                 cmd =   "grbl_file=" + self.get_fw_path_from_string(self.firmware_version) + \
                         " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
                 proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
                 self.stdout, stderr = proc.communicate()
                 self.exit_code = int(proc.returncode)
 
-                connect()
+            else:
+                self.ok_button.text = "Check pigpiod and AMA0 port"
+            
+            connect()
 
         # RECONNECT
         def connect():
@@ -649,8 +674,10 @@ class ZHeadPCBSetUp(Screen):
 
         # CONFIRM THAT IT WAS SUCCESSFUL
         def update_complete(dt):
-            if self.exit_code == 0: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
-            else: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
+            if self.exit_code == 0: 
+                self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
+            else: 
+                self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
             self.reset_screens()
 
             if str(self.m.s.fw_version).startswith("2"):
