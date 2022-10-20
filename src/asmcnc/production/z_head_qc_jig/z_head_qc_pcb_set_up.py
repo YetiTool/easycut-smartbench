@@ -463,12 +463,12 @@ class ZHeadPCBSetUp(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
 
-        x_current_checkbox_group = [self.other_x_current_checkbox, 
-                                    self.single_stack_x_current_checkbox, 
-                                    self.double_stack_x_current_checkbox]
+        self.x_current_checkbox_group = [self.other_x_current_checkbox, 
+                                        self.single_stack_x_current_checkbox, 
+                                        self.double_stack_x_current_checkbox]
 
-        z_current_checkbox_group = [self.other_z_current_checkbox, 
-                                    self.recommended_z_current_checkbox]
+        self.z_current_checkbox_group = [self.other_z_current_checkbox, 
+                                        self.recommended_z_current_checkbox]
 
         # # Ensure that textinputs are auto-validated when user presses away from keyboard
         self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.x_current_checkbox_group))
@@ -526,8 +526,13 @@ class ZHeadPCBSetUp(Screen):
 
     def on_focus(self, radio_button_group, instance, value):
         # if not value: 
-        [radio_button.state = "normal" for radio_button in radio_button_group]
-        radio_button_group[0] = "down"
+        radio_button_group[0].state = "down"
+        try: 
+            radio_button_group[1].state = "normal"
+            radio_button_group[2].state = "normal"
+        except:
+            pass
+
         self.set_value_to_update_to(instance, radio_button_group[0])
 
     def set_value_to_update_to(self, text_obj, radio_button):
