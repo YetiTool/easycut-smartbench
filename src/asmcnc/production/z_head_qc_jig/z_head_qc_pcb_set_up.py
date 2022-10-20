@@ -661,6 +661,12 @@ class ZHeadPCBSetUp(Screen):
             if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
             else: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = False
 
+
+            print("Versions to compare: ")
+            print(self.m.s.firmware_version)
+            print(fw_components)
+            print(version)
+
             if str(self.m.s.fw_version).startswith("2"):
                 set_currents_and_coeffs()
 
