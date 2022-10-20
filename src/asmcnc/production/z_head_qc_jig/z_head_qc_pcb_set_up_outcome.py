@@ -173,10 +173,10 @@ class ZHeadPCBSetUpOutcome(Screen):
                                         "X2 idle " + str(self.m.TMC_motor[TMC_X2].standStillCurrentScale) + "; "
 
         self.thermal_coefficients_label.text = "Thermal coefficients: " + \
-                                                "X1: " + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) + ";" + \
-                                                "X2: " + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient) + ";" + \
-                                                "Y1: " + str(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) + ";" + \
-                                                "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + ";" + \
+                                                "X1: " + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) + "; " + \
+                                                "X2: " + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient) + "; " + \
+                                                "Y1: " + str(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) + "; " + \
+                                                "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + "; " + \
                                                 "Z: " + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ";"
 
         if self.fw_update_success:
