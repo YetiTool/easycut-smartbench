@@ -12,8 +12,6 @@ Builder.load_string("""
     status_container : status_container
     fw_update_image : fw_update_image
     fw_update_label : fw_update_label
-    fw_version_image : fw_version_image
-    fw_version_label : fw_version_label
     z_current_image : z_current_image
     z_current_label : z_current_label
     x_current_image : x_current_image
@@ -62,22 +60,6 @@ Builder.load_string("""
 
                 Label:
                     id: fw_update_label
-                    text: "FW update successful"
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-
-                Image:
-                    id: fw_version_image
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-                Label:
-                    id: fw_version_label
                     text: "FW update successful"
                     text_size: self.size
                     markup: 'True'
@@ -155,11 +137,10 @@ class ZHeadPCBSetUpOutcome(Screen):
     success_image = "./asmcnc/skavaUI/img/file_select_select.png"
     fail_image = "./asmcnc/skavaUI/img/template_cancel.png"
 
-    fw_update_success = True
-    fw_version_correct = True
-    z_current_correct = True
-    x_current_correct = True
-    thermal_coefficients_correct = True
+    fw_update_success = False
+    z_current_correct = False
+    x_current_correct = False
+    thermal_coefficients_correct = False
 
     def __init__(self, **kwargs):
 
@@ -180,11 +161,26 @@ class ZHeadPCBSetUpOutcome(Screen):
 
     def on_enter(self):
 
+        self.fw_update_label.text = "Firmware: " + str(self.m.s.firmware_version)
+        self.z_current_label.text =     "Z Current: " + \
+                                        "active " + str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) + "; " + \
+                                        "idle " + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale)
+
+        self.x_current_label.text =     "X Current: " + \
+                                        "X1 active " + str(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) + "; " + \
+                                        "X1 idle " + str(self.m.TMC_motor[TMC_X1].standStillCurrentScale) + "; " + \
+                                        "X2 active " + str(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) + "; " + \
+                                        "X2 idle " + str(self.m.TMC_motor[TMC_X2].standStillCurrentScale) + "; "
+
+        self.thermal_coefficients_label.text = "Thermal coefficients: " + \
+                                                "X1: " + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) + ";" + \
+                                                "X2: " + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient) + ";" + \
+                                                "Y1: " + str(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) + ";" + \
+                                                "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + ";" + \
+                                                "Z: " + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ";"
+
         if self.fw_update_success:
             self.fw_update_image.source = self.success_image
-
-        if self.fw_version_correct: 
-            self.fw_version_image.source = self.success_image
 
         if self.z_current_correct:
             self.z_current_image.source = self.success_image
@@ -195,6 +191,14 @@ class ZHeadPCBSetUpOutcome(Screen):
         if self.thermal_coefficients_correct:
             self.thermal_coefficients_image.source = self.success_image
 
+
+
+    def on_leave(self):
+
+        self.fw_update_success = False
+        self.z_current_correct = False
+        self.x_current_correct = False
+        self.thermal_coefficients_correct = False
 
 
     # fw_update_image

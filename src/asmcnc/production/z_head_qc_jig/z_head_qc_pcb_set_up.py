@@ -645,27 +645,6 @@ class ZHeadPCBSetUp(Screen):
             if self.exit_code == 0: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = True
             else: self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
             self.reset_screens()
-            does_firmware_version_match()
-
-
-        # CHECK FW VERSION MATCHES
-        def does_firmware_version_match():
-            if not self.m.s.fw_version:
-                Clock.schedule_once(lambda dt: does_firmware_version_match(), 1)
-                return
-
-            self.ok_button.text = "Checking FW version..."
-
-            fw_components = self.firmware_version.rsplit('.', 1)
-            version = re.findall(fw_components[0] + ".\d." + fw_components[1] + ".\d", self.m.s.fw_version)
-            if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
-            else: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = False
-
-
-            print("Versions to compare: ")
-            print(self.m.s.fw_version)
-            print(fw_components)
-            print(version)
 
             if str(self.m.s.fw_version).startswith("2"):
                 set_currents_and_coeffs()
