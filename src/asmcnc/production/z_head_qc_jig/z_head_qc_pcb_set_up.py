@@ -677,11 +677,11 @@ class ZHeadPCBSetUp(Screen):
             self.ok_button.text = "Setting currents and coefficients..."
 
             # SET CURRENTS AND THERMAL COEFFICIENTS
-            if  self.m.set_thermal_coefficients("X", str(self.x_thermal_coefficient)) and \
-                self.m.set_thermal_coefficients("Y", str(self.y_thermal_coefficient)) and \
-                self.m.set_thermal_coefficients("Z", str(self.z_thermal_coefficient)) and \
-                self.m.set_motor_current("Z", str(self.z_current)) and \
-                self.m.set_motor_current("X", str(self.x_current)):
+            if  self.m.set_thermal_coefficients("X", int(self.x_thermal_coefficient)) and \
+                self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
+                self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
+                self.m.set_motor_current("Z", int(self.z_current)) and \
+                self.m.set_motor_current("X", int(self.x_current)):
 
                 # STORE PARAMETERS
                 Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
