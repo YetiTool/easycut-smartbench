@@ -479,9 +479,8 @@ class ZHeadPCBSetUp(Screen):
         self.z_thermal_coefficient = str(self.default_z_thermal_coefficient)
     
         try:
-            hw, fw = self.scrape_fw_version()
-            number_of_drivers = self.generate_no_drivers_based_on_hw_version(hw)
-            self.generate_hw_and_fw_info_label(hw, fw, number_of_drivers)
+            number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
+            self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, number_of_drivers)
             self.generate_recommended_x_currents(number_of_drivers)
 
         except: self.hw_info_label.text = "Can't read HW version :("
@@ -514,13 +513,6 @@ class ZHeadPCBSetUp(Screen):
         self.set_value_to_update_to(self.single_stack_x_current_label, self.x_current, self.single_stack_x_current_checkbox)
 
     # VERSION HANDLING
-
-    def scrape_fw_version(self):
-        fw_and_hw = str(self.m.s.fw_version).split('; HW:')
-        print("OBJ FROM SC: " + str(self.m.s.fw_version))
-        print("OBJ FROM SC: " + str(self.m.s.hw_version))
-        print("FW AND HW: " + str(fw_and_hw))
-        return int(fw_and_hw[1]), fw_and_hw[0]
 
     def generate_no_drivers_based_on_hw_version(self, hw_version):
         """
@@ -653,8 +645,7 @@ class ZHeadPCBSetUp(Screen):
         # CHECK FW VERSION MATCHES
         def does_firmware_version_match(self):
             fw_components = self.firmware_version.rsplit('.', 1)
-            hw, fw = self.scrape_fw_version()
-            version = re.findall(fw_components[0] + ".\d." + fw_components[1], fw)
+            version = re.findall(fw_components[0] + ".\d." + fw_components[1] + ".\d", self.m.s.fw_version)
             if version: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = True
             else: self.sm.get_screen("qcpcbsetupoutcome").fw_version_correct = False
 
