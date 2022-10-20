@@ -649,7 +649,7 @@ class ZHeadPCBSetUp(Screen):
 
 
         # CHECK FW VERSION MATCHES
-        def does_firmware_version_match(self):
+        def does_firmware_version_match():
             if not self.m.s.fw_version:
                 Clock.schedule_once(lambda dt: does_firmware_version_match(), 1)
                 return
@@ -668,7 +668,7 @@ class ZHeadPCBSetUp(Screen):
                 self.progress_to_next_screen()
 
 
-        def set_currents_and_coeffs(self):
+        def set_currents_and_coeffs():
 
             if not self.m.TMC_registers_have_been_read_in():
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 1)
@@ -691,7 +691,7 @@ class ZHeadPCBSetUp(Screen):
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
 
-        def store_params_and_progress(self):
+        def store_params_and_progress():
 
             self.ok_button.text = "Storing parameters..."
             log("Storing TMC params...")
@@ -699,7 +699,7 @@ class ZHeadPCBSetUp(Screen):
             check_registers_are_correct()
 
 
-        def check_registers_are_correct(self):
+        def check_registers_are_correct():
 
             if not self.m.TMC_registers_have_been_read_in():
                 Clock.schedule_once(lambda dt: check_registers_are_correct(), 0.5)
