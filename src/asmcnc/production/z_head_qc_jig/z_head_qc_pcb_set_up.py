@@ -465,6 +465,8 @@ class ZHeadPCBSetUp(Screen):
     y_thermal_coefficient_min = 4999
     z_thermal_coefficient_min = 4999
 
+    exit_code = None
+
     def __init__(self, **kwargs):
 
         super(ZHeadPCBSetUp, self).__init__(**kwargs)
@@ -491,6 +493,7 @@ class ZHeadPCBSetUp(Screen):
     def on_pre_enter(self):
 
         self.ok_button.text = "Flash FW and set up PCB"
+        self.exit_code = None
 
         self.set_default_thermal_coefficients()
         self.set_default_z_current()
@@ -749,8 +752,10 @@ class ZHeadPCBSetUp(Screen):
             try: 
                 if self.exit_code != 0: 
                     self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
+                    self.ok_button.text = "Check pigpiod and AMA0 port"
 
-                set_settings_if_fw_version_high_enough()
+                else:
+                    set_settings_if_fw_version_high_enough()
 
             except: 
                 self.ok_button.text = "Check pigpiod and AMA0 port"
