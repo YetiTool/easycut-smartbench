@@ -522,7 +522,6 @@ class ZHeadPCBSetUp(Screen):
         self.recommended_z_current_checkbox.state = "normal"
         self.other_z_current_checkbox.state = "normal"
 
-        self.z_current = str(self.default_z_current)
         self.other_z_current_textinput.text = str(self.z_current)
         self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
 
