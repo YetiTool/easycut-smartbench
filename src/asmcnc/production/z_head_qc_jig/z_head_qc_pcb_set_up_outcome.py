@@ -179,19 +179,20 @@ class ZHeadPCBSetUpOutcome(Screen):
                                                 "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + "; " + \
                                                 "Z: " + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ";"
 
-        if self.fw_update_success:
-            self.fw_update_image.source = self.success_image
+        if self.fw_update_success: self.fw_update_image.source = self.success_image
+        else: self.fw_update_image.source = self.fail_image
 
-        if self.z_current_correct:
-            self.z_current_image.source = self.success_image
+        if self.z_current_correct: self.z_current_image.source = self.success_image
+        elif str(self.m.s.fw_version).startswith("1"): self.z_current_image.source = self.undetermined_image
+        else: self.z_current_image.source = self.fail_image
 
-        if self.x_current_correct:
-            self.x_current_image.source = self.success_image
+        if self.x_current_correct: self.x_current_image.source = self.success_image
+        elif str(self.m.s.fw_version).startswith("1"): self.x_current_image.source = self.undetermined_image
+        else: self.x_current_image.source = self.fail_image
 
-        if self.thermal_coefficients_correct:
-            self.thermal_coefficients_image.source = self.success_image
-
-
+        if self.thermal_coefficients_correct: self.thermal_coefficients_image.source = self.success_image
+        elif str(self.m.s.fw_version).startswith("1"): self.thermal_coefficients_image.source = self.undetermined_image
+        else: self.thermal_coefficients_image.source = self.fail_image
 
     def on_leave(self):
 
@@ -200,6 +201,10 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.x_current_correct = True
         self.thermal_coefficients_correct = True
 
+        self.fw_update_image.source = self.undetermined_image
+        self.z_current_image.source = self.undetermined_image
+        self.x_current_image.source = self.undetermined_image
+        self.thermal_coefficients_image.source = self.undetermined_image
 
     # fw_update_image
     # fw_update_label
