@@ -613,8 +613,6 @@ class ZHeadPCBSetUp(Screen):
         if  not (self.x_thermal_coefficient_min < int(self.thermal_coeff_x_textinput.text) < self.x_thermal_coefficient_max) \
             or not (self.y_thermal_coefficient_min < int(self.thermal_coeff_y_textinput.text) < self.y_thermal_coefficient_max) \
             or not (self.z_thermal_coefficient_min < int(self.thermal_coeff_z_textinput.text) < self.z_thermal_coefficient_max):
-
-            print("Thermal coeffs rejected")
             return False
 
         self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
@@ -632,16 +630,14 @@ class ZHeadPCBSetUp(Screen):
                 x_min = self.x_current_single_driver_min
                 x_max = self.x_current_single_driver_max
 
-            if not (x_min < int(self.other_x_current_textinput.text) < x_max): 
-                print("X rejected")
-                return False
+            if not (x_min < int(self.other_x_current_textinput.text) < x_max): return False
             self.x_current = int(self.other_x_current_textinput.text)
 
         if self.other_z_current_checkbox.state == "down": 
-            if not (self.z_current_min < int(self.other_x_current_textinput.text) < self.z_current_max): 
-                print("Z rejected")
-                return False
+            if not (self.z_current_min < int(self.other_x_current_textinput.text) < self.z_current_max): return False
             self.z_current = int(self.other_z_current_textinput.text)
+
+        return True
 
     def print_settings_to_set(self):
 
