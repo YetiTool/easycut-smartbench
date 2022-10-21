@@ -765,6 +765,9 @@ class ZHeadPCBSetUp(Screen):
                 set_currents_and_coeffs()
 
             else:
+                self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+                self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
+                self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
                 self.progress_to_next_screen()
 
         # SET CURRENTS AND THERMAL COEFFICIENTS
