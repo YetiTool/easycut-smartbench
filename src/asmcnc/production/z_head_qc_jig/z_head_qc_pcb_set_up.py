@@ -518,16 +518,30 @@ class ZHeadPCBSetUp(Screen):
         self.thermal_coeff_z_textinput.text = str(self.z_thermal_coefficient)
 
     def set_default_z_current(self):
+
+        self.recommended_z_current_checkbox.state = "normal"
+        self.other_z_current_checkbox.state = "normal"
+
         self.z_current = str(self.default_z_current)
         self.other_z_current_textinput.text = str(self.z_current)
         self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
 
     def set_default_x_current(self, number_of_drivers):
+
+        self.single_stack_x_current_checkbox.state = "normal"
+        self.double_stack_x_current_checkbox.state = "normal"
+        self.other_x_current_checkbox.state = "normal"
+        
         self.generate_recommended_x_currents(number_of_drivers)
         self.other_x_current_textinput.text = str(self.x_current)
         self.x_current = self.set_value_to_update_to(self.single_stack_x_current_label, self.single_stack_x_current_checkbox)
 
     def set_default_firmware_version(self):
+
+        self.recommended_firmware_checkbox.state = "normal"
+        self.alt_v3_firmware_checkbox.state == "normal"
+        self.alt_v2_firmware_checkbox.state == "normal"
+
         try:
             self.get_fw_options_from_usb(self.usb_path)
             self.choose_recommended_firmware_from_available(self.m.s.hw_version)
@@ -535,6 +549,7 @@ class ZHeadPCBSetUp(Screen):
 
         except: 
             self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
+
 
     # BUTTON HANDLING
 
