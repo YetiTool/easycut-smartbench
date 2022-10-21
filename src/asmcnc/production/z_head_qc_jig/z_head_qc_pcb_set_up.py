@@ -634,7 +634,7 @@ class ZHeadPCBSetUp(Screen):
             self.x_current = int(self.other_x_current_textinput.text)
 
         if self.other_z_current_checkbox.state == "down": 
-            if not (self.z_current_min < int(self.other_x_current_textinput.text) < self.z_current_max): return False
+            if not (self.z_current_min < int(self.other_z_current_textinput.text) < self.z_current_max): return False
             self.z_current = int(self.other_z_current_textinput.text)
 
         return True
