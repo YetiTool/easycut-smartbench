@@ -53,6 +53,7 @@ class ZHeadQCConnecting(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.usb = kwargs['usb']
         self.connecting_label.text = "Connecting to Z Head..."
 
     def on_enter(self):
@@ -64,13 +65,20 @@ class ZHeadQCConnecting(Screen):
 
         if not self.m.s.fw_version:
             log("Waiting to get FW version")
+            self.connecting_label.text = "Waiting to get FW version"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
 
         if not self.m.TMC_registers_have_been_read_in():
-            log("TMC registers have not been read in yet")
+            log("Waiting to get TMC registers")
+            self.connecting_label.text = "Waiting to get TMC registers"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
+
+        if not self.usb.is_available()
+            log("Getting USB")
+            self.connecting_label.text = "Getting USB"
+            Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
 
         self.progress_to_next_screen()
 

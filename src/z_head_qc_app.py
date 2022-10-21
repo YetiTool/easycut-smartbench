@@ -145,7 +145,7 @@ class ZHeadQC(App):
         z_head_qc_8 = ZHeadQC8(name='qc8', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_8)
 
-        z_head_qc_connecting = ZHeadQCConnecting(name='qcconnecting', sm = sm, m = m)
+        z_head_qc_connecting = ZHeadQCConnecting(name='qcconnecting', sm = sm, m = m, usb = usb_stick)
         sm.add_widget(z_head_qc_connecting)
 
         z_head_qc_pcb_set_up = ZHeadPCBSetUp(name='qcpcbsetup', sm = sm, m = m)
