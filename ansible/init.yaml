@@ -135,3 +135,7 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: Install paramiko python package on version 2.0.0
+    pip:
+      name: paramiko==2.0.0
+    ignore_errors: yes

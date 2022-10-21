@@ -159,3 +159,12 @@ class AlarmScreen1(Screen):
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_1'
+
+	def on_pre_enter(self):
+		self.update_font_size(self.description_label)
+
+	def update_font_size(self, value):
+		if len(value.text) > 330:
+			value.font_size = 19
+		else: 
+			value.font_size = 20

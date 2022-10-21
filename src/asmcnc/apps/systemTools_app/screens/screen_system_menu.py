@@ -61,20 +61,6 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            id: button_support_menu
-            text: 'Support'
-            on_press: root.go_to_support()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/support.png"
-            border: [dp(25)]*4
-            padding_y: 5
-
-        Button:
             id: button_reboot
             text: 'Reboot'
             on_press: root.reboot()
@@ -85,6 +71,20 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
+            border: [dp(25)]*4
+            padding_y: 5
+
+        Button:
+            id: button_support_menu
+            text: 'Support'
+            on_press: root.go_to_support()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/support.png"
             border: [dp(25)]*4
             padding_y: 5
 

@@ -141,6 +141,7 @@ class AlarmSequenceManager(object):
 	def exit_sequence(self):
 		
 		self.sg_alarm = False
+		self.stall_axis = "W"
 		self.m.resume_from_alarm()
 		
 		if self.sm.has_screen(self.return_to_screen):
@@ -240,7 +241,10 @@ class AlarmSequenceManager(object):
 		self.sm.get_screen('alarm_1').description_label.text = (
 			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
 			" " + \
-			self.l.get_str("SmartBench has paused the job, to prevent further damage.")
+			self.l.get_str("SmartBench has paused the job, to prevent further damage.") + \
+            " " + \
+            self.l.get_str("Before raising the Z axis, ensure that you release any side-load on the tool by " + \
+                           "jogging the X and Y axis a very small amount (e.g. 0.5mm), away from the side of the material.")
 			)
 
 		self.sm.get_screen('alarm_5').description_label.text = (

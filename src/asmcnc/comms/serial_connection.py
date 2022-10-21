@@ -719,13 +719,16 @@ class SerialConnection(object):
     stall_Z = False
     stall_Y = False
 
+    # Is GRBL locked due to an alarm? 
+    grbl_waiting_for_reset = False
+
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
     print_buffer_status = True
 
-
     expecting_probe_result = False
     
+    # VERSIONS
     fw_version = ''
     hw_version = ''
 
@@ -746,6 +749,8 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+    sg_x1_motor = None
+    sg_x2_motor = None
 
     # STALL GUARD WARNING
     last_stall_tmc_index = None
@@ -753,6 +758,7 @@ class SerialConnection(object):
     last_stall_load = None
     last_stall_threshold = None
     last_stall_travel_distance = None
+    last_stall_temperature = None
     last_stall_x_coord = None
     last_stall_y_coord = None
     last_stall_z_coord = None
@@ -769,6 +775,14 @@ class SerialConnection(object):
     spindle_total_run_time_seconds = None
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
+
+    # DETECT SOFT RESET
+    grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
+
+    # IF NEED TO MEASURE RUNNING DATA
+    measure_running_data = False
+    running_data = []
+    measurement_stage = 0
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1071,6 +1085,21 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
+                    try:
+                        int(sg_values[5])
+                        int(sg_values[6])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    else:
+                        self.sg_x1_motor = int(sg_values[5])
+                        self.sg_x2_motor = int(sg_values[6]) 
+
                     if self.record_sg_values_flag:
 
                         self.m.temp_sg_array.append([
@@ -1078,7 +1107,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
@@ -1115,9 +1146,10 @@ class SerialConnection(object):
                     self.last_stall_load = int(sg_alarm_parts[2])
                     self.last_stall_threshold = int(sg_alarm_parts[3])
                     self.last_stall_travel_distance = int(sg_alarm_parts[4])
-                    self.last_stall_x_coord = float(sg_alarm_parts[5])
-                    self.last_stall_y_coord = float(sg_alarm_parts[6])
-                    self.last_stall_z_coord = float(sg_alarm_parts[7])
+                    self.last_stall_temperature = int(sg_alarm_parts[5])
+                    self.last_stall_x_coord = float(sg_alarm_parts[6])
+                    self.last_stall_y_coord = float(sg_alarm_parts[7])
+                    self.last_stall_z_coord = float(sg_alarm_parts[8])
                     self.last_stall_status = message
 
                 elif part.startswith('Sp:'):
@@ -1201,7 +1233,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
-
+                    self.m.TMC_motor[int(motor_index)].got_calibration_coefficients = True
 
                     try: 
 
@@ -1224,8 +1256,35 @@ class SerialConnection(object):
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
+
+            if self.measure_running_data:
+
+                try:
+
+                    self.running_data.append([
+                        int(self.measurement_stage),
+                        float(self.m_x),
+                        float(self.m_y),
+                        float(self.m_z),
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
+                        int(self.motor_driver_temp),
+                        int(self.pcb_temp),
+                        int(self.transistor_heatsink_temp),
+                        datetime.now(),
+                        int(self.feed_rate),
+                        self.sg_x1_motor,
+                        self.sg_x2_motor,
+                    ])
+
+                except: 
+                    pass
  
         elif message.startswith('ALARM:'):
+            self.grbl_waiting_for_reset = True
             log('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
@@ -1264,6 +1323,7 @@ class SerialConnection(object):
             elif setting == '$50': self.setting_50 = value; # Serial number and product code
             elif setting == '$51': self.setting_51 = value; # Enable digital feedback spindle, boolean
             elif setting == '$53': self.setting_53 = value; # Enable stall guard alarm operation, boolean
+            elif setting == '$54': self.setting_54 = value; # Motor load (SG) values reporting type, boolean
             elif setting == '$100': self.setting_100 = value;  # X steps/mm
             elif setting == '$101': self.setting_101 = value;  # Y steps/mm
             elif setting == '$102': self.setting_102 = value;  # Z steps/mm
@@ -1347,6 +1407,10 @@ class SerialConnection(object):
                 except: 
                     log("Could not retrieve HW version")
 
+        elif re.match(self.grbl_initialisation_message, message):
+            # Let sw know that grbl is unlocked now that statuses are being received
+            self.grbl_waiting_for_reset = False
+
 
     def check_for_sustained_max_overload(self, dt):
 
@@ -1402,6 +1466,7 @@ class SerialConnection(object):
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
+        if reset_grbl_after_stream: list_to_stream.append("G4 P1")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
@@ -1413,8 +1478,14 @@ class SerialConnection(object):
             self._process_oks_from_sequential_streaming = True
 
         if self._sequential_stream_buffer:
-            self.write_direct(self._sequential_stream_buffer[0])
-            del self._sequential_stream_buffer[0]
+            try: 
+                self.write_direct(self._sequential_stream_buffer[0])
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                else: del self._sequential_stream_buffer[0]
+
+            except IndexError: 
+                log("Sequential streaming buffer empty")
+                return
 
         else:
             self._process_oks_from_sequential_streaming = False
@@ -1424,6 +1495,19 @@ class SerialConnection(object):
                 self.m._grbl_soft_reset()
                 log("GRBL Reset after sequential stream ended")
             self.is_sequential_streaming = False
+
+    def _after_grbl_settings_insert_dwell(self):
+
+        if self._sequential_stream_buffer[0].startswith('$'):
+            try: 
+                if not self._sequential_stream_buffer[1].startswith('$') \
+                and not self._sequential_stream_buffer[1] == "G4 P1":
+                    return True
+            except: 
+                return True
+
+        return False
+
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
         
@@ -1446,8 +1530,8 @@ class SerialConnection(object):
 
 
 ## WRITE-----------------------------------------------------------------------------
-
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
+
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):

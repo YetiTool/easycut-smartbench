@@ -20,6 +20,9 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
+from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -29,6 +32,7 @@ Builder.load_string("""
 
     software_version_label: software_version_label
     platform_version_label: platform_version_label
+    setting_54_label:setting_54_label
     latest_software_version: latest_software_version
     latest_platform_version: latest_platform_version
     z_touch_plate_entry: z_touch_plate_entry
@@ -39,6 +43,7 @@ Builder.load_string("""
     machine_touchplate_thickness: machine_touchplate_thickness
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
+    setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
 
@@ -93,7 +98,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(210)
+                        height: dp(230)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -102,7 +107,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             cols: 0
-                            rows: 3
+                            rows: 4
                             padding: 10
                             spacing: 5
                             BoxLayout: 
@@ -125,7 +130,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
                                     Label:
                                         text: '[b]Serial number[/b]'
@@ -193,7 +198,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
 
                                     Label:
@@ -218,11 +223,31 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
+                        BoxLayout:
+                            size_hint_y: 0.3
+                            orientation: 'horizontal'
+                            spacing: dp(10)
+
+                            Button:
+                                text: '$54 info'
+                                on_press: root.setting_54_info()
+
+                            ToggleButton:
+                                id: setting_54_toggle
+                                text: 'Set $54=1'
+                                on_press: root.toggle_setting_54()
+
+                            Label:
+                                id: setting_54_label
+                                size_hint_x: 0.7
+                                text: '$54 = N/A'
+                                color: [0,0,0,1]
+
 
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(100)
+                        height: dp(80)
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
@@ -297,8 +322,8 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 8
-                        padding: 10
+                        rows: 9
+                        padding: 5
                         spacing: 2
                         ToggleButton:
                             id: maintenance_reminder_toggle
@@ -333,9 +358,29 @@ Builder.load_string("""
                         Button:
                             text: 'Overnight test'
                             on_press: root.enter_overnight_test()
-                        Button:
-                            text: 'Current Adjustment'
-                            on_press: root.enter_current_adjustment()
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+
+                            Button:
+                                text: 'Current'
+                                on_press: root.enter_current_adjustment()
+
+                            Button:
+                                text: 'Stall Jig'
+                                on_press: root.enter_stall_jig()
+
+                        BoxLayout: 
+                            orientation: 'horizontal'
+
+                            Button:
+                                text: 'SG thresh'
+                                on_press: root.enter_set_thresholds()
+
+                            Button:
+                                text: 'Measure'
+                                on_press: root.enter_general_measurement()
+                            
 
             BoxLayout:
                 size_hint: (None,None)
@@ -513,6 +558,18 @@ class FactorySettingsScreen(Screen):
         if not os.path.exists(csv_path):
             os.mkdir(csv_path)
 
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Get $54 state'):
+            if self.m.s.setting_54:
+                self.setting_54_label.text = '$54 = 1'
+                self.setting_54_toggle.state = 'down'
+                self.setting_54_toggle.text = 'Set $54=0'
+            else:
+                self.setting_54_label.text = '$54 = 0'
+                self.setting_54_toggle.state = 'normal'
+                self.setting_54_toggle.text = 'Set $54=1'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
@@ -668,6 +725,14 @@ class FactorySettingsScreen(Screen):
 
         else:
 
+            try:
+                if self.m.s.setting_54:
+                    warning_message = 'Please ensure $54 is set to 0 before doing a factory reset.'
+                    popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                    return
+            except:
+                pass
+
             if self.smartbench_model.text == 'Choose model':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
@@ -707,6 +772,14 @@ class FactorySettingsScreen(Screen):
         os.system('sudo shutdown -h now')
 
     def full_console_update(self):
+
+        try:
+            if self.m.s.setting_54:
+                warning_message = 'Please ensure $54 is set to 0 before doing an update.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                return
+        except:
+            pass
 
         self.console_update_button.text = "Doing update,\nplease wait..."
         self.remove_csv_files()
@@ -748,6 +821,27 @@ class FactorySettingsScreen(Screen):
         elif self.show_spindle_overload_toggle.state == 'down':
             self.systemtools_sm.sm.get_screen('go').show_spindle_overload = True
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
+
+    def toggle_setting_54(self):
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
+            if self.setting_54_toggle.state == 'normal':
+                self.setting_54_label.text = '$54 = 0'
+                self.m.write_dollar_54_setting(0)
+                self.setting_54_toggle.text = 'Set $54=1'
+            else:
+                self.setting_54_label.text = '$54 = 1'
+                self.m.write_dollar_54_setting(1)
+                self.setting_54_toggle.text = 'Set $54=0'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
+            self.setting_54_toggle.state = 'normal'
+            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+
+    def setting_54_info(self):
+        info = '$54 available on FW 2.5 and up\n\n' + \
+               '$54 should be set to 1 for all final test procedures\n\n' + \
+               '$54 should be set to 0 when SB is ready to be factory reset and packed'
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
@@ -835,7 +929,7 @@ class FactorySettingsScreen(Screen):
             file.close()
 
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
 
         return str(serial_number_from_file)
 
@@ -908,3 +1002,36 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
+
+
+    def enter_stall_jig(self):
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('stall_jig'):
+                    stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
+                    self.systemtools_sm.sm.add_widget(stall_jig_screen)
+                
+                self.systemtools_sm.sm.current = 'stall_jig'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+
+    def enter_set_thresholds(self):
+        if not self.systemtools_sm.sm.has_screen('set_thresholds'):
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            self.systemtools_sm.sm.add_widget(set_thresholds_screen)
+        
+        self.systemtools_sm.sm.current = 'set_thresholds'
+
+
+    def enter_general_measurement(self):
+        if not self.systemtools_sm.sm.has_screen('general_measurement'):
+            general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
+            self.systemtools_sm.sm.add_widget(general_measurement_screen)
+        
+        self.systemtools_sm.sm.current = 'general_measurement'
+
+
+
