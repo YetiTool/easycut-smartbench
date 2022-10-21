@@ -74,7 +74,7 @@ Builder.load_string("""
 
 class ZHeadQCHome(Screen):
 
-    fw_button_string = 'NO - Update FW now! (For v1.3)'
+    fw_button_string = 'NO - Set up PCB & Flash FW'
     hw_version = 0
 
     def __init__(self, **kwargs):

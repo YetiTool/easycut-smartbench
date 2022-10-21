@@ -690,10 +690,15 @@ class ZHeadPCBSetUp(Screen):
 
         # CONFIRM THAT IT WAS SUCCESSFUL
         def update_complete(dt):
-            if self.exit_code != 0: 
-                self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
 
-            set_settings_if_fw_version_high_enough()
+            try: 
+                if self.exit_code != 0: 
+                    self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
+
+                set_settings_if_fw_version_high_enough()
+
+            except: 
+                self.ok_button.text = "Check pigpiod and AMA0 port"
 
         # WAIT TO GET FW VERSION, THEN JUDGE IF PROTOCOL COMMANDS CAN BE SENT
         def set_settings_if_fw_version_high_enough():
