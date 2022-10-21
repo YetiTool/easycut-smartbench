@@ -6,3 +6,7 @@ sb_values/
 src/asmcnc/production/database/credentials.py
 src/asmcnc/job/job_recovery.txt
 src/asmcnc/production/database/csvs/
+src/asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png
+src/asmcnc/production/database/csvs/
+src/asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png
+

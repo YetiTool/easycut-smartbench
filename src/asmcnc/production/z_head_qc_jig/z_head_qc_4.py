@@ -69,7 +69,8 @@ class ZHeadQC4(Screen):
         if not self.m.run_calibration:
             Clock.unschedule(self.poll_for_calibration_check)
 
-            if not self.m.calibration_tuning_fail_info:        
+            if not self.m.calibration_tuning_fail_info:
+                self.m.start_measuring_running_data(stage=12)
                 self.m.check_x_z_calibration()
                 self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 5)
 
@@ -80,6 +81,7 @@ class ZHeadQC4(Screen):
     def finish_calibrating(self, dt):
         if not self.m.checking_calibration_in_progress:
             Clock.unschedule(self.poll_for_calibration_completion)
+            self.m.stop_measuring_running_data()
 
             if not self.m.checking_calibration_fail_info:
                 self.enter_next_screen()

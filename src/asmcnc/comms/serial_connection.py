@@ -1243,7 +1243,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
-
+                    self.m.TMC_motor[int(motor_index)].got_calibration_coefficients = True
 
                     try: 
 
@@ -1270,16 +1270,17 @@ class SerialConnection(object):
             if self.measure_running_data:
 
                 try:
+
                     self.running_data.append([
                         int(self.measurement_stage),
                         float(self.m_x),
                         float(self.m_y),
                         float(self.m_z),
-                        self.sg_x_motor_axis,
-                        self.sg_y_axis,
-                        self.sg_y1_motor,
-                        self.sg_y2_motor,
-                        self.sg_z_motor_axis,
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
                         int(self.motor_driver_temp),
                         int(self.pcb_temp),
                         int(self.transistor_heatsink_temp),
@@ -1332,6 +1333,7 @@ class SerialConnection(object):
             elif setting == '$50': self.setting_50 = value; # Serial number and product code
             elif setting == '$51': self.setting_51 = value; # Enable digital feedback spindle, boolean
             elif setting == '$53': self.setting_53 = value; # Enable stall guard alarm operation, boolean
+            elif setting == '$54': self.setting_54 = value; # Motor load (SG) values reporting type, boolean
             elif setting == '$100': self.setting_100 = value;  # X steps/mm
             elif setting == '$101': self.setting_101 = value;  # Y steps/mm
             elif setting == '$102': self.setting_102 = value;  # Z steps/mm
@@ -1474,6 +1476,7 @@ class SerialConnection(object):
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
+        if reset_grbl_after_stream: list_to_stream.append("G4 P1")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
@@ -1485,8 +1488,14 @@ class SerialConnection(object):
             self._process_oks_from_sequential_streaming = True
 
         if self._sequential_stream_buffer:
-            self.write_direct(self._sequential_stream_buffer[0])
-            del self._sequential_stream_buffer[0]
+            try: 
+                self.write_direct(self._sequential_stream_buffer[0])
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                else: del self._sequential_stream_buffer[0]
+
+            except IndexError: 
+                log("Sequential streaming buffer empty")
+                return
 
         else:
             self._process_oks_from_sequential_streaming = False
@@ -1496,6 +1505,19 @@ class SerialConnection(object):
                 self.m._grbl_soft_reset()
                 log("GRBL Reset after sequential stream ended")
             self.is_sequential_streaming = False
+
+    def _after_grbl_settings_insert_dwell(self):
+
+        if self._sequential_stream_buffer[0].startswith('$'):
+            try: 
+                if not self._sequential_stream_buffer[1].startswith('$') \
+                and not self._sequential_stream_buffer[1] == "G4 P1":
+                    return True
+            except: 
+                return True
+
+        return False
+
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
         
@@ -1518,8 +1540,8 @@ class SerialConnection(object):
 
 
 ## WRITE-----------------------------------------------------------------------------
-
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
+
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):

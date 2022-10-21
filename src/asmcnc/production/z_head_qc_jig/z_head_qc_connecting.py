@@ -52,11 +52,17 @@ class ZHeadQCConnecting(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.connecting_label.text = "Connecting to Z Head..."
-        self.current = 25
+        self.z_current = 25
+        self.x_current = 26
+
+        # IMPORTANT: uncomment below to run z head qc on riggy
+        # self.z_current = 5
+        # self.x_current = 5
 
     def on_enter(self):
 
         log("Set Z current to 25 if it is not set already...")
+        log("Set X current to 26 if it is not set already...")
         self.connecting_label.text = "Connecting to Z Head..."
         self.get_and_set_current()
 
@@ -93,18 +99,61 @@ class ZHeadQCConnecting(Screen):
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 1)
             return
 
-        if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.current:
-            log("Current already set at 25")
-            self.progress_to_next_screen()
+        if self.m.TMC_motor[TMC_Z].ActiveCurrentScale == self.z_current and \
+            self.m.TMC_motor[TMC_X1].ActiveCurrentScale == self.x_current and \
+            self.m.TMC_motor[TMC_X2].ActiveCurrentScale == self.x_current:
+            log("Z Current already set at 25")
+            log("X Current already set at 26")
+
+            if self.m.TMC_motor[TMC_Z].temperatureCoefficient == 10000 and \
+              (self.m.TMC_motor[TMC_Y1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_Y2].temperatureCoefficient == 5000) and \
+              (self.m.TMC_motor[TMC_X1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_X2].temperatureCoefficient == 5000):
+
+                log("Thermal coeffs already set")
+                self.progress_after_all_registers_read_in()
+            
+            else:
+                self.set_thermal_coefficients()
+
             return
 
         self.connecting_label.text = "Setting current..."
-        log("Setting current to 25...")
-        if self.m.set_motor_current("Z", self.current): 
-            Clock.schedule_once(lambda dt: self.progress_after_all_registers_read_in(), 0.5)
+        log("Setting Z current to 25...")
+        log("Setting X current to 26...")
+        if self.m.set_motor_current("Z", self.z_current) and self.m.set_motor_current("X", self.x_current):
+            Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
         else: 
             log("Z Head not Idle yet, waiting...")
             Clock.schedule_once(lambda dt: self.get_and_set_current(), 1) # If unsuccessful it's because it's not Idle
+
+
+    def set_thermal_coefficients(self):
+
+        if self.m.TMC_motor[TMC_Z].temperatureCoefficient == 10000 and \
+          (self.m.TMC_motor[TMC_Y1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_Y2].temperatureCoefficient == 5000) and \
+          (self.m.TMC_motor[TMC_X1].temperatureCoefficient == 5000 and self.m.TMC_motor[TMC_X2].temperatureCoefficient == 5000):
+
+            log("Thermal coeffs already set")
+            self.store_params_and_progress()
+            return
+
+        self.connecting_label.text = "Setting thermal coeffs..."
+        log("Setting thermal coeffs...")
+
+        if self.m.set_thermal_coefficients("X", 5000) and self.m.set_thermal_coefficients("Y", 5000) and self.m.set_thermal_coefficients("Z", 10000):
+            Clock.schedule_once(lambda dt: self.store_params_and_progress(), 1)
+
+        else:
+            log("Z Head not Idle yet, waiting...")
+            Clock.schedule_once(lambda dt: self.set_thermal_coefficients(), 0.5)
+
+
+    def store_params_and_progress(self):
+        log("Storing TMC params...")
+        self.m.store_tmc_params_in_eeprom_and_handshake()
+        self.progress_after_all_registers_read_in()
+
+
 
 
 
