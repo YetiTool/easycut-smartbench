@@ -539,8 +539,8 @@ class ZHeadPCBSetUp(Screen):
     def set_default_firmware_version(self):
 
         self.recommended_firmware_checkbox.state = "normal"
-        self.alt_v3_firmware_checkbox.state == "normal"
-        self.alt_v2_firmware_checkbox.state == "normal"
+        self.alt_v3_firmware_checkbox.state = "normal"
+        self.alt_v2_firmware_checkbox.state = "normal"
 
         try:
             self.get_fw_options_from_usb(self.usb_path)
@@ -633,7 +633,6 @@ class ZHeadPCBSetUp(Screen):
         self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
         self.y_thermal_coefficient = int(self.thermal_coeff_y_textinput.text)
         self.z_thermal_coefficient = int(self.thermal_coeff_z_textinput.text)
-
 
         if self.other_x_current_checkbox.state == "down":
 
