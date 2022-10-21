@@ -451,6 +451,20 @@ class ZHeadPCBSetUp(Screen):
 
     poll_for_reconnection = None
 
+    x_current_single_driver_max = 30
+    x_current_dual_driver_max = 30
+    z_current_max = 30
+    x_current_single_driver_min = 0
+    x_current_dual_driver_min = 0
+    z_current_min = 0
+
+    x_thermal_coefficient_max = 10001
+    y_thermal_coefficient_max = 10001
+    z_thermal_coefficient_max = 10001
+    x_thermal_coefficient_min = 4999
+    y_thermal_coefficient_min = 4999
+    z_thermal_coefficient_min = 4999
+
     def __init__(self, **kwargs):
 
         super(ZHeadPCBSetUp, self).__init__(**kwargs)
@@ -483,9 +497,9 @@ class ZHeadPCBSetUp(Screen):
             self.hw_info_label.text = "Can't read HW version :("
             return
 
-        number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
-        self.set_default_x_current(number_of_drivers)
-        self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, number_of_drivers)
+        self.number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
+        self.set_default_x_current(self.number_of_drivers)
+        self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, self.number_of_drivers)
         self.set_default_firmware_version()
 
     def go_to_qc_home(self):
@@ -594,13 +608,32 @@ class ZHeadPCBSetUp(Screen):
         just_numbers_and_underscores = re.findall('[0-9_]+', os.path.basename(fw_path))[0]
         return (".".join(just_numbers_and_underscores.split("_")))
 
-    def set_textinput_values(self):
+    def check_and_set_textinput_values(self):
+
+        if  not (self.x_thermal_coefficient_min < int(self.thermal_coeff_x_textinput.text) < self.x_thermal_coefficient_max) \
+            or not (self.y_thermal_coefficient_min < int(self.thermal_coeff_y_textinput.text) < self.y_thermal_coefficient_max) \
+            or not (self.z_thermal_coefficient_min < int(self.thermal_coeff_z_textinput.text) < self.z_thermal_coefficient_max):
+            return False
 
         self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
         self.y_thermal_coefficient = int(self.thermal_coeff_y_textinput.text)
         self.z_thermal_coefficient = int(self.thermal_coeff_z_textinput.text)
-        if self.other_x_current_checkbox.state == "down": self.x_current = int(self.other_x_current_textinput.text)
-        if self.other_z_current_checkbox.state == "down": self.z_current = int(self.other_z_current_textinput.text)
+
+        if int(self.number_of_drivers) > 4:
+            x_min = self.x_current_dual_driver_min
+            x_max = self.x_current_dual_driver_max
+
+        else: 
+            x_min = self.x_current_single_driver_min
+            x_max = self.x_current_single_driver_max
+
+        if self.other_x_current_checkbox.state == "down":
+            if not (x_min < self.other_x_current_textinput.text < x_max): return False
+            self.x_current = int(self.other_x_current_textinput.text)
+
+        if self.other_z_current_checkbox.state == "down": 
+            if not (self.z_current_min < self.other_x_current_textinput.text < self.z_current_max): return False
+            self.z_current = int(self.other_z_current_textinput.text)
 
     def print_settings_to_set(self):
 
@@ -648,7 +681,10 @@ class ZHeadPCBSetUp(Screen):
         self.ok_button.text = "Updating firmware..."
 
         # ENSURE VALUES ARE SET
-        self.set_textinput_values()
+        if not self.check_and_set_textinput_values():
+            self.ok_button.text = "Check text inputs, something wrong"
+            return
+
         self.print_settings_to_set()
 
         # DO FW UPDATE
