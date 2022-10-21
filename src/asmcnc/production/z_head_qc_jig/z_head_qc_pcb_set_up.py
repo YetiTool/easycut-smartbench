@@ -490,6 +490,8 @@ class ZHeadPCBSetUp(Screen):
 
     def on_pre_enter(self):
 
+        self.connection_button.text = "Flash FW and set up PCB"
+
         self.set_default_thermal_coefficients()
         self.set_default_z_current()
 
