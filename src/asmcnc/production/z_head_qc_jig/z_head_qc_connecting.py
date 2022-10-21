@@ -79,6 +79,7 @@ class ZHeadQCConnecting(Screen):
             log("Getting USB")
             self.connecting_label.text = "Getting USB"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
+            return
 
         self.progress_to_next_screen()
 
