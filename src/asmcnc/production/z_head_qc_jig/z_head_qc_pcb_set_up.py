@@ -792,6 +792,7 @@ class ZHeadPCBSetUp(Screen):
             # else:
             #     log("Z Head not Idle yet, waiting...")
             #     Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
+            check_registers_are_correct()
 
 
         def store_params_and_progress():
