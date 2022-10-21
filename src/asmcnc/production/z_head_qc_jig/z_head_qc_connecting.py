@@ -69,7 +69,7 @@ class ZHeadQCConnecting(Screen):
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
 
-        if not self.m.TMC_registers_have_been_read_in():
+        if not self.m.TMC_registers_have_been_read_in() and (self.m.s.fw_version).startswith("2"):
             log("Waiting to get TMC registers")
             self.connecting_label.text = "Waiting to get TMC registers"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
