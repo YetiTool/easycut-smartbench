@@ -779,20 +779,19 @@ class ZHeadPCBSetUp(Screen):
 
             self.ok_button.text = "Setting currents and coefficients..."
 
-            # # # SET CURRENTS AND THERMAL COEFFICIENTS
-            # # if  self.m.set_thermal_coefficients("X", int(self.x_thermal_coefficient)) and \
-            # #     self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
-            # #     self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
-            # #     self.m.set_motor_current("Z", int(self.z_current)) and \
-            # #     self.m.set_motor_current("X", int(self.x_current)):
+            # SET CURRENTS AND THERMAL COEFFICIENTS
+            if  self.m.set_thermal_coefficients("X", int(self.x_thermal_coefficient)) and \
+                self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
+                self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
+                self.m.set_motor_current("Z", int(self.z_current)) and \
+                self.m.set_motor_current("X", int(self.x_current)):
 
-            # #     # STORE PARAMETERS
-            # #     Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
+                # STORE PARAMETERS
+                Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
 
-            # else:
-            #     log("Z Head not Idle yet, waiting...")
-            #     Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
-            check_registers_are_correct()
+            else:
+                log("Z Head not Idle yet, waiting...")
+                Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
 
         def store_params_and_progress():
