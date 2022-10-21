@@ -75,7 +75,7 @@ class ZHeadQCConnecting(Screen):
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
 
-        if not self.usb.is_available()
+        if not self.usb.is_available():
             log("Getting USB")
             self.connecting_label.text = "Getting USB"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
