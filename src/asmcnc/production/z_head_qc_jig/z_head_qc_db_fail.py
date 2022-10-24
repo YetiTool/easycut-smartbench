@@ -51,6 +51,7 @@ Builder.load_string("""
 
 """)
 
+
 class ZHeadQCDBFail(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQCDBFail, self).__init__(**kwargs)
@@ -59,7 +60,7 @@ class ZHeadQCDBFail(Screen):
         self.m = kwargs['m']
 
     def on_enter(self):
-        log_exporter.create_and_send_logs(self.serial)
+        log_exporter.create_trim_and_send_logs(self.serial, 1000)
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'

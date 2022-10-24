@@ -45,9 +45,6 @@ class ZHeadQCDBSuccess(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-    def on_enter(self):
-        log_exporter.create_and_send_logs(self.serial)
-
     def enter_next_screen(self):
         self.sm.current = 'qc6'
 

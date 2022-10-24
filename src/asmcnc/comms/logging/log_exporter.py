@@ -8,9 +8,11 @@ WORKING_DIR = 'C:\\SBLogs\\'
 
 export_logs_folder = '/home/pi/exported_logs'
 
+
 def log(message):
     timestamp = datetime.now()
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
 
 def create_log_folder():
     # remove all logs when creating new one
@@ -24,6 +26,14 @@ def create_and_send_logs(serial_number):
     create_log_folder()
 
     log_file_path = generate_logs(serial_number)
+    send_logs(log_file_path)
+
+
+def create_trim_and_send_logs(serial_number, x_lines):
+    create_log_folder()
+
+    log_file_path = generate_logs(serial_number)
+    trim_logs(log_file_path, x_lines)
     send_logs(log_file_path)
 
 
@@ -42,6 +52,7 @@ def generate_logs(serial_number):
     return log_name
 
 
+# trims to last x lines
 def trim_logs(log_file_path, x_lines):
     with open(log_file_path, 'r+') as untrimmed_file:
         lines = untrimmed_file.readlines()

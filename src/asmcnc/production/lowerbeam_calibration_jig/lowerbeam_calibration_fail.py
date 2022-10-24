@@ -61,7 +61,7 @@ class LBCalibrationFail(Screen):
         self.sm.current = 'lbc4'
 
     def on_enter(self):
-        log_exporter.create_and_send_logs(self.serial)
+        log_exporter.create_trim_and_send_logs(self.serial, 1000)
 
     def set_serial_no(self, serial_no):
         self.serial = serial_no
