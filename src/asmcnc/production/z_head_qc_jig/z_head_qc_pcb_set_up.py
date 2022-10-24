@@ -458,12 +458,12 @@ class ZHeadPCBSetUp(Screen):
     x_current_dual_driver_min = 0
     z_current_min = 0
 
-    x_thermal_coefficient_max = 10001
-    y_thermal_coefficient_max = 10001
-    z_thermal_coefficient_max = 10001
-    x_thermal_coefficient_min = 4999
-    y_thermal_coefficient_min = 4999
-    z_thermal_coefficient_min = 4999
+    x_thermal_coefficient_max = 65001
+    y_thermal_coefficient_max = 65001
+    z_thermal_coefficient_max = 65001
+    x_thermal_coefficient_min = 0
+    y_thermal_coefficient_min = 0
+    z_thermal_coefficient_min = 0
 
     exit_code = None
 
