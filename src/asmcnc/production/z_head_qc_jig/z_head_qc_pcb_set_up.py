@@ -451,19 +451,19 @@ class ZHeadPCBSetUp(Screen):
 
     poll_for_reconnection = None
 
-    x_current_single_driver_max = 31
-    x_current_dual_driver_max = 31
-    z_current_max = 31
-    x_current_single_driver_min = 0
-    x_current_dual_driver_min = 0
-    z_current_min = 0
+    x_current_single_driver_max = 32
+    x_current_dual_driver_max = 32
+    z_current_max = 32
+    x_current_single_driver_min = -1
+    x_current_dual_driver_min = -1
+    z_current_min = -1
 
     x_thermal_coefficient_max = 65001
     y_thermal_coefficient_max = 65001
     z_thermal_coefficient_max = 65001
-    x_thermal_coefficient_min = 0
-    y_thermal_coefficient_min = 0
-    z_thermal_coefficient_min = 0
+    x_thermal_coefficient_min = -1
+    y_thermal_coefficient_min = -1
+    z_thermal_coefficient_min = -1
 
     exit_code = None
 
