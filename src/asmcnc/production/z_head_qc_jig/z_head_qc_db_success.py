@@ -49,5 +49,4 @@ class ZHeadQCDBSuccess(Screen):
         self.sm.current = 'qc6'
 
     def set_serial_no(self, serial_no):
-        self.serial = serial_no
         self.success_label.text = 'Database updated for:\n' + serial_no
