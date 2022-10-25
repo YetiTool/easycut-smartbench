@@ -707,6 +707,10 @@ class ZHeadPCBSetUp(Screen):
 
         self.ok_button.text = "Updating firmware..."
 
+        if not self.m.state().startswith("Idle"):
+            self.ok_button.text = "Ensure Z Head connected and Idle!"
+            return
+
         # ENSURE VALUES ARE SET
         if not self.check_and_set_textinput_values():
             self.ok_button.text = "Check text inputs, something wrong"
