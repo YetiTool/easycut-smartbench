@@ -73,6 +73,9 @@ def trim_logs(log_file_path, x_lines):
         lines = untrimmed_file.readlines()
         line_count = len(lines)
 
+    if x_lines > line_count:
+        return
+
     with open(log_file_path, 'w+') as trimmed_file:
         lines_to_remove = line_count - x_lines
         new_lines = lines[lines_to_remove:]
