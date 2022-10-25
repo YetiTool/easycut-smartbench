@@ -48,7 +48,7 @@ def create_trim_and_send_logs(serial_number, x_lines):
     create_log_folder()
 
     log_file_path = generate_logs(serial_number)
-    trim_logs(log_file_path, x_lines)
+    trim_logs(export_logs_folder + '/' + log_file_path, x_lines)
     send_logs(log_file_path)
 
 
