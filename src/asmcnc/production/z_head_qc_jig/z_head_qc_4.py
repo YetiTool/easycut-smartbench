@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
+from asmcnc.comms.logging import log_exporter
 
 Builder.load_string("""
 <ZHeadQC4>:
@@ -49,6 +50,8 @@ class ZHeadQC4(Screen):
         else: 
             self.calibration_label.text = "Try later"
             Clock.schedule_once(self.enter_prev_screen, 3)
+
+        log_exporter.create_trim_and_send_logs(self.serial, 1000)
 
     def run_calibration(self):
         self.m.tune_X_and_Z_for_calibration()
