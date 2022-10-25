@@ -51,7 +51,7 @@ class ZHeadQC4(Screen):
             self.calibration_label.text = "Try later"
             Clock.schedule_once(self.enter_prev_screen, 3)
 
-        log_exporter.create_trim_and_send_logs(self.serial, 1000)
+        log_exporter.create_trim_and_send_logs('ys61492', 1000)
 
     def run_calibration(self):
         self.m.tune_X_and_Z_for_calibration()
