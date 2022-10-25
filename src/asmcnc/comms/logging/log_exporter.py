@@ -1,17 +1,32 @@
 from datetime import datetime
 import os
-from asmcnc.production.database import credentials as creds
 import paramiko
 import sys
 
 WORKING_DIR = 'C:\\SBLogs\\'
-
 export_logs_folder = '/home/pi/exported_logs'
+ftp_server = None
+ftp_username = None
+ftp_password = None
+
+creds_imported = False
 
 
 def log(message):
     timestamp = datetime.now()
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
+
+def try_import_creds():
+    global ftp_server, ftp_username, ftp_password, creds_imported
+    try:
+        from asmcnc.production.database import credentials as creds
+        ftp_server = creds.ftp_server
+        ftp_username = creds.ftp_username
+        ftp_password = creds.ftp_password
+        creds_imported = True
+    except:
+        log("Log exporter not available - no creds file")
 
 
 def create_log_folder():
@@ -67,10 +82,13 @@ def trim_logs(log_file_path, x_lines):
 
 
 def send_logs(log_file_path):
+    if not creds_imported:
+        try_import_creds()
+
     log("Sending logs to server")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(creds.ftp_server, username=creds.ftp_username, password=creds.ftp_password)
+    ssh.connect(ftp_server, username=ftp_username, password=ftp_password)
     sftp = ssh.open_sftp()
 
     file_name = log_file_path.split('/')[-1]
