@@ -451,19 +451,19 @@ class ZHeadPCBSetUp(Screen):
 
     poll_for_reconnection = None
 
-    x_current_single_driver_max = 32
-    x_current_dual_driver_max = 32
-    z_current_max = 32
-    x_current_single_driver_min = -1
-    x_current_dual_driver_min = -1
-    z_current_min = -1
+    x_current_single_driver_max = 31
+    x_current_dual_driver_max = 31
+    z_current_max = 31
+    x_current_single_driver_min = 0
+    x_current_dual_driver_min = 0
+    z_current_min = 0
 
-    x_thermal_coefficient_max = 65001
-    y_thermal_coefficient_max = 65001
-    z_thermal_coefficient_max = 65001
-    x_thermal_coefficient_min = -1
-    y_thermal_coefficient_min = -1
-    z_thermal_coefficient_min = -1
+    x_thermal_coefficient_max = 65000
+    y_thermal_coefficient_max = 65000
+    z_thermal_coefficient_max = 65000
+    x_thermal_coefficient_min = 0
+    y_thermal_coefficient_min = 0
+    z_thermal_coefficient_min = 0
 
     exit_code = None
 
@@ -629,9 +629,9 @@ class ZHeadPCBSetUp(Screen):
 
     def check_and_set_textinput_values(self):
 
-        if  not (self.x_thermal_coefficient_min < int(self.thermal_coeff_x_textinput.text) < self.x_thermal_coefficient_max) \
-            or not (self.y_thermal_coefficient_min < int(self.thermal_coeff_y_textinput.text) < self.y_thermal_coefficient_max) \
-            or not (self.z_thermal_coefficient_min < int(self.thermal_coeff_z_textinput.text) < self.z_thermal_coefficient_max):
+        if  not (self.x_thermal_coefficient_min <= int(self.thermal_coeff_x_textinput.text) <= self.x_thermal_coefficient_max) \
+            or not (self.y_thermal_coefficient_min <= int(self.thermal_coeff_y_textinput.text) <= self.y_thermal_coefficient_max) \
+            or not (self.z_thermal_coefficient_min <= int(self.thermal_coeff_z_textinput.text) <= self.z_thermal_coefficient_max):
             return False
 
         self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
@@ -648,11 +648,11 @@ class ZHeadPCBSetUp(Screen):
                 x_min = self.x_current_single_driver_min
                 x_max = self.x_current_single_driver_max
 
-            if not (x_min < int(self.other_x_current_textinput.text) < x_max): return False
+            if not (x_min <= int(self.other_x_current_textinput.text) <= x_max): return False
             self.x_current = int(self.other_x_current_textinput.text)
 
         if self.other_z_current_checkbox.state == "down": 
-            if not (self.z_current_min < int(self.other_z_current_textinput.text) < self.z_current_max): return False
+            if not (self.z_current_min <= int(self.other_z_current_textinput.text) <= self.z_current_max): return False
             self.z_current = int(self.other_z_current_textinput.text)
 
         return True
