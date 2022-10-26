@@ -416,6 +416,8 @@ class JobData(object):
             self.job_recovery_filepath = job_recovery_info[0]
             self.job_recovery_cancel_line = int(job_recovery_info[1])
 
+            print("Read recovery info")
+
         except:
             print("Could not read recovery info")
             print(str(traceback.format_exc()))
@@ -435,6 +437,11 @@ class JobData(object):
                 self.job_recovery_filepath = self.filename
                 self.job_recovery_cancel_line = cancel_line
 
+                print("Wrote recovery info")
+
+            else:
+                print("Job cancelled before start, not writing recovery info")
+
             self.reset_recovery()
         
         except:
@@ -453,7 +460,9 @@ class JobData(object):
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
             self.reset_recovery()
-        
+
+            print("Wrote recovery info")
+
         except:
             print("Could not write recovery info")
             print(str(traceback.format_exc()))
