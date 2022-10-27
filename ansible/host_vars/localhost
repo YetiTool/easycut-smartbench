@@ -1,17 +1,16 @@
 pkgs:
-- python-pip
+- python2-pip
 - proftpd-basic
 - avrdude
 - pigpio
-- python-pigpio
+- python2-pigpio
 - git-repair
-- python-influxdb
 - freetds-bin
 - freetds-dev
 - tdsodbc
-- python-mysqldb
-- python-pyodbc
-- python-matplotlib
+- python2-mysqldb
+- python2-pyodbc
+- python2-matplotlib
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool

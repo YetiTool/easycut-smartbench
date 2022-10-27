@@ -20,13 +20,16 @@
       state: present
     with_items: "{{ pkgs }}"
     ignore_errors: yes
-  - name: Install pika python package on version 1.2.0
+  - name: Install pip python packages
     pip:
-      name: pika==1.2.0
-    ignore_errors: yes
-  - name: Install pytz for timezone info
-    pip:
-      name: pytz
+      name: 
+        - pika==1.2.0
+        - pytz
+        - influxdb
+        - mysqldb
+        - pyodbc
+        - matplotlib
+        - pigpio
     ignore_errors: yes
   - name: Copying the odbcinst ini script
     template:
