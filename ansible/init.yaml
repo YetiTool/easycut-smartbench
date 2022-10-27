@@ -26,6 +26,7 @@
         - pika==1.2.0
         - pytz
         - influxdb
+        - pyserial
         - pyodbc
         - matplotlib
         - pigpio

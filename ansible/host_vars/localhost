@@ -8,6 +8,7 @@ pkgs:
 - freetds-bin
 - freetds-dev
 - tdsodbc
+- unixodbc-dev
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
