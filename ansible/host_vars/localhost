@@ -9,6 +9,7 @@ pkgs:
 - freetds-dev
 - tdsodbc
 - mysql-server
+- default-mysql-server
 - libmysqlclient-dev
 - python-mysqldb
 - python-pyodbc
