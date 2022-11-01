@@ -17,7 +17,6 @@ Builder.load_string("""
 <LowerBeamQC>:
 
     vac_toggle:vac_toggle
-    spindle_toggle:spindle_toggle
     y_home_check:y_home_check
     motor_chips_check:motor_chips_check
     warranty_toggle:warranty_toggle
@@ -90,25 +89,14 @@ Builder.load_string("""
                         padding: [dp(10),0]
                         on_press: root.enable_alarms()
 
-                    GridLayout:
-                        cols: 2
-                        ToggleButton:
-                            id: vac_toggle
-                            text: '5. Extractor'
-                            text_size: self.size
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.set_vac()
-
-                        ToggleButton:
-                            id: spindle_toggle
-                            text: '6. Spindle'
-                            text_size: self.size
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.set_spindle()
+                    ToggleButton:
+                        id: vac_toggle
+                        text: '5. Extractor'
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.set_vac()
 
                 # COLUMN 2
                 BoxLayout:
@@ -334,12 +322,6 @@ class LowerBeamQC(Screen):
             self.m.vac_off()
         else: 
             self.m.vac_on()
-
-    def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
-            self.m.spindle_off()
-        else: 
-            self.m.spindle_on()
 
     def update_checkboxes(self, dt):
         self.y_home_switch()
