@@ -62,7 +62,7 @@ Builder.load_string("""
 
                 Button:
                     id: cycle_button
-                    text: 'Cycle Z (10x)'
+                    text: 'Cycle Z (3x)'
                     background_color: [0,1,0,1]
                     background_normal: ''
                     color: [0,0,0,1]
@@ -116,20 +116,6 @@ class ZHeadQC7(Screen):
         self.m.resume_from_alarm()
 
     def do_cycle(self):
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
         self.m.s.write_command('G53 G0 Z-150')
         self.m.s.write_command('G53 G0 Z-1')
         self.m.s.write_command('G53 G0 Z-150')
