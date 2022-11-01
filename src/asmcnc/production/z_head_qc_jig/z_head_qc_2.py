@@ -224,7 +224,7 @@ class ZHeadQC2(Screen):
         self.sm.current = 'qc1'
 
     def enter_next_screen(self):
-        self.sm.current = 'qc3'
+        self.sm.current = 'qc7'
 
     def update_status_text(self, dt):
         try:
