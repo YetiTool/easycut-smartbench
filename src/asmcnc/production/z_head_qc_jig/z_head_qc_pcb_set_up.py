@@ -1,7 +1,7 @@
 import re
 from functools import partial
 import glob
-import os, subprocess
+import os, subprocess, sys
 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
@@ -704,6 +704,10 @@ class ZHeadPCBSetUp(Screen):
     ## DOING PCB FW UPDATE AND SETTINGS
 
     def do_pcb_update_and_set_settings(self):
+
+        if sys.platform == "win32":
+            self.progress_to_next_screen()
+            return
 
         self.ok_button.text = "Updating firmware..."
 
