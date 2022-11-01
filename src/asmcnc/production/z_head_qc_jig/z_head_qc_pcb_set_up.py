@@ -705,10 +705,6 @@ class ZHeadPCBSetUp(Screen):
 
     def do_pcb_update_and_set_settings(self):
 
-        if sys.platform == "win32":
-            self.progress_to_next_screen()
-            return
-
         self.ok_button.text = "Updating firmware..."
 
         if not self.m.state().startswith("Idle"):
