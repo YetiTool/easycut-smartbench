@@ -96,6 +96,7 @@ def send_logs(log_file_path):
     log("Sending logs to server")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    log('Connecting to: ' + ftp_server)
     ssh.connect(ftp_server, username=ftp_username, password=ftp_password)
     log('Connected to: ' + ftp_server)
     sftp = ssh.open_sftp()
