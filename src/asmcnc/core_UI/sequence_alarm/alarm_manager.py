@@ -242,7 +242,7 @@ class AlarmSequenceManager(object):
 			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
 			" " + \
 			self.l.get_str("SmartBench has paused the job, to prevent further damage.") + \
-            " " + \
+            "\n\n" + \
             self.l.get_str("Before raising the Z axis, ensure that you release any side-load on the tool by " + \
                            "jogging the X and Y axis a very small amount (e.g. 0.5mm), away from the side of the material.")
 			)

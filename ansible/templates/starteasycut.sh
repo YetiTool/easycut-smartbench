@@ -21,12 +21,15 @@ if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
                 echo "Running Z Head QC app"
                 exec python z_head_qc_app.py
 
+        elif [ -f /home/pi/YETI_ZHEADUPDOWN_PROD_JIG.txt ]
+        then
+                echo "Running Z Head Up Down app"
+                exec python z_head_mechanics_app.py
 
         elif [ -f /home/pi/YETI_LBQC_PROD_JIG.txt ]
         then
                 echo "Running LB QC app"
                 exec python lower_beam_qc_app.py
-
 
         elif [ -f /home/pi/YETI_LBCAL_PROD_JIG.txt ]
         then
