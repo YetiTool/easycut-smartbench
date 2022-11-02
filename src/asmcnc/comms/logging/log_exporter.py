@@ -27,6 +27,11 @@ def try_import_creds():
         creds_imported = True
     except:
         log("Log exporter not available - no creds file")
+        try:
+            from ...production.database import credentials as creds
+            log('Imported creds from dev path')
+        except:
+            log('Creds not available from dev path')
 
 
 def create_log_folder():
