@@ -3,7 +3,7 @@ import os
 import paramiko
 import sys
 
-WORKING_DIR = 'C:\\SBLogs\\'
+WORKING_DIR = 'A:\\Logs\\'
 export_logs_folder = '/home/pi/exported_logs'
 ftp_server = None
 ftp_username = None
