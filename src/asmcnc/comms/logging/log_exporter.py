@@ -97,3 +97,10 @@ def send_logs(log_file_path):
     file_name = log_file_path.split('/')[-1]
     sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
     log("Done sending logs to server")
+
+
+if __name__ == '__main__':
+    print('Testing basic log send')
+    try_import_creds()
+
+    create_trim_and_send_logs('123456', 100)
