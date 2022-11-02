@@ -97,15 +97,16 @@ def send_logs(log_file_path):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(ftp_server, username=ftp_username, password=ftp_password)
+    log('Connected to: ' + ftp_server)
     sftp = ssh.open_sftp()
 
     file_name = log_file_path.split('/')[-1]
+    log('Transferring file: ' + file_name)
     sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
     log("Done sending logs to server")
 
 
 if __name__ == '__main__':
     print('Testing basic log send')
-    try_import_creds()
 
     create_trim_and_send_logs('123456', 100)
