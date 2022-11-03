@@ -19,6 +19,8 @@ CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
+if os.getcwd().endswith("easycut-smartbench"): 
+    CSV_PATH = './src' + CSV_PATH[1:]
 
 def log(message):
     timestamp = datetime.now()
