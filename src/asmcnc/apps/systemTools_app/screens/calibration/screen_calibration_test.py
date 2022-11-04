@@ -1689,6 +1689,7 @@ class CalibrationTesting(Screen):
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             return True
+
         except:
             print(traceback.format_exc())
             return False
