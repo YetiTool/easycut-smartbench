@@ -319,9 +319,13 @@ class LowerBeamQC(Screen):
         self.y_home_switch()
 
     def y_home_switch(self):
+
+        print("polling limit")
         if self.m.s.limit_Y_axis:
+            print("limit yes")
             self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
+            print("limit no")
             self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def disable_alarms(self):
