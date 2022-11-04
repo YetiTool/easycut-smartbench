@@ -55,6 +55,8 @@ class ZHeadQCConnecting(Screen):
         self.m = kwargs['m']
         self.usb = kwargs['usb']
         self.connecting_label.text = "Connecting to Z Head..."
+        self.z_current = 25
+        self.x_current = 26
 
     def on_enter(self):
         self.connecting_label.text = "Connecting to Z Head..."

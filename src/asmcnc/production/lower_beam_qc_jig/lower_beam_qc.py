@@ -283,14 +283,6 @@ class LowerBeamQC(Screen):
         lower_sg_limit = 200
         upper_sg_limit = 800
 
-        if lower_sg_limit <= self.m.s.sg_y_axis <= upper_sg_limit:
-            pass_fail = pass_fail*(True)
-
-        else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("Y axis SG value: " + str(self.m.s.sg_y_axis))
-            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
-
         if lower_sg_limit <= self.m.s.sg_y1_motor <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 

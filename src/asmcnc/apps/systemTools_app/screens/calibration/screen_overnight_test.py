@@ -23,6 +23,8 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 
+from asmcnc.comms.logging import log_exporter
+
 Builder.load_string("""
 <OvernightTesting>:
 
@@ -1559,11 +1561,13 @@ class OvernightTesting(Screen):
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             log("Finished statistics data send")
+            log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
 
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
+            log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
     def send_all_calibration_coefficients(self):
