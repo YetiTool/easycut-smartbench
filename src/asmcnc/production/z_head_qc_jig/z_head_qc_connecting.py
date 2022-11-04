@@ -58,10 +58,6 @@ class ZHeadQCConnecting(Screen):
         self.z_current = 25
         self.x_current = 26
 
-        # IMPORTANT: uncomment below to run z head qc on riggy
-        # self.z_current = 5
-        # self.x_current = 5
-
     def on_enter(self):
         self.connecting_label.text = "Connecting to Z Head..."
         self.ensure_hw_version_and_registers_are_loaded_in()
