@@ -1683,15 +1683,15 @@ class CalibrationTesting(Screen):
     def send_data_for_each_stage(self, stage):
 
         try:
-            log_exporter.create_and_send_logs(self.sn_for_db)
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             return True
-
         except:
             print(traceback.format_exc())
             return False
+        finally:
+            log_exporter.create_and_send_logs(self.sn_for_db)
 

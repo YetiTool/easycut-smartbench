@@ -1,6 +1,5 @@
 from datetime import datetime
 import os
-import paramiko
 import sys
 
 WORKING_DIR = 'A:\\Logs\\'
@@ -17,6 +16,12 @@ def log(message):
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
+try:
+    import paramiko
+except (ImportWarning, ImportError):
+    log("Unable to import paramiko")
+
+
 def try_import_creds():
     global ftp_server, ftp_username, ftp_password, creds_imported
     try:
@@ -25,12 +30,12 @@ def try_import_creds():
         ftp_username = creds.ftp_username
         ftp_password = creds.ftp_password
         creds_imported = True
-    except:
+    except Exception:
         log("Log exporter not available - no creds file")
         try:
             from ...production.database import credentials as creds
             log('Imported creds from dev path')
-        except:
+        except Exception:
             log('Creds not available from dev path')
 
 
