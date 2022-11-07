@@ -14,23 +14,17 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
-  - name: Install packages
+  - name: Install apt packages
     package:
       name: "{{ item }}"
-      state: absent
-    with_items: "{{ pkgs }}"
+      state: present
+    with_items: "{{ apt_pkgs }}"
     ignore_errors: yes
   - name: Install pip python packages
     pip:
-      name: 
-        - pika==1.2.0
-        - pytz
-        - influxdb
-        - pyserial
-        - pyodbc
-        - matplotlib
-        - pigpio
-      state: absent
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ pip_pkgs }}"
     ignore_errors: yes
   - name: Copying the odbcinst ini script
     template:
