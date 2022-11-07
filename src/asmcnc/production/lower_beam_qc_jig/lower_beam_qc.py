@@ -319,7 +319,7 @@ class LowerBeamQC(Screen):
         self.y_home_switch()
 
     def y_home_switch(self):
-        if self.m.s.limit_y:
+        if self.m.s.limit_Y_axis:
             self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
             self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
