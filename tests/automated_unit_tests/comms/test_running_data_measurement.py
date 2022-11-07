@@ -22,8 +22,6 @@ from datetime import datetime
 from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
-# os.chdir('./src')
-
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
