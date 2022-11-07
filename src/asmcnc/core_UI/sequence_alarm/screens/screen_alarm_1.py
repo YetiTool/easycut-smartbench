@@ -165,6 +165,10 @@ class AlarmScreen1(Screen):
 
 	def update_font_size(self, value):
 		if len(value.text) > 330:
-			value.font_size = 19
+			value.font_size = 16
+		elif len(value.text) > 280:
+			value.font_size = 17
+		elif len(value.text) > 270:
+			value.font_size = 18
 		else: 
 			value.font_size = 20
