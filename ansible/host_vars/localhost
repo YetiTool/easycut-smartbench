@@ -1,3 +1,7 @@
+stretch_pkgs:
+- python-pip
+- python-mysqldb
+
 apt_pkgs:
 - proftpd-basic
 - avrdude
@@ -7,6 +11,17 @@ apt_pkgs:
 - freetds-dev
 - tdsodbc
 - unixodbc-dev
+- python-pigpio=1.78
+
+pip_pkgs:
+- pika==1.2.0
+- paramiko==2.0.0
+- pigpio==1.78
+- pytz==2022.5
+- influxdb==5.2.0
+- pyserial==3.2.1
+- pyodbc<=4.0.34
+- matplotlib<=2.2.5
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
