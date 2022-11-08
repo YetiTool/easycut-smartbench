@@ -32,6 +32,10 @@
       state: present
     with_items: "{{ apt_pkgs }}"
     ignore_errors: yes
+  - name: Pip install pika==1.2.0
+    pip:
+      name: pika==1.2.0
+    ignore_errors: yes
   - name: Copying the odbcinst ini script
     template:
       src: odbcinst.ini
@@ -142,12 +146,6 @@
   - name: Pip install paramiko 2.0.0
     pip:
       name: paramiko==2.0.0
-    become: yes
-    become_user: root
-    ignore_errors: yes
-  - name: Pip install pika==1.2.0
-    pip:
-      name: pika==1.2.0
     ignore_errors: yes
   - name: Pip install pigpio==1.78
     pip:
