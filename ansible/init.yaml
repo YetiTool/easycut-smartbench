@@ -142,41 +142,33 @@
   - name: Pip install paramiko 2.0.0
     pip:
       name: paramiko==2.0.0
-      state: present
     ignore_errors: yes
   - name: Pip install pika==1.2.0
     pip:
       name: pika==1.2.0
-      state: present
     ignore_errors: yes
   - name: Pip install pigpio==1.78
     pip:
       name: pigpio==1.78
-      state: present
     ignore_errors: yes
   - name: Pip install pytz==2022.5
     pip:
       name: pytz==2022.5
-      state: present
     ignore_errors: yes
   - name: Pip install influxdb==5.2.0
     pip:
       name: influxdb==5.2.0
-      state: present
     ignore_errors: yes
   - name: Pip install pyserial==3.2.1
     pip:
       name: pyserial==3.2.1
-      state: present
     ignore_errors: yes
   - name: Pip install pyodbc<=4.0.34
     pip:
       name: pyodbc<=4.0.34
-      state: present
     ignore_errors: yes
   - name: Pip install matplotlib==2.2.5
     pip:
       name: matplotlib<=2.2.5
-      state: present
     ignore_errors: yes  
   
