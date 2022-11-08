@@ -20,6 +20,12 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
+  - name: Install pip on Debian 9 or 10
+    package:
+      name: python-pip
+      state: present
+    ignore_errors: yes
+    when: ansible_distribution_major_version == '9' or ansible_distribution_major_version == '10'
   - name: Install apt packages
     package:
       name: "{{ item }}"

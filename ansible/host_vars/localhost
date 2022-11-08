@@ -1,5 +1,4 @@
 apt_pkgs:
-- python-pip
 - proftpd-basic
 - avrdude
 - pigpio
