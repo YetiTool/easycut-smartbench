@@ -157,14 +157,14 @@
       name: pyserial==3.2.1
       state: present
     ignore_errors: yes
-  - name: Pip install pyodbc==4.0.34
+  - name: Pip install pyodbc<=4.0.34
     pip:
-      name: pyodbc==4.0.34
+      name: pyodbc<=4.0.34
       state: present
     ignore_errors: yes
   - name: Pip install matplotlib==2.2.5
     pip:
-      name: matplotlib==2.2.5
+      name: matplotlib<=2.2.5
       state: present
     ignore_errors: yes  
   
