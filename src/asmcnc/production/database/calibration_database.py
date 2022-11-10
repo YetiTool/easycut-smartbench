@@ -10,12 +10,19 @@ def log(message):
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-try:
-    import MySQLdb
-    from influxdb import InfluxDBClient
+try: 
+    try:
+        import pymysql as MySQLdb
 
+    except:
+        import MySQLdb
 except:
-    log('Pyodbc or influxdb not installed')
+    log("No MySQLdb or pymysql package installed")
+
+try:
+    from influxdb import InfluxDBClient
+except:
+    log('Influxdb not installed')
 
 
 class CalibrationDatabase(object):
