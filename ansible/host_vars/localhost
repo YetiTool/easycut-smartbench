@@ -5,13 +5,13 @@ stretch_pkgs:
 apt_pkgs:
 - proftpd-basic
 - avrdude
-- pigpio
 - git-repair
 - freetds-bin
 - freetds-dev
 - tdsodbc
 - unixodbc-dev
-- python-pigpio=1.78
+- pigpio
+- python-pigpio
 
 pip_pkgs:
 - pika==1.2.0
