@@ -14,12 +14,12 @@ apt_pkgs:
 - python-pigpio
 
 pip_pkgs:
-- pika==1.2.0
-- paramiko==2.0.0
-- pigpio==1.78
-- pytz==2022.5
-- influxdb==5.2.0
-- pyserial==3.2.1
+- pika=1.2.0
+- paramiko=2.0.0
+- pigpio=1.78
+- pytz=2022.5
+- influxdb=5.2.0
+- pyserial=3.2.1
 - pyodbc<=4.0.34
 - matplotlib<=2.2.5
 
