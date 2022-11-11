@@ -80,7 +80,7 @@ Builder.load_string("""
                 font_size: dp(30)
                 valign: "middle"
                 halign: "center"
-                text_size: self.size
+                text_size: self.size[0] - dp(50), self.size[1]
                 on_press: root.repeat_job()
                 background_normal: "./asmcnc/skavaUI/img/blank_green_button.png"
                 background_down: "./asmcnc/skavaUI/img/blank_green_button.png"
@@ -91,7 +91,7 @@ Builder.load_string("""
                 font_size: dp(30)
                 valign: "middle"
                 halign: "center"
-                text_size: self.size
+                text_size: self.size[0] - dp(50), self.size[1]
                 on_press: root.go_to_recovery()
                 background_normal: "./asmcnc/skavaUI/img/blank_orange_button.png"
                 background_down: "./asmcnc/skavaUI/img/blank_orange_button.png"
@@ -144,6 +144,8 @@ class RecoveryDecisionScreen(Screen):
                 self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
                 self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
 
+        self.update_font_size(self.completion_label)
+
     def go_to_recovery(self):
         # Doing it this way because disabling the button causes visuals errors
         if self.jd.job_recovery_cancel_line != -1:
@@ -174,3 +176,9 @@ class RecoveryDecisionScreen(Screen):
         self.job_name_header.text = self.l.get_bold('Last job:')
         self.repeat_job_button.text = self.l.get_str('Repeat job from the beginning')
         self.recover_job_button.text = self.l.get_str('Recover job')
+
+    def update_font_size(self, value):
+        if len(value.text) > 50:
+            value.font_size = 28
+        else: 
+            value.font_size = 30
