@@ -1103,7 +1103,7 @@ class PopupBigInfo(Widget):
         
         self.sm = screen_manager
         self.l = localization
-        label_width = popup_width - 40
+        label_width = popup_width - 20
         
         title_string = self.l.get_str('Information')
         ok_string = self.l.get_bold('Ok')
@@ -1115,7 +1115,7 @@ class PopupBigInfo(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0])
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical')
@@ -1129,7 +1129,7 @@ class PopupBigInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 440),
+                      size=(popup_width, 460),
                       auto_dismiss= False
                       )
 

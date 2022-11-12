@@ -224,7 +224,7 @@ class NudgeScreen(Screen):
                self.l.get_str('Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) could result in damage to your spindle, cutting tool and/or workpiece.') + '\n\n' + \
                self.l.get_str('Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).')
 
-        popup_info.PopupBigInfo(self.sm, self.l, 760, info)
+        popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
     def back_to_home(self):
         self.jd.reset_values()

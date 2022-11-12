@@ -60,7 +60,7 @@ Builder.load_string("""
                                 font_size: dp(25)
 
                             BoxLayout:
-                                padding: dp(5)
+                                padding: [dp(0), dp(4), dp(0), dp(0)]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -117,7 +117,7 @@ Builder.load_string("""
                         halign: "center"
                         markup: True
                         font_size: dp(30)
-                        text_size: self.size
+                        text_size: self.size[0] - dp(20), self.size[1]
                         text: "GO XY"
                         background_normal: "./asmcnc/skavaUI/img/blank_small_button.png"
                         background_down: "./asmcnc/skavaUI/img/blank_small_button.png"
@@ -175,7 +175,7 @@ Builder.load_string("""
                     BoxLayout:
                         orientation: 'vertical'
                         padding: dp(12)
-                        spacing: dp(10)
+                        spacing: dp(9)
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -185,7 +185,6 @@ Builder.load_string("""
 
                         Label:
                             id: pos_label_header
-                            size_hint_y: 0.75
                             text: "Job resumes at:"
                             color: hex('#333333FF')
                             bold: True
@@ -404,7 +403,7 @@ class JobRecoveryScreen(Screen):
                self.l.get_str('Note: the Z position will be automatically calculated when the job recovery starts.') + '\n\n' + \
                self.l.get_str('Note: when using job recovery for GCode containing G2 & G3 commands, the recovery point may be highlighted earlier in the file than actual, due to file streaming protocols.')
 
-        popup_info.PopupBigInfo(self.sm, self.l, 760, info)
+        popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
     def go_xy(self):
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
