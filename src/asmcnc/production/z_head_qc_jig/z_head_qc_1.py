@@ -437,7 +437,7 @@ class ZHeadQC1(Screen):
 
     def bake_grbl_settings(self):
 
-        self.m.bake_default_grbl_settings()
+        self.m.bake_default_grbl_settings(z_head_qc_bake=True)
         self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def test_motor_chips(self):
@@ -467,14 +467,35 @@ class ZHeadQC1(Screen):
         lower_sg_limit = 200
         upper_sg_limit = 800
 
-        if lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
-            pass_fail = pass_fail*(True)
+        # If X motors are controlled by 2 drivers, don't measure combined X value
+        if self.m.s.sg_x1_motor != None and self.m.s.sg_x2_motor != None:
+            if lower_sg_limit <= self.m.s.sg_x1_motor <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
 
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X1 motor SG value: " + str(self.m.s.sg_x1_motor))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+            if lower_sg_limit <= self.m.s.sg_x2_motor <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
+
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X2 motor SG value: " + str(self.m.s.sg_x2_motor))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+        # If X motors are controlled by 1 driver, only measure combined X value
         else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
-            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+            if lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
 
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+        # Measure Z value
         if lower_sg_limit <= self.m.s.sg_z_motor_axis <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
