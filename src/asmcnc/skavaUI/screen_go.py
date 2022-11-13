@@ -556,7 +556,10 @@ class GoScreen(Screen):
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
 
-        self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
+        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+            self.progress_percentage_label.text = "- %"
+        else:
+            self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
         self.spindle_speed_max_percentage = 100
         self.spindle_speed_max_absolute = 0
@@ -680,7 +683,7 @@ class GoScreen(Screen):
         # % progress    
         if len(self.jd.job_gcode_running) != 0:
             self.jd.percent_thru_job = int(
-                round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0) * 100.0))
+                round(((self.m.s.g_count - self.jd.job_recovery_offset) * 1.0 / (len(self.jd.job_gcode_running) - self.jd.job_recovery_offset + 4) * 1.0) * 100.0))
             if self.jd.percent_thru_job > 100: self.jd.percent_thru_job = 100
             self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
