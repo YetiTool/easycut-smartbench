@@ -1,16 +1,26 @@
-import pika
 import uuid
 import csv
 import json
-import paramiko
 import traceback
 from datetime import datetime
 import os
+
+try: import pika
+except: 
+    pika = None
+    print(traceback.format_exc())
+
+try: import paramiko
+except: 
+    paramiko = None
+    print(traceback.format_exc())
 
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
+if os.getcwd().endswith("easycut-smartbench"): 
+    CSV_PATH = './src' + CSV_PATH[1:]
 
 def log(message):
     timestamp = datetime.now()
@@ -47,8 +57,8 @@ status_order = {
 
 
 def json_to_csv(data, machine_serial, table, stage):
-
-    if not os.path.exists(CSV_PATH): os.mkdir(CSV_PATH)
+    if not os.path.exists(CSV_PATH):
+        os.mkdir(CSV_PATH)
 
     file_path = CSV_PATH + get_unique_file_name(machine_serial, table, stage)
 
@@ -67,26 +77,29 @@ class DataPublisher(object):
     def __init__(self, machine_serial):
         from asmcnc.production.database import credentials as creds
         self.creds = creds
-
         self.machine_serial = machine_serial
 
-        pika_credentials = pika.PlainCredentials(
-            username='calibration',
-            password=creds.password
-        )
-
-        self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host=creds.server,
-                credentials=pika_credentials
+        try: 
+            pika_credentials = pika.PlainCredentials(
+                username='calibration',
+                password=creds.password
             )
-        )
 
-        self.channel = self.connection.channel()
+            self.connection = pika.BlockingConnection(
+                pika.ConnectionParameters(
+                    host=creds.server,
+                    credentials=pika_credentials
+                )
+            )
 
-        self.channel.queue_declare(
-            queue=QUEUE
-        )
+            self.channel = self.connection.channel()
+
+            self.channel.queue_declare(
+                queue=QUEUE
+            )
+
+        except: 
+            log(traceback.format_exc())
 
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
@@ -111,7 +124,12 @@ class DataPublisher(object):
 
     def run_data_send(self, statuses, table, stage):
         csv_name = json_to_csv(statuses, self.machine_serial, table, stage)
-        self.send_file_paramiko_sftp(csv_name)
+        
+        try: 
+            self.send_file_paramiko_sftp(csv_name)
+        except:
+            print(traceback.format_exc())
+            return False
 
         raw_file_name = csv_name.split('/')[-1]
 

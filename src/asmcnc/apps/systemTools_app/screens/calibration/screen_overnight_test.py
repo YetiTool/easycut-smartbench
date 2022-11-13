@@ -10,6 +10,9 @@ import threading
 from datetime import datetime
 import json
 from asmcnc.production.database.payload_publisher import DataPublisher
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
+import os
+import glob
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
@@ -19,6 +22,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+
+from asmcnc.comms.logging import log_exporter
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -1509,12 +1514,28 @@ class OvernightTesting(Screen):
     def send_fully_calibrated_final_run_data(self):
         self._has_data_been_sent("FullyCalibratedTest", self.sent_fully_recalibrated_run_data)
 
-    def _has_data_been_sent(self, stage, checkbox_id):
+    def get_most_recent_csv(self):
+        CSV_PATH = './asmcnc/production/database/csvs/'
+        list_of_files = glob.glob(CSV_PATH + '*.csv')
+        latest_file = max(list_of_files, key=os.path.getctime)
+        return latest_file
 
-        if self.send_data(stage):
-            self.tick_checkbox(checkbox_id, True)
+    def show_failed_send_popup(self, csv_name):
+        log("Transferring file failed, copying to USB stick")
+
+        if os.path.exists('/media/usb'):
+            os.system('cp ' + csv_name + ' /media/usb/')
+            PopupCSVOnUSB()
         else:
-            self.tick_checkbox(checkbox_id, False)
+            log("USB stick not found")
+
+    def _has_data_been_sent(self, stage, checkbox_id):
+        sent_data = self.send_data(stage)
+
+        self.tick_checkbox(checkbox_id, sent_data)
+
+        if not sent_data:
+            self.show_failed_send_popup(self.get_most_recent_csv())
 
     def send_data(self, stage):
         try:
@@ -1540,12 +1561,13 @@ class OvernightTesting(Screen):
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
             log("Finished statistics data send")
-
+            log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
 
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())
+            log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
     def send_all_calibration_coefficients(self):
