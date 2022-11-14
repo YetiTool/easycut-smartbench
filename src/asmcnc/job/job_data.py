@@ -422,14 +422,12 @@ class JobData(object):
             print("Could not read recovery info")
             print(str(traceback.format_exc()))
 
-    def write_to_recovery_file_after_cancel(self, cancel_line):
+    def write_to_recovery_file_after_cancel(self, cancel_line, cancel_time):
         try:
             # Account for number of lines added in by the software when running file
             cancel_line -= self.job_recovery_offset
 
-            # If job was cancelled before it started, no need to store recovery info
-            if cancel_line >= 0:
-
+            def write_to_file(cancel_line):
                 with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
                     job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
 
@@ -439,6 +437,15 @@ class JobData(object):
 
                 print("Wrote recovery info")
 
+            # If everything is normal, write recovery info as normal
+            if cancel_line >= 0:
+                write_to_file(cancel_line)
+
+            # If cancel line < 0 but enough time has passed, job has probably started, so write line 0
+            elif cancel_time >= 30:
+                write_to_file(1)
+                
+            # If job was cancelled before it started, no need to store recovery info
             else:
                 print("Job cancelled before start, not writing recovery info")
 

@@ -624,7 +624,7 @@ class SerialConnection(object):
             # The line buffer has a capacity of 35 lines
             # So the currently executing command is the one 35 lines before the last one received by the buffer
             if not self.jd.job_recovery_skip_recovery:
-                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35)
+                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35, self.sm.get_screen('go').time_taken_seconds)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
