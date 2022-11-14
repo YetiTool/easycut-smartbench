@@ -14,6 +14,8 @@ Builder.load_string("""
     z_move_container:z_move_container
     nudge_speed_container:nudge_speed_container
 
+    nudge_header:nudge_header
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -32,6 +34,7 @@ Builder.load_string("""
                 orientation: 'horizontal'
 
                 Label:
+                    id: nudge_header
                     size_hint_x: 3.15
                     text: 'Optional Nudge:'
                     bold: True
@@ -205,25 +208,23 @@ class NudgeScreen(Screen):
         self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=self.m, screen_manager=self.sm)
         self.nudge_speed_container.add_widget(self.nudge_speed_widget)
 
+        self.update_strings()
+
     def on_pre_enter(self):
         self.initial_x = self.m.mpos_x()
         self.initial_y = self.m.mpos_y()
 
     def get_info(self):
 
-        info = ('"Nudging" is an optional manual adjustment in the XY plane. '
-                'It is only necessary if SmartBench has suffered any positional loss e.g. due to a stall, or a re-home.\n\n'
-                'Nudging allows the user to apply micro-corrections to the XY starting point of the tool, '
-                'allowing the tool to re-start in exact registration with previous cut paths.\n\n'
-                'The Z restart point cannot be adjusted using the nudge screen. '
-                'In the event of a Z datum reset (e.g. to correct for a stall in Z axis, or tool change), '
-                'please use the standard functions in the manual move screen.\n\n'
-                'Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) '
-                'could result in damage to your spindle, cutting tool and/or workpiece.\n\n'
-                'Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).'
-        )
+        info = self.l.get_str('Nudging is an optional manual adjustment in the XY plane.') + ' ' + \
+               self.l.get_str('It is only necessary if SmartBench has suffered any positional loss e.g. due to a stall, or a re-home.') + '\n\n' + \
+               self.l.get_str('Nudging allows the user to apply micro-corrections to the XY starting point of the tool, allowing the tool to re-start in exact registration with previous cut paths.') + '\n\n' + \
+               self.l.get_str('The Z restart point cannot be adjusted using the nudge screen.') + ' ' + \
+               self.l.get_str('In the event of a Z datum reset (e.g. to correct for a stall in Z axis, or tool change), please use the standard functions in the manual move screen.') + '\n\n' + \
+               self.l.get_str('Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) could result in damage to your spindle, cutting tool and/or workpiece.') + '\n\n' + \
+               self.l.get_str('Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).')
 
-        popup_info.PopupBigInfo(self.sm, self.l, 760, info)
+        popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
     def back_to_home(self):
         self.jd.reset_values()
@@ -255,3 +256,6 @@ class NudgeScreen(Screen):
 
         # Give time for wait popup to appear
         Clock.schedule_once(lambda dt: generate_gcode(), 0.5)
+
+    def update_strings(self):
+        self.nudge_header.text = self.l.get_str('Optional Nudge:')

@@ -15,6 +15,8 @@ Builder.load_string("""
     job_name_label:job_name_label
     completion_label:completion_label
 
+    job_name_header:job_name_header
+
     BoxLayout:
         orientation: 'vertical'
         canvas:
@@ -46,6 +48,7 @@ Builder.load_string("""
             orientation: 'vertical'
 
             Label:
+                id: job_name_header
                 text: "[b]Last job:[/b]"
                 color: hex('#333333ff')
                 markup: True
@@ -77,7 +80,7 @@ Builder.load_string("""
                 font_size: dp(30)
                 valign: "middle"
                 halign: "center"
-                text_size: self.size
+                text_size: self.size[0] - dp(50), self.size[1]
                 on_press: root.repeat_job()
                 background_normal: "./asmcnc/skavaUI/img/blank_green_button.png"
                 background_down: "./asmcnc/skavaUI/img/blank_green_button.png"
@@ -88,7 +91,7 @@ Builder.load_string("""
                 font_size: dp(30)
                 valign: "middle"
                 halign: "center"
-                text_size: self.size
+                text_size: self.size[0] - dp(50), self.size[1]
                 on_press: root.go_to_recovery()
                 background_normal: "./asmcnc/skavaUI/img/blank_orange_button.png"
                 background_down: "./asmcnc/skavaUI/img/blank_orange_button.png"
@@ -106,11 +109,13 @@ class RecoveryDecisionScreen(Screen):
         self.jd=kwargs['job']
         self.l=kwargs['localization']
 
+        self.update_strings()
+
     def on_pre_enter(self):
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
             self.job_name_label.text = ''
-            self.completion_label.text = "No file available!"
+            self.completion_label.text = self.l.get_str("No file available!")
 
             self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
             self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
@@ -131,13 +136,15 @@ class RecoveryDecisionScreen(Screen):
 
             # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
-                self.completion_label.text = "SmartBench completed the last job 100%"
+                self.completion_label.text = self.l.get_str("SmartBench completed the last job 100%")
                 self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
                 self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
             else:
-                self.completion_label.text = "SmartBench did not finish the last job"
+                self.completion_label.text = self.l.get_str("SmartBench did not finish the last job")
                 self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
                 self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
+
+        self.update_font_size(self.completion_label)
 
     def go_to_recovery(self):
         # Doing it this way because disabling the button causes visuals errors
@@ -164,3 +171,14 @@ class RecoveryDecisionScreen(Screen):
 
     def back_to_home(self):
         self.sm.current = 'home'
+
+    def update_strings(self):
+        self.job_name_header.text = self.l.get_bold('Last job:')
+        self.repeat_job_button.text = self.l.get_str('Repeat job from the beginning')
+        self.recover_job_button.text = self.l.get_str('Recover job')
+
+    def update_font_size(self, value):
+        if len(value.text) > 50:
+            value.font_size = 28
+        else: 
+            value.font_size = 30

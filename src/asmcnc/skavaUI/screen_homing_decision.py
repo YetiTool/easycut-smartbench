@@ -174,7 +174,7 @@ class HomingDecisionScreen(Screen):
                 self.l.get_str("Homing is used by the machine to understand its position in 3D space.") + " " + \
                 self.l.get_str("In the event of a mechanical stall (where the machine audibly clicks), SmartBench will have an incorrect understanding of its position.") + " " + \
                 self.l.get_str("In this case we recommend rehoming.") + " " + \
-                self.l.get_str("If SmartBench did not stall, we recommend that you do not re-home.").replace(self.l.get_str('not'), self.l.get_bold('not')) + "\n\n" + \
+                self.l.get_str("If SmartBench did not stall, we recommend that you do not re-home.").replace(" " + self.l.get_str('not') + " ", " " + self.l.get_bold('not') + " ").replace(" " + self.l.get_str('not') + ",", " " + self.l.get_bold('not') + ",") + "\n\n" + \
                 self.l.get_str("If you choose to rehome, use the nudge screen to properly realign your tool over the already cut toolpath.") + " " + \
                 self.l.get_str("This accounts for inconsistencies in the homing process and will move your datum accordingly.")
 

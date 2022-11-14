@@ -494,13 +494,13 @@ class JobData(object):
             if distance_line:
                 # Recovery not allowed if G91 is used
                 if re.search("G91([A-Z]|\s|$)", distance_line):
-                    return False, 'The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.'
+                    return False, self.l.get_str('The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.')
                 recovery_gcode.append("G90")
 
             # Arc IJK distance mode
             arc_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[0,1]\.1", s)), None)
             if arc_mode_line:
-                return False, 'Job recovery does not currently support arc distance modes. This job contains %s, and therefore cannot be recovered.' % re.search("G9[0,1]\.1", arc_mode_line).group(0)
+                return False, self.l.get_str('Job recovery does not currently support arc distance modes. This job contains N, and therefore cannot be recovered.').replace('N', re.search("G9[0,1]\.1", arc_mode_line).group(0))
 
             # Feed rate mode
             feedrate_mode_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G9[3-5]", s)), None)
@@ -508,7 +508,7 @@ class JobData(object):
                 if re.search("G94", feedrate_mode_line):
                     recovery_gcode.append('G94')
                 else:
-                    return False, 'Job recovery only supports feed rate mode G94. This job contains %s, and therefore cannot be recovered.' % re.search("G9[3-5]", feedrate_mode_line).group(0)
+                    return False, self.l.get_str('Job recovery only supports feed rate mode G94. This job contains N, and therefore cannot be recovered.').replace('N', re.search("G9[3-5]", feedrate_mode_line).group(0))
 
             # Units
             unit_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("G2[0,1]", s)), None)
@@ -628,4 +628,4 @@ class JobData(object):
 
         except:
             # An error occurred, job cannot be recovered
-            return False, 'This job cannot be recovered! Please check your job for errors.'
+            return False, self.l.get_str('This job cannot be recovered! Please check your job for errors.')

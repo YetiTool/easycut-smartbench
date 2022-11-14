@@ -381,9 +381,9 @@ class HomeScreen(Screen):
             # Line -1 being selected represents no selected line
             if self.jd.job_recovery_selected_line == -1:
                 if self.jd.job_recovery_from_beginning:
-                    self.file_data_label.text += "\n[color=FF0000]Restart from beginning[/color]"
+                    self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("Restart from beginning") + "[/color]"
             else:
-                self.file_data_label.text += "\n[color=FF0000]From line " + str(self.jd.job_recovery_selected_line) + "[/color]"
+                self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("From line N").replace("N", str(self.jd.job_recovery_selected_line)) + "[/color]"
         else:
             self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
