@@ -67,11 +67,13 @@
   #     name: matplotlib==2.2.5
   #   ignore_errors: yes
   #   when: ansible_distribution_major_version == '11'
-  - name: Pip install matplotlib and numpy (dependency)
+  - name: Pip install numpy==1.16.6
     pip:
-      name: 
-        - numpy==1.16.6
-        - matplotlib==2.2.5
+      name: numpy==1.16.6
+    ignore_errors: yes
+  - name: Pip install matplotlib==2.2.5
+    pip:
+      name: matplotlib==2.2.5
     ignore_errors: yes
     # when: ansible_distribution_major_version == '9'
   - name: Pip install PyMySQL==0.10.1
