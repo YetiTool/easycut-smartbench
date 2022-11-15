@@ -619,16 +619,16 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
+            # Update time for maintenance reminders
+            time.sleep(0.4)
+            time_taken_seconds = self.update_machine_runtime()
+
             # Write recovery info
             # g_count represents the number of OKs issued by grbl which are sent when a line enters the line buffer
             # The line buffer has a capacity of 35 lines
             # So the currently executing command is the one 35 lines before the last one received by the buffer
             if not self.jd.job_recovery_skip_recovery:
-                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35, self.sm.get_screen('go').time_taken_seconds)
-
-            # Update time for maintenance reminders
-            time.sleep(0.4)
-            self.update_machine_runtime()
+                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35, time_taken_seconds)
             
 
         else:
@@ -676,6 +676,8 @@ class SerialConnection(object):
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
         self._reset_counters()
+
+        return time_taken_seconds
         
 
 # PUSH MESSAGE HANDLING
