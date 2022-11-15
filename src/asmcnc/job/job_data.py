@@ -423,19 +423,20 @@ class JobData(object):
             print(str(traceback.format_exc()))
 
     def write_to_recovery_file_after_cancel(self, cancel_line, cancel_time):
+
+        def write_to_file(cancel_line):
+            with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
+                job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
+
+            # Simultaneously update variables
+            self.job_recovery_filepath = self.filename
+            self.job_recovery_cancel_line = cancel_line
+
+            print("Wrote recovery info")
+
         try:
             # Account for number of lines added in by the software when running file
             cancel_line -= self.job_recovery_offset
-
-            def write_to_file(cancel_line):
-                with open(self.job_recovery_info_filepath, 'w+') as job_recovery_info_file:
-                    job_recovery_info_file.write(self.filename + "\n" + str(cancel_line))
-
-                # Simultaneously update variables
-                self.job_recovery_filepath = self.filename
-                self.job_recovery_cancel_line = cancel_line
-
-                print("Wrote recovery info")
 
             # If everything is normal, write recovery info as normal
             if cancel_line >= 0:
