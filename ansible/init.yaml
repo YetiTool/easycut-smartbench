@@ -25,7 +25,7 @@
     with_items: "{{ stretch_pkgs }}"
     when: ansible_distribution_major_version == '9' or ansible_distribution_major_version == '10'
 
-    # This might be very very important before the pip run
+    # This is very important before the pip run
   - name: Install apt packages and one python package
     package:
       name: "{{ item }}"
@@ -62,11 +62,6 @@
     pip:
       name: pyodbc<=4.0.34
     ignore_errors: yes
-  # - name: Pip install matplotlib==2.2.5
-  #   pip:
-  #     name: matplotlib==2.2.5
-  #   ignore_errors: yes
-  #   when: ansible_distribution_major_version == '11'
   - name: Pip install numpy==1.16.6
     pip:
       name: numpy==1.16.6
@@ -75,7 +70,6 @@
     pip:
       name: matplotlib==2.2.5
     ignore_errors: yes
-    # when: ansible_distribution_major_version == '9'
   - name: Pip install PyMySQL==0.10.1
     pip:
       name: PyMySQL==0.10.1
@@ -197,6 +191,3 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
-
-
-  
