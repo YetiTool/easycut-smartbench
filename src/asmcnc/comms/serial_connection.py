@@ -675,9 +675,12 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
+        # This accounts for the current pause and doesn't include cooldown time
+        time_without_current_pause = self.stream_pause_start_time - self.stream_start_time - self.stream_paused_accumulated_time
+
         self._reset_counters()
 
-        return time_taken_seconds
+        return time_without_current_pause
         
 
 # PUSH MESSAGE HANDLING
