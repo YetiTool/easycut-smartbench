@@ -12,10 +12,10 @@ def log(message):
 
 try: 
     try:
-        import pymysql as MySQLdb
+        import pymysql as my_sql_client
 
     except:
-        import MySQLdb
+        import MySQLdb as my_sql_client
 except:
     log("No MySQLdb or pymysql package installed")
 
@@ -72,7 +72,7 @@ class CalibrationDatabase(object):
                 import credentials
 
         try:
-            self.conn = MySQLdb.connect(host=credentials.server, db=credentials.database, user=credentials.username,
+            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
                                         passwd=credentials.password)
             log("Connected to database")
 
