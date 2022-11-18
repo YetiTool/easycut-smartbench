@@ -55,23 +55,23 @@ class SQLQueryTests(unittest.TestCase):
 
     # # QC CALIBRATION TESTS
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_setup_z_head_coefficients(self):
         self.db.setup_z_head_coefficients('zh8888', 4, 4)
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_setup_lower_beam_coefficients(self):
         self.db.setup_lower_beam_coefficients('xl8888', 2, 1)
         self.db.setup_lower_beam_coefficients('xl8888', 3, 1)
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_insert_calibration_coefficients(self):
         self.db.insert_calibration_coefficients('xl8888', 2, 1, self.coefficients)
         self.db.insert_calibration_coefficients('xl8888', 3, 1, self.coefficients)
 
     # # FETCH COEFFICIENTS TEST
 
-    # @unittest.skip("tries to retrieve test data from db")
+    @unittest.skip("tries to retrieve test data from db")
     def test_get_lower_beam_coefficents(self):
         self.assertIsNotNone(self.db.get_lower_beam_coefficents('xl8888', 2, 1))
 
@@ -79,42 +79,42 @@ class SQLQueryTests(unittest.TestCase):
 
     # # Serial numbers
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_insert_serial_numbers(self):
         self.db.insert_serial_numbers('ys68888', 'zh8888', 'xl8888', 'xu8888','cs8888', 'yb8888', '123456Y', 'v9.9.9', '9.9.9', '0.0')
 
-    # @unittest.skip("tries to retrieve test data from db")
+    @unittest.skip("tries to retrieve test data from db")
     def test_get_serials_by_machine_serial(self):
         self.assertIsNotNone(self.db.get_serials_by_machine_serial('ys68888'))
 
-    # @unittest.skip("tries to retrieve test data from db")
+    @unittest.skip("tries to retrieve test data from db")
     def test_get_all_serials_by_machine_serial(self):
         self.assertIsNotNone(self.db.get_all_serials_by_machine_serial('ys68888'))
 
     # # Stages
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_insert_final_test_stage(self):
         self.db.insert_final_test_stage('ys68888', 5)
 
-    # @unittest.skip("tries to retrieve test data from db")
+    @unittest.skip("tries to retrieve test data from db")
     def test_does_final_test_stage_already_exist_yarp(self):
         self.assertIsNotNone(self.db.does_final_test_stage_already_exist('688885'))
 
-    # @unittest.skip("tries to retrieve test data from db")
+    @unittest.skip("tries to retrieve test data from db")
     def test_does_final_test_stage_already_exist_narp(self):
         self.assertIsNone(self.db.does_final_test_stage_already_exist('688888'))
 
     # # Statistics
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_insert_final_test_statistics(self):
         statistics_list = ['ys68888', 5, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
         self.db.insert_final_test_statistics(*statistics_list)
 
     # # Statuses
 
-    # @unittest.skip("inserts test data into db")
+    @unittest.skip("inserts test data into db")
     def test_insert_final_test_statuses(self):
                       # (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s, %s, %s)
         status_list = (688885, -1.0, -1.0, -1.0, -1, -1, -1, -3, -3, -3, -3, -3, 30, 45, 45, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 6000, 0, 0, 2)
