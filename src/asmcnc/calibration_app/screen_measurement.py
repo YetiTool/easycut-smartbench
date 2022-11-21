@@ -237,7 +237,7 @@ class MeasurementScreenClass(Screen):
         
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
-        self.m.jog_absolute_single_axis('Y', -2320, 9999)
+        self.m.jog_absolute_single_axis('Y', round(0.9 * self.m.y_min_jog_abs_limit), 9999)
         self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. ' \
                             'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
         self.instruction_left.text = ''
