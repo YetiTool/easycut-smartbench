@@ -10,12 +10,19 @@ def log(message):
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-try:
-    import MySQLdb
-    from influxdb import InfluxDBClient
+try: 
+    try:
+        import pymysql as my_sql_client
 
+    except:
+        import MySQLdb as my_sql_client
 except:
-    log('Pyodbc or influxdb not installed')
+    log("No MySQLdb or pymysql package installed")
+
+try:
+    from influxdb import InfluxDBClient
+except:
+    log('Influxdb not installed')
 
 
 class CalibrationDatabase(object):
@@ -65,7 +72,7 @@ class CalibrationDatabase(object):
                 import credentials
 
         try:
-            self.conn = MySQLdb.connect(host=credentials.server, db=credentials.database, user=credentials.username,
+            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
                                         passwd=credentials.password)
             log("Connected to database")
 

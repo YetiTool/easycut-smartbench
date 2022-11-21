@@ -327,7 +327,7 @@ class BacklashScreenClass(Screen):
 
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
-        self.m.jog_absolute_single_axis('Y', -2320, 9999)
+        self.m.jog_absolute_single_axis('Y', round(0.9 * self.m.y_min_jog_abs_limit), 9999)
         self.m.jog_relative('Y',-10,9999)
         self.m.jog_relative('Y',10,9999)
         self.sub_screen_count = 0
