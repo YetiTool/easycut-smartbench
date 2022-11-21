@@ -154,16 +154,30 @@ class RecoveryDecisionScreen(Screen):
     def repeat_job(self, recovering=False):
         if self.jd.job_recovery_cancel_line != None:
             if os.path.isfile(self.jd.job_recovery_filepath):
-                self.jd.reset_values()
-                self.jd.job_recovery_from_beginning = True
-                self.jd.set_job_filename(self.jd.job_recovery_filepath)
+                # Only load file if it's not already loaded
+                if self.jd.job_recovery_filepath != self.jd.filename:
+                    self.jd.reset_values()
+                    self.jd.job_recovery_from_beginning = True
+                    self.jd.set_job_filename(self.jd.job_recovery_filepath)
 
-                if recovering:
-                    self.sm.get_screen('loading').continuing_to_recovery = True
+                    if recovering:
+                        self.sm.get_screen('loading').continuing_to_recovery = True
+                    else:
+                        self.sm.get_screen('loading').skip_check_decision = True
+
+                    self.sm.current = 'loading'
+
                 else:
-                    self.sm.get_screen('loading').skip_check_decision = True
+                    self.sm.get_screen('home').z_datum_reminder_flag = True
+                    self.jd.reset_recovery()
 
-                self.sm.current = 'loading'
+                    if recovering:
+                        self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
+                        self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
+                        self.sm.current = 'homing_decision'
+                    else:
+                        self.jd.job_recovery_from_beginning = True
+                        self.back_to_home()
 
             else: 
                 error_message = self.l.get_str('File selected does not exist!')

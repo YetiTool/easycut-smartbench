@@ -619,6 +619,9 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
+            # Store cancel line, as g_count is reset in update_machine_runtime
+            cancel_line = self.g_count - 35
+
             # Update time for maintenance reminders
             time.sleep(0.4)
             time_taken_seconds = self.update_machine_runtime()
@@ -628,7 +631,7 @@ class SerialConnection(object):
             # The line buffer has a capacity of 35 lines
             # So the currently executing command is the one 35 lines before the last one received by the buffer
             if not self.jd.job_recovery_skip_recovery:
-                self.jd.write_to_recovery_file_after_cancel(self.g_count - 35, time_taken_seconds)
+                self.jd.write_to_recovery_file_after_cancel(cancel_line, time_taken_seconds)
             
 
         else:
