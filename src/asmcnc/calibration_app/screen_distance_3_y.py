@@ -298,6 +298,8 @@ class DistanceScreen3yClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+        self.initial_y_cal_move = round(0.8 * (abs(self.m.y_max_jog_abs_limit - self.m.y_min_jog_abs_limit)))
+
     def on_pre_enter(self):
         self.nudge_counter = 0
         self.value_input.text = ''
