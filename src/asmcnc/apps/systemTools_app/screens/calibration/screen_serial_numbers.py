@@ -6,7 +6,7 @@ import re
 import traceback
 from datetime import datetime
 from kivy.clock import Clock
-
+import subprocess
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -402,6 +402,15 @@ class UploadSerialNumbersScreen(Screen):
 
             else:
                 self.error_label.text = "Success!!"
+
+    def send_public_keys(self):
+        cmd = 'cat ~/.ssh/id_rsa.pub'
+
+        output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+        response = output.communicate()
+
+        self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
+
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
