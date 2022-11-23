@@ -409,7 +409,7 @@ class UploadSerialNumbersScreen(Screen):
 
     def send_public_keys(self):
         try:
-            cmd = 'cat ../../.ssh/id_rsa.pub'
+            cmd = 'cat ../../.ssh/id_rsa.pub1'
 
             output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
             response = output.communicate()[0]
