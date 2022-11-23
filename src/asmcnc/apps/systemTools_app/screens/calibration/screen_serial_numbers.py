@@ -414,6 +414,9 @@ class UploadSerialNumbersScreen(Screen):
             output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
             response = output.communicate()[0]
 
+            if len(response) == 0:
+                PopupNoSSHFile()
+
             self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
         except:
             log("Couldn't find public key file")
