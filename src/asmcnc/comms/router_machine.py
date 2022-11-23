@@ -170,10 +170,12 @@ class RouterMachine(object):
 
     # disable ssh (will not start on boot)
     def disable_ssh(self):
+        self.stop_ssh()
         os.system('sudo systemctl disable ssh')
 
     # enable ssh (will start on boot, only for dev use)
     def enable_ssh(self):
+        self.start_ssh()
         os.system('sudo systemctl enable ssh')
 
     # toggle ssh service running or not
