@@ -733,19 +733,19 @@ class FactorySettingsScreen(Screen):
             except:
                 pass
 
-            if self.smartbench_model.text == 'Choose model':
+            if not self.smartbench_model.text == 'Choose model':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif not self.check_serial_number_for_factory_reset():
+            elif self.check_serial_number_for_factory_reset():
                 warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif self.software_version_label.text != self.latest_software_version.text:
+            elif not self.software_version_label.text != self.latest_software_version.text:
                 warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif self.platform_version_label.text != self.latest_platform_version.text:
+            elif not self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
