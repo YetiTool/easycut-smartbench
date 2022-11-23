@@ -583,7 +583,7 @@ class CalibrationDatabase(object):
 
     def get_ssh_key(self, serial):
         with self.ssh_conn.cursor() as cursor:
-            query = "SELECT * FROM public_keys WHERE Serial = %s"
+            query = "SELECT * FROM public_keys WHERE ConsoleSerial = %s"
 
             params = [serial]
 
@@ -594,7 +594,7 @@ class CalibrationDatabase(object):
 
     def delete_ssh_key(self, serial):
         with self.ssh_conn.cursor() as cursor:
-            query = "DELETE FROM public_keys WHERE Serial = %s"
+            query = "DELETE FROM public_keys WHERE ConsoleSerial = %s"
 
             params = [serial]
 
