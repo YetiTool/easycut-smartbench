@@ -424,7 +424,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(210)
                     height: dp(280)
-                    padding_y: -20
+                    padding: -20
                     spacing: 20
                     orientation: 'vertical'
 
@@ -699,7 +699,9 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = self.l.get_str('Firmware')
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
-        self.toggle_ssh_button.text = 'SSH: ' + 'enabled' if self.m.is_service_running('ssh') else 'disabled'
+
+        enabled_text = 'enabled' if self.m.is_service_running('ssh') else 'disabled'
+        self.toggle_ssh_button.text = 'SSH: ' + enabled_text
 
         self.show_more_info.text = (
             self.l.get_str('Software') + '\n' + \

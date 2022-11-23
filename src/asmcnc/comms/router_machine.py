@@ -200,10 +200,13 @@ class RouterMachine(object):
         return self.is_service_running('ssh')
 
     def is_service_running(self, service):
-        with open(os.devnull, 'wb') as hide_output:
-            exit_code = subprocess.Popen(['systemctl', 'is-active', service],
-                                         stdout=hide_output, stderr=hide_output).wait()
-            return exit_code == 0
+        try:
+            with open(os.devnull, 'wb') as hide_output:
+                exit_code = subprocess.Popen(['systemctl', 'is-active', service],
+                                             stdout=hide_output, stderr=hide_output).wait()
+                return exit_code == 0
+        except:
+            log("Couldn't check status")
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
