@@ -473,7 +473,7 @@ class FactorySettingsScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
-    dev_mode = False
+    dev_mode = True
 
     poll_for_creds_file = None
 
@@ -690,9 +690,8 @@ class FactorySettingsScreen(Screen):
             pass
 
     def factory_reset(self):
-        self.m.disable_ssh()
         def nested_factory_reset():
-
+            self.m.disable_ssh()
             # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
@@ -733,19 +732,19 @@ class FactorySettingsScreen(Screen):
             except:
                 pass
 
-            if not self.smartbench_model.text == 'Choose model':
+            if self.smartbench_model.text == 'Choose model':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif self.check_serial_number_for_factory_reset():
+            elif not self.check_serial_number_for_factory_reset():
                 warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif not self.software_version_label.text != self.latest_software_version.text:
+            elif self.software_version_label.text != self.latest_software_version.text:
                 warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif not self.platform_version_label.text != self.latest_platform_version.text:
+            elif self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
