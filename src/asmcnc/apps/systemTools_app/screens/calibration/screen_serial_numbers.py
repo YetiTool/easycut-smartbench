@@ -416,6 +416,7 @@ class UploadSerialNumbersScreen(Screen):
 
             if len(response) == 0:
                 PopupNoSSHFile()
+                return
 
             self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
         except:
