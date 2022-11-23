@@ -168,6 +168,15 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
+    # disable ssh (will not start on boot)
+    def disable_ssh(self):
+        os.system('sudo systemctl disable ssh')
+
+    # enable ssh (will start on boot, only for dev use)
+    def enable_ssh(self):
+        os.system('sudo systemctl enable ssh')
+
+    # toggle ssh service running or not
     def toggle_ssh(self):
         ssh_running = self.is_service_running('ssh')
 
@@ -176,11 +185,13 @@ class RouterMachine(object):
 
         return self.start_ssh()
 
+    # stop ssh (doesn't change status on boot)
     def stop_ssh(self):
         os.system('sudo systemctl stop ssh')
 
         return not self.is_service_running('ssh')
 
+    # start ssh (doesn't change status on boot)
     def start_ssh(self):
         os.system('sudo systemctl start ssh')
 

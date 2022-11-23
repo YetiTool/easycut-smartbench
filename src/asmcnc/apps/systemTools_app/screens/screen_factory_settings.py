@@ -690,7 +690,7 @@ class FactorySettingsScreen(Screen):
             pass
 
     def factory_reset(self):
-
+        self.m.disable_ssh()
         def nested_factory_reset():
 
             # Ensure git repo is good before anything else happens
