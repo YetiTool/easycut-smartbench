@@ -423,7 +423,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(210)
-                    height: dp(280)
+                    height: dp(300)
                     padding: 0
                     spacing: 20
                     orientation: 'vertical'
@@ -501,7 +501,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(80)
+                height: dp(60)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
@@ -509,13 +509,13 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(80)
-                    height: dp(80)
+                    height: dp(60)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(80)
+                        height: dp(60)
                         width: dp(80)
                         padding: [10, 10, 10, 10]
                         Button:
