@@ -424,7 +424,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(210)
                     height: dp(280)
-                    padding: [0, -20, 0, 0]
+                    padding: 0
                     spacing: 20
                     orientation: 'vertical'
 
