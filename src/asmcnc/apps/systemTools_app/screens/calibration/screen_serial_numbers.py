@@ -411,7 +411,6 @@ class UploadSerialNumbersScreen(Screen):
 
         self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
 
-
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
 
