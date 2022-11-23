@@ -384,8 +384,8 @@ class PopupFactorySettingsPassword(Widget):
         ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
-            # if textinput.text == "fac":
-            self.systemtools_sm.open_factory_settings_screen()
+            if textinput.text == "fac":
+                self.systemtools_sm.open_factory_settings_screen()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=0.7, text_size=(450, None), halign='center', valign='middle', text=description,
