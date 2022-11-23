@@ -406,10 +406,10 @@ class UploadSerialNumbersScreen(Screen):
                 self.error_label.text = "Success!!"
 
     def send_public_keys(self):
-        cmd = 'cat ~/.ssh/id_rsa.pub'
+        cmd = 'cat ../../.ssh/id_rsa.pub'
 
         output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-        response = output.communicate()
+        response = output.communicate()[0]
 
         self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
 
