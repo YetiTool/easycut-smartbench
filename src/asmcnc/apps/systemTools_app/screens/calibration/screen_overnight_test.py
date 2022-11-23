@@ -695,13 +695,6 @@ Builder.load_string("""
 
 """)
 
-MAX_XY_SPEED = 6000
-MAX_Z_SPEED = 750
-
-MAX_Z_DISTANCE = 149
-MAX_X_DISTANCE = 1299
-MAX_Y_DISTANCE = 2501
-
 
 def log(message):
     timestamp = datetime.now()
@@ -1364,7 +1357,7 @@ class OvernightTesting(Screen):
 
         log("SB fully calibrated, start final run")
 
-        self.m.jog_absolute_xy(-1298, -2500, 6000)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', -32, 750)
 
         self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_spiral_file, 5)
