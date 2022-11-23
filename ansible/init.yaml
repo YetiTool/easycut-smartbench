@@ -18,7 +18,7 @@
     become_user: root
   - name: Disable SSH on debian 11
     shell: sudo systemctl disable ssh
-    #when: ansible_distribution_major_version == '11'
+    when: ansible_distribution_major_version == '11'
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:
