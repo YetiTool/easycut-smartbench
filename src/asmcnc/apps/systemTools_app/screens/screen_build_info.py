@@ -17,6 +17,7 @@ from kivy.metrics import dp
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
 
 Builder.load_string("""
 
@@ -676,8 +677,11 @@ class BuildInfoScreen(Screen):
         self.reset_language = True
 
     def toggle_ssh(self):
-        self.m.toggle_ssh()
+        toggled = self.m.toggle_ssh()
         self.toggle_ssh_button.text = 'SSH: ' + str(self.m.is_service_running('ssh'))
+
+        if not toggled:
+            PopupSSHToggleFailed()
 
     def update_strings(self):
         self.language_button.text = self.l.lang
