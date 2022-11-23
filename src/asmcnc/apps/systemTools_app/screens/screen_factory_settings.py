@@ -469,7 +469,7 @@ Builder.load_string("""
 
 class FactorySettingsScreen(Screen):
 
-    machine_model_values = ['SmartBench V1.0 CNC Router', 'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
+    machine_model_values = ['SmartBench V1.0 CNC Router', 'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router', 'SmartBench V1.3 PrecisionPro CNC Router', 'ShortBench']
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
@@ -851,7 +851,8 @@ class FactorySettingsScreen(Screen):
         (self.smartbench_model.text == 'SmartBench V1.2 Precision CNC Router')):
             self.product_number_input.text = '02'
 
-        elif self.smartbench_model.text == 'SmartBench V1.2 PrecisionPro CNC Router':
+        elif ((self.smartbench_model.text == 'SmartBench V1.2 PrecisionPro CNC Router') or
+        (self.smartbench_model.text == 'SmartBench V1.3 PrecisionPro CNC Router')):
             self.product_number_input.text = '03'
 
         else: 
