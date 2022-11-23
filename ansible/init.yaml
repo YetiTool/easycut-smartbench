@@ -191,3 +191,6 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: Disable SSH
+    shell: sudo systemctl disable ssh
+    when: ansible_distribution_major_version == '11'
