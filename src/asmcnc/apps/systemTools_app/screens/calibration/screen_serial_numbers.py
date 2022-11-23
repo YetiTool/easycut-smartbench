@@ -173,7 +173,7 @@ class UploadSerialNumbersScreen(Screen):
 
     poll_for_end_of_upload = None
 
-    dev_mode = False
+    dev_mode = True
 
     already_in_database = False
 
