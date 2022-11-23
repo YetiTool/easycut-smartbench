@@ -473,7 +473,7 @@ class FactorySettingsScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
-    dev_mode = True
+    dev_mode = False
 
     poll_for_creds_file = None
 
