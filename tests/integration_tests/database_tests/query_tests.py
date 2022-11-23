@@ -129,6 +129,20 @@ class SQLQueryTests(unittest.TestCase):
 
         self.db.send_ssh_keys(test_serial, test_key)
 
+    @unittest.skip("get key from public key db")
+    def test_get_ssh_keys(self):
+        test_serial = 'ys66969'
+
+        self.assertIsNotNone(self.db.get_ssh_key(test_serial))
+
+    @unittest.skip("delete key from public key db")
+    def test_delete_ssh_keys(self):
+        test_serial = 'ys66969'
+
+        self.db.delete_ssh_key(test_serial)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
