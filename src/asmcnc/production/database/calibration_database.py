@@ -575,7 +575,7 @@ class CalibrationDatabase(object):
         with self.ssh_conn.cursor() as cursor:
             query = "INSERT INTO public_keys (ConsoleSerial, PublicKey) VALUES (%s, %s)"
 
-            params = serial, key
+            params = [serial, key]
 
             cursor.execute(query, params)
 
