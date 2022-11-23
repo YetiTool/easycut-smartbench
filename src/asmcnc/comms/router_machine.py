@@ -21,6 +21,7 @@ import sys, os, time
 from datetime import datetime
 import os.path
 from os import path
+import subprocess
 
 from __builtin__ import True
 from kivy.uix.switch import Switch
@@ -137,6 +138,8 @@ class RouterMachine(object):
 
     trigger_setup = False
 
+    ssh_enabled = False
+
     def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -164,6 +167,31 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+    def toggle_ssh(self):
+        ssh_running = self.is_service_running('ssh')
+
+        if ssh_running:
+            self.stop_ssh()
+            return
+
+        self.start_ssh()
+
+    def stop_ssh(self):
+        os.system('systemctl stop ssh')
+
+        return not self.is_service_running('ssh')
+
+    def start_ssh(self):
+        os.system('systemctl start ssh')
+
+        return self.is_service_running('ssh')
+
+    def is_service_running(self, service):
+        with open(os.devnull, 'wb') as hide_output:
+            exit_code = subprocess.Popen(['systemctl', 'is-active', service],
+                                         stdout=hide_output, stderr=hide_output).wait()
+            return exit_code == 0
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):

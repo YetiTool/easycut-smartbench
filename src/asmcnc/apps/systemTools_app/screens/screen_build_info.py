@@ -64,6 +64,7 @@ Builder.load_string("""
     advanced_button : advanced_button
     show_more_info: show_more_info
     console_serial_number: console_serial_number
+    toggle_ssh_button:toggle_ssh_button
 
     BoxLayout:
         height: dp(800)
@@ -469,6 +470,20 @@ Builder.load_string("""
                         on_press: root.do_show_more_info()
                         color: hex('#f9f9f9ff')
                         markup: True
+                        
+                    ToggleButton:
+                        id: toggle_ssh_button
+                        size_hint: (None,None)
+                        height: dp(35)
+                        width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.toggle_ssh()
+                        color: hex('#f9f9f9ff')
+                        markup: True
 
                     BoxLayout: 
                         size_hint: (None, None)
@@ -660,6 +675,10 @@ class BuildInfoScreen(Screen):
         self.restart_app()
         self.reset_language = True
 
+    def toggle_ssh(self):
+        self.m.toggle_ssh()
+        self.toggle_ssh_button.text = 'SSH: ' + str(self.m.is_service_running('ssh'))
+
     def update_strings(self):
         self.language_button.text = self.l.lang
         self.data_and_wifi_button.text = self.l.get_str('Data and Wi-Fi')
@@ -673,6 +692,7 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = self.l.get_str('Firmware')
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
+        self.toggle_ssh_button.text = 'SSH: ' + str(self.m.is_service_running('ssh'))
 
         self.show_more_info.text = (
             self.l.get_str('Software') + '\n' + \
