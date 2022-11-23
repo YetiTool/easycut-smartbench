@@ -178,12 +178,12 @@ class RouterMachine(object):
         self.start_ssh()
 
     def stop_ssh(self):
-        os.system('systemctl stop ssh')
+        os.system('sudo systemctl stop ssh')
 
         return not self.is_service_running('ssh')
 
     def start_ssh(self):
-        os.system('systemctl start ssh')
+        os.system('sudo systemctl start ssh')
 
         return self.is_service_running('ssh')
 
