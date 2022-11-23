@@ -173,7 +173,7 @@ class UploadSerialNumbersScreen(Screen):
 
     poll_for_end_of_upload = None
 
-    dev_mode = True
+    dev_mode = False
 
     already_in_database = False
 
@@ -406,12 +406,15 @@ class UploadSerialNumbersScreen(Screen):
                 self.error_label.text = "Success!!"
 
     def send_public_keys(self):
-        cmd = 'cat ../../.ssh/id_rsa.pub'
+        try:
+            cmd = 'cat ../../.ssh/id_rsa.pub'
 
-        output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-        response = output.communicate()[0]
+            output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+            response = output.communicate()[0]
 
-        self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
+            self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
+        except:
+            log("Couldn't find public key file")
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
