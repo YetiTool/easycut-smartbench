@@ -678,7 +678,10 @@ class BuildInfoScreen(Screen):
 
     def toggle_ssh(self):
         toggled = self.m.toggle_ssh()
-        self.toggle_ssh_button.text = 'SSH: ' + str(self.m.is_service_running('ssh'))
+
+        enabled_text = 'enabled' if self.m.is_service_running('ssh') else 'disabled'
+
+        self.toggle_ssh_button.text = 'SSH: ' + enabled_text
 
         if not toggled:
             PopupSSHToggleFailed()
