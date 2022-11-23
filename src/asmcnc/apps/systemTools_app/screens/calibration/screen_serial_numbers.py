@@ -9,6 +9,8 @@ from kivy.clock import Clock
 import subprocess
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupNoSSHFile
+
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
 
@@ -415,6 +417,7 @@ class UploadSerialNumbersScreen(Screen):
             self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
         except:
             log("Couldn't find public key file")
+            PopupNoSSHFile()
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
