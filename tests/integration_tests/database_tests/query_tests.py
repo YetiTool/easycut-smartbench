@@ -122,6 +122,13 @@ class SQLQueryTests(unittest.TestCase):
         more_statuses = [status_list]
         self.db.insert_final_test_statuses(more_statuses)
 
+    @unittest.skip("inserts test data into public key db")
+    def test_send_ssh_keys(self):
+        test_serial = 'ys66969'
+        test_key = 'key'
+
+        self.db.send_ssh_keys(test_serial, test_key)
+
 
 if __name__ == "__main__":
     unittest.main()
