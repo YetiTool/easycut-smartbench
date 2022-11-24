@@ -677,9 +677,9 @@ class BuildInfoScreen(Screen):
         self.reset_language = True
 
     def toggle_ssh(self):
-        toggled = self.m.toggle_ssh()
+        toggled = self.set.toggle_ssh()
 
-        enabled_text = 'enabled' if self.m.is_service_running('ssh') else 'disabled'
+        enabled_text = 'enabled' if self.set.is_service_running('ssh') else 'disabled'
 
         self.toggle_ssh_button.text = 'SSH: ' + enabled_text
 
@@ -700,7 +700,7 @@ class BuildInfoScreen(Screen):
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
 
-        enabled_text = 'enabled' if self.m.is_service_running('ssh') else 'disabled'
+        enabled_text = 'enabled' if self.set.is_service_running('ssh') else 'disabled'
         self.toggle_ssh_button.text = 'SSH: ' + enabled_text
 
         self.show_more_info.text = (

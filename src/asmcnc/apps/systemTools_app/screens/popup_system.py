@@ -603,7 +603,7 @@ class RebootAfterLanguageChange(Widget):
 
 class PopupSSHToggleFailed(Widget):
     def __init__(self):
-        description = 'Please contact Yeti Tool support'
+        description = "Try rebooting your console and try again.\nIf problem occurs afterwards, please contact Yeti Tool Support."
         title_string = 'Failed to toggle SSH service'
         ok_string = 'Ok'
 

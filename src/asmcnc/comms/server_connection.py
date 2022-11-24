@@ -27,10 +27,9 @@ class ServerConnection(object):
 
 	poll_connection = None
 
-	def __init__(self, settings_manager, m):
+	def __init__(self, settings_manager):
 
 		self.set = settings_manager
-		self.m = m
 
 		self.get_smartbench_name()
 		server_thread = threading.Thread(target=self.initialise_server_connection)
@@ -103,7 +102,7 @@ class ServerConnection(object):
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 
-					self.m.start_ssh()
+					self.set.start_ssh()
 
 					try: 
 						self.get_smartbench_name()
