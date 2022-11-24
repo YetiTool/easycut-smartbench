@@ -21,11 +21,8 @@ import sys, os, time
 from datetime import datetime
 import os.path
 from os import path
-import subprocess
 
 from __builtin__ import True
-from kivy.uix.switch import Switch
-from pickle import TRUE
 
 from asmcnc.skavaUI import popup_info
 
