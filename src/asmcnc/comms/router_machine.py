@@ -2100,7 +2100,7 @@ class RouterMachine(object):
             self.s.write_command('$J = G91 X2000 Z-200 F301.5')
 
         elif X and Y and Z: 
-            self.s.write_command('$J = G91 X1290 Y1290 Z-129 F425.3')
+            self.s.write_command('$J = G91 X1270 Y1270 Z-127 F425.3')
 
         elif Y: 
             self.s.write_command('$J = G91 Y2000 F300')
@@ -2144,7 +2144,7 @@ class RouterMachine(object):
             self.s.write_command('$J=G53 X-1192 Z-149 F6046')
 
         elif X and Y and Z: 
-            self.s.write_command('$J = G91 X-1290 Y-1290 Z129 F8518.3')
+            self.s.write_command('$J = G91 X-1270 Y-1270 Z127 F8518.3')
 
         elif Y: 
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
