@@ -135,8 +135,6 @@ class RouterMachine(object):
 
     trigger_setup = False
 
-    ssh_enabled = False
-
     def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
