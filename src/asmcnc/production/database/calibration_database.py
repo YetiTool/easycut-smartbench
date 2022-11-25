@@ -49,6 +49,7 @@ class CalibrationDatabase(object):
 
     def __init__(self):
         self.conn = None
+        self.ssh_conn = None
 
     # AVAILABLE STAGES ARE:
 
@@ -79,6 +80,13 @@ class CalibrationDatabase(object):
         except:
             log('Unable to connect to database')
             print(traceback.format_exc())
+
+        try:
+            self.ssh_conn = my_sql_client.connect(host=credentials.server, db='sshdb', user=credentials.username,
+                                                  passwd=credentials.password)
+            log('Connected to ssh key db')
+        except:
+            log('Unable to connect to ssh key db')
 
         try:
             self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port,
@@ -562,3 +570,34 @@ class CalibrationDatabase(object):
         response = publisher.run_data_send(*self.processed_running_data[str(stage_id)])
         log("Received %s from consumer" % response)
         return response
+
+    def send_ssh_keys(self, serial, key):
+        with self.ssh_conn.cursor() as cursor:
+            query = "INSERT INTO public_keys (ConsoleSerial, PublicKey) VALUES (%s, %s)"
+
+            params = [serial, key]
+
+            cursor.execute(query, params)
+
+        self.ssh_conn.commit()
+
+    def get_ssh_key(self, serial):
+        with self.ssh_conn.cursor() as cursor:
+            query = "SELECT * FROM public_keys WHERE ConsoleSerial = %s"
+
+            params = [serial]
+
+            cursor.execute(query, params)
+
+            key = cursor.fetchone()
+            return key
+
+    def delete_ssh_key(self, serial):
+        with self.ssh_conn.cursor() as cursor:
+            query = "DELETE FROM public_keys WHERE ConsoleSerial = %s"
+
+            params = [serial]
+
+            cursor.execute(query, params)
+
+
