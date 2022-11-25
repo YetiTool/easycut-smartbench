@@ -160,17 +160,17 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - name: Ensure we use ttyS0 port on Pi3
+  - name: Ensure we use ttyAMA0 port on Pi3
     lineinfile:
       name: /boot/config.txt
-      state: absent
+      state: present
       insertafter: 'enable_uart=1'
       line: 'dtoverlay=pi3-disable-bt'
     when: ansible_distribution_major_version == '9'
-  - name: Ensure we use ttyS0 port on Pi4
+  - name: Ensure we use ttyAMA0 port on Pi4
     lineinfile:
       name: /boot/config.txt
-      state: absent
+      state: present
       insertafter: 'enable_uart=1'
       line: 'dtoverlay=disable-bt'
     when: ansible_distribution_major_version == '11'
