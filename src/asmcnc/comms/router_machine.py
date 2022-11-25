@@ -853,6 +853,17 @@ class RouterMachine(object):
         self.z_min_jog_abs_limit = -self.grbl_z_max_travel
 
 
+    # Functions to check which Y bench is being used based on y max travel
+    def bench_is_short(self):
+        return self.grbl_y_max_travel < 2000.0
+
+    def bench_is_standard(self):
+        return self.grbl_y_max_travel > 2000.0
+
+    # def bench_is_long(self):
+    #     return self.grbl_y_max_travel > 3000.0
+
+
 # HW/FW VERSION CAPABILITY
 
     def fw_can_operate_digital_spindle(self):

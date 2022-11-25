@@ -1455,6 +1455,7 @@ class OvernightTesting(Screen):
         self.overnight_running = True
 
         if self.mini_run_dev_mode: filename_end = 'super_mini_run'
+        elif self.m.bench_is_short(): filename_end += "_shortbench"
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
