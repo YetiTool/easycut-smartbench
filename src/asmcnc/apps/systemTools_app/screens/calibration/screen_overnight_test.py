@@ -1454,7 +1454,7 @@ class OvernightTesting(Screen):
 
         self.overnight_running = True
 
-        filename_end = 'mini_run' # QUICK FULL LENGTH TEST
+        if "spiral" not in filename_end: filename_end = 'mini_run' # QUICK FULL LENGTH TEST
 
         if self.mini_run_dev_mode: filename_end = 'super_mini_run'
         elif self.m.bench_is_short(): filename_end += "_shortbench"
