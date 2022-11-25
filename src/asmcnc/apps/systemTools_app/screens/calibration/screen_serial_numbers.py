@@ -6,8 +6,10 @@ import re
 import traceback
 from datetime import datetime
 from kivy.clock import Clock
-
+import subprocess
 from asmcnc.skavaUI import popup_info
+
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupNoSSHFile, PopupFailedToSendSSHKey
 
 Builder.load_string("""
 <UploadSerialNumbersScreen>:
@@ -364,6 +366,8 @@ class UploadSerialNumbersScreen(Screen):
 
     def download_and_upload_LB_cal_data(self):
 
+        self.send_public_keys()
+
         stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
 
         try: 
@@ -402,6 +406,21 @@ class UploadSerialNumbersScreen(Screen):
 
             else:
                 self.error_label.text = "Success!!"
+
+    def send_public_keys(self):
+        cmd = 'cat ../../.ssh/id_rsa.pub'
+
+        output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+        response = output.communicate()[0]
+
+        if len(response) == 0:
+            PopupNoSSHFile()
+            return
+
+        try:
+            self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
+        except:
+            PopupFailedToSendSSHKey()
 
     def on_leave(self):
         if self.poll_for_end_of_upload != None: Clock.unschedule(self.poll_for_end_of_upload)   
