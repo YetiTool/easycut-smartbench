@@ -734,7 +734,7 @@ class OvernightTesting(Screen):
     red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
-    mini_run_dev_mode = True
+    mini_run_dev_mode = False
 
     sn_for_db = ''
 
@@ -1453,6 +1453,8 @@ class OvernightTesting(Screen):
             self._stream_overnight_file_event = Clock.schedule_once(lambda dt: self._stream_overnight_file(filename_end), 2)
 
         self.overnight_running = True
+
+        filename_end = 'mini_run' # QUICK FULL LENGTH TEST
 
         if self.mini_run_dev_mode: filename_end = 'super_mini_run'
         elif self.m.bench_is_short(): filename_end += "_shortbench"
