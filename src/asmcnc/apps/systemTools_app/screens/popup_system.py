@@ -601,9 +601,10 @@ class RebootAfterLanguageChange(Widget):
 
         popup.open()
 
+
 class PopupSSHToggleFailed(Widget):
     def __init__(self):
-        description = "Try rebooting your console and try again.\nIf problem occurs afterwards, please contact Yeti Tool Support."
+        description = "Reboot your console and try again.\nIf this issue persists, please contact Yeti Tool Ltd for support."
         title_string = 'Failed to toggle SSH service'
         ok_string = 'Ok'
 
@@ -640,6 +641,7 @@ class PopupSSHToggleFailed(Widget):
         ok_button.bind(on_press=popup.dismiss)
 
         popup.open()
+
 
 class PopupCSVOnUSB(Widget):
     def __init__(self):
