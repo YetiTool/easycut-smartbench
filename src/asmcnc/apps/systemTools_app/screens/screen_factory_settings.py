@@ -309,7 +309,6 @@ Builder.load_string("""
                 GridLayout:
                     cols: 2
                     rows: 7
-                    padding: 5
                     spacing: 2
                     ToggleButton:
                         id: maintenance_reminder_toggle
