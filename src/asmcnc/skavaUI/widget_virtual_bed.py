@@ -49,6 +49,8 @@ Builder.load_string("""
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
+                    size: self.parent.size[0]-80, self.parent.size[1]-60
+                    pos: self.parent.pos[0]+40,self.parent.pos[1]+30
 
                 Image:
                     id: xBar
