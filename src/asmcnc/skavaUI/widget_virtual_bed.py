@@ -36,20 +36,31 @@ Builder.load_string("""
             do_scale: True        
         
             Image:
-                source: './asmcnc/skavaUI/img/virtual_bed.png'
+                source: './asmcnc/skavaUI/img/virtual_bed_mini.png'
                 allow_stretch: True
                 keep_ratio: False
                 size: self.parent.size
 #                 pos: self.parent.pos
                 
+                # ORIGINAL
+                # Image:
+                #     id: touch_zone
+                #     source: './asmcnc/skavaUI/img/virtual_bed_touch_zone.png'
+                #     opacity: 0
+                #     allow_stretch: True
+                #     keep_ratio: False
+                #     size: self.parent.size[0]-80, self.parent.size[1]-60
+                #     pos: self.parent.pos[0]+40,self.parent.pos[1]+30
+
                 Image:
                     id: touch_zone
                     source: './asmcnc/skavaUI/img/virtual_bed_touch_zone.png'
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-80, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+40,self.parent.pos[1]+30
+                    size: self.parent.size[0]-160, self.parent.size[1]-60
+                    pos: self.parent.pos[0]+80,self.parent.pos[1]+30
+
                 Image:
                     id: xBar
                     source: './asmcnc/skavaUI/img/virtual_x_bar.png'
