@@ -38,7 +38,6 @@ Builder.load_string("""
         
             Image:
                 id: virtual_bed_image
-                source: './asmcnc/skavaUI/img/virtual_bed_mini.png'
                 allow_stretch: True
                 keep_ratio: False
                 size: self.parent.size
