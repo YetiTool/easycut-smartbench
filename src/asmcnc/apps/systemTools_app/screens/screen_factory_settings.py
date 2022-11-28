@@ -85,8 +85,6 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(320)
-                padding: 10
-                spacing: 10
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
@@ -308,78 +306,117 @@ Builder.load_string("""
                                     color: [0,0,0,1]
                                     markup: True
 
+                GridLayout:
+                    cols: 2
+                    rows: 7
+                    spacing: 2
+                    ToggleButton:
+                        id: maintenance_reminder_toggle
+                        text: 'Turn reminders off'
+                        on_press: root.toggle_reminders()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
+                    ToggleButton:
+                        id: show_spindle_overload_toggle
+                        text: 'Show spindle overload'
+                        on_press: root.toggle_spindle_mode()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(320)
-                    padding: 0
-                    spacing: 0
-                    orientation: 'vertical'
+                    Button:
+                        text: 'Diagnostics'
+                        on_press: root.diagnostics()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                    GridLayout: 
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        cols: 1
-                        rows: 9
-                        padding: 5
-                        spacing: 2
-                        ToggleButton:
-                            id: maintenance_reminder_toggle
-                            text: 'Turn reminders off'
-                            on_press: root.toggle_reminders()
-                        ToggleButton:
-                            id: show_spindle_overload_toggle
-                            text: 'Show spindle overload'
-                            on_press: root.toggle_spindle_mode()
-                        Button:
-                            text: 'Diagnostics'
-                            on_press: root.diagnostics()
+                    Button:
+                        text: 'Current'
+                        on_press: root.enter_current_adjustment()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                        BoxLayout: 
-                            orientation: 'horizontal'
-                            Button:
-                                text: 'FT B1'
-                                background_normal: ''
-                                background_color: [0.75,0.34,0.51,1]
-                                on_press: root.final_test("pink")
-                            Button:
-                                text: 'FT B2'
-                                background_normal: ''
-                                background_color: [0.28,0.44,0.97,1]
-                                on_press: root.final_test("blue")
-                        Button:
-                            text: 'Retrieve LB cal data'
-                            on_press: root.enter_serial_number_screen()
-                        Button:
-                            text: 'SG & Load test'
-                            on_press: root.enter_calibration_test()
-                        Button:
-                            text: 'Overnight test'
-                            on_press: root.enter_overnight_test()
+                    Button:
+                        text: 'FT B1'
+                        background_normal: ''
+                        background_color: [0.75,0.34,0.51,1]
+                        on_press: root.final_test("pink")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                        BoxLayout: 
-                            orientation: 'horizontal'
+                    Button:
+                        text: 'FT B2'
+                        background_normal: ''
+                        background_color: [0.28,0.44,0.97,1]
+                        on_press: root.final_test("blue")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                            Button:
-                                text: 'Current'
-                                on_press: root.enter_current_adjustment()
+                    Button:
+                        text: 'FT B3'
+                        background_normal: ''
+                        background_color: [0.2,0.8,0.2,1]
+                        on_press: root.final_test("green")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                            Button:
-                                text: 'Stall Jig'
-                                on_press: root.enter_stall_jig()
+                    Button:
+                        text: 'FT B4'
+                        background_normal: ''
+                        background_color: [0.8,0.2,0.2,1]
+                        on_press: root.final_test("red")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                        BoxLayout: 
-                            orientation: 'horizontal'
+                    Button:
+                        text: 'Retrieve LB cal data'
+                        on_press: root.enter_serial_number_screen()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                            Button:
-                                text: 'SG thresh'
-                                on_press: root.enter_set_thresholds()
+                    Button:
+                        text: 'SG & Load test'
+                        on_press: root.enter_calibration_test()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                            Button:
-                                text: 'Measure'
-                                on_press: root.enter_general_measurement()
+                    Button:
+                        text: 'Overnight test'
+                        on_press: root.enter_overnight_test()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Stall Jig'
+                        on_press: root.enter_stall_jig()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'SG thresh'
+                        on_press: root.enter_set_thresholds()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Measure'
+                        on_press: root.enter_general_measurement()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
                             
 
             BoxLayout:
