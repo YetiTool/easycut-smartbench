@@ -65,6 +65,7 @@ Builder.load_string("""
                     allow_stretch: True
                     keep_ratio: True
                     pos: self.parent.pos
+                    width: (self.parent.width - 80)/6
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
@@ -126,10 +127,11 @@ class VirtualBed(Widget):
     def set_up_virtual_bed(self, dt):
 
         print("IMAGE WIDTH" + str(self.virtual_bed_image.width))
-        Clock.schedule_once(self.set_up_virtual_bed, 2)
+
 
         if self.m.grbl_y_max_travel==3000.0:
             print("DON'T SET UP BED YET")
+            Clock.schedule_once(self.set_up_virtual_bed, 2)
             return
 
         print("SET UP BED")
@@ -144,8 +146,6 @@ class VirtualBed(Widget):
             self.width_modifier = 326
             self.x_pos_modifier = 163
 
-
-        self.carriage.width = self.virtual_bed_image.width/6
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
 
