@@ -115,19 +115,26 @@ class VirtualBed(Widget):
         super(VirtualBed, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.carriage.width = self.virtual_bed_image.width/6
-        self.initialise_touch_zone_size()
+        self.set_up_virtual_bed(0)
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
-    def initialise_touch_zone_size(self):
+    def set_up_virtual_bed(self, dt):
+
+        if self.m.grbl_y_max_travel == 3000.0:
+            Clock.schedule_once(self.set_up_virtual_bed, 1)
+            return
 
         if self.m.bench_is_standard():
+            self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed.png'
             self.touch_zone.size = [self.touch_zone.parent.size[0]-80, self.touch_zone.parent.size[1]-60]
             self.touch_zone.pos = [self.touch_zone.parent.pos[0]+40,self.touch_zone.parent.pos[1]+30]
 
         if self.m.bench_is_short():
+            self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed_mini.png'
             self.touch_zone.size = [self.touch_zone.parent.size[0]-326, self.touch_zone.parent.size[1]-60]
             self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
+
+        self.carriage.width = self.virtual_bed_image.width/6
 
 
     def refresh_widget(self, dt):
