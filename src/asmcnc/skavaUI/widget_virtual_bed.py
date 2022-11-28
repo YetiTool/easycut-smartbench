@@ -127,11 +127,11 @@ class VirtualBed(Widget):
 
     def set_up_virtual_bed(self, dt):
 
-        Clock.schedule_once(self.set_up_virtual_bed, 1)
 
         if self.m.grbl_y_max_travel==3000.0:
             print("DON'T SET UP BED YET")
             print("IMAGE WIDTH" + str(self.virtual_bed_image.width))
+            Clock.schedule_once(self.set_up_virtual_bed, 1)
             return
 
         print("SET UP BED")
@@ -140,15 +140,12 @@ class VirtualBed(Widget):
             self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed.png'
             self.width_modifier = 80
             self.x_pos_modifier = 40
-            # self.touch_zone.size = [self.touch_zone.parent.size[0]-80, self.touch_zone.parent.size[1]-60]
-            # self.touch_zone.pos = [self.touch_zone.parent.pos[0]+40,self.touch_zone.parent.pos[1]+30]
 
         if self.m.bench_is_short():
             self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed_mini.png'
             self.width_modifier = 326
             self.x_pos_modifier = 163
-            # self.touch_zone.size = [self.touch_zone.parent.size[0]-326, self.touch_zone.parent.size[1]-60]
-            # self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
+
 
         self.carriage.width = self.virtual_bed_image.width/6
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
