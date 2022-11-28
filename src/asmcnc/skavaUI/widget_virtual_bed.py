@@ -58,8 +58,8 @@ Builder.load_string("""
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-320, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+160,self.parent.pos[1]+30
+                    size: self.parent.size[0]-326, self.parent.size[1]-60
+                    pos: self.parent.pos[0]+163,self.parent.pos[1]+30
 
                 Image:
                     id: xBar
@@ -128,6 +128,9 @@ class VirtualBed(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
+        # THIS NEEDS GENERALISING FOR BOTH CASES
+        self.carriage.width = self.touch_zone.width/6
+
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
         self.setG54SizePx()
@@ -194,10 +197,6 @@ class VirtualBed(Widget):
         pixels_x = pixel_datum[0] + pixel_canvas[0] - (grbl_y+self.m.grbl_y_max_travel)/self.m.grbl_y_max_travel*pixel_canvas[0] 
         pixels_y = pixel_datum[1] + (grbl_x+self.m.grbl_x_max_travel)/self.m.grbl_x_max_travel*pixel_canvas[1]
 
-#         self.carriage.width = self.xBar.width
-#         self.carriage.width = self.xBar.width
-        self.carriage.width = self.touch_zone.width/6
-        
         self.carriage.x = pixels_x-self.carriage.width/2        
         self.carriage.y = pixels_y-self.carriage.height/2
         self.xBar.x = pixels_x-self.xBar.width/2
