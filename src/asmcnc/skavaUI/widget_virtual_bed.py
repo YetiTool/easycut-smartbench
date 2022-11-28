@@ -24,6 +24,7 @@ Builder.load_string("""
     g54_zone:g54_zone
     g54_marker:g54_marker
     g28Marker:g28Marker
+    virtual_bed_image:virtual_bed_image
     touch_zone:touch_zone
     
     StencilBox2:
@@ -36,21 +37,11 @@ Builder.load_string("""
             do_scale: True        
         
             Image:
+                id: virtual_bed_image
                 source: './asmcnc/skavaUI/img/virtual_bed_mini.png'
                 allow_stretch: True
                 keep_ratio: False
                 size: self.parent.size
-#                 pos: self.parent.pos
-                
-                # ORIGINAL
-                # Image:
-                #     id: touch_zone
-                #     source: './asmcnc/skavaUI/img/virtual_bed_touch_zone.png'
-                #     opacity: 0
-                #     allow_stretch: True
-                #     keep_ratio: False
-                #     size: self.parent.size[0]-80, self.parent.size[1]-60
-                #     pos: self.parent.pos[0]+40,self.parent.pos[1]+30
 
                 Image:
                     id: touch_zone
@@ -58,8 +49,6 @@ Builder.load_string("""
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-326, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+163,self.parent.pos[1]+30
 
                 Image:
                     id: xBar
@@ -126,10 +115,20 @@ class VirtualBed(Widget):
         super(VirtualBed, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.carriage.width = self.virtual_bed_image.width/6
+        self.initialise_touch_zone_size()
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
-        # THIS NEEDS GENERALISING FOR BOTH CASES
-        self.carriage.width = self.touch_zone.width/6
+    def initialise_touch_zone_size(self):
+
+        if self.m.bench_is_standard():
+            self.touch_zone.size = [self.touch_zone.parent.size[0]-80, self.touch_zone.parent.size[1]-60]
+            self.touch_zone.pos = [self.touch_zone.parent.pos[0]+40,self.touch_zone.parent.pos[1]+30]
+
+        if self.m.bench_is_short():
+            self.touch_zone.size = [self.touch_zone.parent.size[0]-326, self.touch_zone.parent.size[1]-60]
+            self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
+
 
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
