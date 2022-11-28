@@ -38,6 +38,7 @@ Builder.load_string("""
         
             Image:
                 id: virtual_bed_image
+                source: './asmcnc/skavaUI/img/virtual_bed.png'
                 allow_stretch: True
                 keep_ratio: False
                 size: self.parent.size
@@ -115,7 +116,6 @@ class VirtualBed(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.set_up_virtual_bed(0)
-        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
     def set_up_virtual_bed(self, dt):
 
@@ -137,6 +137,7 @@ class VirtualBed(Widget):
             self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
 
         self.carriage.width = self.virtual_bed_image.width/6
+        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
 
     def refresh_widget(self, dt):
