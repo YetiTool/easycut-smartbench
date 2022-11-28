@@ -49,8 +49,8 @@ Builder.load_string("""
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-80, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+40,self.parent.pos[1]+30
+                    size: self.parent.size[0]-root.width_modifier, self.parent.size[1]-60
+                    pos: self.parent.pos[0]+root.x_pos_modifier,self.parent.pos[1]+30
 
                 Image:
                     id: xBar
@@ -112,6 +112,10 @@ class VirtualBed(Widget):
     # G54: workpiece co-ordinates
     # G28: set reference point
 
+
+    width_modifier = NumericProperty()
+    x_pos_modifier = NumericProperty()
+
     def __init__(self, **kwargs):
     
         super(VirtualBed, self).__init__(**kwargs)
@@ -123,8 +127,8 @@ class VirtualBed(Widget):
 
     def set_up_virtual_bed(self, dt):
 
-        Clock.schedule_once(self.set_up_virtual_bed, 2)
-        
+        Clock.schedule_once(self.set_up_virtual_bed, 1)
+
         if self.m.grbl_y_max_travel==3000.0:
             print("DON'T SET UP BED YET")
             print("IMAGE WIDTH" + str(self.virtual_bed_image.width))
@@ -134,13 +138,17 @@ class VirtualBed(Widget):
 
         if self.m.bench_is_standard():
             self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed.png'
-            self.touch_zone.size = [self.touch_zone.parent.size[0]-80, self.touch_zone.parent.size[1]-60]
-            self.touch_zone.pos = [self.touch_zone.parent.pos[0]+40,self.touch_zone.parent.pos[1]+30]
+            self.width_modifier = 80
+            self.x_pos_modifier = 40
+            # self.touch_zone.size = [self.touch_zone.parent.size[0]-80, self.touch_zone.parent.size[1]-60]
+            # self.touch_zone.pos = [self.touch_zone.parent.pos[0]+40,self.touch_zone.parent.pos[1]+30]
 
         if self.m.bench_is_short():
             self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed_mini.png'
-            self.touch_zone.size = [self.touch_zone.parent.size[0]-326, self.touch_zone.parent.size[1]-60]
-            self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
+            self.width_modifier = 326
+            self.x_pos_modifier = 163
+            # self.touch_zone.size = [self.touch_zone.parent.size[0]-326, self.touch_zone.parent.size[1]-60]
+            # self.touch_zone.pos = [self.touch_zone.parent.pos[0]+163,self.touch_zone.parent.pos[1]+30]
 
         self.carriage.width = self.virtual_bed_image.width/6
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
