@@ -119,9 +119,12 @@ class VirtualBed(Widget):
 
     def set_up_virtual_bed(self, dt):
 
-        if self.m.grbl_y_max_travel == 3000.0:
+        if self.m.grbl_y_max_travel==3000.0:
+            print("DON'T SET UP BED YET")
             Clock.schedule_once(self.set_up_virtual_bed, 1)
             return
+
+        print("SET UP BED")
 
         if self.m.bench_is_standard():
             self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed.png'
