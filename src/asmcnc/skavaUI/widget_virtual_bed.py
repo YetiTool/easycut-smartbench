@@ -122,9 +122,9 @@ class VirtualBed(Widget):
         super(VirtualBed, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.set_up_virtual_bed(0)
+        self.set_up_virtual_bed()
 
-    def set_up_virtual_bed(self, dt):
+    def set_up_virtual_bed(self, dt=0):
 
         if self.m.grbl_y_max_travel==3000.0:
             Clock.schedule_once(self.set_up_virtual_bed, 1)
