@@ -370,8 +370,8 @@ class BacklashScreenClass(Screen):
     
     def test(self):    
         
-        jog_relative_to_stream = ['$J=G91 ' + self.axis + str(self.backlash_move_distance) + ' F9999',
-                                  '$J=G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F9999'
+        jog_relative_to_stream = ['G91 ' + self.axis + str(self.backlash_move_distance) + ' F6000',
+                                  'G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F6000'
                                   ]
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         
