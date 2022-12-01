@@ -191,3 +191,7 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: Expand filesystem to utilise entire sd card (requires reboot to take effect)
+    command: raspi-config --expand-rootfs
+    become: true
+    become_user: pi
