@@ -1395,7 +1395,7 @@ class StallJigScreen(Screen):
 
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll to prepare to calibrate")
-            if self.poll_to_prepare_to_calibrate: Clock.schedule_once(lambda dt: self.prepare_to_calibrate(), 0.5)
+            self.poll_to_prepare_to_calibrate = Clock.schedule_once(lambda dt: self.prepare_to_calibrate(), 0.5)
             return
 
         log("Move probe out of the way, ready to calibrate")
@@ -1406,7 +1406,7 @@ class StallJigScreen(Screen):
 
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll to calibrate")
-            if self.poll_to_calibrate_axis: Clock.schedule_once(lambda dt: self.calibrate_axis(), 0.5)
+            self.poll_to_calibrate_axis = Clock.schedule_once(lambda dt: self.calibrate_axis(), 0.5)
             return
 
         self.calibrate[self.current_axis()](False)
@@ -1416,7 +1416,7 @@ class StallJigScreen(Screen):
 
         if self.smartbench_is_not_ready_for_next_command() and self.m.run_calibration:
             if self.VERBOSE: log("Poll to move into test run position")
-            if self.poll_to_move_into_test_run_position: Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
+            self.poll_to_move_into_test_run_position = Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
             return
 
         move_command = "G01 G91 " + self.current_axis() + str(self.travel_to_next_test_start[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
