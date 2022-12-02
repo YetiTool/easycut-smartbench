@@ -513,9 +513,9 @@ class StallJigScreen(Screen):
 
         self.start_positions = {
 
-            "X": start_pos_x_test,
-            "Y": start_pos_y_test,
-            "Z": start_pos_z_test
+            "X": self.start_pos_x_test,
+            "Y": self.start_pos_y_test,
+            "Z": self.start_pos_z_test
         }
 
         # FUNCTION DICTIONARIES
