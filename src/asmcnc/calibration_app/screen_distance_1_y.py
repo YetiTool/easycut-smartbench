@@ -301,8 +301,8 @@ class DistanceScreen1yClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-        self.initial_y_cal_move = round(0.8 * (abs(self.m.y_max_jog_abs_limit - self.m.y_min_jog_abs_limit)))
-        self.expected_user_entry = round(0.08 * (abs(self.m.y_max_jog_abs_limit - self.m.y_min_jog_abs_limit)))
+        if self.m.bench_is_standard(): self.initial_y_cal_move = 2000
+        elif self.m.bench_is_short(): self.initial_y_cal_move = 1000
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'
@@ -318,7 +318,7 @@ class DistanceScreen1yClass(Screen):
 
     def initial_move_y(self):
         self.m.jog_absolute_single_axis('X',-660,9999)    # machine moves on screen enter       
-        self.m.jog_absolute_single_axis('Y', round(0.9 * self.m.y_min_jog_abs_limit), 9999)
+        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel + 182, 9999)
         self.m.jog_relative('Y',-10,9999)
         self.m.jog_relative('Y',10,9999)
 
