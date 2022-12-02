@@ -318,16 +318,16 @@ class StallJigScreen(Screen):
 
     limit_pull_off = {
 
-        "X": 2,     # 5
-        "Y": 2,     # 5
+        "X": 5,     # 5
+        "Y": 5,     # 5
         "Z": -2     # 5
 
     }
 
     travel_to_next_test_start = {
 
-        "X": 288,   # 5
-        "Y": 3,     # 5
+        "X": 295,   # 5
+        "Y": 0,     # 5
         "Z": 0      # 5
 
     }
