@@ -308,13 +308,13 @@ class StallJigScreen(Screen):
 
     # ORIGINAL LIMIT PULL OFF + TRAVEL TO NEXT TEST START
 
-    # limit_pull_off = {
+    limit_pull_off_and_travel = {
 
-    #     "X": 300,   # 5
-    #     "Y": 5,     # 5
-    #     "Z": -2     # 5
+        "X": 300,   # 5
+        "Y": 5,     # 5
+        "Z": -2     # 5
 
-    # }
+    }
 
     limit_pull_off = {
 
@@ -1620,7 +1620,7 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "SET TRAVEL"
 
         log("Pull off from limit")
-        move_command = ["G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
+        move_command = ["G91 " + self.current_axis() + str(self.limit_pull_off_and_travel[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
         self.m.s.start_sequential_stream(move_command)
         self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis()), 0.5)
 
