@@ -1399,6 +1399,7 @@ class StallJigScreen(Screen):
             return
 
         log("Move probe out of the way, ready to calibrate")
+        self.test_status_label.text = "PREP RECAL"
         self.m.s.start_sequential_stream([self.move_the_probe_out_of_the_way[self.current_axis()]])
         self.calibrate_axis()
 
@@ -1409,7 +1410,8 @@ class StallJigScreen(Screen):
             self.poll_to_calibrate_axis = Clock.schedule_once(lambda dt: self.calibrate_axis(), 0.5)
             return
 
-        self.calibrate[self.current_axis()](False)
+        self.test_status_label.text = "DO RECAL"
+        # self.calibrate[self.current_axis()](False)
         self.move_into_test_run_position()
 
     def move_into_test_run_position(self):
@@ -1419,6 +1421,7 @@ class StallJigScreen(Screen):
             self.poll_to_move_into_test_run_position = Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
             return
 
+        self.test_status_label.text = "GO TO POS"
         move_command = "G01 G91 " + self.current_axis() + str(self.travel_to_next_test_start[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         grbl_sequence = [self.move_the_probe_into_the_way[self.current_axis()], move_command]
         self.m.s.start_sequential_stream(grbl_sequence)
