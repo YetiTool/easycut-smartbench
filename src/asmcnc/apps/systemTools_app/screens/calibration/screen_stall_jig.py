@@ -1411,12 +1411,12 @@ class StallJigScreen(Screen):
             return
 
         self.test_status_label.text = "DO RECAL"
-        self.calibrate[self.current_axis()](False)
+        self.calibrate[self.current_axis()](zero_position=False)
         self.move_into_test_run_position()
 
     def move_into_test_run_position(self):
 
-        if self.smartbench_is_not_ready_for_next_command() and self.m.run_calibration:
+        if self.smartbench_is_not_ready_for_next_command() or self.m.run_calibration:
             if self.VERBOSE: log("Poll to move into test run position")
             self.poll_to_move_into_test_run_position = Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
             return

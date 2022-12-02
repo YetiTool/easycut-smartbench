@@ -1902,31 +1902,31 @@ class RouterMachine(object):
     def calibrate_X(self, zero_position=True):
 
         self.run_calibration = True
-        log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = False)
+        log("Calibrating X...")
+        self.initialise_calibration(X = True, Y = False, Z = False, zero_position=zero_position)
 
     def calibrate_Y(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating Y...")
-        self.initialise_calibration(X = False, Y = True, Z = False)
+        self.initialise_calibration(X = False, Y = True, Z = False, zero_position=zero_position)
 
     def calibrate_Z(self, zero_position=True):
         self.run_calibration = True
         log("Calibrating Z...")
-        self.initialise_calibration(X = False, Y = False, Z = True)
+        self.initialise_calibration(X = False, Y = False, Z = True, zero_position=zero_position)
 
     def calibrate_X_and_Z(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = True)
+        self.initialise_calibration(X = True, Y = False, Z = True, zero_position=zero_position)
 
     def calibrate_X_Y_and_Z(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating X, Y, and Z...")
-        self.initialise_calibration(X = True, Y = True, Z = True)
+        self.initialise_calibration(X = True, Y = True, Z = True, zero_position=zero_position)
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
