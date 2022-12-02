@@ -1411,7 +1411,7 @@ class StallJigScreen(Screen):
             return
 
         self.test_status_label.text = "DO RECAL"
-        # self.calibrate[self.current_axis()](False)
+        self.calibrate[self.current_axis()](False)
         self.move_into_test_run_position()
 
     def move_into_test_run_position(self):
