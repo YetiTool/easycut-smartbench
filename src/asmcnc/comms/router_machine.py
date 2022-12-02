@@ -1899,29 +1899,34 @@ class RouterMachine(object):
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
 
-    def calibrate_Z(self):
-        self.run_calibration = True
-        log("Calibrating Z...")
-        self.initialise_calibration(X = False, Y = False, Z = True)
-
-    def calibrate_X_and_Z(self):
+    def calibrate_X(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = True)
+        self.initialise_calibration(X = True, Y = False, Z = False)
 
-    def calibrate_Y(self):
+    def calibrate_Y(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating Y...")
         self.initialise_calibration(X = False, Y = True, Z = False)
 
-    def calibrate_X_Y_and_Z(self):
+    def calibrate_Z(self, zero_position=True):
+        self.run_calibration = True
+        log("Calibrating Z...")
+        self.initialise_calibration(X = False, Y = False, Z = True)
+
+    def calibrate_X_and_Z(self, zero_position=True):
+
+        self.run_calibration = True
+        log("Calibrating X and Z...")
+        self.initialise_calibration(X = True, Y = False, Z = True)
+
+    def calibrate_X_Y_and_Z(self, zero_position=True):
 
         self.run_calibration = True
         log("Calibrating X, Y, and Z...")
         self.initialise_calibration(X = True, Y = True, Z = True)
-
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -2480,17 +2485,18 @@ class RouterMachine(object):
 
     time_to_check_for_calibration_prep = 0
 
-    def initialise_calibration(self, X=False, Y=False, Z=False):
+    def initialise_calibration(self, X=False, Y=False, Z=False, disable_soft_limits=True, zero_position=True):
 
         log("Initialise Calibration")
-
         self.calibration_tuning_fail_info = ''
 
-        self.s.write_command('$20=0')
+        if disable_soft_limits: 
+            self.s.write_command('$20=0')
 
-        log("Zero position")
-        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        if zero_position:
+            log("Zero position")
+            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)

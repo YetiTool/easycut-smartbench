@@ -273,54 +273,6 @@ class StallJigScreen(Screen):
 
     }
 
-    ## POSITIONS
-
-    ### ABSOLUTE START POSITION OF ALL TESTS 
-    ### RELATIVE TO TRUE HOME
-
-    absolute_start_pos = {
-
-        "X": -1299,
-        "Y": -2501,
-        "Z": -1
-
-    }
-
-    ### START POSITIONS WHEN HOMED AGAINST THE MAGNET JIG
-    ### (SO NOT TRUE MACHINE COORDS)
-
-    start_pos_x_test = {
-
-        "X": -1300,
-        "Y": -2501,
-        "Z": -70
-
-    }
-
-    start_pos_y_test = {
-
-        "X": -1210,
-        "Y": -2502,
-        "Z": -70
-
-    }
-
-    start_pos_z_test = {
-
-        "X": -1299,
-        "Y": -2405,
-        "Z": 0
-
-    }
-
-    start_positions = {
-
-        "X": start_pos_x_test,
-        "Y": start_pos_y_test,
-        "Z": start_pos_z_test
-    }
-
-
     ### CURRENT POSITION DEFINED IN CLASS INIT
     ### AS PULLS FUNCTIONS FROM ROUTER_MACHINE
 
@@ -354,11 +306,29 @@ class StallJigScreen(Screen):
 
     }
 
+    # ORIGINAL LIMIT PULL OFF + TRAVEL TO NEXT TEST START
+
+    # limit_pull_off = {
+
+    #     "X": 300,   # 5
+    #     "Y": 5,     # 5
+    #     "Z": -2     # 5
+
+    # }
+
     limit_pull_off = {
 
-        "X": 300,   # 5
-        "Y": 5,     # 5
+        "X": 2,     # 5
+        "Y": 2,     # 5
         "Z": -2     # 5
+
+    }
+
+    travel_to_next_test_start = {
+
+        "X": 288,   # 5
+        "Y": 3,     # 5
+        "Z": 0      # 5
 
     }
 
@@ -378,6 +348,19 @@ class StallJigScreen(Screen):
 
     }
 
+    move_the_probe_out_of_the_way = {
+
+            "X": "G91 Z50 F750",
+            "Y": "G91 Z50 F750",
+            "Z": "G91 X89 Y-85 F9999"
+        }
+
+    move_the_probe_into_the_way = {
+
+            "X": "G91 Z-50 F750",
+            "Y": "G91 Z-50 F750",
+            "Z": "G91 X-89 Y85 F9999"
+        }
 
     ## DIS/ENABLE MOTORS DEFINED IN CLASS INIT
     ## AS PULLS FUNCTIONS FROM ROUTER_MACHINE
@@ -435,6 +418,9 @@ class StallJigScreen(Screen):
     poll_for_send_data_after_final_calibration_check = None
     run_final_calibration_check_and_then_send_data_event = None
     print_registers_just_before_run_tests_starts_event = None
+    poll_to_prepare_to_calibrate = None
+    poll_to_calibrate_axis = None
+    poll_to_move_into_test_run_position = None
 
 
     ## DATABASE OBJECTS
@@ -485,6 +471,53 @@ class StallJigScreen(Screen):
         self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.combined_id = (self.sn_for_db + str(self.stage_id))[2:]
 
+        ## POSITIONS
+
+        ### ABSOLUTE START POSITION OF ALL TESTS 
+        ### RELATIVE TO TRUE HOME
+
+        self.absolute_start_pos = {
+
+            "X": -1299,
+            "Y": self.m.y_min_jog_abs_limit,
+            "Z": -1
+
+        }
+
+        ### START POSITIONS WHEN HOMED AGAINST THE MAGNET JIG
+        ### (SO NOT TRUE MACHINE COORDS)
+
+        self.start_pos_x_test = {
+
+            "X": -1300,
+            "Y": self.m.y_min_jog_abs_limit,
+            "Z": -70
+
+        }
+
+        self.start_pos_y_test = {
+
+            "X": -1210,
+            "Y": -self.m.grbl_y_max_travel,
+            "Z": -70
+
+        }
+
+        self.start_pos_z_test = {
+
+            "X": -1299,
+            "Y": self.m.y_min_jog_abs_limit + 96,
+            "Z": 0
+
+        }
+
+        self.start_positions = {
+
+            "X": start_pos_x_test,
+            "Y": start_pos_y_test,
+            "Z": start_pos_z_test
+        }
+
         # FUNCTION DICTIONARIES
 
         self.current_position = {
@@ -516,6 +549,14 @@ class StallJigScreen(Screen):
             "X": self.if_more_than_expected_pos,
             "Y": self.if_more_than_expected_pos,
             "Z": self.if_less_than_expected_pos
+
+        }
+
+        self.calibrate = {
+
+            "X": self.m.calibrate_X,
+            "Y": self.m.calibrate_Y,
+            "Z": self.m.calibrate_Z
 
         }
 
@@ -572,8 +613,10 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.send_logs_event)
         self.unschedule_event_if_it_exists(self.poll_for_send_data_after_final_calibration_check)
         self.unschedule_event_if_it_exists(self.run_final_calibration_check_and_then_send_data_event)   
-        self.unschedule_event_if_it_exists(self.print_registers_just_before_run_tests_starts_event)     
-
+        self.unschedule_event_if_it_exists(self.print_registers_just_before_run_tests_starts_event)
+        self.unschedule_event_if_it_exists(self.poll_to_prepare_to_calibrate)
+        self.unschedule_event_if_it_exists(self.poll_to_calibrate_axis)
+        self.unschedule_event_if_it_exists(self.poll_to_move_into_test_run_position)
 
         log("Unschedule all events")
 
@@ -1346,6 +1389,39 @@ class StallJigScreen(Screen):
             return
 
         self.m.enable_only_hard_limits()
+        self.prepare_to_calibrate()
+
+    def prepare_to_calibrate(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to prepare to calibrate")
+            if self.poll_to_prepare_to_calibrate: Clock.schedule_once(lambda dt: self.prepare_to_calibrate(), 0.5)
+            return
+
+        log("Move probe out of the way, ready to calibrate")
+        self.m.s.start_sequential_stream([self.move_the_probe_out_of_the_way[self.current_axis()]])
+        self.calibrate_axis()
+
+    def calibrate_axis(self):
+
+        if self.smartbench_is_not_ready_for_next_command():
+            if self.VERBOSE: log("Poll to calibrate")
+            if self.poll_to_calibrate_axis: Clock.schedule_once(lambda dt: self.calibrate_axis(), 0.5)
+            return
+
+        self.calibrate[self.current_axis()](False)
+        self.move_into_test_run_position()
+
+    def move_into_test_run_position(self):
+
+        if self.smartbench_is_not_ready_for_next_command() and self.m.run_calibration:
+            if self.VERBOSE: log("Poll to move into test run position")
+            if self.poll_to_move_into_test_run_position: Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
+            return
+
+        move_command = "G01 G91 " + self.current_axis() + str(self.travel_to_next_test_start[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
+        grbl_sequence = [self.move_the_probe_into_the_way[self.current_axis()], move_command]
+        self.m.s.start_sequential_stream(grbl_sequence)
         self.finish_procedure_and_start_next_test()
 
     def finish_procedure_and_start_next_test(self):
