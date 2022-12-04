@@ -735,7 +735,7 @@ class OvernightTesting(Screen):
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
     mini_run_dev_mode = False
-    do_tune = False
+    do_tune = True
 
     sn_for_db = ''
 
