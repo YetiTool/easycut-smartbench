@@ -308,10 +308,14 @@ class StallJigScreen(Screen):
 
     # ORIGINAL LIMIT PULL OFF + TRAVEL TO NEXT TEST START
 
+        # "X": 300,   # 5
+        # "Y": 5,     # 5
+        # "Z": -2     # 5
+
     limit_pull_off_and_travel = {
 
-        "X": 300,   # 5
-        "Y": 5,     # 5
+        "X": 250,   # 5
+        "Y": 4,     # 5
         "Z": -2     # 5
 
     }
@@ -319,14 +323,14 @@ class StallJigScreen(Screen):
     limit_pull_off = {
 
         "X": 5,     # 5
-        "Y": 5,     # 5
+        "Y": 4,     # 5
         "Z": -2     # 5
 
     }
 
     travel_to_next_test_start = {
 
-        "X": 295,   # 5
+        "X": 245,   # 5
         "Y": 0,     # 5
         "Z": 0      # 5
 
@@ -334,8 +338,8 @@ class StallJigScreen(Screen):
 
     crash_distance = {
 
-        "X": 101,   # 381
-        "Y": 75,   # 65
+        "X": 151,   # 381
+        "Y": 76,   # 65
         "Z": -73    # -70
 
     }
@@ -516,6 +520,15 @@ class StallJigScreen(Screen):
             "X": self.start_pos_x_test,
             "Y": self.start_pos_y_test,
             "Z": self.start_pos_z_test
+        }
+
+
+        self.back_off = {
+
+            "X": -1*self.m.grbl_x_max_travel,
+            "Y": -1*self.m.grbl_y_max_travel,
+            "Z": 0.0
+
         }
 
         # FUNCTION DICTIONARIES
@@ -1181,22 +1194,21 @@ class StallJigScreen(Screen):
             self.restore_settings_event = Clock.schedule_once(lambda dt: self.restore_acceleration_and_soft_limits(), 0.5)
             return
 
-        log("Enable soft limits and restore acceleration")
+        log("Enable soft limits")
 
         default_acceleration_values = [
 
                 '$20=1',        # Soft limits
                 '$21=1',        # Enable hard limits
-                '$53=0',        # Disable stall guard
-                '$120=130.0',   # X Acceleration, mm/sec^2
-                '$121=130.0'    #Y Acceleration, mm/sec^2
+                '$53=0'        # Disable stall guard
+                # '$120=130.0',   # X Acceleration, mm/sec^2
+                # '$121=130.0'    #Y Acceleration, mm/sec^2
 
                 ]
 
         self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
         log("Enabling soft limits")
         log("Disabling stall guard")
-        log("Restoring acceleration values for X and Y (to 130)")
 
     def disable_soft_limits_and_max_acceleration_values(self):
 
@@ -1204,15 +1216,14 @@ class StallJigScreen(Screen):
 
                 '$20=0',        # Disable soft limits
                 '$21=1',        # Enable hard limits
-                '$53=1',        # Enable stall guard
-                '$120=1300.0',  # X Acceleration, mm/sec^2
-                '$121=1300.0'   # Y Acceleration, mm/sec^2
+                '$53=1'        # Enable stall guard
+                # '$120=1300.0',  # X Acceleration, mm/sec^2
+                # '$121=1300.0'   # Y Acceleration, mm/sec^2
                 ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
         log("Enabling stall guard")
-        log("Maxing out acceleration values for X and Y (to 1300)")
         log("Move to start position")
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
@@ -1306,7 +1317,7 @@ class StallJigScreen(Screen):
         log("Back off and find position")
         self.test_status_label.text = "REFIND POS"
         self.expected_limit_found = False
-        move_command = ["G01 G91 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
+        move_command = ["G01 G53 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
         self.m.s.start_sequential_stream(move_command)
         self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), 1)
 
