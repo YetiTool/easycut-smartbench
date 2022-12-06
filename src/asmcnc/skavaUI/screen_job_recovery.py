@@ -85,8 +85,12 @@ Builder.load_string("""
 
                             Button:
                                 background_color: [0,0,0,0]
-                                on_press: root.start_scrolling_up()
-                                on_release: root.stop_scrolling_up()
+                                on_press:
+                                    root.start_scrolling_up()
+                                    self.background_color = hex('#F44336FF')
+                                on_release:
+                                    self.background_color = hex('#F4433600')
+                                    root.stop_scrolling_up()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -100,8 +104,12 @@ Builder.load_string("""
 
                             Button:
                                 background_color: [0,0,0,0]
-                                on_press: root.start_scrolling_down()
-                                on_release: root.stop_scrolling_down()
+                                on_press:
+                                    root.start_scrolling_down()
+                                    self.background_color = hex('#F44336FF')
+                                on_release:
+                                    root.stop_scrolling_down()
+                                    self.background_color = hex('#F4433600')
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
