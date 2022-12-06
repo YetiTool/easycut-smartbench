@@ -406,8 +406,8 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
     def go_xy(self):
-        # Pick min out of safe z height and 0, in case positive value is calculated, which causes errors
-        z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').job_box.range_z[1], 0)
+        # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
+        z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').job_box.range_z[1], -self.m.limit_switch_safety_distance)
         self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
 
