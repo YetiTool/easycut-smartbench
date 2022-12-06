@@ -335,21 +335,22 @@ class JobRecoveryScreen(Screen):
         self.scrolling_up = True
 
         # Do one scroll immediately
-        if self.selected_line_index > 0:
-            self.selected_line_index -= 1
-            self.update_display()
+        self.do_scroll_up()
 
         # Start scrolling after a delay
         self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.5)
 
+    def do_scroll_up(self):
+        if self.selected_line_index > 0:
+            self.selected_line_index -= 1
+            self.update_display()
+
     def scroll_up(self, dt=0):
         if self.scrolling_up:
-            if self.selected_line_index > 0:
-                self.selected_line_index -= 1
-                self.update_display()
+            self.do_scroll_up()
 
-                # Keep scrolling until button released
-                self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.03)
+            # Keep scrolling until button released
+            self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.03)
 
     def stop_scrolling_up(self):
         self.scrolling_up = False
@@ -359,21 +360,22 @@ class JobRecoveryScreen(Screen):
         self.scrolling_down = True
 
         # Do one scroll immediately
-        if self.selected_line_index < self.initial_line_index:
-            self.selected_line_index += 1
-            self.update_display()
+        self.do_scroll_down()
 
         # Start scrolling after a delay
         self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.5)
 
+    def do_scroll_down(self):
+        if self.selected_line_index < self.initial_line_index:
+            self.selected_line_index += 1
+            self.update_display()
+
     def scroll_down(self, dt=0):
         if self.scrolling_down:
-            if self.selected_line_index < self.initial_line_index:
-                self.selected_line_index += 1
-                self.update_display()
+            self.do_scroll_down()
 
-                # Keep scrolling until button released
-                self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03)
+            # Keep scrolling until button released
+            self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03)
 
     def stop_scrolling_down(self):
         self.scrolling_down = False
