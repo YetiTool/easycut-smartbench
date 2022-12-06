@@ -299,6 +299,9 @@ class JobRecoveryScreen(Screen):
     selected_line_index = 0
     display_list = []
 
+    scroll_up_event = None
+    scroll_down_event = None
+
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
 
@@ -354,7 +357,8 @@ class JobRecoveryScreen(Screen):
 
     def stop_scrolling_up(self):
         self.scrolling_up = False
-        Clock.unschedule(self.scroll_up_event)
+        if self.scroll_up_event:
+            Clock.unschedule(self.scroll_up_event)
 
     def start_scrolling_down(self):
         self.scrolling_down = True
@@ -379,7 +383,8 @@ class JobRecoveryScreen(Screen):
 
     def stop_scrolling_down(self):
         self.scrolling_down = False
-        Clock.unschedule(self.scroll_down_event)
+        if self.scroll_down_event:
+            Clock.unschedule(self.scroll_down_event)
 
     def jump_to_line(self, instance, value):
         if value:
