@@ -1430,7 +1430,7 @@ class StallJigScreen(Screen):
             return
 
         log("Move probe out of the way, ready to calibrate")
-        self.test_status_label.text = "PREP RECAL"
+        self.test_status_label.text = "PREP CAL"
         self.m.s.start_sequential_stream([self.move_the_probe_out_of_the_way[self.current_axis()]])
         self.calibrate_axis()
 
@@ -1442,7 +1442,10 @@ class StallJigScreen(Screen):
             self.poll_to_calibrate_axis = Clock.schedule_once(lambda dt: self.calibrate_axis(), 0.5)
             return
 
-        self.test_status_label.text = "DO RECAL"
+        self.stop_button.disabled = True
+        self.stop_button.text = "DISABLED FOR CAL"
+
+        self.test_status_label.text = "CALIBRATE"
         self.calibrate[self.current_axis()](zero_position=False, mod_soft_limits=False, fast=True)
         self.move_into_test_run_position()
 
@@ -1453,6 +1456,9 @@ class StallJigScreen(Screen):
             if self.VERBOSE: log("Poll to move into test run position")
             self.poll_to_move_into_test_run_position = Clock.schedule_once(lambda dt: self.move_into_test_run_position(), 0.5)
             return
+
+        self.stop_button.disabled = False
+        self.stop_button.text = "STOP"
 
         self.test_status_label.text = "GO TO POS"
         move_command = "G01 G91 " + self.current_axis() + str(self.travel_to_next_test_start[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
