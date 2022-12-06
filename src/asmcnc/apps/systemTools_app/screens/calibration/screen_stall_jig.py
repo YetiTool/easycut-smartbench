@@ -197,7 +197,7 @@ class StallJigScreen(Screen):
 
     axes = ["X","Y","Z"]
 
-    # # MICRO TEST
+    ### MICRO TEST
 
     # feed_dict = {
 
@@ -219,6 +219,8 @@ class StallJigScreen(Screen):
 
     # }
 
+    ### STANDARD TEST
+
     feed_dict = {
 
         "X": [8000,6000,4500,3000,2000,1200,600],
@@ -227,9 +229,9 @@ class StallJigScreen(Screen):
 
     }
 
-    # Min threshold, Max threshold, Step between thresholds
 
-    # FILTERED FW
+    ## FILTERED FW
+    # Min threshold, Max threshold, Step between thresholds
 
     threshold_dict = {
 
@@ -239,7 +241,7 @@ class StallJigScreen(Screen):
 
     }
 
-    # UNFILTERED FW
+    ## UNFILTERED FW
 
     # threshold_dict = {
 
@@ -265,6 +267,8 @@ class StallJigScreen(Screen):
 
     }
 
+    # This is used for setting the minimum thresholds for tests for each axis
+
     minimum_threshold_index = {
 
         "X": 0,
@@ -273,10 +277,16 @@ class StallJigScreen(Screen):
 
     }
 
-    ### CURRENT POSITION DEFINED IN CLASS INIT
-    ### AS PULLS FUNCTIONS FROM ROUTER_MACHINE
+    ### ALL DICTS THAT RELY ON ABSOLUTE POSITION OR TRAVEL LENGTH DEFINED IN CLASS INIT
+    ### AS PULLS FUNCTIONS AND GRBL TRAVEL FROM ROUTER_MACHINE
 
+    absolute_start_pos = {}
+    start_pos_x_test = {}
+    start_pos_y_test = {}
+    start_pos_z_test = {}
+    start_positions = {}
     current_position = {}
+    back_off = {}
 
     ## DEFAULT FEEDS
 
@@ -292,55 +302,49 @@ class StallJigScreen(Screen):
 
     stall_tolerance = {
 
-        "X": 10,     # 3
-        "Y": 10,    # 3
-        "Z": -3     # -1
+        "X": 10,
+        "Y": 10,
+        "Z": -3
 
     }
 
     back_off = {
 
-        "X": -430,  #  -400, 
-        "Y": -120,   #  -70,
-        "Z": 100     #  76
-
-    }
-
-    # ORIGINAL LIMIT PULL OFF + TRAVEL TO NEXT TEST START
-
-        # "X": 300,   # 5
-        # "Y": 5,     # 5
-        # "Z": -2     # 5
-
-    limit_pull_off_and_travel = {
-
-        "X": 250,   # 5
-        "Y": 4,     # 5
-        "Z": -2     # 5
+        "X": -430,
+        "Y": -120,
+        "Z": 100
 
     }
 
     limit_pull_off = {
 
-        "X": 5,     # 5
-        "Y": 4,     # 5
-        "Z": -2     # 5
+        "X": 5,
+        "Y": 4,
+        "Z": -2
 
     }
 
     travel_to_next_test_start = {
 
-        "X": 245,   # 5
-        "Y": 0,     # 5
-        "Z": 0      # 5
+        "X": 245,
+        "Y": 0,
+        "Z": 0
+
+    }
+
+    limit_pull_off_and_travel = {
+
+        "X": 250,
+        "Y": 4,
+        "Z": -2
 
     }
 
     crash_distance = {
 
-        "X": 151,   # 381
-        "Y": 76,   # 65
-        "Z": -73    # -70
+        "X": 151,
+        "Y": 76,
+        "Z": -73
 
     }
 
@@ -351,6 +355,9 @@ class StallJigScreen(Screen):
         "Z": None
 
     }
+
+    ## COMMANDS THAT MOVE THE PROBE TO SUITABLE POS PRIOR TO CALIBRATION
+    ## AND BACK INTO THE TEST SPACE
 
     move_the_probe_out_of_the_way = {
 
@@ -366,11 +373,20 @@ class StallJigScreen(Screen):
             "Z": "G91 X-89 Y85 F9999"
         }
 
-    ## DIS/ENABLE MOTORS DEFINED IN CLASS INIT
-    ## AS PULLS FUNCTIONS FROM ROUTER_MACHINE
+    ## FUNCTION DICTS DEFINED IN CLASS INIT AS PULLS FUNCTIONS FROM ROUTER_MACHINE
+
+    ### DIS/ENABLE MOTORS 
 
     disable_motors = {}
     enable_motors = {}
+
+    ### TO DETECT WHETHER FOUND POS IS MORE OR LESS THAN EXPECTED
+
+    detection_too_late = {}
+
+    ### TO CALL ROUTER_MACHINE CALIBRATE FUNCTIONS
+
+    calibrate = {}
 
     ## FLAGS FOR TEST EVENTS
 
@@ -407,7 +423,7 @@ class StallJigScreen(Screen):
     poll_for_setting_up_axis_for_test = None  
     get_alarm_info_event = None               
     run_event = None                          
-    limits_acceleration_event = None          
+    limits_event = None          
     post_move_all_axes_event = None           
     restore_settings_event = None             
     poll_to_finish_procedure = None           
@@ -415,7 +431,7 @@ class StallJigScreen(Screen):
     resume_from_alarm_event = None            
     poll_to_deenergize_motors = None
     poll_to_energize_motors = None
-    poll_to_reenable_hard_limits_and_go_to_next_test = None
+    poll_to_reenable_hard_limits_and_go_to_calibrate = None
     poll_ready_to_start_moving = None
     populate_and_transfer_logs_event = None
     send_logs_event = None
@@ -522,6 +538,7 @@ class StallJigScreen(Screen):
             "Z": self.start_pos_z_test
         }
 
+        ### BACK OFF TO ABSOLUTE MINIMUM AFTER STALL
 
         self.back_off = {
 
@@ -557,7 +574,7 @@ class StallJigScreen(Screen):
 
         }
 
-        self.detection_too_late = { # this may need changing depending on direction that X axis travels
+        self.detection_too_late = {
 
             "X": self.if_more_than_expected_pos,
             "Y": self.if_more_than_expected_pos,
@@ -612,7 +629,7 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_for_setting_up_axis_for_test)
         self.unschedule_event_if_it_exists(self.get_alarm_info_event)
         self.unschedule_event_if_it_exists(self.run_event)
-        self.unschedule_event_if_it_exists(self.limits_acceleration_event)
+        self.unschedule_event_if_it_exists(self.limits_event)
         self.unschedule_event_if_it_exists(self.post_move_all_axes_event)
         self.unschedule_event_if_it_exists(self.restore_settings_event)
         self.unschedule_event_if_it_exists(self.poll_to_finish_procedure)
@@ -620,7 +637,7 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.resume_from_alarm_event)
         self.unschedule_event_if_it_exists(self.poll_to_deenergize_motors)
         self.unschedule_event_if_it_exists(self.poll_to_energize_motors)
-        self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_next_test)
+        self.unschedule_event_if_it_exists(self.poll_to_reenable_hard_limits_and_go_to_calibrate)
         self.unschedule_event_if_it_exists(self.poll_ready_to_start_moving)
         self.unschedule_event_if_it_exists(self.populate_and_transfer_logs_event)
         self.unschedule_event_if_it_exists(self.send_logs_event)
@@ -793,7 +810,7 @@ class StallJigScreen(Screen):
     def back_to_fac_settings(self):
 
         self.set_default_thresholds()
-        self.restore_acceleration_and_soft_limits()
+        self.restore_grbl_settings()
         self.systemtools_sm.open_factory_settings_screen()
         log("Return to factory settings")
 
@@ -811,7 +828,7 @@ class StallJigScreen(Screen):
 
         if not self.systemtools_sm.sm.current.startswith('alarm'):
             log("Leaving stall jig...")
-            self.restore_acceleration_and_soft_limits()
+            self.restore_grbl_settings()
             return
 
         self.systemtools_sm.sm.current = 'stall_jig'
@@ -1185,46 +1202,43 @@ class StallJigScreen(Screen):
 
     def current_axis(self): return self.axes[self.indices["axis"]]
 
-    ## PUT ACCELERATION BACK TO NORMAL
 
-    def restore_acceleration_and_soft_limits(self):
+    def restore_grbl_settings(self):
 
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll to restore grbl settings")
-            self.restore_settings_event = Clock.schedule_once(lambda dt: self.restore_acceleration_and_soft_limits(), 0.5)
+            self.restore_settings_event = Clock.schedule_once(lambda dt: self.restore_grbl_settings(), 0.5)
             return
 
-        log("Enable soft limits")
-
-        default_acceleration_values = [
+        default_grbl_values = [
 
                 '$20=1',        # Soft limits
                 '$21=1',        # Enable hard limits
                 '$53=0'        # Disable stall guard
-                # '$120=130.0',   # X Acceleration, mm/sec^2
-                # '$121=130.0'    #Y Acceleration, mm/sec^2
 
                 ]
 
-        self.m.s.start_sequential_stream(default_acceleration_values, reset_grbl_after_stream = True)
-        log("Enabling soft limits")
+        self.m.s.start_sequential_stream(default_grbl_values, reset_grbl_after_stream = True)
+        log("Enabling soft and hard limits")
         log("Disabling stall guard")
 
-    def disable_soft_limits_and_max_acceleration_values(self):
+
+    def disable_soft_limits_enable_stall_guard_enable_hard_limits(self):
 
         settings_list_to_stream = [
 
                 '$20=0',        # Disable soft limits
                 '$21=1',        # Enable hard limits
                 '$53=1'        # Enable stall guard
-                # '$120=1300.0',  # X Acceleration, mm/sec^2
-                # '$121=1300.0'   # Y Acceleration, mm/sec^2
+
                 ]
 
         self.m.s.start_sequential_stream(settings_list_to_stream, reset_grbl_after_stream = True)
         log("Disabling soft limits")
+        log("Enabling soft limits")
         log("Enabling stall guard")
         log("Move to start position")
+
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
 
@@ -1273,6 +1287,7 @@ class StallJigScreen(Screen):
         self.m.set_threshold_for_axis(axis, threshold)
         self.drive_into_barrier_event = Clock.schedule_once(lambda dt: self.drive_into_barrier(axis, feed, start_pos), 1)
 
+
     def drive_into_barrier(self, axis, feed, start_pos):
 
         if self.smartbench_is_not_ready_for_next_command():
@@ -1304,6 +1319,7 @@ class StallJigScreen(Screen):
         ## - BACK OFF FROM THE CRASH SITE INTO A HARD LIMIT
         ## - USE THIS LIMIT TO PLACE SB FOR THE NEXT PROCEDURE
         ## - DE-ENERGIZE AND RE-ENERGIZE THE MOTORS (AS A MINI RE-SQUARE)
+        ## - CALIBRATE BETWEEN TESTS; STALLING CAN DISRUPT THE MOTORS
         ## - CARRY OUT ANY PROCEDURE/OUTCOME SPECIFIC FUNCTIONS (E.G. UNSETTING SETTING_UP FLAG OR STORING RESULT)
         ## - AND THEN CALL RUN FUNCTION AGAIN
 
@@ -1358,6 +1374,7 @@ class StallJigScreen(Screen):
         self.expected_limit_found = False
         self.poll_to_relax_motors = Clock.schedule_once(lambda dt: self.relax_motors(), 1)
 
+
     def relax_motors(self):
 
         if self.smartbench_is_not_ready_for_next_command():
@@ -1366,6 +1383,7 @@ class StallJigScreen(Screen):
             return
 
         self.poll_to_deenergize_motors = Clock.schedule_once(lambda dt: self.deenergize_motors(), 1)
+
 
     def deenergize_motors(self):
 
@@ -1390,17 +1408,19 @@ class StallJigScreen(Screen):
         log("Energize motors")
         self.test_status_label.text = "MOTORS ON"
         self.enable_motors[self.current_axis()]()
-        self.poll_to_reenable_hard_limits_and_go_to_next_test = Clock.schedule_once(lambda dt: self.reenable_hard_limits_and_go_to_next_test(), 1)
+        self.poll_to_reenable_hard_limits_and_go_to_calibrate = Clock.schedule_once(lambda dt: self.reenable_hard_limits_and_go_to_calibrate(), 1)
 
-    def reenable_hard_limits_and_go_to_next_test(self):
+
+    def reenable_hard_limits_and_go_to_calibrate(self):
 
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE: log("Poll for reenable hard limits and start next test")
-            self.poll_to_reenable_hard_limits_and_go_to_next_test = Clock.schedule_once(lambda dt: self.reenable_hard_limits_and_go_to_next_test(), 0.5)
+            self.poll_to_reenable_hard_limits_and_go_to_calibrate = Clock.schedule_once(lambda dt: self.reenable_hard_limits_and_go_to_calibrate(), 0.5)
             return
 
         self.m.enable_only_hard_limits()
         self.prepare_to_calibrate()
+
 
     def prepare_to_calibrate(self):
 
@@ -1414,6 +1434,7 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream([self.move_the_probe_out_of_the_way[self.current_axis()]])
         self.calibrate_axis()
 
+
     def calibrate_axis(self):
 
         if self.smartbench_is_not_ready_for_next_command():
@@ -1422,8 +1443,9 @@ class StallJigScreen(Screen):
             return
 
         self.test_status_label.text = "DO RECAL"
-        self.calibrate[self.current_axis()](zero_position=False, mod_soft_limits=False)
+        self.calibrate[self.current_axis()](zero_position=False, mod_soft_limits=False, fast=True)
         self.move_into_test_run_position()
+
 
     def move_into_test_run_position(self):
 
@@ -1437,6 +1459,7 @@ class StallJigScreen(Screen):
         grbl_sequence = [self.move_the_probe_into_the_way[self.current_axis()], move_command]
         self.m.s.start_sequential_stream(grbl_sequence)
         self.finish_procedure_and_start_next_test()
+
 
     def finish_procedure_and_start_next_test(self):
 
@@ -1544,19 +1567,17 @@ class StallJigScreen(Screen):
             return
 
         self.m.change_stage_measuring_running_data(9)
-        log("Ready to run tests, disabling limits & maxing acceleration")
+        log("Ready to run tests, disabling limits")
         self.set_grbl_settings_for_experiment(True)
-
-    ## MAX OUT ACCELERATION
 
     def set_grbl_settings_for_experiment(self, start_pos_bool):
 
         if self.smartbench_is_not_ready_for_next_command():
-            if self.VERBOSE: log("Poll to disable soft limits and max out acceleration")
-            self.limits_acceleration_event = Clock.schedule_once(lambda dt: self.set_grbl_settings_for_experiment(start_pos_bool), 0.5)
+            if self.VERBOSE: log("Poll to disable soft limits, enable stall guard, and enable hard limits")
+            self.limits_event = Clock.schedule_once(lambda dt: self.set_grbl_settings_for_experiment(start_pos_bool), 0.5)
             return
 
-        self.disable_soft_limits_and_max_acceleration_values()
+        self.disable_soft_limits_enable_stall_guard_enable_hard_limits()
 
         # go to absolute start position (relative to true home)
         if start_pos_bool:
@@ -1668,7 +1689,7 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "NO STALL POS?"
             self.m.stop_from_soft_stop_cancel()
             self.unschedule_all_events()
-            self.restore_acceleration_and_soft_limits()
+            self.restore_grbl_settings()
             self.enable_all_buttons_except_run()
             return
 
@@ -1818,7 +1839,7 @@ class StallJigScreen(Screen):
         if self.all_tests_completed:
             log("All tests completed!!")
             self.set_default_thresholds()
-            self.restore_acceleration_and_soft_limits()
+            self.restore_grbl_settings()
             self.test_status_label.text = "TESTS COMPLETE"
             self.run_final_calibration_check_and_then_send_data_event = Clock.schedule_once(self.run_final_calibration_check_and_then_send_data, 1)
             return True

@@ -1899,34 +1899,35 @@ class RouterMachine(object):
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
 
-    def calibrate_X(self, zero_position=True, mod_soft_limits=True):
+    def calibrate_X(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating X...")
-        self.initialise_calibration(X = True, Y = False, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits)
+        self.initialise_calibration(X = True, Y = False, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_Y(self, zero_position=True, mod_soft_limits=True):
+    def calibrate_Y(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating Y...")
-        self.initialise_calibration(X = False, Y = True, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits)
+        self.initialise_calibration(X = False, Y = True, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_Z(self, zero_position=True, mod_soft_limits=True):
+    def calibrate_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
+
         self.run_calibration = True
         log("Calibrating Z...")
-        self.initialise_calibration(X = False, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits)
+        self.initialise_calibration(X = False, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_X_and_Z(self, zero_position=True, mod_soft_limits=True):
+    def calibrate_X_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits)
+        self.initialise_calibration(X = True, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_X_Y_and_Z(self, zero_position=True, mod_soft_limits=True):
+    def calibrate_X_Y_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating X, Y, and Z...")
-        self.initialise_calibration(X = True, Y = True, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits)
+        self.initialise_calibration(X = True, Y = True, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -2487,11 +2488,15 @@ class RouterMachine(object):
 
     disable_and_enable_soft_limits = True
 
-    def initialise_calibration(self, X=False, Y=False, Z=False, zero_position=True, mod_soft_limits=True):
+    quick_calibration = False
+
+
+    def initialise_calibration(self, X=False, Y=False, Z=False, zero_position=True, mod_soft_limits=True, quick_calibration=False):
 
         log("Initialise Calibration")
         self.calibration_tuning_fail_info = ''
         self.disable_and_enable_soft_limits = mod_soft_limits
+        self.quick_calibration = quick_calibration
 
         if self.disable_and_enable_soft_limits: 
             self.s.write_command('$20=0')
@@ -2552,19 +2557,21 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
+            path_start = './asmcnc/production/calibration_gcode_files/'
+            if self.quick_calibration: path_end = '_cal_quick_n_coarse.gc'
+            else: path_end = '_cal.gc'
+            calibration_file = path_start + axis + path_end
+
             if axis == 'X': 
                 calibrate_mode = 32
-                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc'
                 altDisplayText = "CALIBRATE X AXIS"
 
             if axis == 'Y': 
                 calibrate_mode = 64
-                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc'
                 altDisplayText = "CALIBRATE Y AXIS"
 
             if axis == 'Z': 
                 calibrate_mode = 128
-                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc'
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
