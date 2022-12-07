@@ -5,6 +5,7 @@ from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
 from asmcnc.skavaUI.popup_info import PopupWait, PopupWarning
+from kivy.clock import Clock
 
 Builder.load_string("""
 <CurrentAdjustment>:
