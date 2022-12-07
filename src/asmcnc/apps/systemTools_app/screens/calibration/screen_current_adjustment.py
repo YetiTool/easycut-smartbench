@@ -304,21 +304,15 @@ class CurrentAdjustment(Screen):
         PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
 
     def store_values_and_wait_for_handshake(self):
-        self.wait_while_values_stored_and_read_back_in()
-        self.m.clear_motor_registers()
+        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
         self.m.store_tmc_params_in_eeprom_and_handshake()
+        self.wait_while_values_stored_and_read_back_in()
 
     def wait_while_values_stored_and_read_back_in(self, dt=0):
-        
-        if self.wait_popup_for_tmc_read_in: 
+        if self.m.TMC_registers_have_been_read_in(): 
+            self.wait_popup_for_tmc_read_in.dismiss()
+            self.wait_popup_for_tmc_read_in = None
+        else: 
+            Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
 
-            if self.m.TMC_registers_have_been_read_in(): 
-                self.wait_popup_for_tmc_read_in.dismiss()
-                self.wait_popup_for_tmc_read_in = None
-            else: 
-                Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
-
-            return
-
-        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
 
