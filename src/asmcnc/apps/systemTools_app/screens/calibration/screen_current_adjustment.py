@@ -314,7 +314,7 @@ class CurrentAdjustment(Screen):
 
     def wait_while_values_stored_and_read_back_in(self, dt=0):
         if self.m.TMC_registers_have_been_read_in(): 
-            self.wait_popup_for_tmc_read_in.dismiss()
+            self.wait_popup_for_tmc_read_in.popup.dismiss()
             self.wait_popup_for_tmc_read_in = None
         else: 
             Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
