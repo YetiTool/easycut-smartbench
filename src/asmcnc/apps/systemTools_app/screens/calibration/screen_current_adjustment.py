@@ -309,6 +309,9 @@ class CurrentAdjustment(Screen):
 
     def store_values_and_wait_for_handshake(self):
         self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
+        Clock.schedule_once(self.do_tmc_value_store, 0.2)
+
+    def do_tmc_value_store(self, dt=0):
         self.m.store_tmc_params_in_eeprom_and_handshake()
         self.wait_while_values_stored_and_read_back_in()
 
