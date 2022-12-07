@@ -406,6 +406,9 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
     def go_xy(self):
+        # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
+        z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').job_box.range_z[1], -self.m.limit_switch_safety_distance)
+        self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
@@ -416,7 +419,7 @@ class JobRecoveryScreen(Screen):
         if self.m.state().startswith("Idle"):
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             self.jd.job_recovery_selected_line = self.selected_line_index + 1
-            self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
+            self.go_xy()
             Clock.schedule_once(self.proceed_to_next_screen, 0.4)
         else:
             error_message = self.l.get_str('Please ensure machine is idle before continuing.')
