@@ -18,6 +18,7 @@ except:
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
 from datetime import datetime
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 
 '''
@@ -40,6 +41,8 @@ def m():
     m.s.write_direct = Mock()
     m.s.s = MagicMock()
     m.clear_motor_registers = Mock()
+    m.is_machines_fw_version_equal_to_or_greater_than_version = Mock(return_value=True)
+    m.s.m_state = "Idle"
     return m
 
 def test_close_serial_connection(m):
@@ -58,6 +61,38 @@ def test_construct_calibration_check_file_path(m):
     assert os.path.exists("./src/" + Y_file.strip("."))
     assert os.path.exists("./src/" + Z_file.strip("."))
 
+
+# Set motor current tests
+
+def generate_idle_current_text(axis, motor, current):
+    altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+    return altDisplayText
+
+def generate_active_current_text(axis, motor, current):
+    altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
+    return altDisplayText
+
+def assert_current_sent_to_motor(machine, axis, motor, current):
+    machine.send_command_to_motor = Mock()
+    assert machine.set_motor_current(axis, current)
+    machine.send_command_to_motor.assert_any_call(generate_active_current_text(axis, motor, current), motor=motor, command=SET_ACTIVE_CURRENT, value=current)
+    machine.send_command_to_motor.assert_any_call(generate_idle_current_text(axis, motor, current), motor=motor, command=SET_IDLE_CURRENT, value=current)
+
+# def assert_current_NOT_sent_to_motor(machine, axis, motor, current):
+#     machine.send_command_to_motor = Mock()
+#     assert machine.set_motor_current(axis, current)
+#     machine.send_command_to_motor.assert_any_call(generate_active_current_text(axis, motor, current), motor=motor, command=SET_ACTIVE_CURRENT, value=current)
+#     machine.send_command_to_motor.assert_any_call(generate_idle_current_text(axis, motor, current), motor=motor, command=SET_IDLE_CURRENT, value=current)
+
+
+def test_set_X_motor_current(m):
+
+    axis = "X"
+    motor_1 = TMC_X1
+    motor_2 = TMC_X2
+    current = 26
+    assert_current_sent_to_motor(m, axis, motor_1, current)
+    assert_current_sent_to_motor(m, axis, motor_2, current)
 
 
 

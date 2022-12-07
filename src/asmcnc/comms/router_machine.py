@@ -2991,20 +2991,20 @@ class RouterMachine(object):
 
     def set_motor_current(self, axis, current):
 
-        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
-            self.state().startswith('Idle'):
+        if  (self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle')):
 
             motors = []
 
             if "Z" in axis: motors.append(TMC_Z)
 
-            if "X1" or "X2" in axis: 
+            if "X1" in axis or "X2" in axis: 
                 if "X1" in axis: motors.append(TMC_X1)
                 if "X2" in axis: motors.append(TMC_X2)
             elif "X" in axis: 
                 motors.extend([TMC_X1, TMC_X2])
 
-            if "Y1" or "Y2" in axis: 
+            if "Y1" in axis or "Y2" in axis: 
                 if "Y1" in axis: motors.append(TMC_Y1)
                 if "Y2" in axis: motors.append(TMC_Y2)
             elif "Y" in axis: 
@@ -3016,6 +3016,7 @@ class RouterMachine(object):
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
                 altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
+
             return True
 
         else:
