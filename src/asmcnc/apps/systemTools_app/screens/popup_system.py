@@ -1034,7 +1034,7 @@ class PopupStopStallJig(Widget):
 
 class PopupConfirmStoreCurrentValues(Widget):
 
-    def __init__(self, machine, screen_manager, localization):
+    def __init__(self, machine, screen_manager, localization, current_adjustment_screen):
         self.m = machine
         self.m.soft_stop()
         self.test_stopped = True
@@ -1042,8 +1042,10 @@ class PopupConfirmStoreCurrentValues(Widget):
         self.sm = screen_manager
         self.l = localization
 
+        self.cs = current_adjustment_screen
+
         def store_tmc_values(*args):
-            self.m.store_tmc_params_in_eeprom()
+            self.cs.store_values_and_wait_for_handshake()
 
         stop_description = self.l.get_str(
             "THIS WILL STORE ALL MODIFIED TMC PARAMS IN EEPROM. Only continue if you know what you're doing.")

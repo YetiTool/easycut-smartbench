@@ -4,6 +4,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment i
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
+from asmcnc.skavaUI.popup_info import PopupWait
 
 Builder.load_string("""
 <CurrentAdjustment>:
@@ -183,6 +184,8 @@ Builder.load_string("""
 
 class CurrentAdjustment(Screen):
 
+    wait_popup_for_tmc_read_in = None
+
     def __init__(self, **kwargs):
         super(CurrentAdjustment, self).__init__(**kwargs)
 
@@ -298,4 +301,24 @@ class CurrentAdjustment(Screen):
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
 
     def confirm_store_values(self):
-        PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l)
+        PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
+
+    def store_values_and_wait_for_handshake(self):
+        self.wait_while_values_stored_and_read_back_in()
+        self.m.clear_motor_registers()
+        self.m.store_tmc_params_in_eeprom_and_handshake()
+
+    def wait_while_values_stored_and_read_back_in(self, dt=0):
+        
+        if self.wait_popup_for_tmc_read_in: 
+
+            if self.m.TMC_registers_have_been_read_in(): 
+                self.wait_popup_for_tmc_read_in.dismiss()
+                self.wait_popup_for_tmc_read_in = None
+            else: 
+                Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
+
+            return
+
+        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
+
