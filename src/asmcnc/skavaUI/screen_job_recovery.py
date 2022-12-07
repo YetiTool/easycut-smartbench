@@ -85,7 +85,12 @@ Builder.load_string("""
 
                             Button:
                                 background_color: [0,0,0,0]
-                                on_press: root.scroll_up()
+                                on_press:
+                                    root.start_scrolling_up()
+                                    self.background_color = hex('#F44336FF')
+                                on_release:
+                                    self.background_color = hex('#F4433600')
+                                    root.stop_scrolling_up()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -99,7 +104,12 @@ Builder.load_string("""
 
                             Button:
                                 background_color: [0,0,0,0]
-                                on_press: root.scroll_down()
+                                on_press:
+                                    root.start_scrolling_down()
+                                    self.background_color = hex('#F44336FF')
+                                on_release:
+                                    root.stop_scrolling_down()
+                                    self.background_color = hex('#F4433600')
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -297,6 +307,9 @@ class JobRecoveryScreen(Screen):
     selected_line_index = 0
     display_list = []
 
+    scroll_up_event = None
+    scroll_down_event = None
+
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
 
@@ -329,15 +342,57 @@ class JobRecoveryScreen(Screen):
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
             self.update_display()
 
-    def scroll_up(self):
+    def start_scrolling_up(self):
+        self.scrolling_up = True
+
+        # Do one scroll immediately
+        self.do_scroll_up()
+
+        # Start scrolling after a delay
+        self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.5)
+
+    def do_scroll_up(self):
         if self.selected_line_index > 0:
             self.selected_line_index -= 1
             self.update_display()
 
-    def scroll_down(self):
+    def scroll_up(self, dt=0):
+        if self.scrolling_up:
+            self.do_scroll_up()
+
+            # Keep scrolling until button released
+            self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.03)
+
+    def stop_scrolling_up(self):
+        self.scrolling_up = False
+        if self.scroll_up_event:
+            Clock.unschedule(self.scroll_up_event)
+
+    def start_scrolling_down(self):
+        self.scrolling_down = True
+
+        # Do one scroll immediately
+        self.do_scroll_down()
+
+        # Start scrolling after a delay
+        self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.5)
+
+    def do_scroll_down(self):
         if self.selected_line_index < self.initial_line_index:
             self.selected_line_index += 1
             self.update_display()
+
+    def scroll_down(self, dt=0):
+        if self.scrolling_down:
+            self.do_scroll_down()
+
+            # Keep scrolling until button released
+            self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03)
+
+    def stop_scrolling_down(self):
+        self.scrolling_down = False
+        if self.scroll_down_event:
+            Clock.unschedule(self.scroll_down_event)
 
     def jump_to_line(self, instance, value):
         if value:
