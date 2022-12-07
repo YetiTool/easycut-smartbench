@@ -828,6 +828,22 @@ class SerialConnection(object):
                 log("ERROR status parse: Status invalid: " + message)
                 return
 
+            # If there is no Pn part in the status, set all limits to defaults.
+            # (except power loss 'r' pin, which is a special condition)
+            if not "|Pn:" in message:
+                self.limit_x = False
+                self.limit_X = False
+                self.limit_y = False
+                self.limit_Y = False
+                self.limit_z = False
+                self.probe = False
+                self.dust_shoe_cover = False
+                self.spare_door = False
+                self.limit_Y_axis = False
+                self.stall_X = False
+                self.stall_Z = False
+                self.stall_Y = False
+
             # Get machine's status
             self.m_state = status_parts[0]
 
@@ -955,7 +971,6 @@ class SerialConnection(object):
                             log("Power loss or DC power supply")
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
-
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):

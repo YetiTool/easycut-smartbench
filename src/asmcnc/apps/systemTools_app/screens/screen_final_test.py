@@ -227,6 +227,14 @@ class FinalTestScreen(Screen):
             self.y_board = 1636.9
             self.x_board = 1149.1
 
+        elif self.board_type == "green":
+            self.y_board = 1250
+            self.x_board = 1150
+
+        elif self.board_type == "red":
+            self.y_board = 1250
+            self.x_board = 1150
+
         self.y_pos_command = "G91 G0 Y" + str(self.y_board)
         self.y_neg_command = "G91 G0 Y-" + str(self.y_board)
         self.x_pos_command = "G91 G0 X" + str(self.x_board)
@@ -239,19 +247,19 @@ class FinalTestScreen(Screen):
 
 
     def X_plus(self):
-    	self.m.send_any_gcode_command(self.x_pos_command)
+        self.m.send_any_gcode_command(self.x_pos_command)
         self.m.set_led_colour('BLUE')
 
     def X_minus(self):
-    	self.m.send_any_gcode_command(self.x_neg_command)
+        self.m.send_any_gcode_command(self.x_neg_command)
         self.m.set_led_colour('BLUE')
 
     def Y_plus(self):
-    	self.m.send_any_gcode_command(self.y_pos_command)
+        self.m.send_any_gcode_command(self.y_pos_command)
         self.m.set_led_colour('BLUE')
 
     def Y_minus(self):
-    	self.m.send_any_gcode_command(self.y_neg_command)
+        self.m.send_any_gcode_command(self.y_neg_command)
         self.m.set_led_colour('BLUE')
 
     def X_575(self):
