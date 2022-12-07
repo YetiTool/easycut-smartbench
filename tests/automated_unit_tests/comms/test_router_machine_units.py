@@ -18,6 +18,7 @@ except:
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
 from datetime import datetime
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 
 '''
@@ -42,6 +43,11 @@ def m():
     m.clear_motor_registers = Mock()
     return m
 
+def generate_idle_current_call(axis, motor, current):
+
+    altDisplayText = 'SET IDLE CURRENT: ' + "X" + ': ' + "TMC: " + str(TMC_X1) + ", I: " + str(current)
+    return altDisplayText
+
 def test_close_serial_connection(m):
     m.close_serial_connection(0)
     m.clear_motor_registers.assert_called()
@@ -57,6 +63,19 @@ def test_construct_calibration_check_file_path(m):
     assert os.path.exists("./src/" + X_file.strip("."))
     assert os.path.exists("./src/" + Y_file.strip("."))
     assert os.path.exists("./src/" + Z_file.strip("."))
+
+def test_set_motor_current(m):
+
+    axis = "X"
+    current = 26
+    motor = TMC_X1
+
+    m.s.fw_version = '2.5.5'
+    m.s.m_state = 'Idle'
+
+    m.send_command_to_motor = Mock()
+    assert m.set_motor_current(axis, current)
+    # m.send_command_to_motor.assert_any_call(generate_idle_current_call(axis, motor, current), motor=TMC_X1, command=SET_IDLE_CURRENT, value=current)
 
 
 
