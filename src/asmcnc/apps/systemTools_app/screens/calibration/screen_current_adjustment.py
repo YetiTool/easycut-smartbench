@@ -4,7 +4,7 @@ from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment i
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
-from asmcnc.skavaUI.popup_info import PopupWait
+from asmcnc.skavaUI.popup_info import PopupWait, PopupWarning
 
 Builder.load_string("""
 <CurrentAdjustment>:
@@ -301,7 +301,11 @@ class CurrentAdjustment(Screen):
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
 
     def confirm_store_values(self):
-        PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
+        if self.m.state().startswith("Idle"):
+            PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
+
+        else: 
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't store")
 
     def store_values_and_wait_for_handshake(self):
         self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)

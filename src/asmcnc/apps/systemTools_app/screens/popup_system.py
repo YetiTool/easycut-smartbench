@@ -1036,9 +1036,6 @@ class PopupConfirmStoreCurrentValues(Widget):
 
     def __init__(self, machine, screen_manager, localization, current_adjustment_screen):
         self.m = machine
-        self.m.soft_stop()
-        self.test_stopped = True
-
         self.sm = screen_manager
         self.l = localization
 
