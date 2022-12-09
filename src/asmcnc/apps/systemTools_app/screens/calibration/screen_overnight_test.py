@@ -1518,7 +1518,7 @@ class OvernightTesting(Screen):
         log("Transferring file failed, copying to USB stick")
 
         if os.path.exists('/media/usb'):
-            os.system('cp ' + csv_name + ' /media/usb/')
+            os.system('sudo cp ' + csv_name + ' /media/usb/')
             PopupCSVOnUSB()
         else:
             log("USB stick not found")
