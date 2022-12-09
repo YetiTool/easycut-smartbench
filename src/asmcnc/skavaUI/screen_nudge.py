@@ -219,10 +219,10 @@ class NudgeScreen(Screen):
         info = self.l.get_str('Nudging is an optional manual adjustment in the XY plane.') + ' ' + \
                self.l.get_str('It is only necessary if SmartBench has suffered any positional loss e.g. due to a stall, or a re-home.') + '\n\n' + \
                self.l.get_str('Nudging allows the user to apply micro-corrections to the XY starting point of the tool, allowing the tool to re-start in exact registration with previous cut paths.') + '\n\n' + \
-               self.l.get_str('The Z restart point cannot be adjusted using the nudge screen.') + ' ' + \
-               self.l.get_str('In the event of a Z datum reset (e.g. to correct for a stall in Z axis, or tool change), please use the standard functions in the manual move screen.') + '\n\n' + \
-               self.l.get_str('Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) could result in damage to your spindle, cutting tool and/or workpiece.') + '\n\n' + \
-               self.l.get_str('Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).')
+               self.l.get_str('Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).') + ' ' + \
+               self.l.get_bold('The toolpiece should lightly touch the edge of the cut path.') + '\n\n' + \
+               self.l.get_str('To correct for a stall in Z axis or tool change, please use the standard functions in the manual move screen to set the Z datum.') + '\n\n' + \
+               self.l.get_str('Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) could result in damage to your spindle, cutting tool and/or workpiece.')
 
         popup_info.PopupBigInfo(self.sm, self.l, 780, info)
 
