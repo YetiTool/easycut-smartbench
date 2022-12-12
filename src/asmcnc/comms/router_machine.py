@@ -2842,19 +2842,19 @@ class RouterMachine(object):
 
         if self.state().startswith('Alarm'):
             self.checking_calibration_fail_info = "Stuck in alarm state"
-            self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+            self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 0.5)
             return
 
         if not self.state().startswith('Idle') or not self.TMC_registers_have_been_read_in() or \
             self.s.is_sequential_streaming or not self.s.setting_132:
-            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 0.5)
             return
 
         if self.refind_position_after_reset:
             self.refind_position_after_reset = False
             if assembled: self.start_homing()
             else: self.free_travel_to_home_positions(axes)
-            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 3)
+            Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 0.5)
             return
 
         if not self.calibration_coefficients_have_been_read_in():
@@ -2882,7 +2882,7 @@ class RouterMachine(object):
             return True
 
         self.checking_calibration_fail_info = "Pin toggle fail"
-        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 1)
+        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 0.5)
         return False
 
     def free_travel_to_home_positions(self, axes):
@@ -2914,22 +2914,23 @@ class RouterMachine(object):
         self.s.record_sg_values_flag = True
 
         self.s.run_skeleton_buffer_stuffer(check_calibration_gcode)
-        self.poll_end_of_calibration_check = Clock.schedule_interval(lambda dt: self.post_calibration_check(axes), 10)
+        self.poll_end_of_calibration_check = Clock.schedule_once(lambda dt: self.post_calibration_check(axes), 5)
 
 
     def post_calibration_check(self, axes):
 
-        if self.state().startswith('Idle') and self.TMC_registers_have_been_read_in():
-
-            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-                if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
-                self.s.record_sg_values_flag = False
-                self.are_sg_values_in_range_after_calibration(axes)
-                self.temp_sg_array = []
-                self.reset_cal_check_pass_thresholds()
-                if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
-                self.checking_calibration_in_progress = False
-                log("Calibration check complete")
+        if  self.state().startswith('Idle') and self.TMC_registers_have_been_read_in() and \
+            self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+            if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
+            self.s.record_sg_values_flag = False
+            self.are_sg_values_in_range_after_calibration(axes)
+            self.temp_sg_array = []
+            self.reset_cal_check_pass_thresholds()
+            if self.checking_calibration_fail_info: log(self.checking_calibration_fail_info)
+            self.checking_calibration_in_progress = False
+            log("Calibration check complete")
+        else:
+            self.poll_end_of_calibration_check = Clock.schedule_once(lambda dt: self.post_calibration_check(axes), 0.5)
 
 
     def construct_calibration_check_file_path(self, axis):
