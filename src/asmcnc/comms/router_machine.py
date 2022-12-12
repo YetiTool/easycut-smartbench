@@ -2585,7 +2585,7 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
 
         else: 
-            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 2)
+            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 0.2)
 
 
     def stream_calibration_file(self, filename):
@@ -2598,7 +2598,8 @@ class RouterMachine(object):
         log("Calibrating...")
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
-        self.poll_end_of_calibration_file_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
+        self.poll_end_of_calibration_file_stream = Clock.schedule_once(self.post_calibration_file_stream, 5)
+
 
     def quick_scrub(self, line):
 
@@ -2608,14 +2609,15 @@ class RouterMachine(object):
 
     def post_calibration_file_stream(self, dt):
 
-        if self.state().startswith('Idle'):
+        if self.state().startswith('Idle') and self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+            Clock.unschedule(self.poll_end_of_calibration_file_stream)
+            self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+            
+            # FW needs 5 seconds to compute & store after calibration
+            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
-            if self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
-                Clock.unschedule(self.poll_end_of_calibration_file_stream)
-                self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-                
-                # FW needs 5 seconds to compute & store after calibration
-                Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
+        else:
+            self.poll_end_of_calibration_file_stream = Clock.schedule_once(self.post_calibration_file_stream, 0.5)
 
 
     def do_next_axis_or_finish_calibration_sequence(self):
