@@ -1320,6 +1320,29 @@ class RouterMachine(object):
         except: return 0
         else: return self.s.fw_version
 
+    def smartbench_model(self):
+        if self.bench_is_short():
+            return "SmartBench Mini V1.3 Precision Pro"
+        elif self.is_machines_hw_version_equal_to_or_greater_than_version(32, 'Smartbench model'):
+            return "SmartBench V1.3 PrecisionPro CNC Router"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+            return "SmartBench V1.2 PrecisionPro CNC Router"
+        else:
+            zh_ver = self.z_head_version()
+
+            if zh_ver == "03":
+                return "SmartBench V1.2 Precision CNC Router"
+            elif zh_ver == "02":
+                return "SmartBench V1.2 Standard CNC Router"
+            elif zh_ver == "01":
+                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                    return "SmartBench V1.1 CNC Router"
+                else:
+                    return "SmartBench V1.0 CNC Router"
+
+        log("SmartBench model detection failed")
+        return "SmartBench model detection failed"
+
 # POSITONAL GETTERS            
         
     def x_pos_str(self): return self.s.m_x
