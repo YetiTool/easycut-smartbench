@@ -494,3 +494,11 @@ class JobRecoveryScreen(Screen):
         self.line_input.hint_text = self.l.get_str('Enter #')
         self.go_xy_button.text = self.l.get_str('GO XY')
         self.pos_label_header.text = self.l.get_str('Job resumes at:')
+
+        self.update_font_size(self.go_xy_button)
+
+    def update_font_size(self, value):
+        if len(value.text) > 10:
+            value.font_size = 25
+        else: 
+            value.font_size = 30
