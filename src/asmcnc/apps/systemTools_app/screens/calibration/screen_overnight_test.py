@@ -735,6 +735,7 @@ class OvernightTesting(Screen):
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
     mini_run_dev_mode = False
+    do_tune = True
 
     sn_for_db = ''
 
@@ -1282,7 +1283,7 @@ class OvernightTesting(Screen):
             return
 
         if not self.m.run_calibration and not self.m.tuning_in_progress:
-            self.m.tune_X_Y_Z_for_calibration()
+            if self.do_tune: self.m.tune_X_Y_Z_for_calibration()
             self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
 
     def do_calibration(self, dt):
