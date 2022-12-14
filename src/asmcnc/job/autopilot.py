@@ -125,7 +125,7 @@ class Autopilot:
         return self.spindle_v_main * 0.1 * sqrt(qda)
 
     def load_qdas_to_watts(self, qdas):
-        return [self.spindle_v_main * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda != 0]
+        return [self.spindle_v_main * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
     def get_feed_multiplier(self, target_power, current_power):
         multiplier = self.bias * (float(target_power) - float(current_power)) / float(target_power) \
