@@ -94,7 +94,7 @@ class Autopilot:
         if len(self.spindle_load_stack) < 5 or not self.setup:
             return
 
-        data = self.spindle_load_stack
+        data = self.load_qdas_to_watts(self.spindle_load_stack)
         data = self.remove_outliers(data)
 
         if len(data) < 3:
@@ -119,6 +119,9 @@ class Autopilot:
 
     def load_qda_to_watts(self, qda):
         return self.spindle_v_main * 0.1 * sqrt(qda)
+
+    def load_qdas_to_watts(self, qdas):
+        return [self.spindle_v_main * 0.1 * sqrt(qda) for qda in qdas]
 
     def get_feed_multiplier(self, target_power, current_power):
         multiplier = self.bias * (float(target_power) - float(current_power)) / float(target_power) \
