@@ -140,13 +140,17 @@ class Autopilot:
         return multiplier
 
     def do_best_adjustment(self, adjustment_list):
-        for i in range(len(adjustment_list)):
-            if adjustment_list[i] == 10:
-                Clock.schedule_once(self.m.feed_override_up_10, 0.05 * i)
-            elif adjustment_list[i] == 1:
-                Clock.schedule_once(self.m.feed_override_up_1, 0.05 * i)
-            elif adjustment_list[i] == -10:
-                Clock.schedule_once(self.m.feed_override_down_10, 0.05 * i)
-            elif adjustment_list[i] == -1:
-                Clock.schedule_once(self.m.feed_override_down_1, 0.05 * i)
+        for item in adjustment_list:
+            if item == 10:
+                self.m.feed_override_percentage += 10
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(self.m.feed_override_percentage), 0.05)
+            elif item == 1:
+                self.m.feed_override_percentage += 1
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(self.m.feed_override_percentage), 0.05)
+            elif item == -10:
+                self.m.feed_override_percentage -= 10
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(self.m.feed_override_percentage), 0.05)
+            elif item == -1:
+                self.m.feed_override_percentage -= 1
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(self.m.feed_override_percentage), 0.05)
 
