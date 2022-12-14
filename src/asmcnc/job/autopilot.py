@@ -52,8 +52,8 @@ class Autopilot:
     bias = 2.0
     m_coefficient = 1.0
     c_coefficient = 30 / 0.875
-    increase_cap = 20
-    decrease_cap = 40
+    increase_cap = 5
+    decrease_cap = 5
 
     autopilot_logger = None
 
@@ -147,6 +147,10 @@ class Autopilot:
             return
 
         for i in range(len(adjustment_list)):
+            if feed_override_widget.feed_override_percentage + adjustment_list[i] > 200 or \
+                    feed_override_widget.feed_override_percentage - adjustment_list[i] < 10:
+                continue
+
             if adjustment_list[i] == 10:
                 feed_override_widget.feed_override_percentage += 10
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(feed_override_widget.feed_override_percentage), 0.05 * i)
