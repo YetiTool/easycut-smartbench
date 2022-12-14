@@ -140,13 +140,23 @@ class Autopilot:
         return multiplier
 
     def do_best_adjustment(self, adjustment_list):
-        for item in adjustment_list:
-            if item == 10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), 0.05)
-            elif item == 1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), 0.05)
-            elif item == -10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(), 0.05)
-            elif item == -1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), 0.05)
+
+        feed_override_widget = self.sm.get_screen('go').feedOverride
+
+        if not feed_override_widget:
+            return
+
+        for i in range(len(adjustment_list)):
+            if adjustment_list[i] == 10:
+                feed_override_widget.feed_override_percentage += 10
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(feed_override_widget.feed_override_percentage), 0.05 * i)
+            elif adjustment_list[i] == 1:
+                feed_override_widget.feed_override_percentage += 1
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(feed_override_widget.feed_override_percentage), 0.05 * i)
+            elif adjustment_list[i] == -10:
+                feed_override_widget.feed_override_percentage -= 10
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(feed_override_widget.feed_override_percentage), 0.05 * i)
+            elif adjustment_list[i] == -1:
+                feed_override_widget.feed_override_percentage -= 1
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(feed_override_widget.feed_override_percentage), 0.05 * i)
 
