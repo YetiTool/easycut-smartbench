@@ -2,7 +2,6 @@
 Created on 9 Dec 2022
 @author: Archie
 """
-
 from kivy.clock import Clock
 from math import sqrt
 from autopilot_logger import AutoPilotLogger
