@@ -44,6 +44,7 @@ class Autopilot:
     spindle_load_stack = []
 
     outlier_percentage = 20
+    outlier_amount = 100
 
     bias = 2.0
     m_coefficient = 1.0
@@ -84,8 +85,7 @@ class Autopilot:
     def remove_outliers(self, data):
         avg = sum(data) / len(data)
         for value in data:
-            if value > avg * (1 + self.outlier_percentage / 100) \
-                    or value < avg * (1 - self.outlier_percentage / 100):
+            if value > avg + self.outlier_amount or value < avg - self.outlier_amount:
                 data.remove(value)
         return data
 
@@ -95,11 +95,7 @@ class Autopilot:
 
         data = self.load_qdas_to_watts(self.spindle_load_stack)
 
-        print(data)
-
         data = self.remove_outliers(data)
-
-        print(data)
 
         if len(data) < 3:
             print('Data invalid - not enough values')
