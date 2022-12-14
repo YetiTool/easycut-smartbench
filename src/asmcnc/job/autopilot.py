@@ -76,7 +76,7 @@ class Autopilot:
         if self.m.wpos_z() > 0:
             return
 
-        adjustment_required = self.get_feed_multiplier(self.spindle_target_watts , self.load_qda_to_watts(data_avg))
+        adjustment_required = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
         best_adjustment = get_best_adjustment(adjustment_required)
         self.do_best_adjustment(best_adjustment)
         self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'))
