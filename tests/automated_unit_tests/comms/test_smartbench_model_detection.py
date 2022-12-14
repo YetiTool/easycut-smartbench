@@ -44,7 +44,7 @@ def test_initial_failure(m):
 def test_mini_v1_3_precision_pro(m):
     m.grbl_y_max_travel = 1500
     m.s.hw_version = 32
-    assert(m.smartbench_model() == "SmartBench Mini V1.3 Precision Pro")
+    assert(m.smartbench_model() == "SmartBench Mini V1.3 PrecisionPro")
 
 def test_v1_3_precision_pro(m):
     m.grbl_y_max_travel = 2500
