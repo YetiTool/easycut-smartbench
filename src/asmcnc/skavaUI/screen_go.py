@@ -588,7 +588,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
         self.database.send_job_start()
-        self.Autopilot(m=self.m, screen_manager=self.sm).start()
+        self.Autopilot(machine=self.m, screen_manager=self.sm).start()
 
         self.m.set_pause(False)
         self.is_job_started_already = True
