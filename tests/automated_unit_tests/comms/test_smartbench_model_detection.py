@@ -49,11 +49,18 @@ def test_mini_v1_3_precision_pro(m):
 def test_v1_3_precision_pro(m):
     m.grbl_y_max_travel = 2500
     m.s.hw_version = 32
+    m.s.fw_version = '2.3.5.4'
     assert(m.smartbench_model() == "SmartBench V1.3 PrecisionPro CNC Router")
 
 def test_v1_2_precision_pro(m):
     m.grbl_y_max_travel = 2500
     m.s.hw_version = 19
+    m.s.fw_version = '1.4.0'
+    assert(m.smartbench_model() == "SmartBench V1.2 PrecisionPro CNC Router")
+
+def test_v1_2_precision_pro_replacement_board(m):
+    m.grbl_y_max_travel = 2500
+    m.s.hw_version = 36
     m.s.fw_version = '1.4.0'
     assert(m.smartbench_model() == "SmartBench V1.2 PrecisionPro CNC Router")
 

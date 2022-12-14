@@ -1324,7 +1324,10 @@ class RouterMachine(object):
         if self.bench_is_short():
             return "SmartBench Mini V1.3 Precision Pro"
         elif self.is_machines_hw_version_equal_to_or_greater_than_version(32, 'Smartbench model'):
-            return "SmartBench V1.3 PrecisionPro CNC Router"
+            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+                return "SmartBench V1.3 PrecisionPro CNC Router"
+            else:
+                return "SmartBench V1.2 PrecisionPro CNC Router"
         elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
             return "SmartBench V1.2 PrecisionPro CNC Router"
         else:
