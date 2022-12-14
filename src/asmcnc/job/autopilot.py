@@ -43,7 +43,7 @@ class Autopilot:
     old_spindle_load_stack = []
     spindle_load_stack = []
 
-    outlier_percentage = 10
+    outlier_percentage = 20
 
     bias = 2.0
     m_coefficient = 1.0
