@@ -27,7 +27,7 @@ class AutoPilotLogger:
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time))
 
     def get_data_for_sheet(self):
-        data = [['Feed Multiplier', 'Current Load', 'Time']]
+        data = [['Current Load', 'Feed Multiplier', 'Time']]
         for log in self.logs:
             data.append([log.current_load, log.feed_multiplier, log.time])
         return data
