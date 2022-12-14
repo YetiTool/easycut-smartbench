@@ -7,22 +7,28 @@ import os
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
+dev_mode_credentials_path = 'credentials.json'
+dev_mode_token_path = 'token.json'
+
+prod_mode_credentials_path = 'asmcnc/job/credentials.json'
+prod_mode_token_path = 'asmcnc/job/token.json'
+
 
 def authorize():
     creds = None
 
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if os.path.exists(prod_mode_token_path):
+        creds = Credentials.from_authorized_user_file(prod_mode_token_path, SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                prod_mode_credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
 
-        with open('token.json', 'w') as token:
+        with open(prod_mode_token_path, 'w') as token:
             token.write(creds.to_json())
 
     return creds
@@ -259,14 +265,3 @@ def create_chart(spreadsheet_id):
     except HttpError as e:
         print(e)
         return e
-
-
-# spreadsheetId = create('sheet')
-#
-# write_other_data_to_sheet(spreadsheetId, 240, 1750, 1, 2, 3, 4, 40)
-#
-# write_data_to_sheet(spreadsheetId, [["Feed", "Load"], [1, 2], [500, 1000]])
-#
-# print(spreadsheetId)
-#
-# create_chart(spreadsheetId)
