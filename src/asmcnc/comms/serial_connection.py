@@ -19,6 +19,8 @@ from serial.serialutil import SerialException
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
+from math import sqrt
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -784,6 +786,9 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
+    autopilot_flag = True
+    autopilot_instance = None
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -986,6 +991,15 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.autopilot_flag:
+                            if self.autopilot_instance:
+                                if not self.autopilot_instance.spindle_v_main:
+                                    self.autopilot_instance.spindle_v_main = self.digital_spindle_mains_voltage
+                                    self.autopilot_instance.spindle_max_watts = self.digital_spindle_mains_voltage * 0.1 * sqrt(5290)
+                                    self.autopilot_instance.first_read_setup()
+
+                                self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0

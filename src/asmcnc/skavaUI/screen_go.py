@@ -570,7 +570,6 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-
         log('start/pause button pressed')
         if self.is_job_started_already:
             self._pause_job()
@@ -578,6 +577,8 @@ class GoScreen(Screen):
             self._start_running_job()
 
     def _pause_job(self):
+        if self.m.s.autopilot_instance:
+            self.m.s.autopilot_instance.stop()
 
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"

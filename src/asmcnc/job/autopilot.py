@@ -1,0 +1,143 @@
+"""
+Created on 9 Dec 2022
+@author: Archie
+"""
+
+from kivy.clock import Clock
+from math import sqrt
+from autopilot_logger import AutoPilotLogger
+from datetime import datetime
+
+
+def get_best_adjustment(percentage):
+    negative = percentage < 0
+
+    percentage = abs(percentage)
+    tens = percentage // 10
+    ones = percentage % 10
+
+    if ones < 5:
+        moves = []
+        for i in range(tens):
+            moves.append(-10 if negative else 10)
+        for i in range(ones):
+            moves.append(-1 if negative else 1)
+        return moves
+    else:
+        moves = []
+        for i in range(tens + 1):
+            moves.append(-10 if negative else 10)
+        for i in range(10 - ones):
+            moves.append(1 if negative else -1)
+        return moves
+
+
+class Autopilot:
+    reading_clock = None
+
+    adjustment_delay = 0.5
+
+    spindle_v_main = None
+    spindle_target_watts = 875
+    spindle_target_percentage = 0.5
+
+    old_spindle_load_stack = []
+    spindle_load_stack = []
+
+    outlier_percentage = 10
+
+    bias = 2.0
+    m_coefficient = 1.0
+    c_coefficient = 30 / 0.875
+    increase_cap = 20
+    decrease_cap = 40
+
+    autopilot_logger = None
+
+    setup = False
+
+    def __init__(self, **kwargs):
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
+
+    def first_read_setup(self):
+        self.autopilot_logger = AutoPilotLogger(self.spindle_v_main, self.spindle_target_watts,
+                                                self.bias, self.m_coefficient, self.c_coefficient,
+                                                self.increase_cap, self.decrease_cap)
+        # confirm 5290 with Boris
+        self.spindle_target_watts = self.spindle_v_main * 0.1 * sqrt(5290)
+        self.setup = True
+
+    def add_to_stack(self, value):
+        if len(self.spindle_load_stack) == 5:
+            self.spindle_load_stack.pop(0)
+        self.spindle_load_stack.append(value)
+
+    def adjust(self, data_avg):
+        if self.m.wpos_z() > 0:
+            return
+
+        adjustment_required = self.get_feed_multiplier(self.spindle_target_watts , self.load_qda_to_watts(data_avg))
+        best_adjustment = get_best_adjustment(adjustment_required)
+        self.do_best_adjustment(best_adjustment)
+        self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'))
+
+    def remove_outliers(self, data):
+        avg = sum(data) / len(data)
+        for value in data:
+            if value > avg * (1 + self.outlier_percentage / 100) \
+                    or value < avg * (1 - self.outlier_percentage / 100):
+                data.remove(value)
+        return data
+
+    def read(self):
+        if len(self.spindle_load_stack) < 5 or not self.setup:
+            return
+
+        data = self.spindle_load_stack
+        data = self.remove_outliers(data)
+
+        if len(data) < 3:
+            print('Data invalid - not enough values')
+            return
+
+        data_avg = sum(data) / len(data)
+
+        self.adjust(data_avg)
+
+    def start(self):
+        self.reading_clock = Clock.schedule_interval(self.read, self.adjustment_delay)
+
+        self.m.s.autopilot_instance = self
+        self.m.s.autopilot_flag = True
+
+    def stop(self):
+        if self.reading_clock is not None:
+            Clock.unschedule(self.reading_clock)
+            self.m.s.autopilot_flag = False
+        self.autopilot_logger.export_to_gsheet()
+
+    def load_qda_to_watts(self, qda):
+        return self.spindle_v_main * 0.1 * sqrt(qda)
+
+    def get_feed_multiplier(self, target_power, current_power):
+        multiplier = self.bias * (float(target_power) - float(current_power)) / float(target_power) \
+                     * self.m_coefficient * self.c_coefficient
+
+        if current_power > target_power and abs(multiplier) > self.decrease_cap:
+            return -self.decrease_cap
+        elif current_power < target_power and multiplier > self.increase_cap:
+            return self.increase_cap
+        return multiplier
+
+    def do_best_adjustment(self, adjustment_list):
+        for i in range(len(adjustment_list)):
+            if adjustment_list[i] == 10:
+                Clock.schedule_once(self.m.feed_override_up_10, 0.05 * i)
+            elif adjustment_list[i] == 1:
+                Clock.schedule_once(self.m.feed_override_up_1, 0.05 * i)
+            elif adjustment_list[i] == -10:
+                Clock.schedule_once(self.m.feed_override_down_10, 0.05 * i)
+            elif adjustment_list[i] == -1:
+                Clock.schedule_once(self.m.feed_override_down_1, 0.05 * i)
+
