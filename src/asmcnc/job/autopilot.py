@@ -4,7 +4,7 @@ Created on 9 Dec 2022
 """
 
 from kivy.clock import Clock
-from math import sqrt
+from math import sqrt, floor
 from autopilot_logger import AutoPilotLogger
 from datetime import datetime
 
@@ -20,16 +20,16 @@ def get_best_adjustment(percentage):
 
     if ones < 5:
         moves = []
-        for i in range(tens):
+        for i in range(int(floor(tens))):
             moves.append(-10 if negative else 10)
-        for i in range(ones):
+        for i in range(int(floor(ones))):
             moves.append(-1 if negative else 1)
         return moves
     else:
         moves = []
-        for i in range(tens + 1):
+        for i in range(int(floor(tens + 1))):
             moves.append(-10 if negative else 10)
-        for i in range(10 - ones):
+        for i in range(int(floor(10 - ones))):
             moves.append(1 if negative else -1)
         return moves
 
