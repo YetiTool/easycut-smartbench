@@ -82,6 +82,9 @@ class Autopilot:
 
         adjustment_required = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
         best_adjustment = get_best_adjustment(adjustment_required)
+
+        print(best_adjustment)
+
         self.do_best_adjustment(best_adjustment)
         self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'))
 
