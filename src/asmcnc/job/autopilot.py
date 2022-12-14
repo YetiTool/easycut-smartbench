@@ -90,7 +90,7 @@ class Autopilot:
                 data.remove(value)
         return data
 
-    def read(self):
+    def read(self, dt):
         if len(self.spindle_load_stack) < 5 or not self.setup:
             return
 
