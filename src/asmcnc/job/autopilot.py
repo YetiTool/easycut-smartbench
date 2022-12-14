@@ -95,7 +95,12 @@ class Autopilot:
             return
 
         data = self.load_qdas_to_watts(self.spindle_load_stack)
+
+        print(data)
+
         data = self.remove_outliers(data)
+
+        print(data)
 
         if len(data) < 3:
             print('Data invalid - not enough values')
