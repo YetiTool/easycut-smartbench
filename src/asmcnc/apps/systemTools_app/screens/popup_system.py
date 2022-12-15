@@ -976,7 +976,7 @@ class PopupStopStallJig(Widget):
             self.sj.unschedule_all_events()
             self.sj.set_default_thresholds()
             self.sj.test_stopped = False
-            self.sj.restore_acceleration_and_soft_limits()
+            self.sj.restore_grbl_settings()
             self.sj.enable_all_buttons_except_run()
             self.sj.test_status_label.text = "STOPPED"
 

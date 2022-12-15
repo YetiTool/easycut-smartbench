@@ -1899,29 +1899,35 @@ class RouterMachine(object):
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
 
-    def calibrate_Z(self):
-        self.run_calibration = True
-        log("Calibrating Z...")
-        self.initialise_calibration(X = False, Y = False, Z = True)
-
-    def calibrate_X_and_Z(self):
+    def calibrate_X(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
-        log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = True)
+        log("Calibrating X...")
+        self.initialise_calibration(X = True, Y = False, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_Y(self):
+    def calibrate_Y(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating Y...")
-        self.initialise_calibration(X = False, Y = True, Z = False)
+        self.initialise_calibration(X = False, Y = True, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_X_Y_and_Z(self):
+    def calibrate_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
+
+        self.run_calibration = True
+        log("Calibrating Z...")
+        self.initialise_calibration(X = False, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
+
+    def calibrate_X_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
+
+        self.run_calibration = True
+        log("Calibrating X and Z...")
+        self.initialise_calibration(X = True, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
+
+    def calibrate_X_Y_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating X, Y, and Z...")
-        self.initialise_calibration(X = True, Y = True, Z = True)
-
+        self.initialise_calibration(X = True, Y = True, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -2480,17 +2486,25 @@ class RouterMachine(object):
 
     time_to_check_for_calibration_prep = 0
 
-    def initialise_calibration(self, X=False, Y=False, Z=False):
+    disable_and_enable_soft_limits = True
+
+    quick_calibration = False
+
+
+    def initialise_calibration(self, X=False, Y=False, Z=False, zero_position=True, mod_soft_limits=True, quick_calibration=False):
 
         log("Initialise Calibration")
-
         self.calibration_tuning_fail_info = ''
+        self.disable_and_enable_soft_limits = mod_soft_limits
+        self.quick_calibration = quick_calibration
 
-        self.s.write_command('$20=0')
+        if self.disable_and_enable_soft_limits: 
+            self.s.write_command('$20=0')
 
-        log("Zero position")
-        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        if zero_position:
+            log("Zero position")
+            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
@@ -2543,19 +2557,21 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
+            path_start = './asmcnc/production/calibration_gcode_files/'
+            if self.quick_calibration: path_end = '_cal_quick_n_coarse.gc'
+            else: path_end = '_cal.gc'
+            calibration_file = path_start + axis + path_end
+
             if axis == 'X': 
                 calibrate_mode = 32
-                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc'
                 altDisplayText = "CALIBRATE X AXIS"
 
             if axis == 'Y': 
                 calibrate_mode = 64
-                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc'
                 altDisplayText = "CALIBRATE Y AXIS"
 
             if axis == 'Z': 
                 calibrate_mode = 128
-                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc'
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
@@ -2612,7 +2628,7 @@ class RouterMachine(object):
 
     def save_calibration_coefficients_to_motor_classes(self):
 
-        self.s.write_command('$20=1')
+        if self.disable_and_enable_soft_limits: self.s.write_command('$20=1')
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
         Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
 
