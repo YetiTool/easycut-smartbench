@@ -42,8 +42,8 @@ class Autopilot:
     bias = 2.0
     m_coefficient = 1.0
     c_coefficient = 30 / 0.875
-    increase_cap = 5
-    decrease_cap = 5
+    increase_cap = 20
+    decrease_cap = 40
 
     autopilot_logger = None
 
