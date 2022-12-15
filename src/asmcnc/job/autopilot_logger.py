@@ -39,8 +39,9 @@ class AutoPilotLogger:
         data = [['Average Load', 'Feed Multiplier', 'Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4',
                  'Raw Load 5', 'Average Load 1', 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5']]
         for log in self.logs:
-            data.append([log.current_load, log.feed_multiplier, log.time, log.raw_loads[0], log.raw_loads[1],
-                         log.raw_loads[2], log.raw_loads[3], log.raw_loads[4], get_safe(log.average_loads, 0),
+            data.append([log.current_load, log.feed_multiplier, log.time, get_safe(log.raw_loads, 0),
+                         get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
+                         get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0),
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4)])
         return data
