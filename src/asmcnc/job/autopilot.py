@@ -114,7 +114,9 @@ class Autopilot:
         if self.reading_clock is not None:
             Clock.unschedule(self.reading_clock)
             self.m.s.autopilot_flag = False
-        self.autopilot_logger.export_to_gsheet()
+
+        Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet(), 3)
+
 
     def load_qda_to_watts(self, qda):
         return self.spindle_v_main * 0.1 * sqrt(qda)
