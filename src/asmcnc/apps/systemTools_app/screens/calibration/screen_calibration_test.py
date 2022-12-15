@@ -1644,6 +1644,8 @@ class CalibrationTesting(Screen):
 
     def send_all_data(self):
 
+        self.calibration_db.set_up_connection()
+
         self.data_send_button.disabled = True
         self.data_send_label.text = "Sending..."
         self.sent_data_check.source = self.checkbox_inactive
