@@ -66,7 +66,7 @@ class Autopilot:
             self.spindle_load_stack.pop(0)
         self.spindle_load_stack.append(value)
 
-    def adjust(self, data_avg):
+    def adjust(self, data_avg, raw_loads, average_loads):
         if self.m.wpos_z() > 0:
             return
 
@@ -79,7 +79,8 @@ class Autopilot:
         print(best_adjustment)
 
         self.do_best_adjustment(best_adjustment)
-        self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'))
+        self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'),
+                                      raw_loads, average_loads)
 
     def remove_outliers(self, data):
         avg = sum(data) / len(data)
@@ -92,17 +93,17 @@ class Autopilot:
         if len(self.spindle_load_stack) < 5 or not self.setup:
             return
 
-        data = self.load_qdas_to_watts(self.spindle_load_stack)
+        raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
 
-        data = self.remove_outliers(data)
+        average_loads = self.remove_outliers(raw_loads)
 
-        if len(data) < 3:
+        if len(average_loads) < 3:
             print('Data invalid - not enough values')
             return
 
-        data_avg = sum(data) / len(data)
+        data_avg = sum(average_loads) / len(average_loads)
 
-        self.adjust(data_avg)
+        self.adjust(data_avg, raw_loads, average_loads)
 
     def start(self):
         self.reading_clock = Clock.schedule_interval(self.read, self.adjustment_delay)
@@ -116,7 +117,6 @@ class Autopilot:
             self.m.s.autopilot_flag = False
 
         Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet(), 3)
-
 
     def load_qda_to_watts(self, qda):
         return self.spindle_v_main * 0.1 * sqrt(qda)

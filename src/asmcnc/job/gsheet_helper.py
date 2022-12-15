@@ -70,7 +70,7 @@ def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_wat
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="E1:K2",
+            spreadsheetId=spreadsheet_id, range="N1:T2",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
@@ -92,7 +92,7 @@ def write_data_to_sheet(spreadsheet_id, data):
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="A1:C",
+            spreadsheetId=spreadsheet_id, range="A1:M",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result

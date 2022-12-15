@@ -1,8 +1,10 @@
 class AutoPilotLog:
-    def __init__(self, current_load, feed_multiplier, time):
+    def __init__(self, current_load, feed_multiplier, time, raw_loads, average_loads):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
+        self.raw_loads = raw_loads
+        self.average_loads = average_loads
 
 
 from datetime import datetime
@@ -23,13 +25,17 @@ class AutoPilotLogger:
         self.increase_cap = increase_cap
         self.decrease_cap = decrease_cap
 
-    def add_log(self, current_load, feed_multiplier, time):
-        self.logs.append(AutoPilotLog(current_load, feed_multiplier, time))
+    def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads):
+        self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads))
 
     def get_data_for_sheet(self):
-        data = [['Current Load', 'Feed Multiplier', 'Time']]
+        data = [['Average Load', 'Feed Multiplier', 'Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4',
+                 'Raw Load 5', 'Average Load 1', 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5']]
         for log in self.logs:
-            data.append([log.current_load, log.feed_multiplier, log.time])
+            data.append([log.current_load, log.feed_multiplier, log.time, log.raw_loads[0], log.raw_loads[1],
+                         log.raw_loads[2], log.raw_loads[3], log.raw_loads[4], log.average_loads.get(0),
+                         log.average_loads.get(1), log.average_loads.get(2), log.average_loads.get(3),
+                         log.average_loads.get(4)])
         return data
 
     def export_to_gsheet(self):
