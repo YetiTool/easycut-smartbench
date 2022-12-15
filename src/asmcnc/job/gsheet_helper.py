@@ -218,8 +218,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": 0,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 1,
-                                                        "endColumnIndex": 2
+                                                        "startColumnIndex": 0,
+                                                        "endColumnIndex": 1
                                                     }
                                                 ]
                                             }
@@ -235,8 +235,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": 0,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 0,
-                                                        "endColumnIndex": 1
+                                                        "startColumnIndex": 1,
+                                                        "endColumnIndex": 2
                                                     }
                                                 ]
                                             }
