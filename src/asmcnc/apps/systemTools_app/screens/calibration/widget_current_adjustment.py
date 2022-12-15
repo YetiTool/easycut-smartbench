@@ -1,3 +1,4 @@
+import traceback
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -91,15 +92,21 @@ class CurrentAdjustmentWidget(Widget):
             self.set_current(instance.text)
 
     def set_current(self, current):
-        if self.m.state().startswith('Idle'):
-            if 0 <= int(current) <= 31:
-                self.current_current = int(current)
-                self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
 
+        try: 
+            if self.m.state().startswith('Idle'):
+                if 0 <= int(current) <= 31:
+                    self.current_current = int(current)
+                    self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
+
+                else:
+                    popup_info.PopupError(self.systemtools_sm, self.l, "Invalid current value!")
             else:
-                popup_info.PopupError(self.systemtools_sm, self.l, "Invalid current value!")
-        else:
-            popup_info.PopupError(self.systemtools_sm, self.l, "Can't change current when not Idle!")
+                popup_info.PopupError(self.systemtools_sm, self.l, "Can't change current when not Idle!")
+
+        except:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Issue setting current")
+            print(traceback.format_exc())
 
         self.current_current_label.text = str(self.current_current)
         self.current_current_label.focus = False
