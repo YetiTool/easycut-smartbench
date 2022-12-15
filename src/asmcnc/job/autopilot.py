@@ -10,28 +10,18 @@ from datetime import datetime
 
 
 def get_best_adjustment(percentage):
-    percentage = round(percentage)
+    moves = []
 
-    negative = percentage < 0
-
-    percentage = abs(percentage)
     tens = percentage // 10
     ones = percentage % 10
 
-    if ones < 5:
-        moves = []
-        for i in range(int(floor(tens))):
-            moves.append(-10 if negative else 10)
-        for i in range(int(floor(ones))):
-            moves.append(-1 if negative else 1)
-        return moves
-    else:
-        moves = []
-        for i in range(int(floor(tens + 1))):
-            moves.append(-10 if negative else 10)
-        for i in range(int(floor(10 - ones))):
-            moves.append(1 if negative else -1)
-        return moves
+    for i in range(int(floor(tens))):
+        moves.append(10)
+
+    for i in range(int(floor(ones))):
+        moves.append(1)
+
+    return moves
 
 
 class Autopilot:
