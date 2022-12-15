@@ -12,6 +12,13 @@ from gsheet_helper import create, write_other_data_to_sheet, write_data_to_sheet
 from random import uniform
 
 
+def get_safe(listt, index):
+    try:
+        return listt[index]
+    except IndexError:
+        return 'n/a'
+
+
 class AutoPilotLogger:
     logs = []
 
@@ -33,9 +40,9 @@ class AutoPilotLogger:
                  'Raw Load 5', 'Average Load 1', 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5']]
         for log in self.logs:
             data.append([log.current_load, log.feed_multiplier, log.time, log.raw_loads[0], log.raw_loads[1],
-                         log.raw_loads[2], log.raw_loads[3], log.raw_loads[4], log.average_loads.get(0),
-                         log.average_loads.get(1), log.average_loads.get(2), log.average_loads.get(3),
-                         log.average_loads.get(4)])
+                         log.raw_loads[2], log.raw_loads[3], log.raw_loads[4], get_safe(log.average_loads, 0),
+                         get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
+                         get_safe(log.average_loads, 3), get_safe(log.average_loads, 4)])
         return data
 
     def export_to_gsheet(self):
