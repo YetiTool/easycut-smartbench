@@ -81,6 +81,9 @@ class Autopilot:
             return
 
         adjustment_required = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
+
+        print(adjustment_required)
+
         best_adjustment = get_best_adjustment(adjustment_required)
 
         print(best_adjustment)
@@ -137,10 +140,10 @@ class Autopilot:
             return -self.decrease_cap
         elif current_power < target_power and multiplier > self.increase_cap:
             return self.increase_cap
+
         return multiplier
 
     def do_best_adjustment(self, adjustment_list):
-
         feed_override_widget = self.sm.get_screen('go').feedOverride
 
         if not feed_override_widget:
