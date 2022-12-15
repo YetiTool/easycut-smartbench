@@ -889,7 +889,7 @@ class RouterMachine(object):
 
     def is_machines_fw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
         
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+        # if sys.platform != 'win32' and sys.platform != 'darwin':
 
             # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
             try:
@@ -923,11 +923,11 @@ class RouterMachine(object):
                     else: 
                         return True # equal
 
-        else: return False
+        # else: return False
 
     def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription): 
         
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+        # if sys.platform != 'win32' and sys.platform != 'darwin':
             try:
                 if float(self.s.hw_version) >= version_to_reference:
                     return True
@@ -941,7 +941,7 @@ class RouterMachine(object):
 
                 return False
 
-        else: return False
+        # else: return False
 
 # HW/FW ADJUSTMENTS
 
@@ -1323,11 +1323,8 @@ class RouterMachine(object):
     def smartbench_model(self):
         if self.bench_is_short():
             return "SmartBench Mini V1.3 PrecisionPro"
-        elif self.is_machines_hw_version_equal_to_or_greater_than_version(32, 'Smartbench model'):
-            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
-                return "SmartBench V1.3 PrecisionPro CNC Router"
-            else:
-                return "SmartBench V1.2 PrecisionPro CNC Router"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+            return "SmartBench V1.3 PrecisionPro CNC Router"
         elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
             return "SmartBench V1.2 PrecisionPro CNC Router"
         else:
