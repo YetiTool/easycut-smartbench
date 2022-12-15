@@ -92,8 +92,8 @@ class CurrentAdjustmentWidget(Widget):
 
     def set_current(self, current):
         if self.m.state().startswith('Idle'):
-            if 0 <= current <= 31:
-                self.current_current = current
+            if 0 <= int(current) <= 31:
+                self.current_current = int(current)
                 self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
 
             else:
