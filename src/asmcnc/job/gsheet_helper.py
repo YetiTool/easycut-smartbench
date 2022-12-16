@@ -108,20 +108,22 @@ def add_img_to_sheet(spreadsheet_id, url):
 
 
 def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient,
-                              increase_cap, decerease_cap):
+                              increase_cap, decerease_cap, delay_between_feed_adjustments, outlier_amount):
     creds = authorize()
 
     try:
         service = build('sheets', 'v4', credentials=creds)
 
         values = [
-            ["Spindle V Main", spindle_v_main],
+            ["Spindle Mains Voltage", spindle_v_main],
             ["Spindle Target Watts", spindle_target_watts],
-            ["Bias", bias],
+            ["Bias for Feed Decrease", bias],
             ["M Coefficient", m_coefficient],
             ["C Coefficient", c_coefficient],
-            ["Increase Cap", increase_cap],
-            ["Decrease Cap", decerease_cap]
+            ["Cap for Feed Increase", increase_cap],
+            ["Cap for Feed Decrease", decerease_cap],
+            ["Delay Between Feed Adjustments", delay_between_feed_adjustments],
+            ["Outlier Amount", outlier_amount]
         ]
 
         body = {

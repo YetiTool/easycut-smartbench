@@ -56,7 +56,8 @@ class Autopilot:
         self.autopilot_logger = AutoPilotLogger(self.spindle_mains_voltage, self.spindle_target_watts,
                                                 self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
                                                 self.cap_for_feed_increase, self.cap_for_feed_decrease,
-                                                job_name, self.m.serial_number())
+                                                job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
+                                                self.outlier_amount)
         # confirm 5290 with Boris
         self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
         self.setup = True
@@ -78,7 +79,7 @@ class Autopilot:
 
         self.do_best_adjustment(best_adjustment)
 
-        self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S'),
+        self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment)
 
     def remove_outliers(self, data):

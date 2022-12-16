@@ -25,7 +25,7 @@ class AutoPilotLogger:
     logs = []
 
     def __init__(self, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap,
-                 decrease_cap, job_name, serial_number):
+                 decrease_cap, job_name, serial_number, delay_between_feed_adjustments, outlier_amount):
         self.spindle_v_main = spindle_v_main
         self.spindle_target_watts = spindle_target_watts
         self.bias = bias
@@ -35,6 +35,8 @@ class AutoPilotLogger:
         self.decrease_cap = decrease_cap
         self.job_name = job_name
         self.serial_number = serial_number
+        self.delay_between_feed_adjustments = delay_between_feed_adjustments
+        self.outlier_amount = outlier_amount
 
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
@@ -50,7 +52,7 @@ class AutoPilotLogger:
                          get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0),
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
-                         log.current_load, log.feed_multiplier, log.raw_multiplier, log.adjustment_list])
+                         log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list])
         return data
 
     def export_to_gsheet(self):
