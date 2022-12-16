@@ -120,8 +120,7 @@ class FeedOverride(Widget):
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
 
-    def update_feed_from_serial(self):
-        self.feed_override_percentage = self.m.feed_rate()
+    def update_feed_percentage_label(self):
         self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
 
     def feed_up(self):
