@@ -71,7 +71,7 @@ class Autopilot:
         if self.m.wpos_z() > 0:
             return
 
-        raw_multiplier = self.get_feed_multiplier(self.spindle_target_watts)
+        raw_multiplier = self.get_feed_multiplier(data_avg)
 
         capped_multiplier = self.cap_feed_multiplier(raw_multiplier, self.spindle_target_watts, data_avg)
 
