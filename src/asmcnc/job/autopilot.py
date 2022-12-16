@@ -71,7 +71,7 @@ class Autopilot:
         if self.m.wpos_z() > 0:
             return
 
-        raw_multiplier = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
+        raw_multiplier = self.get_feed_multiplier(self.spindle_target_watts)
 
         capped_multiplier = self.cap_feed_multiplier(raw_multiplier, self.spindle_target_watts, data_avg)
 
@@ -142,8 +142,8 @@ class Autopilot:
 
         return multiplier
 
-    def get_feed_multiplier(self, target_power, current_power):
-        multiplier = float(self.bias_for_feed_decrease) * (float(target_power) - float(current_power)) / float(target_power) \
+    def get_feed_multiplier(self, current_power):
+        multiplier = float(self.bias_for_feed_decrease) * (float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
         return multiplier
