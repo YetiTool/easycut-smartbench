@@ -201,7 +201,7 @@ def write_data_to_sheet(spreadsheet_id, data):
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="Data!A1:O",
+            spreadsheetId=spreadsheet_id, range="Data!A1:P",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
