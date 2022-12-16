@@ -8,7 +8,7 @@ class AutoPilotLog:
 
 
 from datetime import datetime
-from gsheet_helper import create, write_other_data_to_sheet, write_data_to_sheet, create_chart, create_time_chart
+from gsheet_helper import *
 from random import uniform
 
 
@@ -53,6 +53,10 @@ class AutoPilotLogger:
 
         data = self.get_data_for_sheet()
 
+        add_sheet(spreadsheet_id, 'Data')
+
+        rename_sheet(spreadsheet_id, 'Sheet1', 'Parameters')
+
         write_data_to_sheet(spreadsheet_id, data)
 
         write_other_data_to_sheet(spreadsheet_id, self.spindle_v_main, self.spindle_target_watts, self.bias,
@@ -61,6 +65,10 @@ class AutoPilotLogger:
         create_chart(spreadsheet_id)
 
         create_time_chart(spreadsheet_id)
+
+        rename_sheet(spreadsheet_id, 'Chart1', 'Spindle Load vs Feed Multiplier')
+
+        rename_sheet(spreadsheet_id, 'Chart2', 'Spindle Load vs Time')
 
         url = 'https://docs.google.com/spreadsheets/d/' + spreadsheet_id
 
@@ -71,6 +79,6 @@ if __name__ == '__main__':
     logger = AutoPilotLogger(0, 0, 0, 0, 0, 0, 0)
 
     for i in range(2000):
-        logger.add_log(uniform(-4000, 2000) / 100, i, datetime.now().strftime('%H:%M:%S'))
+        logger.add_log(i, uniform(-4000, 2000) / 100, datetime.now().strftime('%H:%M:%S'), [], [])
 
     logger.export_to_gsheet()

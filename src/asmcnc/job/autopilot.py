@@ -7,6 +7,7 @@ from kivy.clock import Clock
 from math import sqrt, floor
 from autopilot_logger import AutoPilotLogger
 from datetime import datetime
+import json
 
 
 def get_best_adjustment(percentage):
@@ -25,40 +26,35 @@ def get_best_adjustment(percentage):
 
 
 class Autopilot:
-    reading_clock = None
+    # Algorithm Variables
 
-    adjustment_delay = 0.5
-
-    spindle_v_main = None
+    delay_between_feed_adjustments = 0.5
     spindle_target_watts = 875
-    spindle_target_percentage = 0.5
+    outlier_amount = 100  # Value applied above and below the average of spindle power inputs to remove outliers
+    bias_for_feed_decrease = 2.0
+    m_coefficient = 1.0  # see feed factor algorithm https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
+    c_coefficient = 30 / 0.875  # see above
+    cap_for_feed_increase = 20
+    cap_for_feed_decrease = 40
 
-    old_spindle_load_stack = []
-    spindle_load_stack = []
+    # Instance Variables
 
-    outlier_percentage = 20
-    outlier_amount = 100
-
-    bias = 2.0
-    m_coefficient = 1.0
-    c_coefficient = 30 / 0.875
-    increase_cap = 20
-    decrease_cap = 40
-
-    autopilot_logger = None
-
+    spindle_mains_voltage = None
     setup = False
+    spindle_load_stack = []
+    reading_clock = None
+    autopilot_logger = None
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
 
     def first_read_setup(self):
-        self.autopilot_logger = AutoPilotLogger(self.spindle_v_main, self.spindle_target_watts,
-                                                self.bias, self.m_coefficient, self.c_coefficient,
-                                                self.increase_cap, self.decrease_cap)
+        self.autopilot_logger = AutoPilotLogger(self.spindle_mains_voltage, self.spindle_target_watts,
+                                                self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
+                                                self.cap_for_feed_increase, self.cap_for_feed_decrease)
         # confirm 5290 with Boris
-        self.spindle_target_watts = self.spindle_v_main * 0.1 * sqrt(5290)
+        self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
         self.setup = True
 
     def add_to_stack(self, value):
@@ -106,7 +102,9 @@ class Autopilot:
         self.adjust(data_avg, raw_loads, average_loads)
 
     def start(self):
-        self.reading_clock = Clock.schedule_interval(self.read, self.adjustment_delay)
+        self.load_parameters_from_json()
+
+        self.reading_clock = Clock.schedule_interval(self.read, self.delay_between_feed_adjustments)
 
         self.m.s.autopilot_instance = self
         self.m.s.autopilot_flag = True
@@ -119,19 +117,19 @@ class Autopilot:
         Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet(), 3)
 
     def load_qda_to_watts(self, qda):
-        return self.spindle_v_main * 0.1 * sqrt(qda)
+        return self.spindle_mains_voltage * 0.1 * sqrt(qda)
 
     def load_qdas_to_watts(self, qdas):
-        return [self.spindle_v_main * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
+        return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
     def get_feed_multiplier(self, target_power, current_power):
-        multiplier = self.bias * (float(target_power) - float(current_power)) / float(target_power) \
+        multiplier = self.bias_for_feed_decrease * (float(target_power) - float(current_power)) / float(target_power) \
                      * self.m_coefficient * self.c_coefficient
 
-        if current_power > target_power and abs(multiplier) > self.decrease_cap:
-            return -self.decrease_cap
-        elif current_power < target_power and multiplier > self.increase_cap:
-            return self.increase_cap
+        if current_power > target_power and abs(multiplier) > self.cap_for_feed_decrease:
+            return -self.cap_for_feed_decrease
+        elif current_power < target_power and multiplier > self.cap_for_feed_increase:
+            return self.cap_for_feed_increase
 
         return multiplier
 
@@ -148,14 +146,26 @@ class Autopilot:
 
             if adjustment_list[i] == 10:
                 feed_override_widget.feed_override_percentage += 10
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(feed_override_widget.feed_override_percentage), 0.05 * i)
+                Clock.schedule_once(
+                    lambda dt: self.m.feed_override_up_10(feed_override_widget.feed_override_percentage), 0.05 * i)
             elif adjustment_list[i] == 1:
                 feed_override_widget.feed_override_percentage += 1
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(feed_override_widget.feed_override_percentage), 0.05 * i)
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(feed_override_widget.feed_override_percentage),
+                                    0.05 * i)
             elif adjustment_list[i] == -10:
                 feed_override_widget.feed_override_percentage -= 10
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(feed_override_widget.feed_override_percentage), 0.05 * i)
+                Clock.schedule_once(
+                    lambda dt: self.m.feed_override_down_10(feed_override_widget.feed_override_percentage), 0.05 * i)
             elif adjustment_list[i] == -1:
                 feed_override_widget.feed_override_percentage -= 1
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(feed_override_widget.feed_override_percentage), 0.05 * i)
+                Clock.schedule_once(
+                    lambda dt: self.m.feed_override_down_1(feed_override_widget.feed_override_percentage), 0.05 * i)
 
+    def load_parameters_from_json(self):
+        with open('asmcnc/job/parameters.json') as f:
+            data = json.load(f)
+            for item in data:
+                try:
+                    setattr(self, item["Name"], item["Value"])
+                except:
+                    print("Invalid parameter: " + item["Name"])

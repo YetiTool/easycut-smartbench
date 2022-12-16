@@ -1,0 +1,34 @@
+[
+  {
+    "Name": "delay_between_feed_adjustments",
+    "Value": 0.5
+  },
+  {
+    "Name": "spindle_target_watts",
+    "Value": 875
+  },
+  {
+    "Name": "outlier_amount",
+    "Value": 100
+  },
+  {
+    "Name": "bias_for_feed_decrease",
+    "Value": 2.0
+  },
+  {
+    "Name": "m_coefficient",
+    "Value": 1.0
+  },
+  {
+    "Name": "c_coefficient",
+    "Value": "35"
+  },
+  {
+    "Name": "cap_for_feed_increase",
+    "Value": 20
+  },
+  {
+    "Name": "cap_for_feed_decrease",
+    "Value": 40
+  }
+]

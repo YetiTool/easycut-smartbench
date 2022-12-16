@@ -17,18 +17,18 @@ prod_mode_token_path = 'asmcnc/job/token.json'
 def authorize():
     creds = None
 
-    if os.path.exists(prod_mode_token_path):
-        creds = Credentials.from_authorized_user_file(prod_mode_token_path, SCOPES)
+    if os.path.exists(dev_mode_token_path):
+        creds = Credentials.from_authorized_user_file(dev_mode_token_path, SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                prod_mode_credentials_path, SCOPES)
+                dev_mode_credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
 
-        with open(prod_mode_token_path, 'w') as token:
+        with open(dev_mode_token_path, 'w') as token:
             token.write(creds.to_json())
 
     return creds
@@ -54,6 +54,35 @@ def create(title):
         return e
 
 
+def add_sheet(spreadsheet_id, title):
+    creds = authorize()
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        requests = [
+            {
+                "addSheet": {
+                    "properties": {
+                        "title": title
+                    }
+                }
+            }
+        ]
+
+        body = {
+            'requests': requests
+        }
+
+        result = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id, body=body).execute()
+
+        return result
+    except HttpError as e:
+        print(e)
+        return e
+
+
 def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap, decerease_cap):
     creds = authorize()
 
@@ -70,8 +99,56 @@ def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_wat
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="N1:T2",
+            spreadsheetId=spreadsheet_id, range="Parameters!A1:G",
             valueInputOption="USER_ENTERED", body=body).execute()
+
+        return result
+    except HttpError as e:
+        print(e)
+        return e
+
+
+def get_sheet_id(spreadsheet_id, old_name):
+    creds = authorize()
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        spreadsheet = service.spreadsheets().get(
+            spreadsheetId=spreadsheet_id).execute()
+
+        for sheet in spreadsheet['sheets']:
+            if sheet['properties']['title'] == old_name:
+                return sheet['properties']['sheetId']
+    except HttpError as e:
+        print(e)
+        return e
+
+
+def rename_sheet(spreadsheet_id, old_name, new_name):
+    creds = authorize()
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        requests = [
+            {
+                "updateSheetProperties": {
+                    "properties": {
+                        "sheetId": get_sheet_id(spreadsheet_id, old_name),
+                        "title": new_name
+                    },
+                    "fields": "title"
+                }
+            }
+        ]
+
+        body = {
+            'requests': requests
+        }
+
+        result = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id, body=body).execute()
 
         return result
     except HttpError as e:
@@ -92,7 +169,7 @@ def write_data_to_sheet(spreadsheet_id, data):
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="A1:M",
+            spreadsheetId=spreadsheet_id, range="Data!A1:M",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
@@ -103,6 +180,8 @@ def write_data_to_sheet(spreadsheet_id, data):
 
 def create_time_chart(spreadsheet_id):
     creds = authorize()
+
+    sheet_id = get_sheet_id(spreadsheet_id, "Data")
 
     try:
         service = build('sheets', 'v4', credentials=creds)
@@ -132,7 +211,7 @@ def create_time_chart(spreadsheet_id):
                                             "sourceRange": {
                                                 "sources": [
                                                     {
-                                                        "sheetId": 0,
+                                                        "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 2,
@@ -149,7 +228,7 @@ def create_time_chart(spreadsheet_id):
                                             "sourceRange": {
                                                 "sources": [
                                                     {
-                                                        "sheetId": 0,
+                                                        "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 0,
@@ -187,6 +266,8 @@ def create_time_chart(spreadsheet_id):
 def create_chart(spreadsheet_id):
     creds = authorize()
 
+    sheet_id = get_sheet_id(spreadsheet_id, "Data")
+
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -215,7 +296,7 @@ def create_chart(spreadsheet_id):
                                             "sourceRange": {
                                                 "sources": [
                                                     {
-                                                        "sheetId": 0,
+                                                        "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 0,
@@ -232,7 +313,7 @@ def create_chart(spreadsheet_id):
                                             "sourceRange": {
                                                 "sources": [
                                                     {
-                                                        "sheetId": 0,
+                                                        "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 1,
@@ -265,3 +346,40 @@ def create_chart(spreadsheet_id):
     except HttpError as e:
         print(e)
         return e
+
+
+def add_picture_to_sheet(spreadsheet_id, image):
+    creds = authorize()
+
+    sheet_id = get_sheet_id(spreadsheet_id, "Data")
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        requests = [
+            {
+                "addImage": {
+                    "url": image,
+                    "anchorCell": {
+                        "sheetId": sheet_id,
+                        "rowIndex": 1,
+                        "columnIndex": 3
+                    },
+                    "width": 500,
+                    "height": 500
+                }
+            }
+        ]
+
+        body = {
+            'requests': requests
+        }
+
+        result = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id, body=body).execute()
+
+        return result
+    except HttpError as e:
+        print(e)
+        return e
+

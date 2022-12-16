@@ -994,8 +994,8 @@ class SerialConnection(object):
 
                         if self.autopilot_flag:
                             if self.autopilot_instance:
-                                if not self.autopilot_instance.spindle_v_main:
-                                    self.autopilot_instance.spindle_v_main = self.digital_spindle_mains_voltage
+                                if not self.autopilot_instance.spindle_mains_voltage:
+                                    self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
                                     self.autopilot_instance.spindle_max_watts = self.digital_spindle_mains_voltage * 0.1 * sqrt(5290)
                                     self.autopilot_instance.first_read_setup()
 
