@@ -279,8 +279,8 @@ def create_time_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 12,
-                                                        "endColumnIndex": 13
+                                                        "startColumnIndex": 13,
+                                                        "endColumnIndex": 14
                                                     }]
                                             }
                                         },
