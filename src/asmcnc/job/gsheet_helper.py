@@ -285,6 +285,22 @@ def create_time_chart(spreadsheet_id):
                                             }
                                         },
                                         "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 1,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 15,
+                                                        "endColumnIndex": 16
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
                                     }
                                 ]
                             }

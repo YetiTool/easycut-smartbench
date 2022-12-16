@@ -1,5 +1,6 @@
 class AutoPilotLog:
-    def __init__(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list):
+    def __init__(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
+                 feed_override_percentage):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
@@ -7,6 +8,7 @@ class AutoPilotLog:
         self.average_loads = average_loads
         self.raw_multiplier = raw_multiplier
         self.adjustment_list = str(adjustment_list).replace('[', '').replace(']', '')
+        self.feed_override_percentage = feed_override_percentage
 
 
 import datetime
@@ -38,21 +40,23 @@ class AutoPilotLogger:
         self.delay_between_feed_adjustments = delay_between_feed_adjustments
         self.outlier_amount = outlier_amount
 
-    def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list):
+    def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
+                feed_override_percentage):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
-                                      adjustment_list))
+                                      adjustment_list, feed_override_percentage))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
                  'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Average Load',
-                 'Raw Multiplier', 'Capped Multiplier', 'Adjustment List']]
+                 'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Feed Override % Status"]]
         for log in self.logs:
             data.append([log.time, get_safe(log.raw_loads, 0),
                          get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
                          get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0),
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
-                         log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list])
+                         log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
+                         log.feed_override_percentage])
         return data
 
     def export_to_gsheet(self):
@@ -73,7 +77,8 @@ class AutoPilotLogger:
         write_data_to_sheet(spreadsheet_id, data)
 
         write_other_data_to_sheet(spreadsheet_id, self.spindle_v_main, self.spindle_target_watts, self.bias,
-                                  self.m_coefficient, self.c_coefficient, self.increase_cap, self.decrease_cap)
+                                  self.m_coefficient, self.c_coefficient, self.increase_cap, self.decrease_cap,
+                                  self.delay_between_feed_adjustments, self.outlier_amount)
 
         create_chart(spreadsheet_id)
 

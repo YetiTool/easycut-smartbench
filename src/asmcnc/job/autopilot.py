@@ -80,7 +80,8 @@ class Autopilot:
         self.do_best_adjustment(best_adjustment)
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
-                                      raw_loads, average_loads, raw_multiplier, best_adjustment)
+                                      raw_loads, average_loads, raw_multiplier, best_adjustment,
+                                      self.m.s.feed_override_percentage)
 
     def remove_outliers(self, data):
         avg = sum(data) / len(data)
