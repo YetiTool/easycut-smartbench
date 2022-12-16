@@ -5,7 +5,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import os
 
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive.file"]
 
 dev_mode_credentials_path = 'credentials.json'
 dev_mode_token_path = 'token.json'
@@ -83,15 +83,45 @@ def add_sheet(spreadsheet_id, title):
         return e
 
 
-def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap, decerease_cap):
+def add_img_to_sheet(spreadsheet_id, url):
     creds = authorize()
 
     try:
         service = build('sheets', 'v4', credentials=creds)
 
         values = [
-            ["Spindle V Main", "Spindle Target Watts", "Bias", "M Coefficient", "C Coefficient", "Increase Cap", "Decrease Cap"],
-            [spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap, decerease_cap]
+            ['=image("' + url + '", 4, 480, 360)']
+        ]
+
+        body = {
+            'values': values
+        }
+
+        result = service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id, range="Feed Factor Profile!A1",
+            valueInputOption="USER_ENTERED", body=body).execute()
+
+        return result
+    except HttpError as e:
+        print(e)
+        return e
+
+
+def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient,
+                              increase_cap, decerease_cap):
+    creds = authorize()
+
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        values = [
+            ["Spindle V Main", spindle_v_main],
+            ["Spindle Target Watts", spindle_target_watts],
+            ["Bias", bias],
+            ["M Coefficient", m_coefficient],
+            ["C Coefficient", c_coefficient],
+            ["Increase Cap", increase_cap],
+            ["Decrease Cap", decerease_cap]
         ]
 
         body = {
@@ -169,7 +199,7 @@ def write_data_to_sheet(spreadsheet_id, data):
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="Data!A1:M",
+            spreadsheetId=spreadsheet_id, range="Data!A1:O",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
@@ -214,8 +244,8 @@ def create_time_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 2,
-                                                        "endColumnIndex": 3
+                                                        "startColumnIndex": 0,
+                                                        "endColumnIndex": 1
                                                     }
                                                 ]
                                             }
@@ -231,10 +261,25 @@ def create_time_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 0,
-                                                        "endColumnIndex": 1
+                                                        "startColumnIndex": 11,
+                                                        "endColumnIndex": 12
                                                     }
                                                 ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 1,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 12,
+                                                        "endColumnIndex": 13
+                                                    }]
                                             }
                                         },
                                         "targetAxis": "LEFT_AXIS"
@@ -299,8 +344,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 0,
-                                                        "endColumnIndex": 1
+                                                        "startColumnIndex": 11,
+                                                        "endColumnIndex": 12
                                                     }
                                                 ]
                                             }
@@ -316,8 +361,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 1,
-                                                        "endColumnIndex": 2
+                                                        "startColumnIndex": 12,
+                                                        "endColumnIndex": 13
                                                     }
                                                 ]
                                             }
@@ -348,38 +393,25 @@ def create_chart(spreadsheet_id):
         return e
 
 
-def add_picture_to_sheet(spreadsheet_id, image):
+def move_spreadsheet(spreadsheet_id, folder_id):
     creds = authorize()
 
-    sheet_id = get_sheet_id(spreadsheet_id, "Data")
-
     try:
-        service = build('sheets', 'v4', credentials=creds)
+        service = build('drive', 'v3', credentials=creds)
 
-        requests = [
-            {
-                "addImage": {
-                    "url": image,
-                    "anchorCell": {
-                        "sheetId": sheet_id,
-                        "rowIndex": 1,
-                        "columnIndex": 3
-                    },
-                    "width": 500,
-                    "height": 500
-                }
-            }
-        ]
+        file_id = spreadsheet_id
 
-        body = {
-            'requests': requests
-        }
+        f = service.files().get(fileId=file_id,
+                                fields='parents').execute()
+        previous_parents = ",".join(f.get('parents'))
 
-        result = service.spreadsheets().batchUpdate(
-            spreadsheetId=spreadsheet_id, body=body).execute()
+        f = service.files().update(fileId=file_id,
+                                   addParents=folder_id,
+                                   removeParents=previous_parents,
+                                   fields='id, parents',
+                                   supportsAllDrives=True).execute()
 
-        return result
+        return f
     except HttpError as e:
         print(e)
         return e
-

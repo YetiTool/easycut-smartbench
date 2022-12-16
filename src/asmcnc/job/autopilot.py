@@ -32,10 +32,11 @@ class Autopilot:
     spindle_target_watts = 875
     outlier_amount = 100  # Value applied above and below the average of spindle power inputs to remove outliers
     bias_for_feed_decrease = 2.0
-    m_coefficient = 1.0  # see feed factor algorithm https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
+    m_coefficient = 1.0  # see feed factor algorithm
+    # https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
     c_coefficient = 30 / 0.875  # see above
     cap_for_feed_increase = 20
-    cap_for_feed_decrease = 40
+    cap_for_feed_decrease = -40
 
     # Instance Variables
 
@@ -50,9 +51,12 @@ class Autopilot:
         self.sm = kwargs['screen_manager']
 
     def first_read_setup(self):
+        job_name = self.sm.get_screen('go').file_data_label.text
+
         self.autopilot_logger = AutoPilotLogger(self.spindle_mains_voltage, self.spindle_target_watts,
                                                 self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
-                                                self.cap_for_feed_increase, self.cap_for_feed_decrease)
+                                                self.cap_for_feed_increase, self.cap_for_feed_decrease,
+                                                job_name, self.m.serial_number())
         # confirm 5290 with Boris
         self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
         self.setup = True
@@ -66,17 +70,16 @@ class Autopilot:
         if self.m.wpos_z() > 0:
             return
 
-        adjustment_required = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
+        raw_multiplier = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
 
-        print(adjustment_required)
+        capped_multiplier = self.cap_feed_multiplier(raw_multiplier)
 
-        best_adjustment = get_best_adjustment(adjustment_required)
-
-        print(best_adjustment)
+        best_adjustment = get_best_adjustment(capped_multiplier)
 
         self.do_best_adjustment(best_adjustment)
-        self.autopilot_logger.add_log(data_avg, adjustment_required, datetime.now().strftime('%H:%M:%S'),
-                                      raw_loads, average_loads)
+
+        self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S'),
+                                      raw_loads, average_loads, raw_multiplier, best_adjustment)
 
     def remove_outliers(self, data):
         avg = sum(data) / len(data)
@@ -122,14 +125,21 @@ class Autopilot:
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
+    def cap_feed_multiplier(self, multiplier):
+        if multiplier < self.cap_for_feed_decrease:
+            return self.cap_for_feed_decrease
+
+        if multiplier > self.cap_for_feed_increase:
+            return self.cap_for_feed_increase
+
+        return multiplier
+
     def get_feed_multiplier(self, target_power, current_power):
         multiplier = self.bias_for_feed_decrease * (float(target_power) - float(current_power)) / float(target_power) \
                      * self.m_coefficient * self.c_coefficient
 
-        if current_power > target_power and abs(multiplier) > self.cap_for_feed_decrease:
-            return -self.cap_for_feed_decrease
-        elif current_power < target_power and multiplier > self.cap_for_feed_increase:
-            return self.cap_for_feed_increase
+        if current_power > target_power:
+            return -multiplier
 
         return multiplier
 
