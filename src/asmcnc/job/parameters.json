@@ -29,6 +29,6 @@
   },
   {
     "Name": "cap_for_feed_decrease",
-    "Value": 40
+    "Value": -40
   }
 ]
