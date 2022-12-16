@@ -17,18 +17,18 @@ prod_mode_token_path = 'asmcnc/job/token.json'
 def authorize():
     creds = None
 
-    if os.path.exists(dev_mode_token_path):
-        creds = Credentials.from_authorized_user_file(dev_mode_token_path, SCOPES)
+    if os.path.exists(prod_mode_token_path):
+        creds = Credentials.from_authorized_user_file(prod_mode_token_path, SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                dev_mode_credentials_path, SCOPES)
+                prod_mode_credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
 
-        with open(dev_mode_token_path, 'w') as token:
+        with open(prod_mode_token_path, 'w') as token:
             token.write(creds.to_json())
 
     return creds
