@@ -127,12 +127,18 @@ class Autopilot:
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
-    def cap_feed_multiplier(self, multiplier):
-        if multiplier < 0 and multiplier < self.cap_for_feed_decrease:
-            return self.cap_for_feed_decrease
+    def cap_feed_multiplier(self, multiplier, target_power, current_power):
+        if current_power > target_power:
+            if multiplier < self.cap_for_feed_decrease:
+                return self.cap_for_feed_decrease
+            else:
+                return multiplier
 
-        if multiplier > self.cap_for_feed_increase:
-            return self.cap_for_feed_increase
+        if current_power < target_power:
+            if multiplier > self.cap_for_feed_increase:
+                return self.cap_for_feed_increase
+            else:
+                return multiplier
 
         return multiplier
 
