@@ -54,7 +54,7 @@ class AutoPilotLogger:
         return data
 
     def export_to_gsheet(self):
-        sheet_name = self.job_name + '-' + self.serial_number
+        sheet_name = self.job_name + '-YS' + str(self.serial_number)
 
         spreadsheet_id = create(sheet_name)
 
