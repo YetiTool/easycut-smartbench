@@ -135,8 +135,8 @@ class Autopilot:
         return multiplier
 
     def get_feed_multiplier(self, target_power, current_power):
-        multiplier = self.bias_for_feed_decrease * (float(target_power) - float(current_power)) / float(target_power) \
-                     * self.m_coefficient * self.c_coefficient
+        multiplier = float(self.bias_for_feed_decrease) * (float(target_power) - float(current_power)) / float(target_power) \
+                     * float(self.m_coefficient) * float(self.c_coefficient)
 
         if current_power > target_power:
             return -multiplier
