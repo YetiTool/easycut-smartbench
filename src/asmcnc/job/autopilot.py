@@ -73,7 +73,7 @@ class Autopilot:
 
         raw_multiplier = self.get_feed_multiplier(self.spindle_target_watts, data_avg)
 
-        capped_multiplier = self.cap_feed_multiplier(raw_multiplier)
+        capped_multiplier = self.cap_feed_multiplier(raw_multiplier, self.spindle_target_watts, data_avg)
 
         best_adjustment = get_best_adjustment(capped_multiplier)
 
