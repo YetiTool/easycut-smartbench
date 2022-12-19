@@ -69,7 +69,7 @@ class PopupPhaseTwo(Widget):
         self.sm = screen_manager
         self.l = localization
 
-        description = "Press 'Continue' to proceed to fast run"
+        description = "Press 'Continue' to proceed to fast run. Watch and listen for a stall throughout."
         title_string = "Phase Two"
         ok_string = "Continue"
 
