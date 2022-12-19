@@ -13,14 +13,22 @@ import json
 def get_best_adjustment(percentage):
     moves = []
 
+    negative = False
+
+    if percentage < 0:
+        negative = True
+        percentage = abs(percentage)
+
+    percentage = floor(percentage)
+
     tens = percentage // 10
     ones = percentage % 10
 
-    for i in range(int(floor(tens))):
-        moves.append(10)
+    for i in range(int(tens)):
+        moves.append(-10 if negative else 10)
 
-    for i in range(int(floor(ones))):
-        moves.append(1)
+    for i in range(int(ones)):
+        moves.append(-1 if negative else 1)
 
     return moves
 
@@ -29,12 +37,12 @@ class Autopilot:
     # Algorithm Variables
 
     delay_between_feed_adjustments = 0.5
-    spindle_target_watts = 875
+    spindle_target_watts = 400
     outlier_amount = 100  # Value applied above and below the average of spindle power inputs to remove outliers
     bias_for_feed_decrease = 2.0
     m_coefficient = 1.0  # see feed factor algorithm
     # https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
-    c_coefficient = 30 / 0.875  # see above
+    c_coefficient = 35  # see above
     cap_for_feed_increase = 20
     cap_for_feed_decrease = -40
 
@@ -59,7 +67,7 @@ class Autopilot:
                                                 job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
                                                 self.outlier_amount)
         # confirm 5290 with Boris
-        self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
+        # self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
         self.setup = True
 
     def add_to_stack(self, value):
@@ -143,7 +151,8 @@ class Autopilot:
         return multiplier
 
     def get_feed_multiplier(self, current_power):
-        multiplier = float(self.bias_for_feed_decrease) * (float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
+        multiplier = float(self.bias_for_feed_decrease) * (
+                float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
         return multiplier
