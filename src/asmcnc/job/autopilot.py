@@ -38,7 +38,7 @@ class Autopilot:
 
     delay_between_feed_adjustments = 0.5
     spindle_target_watts = 400
-    outlier_amount = 100  # Value applied above and below the average of spindle power inputs to remove outliers
+    outlier_tolerance = 100  # Value applied above and below the average of spindle power inputs to remove outliers
     bias_for_feed_decrease = 2.0
     m_coefficient = 1.0  # see feed factor algorithm
     # https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
@@ -65,7 +65,7 @@ class Autopilot:
                                                 self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
                                                 self.cap_for_feed_increase, self.cap_for_feed_decrease,
                                                 job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
-                                                self.outlier_amount)
+                                                self.outlier_tolerance)
         # confirm 5290 with Boris
         # self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
         self.setup = True
@@ -94,7 +94,7 @@ class Autopilot:
     def remove_outliers(self, data):
         avg = sum(data) / len(data)
         for value in data:
-            if value > avg + self.outlier_amount or value < avg - self.outlier_amount:
+            if value > avg + self.outlier_tolerance or value < avg - self.outlier_tolerance:
                 data.remove(value)
         return data
 
