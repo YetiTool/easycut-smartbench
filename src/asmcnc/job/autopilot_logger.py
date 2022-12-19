@@ -60,7 +60,9 @@ class AutoPilotLogger:
         return data
 
     def export_to_gsheet(self):
-        sheet_name = self.job_name + '-YS' + str(self.serial_number)
+        export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        sheet_name = export_time + '-' + self.job_name + '-YS' + str(self.serial_number)
 
         spreadsheet_id = create(sheet_name)
 
@@ -107,8 +109,12 @@ if __name__ == '__main__':
 
     time = datetime.datetime.now()
 
-    for i in range(2000):
+    for i in range(250000):
         log_time = time + datetime.timedelta(seconds=i)
-        logger.add_log(i, uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [], 0)
+        logger.add_log(uniform(200, 2000), uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [], 0)
 
     logger.export_to_gsheet()
+
+    difference = datetime.datetime.now() - time
+
+    print(difference)

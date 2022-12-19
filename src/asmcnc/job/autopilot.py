@@ -149,7 +149,7 @@ class Autopilot:
         return multiplier
 
     def get_feed_multiplier(self, current_power):
-        multiplier = float(self.bias_for_feed_decrease) * (
+        multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else 1) * (
                 float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
