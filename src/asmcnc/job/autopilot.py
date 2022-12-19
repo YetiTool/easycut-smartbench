@@ -66,8 +66,7 @@ class Autopilot:
                                                 self.cap_for_feed_increase, self.cap_for_feed_decrease,
                                                 job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
                                                 self.outlier_tolerance)
-        # confirm 5290 with Boris
-        # self.spindle_target_watts = self.spindle_mains_voltage * 0.1 * sqrt(5290)
+
         self.setup = True
 
     def add_to_stack(self, value):

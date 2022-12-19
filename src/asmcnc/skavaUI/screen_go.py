@@ -26,6 +26,8 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
+from asmcnc.job.autopilot import Autopilot
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -461,6 +463,7 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
     def on_enter(self):
+        self.m.s.autopilot_instance = None
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
@@ -576,19 +579,22 @@ class GoScreen(Screen):
         else:
             self._start_running_job()
 
-    def _pause_job(self):
         if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.stop()
+            if self.is_job_started_already:
+                self.m.s.autopilot_instance.stop()
+            else:
+                self.m.s.autopilot_instance.start()
+        else:
+            self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
+            self.m.s.autopilot_instance.start()
 
+    def _pause_job(self):
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
 
-    from asmcnc.job.autopilot import Autopilot
-
     def _start_running_job(self):
         self.database.send_job_start()
-        self.Autopilot(machine=self.m, screen_manager=self.sm).start()
 
         self.m.set_pause(False)
         self.is_job_started_already = True
