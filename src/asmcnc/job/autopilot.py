@@ -92,11 +92,12 @@ class Autopilot:
                                       self.m.s.feed_override_percentage)
 
     def remove_outliers(self, data):
-        avg = sum(data) / len(data)
-        for value in data:
+        outlier_list = data
+        avg = sum(outlier_list) / len(outlier_list)
+        for value in outlier_list:
             if value > avg + self.outlier_tolerance or value < avg - self.outlier_tolerance:
-                data.remove(value)
-        return data
+                outlier_list.remove(value)
+        return outlier_list
 
     def read(self, dt):
         if len(self.spindle_load_stack) < 5 or not self.setup:
