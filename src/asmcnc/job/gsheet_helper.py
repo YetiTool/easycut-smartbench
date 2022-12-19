@@ -13,30 +13,34 @@ dev_mode_token_path = 'token.json'
 prod_mode_credentials_path = 'asmcnc/job/credentials.json'
 prod_mode_token_path = 'asmcnc/job/token.json'
 
+token_path = prod_mode_token_path
+credentials_path = prod_mode_credentials_path
+
 
 def authorize():
-    creds = None
+    credentials = None
 
-    if os.path.exists(prod_mode_token_path):
-        creds = Credentials.from_authorized_user_file(prod_mode_token_path, SCOPES)
+    if os.path.exists(token_path):
+        credentials = Credentials.from_authorized_user_file(token_path, SCOPES)
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+    if not credentials or not credentials.valid:
+        if credentials and credentials.expired and credentials.refresh_token:
+            credentials.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                prod_mode_credentials_path, SCOPES)
-            creds = flow.run_local_server(port=0)
+                credentials_path, SCOPES)
+            credentials = flow.run_local_server(port=0)
 
-        with open(prod_mode_token_path, 'w') as token:
-            token.write(creds.to_json())
+        with open(token_path, 'w') as token:
+            token.write(credentials.to_json())
 
-    return creds
+    return credentials
+
+
+creds = authorize()
 
 
 def create(title):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
         spreadsheet = {
@@ -55,8 +59,6 @@ def create(title):
 
 
 def add_sheet(spreadsheet_id, title):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -84,8 +86,6 @@ def add_sheet(spreadsheet_id, title):
 
 
 def add_img_to_sheet(spreadsheet_id, url):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -109,8 +109,6 @@ def add_img_to_sheet(spreadsheet_id, url):
 
 def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient,
                               increase_cap, decerease_cap, delay_between_feed_adjustments, outlier_amount):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -141,8 +139,6 @@ def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_wat
 
 
 def get_sheet_id(spreadsheet_id, old_name):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -158,8 +154,6 @@ def get_sheet_id(spreadsheet_id, old_name):
 
 
 def rename_sheet(spreadsheet_id, old_name, new_name):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -189,8 +183,6 @@ def rename_sheet(spreadsheet_id, old_name, new_name):
 
 
 def write_data_to_sheet(spreadsheet_id, data):
-    creds = authorize()
-
     try:
         service = build('sheets', 'v4', credentials=creds)
 
@@ -211,8 +203,6 @@ def write_data_to_sheet(spreadsheet_id, data):
 
 
 def create_time_chart(spreadsheet_id):
-    creds = authorize()
-
     sheet_id = get_sheet_id(spreadsheet_id, "Data")
 
     try:
@@ -327,8 +317,6 @@ def create_time_chart(spreadsheet_id):
 
 
 def create_chart(spreadsheet_id):
-    creds = authorize()
-
     sheet_id = get_sheet_id(spreadsheet_id, "Data")
 
     try:
@@ -412,8 +400,6 @@ def create_chart(spreadsheet_id):
 
 
 def move_spreadsheet(spreadsheet_id, folder_id):
-    creds = authorize()
-
     try:
         service = build('drive', 'v3', credentials=creds)
 

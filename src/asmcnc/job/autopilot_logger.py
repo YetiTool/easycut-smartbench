@@ -103,12 +103,12 @@ def get_random_time():
 
 
 if __name__ == '__main__':
-    logger = AutoPilotLogger(0, 0, 0, 0, 0, 0, 0, "job.gcode", "ys61234")
+    logger = AutoPilotLogger(0, 0, 0, 0, 0, 0, 0, "job.gcode", "ys61234", 0.5, 100)
 
     time = datetime.datetime.now()
 
     for i in range(2000):
         log_time = time + datetime.timedelta(seconds=i)
-        logger.add_log(i, uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [])
+        logger.add_log(i, uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [], 0)
 
     logger.export_to_gsheet()
