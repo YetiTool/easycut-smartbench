@@ -92,7 +92,7 @@ class Autopilot:
                                       self.m.s.feed_override_percentage)
 
     def remove_outliers(self, data):
-        outlier_list = data
+        outlier_list = list(data)
         avg = sum(outlier_list) / len(outlier_list)
         for value in outlier_list:
             if value > avg + self.outlier_tolerance or value < avg - self.outlier_tolerance:
