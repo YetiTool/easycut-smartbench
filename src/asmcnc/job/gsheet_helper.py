@@ -327,7 +327,7 @@ def create_chart(spreadsheet_id):
                 "addChart": {
                     "chart": {
                         "spec": {
-                            "title": "Spindle Load vs Calculated Feed Multiplier",
+                            "title": "Spindle Load vs Feed Multiplier",
                             "basicChart": {
                                 "chartType": "LINE",
                                 "legendPosition": "BOTTOM_LEGEND",

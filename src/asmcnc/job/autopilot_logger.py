@@ -68,9 +68,9 @@ class AutoPilotLogger:
 
         data = self.get_data_for_sheet()
 
-        add_sheet(spreadsheet_id, 'Feed Factor Profile')
-
-        add_img_to_sheet(spreadsheet_id, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFDK6gOfn33pDikRiDOrGcEet7A55OKNtNNgb4Z-mqqaU734XAXX2s29RxYRhG1e91j_tCSoz_YKICgAs3bAdOCI3UZIiad-bg=w2556-h1614")
+        # add_sheet(spreadsheet_id, 'Feed Factor Profile')
+        #
+        # add_img_to_sheet(spreadsheet_id, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFDK6gOfn33pDikRiDOrGcEet7A55OKNtNNgb4Z-mqqaU734XAXX2s29RxYRhG1e91j_tCSoz_YKICgAs3bAdOCI3UZIiad-bg=w2556-h1614")
 
         add_sheet(spreadsheet_id, 'Data')
 
