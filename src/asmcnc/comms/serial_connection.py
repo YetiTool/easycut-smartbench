@@ -786,6 +786,8 @@ class SerialConnection(object):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    feed_override_percentage = None
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -1087,6 +1089,20 @@ class SerialConnection(object):
                     self.PSU_mV = float(voltages[2])
                     self.spindle_speed_monitor_mV = float(voltages[3])
 
+                elif part.startswith('Ov:'):
+                    values = part[3:].split(',')
+
+                    try:
+                        int(values[0])
+                    except:
+                        log("ERROR status parse: Ov values invalid: " + message)
+                        return
+
+                    self.feed_override_percentage = int(values[0])
+
+                    if self.sm.get_screen('go').feedOverride:
+                        self.sm.get_screen('go').feedOverride.feed_override_percentage = self.feed_override_percentage
+                        self.sm.get_screen('go').feedOverride.update_feed_percentage_label()
 
                 # SG VALUES
                 elif part.startswith('SG:'):
