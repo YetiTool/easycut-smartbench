@@ -133,7 +133,7 @@ class FeedOverride(Widget):
 
                 for i in range(20):
                     Clock.schedule_once(lambda dt:
-                                        self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.01 * i)
+                                        self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.03 * i)
 
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
@@ -153,7 +153,7 @@ class FeedOverride(Widget):
 
                 for i in range(20):
                     Clock.schedule_once(lambda dt:
-                                        self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.02 * i)
+                                        self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.04 * i)
 
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
