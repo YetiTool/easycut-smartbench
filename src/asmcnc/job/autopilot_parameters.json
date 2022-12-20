@@ -34,5 +34,9 @@
   {
     "Name": "cap_for_feed_increase_during_z_movement",
     "Value": 1
+  },
+  {
+    "Name": "do_remove_outliers",
+    "Value": 1
   }
 ]

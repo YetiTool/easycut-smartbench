@@ -35,7 +35,8 @@ def get_best_adjustment(percentage):
 
 class Autopilot:
     # Algorithm Variables
-    delay_between_feed_adjustments = 0.5
+    delay_between_feed_adjustments = 0.3
+    do_remove_outliers = 1
     spindle_target_watts = 400
     outlier_tolerance = 100  # Value applied above and below the average of spindle power inputs to remove outliers
     bias_for_feed_decrease = 2.0
@@ -45,6 +46,7 @@ class Autopilot:
     cap_for_feed_increase = 20
     cap_for_feed_decrease = -40
     cap_for_feed_increase_during_z_movement = 1
+    amount_of_values_in_stack = delay_between_feed_adjustments / 0.1
 
     # Instance Variables
     spindle_mains_voltage = None  # TODO: Find fix for getting voltage accurately
@@ -100,7 +102,7 @@ class Autopilot:
         return outlier_list
 
     def read(self, dt):
-        if len(self.spindle_load_stack) < 5 or not self.setup:
+        if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
             return
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
