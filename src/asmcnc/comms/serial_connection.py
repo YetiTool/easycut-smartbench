@@ -59,6 +59,12 @@ class SerialConnection(object):
     # Flag to kill grbl scanner (used in zhead cycle app)
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
+    
+    last_position = [
+        None,
+        None,
+        None
+    ]
 
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 

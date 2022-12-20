@@ -44,13 +44,16 @@ class Autopilot:
     c_coefficient = 35  # see above
     cap_for_feed_increase = 20
     cap_for_feed_decrease = -40
+    cap_for_feed_increase_during_z_movement = 1
 
     # Instance Variables
-    spindle_mains_voltage = None
+    spindle_mains_voltage = None  # TODO: Find fix for getting voltage accurately
     setup = False
     spindle_load_stack = []
     reading_clock = None
     autopilot_logger = None
+
+    if_only_moving_in_z = False
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -127,9 +130,6 @@ class Autopilot:
 
         Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet(), 3)
 
-    def load_qda_to_watts(self, qda):
-        return self.spindle_mains_voltage * 0.1 * sqrt(qda)
-
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
@@ -184,7 +184,7 @@ class Autopilot:
                     lambda dt: self.m.feed_override_down_1(feed_override_widget.feed_override_percentage), 0.05 * i)
 
     def load_parameters_from_json(self):
-        with open('asmcnc/job/parameters.json') as f:
+        with open('asmcnc/job/autopilot_parameters.json') as f:
             data = json.load(f)
             for item in data:
                 try:

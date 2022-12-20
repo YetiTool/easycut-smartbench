@@ -30,5 +30,9 @@
   {
     "Name": "cap_for_feed_decrease",
     "Value": -40
+  },
+  {
+    "Name": "cap_for_feed_increase_during_z_movement",
+    "Value": 1
   }
 ]
