@@ -128,11 +128,11 @@ class FeedOverride(Widget):
         self.push =+ 1
         if self.feed_override_percentage < 200 and self.push < 2:
             if self.disable_buttons():
-                self.feed_override_percentage += 5
+                self.feed_override_percentage += 20
                 self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
 
-                for _ in range(20):
-                    self.m.feed_override_up_1(final_percentage=self.feed_override_percentage)
+                for i in range(20):
+                    Clock.schedule_once(self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.01 * i)
 
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
@@ -147,13 +147,13 @@ class FeedOverride(Widget):
         self.push =+ 1 
         if self.feed_override_percentage > 10 and self.push < 2:
             if self.disable_buttons():
-                self.feed_override_percentage -= 5
+                self.feed_override_percentage -= 20
                 self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.05) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.1) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.15) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.2)
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.25)
+
+                for i in range(20):
+                    Clock.schedule_once(self.m.feed_override_down_1(final_percentage=self.feed_override_percentage),
+                                        0.02 * i)
+
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
