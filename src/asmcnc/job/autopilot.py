@@ -107,15 +107,18 @@ class Autopilot:
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
 
-        average_loads = self.remove_outliers(raw_loads)
+        loads_to_use = raw_loads
 
-        if len(average_loads) < 3:
-            print('Data invalid - not enough values')
-            return
+        if self.do_remove_outliers:
+            loads_to_use = self.remove_outliers(raw_loads)
 
-        data_avg = sum(average_loads) / len(average_loads)
+            if len(loads_to_use) < 3:
+                print('Data invalid - not enough values')
+                return
 
-        self.adjust(data_avg, raw_loads, average_loads)
+        data_avg = sum(loads_to_use) / len(loads_to_use)
+
+        self.adjust(data_avg, raw_loads, loads_to_use)
 
     def start(self):
         self.load_parameters_from_json()
