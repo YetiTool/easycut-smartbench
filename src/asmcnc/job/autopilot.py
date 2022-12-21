@@ -95,12 +95,16 @@ class Autopilot:
         return moves
 
     def add_to_stack(self, value):
-        self.log("Adding to stack: " + str(value))
+        self.log("In add_to_stack")
 
         if len(self.spindle_load_stack) == int(self.amount_of_values_in_stack):
+            self.log("Current length: " + str(len(self.spindle_load_stack)))
+            self.log("Max length: " + str(self.amount_of_values_in_stack))
+            self.log("Popping value from stack: " + str(self.spindle_load_stack[0]))
             self.spindle_load_stack.pop(0)
-            self.log("Popping value")
-            self.log(self.spindle_load_stack)
+
+        self.log("Adding value to existing stack: " + str(value))
+        self.log("Stack: " + str(self.spindle_load_stack))
         self.spindle_load_stack.append(value)
 
     def adjust(self, data_avg, raw_loads, average_loads):
@@ -128,11 +132,11 @@ class Autopilot:
         return outlier_list
 
     def read(self, dt):
+        self.log("In read")
+        self.log("Stack: " + str(self.spindle_load_stack))
+        self.log("Length: " + str(len(self.spindle_load_stack)))
+        self.log("Max length: " + str(self.amount_of_values_in_stack))
         if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
-            self.log("Not enough values in stack to calculate feed adjustment")
-            self.log(len(self.spindle_load_stack))
-            self.log(self.amount_of_values_in_stack)
-            self.log(len(self.spindle_load_stack) < self.amount_of_values_in_stack)
             return
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
@@ -160,6 +164,7 @@ class Autopilot:
         self.m.s.autopilot_flag = True
 
     def stop(self):
+        self.log("In stop")
         if self.reading_clock is not None:
             Clock.unschedule(self.reading_clock)
             self.m.s.autopilot_flag = False
