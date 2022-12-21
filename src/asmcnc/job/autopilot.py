@@ -32,10 +32,10 @@ def get_best_adjustment(percentage, limit=10):
 
         ones = 0
 
-    for i in range(tens):
+    for _ in range(tens):
         moves.append(10)
 
-    for i in range(ones):
+    for _ in range(ones):
         moves.append(1)
 
     if len(moves) > limit:
