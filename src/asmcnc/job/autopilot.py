@@ -101,6 +101,7 @@ class Autopilot:
             self.log("Current length: " + str(len(self.spindle_load_stack)))
             self.log("Max length: " + str(self.amount_of_values_in_stack))
             self.log("Popping value from stack: " + str(self.spindle_load_stack[0]))
+            self.log("Casted to int: " + str(int(self.amount_of_values_in_stack)))
             self.spindle_load_stack.pop(0)
 
         self.log("Adding value to existing stack: " + str(value))
