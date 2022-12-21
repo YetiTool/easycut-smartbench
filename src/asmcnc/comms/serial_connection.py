@@ -59,17 +59,11 @@ class SerialConnection(object):
     # Flag to kill grbl scanner (used in zhead cycle app)
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
-    
-    last_position = [
-        None,
-        None,
-        None
-    ]
 
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
-        self.sett =settings_manager     
+        self.sett = settings_manager
         self.m = machine
         self.jd = job
         self.l = localization
@@ -854,6 +848,9 @@ class SerialConnection(object):
                     except:
                         log("ERROR status parse: Position invalid: " + message)
                         return
+
+                    if self.autopilot_instance:
+                        self.autopilot_instance.moving_in_z = self.m_z != pos[2]
 
                     self.m_x = pos[0]
                     self.m_y = pos[1]

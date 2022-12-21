@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     time = datetime.datetime.now()
 
-    for i in range(250000):
+    for i in range(1000):
         log_time = time + datetime.timedelta(seconds=i)
         logger.add_log(uniform(200, 2000), uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [], 0)
 

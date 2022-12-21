@@ -10,7 +10,7 @@ from datetime import datetime
 import json
 
 
-def get_best_adjustment(percentage):
+def get_best_adjustment(percentage, limit=10):
     percentage = floor(percentage)
 
     negative = False
@@ -19,15 +19,15 @@ def get_best_adjustment(percentage):
         negative = True
         percentage = abs(percentage)
 
-    tens = percentage // 10
-    ones = percentage % 10
+    tens = int(percentage // 10)
+    ones = int(percentage % 10)
 
     moves = []
 
     if ones > 5:
         tens += 1
 
-        for i in range(10 - int(ones)):
+        for i in range(10 - ones):
             moves.append(-1)
 
         ones = 0
@@ -37,6 +37,9 @@ def get_best_adjustment(percentage):
 
     for i in range(ones):
         moves.append(1)
+
+    if len(moves) > limit:
+        moves = moves[len(moves) - limit:]
 
     return [-move if negative else move for move in moves]
 
@@ -63,7 +66,7 @@ class Autopilot:
     reading_clock = None
     autopilot_logger = None
 
-    if_only_moving_in_z = False
+    moving_in_z = False
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -86,7 +89,7 @@ class Autopilot:
         self.spindle_load_stack.append(value)
 
     def adjust(self, data_avg, raw_loads, average_loads):
-        if self.m.wpos_z() > 0:
+        if self.m.wpos_z() > 0 or self.moving_in_z:
             return
 
         raw_multiplier = self.get_feed_multiplier(data_avg)

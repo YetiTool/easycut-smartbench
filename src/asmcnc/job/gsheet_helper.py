@@ -292,7 +292,8 @@ def create_time_chart(spreadsheet_id):
                                         },
                                         "targetAxis": "LEFT_AXIS"
                                     }
-                                ]
+                                ],
+                                "headerCount": 1
                             }
                         },
                         "position": {
