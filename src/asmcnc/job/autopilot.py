@@ -82,7 +82,7 @@ class Autopilot:
         if len(moves) > limit:
             moves = moves[int(len(moves) - limit):]
 
-        return [-move if negative else move for move in moves]
+        return [-move if negative else move for move in moves].reverse()
 
     def add_to_stack(self, value):
         if len(self.spindle_load_stack) == self.amount_of_values_in_stack:
