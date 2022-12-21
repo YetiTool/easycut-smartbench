@@ -89,9 +89,7 @@ class Autopilot:
         return moves
 
     def add_to_stack(self, value):
-        print(len(self.spindle_load_stack))
-        print(self.amount_of_values_in_stack)
-        if len(self.spindle_load_stack) == self.amount_of_values_in_stack:
+        if len(self.spindle_load_stack) == int(self.amount_of_values_in_stack):
             self.spindle_load_stack.pop(0)
         self.spindle_load_stack.append(value)
 
