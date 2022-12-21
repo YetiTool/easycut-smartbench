@@ -11,7 +11,7 @@ import json
 
 
 def get_best_adjustment(percentage):
-    moves = []
+    percentage = floor(percentage)
 
     negative = False
 
@@ -19,18 +19,26 @@ def get_best_adjustment(percentage):
         negative = True
         percentage = abs(percentage)
 
-    percentage = floor(percentage)
-
     tens = percentage // 10
     ones = percentage % 10
 
-    for i in range(int(tens)):
-        moves.append(-10 if negative else 10)
+    moves = []
 
-    for i in range(int(ones)):
-        moves.append(-1 if negative else 1)
+    if ones > 5:
+        tens += 1
 
-    return moves
+        for i in range(10 - int(ones)):
+            moves.append(-1)
+
+        ones = 0
+
+    for i in range(tens):
+        moves.append(10)
+
+    for i in range(ones):
+        moves.append(1)
+
+    return [-move if negative else move for move in moves]
 
 
 class Autopilot:

@@ -251,7 +251,7 @@ def create_time_chart(spreadsheet_id):
                                                 "sources": [
                                                     {
                                                         "sheetId": sheet_id,
-                                                        "startRowIndex": 1,
+                                                        "startRowIndex": 0,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 11,
                                                         "endColumnIndex": 12
@@ -267,7 +267,7 @@ def create_time_chart(spreadsheet_id):
                                                 "sources": [
                                                     {
                                                         "sheetId": sheet_id,
-                                                        "startRowIndex": 1,
+                                                        "startRowIndex": 0,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 13,
                                                         "endColumnIndex": 14
@@ -282,7 +282,7 @@ def create_time_chart(spreadsheet_id):
                                                 "sources": [
                                                     {
                                                         "sheetId": sheet_id,
-                                                        "startRowIndex": 1,
+                                                        "startRowIndex": 0,
                                                         "endRowIndex": 100000000,
                                                         "startColumnIndex": 15,
                                                         "endColumnIndex": 16
