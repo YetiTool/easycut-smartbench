@@ -120,9 +120,14 @@ if __name__ == '__main__':
 
     time = datetime.datetime.now()
 
-    for i in range(1000):
+    for i in range(1750):
         log_time = time + datetime.timedelta(seconds=i)
-        logger.add_log(uniform(200, 2000), uniform(-4000, 2000) / 100, log_time.strftime('%H:%M:%S'), [], [], 0, [], 0)
+
+        raw_loads = [uniform(0, 1000) for i in range(5)]
+
+        average = sum(raw_loads) / len(raw_loads)
+
+        logger.add_log(average, logger.get_feed_multiplier(average), log_time.strftime('%H:%M:%S'), raw_loads, [], 0, [], 0)
 
     logger.export_to_gsheet()
 

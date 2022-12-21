@@ -123,7 +123,7 @@ class Autopilot:
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
 
-        loads_to_use = raw_loads
+        loads_to_use = list(raw_loads)
 
         if self.do_remove_outliers:
             loads_to_use = self.remove_outliers(raw_loads)
