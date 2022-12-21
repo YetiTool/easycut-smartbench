@@ -138,6 +138,7 @@ class Autopilot:
 
     def start(self):
         self.load_parameters_from_json()
+        self.amount_of_values_in_stack = self.delay_between_feed_adjustments / 0.1
 
         self.reading_clock = Clock.schedule_interval(self.read, self.delay_between_feed_adjustments)
 

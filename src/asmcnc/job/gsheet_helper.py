@@ -13,8 +13,8 @@ dev_mode_token_path = 'token.json'
 prod_mode_credentials_path = 'asmcnc/job/credentials.json'
 prod_mode_token_path = 'asmcnc/job/token.json'
 
-token_path = prod_mode_token_path
-credentials_path = prod_mode_credentials_path
+credentials_path = dev_mode_credentials_path
+token_path = dev_mode_token_path
 
 
 def authorize():
@@ -100,6 +100,23 @@ def add_img_to_sheet(spreadsheet_id, url):
         result = service.spreadsheets().values().update(
             spreadsheetId=spreadsheet_id, range="Feed Factor Profile!A1",
             valueInputOption="USER_ENTERED", body=body).execute()
+
+        return result
+    except HttpError as e:
+        print(e)
+        return e
+
+
+def add_feed_multiplier_sweep(spreadsheet_id, sweep_values):
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        body = {
+            'values': sweep_values
+        }
+
+        result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range="Parameters!Y1:Z",
+                                                        valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
     except HttpError as e:
@@ -318,7 +335,7 @@ def create_time_chart(spreadsheet_id):
 
 
 def create_chart(spreadsheet_id):
-    sheet_id = get_sheet_id(spreadsheet_id, "Data")
+    sheet_id = get_sheet_id(spreadsheet_id, "Parameters")
 
     try:
         service = build('sheets', 'v4', credentials=creds)
@@ -351,8 +368,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 11,
-                                                        "endColumnIndex": 12
+                                                        "startColumnIndex": 24,
+                                                        "endColumnIndex": 25
                                                     }
                                                 ]
                                             }
@@ -368,8 +385,8 @@ def create_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 1,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 12,
-                                                        "endColumnIndex": 13
+                                                        "startColumnIndex": 25,
+                                                        "endColumnIndex": 26
                                                     }
                                                 ]
                                             }

@@ -59,6 +59,19 @@ class AutoPilotLogger:
                          log.feed_override_percentage])
         return data
 
+    def get_feed_multiplier(self, current_power):
+        multiplier = (float(self.bias) if current_power > self.spindle_target_watts else 1) * (
+                float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
+                     * float(self.m_coefficient) * float(self.c_coefficient)
+
+        return multiplier
+
+    def get_sweep(self):
+        sweep = [["Spindle Load", "Feed Multiplier"]]
+        for power in range(0, 1750):
+            sweep.append([power, self.get_feed_multiplier(power)])
+        return sweep
+
     def export_to_gsheet(self):
         export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -68,13 +81,11 @@ class AutoPilotLogger:
 
         data = self.get_data_for_sheet()
 
-        # add_sheet(spreadsheet_id, 'Feed Factor Profile')
-        #
-        # add_img_to_sheet(spreadsheet_id, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFDK6gOfn33pDikRiDOrGcEet7A55OKNtNNgb4Z-mqqaU734XAXX2s29RxYRhG1e91j_tCSoz_YKICgAs3bAdOCI3UZIiad-bg=w2556-h1614")
-
         add_sheet(spreadsheet_id, 'Data')
 
         rename_sheet(spreadsheet_id, 'Sheet1', 'Parameters')
+
+        add_feed_multiplier_sweep(spreadsheet_id, self.get_sweep())
 
         write_data_to_sheet(spreadsheet_id, data)
 
@@ -105,7 +116,7 @@ def get_random_time():
 
 
 if __name__ == '__main__':
-    logger = AutoPilotLogger(0, 0, 0, 0, 0, 0, 0, "job.gcode", "ys61234", 0.5, 100)
+    logger = AutoPilotLogger(230, 875, 2, 1, 35, 20, -40, "job.gcode", "ys61234", 0.5, 100)
 
     time = datetime.datetime.now()
 
