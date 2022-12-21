@@ -162,7 +162,7 @@ class Autopilot:
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
 
     def cap_feed_multiplier(self, multiplier, target_power, current_power):
-        if self.moving_in_z:
+        if self.moving_in_z and current_power < target_power:
             return -self.cap_for_feed_increase_during_z_movement \
                 if current_power > target_power \
                 else self.cap_for_feed_increase_during_z_movement
