@@ -112,6 +112,8 @@ class Autopilot:
 
         self.do_best_adjustment(best_adjustment)
 
+        self.log('adjustment list: ' + str(best_adjustment))
+
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
                                       self.m.s.feed_override_percentage, str(self.moving_in_z))
