@@ -136,6 +136,7 @@ class Autopilot:
         self.log("Stack: " + str(self.spindle_load_stack))
         self.log("Length: " + str(len(self.spindle_load_stack)))
         self.log("Max length: " + str(self.amount_of_values_in_stack))
+        self.log("Will complete read?: " + str(len(self.spindle_load_stack) > int(self.amount_of_values_in_stack)))
         if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
             return
 
