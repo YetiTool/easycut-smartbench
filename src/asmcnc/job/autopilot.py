@@ -34,9 +34,15 @@ class Autopilot:
 
     moving_in_z = False
 
+    dev_mode = True
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
+
+    def log(self, log, override=False):
+        if override or self.dev_mode:
+            print(log)
 
     def first_read_setup(self):
         job_name = self.sm.get_screen('go').file_data_label.text
@@ -89,8 +95,12 @@ class Autopilot:
         return moves
 
     def add_to_stack(self, value):
+        self.log("Adding to stack: " + str(value))
+
         if len(self.spindle_load_stack) == int(self.amount_of_values_in_stack):
             self.spindle_load_stack.pop(0)
+            self.log("Popping value")
+            self.log(self.spindle_load_stack)
         self.spindle_load_stack.append(value)
 
     def adjust(self, data_avg, raw_loads, average_loads):
@@ -119,6 +129,10 @@ class Autopilot:
 
     def read(self, dt):
         if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
+            self.log("Not enough values in stack to calculate feed adjustment")
+            self.log(len(self.spindle_load_stack))
+            self.log(self.amount_of_values_in_stack)
+            self.log(len(self.spindle_load_stack) < self.amount_of_values_in_stack)
             return
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
