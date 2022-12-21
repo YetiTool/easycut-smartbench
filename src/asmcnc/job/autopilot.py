@@ -23,7 +23,7 @@ class Autopilot:
     cap_for_feed_increase = 20
     cap_for_feed_decrease = -40
     cap_for_feed_increase_during_z_movement = 1
-    amount_of_values_in_stack = delay_between_feed_adjustments // 0.1
+    amount_of_values_in_stack = (delay_between_feed_adjustments * 10) // (0.1 * 10)
 
     # Instance Variables
     spindle_mains_voltage = None  # TODO: Find fix for getting voltage accurately
@@ -144,7 +144,7 @@ class Autopilot:
 
     def start(self):
         self.load_parameters_from_json()
-        self.amount_of_values_in_stack = self.delay_between_feed_adjustments // 0.1
+        self.amount_of_values_in_stack = (self.delay_between_feed_adjustments * 10) // (0.1 * 10)
 
         self.reading_clock = Clock.schedule_interval(self.read, self.delay_between_feed_adjustments)
 
