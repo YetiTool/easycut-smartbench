@@ -16,6 +16,10 @@
     "Value": 2.0
   },
   {
+    "Name": "bias_for_feed_increase",
+    "Value": 1.0
+  },
+  {
     "Name": "m_coefficient",
     "Value": 1
   },

@@ -17,6 +17,7 @@ class Autopilot:
     spindle_target_watts = 400
     outlier_tolerance = 100  # Value applied above and below the average of spindle power inputs to remove outliers
     bias_for_feed_decrease = 2.0
+    bias_for_feed_increase = 1.0
     m_coefficient = 1.0  # see feed factor algorithm
     # https://docs.google.com/document/d/1twwDlSkzwoy__OZFrJK5IDz0GDaC2_08EKyNHk6_npI/edit#
     c_coefficient = 35  # see above
@@ -182,7 +183,7 @@ class Autopilot:
         return multiplier
 
     def get_feed_multiplier(self, current_power):
-        multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else 1) * (
+        multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else float(self.bias_for_feed_increase)) * (
                 float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
