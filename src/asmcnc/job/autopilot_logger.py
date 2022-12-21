@@ -67,6 +67,12 @@ class AutoPilotLogger:
                 float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
+        if multiplier > self.increase_cap:
+            multiplier = self.increase_cap
+
+        if multiplier < self.decrease_cap:
+            multiplier = self.decrease_cap
+
         return multiplier
 
     def get_sweep(self):
