@@ -671,8 +671,9 @@ class GoScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
-        self.m.s.autopilot_instance.stop()
-        self.m.s.autopilot_instance = None
+        if self.m.s.autopilot_instance:
+            self.m.s.autopilot_instance.stop()
+            self.m.s.autopilot_instance = None
 
     ### SCREEN UPDATES
 
