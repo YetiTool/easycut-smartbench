@@ -17,11 +17,11 @@
   },
   {
     "Name": "m_coefficient",
-    "Value": 1.0
+    "Value": 1
   },
   {
     "Name": "c_coefficient",
-    "Value": "35"
+    "Value": 35
   },
   {
     "Name": "cap_for_feed_increase",
