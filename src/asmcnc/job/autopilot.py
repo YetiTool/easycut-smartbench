@@ -89,6 +89,8 @@ class Autopilot:
         return moves
 
     def add_to_stack(self, value):
+        print(len(self.spindle_load_stack))
+        print(self.amount_of_values_in_stack)
         if len(self.spindle_load_stack) == self.amount_of_values_in_stack:
             self.spindle_load_stack.pop(0)
         self.spindle_load_stack.append(value)
@@ -104,10 +106,6 @@ class Autopilot:
         best_adjustment = self.get_best_adjustment(capped_multiplier)
 
         self.do_best_adjustment(best_adjustment)
-
-        print('raw multiplier', raw_multiplier)
-        print('capped multiplier', capped_multiplier)
-        print('best adjustment', best_adjustment)
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
@@ -137,10 +135,6 @@ class Autopilot:
                 return
 
         data_avg = sum(loads_to_use) / len(loads_to_use)
-
-        print('raw', raw_loads)
-        print('outliers', loads_to_use)
-        print('avg', data_avg)
 
         self.adjust(data_avg, raw_loads, loads_to_use)
 
