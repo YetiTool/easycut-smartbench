@@ -62,12 +62,13 @@ class Autopilot:
         ones = int(percentage % 10)
 
         moves = []
+        backward_moves = []
 
         if ones > 5:
             tens += 1
 
             for i in range(10 - ones):
-                moves.append(-1)
+                backward_moves.append(-1)
 
             ones = 0
 
@@ -82,9 +83,8 @@ class Autopilot:
         if len(moves) > limit:
             moves = moves[int(len(moves) - limit):]
 
+        moves.extend(backward_moves)
         moves = [-move if negative else move for move in moves]
-
-        moves.reverse()
 
         return moves
 
@@ -133,6 +133,10 @@ class Autopilot:
                 return
 
         data_avg = sum(loads_to_use) / len(loads_to_use)
+
+        print('raw', raw_loads)
+        print('outliers', loads_to_use)
+        print('avg', data_avg)
 
         self.adjust(data_avg, raw_loads, loads_to_use)
 
