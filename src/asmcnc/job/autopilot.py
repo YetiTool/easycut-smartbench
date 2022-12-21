@@ -84,7 +84,7 @@ class Autopilot:
 
         moves = [-move if negative else move for move in moves]
 
-        moves = moves.reverse()
+        moves.reverse()
 
         return moves
 
