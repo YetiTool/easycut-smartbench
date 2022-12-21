@@ -139,7 +139,7 @@ def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_wat
             ["Cap for Feed Decrease", decerease_cap],
             ["Delay Between Feed Adjustments", delay_between_feed_adjustments],
             ["Outlier Amount", outlier_amount],
-            ["Cap for Feed Change When Moving in Z", cap_for_feed_increase_during_z_movement]
+            ["Cap for Feed-Up Change When Moving in Z", cap_for_feed_increase_during_z_movement]
         ]
 
         body = {
@@ -302,8 +302,8 @@ def create_time_chart(spreadsheet_id):
                                                         "sheetId": sheet_id,
                                                         "startRowIndex": 0,
                                                         "endRowIndex": 100000000,
-                                                        "startColumnIndex": 15,
-                                                        "endColumnIndex": 16
+                                                        "startColumnIndex": 16,
+                                                        "endColumnIndex": 17
                                                     }
                                                 ]
                                             }
