@@ -27,7 +27,8 @@ class AutoPilotLogger:
     logs = []
 
     def __init__(self, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap,
-                 decrease_cap, job_name, serial_number, delay_between_feed_adjustments, outlier_amount):
+                 decrease_cap, job_name, serial_number, delay_between_feed_adjustments, outlier_amount,
+                 cap_for_feed_increase_during_z_movement):
         self.spindle_v_main = spindle_v_main
         self.spindle_target_watts = spindle_target_watts
         self.bias = bias
@@ -39,6 +40,7 @@ class AutoPilotLogger:
         self.serial_number = serial_number
         self.delay_between_feed_adjustments = delay_between_feed_adjustments
         self.outlier_amount = outlier_amount
+        self.cap_for_feed_increase_during_z_movement = cap_for_feed_increase_during_z_movement
 
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
                 feed_override_percentage):
@@ -91,7 +93,8 @@ class AutoPilotLogger:
 
         write_other_data_to_sheet(spreadsheet_id, self.spindle_v_main, self.spindle_target_watts, self.bias,
                                   self.m_coefficient, self.c_coefficient, self.increase_cap, self.decrease_cap,
-                                  self.delay_between_feed_adjustments, self.outlier_amount)
+                                  self.delay_between_feed_adjustments, self.outlier_amount,
+                                  self.cap_for_feed_increase_during_z_movement)
 
         create_chart(spreadsheet_id)
 

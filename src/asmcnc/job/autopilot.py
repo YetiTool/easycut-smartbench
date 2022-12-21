@@ -152,7 +152,6 @@ class Autopilot:
         self.m.s.autopilot_flag = True
 
     def stop(self):
-        self.log("In stop")
         if self.reading_clock is not None:
             Clock.unschedule(self.reading_clock)
             self.m.s.autopilot_flag = False
