@@ -85,7 +85,7 @@ class Autopilot:
         return [-move if negative else move for move in moves]
 
     def add_to_stack(self, value):
-        if len(self.spindle_load_stack) == 5:
+        if len(self.spindle_load_stack) == self.amount_of_values_in_stack:
             self.spindle_load_stack.pop(0)
         self.spindle_load_stack.append(value)
 
