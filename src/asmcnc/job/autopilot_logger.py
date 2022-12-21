@@ -1,6 +1,6 @@
 class AutoPilotLog:
     def __init__(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
-                 feed_override_percentage):
+                 feed_override_percentage, moving_in_z):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
@@ -9,6 +9,7 @@ class AutoPilotLog:
         self.raw_multiplier = raw_multiplier
         self.adjustment_list = str(adjustment_list).replace('[', '').replace(']', '')
         self.feed_override_percentage = feed_override_percentage
+        self.moving_in_z = moving_in_z
 
 
 import datetime
@@ -43,14 +44,14 @@ class AutoPilotLogger:
         self.cap_for_feed_increase_during_z_movement = cap_for_feed_increase_during_z_movement
 
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
-                feed_override_percentage):
+                feed_override_percentage, moving_in_z):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
-                                      adjustment_list, feed_override_percentage))
+                                      adjustment_list, feed_override_percentage, moving_in_z))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
                  'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Average Load',
-                 'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Feed Override % Status"]]
+                 'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Moving in Z", "Feed Override % Status"]]
         for log in self.logs:
             data.append([log.time, get_safe(log.raw_loads, 0),
                          get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
@@ -58,7 +59,7 @@ class AutoPilotLogger:
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
                          log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
-                         log.feed_override_percentage])
+                         log.moving_in_z, log.feed_override_percentage])
         return data
 
     def get_feed_multiplier(self, current_power):

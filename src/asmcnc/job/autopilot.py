@@ -113,7 +113,7 @@ class Autopilot:
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
-                                      self.m.s.feed_override_percentage)
+                                      self.m.s.feed_override_percentage, str(self.moving_in_z))
 
     def remove_outliers(self, data):
         outlier_list = list(data)
