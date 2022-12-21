@@ -10,40 +10,6 @@ from datetime import datetime
 import json
 
 
-def get_best_adjustment(percentage, limit=10):
-    percentage = floor(percentage)
-
-    negative = False
-
-    if percentage < 0:
-        negative = True
-        percentage = abs(percentage)
-
-    tens = int(percentage // 10)
-    ones = int(percentage % 10)
-
-    moves = []
-
-    if ones > 5:
-        tens += 1
-
-        for i in range(10 - ones):
-            moves.append(-1)
-
-        ones = 0
-
-    for _ in range(tens):
-        moves.append(10)
-
-    for _ in range(ones):
-        moves.append(1)
-
-    if len(moves) > limit:
-        moves = moves[len(moves) - limit:]
-
-    return [-move if negative else move for move in moves]
-
-
 class Autopilot:
     # Algorithm Variables
     delay_between_feed_adjustments = 0.3
@@ -82,6 +48,41 @@ class Autopilot:
                                                 self.outlier_tolerance)
 
         self.setup = True
+
+    def get_best_adjustment(self, percentage):
+        percentage = floor(percentage)
+
+        negative = False
+
+        if percentage < 0:
+            negative = True
+            percentage = abs(percentage)
+
+        tens = int(percentage // 10)
+        ones = int(percentage % 10)
+
+        moves = []
+
+        if ones > 5:
+            tens += 1
+
+            for i in range(10 - ones):
+                moves.append(-1)
+
+            ones = 0
+
+        for _ in range(tens):
+            moves.append(10)
+
+        for _ in range(ones):
+            moves.append(1)
+
+        limit = self.delay_between_feed_adjustments / 0.05
+
+        if len(moves) > limit:
+            moves = moves[len(moves) - limit:]
+
+        return [-move if negative else move for move in moves]
 
     def add_to_stack(self, value):
         if len(self.spindle_load_stack) == 5:
