@@ -85,13 +85,13 @@ class Autopilot:
         for _ in range(ones):
             moves.append(1)
 
-        limit = self.delay_between_feed_adjustments / 0.05
-
-        if len(moves) > limit:
-            moves = moves[int(len(moves) - limit):]
+        limit = int((self.delay_between_feed_adjustments * 100) / (0.05 * 100))
 
         moves.extend(backward_moves)
         moves = [-move if negative else move for move in moves]
+
+        if len(moves) > limit:
+            moves = moves[:limit]
 
         return moves
 
