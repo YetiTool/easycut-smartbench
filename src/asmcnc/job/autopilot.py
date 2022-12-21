@@ -51,7 +51,7 @@ class Autopilot:
                                                 self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
                                                 self.cap_for_feed_increase, self.cap_for_feed_decrease,
                                                 job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
-                                                self.outlier_tolerance)
+                                                self.outlier_tolerance, self.cap_for_feed_increase_during_z_movement)
 
         self.setup = True
 
