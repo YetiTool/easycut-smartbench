@@ -124,7 +124,7 @@ def add_feed_multiplier_sweep(spreadsheet_id, sweep_values):
         return e
 
 
-def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient,
+def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_watts, increase_bias,  decrease_bias, m_coefficient, c_coefficient,
                               increase_cap, decerease_cap, delay_between_feed_adjustments, outlier_amount, cap_for_feed_increase_during_z_movement):
     try:
         service = build('sheets', 'v4', credentials=creds)
@@ -132,7 +132,8 @@ def write_other_data_to_sheet(spreadsheet_id, spindle_v_main, spindle_target_wat
         values = [
             ["Spindle Mains Voltage", spindle_v_main],
             ["Spindle Target Watts", spindle_target_watts],
-            ["Bias for Feed Decrease", bias],
+            ["Bias for Feed Increase", increase_bias],
+            ["Bias for Feed Decrease", decrease_bias],
             ["M Coefficient", m_coefficient],
             ["C Coefficient", c_coefficient],
             ["Cap for Feed Increase", increase_cap],

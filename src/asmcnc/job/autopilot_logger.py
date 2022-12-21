@@ -26,13 +26,15 @@ def get_safe(listt, index):
 
 class AutoPilotLogger:
     logs = []
+    exported = False
 
-    def __init__(self, spindle_v_main, spindle_target_watts, bias, m_coefficient, c_coefficient, increase_cap,
+    def __init__(self, spindle_v_main, spindle_target_watts, increase_bias, decrease_bias, m_coefficient, c_coefficient, increase_cap,
                  decrease_cap, job_name, serial_number, delay_between_feed_adjustments, outlier_amount,
                  cap_for_feed_increase_during_z_movement):
         self.spindle_v_main = spindle_v_main
         self.spindle_target_watts = spindle_target_watts
-        self.bias = bias
+        self.increase_bias = increase_bias
+        self.decrease_bias = decrease_bias
         self.m_coefficient = m_coefficient
         self.c_coefficient = c_coefficient
         self.increase_cap = increase_cap
@@ -63,7 +65,7 @@ class AutoPilotLogger:
         return data
 
     def get_feed_multiplier(self, current_power):
-        multiplier = (float(self.bias) if current_power > self.spindle_target_watts else 1) * (
+        multiplier = (float(self.decrease_bias) if current_power > self.spindle_target_watts else 1) * (
                 float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
@@ -82,6 +84,11 @@ class AutoPilotLogger:
         return sweep
 
     def export_to_gsheet(self):
+        if self.exported:
+            return
+
+        self.exported = True
+
         export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         sheet_name = export_time + '-' + self.job_name + '-YS' + str(self.serial_number)
@@ -98,9 +105,9 @@ class AutoPilotLogger:
 
         write_data_to_sheet(spreadsheet_id, data)
 
-        write_other_data_to_sheet(spreadsheet_id, self.spindle_v_main, self.spindle_target_watts, self.bias,
-                                  self.m_coefficient, self.c_coefficient, self.increase_cap, self.decrease_cap,
-                                  self.delay_between_feed_adjustments, self.outlier_amount,
+        write_other_data_to_sheet(spreadsheet_id, self.spindle_v_main, self.spindle_target_watts, self.increase_bias,
+                                  self.decrease_bias, self.m_coefficient, self.c_coefficient, self.increase_cap,
+                                  self.decrease_cap, self.delay_between_feed_adjustments, self.outlier_amount,
                                   self.cap_for_feed_increase_during_z_movement)
 
         create_chart(spreadsheet_id)
