@@ -80,7 +80,7 @@ class Autopilot:
         limit = self.delay_between_feed_adjustments / 0.05
 
         if len(moves) > limit:
-            moves = moves[len(moves) - limit:]
+            moves = moves[int(len(moves) - limit):]
 
         return [-move if negative else move for move in moves]
 
@@ -208,3 +208,4 @@ class Autopilot:
                     setattr(self, item["Name"], item["Value"])
                 except:
                     print("Invalid parameter: " + item["Name"])
+
