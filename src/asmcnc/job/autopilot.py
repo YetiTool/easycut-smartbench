@@ -3,11 +3,13 @@ Created on 9 Dec 2022
 @author: Archie
 """
 
-from kivy.clock import Clock
-from math import sqrt, floor
-from autopilot_logger import AutoPilotLogger
-from datetime import datetime
 import json
+from datetime import datetime
+from math import sqrt, floor
+
+from kivy.clock import Clock
+
+from autopilot_logger import AutoPilotLogger
 
 
 class Autopilot:
@@ -116,7 +118,10 @@ class Autopilot:
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
-                                      self.m.s.feed_override_percentage, str(self.moving_in_z))
+                                      self.m.s.feed_override_percentage, str(self.moving_in_z),
+                                      self.m.s.sg_x_motor_axis, self.m.s.y_axis, self.m.s.sg_z_motor_axis,
+                                      self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
+                                      self.m.s.sg_y2_motor)
 
     def remove_outliers(self, data):
         outlier_list = list(data)

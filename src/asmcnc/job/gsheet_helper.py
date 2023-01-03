@@ -13,8 +13,8 @@ dev_mode_token_path = 'token.json'
 prod_mode_credentials_path = 'asmcnc/job/credentials.json'
 prod_mode_token_path = 'asmcnc/job/token.json'
 
-credentials_path = prod_mode_credentials_path
-token_path = prod_mode_token_path
+credentials_path = dev_mode_credentials_path
+token_path = dev_mode_token_path
 
 
 def authorize():
@@ -212,7 +212,7 @@ def write_data_to_sheet(spreadsheet_id, data):
         }
 
         result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id, range="Data!A1:Q",
+            spreadsheetId=spreadsheet_id, range="Data!A1:X",
             valueInputOption="USER_ENTERED", body=body).execute()
 
         return result
@@ -310,7 +310,119 @@ def create_time_chart(spreadsheet_id):
                                             }
                                         },
                                         "targetAxis": "LEFT_AXIS"
-                                    }
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 17,
+                                                        "endColumnIndex": 18
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 18,
+                                                        "endColumnIndex": 19
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 19,
+                                                        "endColumnIndex": 20
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 20,
+                                                        "endColumnIndex": 21
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 21,
+                                                        "endColumnIndex": 22
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 22,
+                                                        "endColumnIndex": 23
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
+                                    {
+                                        "series": {
+                                            "sourceRange": {
+                                                "sources": [
+                                                    {
+                                                        "sheetId": sheet_id,
+                                                        "startRowIndex": 0,
+                                                        "endRowIndex": 100000000,
+                                                        "startColumnIndex": 23,
+                                                        "endColumnIndex": 24
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "targetAxis": "LEFT_AXIS"
+                                    },
                                 ],
                                 "headerCount": 1
                             }
