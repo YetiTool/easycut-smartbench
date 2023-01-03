@@ -114,7 +114,7 @@ class Autopilot:
 
         self.do_best_adjustment(best_adjustment)
 
-        self.log('adjustment list: ' + str(best_adjustment))
+        self.log('adjustment list: ' + str(best_adjustment), override=True)
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
