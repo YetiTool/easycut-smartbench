@@ -683,7 +683,7 @@ class BuildInfoScreen(Screen):
 
         self.toggle_ssh_button.text = 'SSH: ' + enabled_text
 
-        if toggled:
+        if not toggled:
             PopupSSHToggleFailed(localization=self.l)
 
     def update_strings(self):
