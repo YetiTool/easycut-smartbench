@@ -327,7 +327,7 @@ class BacklashScreenClass(Screen):
 
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
-        self.m.jog_absolute_single_axis('Y', round(0.9 * self.m.y_min_jog_abs_limit), 9999)
+        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel + 182, 9999)
         self.m.jog_relative('Y',-10,9999)
         self.m.jog_relative('Y',10,9999)
         self.sub_screen_count = 0
@@ -370,8 +370,8 @@ class BacklashScreenClass(Screen):
     
     def test(self):    
         
-        jog_relative_to_stream = ['$J=G91 ' + self.axis + str(self.backlash_move_distance) + ' F9999',
-                                  '$J=G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F9999'
+        jog_relative_to_stream = ['G91 ' + self.axis + str(self.backlash_move_distance) + ' F6000',
+                                  'G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F6000'
                                   ]
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         

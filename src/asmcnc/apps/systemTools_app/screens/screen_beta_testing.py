@@ -296,7 +296,7 @@ class BetaTestingScreen(Screen):
         self.set = kwargs['settings']
         self.l = kwargs['localization']
 
-        self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.user_branch.text = (self.set.sw_branch).strip('* ')
         self.beta_version.text = self.set.latest_sw_beta
 
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)

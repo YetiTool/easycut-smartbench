@@ -695,13 +695,6 @@ Builder.load_string("""
 
 """)
 
-MAX_XY_SPEED = 6000
-MAX_Z_SPEED = 750
-
-MAX_Z_DISTANCE = 149
-MAX_X_DISTANCE = 1299
-MAX_Y_DISTANCE = 2501
-
 
 def log(message):
     timestamp = datetime.now()
@@ -742,6 +735,7 @@ class OvernightTesting(Screen):
     green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
 
     mini_run_dev_mode = False
+    do_tune = True
 
     sn_for_db = ''
 
@@ -1289,7 +1283,7 @@ class OvernightTesting(Screen):
             return
 
         if not self.m.run_calibration and not self.m.tuning_in_progress:
-            self.m.tune_X_Y_Z_for_calibration()
+            if self.do_tune: self.m.tune_X_Y_Z_for_calibration()
             self.poll_for_tuning_completion = Clock.schedule_interval(self.do_calibration, 5)
 
     def do_calibration(self, dt):
@@ -1364,7 +1358,7 @@ class OvernightTesting(Screen):
 
         log("SB fully calibrated, start final run")
 
-        self.m.jog_absolute_xy(-1298, -2500, 6000)
+        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', -32, 750)
 
         self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_spiral_file, 5)
@@ -1462,6 +1456,7 @@ class OvernightTesting(Screen):
         self.overnight_running = True
 
         if self.mini_run_dev_mode: filename_end = 'super_mini_run'
+        elif self.m.bench_is_short(): filename_end += "_shortbench"
 
         filename = './asmcnc/apps/systemTools_app/files/' + filename_end + '.gc'
 
@@ -1524,7 +1519,7 @@ class OvernightTesting(Screen):
         log("Transferring file failed, copying to USB stick")
 
         if os.path.exists('/media/usb'):
-            os.system('cp ' + csv_name + ' /media/usb/')
+            os.system('sudo cp ' + csv_name + ' /media/usb/')
             PopupCSVOnUSB()
         else:
             log("USB stick not found")
