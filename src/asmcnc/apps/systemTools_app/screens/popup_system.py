@@ -603,10 +603,12 @@ class RebootAfterLanguageChange(Widget):
 
 
 class PopupSSHToggleFailed(Widget):
-    def __init__(self):
-        description = "Reboot your console and try again.\nIf this issue persists, please contact Yeti Tool Ltd for support."
-        title_string = 'Failed to toggle SSH service'
-        ok_string = 'Ok'
+    def __init__(self, localization):
+        self.l = localization
+
+        description = self.l.get_str("Reboot console and try again")
+        title_string = self.l.get_str("Failed to toggle SSH Service")
+        ok_string = self.l.get_str("Ok")
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.7, text_size=(260, None), halign='center', valign='middle', text=description,
