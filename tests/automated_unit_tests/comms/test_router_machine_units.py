@@ -132,6 +132,12 @@ def test_multiple_motor_currents(m):
     current = 9
     assert_current_sent_to_motor(m, axis, motors, current)
 
+def test_multiple_motor_currents_again(m):
+    axis = "Y1Y2Xz" # note that "z" is lower case, and won't trigger
+    motors = [TMC_X1, TMC_X2, TMC_Y1, TMC_Y2]
+    current = 9
+    assert_current_sent_to_motor(m, axis, motors, current)
+
 def test_set_current_without_idle_state(m):
     axis = "Y"
     current = 4
