@@ -16,8 +16,6 @@ from datetime import datetime
 
 
 '''
-These tests will fail on windows because of sys.platform checks
-
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_smartbench_model_detection.py
