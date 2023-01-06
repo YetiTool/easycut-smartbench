@@ -71,7 +71,7 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
-        Clock.schedule_interval(self.reset_spindle_data_counter, 600)
+        Clock.schedule_interval(lambda dt: self.reset_spindle_data_counter, 600)
 
     def __del__(self):
         if self.s: self.s.close()
