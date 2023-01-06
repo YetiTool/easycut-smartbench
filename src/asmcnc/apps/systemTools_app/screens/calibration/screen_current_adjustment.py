@@ -327,11 +327,11 @@ class CurrentAdjustment(Screen):
 
         self.wait_popup_for_reset_currents = PopupWait(self.systemtools_sm.sm,  self.l)
 
-        if  self.x1_current_adjustment_widget.reset_current() and \
+        if  (self.x1_current_adjustment_widget.reset_current() and \
             self.x2_current_adjustment_widget.reset_current() and \
             self.y1_current_adjustment_widget.reset_current() and \
             self.y2_current_adjustment_widget.reset_current() and \
-            self.z_current_adjustment_widget.reset_current():
+            self.z_current_adjustment_widget.reset_current()):
 
             return True
 
