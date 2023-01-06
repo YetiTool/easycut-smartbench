@@ -233,3 +233,7 @@ class Autopilot:
                 except:
                     print("Invalid parameter: " + item["Name"])
 
+    def reset(self):
+        self.load_parameters_from_json()
+        self.spindle_load_stack = []
+        self.autopilot_logger.reset()

@@ -465,6 +465,7 @@ class GoScreen(Screen):
     def on_enter(self):
         if self.m.s.autopilot_instance:
             self.m.s.autopilot_instance.stop()
+            self.m.s.autopilot_instance.reset()
             self.m.s.autopilot_instance = None
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
@@ -584,6 +585,7 @@ class GoScreen(Screen):
         if self.m.s.autopilot_instance:
             if self.is_job_started_already:
                 self.m.s.autopilot_instance.stop()
+                self.m.s.autopilot_instance.reset()
             else:
                 self.m.s.autopilot_instance.start()
         else:
@@ -675,6 +677,7 @@ class GoScreen(Screen):
 
         if self.m.s.autopilot_instance:
             self.m.s.autopilot_instance.stop()
+            self.m.s.autopilot_instance.reset()
             self.m.s.autopilot_instance = None
 
     ### SCREEN UPDATES

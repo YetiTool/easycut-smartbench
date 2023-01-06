@@ -139,6 +139,10 @@ class AutoPilotLogger:
 
         print('Spreadsheet: ' + url)
 
+    def reset(self):
+        self.logs = []
+        self.exported = False
+
 
 def get_random_time():
     hours = randint(1, 23)
