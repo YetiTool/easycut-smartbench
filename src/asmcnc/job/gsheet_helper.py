@@ -13,8 +13,8 @@ dev_mode_token_path = 'token.json'
 prod_mode_credentials_path = 'asmcnc/job/credentials.json'
 prod_mode_token_path = 'asmcnc/job/token.json'
 
-credentials_path = prod_mode_credentials_path
-token_path = prod_mode_token_path
+credentials_path = dev_mode_credentials_path
+token_path = dev_mode_token_path
 
 
 def authorize():

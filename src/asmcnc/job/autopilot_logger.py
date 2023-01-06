@@ -168,6 +168,10 @@ if __name__ == '__main__':
 
     logger.export_to_gsheet()
 
+    logger.reset()
+
+    logger.export_to_gsheet()
+
     difference = datetime.datetime.now() - time
 
     print(difference)
