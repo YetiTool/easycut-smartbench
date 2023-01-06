@@ -1017,8 +1017,8 @@ class SerialConnection(object):
                                 if self.autopilot_instance:
                                     if not self.autopilot_instance.spindle_mains_voltage:
                                         log("First read setup")
-                                        self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
                                         self.autopilot_instance.first_read_setup()
+                                        self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
 
                                     log("Adding value to stack")
                                     self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
