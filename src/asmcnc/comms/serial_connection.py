@@ -71,9 +71,14 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
+        Clock.schedule_interval(self.reset_spindle_data_counter, 600)
+
     def __del__(self):
         if self.s: self.s.close()
         log('Serial connection destructor')
+
+    def reset_spindle_data_counter(self):
+        self.spindle_data_failures = 0
 
     def get_serial_screen(self, serial_error):
 
@@ -791,6 +796,8 @@ class SerialConnection(object):
     autopilot_flag = True
     autopilot_instance = None
 
+    spindle_data_failures = 0
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -997,15 +1004,22 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
-                        if self.autopilot_flag:
-                            if self.autopilot_instance:
-                                if not self.autopilot_instance.spindle_mains_voltage:
-                                    # TODO: hard coded for now - weirdness of voltage readings
-                                    self.autopilot_instance.spindle_mains_voltage = 230
-                                    self.autopilot_instance.spindle_max_watts = self.digital_spindle_mains_voltage * 0.1 * sqrt(5290)
-                                    self.autopilot_instance.first_read_setup()
+                        if self.digital_spindle_ld_qdA < 0:
+                            self.spindle_data_failures += 1
 
-                                self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
+                        if self.spindle_data_failures >= 20:
+                            log("Spindle data failure limit reached")
+
+                            #TODO: notify user
+
+                        if self.digital_spindle_ld_qdA > 0:
+                            if self.autopilot_flag:
+                                if self.autopilot_instance:
+                                    if not self.autopilot_instance.spindle_mains_voltage:
+                                        self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                        self.autopilot_instance.first_read_setup()
+
+                                    self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
