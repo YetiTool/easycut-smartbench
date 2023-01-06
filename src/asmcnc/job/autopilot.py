@@ -35,9 +35,7 @@ class Autopilot:
     spindle_load_stack = []
     reading_clock = None
     autopilot_logger = None
-
     moving_in_z = False
-
     dev_mode = True
 
     def __init__(self, **kwargs):
@@ -242,6 +240,7 @@ class Autopilot:
                     print("Invalid parameter: " + item["Name"])
 
     def reset(self):
+        self.setup = False
         self.load_parameters_from_json()
         self.spindle_load_stack = []
         self.autopilot_logger.reset()

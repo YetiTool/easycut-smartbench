@@ -279,7 +279,6 @@ class JobFeedbackScreen(Screen):
             self.m.s.autopilot_instance.stop()
             self.m.s.autopilot_instance.export()
             self.m.s.autopilot_instance.reset()
-            self.m.s.autopilot_instance = None
 
     def on_leave(self):
         self.sending_label.text = ""
