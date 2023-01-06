@@ -40,7 +40,7 @@ class AutoPilotLogger:
     def __init__(self, spindle_v_main, spindle_target_watts, increase_bias, decrease_bias, m_coefficient, c_coefficient,
                  increase_cap,
                  decrease_cap, job_name, serial_number, delay_between_feed_adjustments, outlier_amount,
-                 cap_for_feed_increase_during_z_movement):
+                 cap_for_feed_increase_during_z_movement, autopilot_instance):
         self.spindle_v_main = spindle_v_main
         self.spindle_target_watts = spindle_target_watts
         self.increase_bias = increase_bias
@@ -54,6 +54,7 @@ class AutoPilotLogger:
         self.delay_between_feed_adjustments = delay_between_feed_adjustments
         self.outlier_amount = outlier_amount
         self.cap_for_feed_increase_during_z_movement = cap_for_feed_increase_during_z_movement
+        self.autopilot_instance = autopilot_instance
 
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
                 feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
@@ -138,6 +139,9 @@ class AutoPilotLogger:
         url = 'https://docs.google.com/spreadsheets/d/' + spreadsheet_id
 
         print('Spreadsheet: ' + url)
+
+        self.autopilot_instance.reset()
+        self.reset()
 
     def reset(self):
         self.logs = []

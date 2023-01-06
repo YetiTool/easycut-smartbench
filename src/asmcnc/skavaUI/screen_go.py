@@ -463,9 +463,7 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
     def on_enter(self):
-        if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.reset()
-        else:
+        if not self.m.s.autopilot_instance:
             self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
