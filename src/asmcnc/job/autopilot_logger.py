@@ -99,12 +99,7 @@ class AutoPilotLogger:
             sweep.append([power, self.get_feed_multiplier(power)])
         return sweep
 
-    def export_to_gsheet(self):
-        if self.exported:
-            return
-
-        self.exported = True
-
+    def export_to_gsheet(self, dt):
         export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         sheet_name = export_time + '-' + self.job_name + '-YS' + str(self.serial_number)

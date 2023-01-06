@@ -140,8 +140,6 @@ class Autopilot:
         if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
             return
 
-        self.log("Reading", override=True)
-
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
 
         loads_to_use = list(raw_loads)
@@ -177,7 +175,7 @@ class Autopilot:
             self.m.s.autopilot_flag = False
 
     def export(self):
-        Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet, 15)
+        Clock.schedule_once(self.autopilot_logger.export_to_gsheet, 15)
 
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
