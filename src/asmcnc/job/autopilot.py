@@ -124,6 +124,9 @@ class Autopilot:
                                       self.m.s.sg_y2_motor)
 
     def remove_outliers(self, data):
+        if len(data) == 0:
+            return data
+
         outlier_list = list(data)
         avg = sum(outlier_list) / len(outlier_list)
         for value in outlier_list:
@@ -145,6 +148,9 @@ class Autopilot:
             if len(loads_to_use) < 3:
                 print('Data invalid - not enough values')
                 return
+
+        if len(loads_to_use) == 0:
+            return
 
         data_avg = sum(loads_to_use) / len(loads_to_use)
 
