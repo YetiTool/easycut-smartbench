@@ -245,7 +245,6 @@ class Autopilot:
 
     def cancel_job(self):
         self.export()
-        self.reset()
 
     def reset(self):
         self.setup = False
