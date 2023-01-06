@@ -177,7 +177,7 @@ class Autopilot:
             self.m.s.autopilot_flag = False
 
     def export(self):
-        Clock.schedule_once(self.autopilot_logger.export_to_gsheet(), 15)
+        Clock.schedule_once(lambda dt: self.autopilot_logger.export_to_gsheet, 15)
 
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
