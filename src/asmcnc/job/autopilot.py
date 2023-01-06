@@ -6,6 +6,7 @@ Created on 9 Dec 2022
 import json
 from datetime import datetime
 from math import sqrt, floor
+import threading
 
 from kivy.clock import Clock
 
@@ -171,7 +172,8 @@ class Autopilot:
             self.m.s.autopilot_flag = False
 
     def export(self):
-        self.autopilot_logger.export_to_gsheet()
+        thread = threading.Thread(target=self.autopilot_logger.export_to_gsheet)
+        thread.start()
 
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
