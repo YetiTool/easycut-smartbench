@@ -60,8 +60,6 @@ class Autopilot:
 
         self.setup = True
 
-        self.log("Run first setup - stack: " + str(self.spindle_load_stack), override=True)
-
     def get_best_adjustment(self, percentage):
         percentage = floor(percentage)
 
@@ -256,6 +254,4 @@ class Autopilot:
         self.spindle_load_stack = []
         if self.autopilot_logger:
             self.autopilot_logger.reset()
-        self.log("Reset autopilot - stack: " + str(self.spindle_load_stack), override=True)
-        self.log("Reset autopilot - logs: " + str(self.autopilot_logger.logs), override=True)
 
