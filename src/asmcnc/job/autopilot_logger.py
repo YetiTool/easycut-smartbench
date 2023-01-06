@@ -17,13 +17,13 @@ class AutoPilotLog:
         self.adjustment_list = str(adjustment_list).replace('[', '').replace(']', '')
         self.feed_override_percentage = feed_override_percentage
         self.moving_in_z = moving_in_z
-        self.sg_x_motor_axis = sg_x_motor_axis
-        self.sg_y_axis = sg_y_axis
-        self.sg_z_motor_axis = sg_z_motor_axis
-        self.sg_x1_motor = sg_x1_motor
-        self.sg_x2_motor = sg_x2_motor
-        self.sg_y1_motor = sg_y1_motor
-        self.sg_y2_motor = sg_y2_motor
+        self.sg_x_motor_axis = sg_x_motor_axis if sg_x_motor_axis > 0 else 0
+        self.sg_y_axis = sg_y_axis if sg_y_axis > 0 else 0
+        self.sg_z_motor_axis = sg_z_motor_axis if sg_z_motor_axis > 0 else 0
+        self.sg_x1_motor = sg_x1_motor if sg_x1_motor > 0 else 0
+        self.sg_x2_motor = sg_x2_motor if sg_x2_motor > 0 else 0
+        self.sg_y1_motor = sg_y1_motor if sg_y1_motor > 0 else 0
+        self.sg_y2_motor = sg_y2_motor if sg_y2_motor > 0 else 0
 
 
 def get_safe(listt, index):
