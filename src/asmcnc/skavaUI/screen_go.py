@@ -466,7 +466,7 @@ class GoScreen(Screen):
         if self.m.s.autopilot_instance:
             self.m.s.autopilot_instance.reset()
         else:
-            self.m.s.autopilot_instance = Autopilot(machine=self.sm, screen_manager=self.sm)
+            self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
