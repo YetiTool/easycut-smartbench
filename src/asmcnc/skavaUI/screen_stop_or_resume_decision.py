@@ -180,6 +180,7 @@ class StopOrResumeDecisionScreen(Screen):
 
         self.m.s.autopilot_instance.stop()
         self.m.s.autopilot_instance.export()
+        self.m.s.autopilot_instance.reset()
         self.m.s.autopilot_instance = None
 
     def resume_job(self):
