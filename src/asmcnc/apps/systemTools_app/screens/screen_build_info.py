@@ -644,11 +644,10 @@ class BuildInfoScreen(Screen):
             self.show_more_info.opacity = 1
 
     def get_smartbench_model(self):
-        try:
-            file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = (str(file.read()).replace("SmartBench ", "")).replace("CNC Router", "")
-            file.close()
-        except: 
+        model = self.m.smartbench_model()
+        if model != "SmartBench model detection failed":
+            self.smartbench_model.text = model.replace("SmartBench ", "").replace("CNC Router", "")
+        else:
             self.smartbench_model.text = 'SmartBench CNC Router'
 
     ## LOCALIZATION TESTING
