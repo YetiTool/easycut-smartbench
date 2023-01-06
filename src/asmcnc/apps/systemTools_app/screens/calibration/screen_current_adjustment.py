@@ -88,7 +88,7 @@ Builder.load_string("""
                                 on_press: root.home()
         
                             Button:
-                                text: 'Reset I'
+                                text: 'Reset Currents'
                                 on_press: root.reset_currents()
 
                             Button:
