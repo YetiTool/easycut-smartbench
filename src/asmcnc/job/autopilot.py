@@ -254,7 +254,8 @@ class Autopilot:
         self.m.s.autopilot_flag = False
         self.spindle_mains_voltage = None
         self.spindle_load_stack = []
-        self.autopilot_logger.reset()
+        if self.autopilot_logger:
+            self.autopilot_logger.reset()
         self.log("Reset autopilot - stack: " + str(self.spindle_load_stack), override=True)
         self.log("Reset autopilot - logs: " + str(self.autopilot_logger.logs), override=True)
 
