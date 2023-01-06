@@ -378,6 +378,6 @@ class CurrentAdjustment(Screen):
             self.protocol_status.text = ""
 
     def grbl_reset(self):
-        self.m.reset_from_alarm()
+        self.m.resume_from_alarm()
 
 
