@@ -243,3 +243,8 @@ class Autopilot:
         self.setup = False
         self.m.s.autopilot_flag = False
         self.export()
+
+    def reset(self):
+        self.spindle_mains_voltage = None
+        self.spindle_load_stack = []
+        self.autopilot_logger.reset()
