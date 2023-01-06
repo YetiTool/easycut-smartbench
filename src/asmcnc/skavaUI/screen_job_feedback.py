@@ -275,6 +275,11 @@ class JobFeedbackScreen(Screen):
         self.sm.get_screen('go').is_job_started_already = False
         self.db.send_job_end(True)
 
+        if self.m.s.autopilot_instance:
+            self.m.s.autopilot_instance.stop()
+            self.m.s.autopilot_instance.export()
+            self.m.s.autopilot_instance = None
+
     def on_leave(self):
         self.sending_label.text = ""
 
