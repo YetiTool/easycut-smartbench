@@ -141,6 +141,8 @@ class Autopilot:
         if len(self.spindle_load_stack) < self.amount_of_values_in_stack or not self.setup:
             return
 
+        self.log("Reading", override=True)
+
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
 
         loads_to_use = list(raw_loads)

@@ -1021,6 +1021,11 @@ class SerialConnection(object):
 
                                     self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
 
+                        log(self.autopilot_flag)
+                        log(self.autopilot_instance)
+                        log(self.autopilot_instance.spindle_mains_voltage)
+
+
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
                         elif self.digital_spindle_kill_time >= 80 : overload_mV_equivalent_state = 20
