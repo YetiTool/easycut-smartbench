@@ -276,9 +276,7 @@ class JobFeedbackScreen(Screen):
         self.db.send_job_end(True)
 
         if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.stop()
-            self.m.s.autopilot_instance.export()
-            self.m.s.autopilot_instance.reset()
+            self.m.s.autopilot_instance.cancel_job()
 
     def on_leave(self):
         self.sending_label.text = ""

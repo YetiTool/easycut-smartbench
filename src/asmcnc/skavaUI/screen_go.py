@@ -463,6 +463,8 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
     def on_enter(self):
+        self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
+
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
             if self.m.spindle_brush_use_seconds >= 0.9 * self.m.spindle_brush_lifetime_seconds:
@@ -572,11 +574,10 @@ class GoScreen(Screen):
 
     def start_or_pause_button_press(self):
         log('start/pause button pressed')
-        if not self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
 
         if self.is_job_started_already:
             self._pause_job()
+            self.m.s.autopilot_instance.stop()
         else:
             self._start_running_job()
             self.m.s.autopilot_instance.start()

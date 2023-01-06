@@ -239,9 +239,7 @@ class Autopilot:
                 except:
                     print("Invalid parameter: " + item["Name"])
 
-    def reset(self):
+    def cancel_job(self):
         self.setup = False
-        self.load_parameters_from_json()
-        self.spindle_load_stack = []
-        self.spindle_mains_voltage = None
-        self.autopilot_logger.reset()
+        self.m.s.autopilot_flag = False
+        self.export()

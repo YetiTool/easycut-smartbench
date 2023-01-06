@@ -179,9 +179,7 @@ class StopOrResumeDecisionScreen(Screen):
         self.sm.current = 'job_incomplete'
 
         if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.stop()
-            self.m.s.autopilot_instance.export()
-            self.m.s.autopilot_instance.reset()
+            self.m.s.autopilot_instance.cancel_job()
 
     def resume_job(self):
         if self.m.s.autopilot_instance:
