@@ -250,7 +250,6 @@ class Autopilot:
 
     def reset(self):
         self.setup = False
-        self.m.s.autopilot_flag = False
         self.spindle_mains_voltage = None
         self.spindle_load_stack = []
         if self.autopilot_logger:
