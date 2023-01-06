@@ -57,6 +57,8 @@ class Autopilot:
 
         self.setup = True
 
+        self.log("Run first setup - stack: " + str(self.spindle_load_stack), override=True)
+
     def get_best_adjustment(self, percentage):
         percentage = floor(percentage)
 
@@ -156,6 +158,8 @@ class Autopilot:
         self.adjust(data_avg, raw_loads, loads_to_use)
 
     def start(self):
+        self.spindle_load_stack = []
+
         self.load_parameters_from_json()
         self.amount_of_values_in_stack = (self.delay_between_feed_adjustments * 10) // (0.1 * 10)
 
@@ -240,11 +244,21 @@ class Autopilot:
                     print("Invalid parameter: " + item["Name"])
 
     def cancel_job(self):
+        self.export()
         self.setup = False
         self.m.s.autopilot_flag = False
-        self.export()
-
-    def reset(self):
         self.spindle_mains_voltage = None
         self.spindle_load_stack = []
         self.autopilot_logger.reset()
+        self.log("Reset autopilot - stack: " + str(self.spindle_load_stack), override=True)
+        self.log("Reset autopilot - logs: " + str(self.autopilot_logger.logs), override=True)
+
+    def reset(self):
+        self.setup = False
+        self.m.s.autopilot_flag = False
+        self.spindle_mains_voltage = None
+        self.spindle_load_stack = []
+        self.autopilot_logger.reset()
+        self.log("Reset autopilot - stack: " + str(self.spindle_load_stack), override=True)
+        self.log("Reset autopilot - logs: " + str(self.autopilot_logger.logs), override=True)
+
