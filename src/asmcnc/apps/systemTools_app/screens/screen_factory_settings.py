@@ -777,7 +777,7 @@ class FactorySettingsScreen(Screen):
             except:
                 pass
 
-            if self.smartbench_model.text == 'Choose model':
+            if self.smartbench_model.text == 'SmartBench model detection failed':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
@@ -903,19 +903,10 @@ class FactorySettingsScreen(Screen):
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
-        print('Writing ' + self.smartbench_model.text)
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            file = open(self.smartbench_model_path, "w+")
-            file.write(str(self.smartbench_model.text))
-            file.close()
 
     def get_smartbench_model(self):
-        try:
-            file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = str(file.read())
-            file.close()
-        except: 
-            self.smartbench_model.text = 'Choose Model'
+        self.smartbench_model.text = self.m.smartbench_model()
+        self.set_smartbench_model()
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))

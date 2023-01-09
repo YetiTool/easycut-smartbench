@@ -888,60 +888,53 @@ class RouterMachine(object):
     
 
     def is_machines_fw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
+
+        # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
+        try:
+            machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
+            ref_version_parts = version_to_reference.split('.')[:3]
         
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+            # convert values to ints for comparison
+            machine_fw_parts = [int(i) for i in machine_fw_parts]
+            ref_version_parts = [int(i) for i in ref_version_parts]
+        except:
+            error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
+            ".\n\n Please check Z Head connection."
+            log(error_description)
 
-            # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
-            try:
-                machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
-                ref_version_parts = version_to_reference.split('.')[:3]
-            
-                # convert values to ints for comparison
-                machine_fw_parts = [int(i) for i in machine_fw_parts]
-                ref_version_parts = [int(i) for i in ref_version_parts]
-            except:
-                error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
-                ".\n\n Please check Z Head connection."
-                log(error_description)
-
-                return False
-            
-            if machine_fw_parts[0] > ref_version_parts[0]:
+            return False
+        
+        if machine_fw_parts[0] > ref_version_parts[0]:
+            return True
+        elif machine_fw_parts[0] < ref_version_parts[0]:
+            return False
+        else: # equal so far
+            if machine_fw_parts[1] > ref_version_parts[1]:
                 return True
-            elif machine_fw_parts[0] < ref_version_parts[0]:
+            elif machine_fw_parts[1] < ref_version_parts[1]:
                 return False
             else: # equal so far
-                if machine_fw_parts[1] > ref_version_parts[1]:
+                if machine_fw_parts[2] > ref_version_parts[2]:
                     return True
-                elif machine_fw_parts[1] < ref_version_parts[1]:
+                elif machine_fw_parts[2] < ref_version_parts[2]:
                     return False
-                else: # equal so far
-                    if machine_fw_parts[2] > ref_version_parts[2]:
-                        return True
-                    elif machine_fw_parts[2] < ref_version_parts[2]:
-                        return False
-                    else: 
-                        return True # equal
-
-        else: return False
+                else: 
+                    return True # equal
 
     def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription): 
-        
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            try:
-                if float(self.s.hw_version) >= version_to_reference:
-                    return True
-                else:
-                    return False
-            
-            except:
-                error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
-                ".\n\n Please check Z Head connection."
-                log(error_description)
 
+        try:
+            if float(self.s.hw_version) >= version_to_reference:
+                return True
+            else:
                 return False
+        
+        except:
+            error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
+            ".\n\n Please check Z Head connection."
+            log(error_description)
 
-        else: return False
+            return False
 
 # HW/FW ADJUSTMENTS
 
@@ -1319,6 +1312,29 @@ class RouterMachine(object):
         try: self.s.fw_version
         except: return 0
         else: return self.s.fw_version
+
+    def smartbench_model(self):
+        if self.bench_is_short():
+            return "SmartBench Mini V1.3 PrecisionPro"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+            return "SmartBench V1.3 PrecisionPro CNC Router"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+            return "SmartBench V1.2 PrecisionPro CNC Router"
+        else:
+            zh_ver = self.z_head_version()
+
+            if zh_ver == "03":
+                return "SmartBench V1.2 Precision CNC Router"
+            elif zh_ver == "02":
+                return "SmartBench V1.2 Standard CNC Router"
+            elif zh_ver == "01":
+                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                    return "SmartBench V1.1 CNC Router"
+                else:
+                    return "SmartBench V1.0 CNC Router"
+
+        log("SmartBench model detection failed")
+        return "SmartBench model detection failed"
 
 # POSITONAL GETTERS            
         
@@ -1899,29 +1915,35 @@ class RouterMachine(object):
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
 
-    def calibrate_Z(self):
-        self.run_calibration = True
-        log("Calibrating Z...")
-        self.initialise_calibration(X = False, Y = False, Z = True)
-
-    def calibrate_X_and_Z(self):
+    def calibrate_X(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
-        log("Calibrating X and Z...")
-        self.initialise_calibration(X = True, Y = False, Z = True)
+        log("Calibrating X...")
+        self.initialise_calibration(X = True, Y = False, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_Y(self):
+    def calibrate_Y(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating Y...")
-        self.initialise_calibration(X = False, Y = True, Z = False)
+        self.initialise_calibration(X = False, Y = True, Z = False, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
-    def calibrate_X_Y_and_Z(self):
+    def calibrate_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
+
+        self.run_calibration = True
+        log("Calibrating Z...")
+        self.initialise_calibration(X = False, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
+
+    def calibrate_X_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
+
+        self.run_calibration = True
+        log("Calibrating X and Z...")
+        self.initialise_calibration(X = True, Y = False, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
+
+    def calibrate_X_Y_and_Z(self, zero_position=True, mod_soft_limits=True, fast=False):
 
         self.run_calibration = True
         log("Calibrating X, Y, and Z...")
-        self.initialise_calibration(X = True, Y = True, Z = True)
-
+        self.initialise_calibration(X = True, Y = True, Z = True, zero_position=zero_position, mod_soft_limits=mod_soft_limits, quick_calibration=fast)
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -2480,17 +2502,25 @@ class RouterMachine(object):
 
     time_to_check_for_calibration_prep = 0
 
-    def initialise_calibration(self, X=False, Y=False, Z=False):
+    disable_and_enable_soft_limits = True
+
+    quick_calibration = False
+
+
+    def initialise_calibration(self, X=False, Y=False, Z=False, zero_position=True, mod_soft_limits=True, quick_calibration=False):
 
         log("Initialise Calibration")
-
         self.calibration_tuning_fail_info = ''
+        self.disable_and_enable_soft_limits = mod_soft_limits
+        self.quick_calibration = quick_calibration
 
-        self.s.write_command('$20=0')
+        if self.disable_and_enable_soft_limits: 
+            self.s.write_command('$20=0')
 
-        log("Zero position")
-        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        if zero_position:
+            log("Zero position")
+            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
@@ -2543,19 +2573,21 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
+            path_start = './asmcnc/production/calibration_gcode_files/'
+            if self.quick_calibration: path_end = '_cal_quick_n_coarse.gc'
+            else: path_end = '_cal.gc'
+            calibration_file = path_start + axis + path_end
+
             if axis == 'X': 
                 calibrate_mode = 32
-                calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc'
                 altDisplayText = "CALIBRATE X AXIS"
 
             if axis == 'Y': 
                 calibrate_mode = 64
-                calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc'
                 altDisplayText = "CALIBRATE Y AXIS"
 
             if axis == 'Z': 
                 calibrate_mode = 128
-                calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc'
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
@@ -2612,7 +2644,7 @@ class RouterMachine(object):
 
     def save_calibration_coefficients_to_motor_classes(self):
 
-        self.s.write_command('$20=1')
+        if self.disable_and_enable_soft_limits: self.s.write_command('$20=1')
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
         Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
 
