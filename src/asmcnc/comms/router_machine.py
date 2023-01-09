@@ -888,60 +888,53 @@ class RouterMachine(object):
     
 
     def is_machines_fw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
+
+        # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
+        try:
+            machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
+            ref_version_parts = version_to_reference.split('.')[:3]
         
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+            # convert values to ints for comparison
+            machine_fw_parts = [int(i) for i in machine_fw_parts]
+            ref_version_parts = [int(i) for i in ref_version_parts]
+        except:
+            error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
+            ".\n\n Please check Z Head connection."
+            log(error_description)
 
-            # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
-            try:
-                machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
-                ref_version_parts = version_to_reference.split('.')[:3]
-            
-                # convert values to ints for comparison
-                machine_fw_parts = [int(i) for i in machine_fw_parts]
-                ref_version_parts = [int(i) for i in ref_version_parts]
-            except:
-                error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
-                ".\n\n Please check Z Head connection."
-                log(error_description)
-
-                return False
-            
-            if machine_fw_parts[0] > ref_version_parts[0]:
+            return False
+        
+        if machine_fw_parts[0] > ref_version_parts[0]:
+            return True
+        elif machine_fw_parts[0] < ref_version_parts[0]:
+            return False
+        else: # equal so far
+            if machine_fw_parts[1] > ref_version_parts[1]:
                 return True
-            elif machine_fw_parts[0] < ref_version_parts[0]:
+            elif machine_fw_parts[1] < ref_version_parts[1]:
                 return False
             else: # equal so far
-                if machine_fw_parts[1] > ref_version_parts[1]:
+                if machine_fw_parts[2] > ref_version_parts[2]:
                     return True
-                elif machine_fw_parts[1] < ref_version_parts[1]:
+                elif machine_fw_parts[2] < ref_version_parts[2]:
                     return False
-                else: # equal so far
-                    if machine_fw_parts[2] > ref_version_parts[2]:
-                        return True
-                    elif machine_fw_parts[2] < ref_version_parts[2]:
-                        return False
-                    else: 
-                        return True # equal
-
-        else: return False
+                else: 
+                    return True # equal
 
     def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription): 
-        
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            try:
-                if float(self.s.hw_version) >= version_to_reference:
-                    return True
-                else:
-                    return False
-            
-            except:
-                error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
-                ".\n\n Please check Z Head connection."
-                log(error_description)
 
+        try:
+            if float(self.s.hw_version) >= version_to_reference:
+                return True
+            else:
                 return False
+        
+        except:
+            error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
+            ".\n\n Please check Z Head connection."
+            log(error_description)
 
-        else: return False
+            return False
 
 # HW/FW ADJUSTMENTS
 
@@ -1319,6 +1312,29 @@ class RouterMachine(object):
         try: self.s.fw_version
         except: return 0
         else: return self.s.fw_version
+
+    def smartbench_model(self):
+        if self.bench_is_short():
+            return "SmartBench Mini V1.3 PrecisionPro"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+            return "SmartBench V1.3 PrecisionPro CNC Router"
+        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+            return "SmartBench V1.2 PrecisionPro CNC Router"
+        else:
+            zh_ver = self.z_head_version()
+
+            if zh_ver == "03":
+                return "SmartBench V1.2 Precision CNC Router"
+            elif zh_ver == "02":
+                return "SmartBench V1.2 Standard CNC Router"
+            elif zh_ver == "01":
+                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                    return "SmartBench V1.1 CNC Router"
+                else:
+                    return "SmartBench V1.0 CNC Router"
+
+        log("SmartBench model detection failed")
+        return "SmartBench model detection failed"
 
 # POSITONAL GETTERS            
         
@@ -3007,22 +3023,31 @@ class RouterMachine(object):
 
     def set_motor_current(self, axis, current):
 
-        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
-            self.state().startswith('Idle'):
+        if  (self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle')):
 
-            if "X" in axis: motors = [TMC_X1, TMC_X2]
-            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
-            if "Z" in axis: motors = [TMC_Z]
+            motors = []
 
+            if "Z" in axis: motors.append(TMC_Z)
+
+            if "X1" in axis or "X2" in axis: 
+                if "X1" in axis: motors.append(TMC_X1)
+                if "X2" in axis: motors.append(TMC_X2)
+            elif "X" in axis: 
+                motors.extend([TMC_X1, TMC_X2])
+
+            if "Y1" in axis or "Y2" in axis: 
+                if "Y1" in axis: motors.append(TMC_Y1)
+                if "Y2" in axis: motors.append(TMC_Y2)
+            elif "Y" in axis: 
+                motors.extend([TMC_Y1, TMC_Y2])
+            
             for motor in motors: 
 
                 altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
-                time.sleep(0.5)
-
                 altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
-                time.sleep(0.5)
 
             return True
 
@@ -3043,7 +3068,6 @@ class RouterMachine(object):
 
                 altDisplayText = 'SET THERMAL COEFF: ' + axis + ': ' + "TMC: " + str(motor) + ", " + str(value)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_THERMAL_COEFF, value=value)
-                time.sleep(0.5)
 
             return True
 
