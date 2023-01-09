@@ -797,6 +797,7 @@ class SerialConnection(object):
     autopilot_instance = None
 
     spindle_data_failures = 0
+    spindle_data_error_buffer = 0
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1016,8 +1017,11 @@ class SerialConnection(object):
                             if self.autopilot_flag:
                                 if self.autopilot_instance:
                                     if not self.autopilot_instance.spindle_mains_voltage:
-                                        self.autopilot_instance.first_read_setup()
-                                        self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                        if self.spindle_data_error_buffer == 5:
+                                            self.autopilot_instance.first_read_setup()
+                                            self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                        else:
+                                            self.spindle_data_error_buffer += 1
 
                                     self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
 
