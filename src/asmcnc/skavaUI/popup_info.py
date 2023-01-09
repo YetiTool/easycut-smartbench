@@ -746,7 +746,7 @@ class PopupWait(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(500, 200),
-                      auto_dismiss= False
+                      auto_dismiss= True
                       )
         
         self.popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
