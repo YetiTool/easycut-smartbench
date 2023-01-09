@@ -88,8 +88,12 @@ Builder.load_string("""
                                 on_press: root.home()
         
                             Button:
-                                text: 'Reset'
+                                text: 'Reset Currents'
                                 on_press: root.reset_currents()
+
+                            Button:
+                                text: 'GRBL Reset'
+                                on_press: root.grbl_reset()
 
                             Label: 
                                 id: protocol_status
@@ -244,12 +248,16 @@ class CurrentAdjustment(Screen):
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
-        self.reset_currents()
-        self.raw_sg_toggle_button.state = 'normal'
-        self.toggle_raw_sg_values()
         if self.update_protocol_status_label_event: Clock.unschedule(self.update_protocol_status_label_event)
 
     def back_to_fac_settings(self):
+        if not self.m.state().startswith("Idle"):
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't reset currents!")
+            return
+
+        self.raw_sg_toggle_button.state = 'normal'
+        self.toggle_raw_sg_values()
+        self.reset_currents()
         self.systemtools_sm.open_factory_settings_screen()
 
     def home(self):
@@ -312,12 +320,20 @@ class CurrentAdjustment(Screen):
 
 
     def reset_currents(self):
+        
+        if not self.m.state().startswith("Idle"):
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't reset currents!")
+            return False
+
         self.wait_popup_for_reset_currents = PopupWait(self.systemtools_sm.sm,  self.l)
-        self.x1_current_adjustment_widget.reset_current()
-        self.x2_current_adjustment_widget.reset_current()
-        self.y1_current_adjustment_widget.reset_current()
-        self.y2_current_adjustment_widget.reset_current()
-        self.z_current_adjustment_widget.reset_current()
+
+        if  not self.x1_current_adjustment_widget.reset_current() or \
+            not self.x2_current_adjustment_widget.reset_current() or \
+            not self.y1_current_adjustment_widget.reset_current() or \
+            not self.y2_current_adjustment_widget.reset_current() or \
+            not self.z_current_adjustment_widget.reset_current():
+            PopupWarning(self.systemtools_sm.sm,  self.l, "Issue resetting currents!")
+
         self.wait_while_currents_reset()
 
     def wait_while_currents_reset(self, dt=0):
@@ -354,12 +370,14 @@ class CurrentAdjustment(Screen):
         else: 
             Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
 
-
     def update_protocol_status_label(self, dt=0):
 
         if self.m.s.write_protocol_buffer: 
             self.protocol_status.text = "Writing..."
         else:
             self.protocol_status.text = ""
+
+    def grbl_reset(self):
+        self.m.resume_from_alarm()
 
 

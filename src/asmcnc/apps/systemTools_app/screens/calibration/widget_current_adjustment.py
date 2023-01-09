@@ -83,9 +83,12 @@ class CurrentAdjustmentWidget(Widget):
         self.set_current(self.current_current-1)
 
     def reset_current(self):
-        self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
-        self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
-        self.current_current_label.text = str(self.current_current)
+        if self.m.set_motor_current(self.motor_name_dict[self.motor], self.m.TMC_motor[self.motor].ActiveCurrentScale):
+            self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
+            self.current_current_label.text = str(self.current_current)
+            return True
+
+        return False
 
     def on_focus(self, instance, value):
         if not value:
