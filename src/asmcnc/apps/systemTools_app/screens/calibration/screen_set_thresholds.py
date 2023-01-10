@@ -3,6 +3,7 @@ from kivy.lang import Builder
 
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
 from asmcnc.skavaUI.popup_info import PopupWait
+from kivy.clock import Clock
 
 Builder.load_string("""
 <SetThresholdsScreen>:
