@@ -24,6 +24,8 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 
+from asmcnc.apps.systemTools_app.screens.xy_jig import screen_xy_jig_decision
+
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
 Builder.load_string("""
@@ -341,10 +343,8 @@ Builder.load_string("""
                         valign: "middle"
 
                     Button:
-                        text: 'FT B1'
-                        background_normal: ''
-                        background_color: [0.75,0.34,0.51,1]
-                        on_press: root.final_test("pink")
+                        text: 'XY Jig'
+                        on_press: root.enter_xy_jig()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -1076,6 +1076,14 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         self.systemtools_sm.sm.current = 'general_measurement'
+
+
+    def enter_xy_jig(self):
+        if not self.systemtools_sm.sm.has_screen('xy_jig_decision'):
+            xy_jig_decision_screen = screen_xy_jig_decision.XYJigDecision(name='xy_jig_decision', systemtools=self.systemtools_sm, m=self.m, l=self.l)
+            self.systemtools_sm.sm.add_widget(xy_jig_decision_screen)
+
+        self.systemtools_sm.sm.current = 'xy_jig_decision'
 
 
 

@@ -60,7 +60,7 @@ class ScreenManagerSystemTools(object):
             else:
                 count +=1
                 Clock.schedule_once(lambda dt: get_logs(count), 0.2)
-                print count
+                print(count)
 
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)
@@ -207,6 +207,11 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('current_adjustment')
         self.destroy_screen('stall_jig')
         self.destroy_screen('set_thresholds')
+        self.destroy_screen('general_measurement')
+        self.destroy_screen('xy_jig_decision')
+        self.destroy_screen('xy_jig')
+        self.destroy_screen('xy_jig_monitor')
+        self.destroy_screen('xy_jig_manual_move')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
