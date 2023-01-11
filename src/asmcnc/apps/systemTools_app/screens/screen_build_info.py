@@ -679,12 +679,14 @@ class BuildInfoScreen(Screen):
     def toggle_ssh(self):
         toggled = self.set.toggle_ssh()
 
-        enabled_text = self.l.get_str("Enabled") if self.set.is_service_running('ssh') else self.l.get_str("Disabled")
-
-        self.toggle_ssh_button.text = 'SSH: ' + enabled_text
+        self.refresh_ssh_button()
 
         if not toggled:
             PopupSSHToggleFailed(localization=self.l)
+
+    def refresh_ssh_button(self):
+        enabled_text = self.l.get_str("Enabled") if self.set.is_service_running('ssh') else self.l.get_str("Disabled")
+        self.toggle_ssh_button.text = self.l.get_str("SSH") + ": " + enabled_text
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -700,8 +702,7 @@ class BuildInfoScreen(Screen):
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
 
-        enabled_text = self.l.get_str("Enabled") if self.set.is_service_running('ssh') else self.l.get_str("Disabled")
-        self.toggle_ssh_button.text = 'SSH: ' + enabled_text
+        self.refresh_ssh_button()
 
         self.show_more_info.text = (
             self.l.get_str('Software') + '\n' + \
