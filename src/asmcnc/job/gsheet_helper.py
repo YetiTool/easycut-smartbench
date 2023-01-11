@@ -213,7 +213,7 @@ def write_data_to_sheet(spreadsheet_id, data):
 
         result = service.spreadsheets().values().update(
             spreadsheetId=spreadsheet_id, range="Data!A1:X",
-            valueInputOption="USER_ENTERED", body=body).execute()
+            valueInputOption="RAW", body=body).execute()
 
         return result
     except HttpError as e:
