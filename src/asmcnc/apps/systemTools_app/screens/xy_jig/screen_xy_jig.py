@@ -232,7 +232,12 @@ class XYJig(Screen):
 
         self.systemtools_sm = kwargs['systemtools']
         self.m=kwargs['m']
-        self.axis=kwargs['axis']
+
+        axis=kwargs['axis']
+        if axis == 'Y':
+            self.axis = 'Y'
+        else:
+            self.axis = 'X'
 
         Clock.schedule_interval(self.update_realtime_load, 0.1)
 
@@ -266,7 +271,7 @@ class XYJig(Screen):
     def begin_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
+                self.m.jog_absolute_single_axis('Z', -1, self.max_speed)
                 Clock.schedule_once(self.start_moving_down, 1)
             else:
                 Clock.schedule_once(self.begin_test, 0.1)
@@ -274,7 +279,7 @@ class XYJig(Screen):
     def start_moving_down(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed / 5)
+                self.m.jog_absolute_single_axis('Z', self.max_travel, self.max_speed / 5)
                 Clock.schedule_once(self.record_down_values, 0.4)
             else:
                 Clock.schedule_once(self.start_moving_down, 0.1)
@@ -282,7 +287,7 @@ class XYJig(Screen):
     def record_down_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed / 5)
+                self.m.jog_absolute_single_axis('Z', -1, self.max_speed / 5)
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
@@ -305,13 +310,13 @@ class XYJig(Screen):
         if self.test_running:
             self.m.set_motor_current("Z", self.phase_two_current)
             self.current_realtime.text = str(self.phase_two_current)
-            self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel, self.z_axis_max_speed)
+            self.m.jog_absolute_single_axis('Z', self.max_travel, self.max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
     def continue_phase_two(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.z_axis_max_speed)
+                self.m.jog_absolute_single_axis('Z', -1, self.max_speed)
                 Clock.schedule_once(self.finish_test, 0.4)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
@@ -414,5 +419,9 @@ class XYJig(Screen):
         self.systemtools_sm.sm.current = 'xy_jig_manual_move'
 
     def exit(self):
-        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+        if self.axis == 'Y':
+            self.m.enable_y_motors()
+        else:
+            self.m.enable_x_motors()
+
         self.systemtools_sm.open_factory_settings_screen()

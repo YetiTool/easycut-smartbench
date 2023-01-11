@@ -25,7 +25,7 @@ Builder.load_string("""
             valign: 'middle'
             background_color: [1,0,0,1]
             background_normal: ''
-            on_press: root.enter_xy_jig('x_single')
+            on_press: root.enter_xy_jig('X_single')
 
         Button:
             text: 'X Double Stack'
@@ -36,7 +36,7 @@ Builder.load_string("""
             valign: 'middle'
             background_color: [1,0,0,1]
             background_normal: ''
-            on_press: root.enter_xy_jig('x_double')
+            on_press: root.enter_xy_jig('X_double')
 
         Button:
             text: 'Y'
@@ -47,7 +47,7 @@ Builder.load_string("""
             valign: 'middle'
             background_color: hex('#00C300FF')
             background_normal: ''
-            on_press: root.enter_xy_jig('y')
+            on_press: root.enter_xy_jig('Y')
 
 """)
 
@@ -77,9 +77,15 @@ class XYJigDecision(Screen):
         self.systemtools_sm.sm.add_widget(xy_jig_screen)
 
         try:
-            self.systemtools_sm.sm.get_screen('xy_jig').z_axis_max_travel = -self.m.s.setting_132
-            self.systemtools_sm.sm.get_screen('xy_jig').z_axis_max_speed = self.m.s.setting_112
-            self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+            if axis == 'Y':
+                self.systemtools_sm.sm.get_screen('xy_jig').max_travel = -self.m.s.setting_131
+                self.systemtools_sm.sm.get_screen('xy_jig').max_speed = self.m.s.setting_111
+                self.m.disable_y_motors()
+            else:
+                self.systemtools_sm.sm.get_screen('xy_jig').max_travel = -self.m.s.setting_130
+                self.systemtools_sm.sm.get_screen('xy_jig').max_speed = self.m.s.setting_110
+                self.m.disable_x_motors()
+
             self.systemtools_sm.sm.current = 'xy_jig'
         except:
             self.systemtools_sm.open_factory_settings_screen()

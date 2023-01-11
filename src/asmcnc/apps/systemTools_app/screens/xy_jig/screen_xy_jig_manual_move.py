@@ -96,7 +96,7 @@ Builder.load_string("""
                     bold: True
                     background_color: [0,1,0,1]
                     background_normal: ''
-                    on_press: root.energise_motor()
+                    on_press: root.energise_motors()
 
                 Button:
                     text: 'De-energise motor'
@@ -104,7 +104,7 @@ Builder.load_string("""
                     bold: True
                     background_color: [1,0,0,1]
                     background_normal: ''
-                    on_press: root.de_energise_motor()
+                    on_press: root.de_energise_motors()
 
             BoxLayout:
                 orientation: 'vertical'
@@ -183,16 +183,22 @@ class XYJigManualMove(Screen):
             self.systemtools_sm.sm.get_screen('xy_jig').phase_two_current = int(self.phase_two_input.text)
 
     def set_power_high(self):
-        self.m.set_motor_current("Z", 25)
+        self.m.set_motor_current(self.axis, 25)
 
     def set_power_low(self):
-        self.m.set_motor_current("Z", 13)
+        self.m.set_motor_current(self.axis, 13)
 
-    def energise_motor(self):
-        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+    def energise_motors(self):
+        if self.axis == 'Y':
+            self.m.enable_y_motors()
+        else:
+            self.m.enable_x_motors()
 
-    def de_energise_motor(self):
-        self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+    def de_energise_motors(self):
+        if self.axis == 'Y':
+            self.m.disable_y_motors()
+        else:
+            self.m.disable_x_motors()
 
 
     def home(self):
