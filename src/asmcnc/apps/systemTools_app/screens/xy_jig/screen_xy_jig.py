@@ -231,9 +231,9 @@ class XYJig(Screen):
         super(XYJig, self).__init__(**kwargs)
 
         self.systemtools_sm = kwargs['systemtools']
-        self.m=kwargs['m']
+        self.m = kwargs['m']
 
-        axis=kwargs['axis']
+        axis = kwargs['axis']
         if axis == 'Y':
             self.axis = 'Y'
         else:

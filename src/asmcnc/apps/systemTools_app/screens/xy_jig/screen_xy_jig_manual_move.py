@@ -3,15 +3,16 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.production.z_head_mechanics_jig import widget_z_move_mechanics
+from asmcnc.apps.maintenance_app.widget_maintenance_xy_move import MaintenanceXYMove
 
 Builder.load_string("""
 <XYJigManualMove>:
 
     load_label:load_label
     pos_label:pos_label
+    pos_label_header:pos_label_header
 
-    z_move_container:z_move_container
+    xy_move_container:xy_move_container
 
     phase_one_input:phase_one_input
     phase_two_input:phase_two_input
@@ -125,7 +126,8 @@ Builder.load_string("""
                         bold: True
 
                     Label:
-                        text: 'Z axis position:'
+                        id: pos_label_header
+                        text: 'Axis position:'
                         font_size: dp(25)
 
                     Label:
@@ -147,7 +149,7 @@ Builder.load_string("""
                 padding: [dp(0), dp(50)]
 
                 BoxLayout:
-                    id: z_move_container
+                    id: xy_move_container
 
                     canvas:
                         Color:
@@ -166,10 +168,17 @@ class XYJigManualMove(Screen):
 
         self.systemtools_sm = kwargs['systemtools']
         self.m = kwargs['m']
-        self.axis = kwargs['axis']
 
-        z_move_widget = widget_z_move_mechanics.ZMoveMechanics(machine=self.m, screen_manager=self.systemtools_sm.sm)
-        self.z_move_container.add_widget(z_move_widget)
+        axis = kwargs['axis']
+        if axis == 'Y':
+            self.axis = 'Y'
+        else:
+            self.axis = 'X'
+
+        self.pos_label_header.text = self.axis + ' axis position:'
+
+        xy_move_widget = MaintenanceXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm)
+        self.xy_move_container.add_widget(xy_move_widget)
 
         Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
@@ -207,12 +216,17 @@ class XYJigManualMove(Screen):
         self.m.request_homing_procedure('xy_jig_manual_move','xy_jig_manual_move')
 
     def update_realtime_labels(self, dt):
-        if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
+        if self.axis == 'Y':
+            sg_value = self.m.s.sg_y_axis
+            self.pos_label.text = self.m.x_pos_str()
+        else:
+            sg_value = self.m.s.sg_x_motor_axis
+            self.pos_label.text = self.m.y_pos_str()
+
+        if sg_value == -999 or sg_value == None:
             self.load_label.text = '-'
         else:
-            self.load_label.text = str(self.m.s.sg_z_motor_axis)
-
-        self.pos_label.text = str(self.m.mpos_z())
+            self.load_label.text = str(sg_value)
 
 
     def back(self):
