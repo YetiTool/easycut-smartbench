@@ -23,8 +23,6 @@ import os.path
 from os import path
 
 from __builtin__ import True
-from kivy.uix.switch import Switch
-from pickle import TRUE
 
 from asmcnc.skavaUI import popup_info
 
