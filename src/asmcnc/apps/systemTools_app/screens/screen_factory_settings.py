@@ -343,7 +343,7 @@ Builder.load_string("""
                         valign: "middle"
 
                     Button:
-                        text: 'XY Jig'
+                        text: 'Virtual Finger'
                         on_press: root.enter_xy_jig()
                         text_size: self.size
                         halign: "center"
