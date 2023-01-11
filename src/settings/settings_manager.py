@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, time, threading
+import sys, os, subprocess, time, threading
 from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
@@ -473,6 +473,47 @@ class Settings(object):
             return False
 
         return True
+
+    # disable ssh (will not start on boot)
+    def disable_ssh(self):
+        self.stop_ssh()
+        os.system('sudo systemctl disable ssh')
+
+    # enable ssh (will start on boot, only for dev use)
+    def enable_ssh(self):
+        self.start_ssh()
+        os.system('sudo systemctl enable ssh')
+
+    # toggle ssh service running or not
+    def toggle_ssh(self):
+        ssh_running = self.is_service_running('ssh')
+
+        if ssh_running:
+            return self.stop_ssh()
+
+        return self.start_ssh()
+
+    # stop ssh (doesn't change status on boot)
+    def stop_ssh(self):
+        os.system('sudo systemctl stop ssh')
+
+        return not self.is_service_running('ssh')
+
+    # start ssh (doesn't change status on boot)
+    def start_ssh(self):
+        os.system('sudo systemctl start ssh')
+
+        return self.is_service_running('ssh')
+
+    def is_service_running(self, service):
+        try:
+            with open(os.devnull, 'wb') as hide_output:
+                exit_code = subprocess.Popen(['systemctl', 'is-active', service],
+                                             stdout=hide_output, stderr=hide_output).wait()
+                return exit_code == 0
+        except:
+            # this will happen on non linux systems
+            log("Couldn't check status of service: " + service)
 
 
             

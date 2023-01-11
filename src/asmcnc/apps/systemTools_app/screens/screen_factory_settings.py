@@ -734,9 +734,7 @@ class FactorySettingsScreen(Screen):
             pass
 
     def factory_reset(self):
-
         def nested_factory_reset():
-
             # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
@@ -746,6 +744,7 @@ class FactorySettingsScreen(Screen):
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
                 self.remove_csv_files()
+                self.set.disable_ssh()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -777,7 +776,7 @@ class FactorySettingsScreen(Screen):
             except:
                 pass
 
-            if self.smartbench_model.text == 'Choose model':
+            if self.smartbench_model.text == 'SmartBench model detection failed':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
@@ -903,19 +902,10 @@ class FactorySettingsScreen(Screen):
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
-        print('Writing ' + self.smartbench_model.text)
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            file = open(self.smartbench_model_path, "w+")
-            file.write(str(self.smartbench_model.text))
-            file.close()
 
     def get_smartbench_model(self):
-        try:
-            file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = str(file.read())
-            file.close()
-        except: 
-            self.smartbench_model.text = 'Choose Model'
+        self.smartbench_model.text = self.m.smartbench_model()
+        self.set_smartbench_model()
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))
