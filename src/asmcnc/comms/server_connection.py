@@ -102,6 +102,8 @@ class ServerConnection(object):
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 
+					self.set.start_ssh()
+
 					try: 
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)

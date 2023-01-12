@@ -23,8 +23,6 @@ import os.path
 from os import path
 
 from __builtin__ import True
-from kivy.uix.switch import Switch
-from pickle import TRUE
 
 from asmcnc.skavaUI import popup_info
 
@@ -3023,22 +3021,31 @@ class RouterMachine(object):
 
     def set_motor_current(self, axis, current):
 
-        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
-            self.state().startswith('Idle'):
+        if  (self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'setting current') and \
+            self.state().startswith('Idle')):
 
-            if "X" in axis: motors = [TMC_X1, TMC_X2]
-            if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
-            if "Z" in axis: motors = [TMC_Z]
+            motors = []
 
+            if "Z" in axis: motors.append(TMC_Z)
+
+            if "X1" in axis or "X2" in axis: 
+                if "X1" in axis: motors.append(TMC_X1)
+                if "X2" in axis: motors.append(TMC_X2)
+            elif "X" in axis: 
+                motors.extend([TMC_X1, TMC_X2])
+
+            if "Y1" in axis or "Y2" in axis: 
+                if "Y1" in axis: motors.append(TMC_Y1)
+                if "Y2" in axis: motors.append(TMC_Y2)
+            elif "Y" in axis: 
+                motors.extend([TMC_Y1, TMC_Y2])
+            
             for motor in motors: 
 
                 altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
-                time.sleep(0.5)
-
                 altDisplayText = 'SET IDLE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_IDLE_CURRENT, value=current)
-                time.sleep(0.5)
 
             return True
 
@@ -3059,7 +3066,6 @@ class RouterMachine(object):
 
                 altDisplayText = 'SET THERMAL COEFF: ' + axis + ': ' + "TMC: " + str(motor) + ", " + str(value)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_THERMAL_COEFF, value=value)
-                time.sleep(0.5)
 
             return True
 

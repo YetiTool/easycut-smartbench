@@ -734,9 +734,7 @@ class FactorySettingsScreen(Screen):
             pass
 
     def factory_reset(self):
-
         def nested_factory_reset():
-
             # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
@@ -746,6 +744,7 @@ class FactorySettingsScreen(Screen):
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
                 self.remove_csv_files()
+                self.set.disable_ssh()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
