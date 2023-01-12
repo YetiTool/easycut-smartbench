@@ -224,8 +224,10 @@ class XYJig(Screen):
     test_running = False
     test_waiting_to_start = False
 
-    phase_one_current = 25
-    phase_two_current = 13
+    phase_one_current = 0
+    phase_two_current = 0
+
+    update_realtime_load_event = None
 
     def __init__(self, **kwargs):
         super(XYJig, self).__init__(**kwargs)
@@ -236,16 +238,37 @@ class XYJig(Screen):
         axis = kwargs['axis']
         if axis == 'Y':
             self.axis = 'Y'
+            self.phase_one_current = 23
+            self.phase_two_current = 14
         else:
             self.axis = 'X'
 
-        Clock.schedule_interval(self.update_realtime_load, 0.1)
+            if 'single' in axis:
+                self.phase_one_current = 13
+            elif 'double' in axis:
+                self.phase_one_current = 20
+
+            self.phase_two_current = 6
+
+        self.update_realtime_load_event = Clock.schedule_interval(self.update_realtime_load, 0.1)
+
+    def enable_motor_drivers(self):
+        if self.axis == 'Y':
+            self.m.enable_y_motors()
+        else:
+            self.m.enable_x_motors()
+
+    def disable_motor_drivers(self):
+        if self.axis == 'Y':
+            self.m.disable_y_motors()
+        else:
+            self.m.disable_x_motors()
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
-        self.m.set_motor_current("Z", self.phase_one_current)
+        self.m.set_motor_current(self.axis, self.phase_one_current)
         self.current_realtime.text = str(self.phase_one_current)
-        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
+        self.enable_motor_drivers()
 
         self.test_running = True
         self.begin_test_button.disabled = True
@@ -271,7 +294,7 @@ class XYJig(Screen):
     def begin_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.max_speed)
+                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
                 Clock.schedule_once(self.start_moving_down, 1)
             else:
                 Clock.schedule_once(self.begin_test, 0.1)
@@ -279,7 +302,7 @@ class XYJig(Screen):
     def start_moving_down(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', self.max_travel, self.max_speed / 5)
+                self.m.jog_absolute_single_axis(self.axis, self.max_travel, self.max_speed / 5)
                 Clock.schedule_once(self.record_down_values, 0.4)
             else:
                 Clock.schedule_once(self.start_moving_down, 0.1)
@@ -287,7 +310,7 @@ class XYJig(Screen):
     def record_down_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.max_speed / 5)
+                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed / 5)
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
@@ -308,15 +331,15 @@ class XYJig(Screen):
 
     def phase_two(self):
         if self.test_running:
-            self.m.set_motor_current("Z", self.phase_two_current)
+            self.m.set_motor_current(self.axis, self.phase_two_current)
             self.current_realtime.text = str(self.phase_two_current)
-            self.m.jog_absolute_single_axis('Z', self.max_travel, self.max_speed)
+            self.m.jog_absolute_single_axis(self.axis, self.max_travel, self.max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
     def continue_phase_two(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis('Z', -1, self.max_speed)
+                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
                 Clock.schedule_once(self.finish_test, 0.4)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
@@ -324,7 +347,7 @@ class XYJig(Screen):
     def finish_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.set_motor_current("Z", self.phase_one_current)
+                self.m.set_motor_current(self.axis, self.phase_one_current)
                 self.current_realtime.text = str(self.phase_one_current)
                 self.display_results()
                 self.reset_after_stop()
@@ -370,7 +393,7 @@ class XYJig(Screen):
         self.exit_button.disabled = False
         self.test_progress_label.text = 'Waiting...'
 
-        self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+        self.disable_motor_drivers()
 
         self.sg_values_down = []
         self.sg_values_up = []
@@ -386,14 +409,17 @@ class XYJig(Screen):
         self.stop_button.disabled = True
         self.test_progress_label.text = 'Calibrating...'
 
-        self.m.send_command_to_motor("ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
-        self.m.calibrate_Z()
+        self.enable_motor_drivers()
+        if self.axis == 'Y':
+            self.m.calibrate_Y()
+        else:
+            self.m.calibrate_X()
 
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
-            self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+            self.disable_motor_drivers()
 
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, 'Calibration complete!')
 
@@ -419,9 +445,24 @@ class XYJig(Screen):
         self.systemtools_sm.sm.current = 'xy_jig_manual_move'
 
     def exit(self):
+        if not self.m.state().startswith("Idle"):
+            popup_info.PopupWarning(self.systemtools_sm.sm,  self.l, "Please ensure SB is idle")
+            return
+
+        self.enable_motor_drivers()
+
+        # Reset currents
         if self.axis == 'Y':
-            self.m.enable_y_motors()
+            self.m.set_motor_current('Y1', self.m.TMC_motor[TMC_Y1].ActiveCurrentScale)
+            self.m.set_motor_current('Y2', self.m.TMC_motor[TMC_Y2].ActiveCurrentScale)
         else:
-            self.m.enable_x_motors()
+            self.m.set_motor_current('X1', self.m.TMC_motor[TMC_X1].ActiveCurrentScale)
+            self.m.set_motor_current('X2', self.m.TMC_motor[TMC_X2].ActiveCurrentScale)
+
+        # Unschedule all active events
+        if self.update_realtime_load_event:
+            Clock.unschedule(self.update_realtime_load_event)
+        if self.systemtools_sm.sm.get_screen('xy_jig_manual_move').update_realtime_load_event:
+            Clock.unschedule(self.systemtools_sm.sm.get_screen('xy_jig_manual_move').update_realtime_load_event)
 
         self.systemtools_sm.open_factory_settings_screen()

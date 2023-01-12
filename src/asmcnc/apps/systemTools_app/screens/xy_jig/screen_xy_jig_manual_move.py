@@ -11,6 +11,8 @@ Builder.load_string("""
     load_label:load_label
     pos_label:pos_label
     pos_label_header:pos_label_header
+    phase_one_current_label:phase_one_current_label
+    phase_two_current_label:phase_two_current_label
 
     xy_move_container:xy_move_container
 
@@ -48,6 +50,7 @@ Builder.load_string("""
                         multiline: False
 
                     Button:
+                        id: phase_one_current_label
                         size_hint_x: 2
                         text: 'Set phase 1 current (Default 25)'
                         text_size: self.size
@@ -67,6 +70,7 @@ Builder.load_string("""
                         multiline: False
 
                     Button:
+                        id: phase_two_current_label
                         size_hint_x: 2
                         text: 'Set phase 2 current (Default 13)'
                         text_size: self.size
@@ -163,6 +167,11 @@ Builder.load_string("""
 
 class XYJigManualMove(Screen):
 
+    update_realtime_load_event = None
+
+    phase_one_current = 0
+    phase_two_current = 0
+
     def __init__(self, **kwargs):
         super(XYJigManualMove, self).__init__(**kwargs)
 
@@ -172,15 +181,27 @@ class XYJigManualMove(Screen):
         axis = kwargs['axis']
         if axis == 'Y':
             self.axis = 'Y'
+            self.phase_one_current = 23
+            self.phase_two_current = 14
         else:
             self.axis = 'X'
 
+            if 'single' in axis:
+                self.phase_one_current = 13
+            elif 'double' in axis:
+                self.phase_one_current = 20
+
+            self.phase_two_current = 6
+
         self.pos_label_header.text = self.axis + ' axis position:'
+
+        self.phase_one_current_label.text = 'Set phase 1 current (Default %s)' % self.phase_one_current
+        self.phase_two_current_label.text = 'Set phase 2 current (Default %s)' % self.phase_two_current
 
         xy_move_widget = MaintenanceXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm)
         self.xy_move_container.add_widget(xy_move_widget)
 
-        Clock.schedule_interval(self.update_realtime_labels, 0.1)
+        self.update_realtime_load_event = Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
 
     def set_phase_one_current(self):
@@ -192,10 +213,10 @@ class XYJigManualMove(Screen):
             self.systemtools_sm.sm.get_screen('xy_jig').phase_two_current = int(self.phase_two_input.text)
 
     def set_power_high(self):
-        self.m.set_motor_current(self.axis, 25)
+        self.m.set_motor_current(self.axis, self.phase_one_current)
 
     def set_power_low(self):
-        self.m.set_motor_current(self.axis, 13)
+        self.m.set_motor_current(self.axis, self.phase_two_current)
 
     def energise_motors(self):
         if self.axis == 'Y':
