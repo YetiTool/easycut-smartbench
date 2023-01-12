@@ -16,7 +16,6 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
-
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:
