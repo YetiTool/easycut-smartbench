@@ -6,27 +6,20 @@ Created on 19 Aug 2017
 '''
 # config
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty  # @UnresolvedImport
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from __builtin__ import file, True, False
-from kivy.clock import Clock, mainthread
+from kivy.uix.screenmanager import Screen
+from __builtin__ import True, False
+from kivy.clock import Clock
 from datetime import datetime
 
-import os, sys, time
+import time
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, \
-    widget_feed_override, widget_speed_override  # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, \
+from asmcnc.skavaUI import widget_status_bar, widget_feed_override, widget_speed_override  # @UnresolvedImport
+from asmcnc.skavaUI import widget_z_height, \
     popup_info  # @UnresolvedImport
-from asmcnc.geometry import job_envelope  # @UnresolvedImport
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty  # @UnresolvedImport
 
-from asmcnc.job.autopilot import Autopilot
+from asmcnc.job.autopilot.autopilot import Autopilot
 
 Builder.load_string("""
 
@@ -463,9 +456,6 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
     def on_enter(self):
-        if not self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
-
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
             if self.m.spindle_brush_use_seconds >= 0.9 * self.m.spindle_brush_lifetime_seconds:
@@ -578,9 +568,12 @@ class GoScreen(Screen):
 
         if self.is_job_started_already:
             self._pause_job()
-            self.m.s.autopilot_instance.stop()
+            if self.m.s.autopilot_instance:
+                self.m.s.autopilot_instance.stop()
         else:
             self._start_running_job()
+            if not self.m.s.autopilot_instance:
+                self.m.s.autopilot_instance = Autopilot(machine=self.m, screen_manager=self.sm)
             self.m.s.autopilot_instance.start()
 
     def _pause_job(self):

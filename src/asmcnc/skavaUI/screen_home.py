@@ -300,6 +300,10 @@ class HomeScreen(Screen):
 
     def on_enter(self):
 
+        if self.m.s.autopilot_instance:
+            if not self.m.s.autopilot_instance.autopilot_logger.exported:
+                self.m.s.autopilot_instance.export()
+
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):

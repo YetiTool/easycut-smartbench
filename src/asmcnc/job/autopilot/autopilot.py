@@ -46,23 +46,23 @@ class Autopilot:
             print(log)
 
     def first_read_setup(self):
-        self.reset()
-
         job_name = self.sm.get_screen('go').file_data_label.text
 
         if not self.autopilot_logger:
-            self.autopilot_logger = AutoPilotLogger(self.spindle_mains_voltage, self.spindle_target_watts, self.bias_for_feed_increase,
+            self.autopilot_logger = AutoPilotLogger(self.spindle_mains_voltage, self.spindle_target_watts,
+                                                    self.bias_for_feed_increase,
                                                     self.bias_for_feed_decrease, self.m_coefficient, self.c_coefficient,
                                                     self.cap_for_feed_increase, self.cap_for_feed_decrease,
-                                                    job_name, self.m.serial_number(), self.delay_between_feed_adjustments,
-                                                    self.outlier_tolerance, self.cap_for_feed_increase_during_z_movement,
+                                                    job_name, self.m.serial_number(),
+                                                    self.delay_between_feed_adjustments,
+                                                    self.outlier_tolerance,
+                                                    self.cap_for_feed_increase_during_z_movement,
                                                     self)
 
         self.setup = True
 
     def get_best_adjustment(self, percentage):
         percentage = floor(percentage)
-
         negative = False
 
         if percentage < 0:
@@ -71,16 +71,13 @@ class Autopilot:
 
         tens = int(percentage // 10)
         ones = int(percentage % 10)
-
         moves = []
         backward_moves = []
 
         if ones > 5:
             tens += 1
-
             for i in range(10 - ones):
                 backward_moves.append(-1)
-
             ones = 0
 
         for _ in range(tens):
@@ -90,7 +87,6 @@ class Autopilot:
             moves.append(1)
 
         limit = int((self.delay_between_feed_adjustments * 100) / (0.05 * 100))
-
         moves.extend(backward_moves)
         moves = [-move if negative else move for move in moves]
 
@@ -109,14 +105,10 @@ class Autopilot:
             return
 
         raw_multiplier = self.get_feed_multiplier(data_avg)
-
         capped_multiplier = self.cap_feed_multiplier(raw_multiplier, self.spindle_target_watts, data_avg)
-
         best_adjustment = self.get_best_adjustment(capped_multiplier)
 
         self.do_best_adjustment(best_adjustment)
-
-        self.log('adjustment list: ' + str(best_adjustment), override=True)
 
         self.autopilot_logger.add_log(data_avg, capped_multiplier, datetime.now().strftime('%H:%M:%S:%f'),
                                       raw_loads, average_loads, raw_multiplier, best_adjustment,
@@ -141,7 +133,6 @@ class Autopilot:
             return
 
         raw_loads = self.load_qdas_to_watts(self.spindle_load_stack)
-
         loads_to_use = list(raw_loads)
 
         if self.do_remove_outliers:
@@ -155,15 +146,13 @@ class Autopilot:
             return
 
         data_avg = sum(loads_to_use) / len(loads_to_use)
-
         self.adjust(data_avg, raw_loads, loads_to_use)
 
     def start(self):
-        self.spindle_load_stack = []
+        self.reset()
 
         self.load_parameters_from_json()
         self.amount_of_values_in_stack = (self.delay_between_feed_adjustments * 10) // (0.1 * 10)
-
         self.reading_clock = Clock.schedule_interval(self.read, self.delay_between_feed_adjustments)
 
         self.m.s.autopilot_instance = self
@@ -175,7 +164,7 @@ class Autopilot:
             self.m.s.autopilot_flag = False
 
     def export(self):
-        Clock.schedule_once(self.autopilot_logger.export_to_gsheet, 10)
+        self.autopilot_logger.export_to_gsheet()
 
     def load_qdas_to_watts(self, qdas):
         return [self.spindle_mains_voltage * 0.1 * sqrt(qda) for qda in qdas if qda is not None and qda > 0]
@@ -201,8 +190,9 @@ class Autopilot:
         return multiplier
 
     def get_feed_multiplier(self, current_power):
-        multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else float(self.bias_for_feed_increase)) * (
-                float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
+        multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else float(
+            self.bias_for_feed_increase)) * (
+                             float(self.spindle_target_watts) - float(current_power)) / float(self.spindle_target_watts) \
                      * float(self.m_coefficient) * float(self.c_coefficient)
 
         return multiplier
@@ -244,12 +234,8 @@ class Autopilot:
                 except:
                     print("Invalid parameter: " + item["Name"])
 
-    def cancel_job(self):
-        self.export()
-
     def reset(self):
         self.spindle_mains_voltage = None
         self.spindle_load_stack = []
         if self.autopilot_logger:
             self.autopilot_logger.reset()
-

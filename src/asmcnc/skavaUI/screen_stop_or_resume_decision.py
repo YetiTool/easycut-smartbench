@@ -178,13 +178,7 @@ class StopOrResumeDecisionScreen(Screen):
         self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
         self.sm.current = 'job_incomplete'
 
-        if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.cancel_job()
-
     def resume_job(self):
-        if self.m.s.autopilot_instance:
-            self.m.s.autopilot_instance.start()
-
         self.m.resume_after_a_stream_pause()
 
         # Job resumed, send event
