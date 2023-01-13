@@ -31,6 +31,8 @@ Builder.load_string("""
     # grbl_zw_label:grbl_zw_label
 
     grbl_X_ld_label : grbl_X_ld_label
+    grbl_X1_ld_label : grbl_X1_ld_label
+    grbl_X2_ld_label : grbl_X2_ld_label
     grbl_Y_ld_label : grbl_Y_ld_label
     grbl_Y1_ld_label : grbl_Y1_ld_label
     grbl_Y2_ld_label : grbl_Y2_ld_label
@@ -104,6 +106,23 @@ Builder.load_string("""
             text_size: self.size
             halign: 'left'
             valign: 'middle'
+
+        Label:
+            size_hint_x: 0.1
+            id: grbl_X1_ld_label
+            text: 'sgX:\\n0'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+
+        Label:
+            size_hint_x: 0.1
+            id: grbl_X2_ld_label
+            text: 'sgX:\\n0'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+
         Label:
             size_hint_x: 0.1
             id: grbl_Y_ld_label
@@ -178,6 +197,8 @@ class SGStatusBar(Widget):
             self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
 
             self.grbl_X_ld_label.text = 'sgX:\n' + str(self.m.x_sg())
+            self.grbl_X1_ld_label.text = 'sgX1:\n' + str(self.m.x1_sg())
+            self.grbl_X2_ld_label.text = 'sgX2:\n' + str(self.m.x2_sg())
             self.grbl_Y_ld_label.text = 'sgY:\n' + str(self.m.y_sg())
             self.grbl_Y1_ld_label.text = 'sgY1:\n' + str(self.m.y1_sg())
             self.grbl_Y2_ld_label.text = 'sgY2:\n' + str(self.m.y2_sg())

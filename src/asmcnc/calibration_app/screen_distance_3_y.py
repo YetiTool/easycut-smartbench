@@ -298,6 +298,9 @@ class DistanceScreen3yClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+        if self.m.bench_is_standard(): self.initial_y_cal_move = 2000
+        elif self.m.bench_is_short(): self.initial_y_cal_move = 1000
+
     def on_pre_enter(self):
         self.nudge_counter = 0
         self.value_input.text = ''

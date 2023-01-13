@@ -24,6 +24,7 @@ Builder.load_string("""
     g54_zone:g54_zone
     g54_marker:g54_marker
     g28Marker:g28Marker
+    virtual_bed_image:virtual_bed_image
     touch_zone:touch_zone
     
     StencilBox2:
@@ -36,20 +37,21 @@ Builder.load_string("""
             do_scale: True        
         
             Image:
+                id: virtual_bed_image
                 source: './asmcnc/skavaUI/img/virtual_bed.png'
                 allow_stretch: True
                 keep_ratio: False
                 size: self.parent.size
-#                 pos: self.parent.pos
-                
+
                 Image:
                     id: touch_zone
                     source: './asmcnc/skavaUI/img/virtual_bed_touch_zone.png'
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-80, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+40,self.parent.pos[1]+30
+                    size: self.parent.size[0]-root.width_modifier, self.parent.size[1]-60
+                    pos: self.parent.pos[0]+root.x_pos_modifier,self.parent.pos[1]+30
+
                 Image:
                     id: xBar
                     source: './asmcnc/skavaUI/img/virtual_x_bar.png'
@@ -63,6 +65,7 @@ Builder.load_string("""
                     allow_stretch: True
                     keep_ratio: True
                     pos: self.parent.pos
+                    width: (self.parent.width - 80)/6
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
@@ -110,12 +113,35 @@ class VirtualBed(Widget):
     # G54: workpiece co-ordinates
     # G28: set reference point
 
+
+    width_modifier = NumericProperty()
+    x_pos_modifier = NumericProperty()
+
     def __init__(self, **kwargs):
     
         super(VirtualBed, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.set_up_virtual_bed()
+
+    def set_up_virtual_bed(self, dt=0):
+
+        if self.m.grbl_y_max_travel==3000.0:
+            Clock.schedule_once(self.set_up_virtual_bed, 1)
+            return
+
+        if self.m.bench_is_standard():
+            self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed.png'
+            self.width_modifier = 80
+            self.x_pos_modifier = 40
+
+        if self.m.bench_is_short():
+            self.virtual_bed_image.source = './asmcnc/skavaUI/img/virtual_bed_mini.png'
+            self.width_modifier = 326
+            self.x_pos_modifier = 163
+
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
+
 
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
@@ -183,10 +209,6 @@ class VirtualBed(Widget):
         pixels_x = pixel_datum[0] + pixel_canvas[0] - (grbl_y+self.m.grbl_y_max_travel)/self.m.grbl_y_max_travel*pixel_canvas[0] 
         pixels_y = pixel_datum[1] + (grbl_x+self.m.grbl_x_max_travel)/self.m.grbl_x_max_travel*pixel_canvas[1]
 
-#         self.carriage.width = self.xBar.width
-#         self.carriage.width = self.xBar.width
-        self.carriage.width = self.touch_zone.width/6
-        
         self.carriage.x = pixels_x-self.carriage.width/2        
         self.carriage.y = pixels_y-self.carriage.height/2
         self.xBar.x = pixels_x-self.xBar.width/2

@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
+from asmcnc.comms.logging import log_exporter
 
 Builder.load_string("""
 <ZHeadQC4>:
@@ -50,6 +51,8 @@ class ZHeadQC4(Screen):
             self.calibration_label.text = "Try later"
             Clock.schedule_once(self.enter_prev_screen, 3)
 
+        log_exporter.create_trim_and_send_logs('ys61492', 1000)
+
     def run_calibration(self):
         self.m.tune_X_and_Z_for_calibration()
         self.poll_for_tuning_completion = Clock.schedule_interval(self.start_calibrating, 5)
@@ -69,7 +72,8 @@ class ZHeadQC4(Screen):
         if not self.m.run_calibration:
             Clock.unschedule(self.poll_for_calibration_check)
 
-            if not self.m.calibration_tuning_fail_info:        
+            if not self.m.calibration_tuning_fail_info:
+                self.m.start_measuring_running_data(stage=12)
                 self.m.check_x_z_calibration()
                 self.poll_for_calibration_completion = Clock.schedule_interval(self.finish_calibrating, 5)
 
@@ -80,6 +84,7 @@ class ZHeadQC4(Screen):
     def finish_calibrating(self, dt):
         if not self.m.checking_calibration_in_progress:
             Clock.unschedule(self.poll_for_calibration_completion)
+            self.m.stop_measuring_running_data()
 
             if not self.m.checking_calibration_fail_info:
                 self.enter_next_screen()

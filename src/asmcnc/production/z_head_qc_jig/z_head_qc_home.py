@@ -44,9 +44,9 @@ Builder.load_string("""
 
                 Button:
                     id: test_fw_update_button 
-                    text: 'NO - Update FW now! (For v1.3)'
+                    text: 'NO - Set up PCB & Flash FW'
                     font_size: dp(20)
-                    on_press: root.test_fw_update()
+                    on_press: root.go_back_to_pcb_setup()
                     markup: True
                     halign: "center"
 
@@ -74,7 +74,8 @@ Builder.load_string("""
 
 class ZHeadQCHome(Screen):
 
-    fw_button_string = 'NO - Update FW now! (For v1.3)'
+    fw_button_string = 'NO - Set up PCB & Flash FW'
+    hw_version = 0
 
     def __init__(self, **kwargs):
         super(ZHeadQCHome, self).__init__(**kwargs)
@@ -84,11 +85,33 @@ class ZHeadQCHome(Screen):
         self.usb = kwargs['usb']
 
     def on_enter(self):
-        self.update_usb_button_label()
+        try: 
+            self.hw_version = int(self.m.s.hw_version)
+            self.update_usb_button_label()
+
+        except:
+            print("Can't get HW version or hex file")
+
+    def go_back_to_pcb_setup(self):
+        self.sm.current = "qcpcbsetup"  
+
+    def get_fw_filepath(self):
+
+        if int(self.hw_version) >= 34:
+            return "/media/usb/GRBL*5.hex"
+
+        elif int(self.hw_version) >= 20:
+            if glob.glob("/media/usb/GRBL*4.hex"):
+                return "/media/usb/GRBL*4.hex"
+
+            # Allow for older FW versions, starting in 2 but not ending in 4
+            return "/media/usb/GRBL23*.hex"
+
+        return "/media/usb/GRBL1*.hex"
 
     def update_usb_button_label(self):
-        try: 
-            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
+        try:
+            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob(self.get_fw_filepath())[0]))[1]
             self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
 
         except: 
@@ -114,7 +137,7 @@ class ZHeadQCHome(Screen):
             print(pi.get_mode(17))
             pi.stop()
 
-            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            cmd = "grbl_file=" + self.get_fw_filepath() + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
             proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
@@ -150,6 +173,7 @@ class ZHeadQCHome(Screen):
             self.sm.get_screen('qc2').reset_checkboxes()
             self.sm.get_screen('qcW136').reset_checkboxes()
             self.sm.get_screen('qcW112').reset_checkboxes()
+            self.sm.get_screen('qc3').reset_timer()
 
         disconnect_and_update()
 

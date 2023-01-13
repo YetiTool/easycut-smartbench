@@ -1,142 +1,216 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from asmcnc.apps.maintenance_app.widget_maintenance_xy_move import MaintenanceXYMove
 from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
+from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
+from asmcnc.skavaUI.popup_info import PopupWait, PopupWarning
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+from kivy.clock import Clock
 
 Builder.load_string("""
 <CurrentAdjustment>:
 
     xy_move_container:xy_move_container
     current_adjustment_container:current_adjustment_container
-
+    
     rt_x_sg:rt_x_sg
+    rt_x1_sg:rt_x1_sg
+    rt_x2_sg:rt_x2_sg
     rt_y1_sg:rt_y1_sg
     rt_y2_sg:rt_y2_sg
+    rt_z_sg:rt_z_sg
+    
     peak_x_sg:peak_x_sg
+    peak_x1_sg:peak_x1_sg
+    peak_x2_sg:peak_x2_sg
     peak_y1_sg:peak_y1_sg
     peak_y2_sg:peak_y2_sg
+    peak_z_sg:peak_z_sg
 
     raw_sg_toggle_button : raw_sg_toggle_button
+    protocol_status : protocol_status
 
-    GridLayout:
-        cols: 2
+    status_container : status_container
 
-        GridLayout:
-            rows: 2
-            size_hint_x: 0.5
+    BoxLayout:
+        orientation: 'vertical'
 
-            BoxLayout:
-                id: xy_move_container
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                size_hint: (None,None)
-                height: dp(360)
-                width: dp(270)
-
-            BoxLayout:
-                size_hint_y: 0.1
-                padding: [0, dp(30), dp(150), 0]
-
-                Button:
-                    text: 'Factory Settings'
-                    on_press: root.back_to_fac_settings()
-
-        GridLayout:
-            rows: 2
+        BoxLayout:
+            size_hint_y: 0.92
+            orientation: 'horizontal'
 
             GridLayout:
                 cols: 2
-
+        
                 GridLayout:
-                    rows:2
-
-                    Label:
-                        size_hint_y: 0.2
-                        text: 'Active Current Adjustment'
-
+                    rows: 2
+                    size_hint_x: 0.5
+        
                     BoxLayout:
-                        id: current_adjustment_container
-
-                BoxLayout:
-                    size_hint_x: 0.3
-                    padding: [0, dp(25), 0, dp(25)]
-                    orientation: 'vertical'
-
-                    Button:
-                        text: 'Home'
-                        on_press: root.home()
-
-                    Button:
-                        text: 'Reset'
-                        on_press: root.reset_currents()
-
-            GridLayout:
-                cols: 2
-
-                # SG value status box
+                        id: xy_move_container
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        size_hint: (None,None)
+                        height: dp(360)
+                        width: dp(270)
+        
+                    BoxLayout:
+                        size_hint_y: 0.1
+                        padding: [0, dp(30), dp(150), 0]
+        
+                        Button:
+                            text: 'Factory Settings'
+                            on_press: root.back_to_fac_settings()
+        
                 GridLayout:
-                    rows: 3
-                    cols: 4
+                    rows: 2
+        
+                    GridLayout:
+                        cols: 2
+        
+                        GridLayout:
+                            rows:2
+        
+                            Label:
+                                size_hint_y: 0.2
+                                text: 'Active Current Adjustment'
+        
+                            BoxLayout:
+                                id: current_adjustment_container
+        
+                        BoxLayout:
+                            size_hint_x: 0.3
+                            # padding: [0, dp(25), 0, dp(25)]
+                            orientation: 'vertical'
+        
+                            Button:
+                                text: 'Home'
+                                on_press: root.home()
+        
+                            Button:
+                                text: 'Reset Currents'
+                                on_press: root.reset_currents()
 
-                    Label
+                            Button:
+                                text: 'GRBL Reset'
+                                on_press: root.grbl_reset()
 
-                    Label:
-                        text: 'SG X'
+                            Label: 
+                                id: protocol_status
+                                text: ""
 
-                    Label:
-                        text: 'SG Y1'
+        
+                    GridLayout:
+                        cols: 2
+        
+                        # SG value status box
+                        GridLayout:
+                            rows: 3
+                            cols: 7
+        
+                            Label
+        
+                            Label:
+                                text: 'SG X'
+        
+                            Label:
+                                text: 'SG X1'
+        
+                            Label:
+                                text: 'SG X2'
+        
+                            Label:
+                                text: 'SG Y1'
+        
+                            Label:
+                                text: 'SG Y2'
+        
+                            Label:
+                                text: 'SG Z'
+        
+                            Label:
+                                text: 'Realtime'
+        
+                            Label:
+                                id: rt_x_sg
+                                text: '-'
+        
+                            Label:
+                                id: rt_x1_sg
+                                text: '-'
+        
+                            Label:
+                                id: rt_x2_sg
+                                text: '-'
+        
+                            Label:
+                                id: rt_y1_sg
+                                text: '-'
+        
+                            Label:
+                                id: rt_y2_sg
+                                text: '-'
+        
+                            Label:
+                                id: rt_z_sg
+                                text: '-'
+        
+                            Label:
+                                text: 'Peak'
+        
+                            Label:
+                                id: peak_x_sg
+                                text: '-'
+        
+                            Label:
+                                id: peak_x1_sg
+                                text: '-'
+        
+                            Label:
+                                id: peak_x2_sg
+                                text: '-'
+        
+                            Label:
+                                id: peak_y1_sg
+                                text: '-'
+        
+                            Label:
+                                id: peak_y2_sg
+                                text: '-'
+        
+                            Label:
+                                id: peak_z_sg
+                                text: '-'
+        
+                        BoxLayout:
+                            orientation: 'vertical'
+                            size_hint_x: 0.3
+                            padding: [0, dp(25), 0, dp(25)]
+        
+                            Button:
+                                text: 'Clear'
+                                on_press: root.clear_sg_vals()
+        
+                            ToggleButton:
+                                id: raw_sg_toggle_button
+                                text: 'Show raw'
+                                on_press: root.toggle_raw_sg_values()
+        
+                            Button:
+                                text: 'STORE PARAMS'
+                                on_press: root.confirm_store_values()
 
-                    Label:
-                        text: 'SG Y2'
-
-                    Label:
-                        text: 'Realtime'
-
-                    Label:
-                        id: rt_x_sg
-                        text: '-'
-
-                    Label:
-                        id: rt_y1_sg
-                        text: '-'
-
-                    Label:
-                        id: rt_y2_sg
-                        text: '-'
-
-                    Label:
-                        text: 'Peak'
-
-                    Label:
-                        id: peak_x_sg
-                        text: '-'
-
-                    Label:
-                        id: peak_y1_sg
-                        text: '-'
-
-                    Label:
-                        id: peak_y2_sg
-                        text: '-'
-
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 0.3
-                    padding: [0, dp(25), 0, dp(25)]
-
-                    Button:
-                        text: 'Clear'
-                        on_press: root.clear_sg_vals()
-
-                    ToggleButton:
-                        id: raw_sg_toggle_button
-                        text: 'Show raw'
-                        on_press: root.toggle_raw_sg_values()
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container    
 
 
 """)
 
 class CurrentAdjustment(Screen):
+
+    wait_popup_for_tmc_read_in = None
+    update_protocol_status_label_event = None
 
     def __init__(self, **kwargs):
         super(CurrentAdjustment, self).__init__(**kwargs)
@@ -146,12 +220,14 @@ class CurrentAdjustment(Screen):
         self.l = kwargs['l']
 
         # Movement widget
-        self.xy_move_widget = MaintenanceXYMove(machine=self.m, screen_manager=self.systemtools_sm, localization=self.l)
-        self.xy_move_container.add_widget(self.xy_move_widget)
+        self.xy_move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
         # Current adjustment widgets
-        self.x_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
-        self.current_adjustment_container.add_widget(self.x_current_adjustment_widget)
+        self.x1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.x1_current_adjustment_widget)
+
+        self.x2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_X2, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.x2_current_adjustment_widget)
 
         self.y1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y1, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y1_current_adjustment_widget)
@@ -159,18 +235,29 @@ class CurrentAdjustment(Screen):
         self.y2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Y2, localization=self.l, systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.y2_current_adjustment_widget)
 
+        self.z_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m, motor=TMC_Z, localization=self.l, systemtools=self.systemtools_sm)
+        self.current_adjustment_container.add_widget(self.z_current_adjustment_widget)
+
         self.clear_sg_vals()
+
+        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def on_enter(self):
         self.m.s.FINAL_TEST = True
+        self.update_protocol_status_label_event = Clock.schedule_interval(self.update_protocol_status_label, 0.1)
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
-        self.reset_currents()
-        self.raw_sg_toggle_button.state = 'normal'
-        self.toggle_raw_sg_values()
+        if self.update_protocol_status_label_event: Clock.unschedule(self.update_protocol_status_label_event)
 
     def back_to_fac_settings(self):
+        if not self.m.state().startswith("Idle"):
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't reset currents!")
+            return
+
+        self.raw_sg_toggle_button.state = 'normal'
+        self.toggle_raw_sg_values()
+        self.reset_currents()
         self.systemtools_sm.open_factory_settings_screen()
 
     def home(self):
@@ -179,10 +266,21 @@ class CurrentAdjustment(Screen):
         self.m.request_homing_procedure('current_adjustment','current_adjustment')
 
     def measure(self):
+        
         if self.m.s.sg_x_motor_axis != -999:
             self.x_vals.append(self.m.s.sg_x_motor_axis)
             self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
             self.peak_x_sg.text = str(max(self.x_vals))
+
+        if self.m.s.sg_x1_motor not in [-999, None]:
+            self.x1_vals.append(self.m.s.sg_x1_motor)
+            self.rt_x1_sg.text = str(self.m.s.sg_x1_motor)
+            self.peak_x1_sg.text = str(max(self.x1_vals))
+
+        if self.m.s.sg_x2_motor not in [-999, None]:
+            self.x2_vals.append(self.m.s.sg_x2_motor)
+            self.rt_x2_sg.text = str(self.m.s.sg_x2_motor)
+            self.peak_x2_sg.text = str(max(self.x2_vals))
 
         if self.m.s.sg_y1_motor != -999:
             self.y1_vals.append(self.m.s.sg_y1_motor)
@@ -194,22 +292,53 @@ class CurrentAdjustment(Screen):
             self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
             self.peak_y2_sg.text = str(max(self.y2_vals))
 
+        if self.m.s.sg_z_motor_axis != -999:
+            self.z_vals.append(self.m.s.sg_z_motor_axis)
+            self.rt_z_sg.text = str(self.m.s.sg_z_motor_axis)
+            self.peak_z_sg.text = str(max(self.z_vals))
+
     def clear_sg_vals(self):
         self.x_vals = []
+        self.x1_vals = []
+        self.x2_vals = []
         self.y1_vals = []
         self.y2_vals = []
+        self.z_vals = []
 
         self.rt_x_sg.text = '-'
+        self.rt_x1_sg.text = '-'
+        self.rt_x2_sg.text = '-'
         self.rt_y1_sg.text = '-'
         self.rt_y2_sg.text = '-'
+        self.rt_z_sg.text = '-'
         self.peak_x_sg.text = '-'
+        self.peak_x1_sg.text = '-'
+        self.peak_x2_sg.text = '-'
         self.peak_y1_sg.text = '-'
         self.peak_y2_sg.text = '-'
+        self.peak_z_sg.text = '-'
+
 
     def reset_currents(self):
-        self.x_current_adjustment_widget.reset_current()
-        self.y1_current_adjustment_widget.reset_current()
-        self.y2_current_adjustment_widget.reset_current()
+        
+        if not self.m.state().startswith("Idle"):
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't reset currents!")
+            return False
+
+        self.wait_popup_for_reset_currents = PopupWait(self.systemtools_sm.sm,  self.l)
+
+        if  not self.x1_current_adjustment_widget.reset_current() or \
+            not self.x2_current_adjustment_widget.reset_current() or \
+            not self.y1_current_adjustment_widget.reset_current() or \
+            not self.y2_current_adjustment_widget.reset_current() or \
+            not self.z_current_adjustment_widget.reset_current():
+            PopupWarning(self.systemtools_sm.sm,  self.l, "Issue resetting currents!")
+
+        self.wait_while_currents_reset()
+
+    def wait_while_currents_reset(self, dt=0):
+        if self.m.s.write_protocol_buffer: Clock.schedule_once(self.wait_while_currents_reset, 0.2)
+        else: Clock.schedule_once(lambda dt: self.wait_popup_for_reset_currents.popup.dismiss(), 0.1)
 
     def toggle_raw_sg_values(self):
         
@@ -218,3 +347,37 @@ class CurrentAdjustment(Screen):
         
         else:
             self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+    def confirm_store_values(self):
+        if self.m.state().startswith("Idle"):
+            PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
+
+        else: 
+            PopupWarning(self.systemtools_sm.sm,  self.l, "SB not Idle!! Can't store")
+
+    def store_values_and_wait_for_handshake(self):
+        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
+        Clock.schedule_once(self.do_tmc_value_store, 0.2)
+
+    def do_tmc_value_store(self, dt=0):
+        self.m.store_tmc_params_in_eeprom_and_handshake()
+        self.wait_while_values_stored_and_read_back_in()
+
+    def wait_while_values_stored_and_read_back_in(self, dt=0):
+        if self.m.TMC_registers_have_been_read_in(): 
+            self.wait_popup_for_tmc_read_in.popup.dismiss()
+            self.wait_popup_for_tmc_read_in = None
+        else: 
+            Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)
+
+    def update_protocol_status_label(self, dt=0):
+
+        if self.m.s.write_protocol_buffer: 
+            self.protocol_status.text = "Writing..."
+        else:
+            self.protocol_status.text = ""
+
+    def grbl_reset(self):
+        self.m.resume_from_alarm()
+
+

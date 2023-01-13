@@ -7,6 +7,8 @@ import traceback
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
+from asmcnc.comms.logging import log_exporter
+
 Builder.load_string("""
 <CalibrationTesting>:
 
@@ -1383,8 +1385,8 @@ class CalibrationTesting(Screen):
 
         self.y_running = True
 
-        self.m.send_any_gcode_command('G91 G1 Y2500 F' + str(MAX_XY_SPEED))
-        self.m.send_any_gcode_command('G91 G1 Y-2500 F' + str(MAX_XY_SPEED))
+        self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))            
+        self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
 
         # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
@@ -1419,8 +1421,8 @@ class CalibrationTesting(Screen):
 
         self.x_running = True
 
-        self.m.send_any_gcode_command('G91 G1 x1298 F' + str(MAX_XY_SPEED))
-        self.m.send_any_gcode_command('G91 G1 x-1298 F' + str(MAX_XY_SPEED))
+        self.m.send_any_gcode_command("G53 G1 X" + str(self.m.x_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
+        self.m.send_any_gcode_command("G53 G1 X" + str(self.m.x_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
 
         # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
@@ -1463,8 +1465,8 @@ class CalibrationTesting(Screen):
             self.setup_arrays("UnweightedFT")
             self.set_unweighted_x_range()
             self.x_running = True
-            self.m.send_any_gcode_command('G91 G1 x1298 F' + str(MAX_XY_SPEED))
-            self.m.send_any_gcode_command('G91 G1 x-1298 F' + str(MAX_XY_SPEED))
+            self.m.send_any_gcode_command("G53 G1 X" + str(self.m.x_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
+            self.m.send_any_gcode_command("G53 G1 X" + str(self.m.x_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
             self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 20)
 
         else:
@@ -1477,8 +1479,8 @@ class CalibrationTesting(Screen):
             self.set_unweighted_y_range()
             self.x_running = False
             self.y_running = True
-            self.m.send_any_gcode_command('G91 G1 Y2500 F' + str(MAX_XY_SPEED))
-            self.m.send_any_gcode_command('G91 G1 Y-2500 F' + str(MAX_XY_SPEED))
+            self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))            
+            self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
             self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 20)
 
         else:
@@ -1492,8 +1494,8 @@ class CalibrationTesting(Screen):
             self.set_unweighted_z_range()
             self.y_running = False
             self.z_running = True
-            self.m.send_any_gcode_command('G91 G1 Z-149 F' + str(MAX_Z_SPEED))
-            self.m.send_any_gcode_command('G91 G1 Z149 F' + str(MAX_Z_SPEED))
+            self.m.send_any_gcode_command("G53 G1 Z" + str(self.m.z_min_jog_abs_limit) + " F" + str(MAX_Z_SPEED))            
+            self.m.send_any_gcode_command("G53 G1 Z" + str(self.m.z_max_jog_abs_limit) + " F" + str(MAX_Z_SPEED))
             self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 20)
 
 
@@ -1642,6 +1644,8 @@ class CalibrationTesting(Screen):
 
     def send_all_data(self):
 
+        self.calibration_db.set_up_connection()
+
         self.data_send_button.disabled = True
         self.data_send_label.text = "Sending..."
         self.sent_data_check.source = self.checkbox_inactive
@@ -1675,11 +1679,12 @@ class CalibrationTesting(Screen):
         self.data_send_label.text = "Sent data?"
         self.data_send_button.disabled = False
 
+        log_exporter.create_and_send_logs(self.sn_for_db)
+
 
     def send_data_for_each_stage(self, stage):
 
         try:
-
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
@@ -1690,4 +1695,6 @@ class CalibrationTesting(Screen):
         except:
             print(traceback.format_exc())
             return False
+        finally:
+            log_exporter.create_and_send_logs(self.sn_for_db)
 

@@ -70,8 +70,8 @@ class SerialConnection(object):
         self.FINAL_TEST = False
 
     def __del__(self):
-        self.s.close()
-        print 'Destructor'
+        if self.s: self.s.close()
+        log('Serial connection destructor')
 
     def get_serial_screen(self, serial_error):
 
@@ -289,11 +289,11 @@ class SerialConnection(object):
     VERBOSE_STATUS = False
 
 
-    def grbl_scanner(self):
+    def grbl_scanner(self, run_grbl_scanner_once = False):
         
         log('Running grbl_scanner thread')
 
-        while self.grbl_scanner_running:
+        while self.grbl_scanner_running or run_grbl_scanner_once:
 
                          
             if self.FLUSH_FLAG == True:
@@ -326,6 +326,8 @@ class SerialConnection(object):
                 protocol_command = self.write_protocol_buffer[0]
                 self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
                 del self.write_protocol_buffer[0]
+
+
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
@@ -380,6 +382,12 @@ class SerialConnection(object):
                     else: 
                         if self.g_count == self.l_count:
                             self.end_stream()
+
+                # Sets off sequential streaming from this grbl scanner thread:
+                if self._ready_to_send_first_sequential_stream and self.is_buffer_clear():
+                    self._send_next_sequential_stream()
+
+            run_grbl_scanner_once = False
                     
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
@@ -396,7 +404,7 @@ class SerialConnection(object):
 
     # streaming variables
     GRBL_BLOCK_SIZE = 35    # max number of gcode lines which GRBL can put in its 'BLOCK' or look ahead buffer
-    RX_BUFFER_SIZE = 256    # serial buffer which gets filled by EasyCut. GRBL grabs from this when there is block space
+    RX_BUFFER_SIZE = 255    # serial buffer which gets filled by EasyCut. GRBL grabs from this when there is block space
 
     is_job_streaming = False
     is_stream_lines_remaining = False
@@ -547,7 +555,7 @@ class SerialConnection(object):
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
-        if self.is_sequential_streaming:
+        if self._process_oks_from_sequential_streaming:
             self._send_next_sequential_stream()
             
         elif self.is_job_streaming:
@@ -706,14 +714,21 @@ class SerialConnection(object):
     probe = False
     dust_shoe_cover = False
     spare_door = False
+    limit_Y_axis = False
+    stall_X = False
+    stall_Z = False
+    stall_Y = False
+
+    # Is GRBL locked due to an alarm? 
+    grbl_waiting_for_reset = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
     print_buffer_status = True
 
-
     expecting_probe_result = False
     
+    # VERSIONS
     fw_version = ''
     hw_version = ''
 
@@ -734,6 +749,20 @@ class SerialConnection(object):
     sg_y_axis = None
     sg_y1_motor = None
     sg_y2_motor = None
+    sg_x1_motor = None
+    sg_x2_motor = None
+
+    # STALL GUARD WARNING
+    last_stall_tmc_index = None
+    last_stall_motor_step_size = None
+    last_stall_load = None
+    last_stall_threshold = None
+    last_stall_travel_distance = None
+    last_stall_temperature = None
+    last_stall_x_coord = None
+    last_stall_y_coord = None
+    last_stall_z_coord = None
+    last_stall_status = None
 
     # FOR CALIBRATION TUNING
     record_sg_values_flag = False
@@ -746,6 +775,14 @@ class SerialConnection(object):
     spindle_total_run_time_seconds = None
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
+
+    # DETECT SOFT RESET
+    grbl_initialisation_message = "^Grbl .+ \['\$' for help\]$"
+
+    # IF NEED TO MEASURE RUNNING DATA
+    measure_running_data = False
+    running_data = []
+    measurement_stage = 0
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -772,6 +809,22 @@ class SerialConnection(object):
                 status_parts[0] != "Sleep"):
                 log("ERROR status parse: Status invalid: " + message)
                 return
+
+            # If there is no Pn part in the status, set all limits to defaults.
+            # (except power loss 'r' pin, which is a special condition)
+            if not "|Pn:" in message:
+                self.limit_x = False
+                self.limit_X = False
+                self.limit_y = False
+                self.limit_Y = False
+                self.limit_z = False
+                self.probe = False
+                self.dust_shoe_cover = False
+                self.spare_door = False
+                self.limit_Y_axis = False
+                self.stall_X = False
+                self.stall_Z = False
+                self.stall_Y = False
 
             # Get machine's status
             self.m_state = status_parts[0]
@@ -852,20 +905,9 @@ class SerialConnection(object):
                     
                     pins_info = part.split(':')[1]
                     
-                    if 'x' in pins_info: self.limit_x = True
-                    else: self.limit_x = False
-                    
-                    if 'X' in pins_info: self.limit_X = True
-                    else: self.limit_X = False
-                    
-                    if 'y' in pins_info: self.limit_y = True
-                    else: self.limit_y = False
-                    
-                    if 'Y' in pins_info: self.limit_Y = True
-                    else: self.limit_Y = False
-                    
-                    if 'Z' in pins_info: self.limit_z = True
-                    else: self.limit_z = False
+                    self.limit_x = 'x' in pins_info
+                    self.limit_X = 'X' in pins_info
+                    self.limit_z = 'Z' in pins_info
 
                     if 'P' in pins_info: self.probe = True
                     else: self.probe = False
@@ -876,6 +918,33 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
+                    if 'Y' or 'y' in pins_info:
+
+                        # Depending on the firmware version (and the alarm type), 
+                        # Y pin means either Y max limit OR Y stall
+                        # and little y could be y home OR y limit
+                        if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
+
+                            self.limit_y = 'y' in pins_info
+                            self.limit_Y = 'Y' in pins_info
+
+                        else:
+
+                            self.limit_Y_axis = 'y' in pins_info
+                            self.stall_Y = 'Y' in pins_info
+
+                    else:
+                        self.limit_y = False
+                        self.limit_Y = False
+                        self.limit_Y_axis = False
+                        self.stall_Y = False
+
+                    self.stall_X = 'S' in pins_info
+                    self.stall_Z = 'z' in pins_info
+
+                    if self.stall_X or self.stall_Y or self.stall_Z:
+                        self.alarm.sg_alarm = True
+
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
@@ -884,7 +953,6 @@ class SerialConnection(object):
                             log("Power loss or DC power supply")
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
-
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -919,6 +987,15 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        # Check overload state
+                        if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
+                        elif self.digital_spindle_kill_time >= 80 : overload_mV_equivalent_state = 20
+                        elif self.digital_spindle_kill_time >= 40 : overload_mV_equivalent_state = 40
+                        elif self.digital_spindle_kill_time >= 20 : overload_mV_equivalent_state = 60
+                        elif self.digital_spindle_kill_time >= 10 : overload_mV_equivalent_state = 80
+                        elif self.digital_spindle_kill_time < 10 : overload_mV_equivalent_state = 100
+                        else: log("Killtime value not recognised")
+
                     else: 
 
                         try:
@@ -940,27 +1017,27 @@ class SerialConnection(object):
                         elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
                         else: log("Overload value not recognised")
 
-                        # update stuff if there's a change
-                        if overload_mV_equivalent_state != self.overload_state:  
-                            self.overload_state = overload_mV_equivalent_state
-                            log("Overload state change: " + str(self.overload_state))
-                            log("Load voltage: " + str(self.spindle_load_voltage))
-                        
-                            try:
-                                self.sm.get_screen('go').update_overload_label(self.overload_state)
+                    # update stuff if there's a change
+                    if overload_mV_equivalent_state != self.overload_state:  
+                        self.overload_state = overload_mV_equivalent_state
+                        log("Overload state change: " + str(self.overload_state))
+                        log("Load voltage: " + str(self.spindle_load_voltage))
+                    
+                        try:
+                            self.sm.get_screen('go').update_overload_label(self.overload_state)
 
-                                # Only report as a peak if state stays elevated for longer than 1 second
-                                if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                                    self.prev_overload_state = self.overload_state
-                                    Clock.schedule_once(self.check_for_sustained_peak, 1)
+                            # Only report as a peak if state stays elevated for longer than 1 second
+                            if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                                self.prev_overload_state = self.overload_state
+                                Clock.schedule_once(self.check_for_sustained_peak, 1)
 
-                            except:
-                                log('Unable to update overload state on go screen')
-                        
-                        # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
-                        if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                            self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                            Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
+                        except:
+                            log('Unable to update overload state on go screen')
+                    
+                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
@@ -1032,6 +1109,21 @@ class SerialConnection(object):
                     self.sg_y1_motor = int(sg_values[3])
                     self.sg_y2_motor = int(sg_values[4])
 
+                    try:
+                        int(sg_values[5])
+                        int(sg_values[6])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    else:
+                        self.sg_x1_motor = int(sg_values[5])
+                        self.sg_x2_motor = int(sg_values[6]) 
+
                     if self.record_sg_values_flag:
 
                         self.m.temp_sg_array.append([
@@ -1039,7 +1131,9 @@ class SerialConnection(object):
                                                     self.sg_x_motor_axis,
                                                     self.sg_y_axis,
                                                     self.sg_y1_motor,
-                                                    self.sg_y2_motor
+                                                    self.sg_y2_motor,
+                                                    self.sg_x1_motor,
+                                                    self.sg_x2_motor
                                                 ])
 
                     if self.FINAL_TEST:
@@ -1051,6 +1145,36 @@ class SerialConnection(object):
 
                         if self.sm.has_screen('current_adjustment'):
                             self.sm.get_screen('current_adjustment').measure()
+
+                # SG ALARM
+                elif part.startswith('SGALARM:'):
+
+                    sg_alarm_parts = part[8:].split(',')
+
+                    try:
+                        int(sg_alarm_parts[0])
+                        int(sg_alarm_parts[1])
+                        int(sg_alarm_parts[2])
+                        int(sg_alarm_parts[3])
+                        int(sg_alarm_parts[4])
+                        float(sg_alarm_parts[5])
+                        float(sg_alarm_parts[6])
+                        float(sg_alarm_parts[7])
+
+                    except:
+                        log("ERROR status parse: SGALARM pins_info invalid: " + message)
+                        return
+
+                    self.last_stall_tmc_index = int(sg_alarm_parts[0])
+                    self.last_stall_motor_step_size = int(sg_alarm_parts[1])
+                    self.last_stall_load = int(sg_alarm_parts[2])
+                    self.last_stall_threshold = int(sg_alarm_parts[3])
+                    self.last_stall_travel_distance = int(sg_alarm_parts[4])
+                    self.last_stall_temperature = int(sg_alarm_parts[5])
+                    self.last_stall_x_coord = float(sg_alarm_parts[6])
+                    self.last_stall_y_coord = float(sg_alarm_parts[7])
+                    self.last_stall_z_coord = float(sg_alarm_parts[8])
+                    self.last_stall_status = message
 
                 elif part.startswith('Sp:'):
 
@@ -1133,7 +1257,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(motor_index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
                     self.m.TMC_motor[int(motor_index)].calibrated_at_temperature = int(all_cal_data_list[131])
-
+                    self.m.TMC_motor[int(motor_index)].got_calibration_coefficients = True
 
                     try: 
 
@@ -1153,15 +1277,38 @@ class SerialConnection(object):
                     except:
                         log("Could not print calibration output")
 
-                # else:
-                #     continue
-                # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
 
+            if self.measure_running_data:
+
+                try:
+
+                    self.running_data.append([
+                        int(self.measurement_stage),
+                        float(self.m_x),
+                        float(self.m_y),
+                        float(self.m_z),
+                        int(self.sg_x_motor_axis),
+                        int(self.sg_y_axis),
+                        int(self.sg_y1_motor),
+                        int(self.sg_y2_motor),
+                        int(self.sg_z_motor_axis),
+                        int(self.motor_driver_temp),
+                        int(self.pcb_temp),
+                        int(self.transistor_heatsink_temp),
+                        datetime.now(),
+                        int(self.feed_rate),
+                        self.sg_x1_motor,
+                        self.sg_x2_motor,
+                    ])
+
+                except: 
+                    pass
  
         elif message.startswith('ALARM:'):
+            self.grbl_waiting_for_reset = True
             log('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
@@ -1200,6 +1347,7 @@ class SerialConnection(object):
             elif setting == '$50': self.setting_50 = value; # Serial number and product code
             elif setting == '$51': self.setting_51 = value; # Enable digital feedback spindle, boolean
             elif setting == '$53': self.setting_53 = value; # Enable stall guard alarm operation, boolean
+            elif setting == '$54': self.setting_54 = value; # Motor load (SG) values reporting type, boolean
             elif setting == '$100': self.setting_100 = value;  # X steps/mm
             elif setting == '$101': self.setting_101 = value;  # Y steps/mm
             elif setting == '$102': self.setting_102 = value;  # Z steps/mm
@@ -1283,6 +1431,10 @@ class SerialConnection(object):
                 except: 
                     log("Could not retrieve HW version")
 
+        elif re.match(self.grbl_initialisation_message, message):
+            # Let sw know that grbl is unlocked now that statuses are being received
+            self.grbl_waiting_for_reset = False
+
 
     def check_for_sustained_max_overload(self, dt):
 
@@ -1327,44 +1479,83 @@ class SerialConnection(object):
     # It does not stuff the grbl buffer
     # It is for:
     ## Anything sending EEPROM settings (which require special attention, due to writing of values)
-    ## Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
     
     is_sequential_streaming = False
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
+    _ready_to_send_first_sequential_stream = False
+    _process_oks_from_sequential_streaming = False
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
-        log("start_sequential_stream")
+        self.is_sequential_streaming = True
+        log("Start_sequential_stream")
+        if reset_grbl_after_stream: list_to_stream.append("G4 P1")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
-        self._send_next_sequential_stream()
-        
+        self._ready_to_send_first_sequential_stream = True
                 
     def _send_next_sequential_stream(self):
+
+        if self._ready_to_send_first_sequential_stream:
+            self._ready_to_send_first_sequential_stream = False
+            self._process_oks_from_sequential_streaming = True
+
         if self._sequential_stream_buffer:
-            self.is_sequential_streaming = True
-            self.write_direct(self._sequential_stream_buffer[0])
-            del self._sequential_stream_buffer[0]
+            try: 
+                self.write_direct(self._sequential_stream_buffer[0])
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                else: del self._sequential_stream_buffer[0]
+
+            except IndexError: 
+                log("Sequential streaming buffer empty")
+                return
+
         else:
-            self.is_sequential_streaming = False
-            log("sequential stream ended")
+            self._process_oks_from_sequential_streaming = False
+            log("Sequential stream ended")
             if self._reset_grbl_after_stream:
-                self.m.reset_after_sequential_stream()
+                self._reset_grbl_after_stream = False
+                self.m._grbl_soft_reset()
                 log("GRBL Reset after sequential stream ended")
+            self.is_sequential_streaming = False
+
+    def _after_grbl_settings_insert_dwell(self):
+
+        if self._sequential_stream_buffer[0].startswith('$'):
+            try: 
+                if not self._sequential_stream_buffer[1].startswith('$') \
+                and not self._sequential_stream_buffer[1] == "G4 P1":
+                    return True
+            except: 
+                return True
+
+        return False
 
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
-        self.is_sequential_streaming = False
-        _sequential_stream_buffer = []
-        if reset_grbl_after_cancel:
-            self.m.reset_after_sequential_stream()
+        
+        self._sequential_stream_buffer = []
+        self._process_oks_from_sequential_streaming = False
+        self._ready_to_send_first_sequential_stream = False
+        if reset_grbl_after_cancel or self._reset_grbl_after_stream:
+            self._reset_grbl_after_stream = False
+            self.m._grbl_soft_reset()
             print "GRBL Reset after sequential stream cancelled"
+        self.is_sequential_streaming = False
+
+    def is_buffer_clear(self):
+
+        if int(self.serial_chars_available) == self.RX_BUFFER_SIZE \
+        and int(self.serial_blocks_available) == self.GRBL_BLOCK_SIZE:
+            return True
+
+        return False
 
 
 ## WRITE-----------------------------------------------------------------------------
-
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
+
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):

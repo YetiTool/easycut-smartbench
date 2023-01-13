@@ -20,6 +20,9 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test imp
 from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
 from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
+from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -29,6 +32,7 @@ Builder.load_string("""
 
     software_version_label: software_version_label
     platform_version_label: platform_version_label
+    setting_54_label:setting_54_label
     latest_software_version: latest_software_version
     latest_platform_version: latest_platform_version
     z_touch_plate_entry: z_touch_plate_entry
@@ -39,6 +43,7 @@ Builder.load_string("""
     machine_touchplate_thickness: machine_touchplate_thickness
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
+    setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
 
@@ -80,8 +85,6 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(320)
-                padding: 10
-                spacing: 10
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
@@ -93,7 +96,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(210)
+                        height: dp(230)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -102,7 +105,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             cols: 0
-                            rows: 3
+                            rows: 4
                             padding: 10
                             spacing: 5
                             BoxLayout: 
@@ -125,7 +128,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
                                     Label:
                                         text: '[b]Serial number[/b]'
@@ -193,7 +196,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 10
+                                    padding: 5
                                     spacing: 10
 
                                     Label:
@@ -218,11 +221,31 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
+                        BoxLayout:
+                            size_hint_y: 0.3
+                            orientation: 'horizontal'
+                            spacing: dp(10)
+
+                            Button:
+                                text: '$54 info'
+                                on_press: root.setting_54_info()
+
+                            ToggleButton:
+                                id: setting_54_toggle
+                                text: 'Set $54=1'
+                                on_press: root.toggle_setting_54()
+
+                            Label:
+                                id: setting_54_label
+                                size_hint_x: 0.7
+                                text: '$54 = N/A'
+                                color: [0,0,0,1]
+
 
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(100)
+                        height: dp(80)
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
@@ -283,59 +306,118 @@ Builder.load_string("""
                                     color: [0,0,0,1]
                                     markup: True
 
+                GridLayout:
+                    cols: 2
+                    rows: 7
+                    spacing: 2
+                    ToggleButton:
+                        id: maintenance_reminder_toggle
+                        text: 'Turn reminders off'
+                        on_press: root.toggle_reminders()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
+                    ToggleButton:
+                        id: show_spindle_overload_toggle
+                        text: 'Show spindle overload'
+                        on_press: root.toggle_spindle_mode()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(320)
-                    padding: 0
-                    spacing: 0
-                    orientation: 'vertical'
+                    Button:
+                        text: 'Diagnostics'
+                        on_press: root.diagnostics()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                    GridLayout: 
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        cols: 1
-                        rows: 8
-                        padding: 10
-                        spacing: 2
-                        ToggleButton:
-                            id: maintenance_reminder_toggle
-                            text: 'Turn reminders off'
-                            on_press: root.toggle_reminders()
-                        ToggleButton:
-                            id: show_spindle_overload_toggle
-                            text: 'Show spindle overload'
-                            on_press: root.toggle_spindle_mode()
-                        Button:
-                            text: 'Diagnostics'
-                            on_press: root.diagnostics()
+                    Button:
+                        text: 'Current'
+                        on_press: root.enter_current_adjustment()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
 
-                        BoxLayout: 
-                            orientation: 'horizontal'
-                            Button:
-                                text: 'FT B1'
-                                background_normal: ''
-                                background_color: [0.75,0.34,0.51,1]
-                                on_press: root.final_test("pink")
-                            Button:
-                                text: 'FT B2'
-                                background_normal: ''
-                                background_color: [0.28,0.44,0.97,1]
-                                on_press: root.final_test("blue")
-                        Button:
-                            text: 'Retrieve LB cal data'
-                            on_press: root.enter_serial_number_screen()
-                        Button:
-                            text: 'SG & Load test'
-                            on_press: root.enter_calibration_test()
-                        Button:
-                            text: 'Overnight test'
-                            on_press: root.enter_overnight_test()
-                        Button:
-                            text: 'Current Adjustment'
-                            on_press: root.enter_current_adjustment()
+                    Button:
+                        text: 'FT B1'
+                        background_normal: ''
+                        background_color: [0.75,0.34,0.51,1]
+                        on_press: root.final_test("pink")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'FT B2'
+                        background_normal: ''
+                        background_color: [0.28,0.44,0.97,1]
+                        on_press: root.final_test("blue")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'FT B3'
+                        background_normal: ''
+                        background_color: [0.2,0.8,0.2,1]
+                        on_press: root.final_test("green")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'FT B4'
+                        background_normal: ''
+                        background_color: [0.8,0.2,0.2,1]
+                        on_press: root.final_test("red")
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Retrieve LB cal data'
+                        on_press: root.enter_serial_number_screen()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'SG & Load test'
+                        on_press: root.enter_calibration_test()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Overnight test'
+                        on_press: root.enter_overnight_test()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Stall Jig'
+                        on_press: root.enter_stall_jig()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'SG thresh'
+                        on_press: root.enter_set_thresholds()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+
+                    Button:
+                        text: 'Measure'
+                        on_press: root.enter_general_measurement()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+                            
 
             BoxLayout:
                 size_hint: (None,None)
@@ -424,7 +506,14 @@ Builder.load_string("""
 
 class FactorySettingsScreen(Screen):
 
-    machine_model_values = ['SmartBench V1.0 CNC Router', 'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
+    machine_model_values = ['SmartBench V1.0 CNC Router',
+                            'SmartBench V1.1 CNC Router',
+                            'SmartBench V1.2 Standard CNC Router',
+                            'SmartBench V1.2 Precision CNC Router',
+                            'SmartBench V1.2 PrecisionPro CNC Router',
+                            'SmartBench V1.3 PrecisionPro CNC Router',
+                            'SmartBench Mini V1.3 PrecisionPro']
+
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
@@ -507,6 +596,23 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
+
+        csv_path = './asmcnc/production/database/csvs'
+
+        if not os.path.exists(csv_path):
+            os.mkdir(csv_path)
+
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Get $54 state'):
+            if self.m.s.setting_54:
+                self.setting_54_label.text = '$54 = 1'
+                self.setting_54_toggle.state = 'down'
+                self.setting_54_toggle.text = 'Set $54=0'
+            else:
+                self.setting_54_label.text = '$54 = 0'
+                self.setting_54_toggle.state = 'normal'
+                self.setting_54_toggle.text = 'Set $54=1'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
 
     def set_toggle_buttons(self):
 
@@ -621,10 +727,14 @@ class FactorySettingsScreen(Screen):
         except:
             pass
 
+    def remove_csv_files(self):
+        try:
+            os.system("rm -r ./asmcnc/production/database/csvs")
+        except:
+            pass
+
     def factory_reset(self):
-
         def nested_factory_reset():
-
             # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
@@ -633,6 +743,8 @@ class FactorySettingsScreen(Screen):
 
             if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                 self.remove_creds_file()
+                self.remove_csv_files()
+                self.set.disable_ssh()
                 lifetime = float(120*3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
@@ -656,7 +768,15 @@ class FactorySettingsScreen(Screen):
 
         else:
 
-            if self.smartbench_model.text == 'Choose model':
+            try:
+                if self.m.s.setting_54:
+                    warning_message = 'Please ensure $54 is set to 0 before doing a factory reset.'
+                    popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                    return
+            except:
+                pass
+
+            if self.smartbench_model.text == 'SmartBench model detection failed':
                 warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
@@ -696,8 +816,16 @@ class FactorySettingsScreen(Screen):
 
     def full_console_update(self):
 
-        self.console_update_button.text = "Doing update,\nplease wait..."
+        try:
+            if self.m.s.setting_54:
+                warning_message = 'Please ensure $54 is set to 0 before doing an update.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                return
+        except:
+            pass
 
+        self.console_update_button.text = "Doing update,\nplease wait..."
+        self.remove_csv_files()
         self.remove_creds_file()
 
         def nested_full_console_update(dt):
@@ -737,6 +865,27 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.get_screen('go').show_spindle_overload = True
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
 
+    def toggle_setting_54(self):
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
+            if self.setting_54_toggle.state == 'normal':
+                self.setting_54_label.text = '$54 = 0'
+                self.m.write_dollar_54_setting(0)
+                self.setting_54_toggle.text = 'Set $54=1'
+            else:
+                self.setting_54_label.text = '$54 = 1'
+                self.m.write_dollar_54_setting(1)
+                self.setting_54_toggle.text = 'Set $54=0'
+        else:
+            self.setting_54_label.text = '$54 = N/A'
+            self.setting_54_toggle.state = 'normal'
+            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+
+    def setting_54_info(self):
+        info = '$54 available on FW 2.5 and up\n\n' + \
+               '$54 should be set to 1 for all final test procedures\n\n' + \
+               '$54 should be set to 0 when SB is ready to be factory reset and packed'
+        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
+
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
 
@@ -745,7 +894,7 @@ class FactorySettingsScreen(Screen):
         (self.smartbench_model.text == 'SmartBench V1.2 Precision CNC Router')):
             self.product_number_input.text = '02'
 
-        elif self.smartbench_model.text == 'SmartBench V1.2 PrecisionPro CNC Router':
+        elif 'PrecisionPro' in self.smartbench_model.text:
             self.product_number_input.text = '03'
 
         else: 
@@ -753,19 +902,10 @@ class FactorySettingsScreen(Screen):
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
-        print('Writing ' + self.smartbench_model.text)
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            file = open(self.smartbench_model_path, "w+")
-            file.write(str(self.smartbench_model.text))
-            file.close()
 
     def get_smartbench_model(self):
-        try:
-            file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = str(file.read())
-            file.close()
-        except: 
-            self.smartbench_model.text = 'Choose Model'
+        self.smartbench_model.text = self.m.smartbench_model()
+        self.set_smartbench_model()
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))
@@ -823,7 +963,7 @@ class FactorySettingsScreen(Screen):
             file.close()
 
         except: 
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
 
         return str(serial_number_from_file)
 
@@ -896,3 +1036,36 @@ class FactorySettingsScreen(Screen):
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
+
+
+    def enter_stall_jig(self):
+        if self.calibration_db.conn != None:
+            if self.get_serial_number():
+                if not self.systemtools_sm.sm.has_screen('stall_jig'):
+                    stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = self.systemtools_sm, machine = self.m, localization = self.l, calibration_db = self.calibration_db)
+                    self.systemtools_sm.sm.add_widget(stall_jig_screen)
+                
+                self.systemtools_sm.sm.current = 'stall_jig'
+            else:
+                popup_info.PopupError(self.systemtools_sm, self.l, "Serial number has not been entered!")
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Database not connected!")
+
+
+    def enter_set_thresholds(self):
+        if not self.systemtools_sm.sm.has_screen('set_thresholds'):
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            self.systemtools_sm.sm.add_widget(set_thresholds_screen)
+        
+        self.systemtools_sm.sm.current = 'set_thresholds'
+
+
+    def enter_general_measurement(self):
+        if not self.systemtools_sm.sm.has_screen('general_measurement'):
+            general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
+            self.systemtools_sm.sm.add_widget(general_measurement_screen)
+        
+        self.systemtools_sm.sm.current = 'general_measurement'
+
+
+

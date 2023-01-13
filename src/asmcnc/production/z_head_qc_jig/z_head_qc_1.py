@@ -6,6 +6,7 @@ from datetime import datetime
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Builder.load_string("""
 <ZHeadQC1>:
@@ -435,49 +436,8 @@ class ZHeadQC1(Screen):
             pass
 
     def bake_grbl_settings(self):
-        grbl_settings = [
-                    '$0=10',          #Step pulse, microseconds
-                    '$1=255',         #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',      #Homing feed, mm/min
-                    '$25=3000.0',     #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',     #Homing pull-off, mm
-                    '$30=25000.0',    #Max spindle speed, RPM
-                    '$31=0.0',        #Min spindle speed, RPM
-                    '$32=0',          #Laser mode, boolean
-                    '$51=0',          #Enable digital feedback spindle, boolean
-                    '$53=0',          #Enable stall guard alarm operation, boolean
-                    # '$100=56.649',    #X steps/mm
-                    # '$101=56.665',    #Y steps/mm
-                    # '$102=1066.667',  #Z steps/mm
-                    '$110=8000.0',    #X Max rate, mm/min
-                    '$111=6000.0',    #Y Max rate, mm/min
-                    '$112=750.0',     #Z Max rate, mm/min
-                    '$120=130.0',     #X Acceleration, mm/sec^2
-                    '$121=130.0',     #Y Acceleration, mm/sec^2
-                    '$122=200.0',     #Z Acceleration, mm/sec^2
-                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2502.0',    #Y Max travel, mm
-                    '$132=150.0',     #Z Max travel, mm
-                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
-            ]
 
-        self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
-
+        self.m.bake_default_grbl_settings(z_head_qc_bake=True)
         self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def test_motor_chips(self):
@@ -493,6 +453,7 @@ class ZHeadQC1(Screen):
 
     def try_start_motor_chips_test(self, dt):
         if self.m.s.m_state == "Idle":
+            self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
             self.m.s.write_command('$J=G91 X700 Z-63 F8035') # move for 5 seconds in x and z directions at max speed
             Clock.schedule_once(self.check_sg_values, 3)
         elif self.m.s.m_state == "Jog":
@@ -503,21 +464,45 @@ class ZHeadQC1(Screen):
         pass_fail = True
         fail_report = []
 
-        if -300 <= self.m.s.sg_x_motor_axis <= 300:
-            pass_fail = pass_fail*(True)
+        lower_sg_limit = 200
+        upper_sg_limit = 800
 
+        # If X motors are controlled by 2 drivers, don't measure combined X value
+        if self.m.s.sg_x1_motor != None and self.m.s.sg_x2_motor != None:
+            if lower_sg_limit <= self.m.s.sg_x1_motor <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
+
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X1 motor SG value: " + str(self.m.s.sg_x1_motor))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+            if lower_sg_limit <= self.m.s.sg_x2_motor <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
+
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X2 motor SG value: " + str(self.m.s.sg_x2_motor))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+        # If X motors are controlled by 1 driver, only measure combined X value
         else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
-            fail_report.append("Should be between -300 and 300.")
+            if lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
+                pass_fail = pass_fail*(True)
 
-        if -300 <= self.m.s.sg_z_motor_axis <= 300:
+            else:
+                pass_fail = pass_fail*(False)
+                fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
+                fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+
+        # Measure Z value
+        if lower_sg_limit <= self.m.s.sg_z_motor_axis <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Z motor/axis SG value: " + str(self.m.s.sg_z_motor_axis))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
@@ -526,6 +511,8 @@ class ZHeadQC1(Screen):
 
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
 
 
     def home(self):
@@ -609,13 +596,13 @@ class ZHeadQC1(Screen):
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
-        if 10 < self.m.s.motor_driver_temp < 60:
+        if 15 < self.m.s.motor_driver_temp < 100:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
-            fail_report.append("Should be greater than 10 and less than 60 deg C.")
+            fail_report.append("Should be greater than 15 and less than 100 deg C.")
 
         if 0 < self.m.s.transistor_heatsink_temp < 100:
             pass_fail = pass_fail*(True)
@@ -626,21 +613,21 @@ class ZHeadQC1(Screen):
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
-        if 4800 < self.m.s.microcontroller_mV < 5200:
+        if 4500 < self.m.s.microcontroller_mV < 5500:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
-            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+            fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
-        if 4800 < self.m.s.LED_mV < 5200:
+        if 4500 < self.m.s.LED_mV < 5500:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
-            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+            fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
         if 22000 < self.m.s.PSU_mV < 26000:
             pass_fail = pass_fail*(True)

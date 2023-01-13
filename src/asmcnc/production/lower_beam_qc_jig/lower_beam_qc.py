@@ -9,6 +9,7 @@ from kivy.uix.button import  Button
 
 from asmcnc.skavaUI import widget_status_bar, popup_info
 from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 import sys, os
 
@@ -16,7 +17,6 @@ Builder.load_string("""
 <LowerBeamQC>:
 
     vac_toggle:vac_toggle
-    spindle_toggle:spindle_toggle
     y_home_check:y_home_check
     motor_chips_check:motor_chips_check
     warranty_toggle:warranty_toggle
@@ -48,7 +48,7 @@ Builder.load_string("""
                             halign: 'left'
                             valign: 'middle'
                             padding: [dp(10),0]
-                            on_press: root.test_motor_chips()
+                            on_press: root.new_test_motor_chips()
                         Image:
                             id: motor_chips_check
                             source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -89,25 +89,14 @@ Builder.load_string("""
                         padding: [dp(10),0]
                         on_press: root.enable_alarms()
 
-                    GridLayout:
-                        cols: 2
-                        ToggleButton:
-                            id: vac_toggle
-                            text: '5. Extractor'
-                            text_size: self.size
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.set_vac()
-
-                        ToggleButton:
-                            id: spindle_toggle
-                            text: '6. Spindle'
-                            text_size: self.size
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.set_spindle()
+                    ToggleButton:
+                        id: vac_toggle
+                        text: '5. Extractor'
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.set_vac()
 
                 # COLUMN 2
                 BoxLayout:
@@ -253,38 +242,62 @@ class LowerBeamQC(Screen):
             pass
 
     def test_motor_chips(self):
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
         self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
         Clock.schedule_once(self.check_sg_values, 3)
+
+    def is_relative_move_safe(self, distance):
+        if self.m.mpos_y() + distance > self.m.y_max_jog_abs_limit:
+            return False
+        elif self.m.mpos_y() + distance < self.m.y_min_jog_abs_limit:
+            return False
+        else:
+            return True
+
+    def get_closest_limit(self, position):
+        if abs(position - self.m.y_min_jog_abs_limit) < abs(position - self.m.y_max_jog_abs_limit):
+            return self.m.y_min_jog_abs_limit
+        else:
+            return self.m.y_max_jog_abs_limit
+
+    def new_test_motor_chips(self):
+        self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+        if self.is_relative_move_safe(500):
+            self.m.jog_relative('Y', 500, 6000)
+        elif self.is_relative_move_safe(-500):
+            self.m.jog_relative('Y', -500, 6000)
+        else:
+            self.m.jog_absolute_single_axis('Y', self.get_closest_limit(self.m.mpos_y()), 6000)
+            self.m.jog_relative('Y', 500, 6000)
+
+        Clock.schedule_once(self.check_sg_values, 3)
+
 
     def check_sg_values(self, dt):
 
         pass_fail = True
         fail_report = []
 
-        if -300 <= self.m.s.y_axis <= 300:
+        lower_sg_limit = 200
+        upper_sg_limit = 800
+
+        if lower_sg_limit <= self.m.s.sg_y1_motor <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y axis SG value: " + str(self.m.s.y_axis))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y1_motor))
+            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
-        if -300 <= self.m.s.y1_motor <= 300:
+        if lower_sg_limit <= self.m.s.sg_y2_motor <= upper_sg_limit:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Y2 motor SG value: " + str(self.m.s.y1_motor))
-            fail_report.append("Should be between -300 and 300.")
-
-        if -300 <= self.m.s.y2_motor <= 300:
-            pass_fail = pass_fail*(True)
-
-        else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("Y1 motor SG value: " + str(self.m.s.y2_motor))
-            fail_report.append("Should be between -300 and 300.")
+            fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y2_motor))
+            fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
@@ -294,23 +307,19 @@ class LowerBeamQC(Screen):
         else:
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
+        self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
             self.m.vac_off()
         else: 
             self.m.vac_on()
 
-    def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
-            self.m.spindle_off()
-        else: 
-            self.m.spindle_on()
-
     def update_checkboxes(self, dt):
         self.y_home_switch()
 
     def y_home_switch(self):
-        if self.m.s.limit_y:
+        if self.m.s.limit_Y_axis:
             self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
             self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
