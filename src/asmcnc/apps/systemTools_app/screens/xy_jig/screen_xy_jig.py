@@ -4,6 +4,7 @@ from kivy.clock import Clock
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
+from asmcnc.production.z_head_mechanics_jig.popup_z_head_mechanics import *
 
 import matplotlib
 matplotlib.use('Agg')
@@ -49,7 +50,7 @@ Builder.load_string("""
                     font_size: dp(20)
                     background_color: hex('#FF9900FF')
                     background_normal: ''
-                    on_press: root.calibrate_motor()
+                    on_press: root.show_calibration_popup()
 
                 Button:
                     id: begin_test_button
@@ -362,7 +363,7 @@ class XYJig(Screen):
     def record_home_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.phase_two()
+                PopupPhaseTwo(self.systemtools_sm.sm, self.l)
             else:
                 if self.axis == 'Y':
                     sg_value = self.m.s.sg_y_axis
@@ -488,6 +489,9 @@ class XYJig(Screen):
         self.pos_values_home_motor_1 = []
         self.pos_values_home_motor_2 = []
 
+
+    def show_calibration_popup(self):
+        PopupCalibrate(self.systemtools_sm.sm, self.l)
 
     def calibrate_motor(self):
         self.load_graph_away.opacity = 0
