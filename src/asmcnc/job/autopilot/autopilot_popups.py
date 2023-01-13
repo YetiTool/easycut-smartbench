@@ -12,7 +12,7 @@ class PopupSendData(Widget):
         total_rows = 0
 
         if self.m.s.autopilot_instance:
-            total_rows = self.m.s.autopilot_instance.autopilot_logger.logs
+            total_rows = len(self.m.s.autopilot_instance.autopilot_logger.logs)
 
         description = "Would you like to export data to GSheets?\nThere are currently " + str(total_rows) + " rows of data."
         title_string = 'Export?'
@@ -51,12 +51,12 @@ class PopupSendData(Widget):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
-        def on_send_button():
+        def on_send_button(*args):
             if self.m.s.autopilot_instance:
                 self.m.s.autopilot_instance.export()
             popup.dismiss()
 
-        def on_cancel_button():
+        def on_cancel_button(*args):
             if self.m.s.autopilot_instance:
                 self.m.s.autopilot_instance.reset()
             popup.dismiss()
