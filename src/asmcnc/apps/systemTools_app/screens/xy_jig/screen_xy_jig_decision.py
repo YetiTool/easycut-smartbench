@@ -73,7 +73,7 @@ class XYJigDecision(Screen):
         self.systemtools_sm.sm.add_widget(xy_jig_screen)
 
         self.systemtools_sm.destroy_screen('xy_jig_manual_move')
-        xy_jig_screen = screen_xy_jig_manual_move.XYJigManualMove(name='xy_jig_manual_move', systemtools=self.systemtools_sm, m=self.m, axis=axis)
+        xy_jig_screen = screen_xy_jig_manual_move.XYJigManualMove(name='xy_jig_manual_move', systemtools=self.systemtools_sm, m=self.m, l=self.l, axis=axis)
         self.systemtools_sm.sm.add_widget(xy_jig_screen)
 
         try:

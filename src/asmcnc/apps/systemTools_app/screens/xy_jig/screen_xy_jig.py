@@ -253,6 +253,7 @@ class XYJig(Screen):
 
         self.systemtools_sm = kwargs['systemtools']
         self.m = kwargs['m']
+        self.l = kwargs['l']
 
         axis = kwargs['axis']
         if axis == 'Y':
