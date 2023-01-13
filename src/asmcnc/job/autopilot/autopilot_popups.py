@@ -9,10 +9,15 @@ class PopupSendData(Widget):
     def __init__(self, machine):
         self.m = machine
 
-        description = self.l.get_str("Would you like to export data to GSheets?\n")
-        title_string = self.l.get_str('Export?')
-        ok_string = self.l.get_bold('Yes')
-        back_string = self.l.get_bold('No (deletes data)')
+        total_rows = 0
+
+        if self.m.s.autopilot_instance:
+            total_rows = self.m.s.autopilot_instance.autopilot_logger.logs
+
+        description = "Would you like to export data to GSheets?\nThere are currently " + str(total_rows) + " rows of data."
+        title_string = 'Export?'
+        ok_string = 'Yes'
+        back_string = 'No (deletes data)'
 
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
