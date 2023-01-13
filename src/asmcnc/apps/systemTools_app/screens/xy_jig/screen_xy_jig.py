@@ -428,7 +428,7 @@ class XYJig(Screen):
         plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
         plt.ylabel(self.axis + ' Load (Away)')
         ax = plt.gca()
-        ax.set_ylim([0, 100])
+        ax.set_ylim([-20, 20])
         combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
         ax.set_xlim([min(combined_list), max(combined_list)])
         loc = plticker.MultipleLocator(base=10)
@@ -448,7 +448,7 @@ class XYJig(Screen):
         plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
         plt.ylabel(self.axis + ' Load (Home)')
         ax = plt.gca()
-        ax.set_ylim([0, 100])
+        ax.set_ylim([-20, 20])
         combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
         ax.set_xlim([min(combined_list), max(combined_list)])
         loc = plticker.MultipleLocator(base=10)
