@@ -20,14 +20,15 @@ Builder.load_string("""
 
     test_progress_label:test_progress_label
 
-    load_up_peak:load_up_peak
-    load_down_peak:load_down_peak
-    load_up_average:load_up_average
-    load_down_average:load_down_average
+    load_home_peak:load_home_peak
+    load_away_peak:load_away_peak
+    load_home_average:load_home_average
+    load_away_average:load_away_average
     load_realtime:load_realtime
     current_realtime:current_realtime
 
-    load_graph:load_graph
+    load_graph_away:load_graph_away
+    load_graph_home:load_graph_home
 
     BoxLayout:
         orientation: 'vertical'
@@ -72,11 +73,11 @@ Builder.load_string("""
                     Label
 
                     Label:
-                        text: 'Up'
+                        text: 'Home'
                         bold: True
 
                     Label:
-                        text: 'Down'
+                        text: 'Away'
                         bold: True
 
                     Label:
@@ -87,11 +88,11 @@ Builder.load_string("""
                         bold: True
 
                     Label:
-                        id: load_up_peak
+                        id: load_home_peak
                         text: '-'
 
                     Label:
-                        id: load_down_peak
+                        id: load_away_peak
                         text: '-'
 
                     Label:
@@ -102,11 +103,11 @@ Builder.load_string("""
                         bold: True
 
                     Label:
-                        id: load_up_average
+                        id: load_home_average
                         text: '-'
 
                     Label:
-                        id: load_down_average
+                        id: load_away_average
                         text: '-'
 
                 BoxLayout:
@@ -202,9 +203,19 @@ Builder.load_string("""
 
     FloatLayout:
         Image:
-            id: load_graph
+            id: load_graph_away
             size_hint: None, None
-            height: dp(355)
+            height: dp(175)
+            width: dp(790)
+            x: dp(5)
+            y: dp(185)
+            allow_stretch: True
+            opacity: 0
+
+        Image:
+            id: load_graph_home
+            size_hint: None, None
+            height: dp(180)
             width: dp(790)
             x: dp(5)
             y: dp(5)
@@ -216,10 +227,18 @@ Builder.load_string("""
 
 class XYJig(Screen):
 
-    sg_values_down = []
-    sg_values_up = []
-    z_pos_values_down = []
-    z_pos_values_up = []
+    sg_values_away = []
+    sg_values_away_motor_1 = []
+    sg_values_away_motor_2 = []
+    sg_values_home = []
+    sg_values_home_motor_1 = []
+    sg_values_home_motor_2 = []
+    pos_values_away = []
+    pos_values_away_motor_1 = []
+    pos_values_away_motor_2 = []
+    pos_values_home = []
+    pos_values_home_motor_1 = []
+    pos_values_home_motor_2 = []
 
     test_running = False
     test_waiting_to_start = False
@@ -276,11 +295,12 @@ class XYJig(Screen):
         self.exit_button.disabled = True
         self.test_progress_label.text = 'Test running...\n[color=ff0000]WATCH FOR STALL THROUGHOUT ENTIRE TEST[/color]'
 
-        self.load_up_peak.text = '-'
-        self.load_down_peak.text = '-'
-        self.load_up_average.text = '-'
-        self.load_down_average.text = '-'
-        self.load_graph.opacity = 0
+        self.load_home_peak.text = '-'
+        self.load_away_peak.text = '-'
+        self.load_home_average.text = '-'
+        self.load_away_average.text = '-'
+        self.load_graph_away.opacity = 0
+        self.load_graph_home.opacity = 0
 
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
@@ -295,38 +315,78 @@ class XYJig(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
-                Clock.schedule_once(self.start_moving_down, 1)
+                Clock.schedule_once(self.start_moving_away, 1)
             else:
                 Clock.schedule_once(self.begin_test, 0.1)
 
-    def start_moving_down(self, dt):
+    def start_moving_away(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis(self.axis, self.max_travel, self.max_speed / 5)
-                Clock.schedule_once(self.record_down_values, 0.4)
+                Clock.schedule_once(self.record_away_values, 0.4)
             else:
-                Clock.schedule_once(self.start_moving_down, 0.1)
+                Clock.schedule_once(self.start_moving_away, 0.1)
 
-    def record_down_values(self, dt):
+    def record_away_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed / 5)
-                Clock.schedule_once(self.record_up_values, 0.4)
+                Clock.schedule_once(self.record_home_values, 0.4)
             else:
-                if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_down.append(self.m.s.sg_z_motor_axis)
-                    self.z_pos_values_down.append(self.m.mpos_z())
-                Clock.schedule_once(self.record_down_values, 0.1)
+                if self.axis == 'Y':
+                    sg_value = self.m.s.sg_y_axis
+                    sg_value_motor_1 = self.m.s.sg_y1_motor
+                    sg_value_motor_2 = self.m.s.sg_y2_motor
+                    pos = self.m.mpos_y()
+                else:
+                    sg_value = self.m.s.sg_x_motor_axis
+                    sg_value_motor_1 = self.m.s.sg_x1_motor
+                    sg_value_motor_2 = self.m.s.sg_x2_motor
+                    pos = self.m.mpos_x()
 
-    def record_up_values(self, dt):
+                if sg_value not in [-999, None]:
+                    self.sg_values_away.append(sg_value)
+                    self.pos_values_away.append(pos)
+
+                if sg_value_motor_1 not in [-999, None]:
+                    self.sg_values_away_motor_1.append(sg_value_motor_1)
+                    self.pos_values_away_motor_1.append(pos)
+
+                if sg_value_motor_2 not in [-999, None]:
+                    self.sg_values_away_motor_2.append(sg_value_motor_2)
+                    self.pos_values_away_motor_2.append(pos)
+
+                Clock.schedule_once(self.record_away_values, 0.1)
+
+    def record_home_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.phase_two()
             else:
-                if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_up.append(self.m.s.sg_z_motor_axis)
-                    self.z_pos_values_up.append(self.m.mpos_z())
-                Clock.schedule_once(self.record_up_values, 0.1)
+                if self.axis == 'Y':
+                    sg_value = self.m.s.sg_y_axis
+                    sg_value_motor_1 = self.m.s.sg_y1_motor
+                    sg_value_motor_2 = self.m.s.sg_y2_motor
+                    pos = self.m.mpos_y()
+                else:
+                    sg_value = self.m.s.sg_x_motor_axis
+                    sg_value_motor_1 = self.m.s.sg_x1_motor
+                    sg_value_motor_2 = self.m.s.sg_x2_motor
+                    pos = self.m.mpos_x()
+
+                if sg_value not in [-999, None]:
+                    self.sg_values_home.append(sg_value)
+                    self.pos_values_home.append(pos)
+
+                if sg_value_motor_1 not in [-999, None]:
+                    self.sg_values_home_motor_1.append(sg_value_motor_1)
+                    self.pos_values_home_motor_1.append(pos)
+
+                if sg_value_motor_2 not in [-999, None]:
+                    self.sg_values_home_motor_2.append(sg_value_motor_2)
+                    self.pos_values_home_motor_2.append(pos)
+
+                Clock.schedule_once(self.record_home_values, 0.1)
 
 
     def phase_two(self):
@@ -355,30 +415,49 @@ class XYJig(Screen):
                 Clock.schedule_once(self.finish_test, 0.1)
 
     def display_results(self):
-        self.load_up_peak.text = str(max(self.sg_values_up))
-        self.load_down_peak.text = str(max(self.sg_values_down))
-        self.load_up_average.text = str(sum(self.sg_values_up) / len(self.sg_values_up))
-        self.load_down_average.text = str(sum(self.sg_values_down) / len(self.sg_values_down))
+        self.load_home_peak.text = str(max(self.sg_values_home))
+        self.load_away_peak.text = str(max(self.sg_values_away))
+        self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
+        self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
-        plt.rcParams["figure.figsize"] = (7.9,3.55)
-        plt.plot(self.z_pos_values_down, self.sg_values_down, 'b', label='Z SG Down')
-        plt.plot(self.z_pos_values_up, self.sg_values_up, 'r', label='Z SG Up')
-        plt.legend()
-        plt.title('Z motor load vs Z coordinate')
-        plt.xlabel('Z coordinate, mm')
-        plt.ylabel('Z load')
+        plt.rcParams["figure.figsize"] = (7.9,1.75)
+        plt.plot(self.pos_values_away, self.sg_values_away, '--', color='cyan', label='Avg')
+        plt.plot(self.pos_values_away_motor_1, self.sg_values_away_motor_1, 'green', label='Motor 1')
+        plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
+        plt.ylabel(self.axis + ' Load (Away)')
         ax = plt.gca()
         ax.set_ylim([0, 100])
-        ax.set_xlim([min(self.z_pos_values_down + self.z_pos_values_up), max(self.z_pos_values_down + self.z_pos_values_up)])
+        combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
+        ax.set_xlim([min(combined_list), max(combined_list)])
         loc = plticker.MultipleLocator(base=10)
         ax.yaxis.set_major_locator(loc)
-        plt.tight_layout()
+        plt.tight_layout(pad=0.3)
         plt.grid()
-        plt.savefig('./asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png')
+        plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
         plt.close()
-        self.load_graph.source = './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-        self.load_graph.reload()
-        self.load_graph.opacity = 1
+        self.load_graph_away.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
+        self.load_graph_away.reload()
+        self.load_graph_away.opacity = 1
+
+        plt.rcParams["figure.figsize"] = (7.9,1.8)
+        plt.plot(self.pos_values_home, self.sg_values_home, '--', color='cyan', label='Avg')
+        plt.plot(self.pos_values_home_motor_1, self.sg_values_home_motor_1, 'green', label='Motor 1')
+        plt.plot(self.pos_values_home_motor_2, self.sg_values_home_motor_2, 'orange', label='Motor 2')
+        plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
+        plt.ylabel(self.axis + ' Load (Home)')
+        ax = plt.gca()
+        ax.set_ylim([0, 100])
+        combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
+        ax.set_xlim([min(combined_list), max(combined_list)])
+        loc = plticker.MultipleLocator(base=10)
+        ax.yaxis.set_major_locator(loc)
+        plt.tight_layout(pad=0.3)
+        plt.grid()
+        plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
+        plt.close()
+        self.load_graph_home.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
+        self.load_graph_home.reload()
+        self.load_graph_home.opacity = 1
 
 
     def stop(self):
@@ -395,14 +474,23 @@ class XYJig(Screen):
 
         self.disable_motor_drivers()
 
-        self.sg_values_down = []
-        self.sg_values_up = []
-        self.z_pos_values_down = []
-        self.z_pos_values_up = []
+        self.sg_values_away = []
+        self.sg_values_away_motor_1 = []
+        self.sg_values_away_motor_2 = []
+        self.sg_values_home = []
+        self.sg_values_home_motor_1 = []
+        self.sg_values_home_motor_2 = []
+        self.pos_values_away = []
+        self.pos_values_away_motor_1 = []
+        self.pos_values_away_motor_2 = []
+        self.pos_values_home = []
+        self.pos_values_home_motor_1 = []
+        self.pos_values_home_motor_2 = []
 
 
     def calibrate_motor(self):
-        self.load_graph.opacity = 0
+        self.load_graph_away.opacity = 0
+        self.load_graph_home.opacity = 0
         self.begin_test_button.disabled = True
         self.calibrate_button.disabled = True
         self.exit_button.disabled = True
@@ -432,10 +520,15 @@ class XYJig(Screen):
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def update_realtime_load(self, dt):
-        if self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis == None:
+        if self.axis == 'Y':
+            sg_value = self.m.s.sg_y_axis
+        else:
+            sg_value = self.m.s.sg_x_motor_axis
+
+        if sg_value == -999 or sg_value == None:
             self.load_realtime.text = '-'
         else:
-            self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
+            self.load_realtime.text = str(sg_value)
 
 
     def go_to_monitor(self):
