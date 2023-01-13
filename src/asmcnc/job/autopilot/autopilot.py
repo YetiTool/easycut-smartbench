@@ -226,7 +226,7 @@ class Autopilot:
                     lambda dt: self.m.feed_override_down_1(feed_override_widget.feed_override_percentage), 0.05 * i)
 
     def load_parameters_from_json(self):
-        with open('asmcnc/job/autopilot_parameters.json') as f:
+        with open('asmcnc/job/autopilot/autopilot_parameters.json') as f:
             data = json.load(f)
             for item in data:
                 try:
