@@ -547,8 +547,6 @@ class XYJig(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm,  self.l, "Please ensure SB is idle")
             return
 
-        self.enable_motor_drivers()
-
         # Reset currents
         if self.axis == 'Y':
             self.m.set_motor_current('Y1', self.m.TMC_motor[TMC_Y1].ActiveCurrentScale)
@@ -556,6 +554,8 @@ class XYJig(Screen):
         else:
             self.m.set_motor_current('X1', self.m.TMC_motor[TMC_X1].ActiveCurrentScale)
             self.m.set_motor_current('X2', self.m.TMC_motor[TMC_X2].ActiveCurrentScale)
+
+        self.enable_motor_drivers()
 
         # Unschedule all active events
         if self.update_realtime_load_event:
