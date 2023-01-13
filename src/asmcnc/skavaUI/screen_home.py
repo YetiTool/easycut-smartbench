@@ -25,6 +25,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
+from asmcnc.job.autopilot.autopilot_popups import PopupSendData
 
 Builder.load_string("""
 
@@ -299,10 +300,9 @@ class HomeScreen(Screen):
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
     def on_enter(self):
-
         if self.m.s.autopilot_instance:
             if self.m.s.autopilot_instance.autopilot_logger:
-                self.m.s.autopilot_instance.export()
+                PopupSendData(machine=self.m)
 
         self.m.stylus_router_choice = 'router'
 
