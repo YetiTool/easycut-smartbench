@@ -239,10 +239,10 @@ class XYJigManualMove(Screen):
     def update_realtime_labels(self, dt):
         if self.axis == 'Y':
             sg_value = self.m.s.sg_y_axis
-            self.pos_label.text = self.m.x_pos_str()
+            self.pos_label.text = self.m.y_pos_str()
         else:
             sg_value = self.m.s.sg_x_motor_axis
-            self.pos_label.text = self.m.y_pos_str()
+            self.pos_label.text = self.m.x_pos_str()
 
         if sg_value == -999 or sg_value == None:
             self.load_label.text = '-'
