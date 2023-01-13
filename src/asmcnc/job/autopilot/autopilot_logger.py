@@ -119,9 +119,11 @@ class AutoPilotLogger:
         export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         title = export_time + '-' + self.job_name + '-YS' + str(self.serial_number)
         autopilot_exporter.run(title, self)
+        self.reset()
         self.exported = True
 
     def reset(self):
+        del self.logs
         self.logs = []
         self.exported = False
 
