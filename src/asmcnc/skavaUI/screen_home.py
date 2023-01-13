@@ -301,7 +301,7 @@ class HomeScreen(Screen):
     def on_enter(self):
 
         if self.m.s.autopilot_instance:
-            if not self.m.s.autopilot_instance.autopilot_logger.exported:
+            if self.m.s.autopilot_instance.autopilot_logger:
                 self.m.s.autopilot_instance.export()
 
         self.m.stylus_router_choice = 'router'
