@@ -1018,8 +1018,8 @@ class SerialConnection(object):
                                 if self.autopilot_instance:
                                     if not self.autopilot_instance.spindle_mains_voltage:
                                         if self.spindle_data_error_buffer == 3:
-                                            self.autopilot_instance.first_read_setup()
                                             self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                            self.autopilot_instance.first_read_setup()
                                         else:
                                             self.spindle_data_error_buffer += 1
 
