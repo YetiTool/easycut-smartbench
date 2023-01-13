@@ -4,7 +4,7 @@ from kivy.clock import Clock
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
-from asmcnc.production.z_head_mechanics_jig.popup_z_head_mechanics import *
+from asmcnc.apps.systemTools_app.screens.xy_jig.popup_xy_jig import *
 
 import matplotlib
 matplotlib.use('Agg')
