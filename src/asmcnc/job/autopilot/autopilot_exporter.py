@@ -13,14 +13,14 @@ SCOPES = [
 MAX = 100000000
 DRIVE_FOLDER_ID = "1FwSQqN98_T39rtHd522KlLOTwxfcygsV"
 
-dev_mode_credentials_path = '../google/credentials.json'
-dev_mode_token_path = '../google/token.json'
+dev_mode_credentials_path = 'google/credentials.json'
+dev_mode_token_path = 'google/token.json'
 
-prod_mode_credentials_path = 'asmcnc/job/credentials.json'
-prod_mode_token_path = 'asmcnc/job/token.json'
+prod_mode_credentials_path = 'asmcnc/job/autopilot/google/credentials.json'
+prod_mode_token_path = 'asmcnc/job/autopilot/google/token.json'
 
-credentials_path = dev_mode_credentials_path
-token_path = dev_mode_token_path
+credentials_path = prod_mode_credentials_path
+token_path = prod_mode_token_path
 
 
 def get_series_format(sheet_id, start_row, end_row, start_column, end_column):
