@@ -2520,15 +2520,14 @@ class RouterMachine(object):
             self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
             self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
-        if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
-        if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
-        if Z: self.poll_for_z_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
-
         # Only sets one ready to begin with
         if X: self.x_ready_to_calibrate = True
         elif Y: self.y_ready_to_calibrate = True
         elif Z: self.z_ready_to_calibrate = True
 
+        if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 1)
+        if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 1)
+        if Z: self.poll_for_z_ready = Clock.schedule_interval(self.do_calibrate_z, 1)
 
     def do_calibrate_x(self, dt):
 
@@ -2589,7 +2588,7 @@ class RouterMachine(object):
                 altDisplayText = "CALIBRATE Z AXIS"
 
             self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
-            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 10)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.5)
 
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
@@ -2599,7 +2598,7 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
 
         else: 
-            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 0.2)
+            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 0.1)
 
 
     def stream_calibration_file(self, filename):
@@ -2612,7 +2611,7 @@ class RouterMachine(object):
         log("Calibrating...")
 
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
-        self.poll_end_of_calibration_file_stream = Clock.schedule_once(self.post_calibration_file_stream, 5)
+        self.poll_end_of_calibration_file_stream = Clock.schedule_once(self.post_calibration_file_stream, 0.5)
 
 
     def quick_scrub(self, line):
