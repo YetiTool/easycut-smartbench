@@ -1021,6 +1021,8 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "GRBL RESET"
         log("GRBL RESET")
 
+    ## CHECK WHETHER SMARTBENCH IS *TRULY* IDLE AND READY FOR NEXT COMMAND
+
     def smartbench_is_not_ready_for_next_command(self, ignore_alarm = False):
 
         if not self.m.state().startswith("Idle") and not ignore_alarm:
@@ -1052,6 +1054,14 @@ class StallJigScreen(Screen):
 
         return False
 
+    ### WRAPPER FUNCTION FOR SEQUENTIAL STREAMING
+    ### This also appends a very short grbl pause, which means that 'ok's will be blocked until SB has finished processing the commands
+
+    def seq_stream_and_mini_dwell(self, list_to_stream):
+        list_to_stream.append("G4 P0.01")
+        self.m.s.start_sequential_stream(list_to_stream)
+
+
     ## RESET CURRENT SUB-TEST (DOESN'T RESTART THOUGH - WAITS FOR USER INPUT)
 
     def reset_current_sub_test(self):
@@ -1059,7 +1069,9 @@ class StallJigScreen(Screen):
         self.choose_test(self.indices["axis"], self.indices["threshold"], self.indices["feed"])
         log("Current test reset")
 
-    ## UNLOCK DATA SEND (IN CASE USER WANTS/NEEDS TO SEND INCOMPLETE DATA SET)
+    ## DATA SEND FUNCTIONALITY
+
+    ### UNLOCK DATA SEND (IN CASE USER WANTS/NEEDS TO SEND INCOMPLETE DATA SET)
 
     def enable_data_send(self):
 
@@ -1073,7 +1085,7 @@ class StallJigScreen(Screen):
             self.send_data_button.disabled = True
             log("Data send disabled")
 
-    ## DO DATA SEND
+    ### DO DATA SEND
 
     def start_stall_jig_data_send(self):
         
@@ -1137,6 +1149,8 @@ class StallJigScreen(Screen):
         self.enable_all_buttons()
 
 
+    ### ALSO SEND LOGS
+
     def populate_and_transfer_logs(self):
 
         if self.smartbench_is_not_ready_for_next_command():
@@ -1149,7 +1163,7 @@ class StallJigScreen(Screen):
         self.send_logs()
 
 
-    def send_logs(self):
+    def send_logs(self): # placeholder
 
         if self.smartbench_is_not_ready_for_next_command() and not self.m.TMC_registers_have_been_read_in():
             if self.VERBOSE: log("Poll to send logs once registers are in")
@@ -1157,7 +1171,6 @@ class StallJigScreen(Screen):
             return
 
         log("Registers are in, ready to send logs")
-        # PLACEHOLDER
 
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
@@ -1271,7 +1284,7 @@ class StallJigScreen(Screen):
         move_sequence.append("G0 G53 Z-" + str(self.m.s.setting_27))
         move_sequence.append("G53 " + "X" + str(pos_dict["X"]) + " Y" + str(pos_dict["Y"]) + " F" + str(self.fast_travel["Y"]))
         move_sequence.append("G53 " + "Z" + str(pos_dict["Z"]) + " F" + str(self.fast_travel["Z"]))
-        self.m.s.start_sequential_stream(move_sequence)
+        self.seq_stream_and_mini_dwell(move_sequence)
 
         # IMPORTANT THAT THE FUNCTION PASSED ACCEPTS CLOCK TIME AS AN ARGUMENT
         self.post_move_all_axes_event = Clock.schedule_once(next_func, self.sequence_interval)
@@ -1309,7 +1322,7 @@ class StallJigScreen(Screen):
         log("Drive into barrier")
         self.test_status_label.text = "CRASH TIME!"
         move_sequence = ["G01 G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)]
-        self.m.s.start_sequential_stream(move_sequence)
+        self.seq_stream_and_mini_dwell(move_sequence)
 
         if self.setting_up_axis_for_test:
             log("Setting up axis, so look for stall position")
@@ -1342,7 +1355,7 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "REFIND POS"
         self.expected_limit_found = False
         move_command = ["G01 G53 " + self.current_axis() + str(self.back_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
-        self.m.s.start_sequential_stream(move_command)
+        self.seq_stream_and_mini_dwell(move_command)
         self.poll_for_back_off_completion = Clock.schedule_once(lambda dt: self.back_off_completed(), self.sequence_interval)
 
 
@@ -1378,7 +1391,7 @@ class StallJigScreen(Screen):
         log("Turn off hard limits, and pull off from limit")
         move_command = "G01 G91 " + self.current_axis() + str(self.limit_pull_off[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         grbl_sequence = ['$21=0', move_command]
-        self.m.s.start_sequential_stream(grbl_sequence)
+        self.seq_stream_and_mini_dwell(grbl_sequence)
         self.expected_limit_found = False
         self.poll_to_relax_motors = Clock.schedule_once(lambda dt: self.relax_motors(), self.sequence_interval)
 
@@ -1439,7 +1452,7 @@ class StallJigScreen(Screen):
 
         log("Move probe out of the way, ready to calibrate")
         self.test_status_label.text = "PREP CAL"
-        self.m.s.start_sequential_stream([self.move_the_probe_out_of_the_way[self.current_axis()]])
+        self.seq_stream_and_mini_dwell([self.move_the_probe_out_of_the_way[self.current_axis()]])
         self.calibrate_axis()
 
 
@@ -1471,7 +1484,7 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "GO TO POS"
         move_command = "G01 G91 " + self.current_axis() + str(self.travel_to_next_test_start[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])
         grbl_sequence = [self.move_the_probe_into_the_way[self.current_axis()], move_command]
-        self.m.s.start_sequential_stream(grbl_sequence)
+        self.seq_stream_and_mini_dwell(grbl_sequence)
         self.finish_procedure_and_start_next_test()
 
 
@@ -1670,7 +1683,7 @@ class StallJigScreen(Screen):
 
         log("Pull off from limit")
         move_command = ["G91 " + self.current_axis() + str(self.limit_pull_off_and_travel[self.current_axis()]) + " F" + str(self.fast_travel[self.current_axis()])]
-        self.m.s.start_sequential_stream(move_command)
+        self.seq_stream_and_mini_dwell(move_command)
         self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(lambda dt: self.prepare_to_find_stall_pos(self.current_axis()), self.sequence_interval)
 
     def prepare_to_find_stall_pos(self, axis):
