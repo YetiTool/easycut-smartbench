@@ -116,6 +116,9 @@ class AutoPilotLogger:
         ]
 
     def export_to_gsheet(self):
+        if len(self.logs) == 0:
+            return
+
         export_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         title = export_time + '-' + self.job_name + '-YS' + str(self.serial_number)
         autopilot_exporter.run(title, self)
