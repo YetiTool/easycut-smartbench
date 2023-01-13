@@ -236,6 +236,6 @@ class Autopilot:
 
     def reset(self):
         self.spindle_mains_voltage = None
-        self.spindle_load_stack = []
+        self.spindle_load_stack *= 0
         if self.autopilot_logger:
             self.autopilot_logger.reset()

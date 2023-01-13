@@ -126,7 +126,7 @@ class AutoPilotLogger:
         self.exported = True
 
     def reset(self):
-        self.logs = []
+        self.logs *= 0
         self.exported = False
 
 
