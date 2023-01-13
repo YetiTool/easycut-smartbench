@@ -235,9 +235,9 @@ class StallJigScreen(Screen):
 
     threshold_dict = {
 
-        "X": range(100, 375, 25),
+        "X": range(125, 375, 25),
         "Y": range(100, 375, 25),
-        "Z": range(100, 220, 20) 
+        "Z": range(120, 220, 20) 
 
     }
 
@@ -443,7 +443,7 @@ class StallJigScreen(Screen):
     poll_to_move_into_test_run_position = None
 
     ## CLOCK INTERVALS
-    sequence_interval = 0.4
+    sequence_interval = 0.2
     motors_interval = 0.5
     data_process_interval = 0.5
     homing_check_interval = 0.3
