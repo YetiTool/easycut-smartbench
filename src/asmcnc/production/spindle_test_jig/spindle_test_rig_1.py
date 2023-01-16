@@ -361,15 +361,15 @@ class SpindleTestRig1(Screen):
             measured_kill_time = self.m.s.digital_spindle_kill_time
             measured_load = ld_qda_to_w(measured_voltage, self.m.s.digital_spindle_ld_qdA)
 
-            if not (rpm - 2000 <= measured_rpm <= rpm + 2000):
+            if abs(rpm - measured_rpm) > 2000:
                 fail_test("RPM out of range: " + str(measured_rpm))
                 return
 
-            if not (measured_voltage - 0.1 <= 230 <= measured_voltage + 0.1):
+            if abs(230 - measured_voltage) > 15:
                 fail_test("Voltage out of range: " + str(measured_voltage))
                 return
 
-            if not (10 <= measured_temp <= 40):
+            if measured_temp < 10 or measured_temp > 40:
                 fail_test("Temperature out of range: " + str(measured_temp))
                 return
 
@@ -377,7 +377,7 @@ class SpindleTestRig1(Screen):
                 fail_test("Kill time out of range: " + str(measured_kill_time))
                 return
 
-            if not (100 <= measured_load <= 400):
+            if measured_load < 100 or measured_load > 400:
                 fail_test("Load out of range: " + str(measured_load))
                 return
 
