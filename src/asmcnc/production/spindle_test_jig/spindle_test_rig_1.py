@@ -305,7 +305,7 @@ class SpindleTestRig1(Screen):
     def run_spindle_test(self):
         def read_spindle_info():
             def send_get_spindle_info():
-                self.m.s.write_realtime(GET_DIGITAL_SPINDLE_INFO)
+                self.m.s.write_protocol(GET_DIGITAL_SPINDLE_INFO)
 
             send_get_spindle_info()
             self.serial_number_value.text = 'TEST'
