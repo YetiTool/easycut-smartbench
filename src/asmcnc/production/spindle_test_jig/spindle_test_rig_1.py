@@ -385,7 +385,7 @@ class SpindleTestRig1(Screen):
                 Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
 
             def stop_spindle():
-                self.m.s.write_realtime('M5')
+                self.m.s.write_realtime('M3 S1000')
 
             def check_pass():
                 if len(self.fail_reasons) == 0:
@@ -404,7 +404,7 @@ class SpindleTestRig1(Screen):
             self.rpm_22000_clock = Clock.schedule_once(lambda dt: test_rpm(22000), 18)
             self.rpm_25000_clock = Clock.schedule_once(lambda dt: test_rpm(25000), 24)
             self.stop_spindle_clock = Clock.schedule_once(lambda dt: stop_spindle(), 30)
-            self.check_pass_clock = Clock.schedule_once(lambda dt: check_pass(), 35)
+            self.check_pass_clock = Clock.schedule_once(lambda dt: check_pass(), 30)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
