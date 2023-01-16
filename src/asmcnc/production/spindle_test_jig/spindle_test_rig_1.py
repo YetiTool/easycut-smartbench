@@ -277,8 +277,26 @@ Builder.load_string("""
             pos: self.pos
 """)
 
+from math import sqrt
+
+
+def ld_qda_to_w(voltage, ld_qda):
+    return voltage * 0.1 * sqrt(ld_qda)
+
+
+def unschedule(clock):
+    if clock is not None:
+        Clock.unschedule(clock)
+        clock = None
+
 
 class SpindleTestRig1(Screen):
+    rpm_13000_clock = None
+    rpm_19000_clock = None
+    rpm_22000_clock = None
+    rpm_25000_clock = None
+    stop_spindle_clock = None
+
     def __init__(self, **kwargs):
         super(SpindleTestRig1, self).__init__(**kwargs)
 
@@ -296,8 +314,12 @@ class SpindleTestRig1(Screen):
         except:
             pass
 
-    def on_pass(self):
-        self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
+    def cancel_clocks(self):
+        unschedule(self.rpm_13000_clock)
+        unschedule(self.rpm_19000_clock)
+        unschedule(self.rpm_22000_clock)
+        unschedule(self.rpm_25000_clock)
+        unschedule(self.stop_spindle_clock)
 
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
@@ -326,4 +348,60 @@ class SpindleTestRig1(Screen):
             self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
 
+        def check_spindle_data_valid(rpm):
+            def pass_test():
+                self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
+
+            def fail_test(message):
+                print(message)
+
+            measured_rpm = self.m.s.spindle_speed
+            measured_voltage = self.m.s.digital_spindle_mains_voltage
+            measured_temp = self.m.s.digital_spindle_temperature
+            measured_kill_time = self.m.s.digital_spindle_kill_time
+            measured_load = ld_qda_to_w(measured_voltage, self.m.s.digital_spindle_ld_qdA)
+
+            if not (rpm - 2000 < measured_rpm < rpm + 2000):
+                fail_test("RPM out of range")
+                return
+
+            if not (measured_voltage - 0.1 < 230 < measured_voltage + 0.1):
+                fail_test("Voltage out of range")
+                return
+
+            if not (10 < measured_temp < 40):
+                fail_test("Temperature out of range")
+                return
+
+            if not (measured_kill_time > 254):
+                fail_test("Kill time out of range")
+                return
+
+            if not (100 < measured_load < 400):
+                fail_test("Load out of range")
+                return
+
+            pass_test()
+
+        def run_full_test():
+            def set_spindle_rpm(rpm):
+                self.m.s.write_realtime('M3 S' + str(rpm))
+                self.target_rpm_value.text = str(rpm)
+                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
+
+            def test_rpm(rpm):
+                set_spindle_rpm(rpm)
+                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
+
+            def stop_spindle():
+                self.m.s.write_realtime('M5')
+
+            test_rpm(10000)
+            self.rpm_13000_clock = Clock.schedule_once(lambda dt: test_rpm(13000), 6)
+            self.rpm_19000_clock = Clock.schedule_once(lambda dt: test_rpm(19000), 12)
+            self.rpm_22000_clock = Clock.schedule_once(lambda dt: test_rpm(22000), 18)
+            self.rpm_25000_clock = Clock.schedule_once(lambda dt: test_rpm(25000), 24)
+            self.stop_spindle_clock = Clock.schedule_once(lambda dt: stop_spindle(), 30)
+
         send_get_digital_spindle_info()
+        Clock.schedule_once(lambda dt: run_full_test(), 2)
