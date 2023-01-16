@@ -303,8 +303,27 @@ class SpindleTestRig1(Screen):
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            Clock.schedule_once(show_digital_spindle_info, 1)
 
-        def confirm_digital_spindle_info():
-            pass
+        def show_digital_spindle_info():
+            def format_week_year(week, year):
+                return str(week) + 'th wk ' + str(year)
+
+            def format_seconds(seconds):
+                days = seconds // 86400
+                seconds = seconds % 86400
+                hours = seconds // 3600
+                seconds %= 3600
+                minutes = seconds // 60
+                seconds %= 60
+                return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
+
+            self.serial_number_value.text = self.m.s.spindle_serial_number
+            self.mains_value.text = self.m.s.spindle_mains_frequency_hertz
+            self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
+                                                               self.m.s.spindle_production_year)
+            self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
+            self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
+            self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
 
         send_get_digital_spindle_info()
