@@ -3,8 +3,6 @@ from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
 
 Builder.load_string("""
 <SpindleTestRig1>:
@@ -303,16 +301,10 @@ class SpindleTestRig1(Screen):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
 
     def run_spindle_test(self):
-        def read_spindle_info():
-            def send_get_spindle_info():
-                self.m.s.write_protocol(GET_DIGITAL_SPINDLE_INFO)
+        def send_get_digital_spindle_info():
+            self.m.s.send_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
 
-            send_get_spindle_info()
-            self.serial_number_value.text = 'TEST'
-            self.mains_value.text = '235V/50Hz'
-            self.production_date_value.text = '15th wk 2022'
-            self.firmware_version_value.text = '10'
-            self.up_time_value.text = '1wk, 1d, 9h, 33m, 52s'
-            self.brush_time_value.text = '2d, 7h, 45m, 34s'
+        def confirm_digital_spindle_info():
+            pass
 
-        read_spindle_info()
+        send_get_digital_spindle_info()
