@@ -13,8 +13,6 @@ class SpindleTest(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
 
-        sm = ScreenManager(transition=NoTransition())
-
         sett = Settings(sm)
 
         l = Localization()
