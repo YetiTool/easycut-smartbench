@@ -302,7 +302,7 @@ class SpindleTestRig1(Screen):
 
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
-            self.m.s.send_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
 
         def confirm_digital_spindle_info():
             pass
