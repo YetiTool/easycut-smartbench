@@ -1639,7 +1639,7 @@ class SerialConnection(object):
         
         self.write_realtime_buffer.append([serialCommand, altDisplayText])
 
-    def write_protocol(self, serialCommand, altDisplayText):
+    def write_protocol(self, serialCommand, altDisplayText = None):
         
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
