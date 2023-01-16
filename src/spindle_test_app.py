@@ -8,6 +8,8 @@ from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
 from asmcnc.comms import smartbench_flurry_database_connection
 
+from asmcnc.skavaUI.screen_home import HomeScreen
+
 from asmcnc.production.spindle_test_jig.spindle_test_rig_1 import SpindleTestRig1
 
 
@@ -28,10 +30,13 @@ class SpindleTest(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
-        screen_1 = SpindleTestRig1(name='home', screen_manager=sm, machine=m)
+        home_screen = HomeScreen(name='home', screen_manager=sm, machine=m, job=jd, settings=sett, localization=l)
+        sm.add_widget(home_screen)
+
+        screen_1 = SpindleTestRig1(name='spindle_test_1', screen_manager=sm, machine=m)
         sm.add_widget(screen_1)
 
-        sm.current = 'home'
+        sm.current = 'spindle_test_1'
         return sm
 
 
