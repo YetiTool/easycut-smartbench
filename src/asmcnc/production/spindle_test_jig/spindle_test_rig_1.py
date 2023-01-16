@@ -3,7 +3,6 @@ from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 
-
 Builder.load_string("""
 <SpindleTestRig1>:
     status_container:status_container
@@ -319,7 +318,8 @@ class SpindleTestRig1(Screen):
                 return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
 
             self.serial_number_value.text = str(self.m.s.spindle_serial_number)
-            self.mains_value.text = str(self.m.s.spindle_mains_frequency_hertz)
+            self.mains_value.text = str(self.m.s.digital_spindle_mains_voltage) + '/ ' + \
+                                    str(self.m.s.spindle_mains_frequency_hertz)
             self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
                                                                self.m.s.spindle_production_year)
             self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
