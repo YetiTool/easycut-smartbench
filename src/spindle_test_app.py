@@ -25,10 +25,10 @@ class SpindleTest(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
-        screen_1 = SpindleTestRig1(name='screen_1', screen_manager=sm, machine=m)
+        screen_1 = SpindleTestRig1(name='home', screen_manager=sm, machine=m)
         sm.add_widget(screen_1)
 
-        sm.current = 'screen_1'
+        sm.current = 'home'
 
         return sm
 
