@@ -297,6 +297,8 @@ class SpindleTestRig1(Screen):
     rpm_25000_clock = None
     stop_spindle_clock = None
 
+    fail_reasons = []
+
     def __init__(self, **kwargs):
         super(SpindleTestRig1, self).__init__(**kwargs)
 
@@ -349,11 +351,8 @@ class SpindleTestRig1(Screen):
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
 
         def check_spindle_data_valid(rpm):
-            def pass_test():
-                self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
-
             def fail_test(message):
-                print(message)
+                self.fail_reasons.append([rpm, message])
 
             measured_rpm = int(self.m.s.spindle_speed)
             measured_voltage = self.m.s.digital_spindle_mains_voltage
@@ -363,25 +362,18 @@ class SpindleTestRig1(Screen):
 
             if abs(rpm - measured_rpm) > 2000:
                 fail_test("RPM out of range: " + str(measured_rpm))
-                return
 
             if abs(230 - measured_voltage) > 15:
                 fail_test("Voltage out of range: " + str(measured_voltage))
-                return
 
             if measured_temp < 10 or measured_temp > 40:
                 fail_test("Temperature out of range: " + str(measured_temp))
-                return
 
             if not (measured_kill_time > 254):
                 fail_test("Kill time out of range: " + str(measured_kill_time))
-                return
 
             if measured_load < 100 or measured_load > 400:
                 fail_test("Load out of range: " + str(measured_load))
-                return
-
-            pass_test()
 
         def run_full_test():
             def set_spindle_rpm(rpm):
@@ -396,12 +388,24 @@ class SpindleTestRig1(Screen):
             def stop_spindle():
                 self.m.s.write_realtime('M3 S0')
 
+            def check_pass():
+                if len(self.fail_reasons) == 0:
+                    self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
+                else:
+                    self.pass_fail_img.source = 'asmcnc/skavaUI/img/red_cross.png'
+
+                    for item in self.fail_reasons:
+                        print(str(item[0]) + ' RPM: ' + item[1])
+
+            self.cancel_clocks()
+
             test_rpm(10000)
             self.rpm_13000_clock = Clock.schedule_once(lambda dt: test_rpm(13000), 6)
             self.rpm_19000_clock = Clock.schedule_once(lambda dt: test_rpm(19000), 12)
             self.rpm_22000_clock = Clock.schedule_once(lambda dt: test_rpm(22000), 18)
             self.rpm_25000_clock = Clock.schedule_once(lambda dt: test_rpm(25000), 24)
             self.stop_spindle_clock = Clock.schedule_once(lambda dt: stop_spindle(), 30)
+            self.check_pass_clock = Clock.schedule_once(lambda dt: check_pass(), 35)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
