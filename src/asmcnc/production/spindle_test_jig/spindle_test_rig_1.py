@@ -385,7 +385,7 @@ class SpindleTestRig1(Screen):
 
         def run_full_test():
             def set_spindle_rpm(rpm):
-                self.m.s.write_realtime('M3 S' + str(rpm))
+                self.m.s.write_command('M3 S' + str(rpm))
                 self.target_rpm_value.text = str(rpm)
                 Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
 
