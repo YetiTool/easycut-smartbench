@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
@@ -20,6 +21,9 @@ class SpindleTest(App):
         jd = JobData(localization=l, settings_manager=sett)
 
         m = RouterMachine('COM3', sm, sett, l, jd)
+
+        if m.s.is_connected():
+            Clock.schedule_once(m.s.start_services, 4)
 
         screen_1 = SpindleTestRig1(name='screen_1', screen_manager=sm, machine=m)
         sm.add_widget(screen_1)
