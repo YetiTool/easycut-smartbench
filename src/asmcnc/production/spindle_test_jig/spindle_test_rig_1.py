@@ -44,6 +44,7 @@ Builder.load_string("""
                         text: 'Begin Test'
                         bold: True
                         background_color: [0, 1, 0, 1]
+                        on_press: root.run_spindle_test()
                         
                     Button:
                         text: 'Open Terminal'
@@ -300,9 +301,6 @@ class SpindleTestRig1(Screen):
 
     def on_pass(self):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
-
-    def on_enter(self):
-        self.run_spindle_test()
 
     def run_spindle_test(self):
         def read_spindle_info():
