@@ -303,7 +303,7 @@ class SpindleTestRig1(Screen):
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(show_digital_spindle_info, 1)
+            Clock.schedule_once(lambda dt: show_digital_spindle_info(), 1)
 
         def show_digital_spindle_info():
             def format_week_year(week, year):
