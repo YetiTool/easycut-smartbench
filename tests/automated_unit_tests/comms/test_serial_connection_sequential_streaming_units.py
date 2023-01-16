@@ -144,7 +144,7 @@ def test_process_grbl_push_detects_reset_has_not_happened(sc):
 def test_dwell_appended_at_end_of_seq_stream_with_reset_requested(sc):
     sc.start_sequential_stream(['a'], True)
     run_scanner(sc)
-    assert sc._sequential_stream_buffer == ["G4 P1"]
+    assert sc._sequential_stream_buffer == ["G4 P0.5"]
     assert sc.is_sequential_streaming == True
     assert sc._reset_grbl_after_stream == True
     assert sc._ready_to_send_first_sequential_stream == False
@@ -176,7 +176,7 @@ def sc_write_spy():
 def test_dwell_inserted_into_mixed_block(sc_write_spy):
 
     stream = ["G90","$1=1","$2=2","$3=3","G91","$2=6","XYZ"]
-    expected_dwells = ["G90","$1=1","$2=2","$3=3","G4 P1","G91","$2=6","G4 P1","XYZ"]
+    expected_dwells = ["G90","$1=1","$2=2","$3=3","G4 P0.5","G91","$2=6","G4 P0.5","XYZ"]
     global written_gcodes_list
     written_gcodes_list = []
 
@@ -196,7 +196,7 @@ def test_dwell_inserted_into_mixed_block(sc_write_spy):
 def test_dwell_inserted_into_mixed_block_with_reset(sc_write_spy):
 
     stream = ["G90","$1=1","$2=2","$3=3","G91","$2=6","XYZ","$6=8"]
-    expected_dwells = ["G90","$1=1","$2=2","$3=3","G4 P1","G91","$2=6","G4 P1","XYZ","$6=8","G4 P1"]
+    expected_dwells = ["G90","$1=1","$2=2","$3=3","G4 P0.5","G91","$2=6","G4 P0.5","XYZ","$6=8","G4 P0.5"]
     global written_gcodes_list
     written_gcodes_list = []
 
