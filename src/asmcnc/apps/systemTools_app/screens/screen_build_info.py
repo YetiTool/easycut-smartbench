@@ -17,6 +17,7 @@ from kivy.metrics import dp
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
 
 Builder.load_string("""
 
@@ -64,6 +65,7 @@ Builder.load_string("""
     advanced_button : advanced_button
     show_more_info: show_more_info
     console_serial_number: console_serial_number
+    toggle_ssh_button:toggle_ssh_button
 
     BoxLayout:
         height: dp(800)
@@ -455,6 +457,20 @@ Builder.load_string("""
                         on_press: root.open_data_consent_app()
                         color: hex('#f9f9f9ff')
                         markup: True
+                        
+                    ToggleButton:
+                        id: toggle_ssh_button
+                        size_hint: (None,None)
+                        height: dp(35)
+                        width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.toggle_ssh()
+                        color: hex('#f9f9f9ff')
+                        markup: True
 
                     ToggleButton:
                         id: advanced_button
@@ -472,7 +488,7 @@ Builder.load_string("""
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(115)
+                        height: dp(80)
                         width: dp(210)
                         padding: [0,0]
 
@@ -659,6 +675,18 @@ class BuildInfoScreen(Screen):
         self.restart_app()
         self.reset_language = True
 
+    def toggle_ssh(self):
+        toggled = self.set.toggle_ssh()
+
+        self.refresh_ssh_button()
+
+        if not toggled:
+            PopupSSHToggleFailed(localization=self.l)
+
+    def refresh_ssh_button(self):
+        enabled_text = self.l.get_str("Enabled") if self.set.is_service_running('ssh') else self.l.get_str("Disabled")
+        self.toggle_ssh_button.text = self.l.get_str("SSH") + ": " + enabled_text
+
     def update_strings(self):
         self.language_button.text = self.l.lang
         self.data_and_wifi_button.text = self.l.get_str('Data and Wi-Fi')
@@ -672,6 +700,8 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = self.l.get_str('Firmware')
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
+
+        self.refresh_ssh_button()
 
         self.show_more_info.text = (
             self.l.get_str('Software') + '\n' + \
