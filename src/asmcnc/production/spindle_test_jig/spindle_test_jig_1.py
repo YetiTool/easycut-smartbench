@@ -287,6 +287,8 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+
+    def on_enter(self):
         self.send_get_digital_spindle_info()
 
     def update_status_text(self, dt):
