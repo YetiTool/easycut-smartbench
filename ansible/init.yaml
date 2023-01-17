@@ -16,6 +16,32 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
+  - name: Ensure we use ttyS0 port on Pi3
+    lineinfile:
+      name: /boot/config.txt
+      state: absent
+      insertafter: 'enable_uart=1'
+      line: 'dtoverlay=pi3-disable-bt'
+    when: ansible_distribution_major_version == '9'
+  - name: Ensure we use ttyS0 port on Pi4
+    lineinfile:
+      name: /boot/config.txt
+      state: absent
+      insertafter: 'enable_uart=1'
+      line: 'dtoverlay=disable-bt'
+    when: ansible_distribution_major_version == '11'
+  - name: Update GPU memory
+    lineinfile: 
+      name: /boot/config.txt
+      regexp: 'gpu_mem=128'
+      line: 'gpu_mem=256'
+      backrefs: yes
+  - name: Copying the starteasycut shell script
+    template:
+      src: starteasycut.sh
+      dest: /home/pi/starteasycut.sh
+      mode: '0755'
+
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:
@@ -23,6 +49,7 @@
       state: present
     with_items: "{{ stretch_pkgs }}"
     when: ansible_distribution_major_version == '9' or ansible_distribution_major_version == '10'
+    ignore_errors: yes
 
     # This is very important before the pip run
   - name: Install apt packages and one python package
@@ -129,6 +156,7 @@
     systemd:
       name: proftpd.service
       state: restarted
+    ignore_errors: yes
   - name: Generate /home/pi/.ssh/ RSA host key
     command : ssh-keygen -q -t rsa -b 4096 -f /home/pi/.ssh/id_rsa -N ""
     become: true
@@ -159,31 +187,6 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - name: Ensure we use ttyS0 port on Pi3
-    lineinfile:
-      name: /boot/config.txt
-      state: absent
-      insertafter: 'enable_uart=1'
-      line: 'dtoverlay=pi3-disable-bt'
-    when: ansible_distribution_major_version == '9'
-  - name: Ensure we use ttyS0 port on Pi4
-    lineinfile:
-      name: /boot/config.txt
-      state: absent
-      insertafter: 'enable_uart=1'
-      line: 'dtoverlay=disable-bt'
-    when: ansible_distribution_major_version == '11'
-  - name: Update GPU memory
-    lineinfile: 
-      name: /boot/config.txt
-      regexp: 'gpu_mem=128'
-      line: 'gpu_mem=256'
-      backrefs: yes
-  - name: Copying the starteasycut shell script
-    template:
-      src: starteasycut.sh
-      dest: /home/pi/starteasycut.sh
-      mode: '0755'
   - name: Add ansible_from_easycut line to Easycut config
     lineinfile:
       name: /home/pi/easycut-smartbench/src/config.txt
