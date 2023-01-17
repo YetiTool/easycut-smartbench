@@ -8,9 +8,7 @@ import os
 
 
 class ConfirmShutdownPopup(Widget):
-    def __init__(self, m):
-        self.m = m
-
+    def __init__(self):
         description = "Would you like to shutdown the console?"
         title_string = "Shutdown"
         ok_string = "Yes"

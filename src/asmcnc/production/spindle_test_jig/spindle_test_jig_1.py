@@ -314,7 +314,7 @@ class SpindleTestJig1(Screen):
         self.run_test_button.disabled = False
 
     def shutdown(self):
-        ConfirmShutdownPopup(self.m)
+        ConfirmShutdownPopup()
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
