@@ -4,6 +4,8 @@ from asmcnc.skavaUI import widget_gcode_monitor
 
 Builder.load_string("""
 <SpindleTestJigConsole>:
+    gcode_monitor_container:gcode_monitor_container
+    
     BoxLayout:
         orientation: 'vertical'
         
