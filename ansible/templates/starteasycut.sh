@@ -35,7 +35,10 @@ if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
         then
                 echo "Running LB Calibration app"
                 exec python lb_calibration_app.py
-
+        elif [ -f /home/pi/YETI_SPINDLE_PROD_JIG.txt ]
+        then
+                echo "Running Spindle Test app"
+                exec python spindle_test_app.py
         fi
 
 else
