@@ -22,7 +22,7 @@ class PostTestSummaryPopup(Widget):
             description = "Spindle test failed. Following issues were found:\n"
 
             for fail_reason in fail_reasons:
-                description += fail_reason + "\n"
+                description += str(fail_reason) + "\n"
 
         title_string = "Spindle Test Result"
         ok_string = "OK"
