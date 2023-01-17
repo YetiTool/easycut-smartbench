@@ -4,6 +4,7 @@ from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
+import os
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -56,6 +57,7 @@ Builder.load_string("""
                     Button:
                         text: 'Shutdown'
                         bold: True
+                        on_press: root.shutdown()
                         background_color: [1, 0, 0, 1]
                         
                 GridLayout:
@@ -310,6 +312,9 @@ class SpindleTestJig1(Screen):
         self.m.s.write_command('M5')
         [unschedule(clock) for clock in self.clocks]
         self.run_test_button.disabled = False
+
+    def shutdown(self):
+        os.system('sudo shutdown -h now')
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
