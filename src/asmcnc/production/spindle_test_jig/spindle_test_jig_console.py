@@ -12,12 +12,12 @@ Builder.load_string("""
         Button:
             text: 'Back'
             on_press: root.back()
-            size_hint_x: 0.8
+            size_hint_x: 1.0
             size_hint_y: 0.2
             
         BoxLayout:
             id: gcode_monitor_container
-            size_hint_x: 0.8
+            size_hint_x: 1.0
             size_hint_y: 0.8
 
 """)
