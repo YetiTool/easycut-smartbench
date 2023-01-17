@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 from math import ceil
+from asmcnc.production.spindle_test_jig.popups.reset_spindle_brush_popup import ResetSpindleBrushPopup
 
 Builder.load_string("""
 <SpindleTestRig1>:
@@ -294,12 +295,6 @@ def unschedule(clock):
 
 
 class SpindleTestRig1(Screen):
-    rpm_13000_clock = None
-    rpm_19000_clock = None
-    rpm_22000_clock = None
-    rpm_25000_clock = None
-    stop_spindle_clock = None
-
     fail_reasons = []
 
     def __init__(self, **kwargs):
@@ -334,6 +329,7 @@ class SpindleTestRig1(Screen):
 
     def run_spindle_test(self):
         self.toggle_run_button()
+
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
             Clock.schedule_once(lambda dt: show_digital_spindle_info(), 1)
@@ -399,22 +395,15 @@ class SpindleTestRig1(Screen):
 
             def check_pass():
                 total_fails = len(self.fail_reasons)
-                spindle_brush_time = self.m.s.spindle_brush_run_time_seconds
 
-                if total_fails > 0 or spindle_brush_time > 0:
-                    print("FAIL")
-                    for fail in self.fail_reasons:
-                        print(str(fail[0]) + " - " + str(fail[1]))
-                    print("Spindle brush time: " + str(spindle_brush_time))
+                if total_fails > 0:
                     self.pass_fail_img.source = 'asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png'
                     return
 
                 self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
-                print("PASS")
 
-            def reset_brush_timer():
-                self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET BRUSH TIMER")
-                send_get_digital_spindle_info()
+            def show_spindle_brush_popup():
+                ResetSpindleBrushPopup(self.m.s)
 
             test_rpm(10000)
             Clock.schedule_once(lambda dt: test_rpm(13000), 6)
@@ -422,9 +411,9 @@ class SpindleTestRig1(Screen):
             Clock.schedule_once(lambda dt: test_rpm(22000), 18)
             Clock.schedule_once(lambda dt: test_rpm(25000), 24)
             Clock.schedule_once(lambda dt: stop_spindle(), 30)
-            Clock.schedule_once(lambda dt: reset_brush_timer(), 31)
-            Clock.schedule_once(lambda dt: check_pass(), 33)
+            Clock.schedule_once(lambda dt: check_pass(), 32)
             Clock.schedule_once(lambda dt: self.toggle_run_button(), 34)
+            Clock.schedule_once(lambda dt: show_spindle_brush_popup(), 35)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
