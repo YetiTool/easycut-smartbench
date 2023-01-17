@@ -316,13 +316,6 @@ class SpindleTestRig1(Screen):
         except:
             pass
 
-    def cancel_clocks(self):
-        unschedule(self.rpm_13000_clock)
-        unschedule(self.rpm_19000_clock)
-        unschedule(self.rpm_22000_clock)
-        unschedule(self.rpm_25000_clock)
-        unschedule(self.stop_spindle_clock)
-
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
@@ -385,7 +378,7 @@ class SpindleTestRig1(Screen):
                 Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
 
             def stop_spindle():
-                self.m.s.write_realtime('M3 S1000')
+                self.m.s.write_realtime('M5')
 
             def check_pass():
                 if len(self.fail_reasons) == 0:
@@ -396,15 +389,13 @@ class SpindleTestRig1(Screen):
                     for item in self.fail_reasons:
                         print(str(item[0]) + ' RPM: ' + item[1])
 
-            self.cancel_clocks()
-
             test_rpm(10000)
-            self.rpm_13000_clock = Clock.schedule_once(lambda dt: test_rpm(13000), 6)
-            self.rpm_19000_clock = Clock.schedule_once(lambda dt: test_rpm(19000), 12)
-            self.rpm_22000_clock = Clock.schedule_once(lambda dt: test_rpm(22000), 18)
-            self.rpm_25000_clock = Clock.schedule_once(lambda dt: test_rpm(25000), 24)
-            self.stop_spindle_clock = Clock.schedule_once(lambda dt: stop_spindle(), 30)
-            self.check_pass_clock = Clock.schedule_once(lambda dt: check_pass(), 30)
+            Clock.schedule_once(lambda dt: test_rpm(13000), 6)
+            Clock.schedule_once(lambda dt: test_rpm(19000), 12)
+            Clock.schedule_once(lambda dt: test_rpm(22000), 18)
+            Clock.schedule_once(lambda dt: test_rpm(25000), 24)
+            Clock.schedule_once(lambda dt: stop_spindle(), 30)
+            Clock.schedule_once(lambda dt: check_pass(), 30)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
