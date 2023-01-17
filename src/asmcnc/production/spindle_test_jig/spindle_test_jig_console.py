@@ -9,19 +9,15 @@ Builder.load_string("""
     BoxLayout:
         orientation: 'vertical'
         
-        GridLayout:
-            cols: 1
-            rows: 2
+        Button:
+            text: 'Back'
+            on_press: root.back()
             
-            Button:
-                text: 'Back'
-                on_press: root.back()
-                
-            BoxLayout:
-                height: self.parent.height
-                id: gcode_monitor_container
-                size_hint_x: 0.8
-                size_hint_y: 0.8
+        BoxLayout:
+            height: self.parent.height
+            id: gcode_monitor_container
+            size_hint_x: 0.8
+            size_hint_y: 0.8
 
 """)
 
