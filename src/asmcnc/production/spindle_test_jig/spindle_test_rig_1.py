@@ -403,7 +403,7 @@ class SpindleTestRig1(Screen):
                 self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
 
             def show_spindle_brush_popup():
-                ResetSpindleBrushPopup(self.m.s)
+                ResetSpindleBrushPopup(self.m)
 
             test_rpm(10000)
             Clock.schedule_once(lambda dt: test_rpm(13000), 6)
