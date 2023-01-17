@@ -156,6 +156,7 @@
     systemd:
       name: proftpd.service
       state: restarted
+    ignore_errors: yes
   - name: Generate /home/pi/.ssh/ RSA host key
     command : ssh-keygen -q -t rsa -b 4096 -f /home/pi/.ssh/id_rsa -N ""
     become: true
