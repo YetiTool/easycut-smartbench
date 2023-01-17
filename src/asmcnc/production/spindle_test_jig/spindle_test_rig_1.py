@@ -20,6 +20,7 @@ Builder.load_string("""
     up_time_value:up_time_value
     firmware_version_value:firmware_version_value
     brush_time_value:brush_time_value
+    run_test_button:run_test_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -38,6 +39,7 @@ Builder.load_string("""
                     size_hint_x: 0.4
                     
                     Button:
+                        id: run_test_button
                         text: 'Begin Test'
                         bold: True
                         background_color: [0, 1, 0, 1]
@@ -324,6 +326,7 @@ class SpindleTestRig1(Screen):
         self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
     def run_spindle_test(self):
+        self.run_test_button.disabled = True
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
             Clock.schedule_once(lambda dt: show_digital_spindle_info(), 1)
@@ -412,8 +415,8 @@ class SpindleTestRig1(Screen):
             Clock.schedule_once(lambda dt: test_rpm(22000), 18)
             Clock.schedule_once(lambda dt: test_rpm(25000), 24)
             Clock.schedule_once(lambda dt: stop_spindle(), 30)
-            Clock.schedule_once(lambda dt: reset_brush_timer(), 30)
-            Clock.schedule_once(lambda dt: check_pass(), 32)
+            Clock.schedule_once(lambda dt: reset_brush_timer(), 31)
+            Clock.schedule_once(lambda dt: check_pass(), 33)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
