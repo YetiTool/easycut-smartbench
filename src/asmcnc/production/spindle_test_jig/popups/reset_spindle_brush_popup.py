@@ -10,8 +10,8 @@ class ResetSpindleBrushPopup(Widget):
     def __init__(self, s):
         description = "Would you like to reset the spindle's internal brush timer?"
         title_string = "Reset Spindle Brush"
-        ok_string = self.l.get_bold("Yes - Reset brush timer")
-        back_string = self.l.get_bold("No - Don't reset brush timer")
+        ok_string = "Yes - Reset brush timer"
+        back_string = "No - Don't reset brush timer"
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description,
