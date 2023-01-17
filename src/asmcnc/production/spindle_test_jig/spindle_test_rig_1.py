@@ -325,8 +325,14 @@ class SpindleTestRig1(Screen):
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
         self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
+    def toggle_run_button(self):
+        if self.run_test_button.disabled:
+            self.run_test_button.disabled = False
+        else:
+            self.run_test_button.disabled = True
+
     def run_spindle_test(self):
-        self.run_test_button.disabled = True
+        self.toggle_run_button()
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
             Clock.schedule_once(lambda dt: show_digital_spindle_info(), 1)
@@ -417,6 +423,7 @@ class SpindleTestRig1(Screen):
             Clock.schedule_once(lambda dt: stop_spindle(), 30)
             Clock.schedule_once(lambda dt: reset_brush_timer(), 31)
             Clock.schedule_once(lambda dt: check_pass(), 33)
+            Clock.schedule_once(lambda dt: self.toggle_run_button(), 34)
 
         send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
