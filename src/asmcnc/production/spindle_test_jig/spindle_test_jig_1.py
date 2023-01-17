@@ -51,6 +51,7 @@ Builder.load_string("""
                         text: 'Open Terminal'
                         bold: True
                         background_color: [0.62, 0.12, 0.94, 1]
+                        on_press: root.open_console()
                         
                     Button:
                         text: 'Shutdown'
