@@ -321,6 +321,7 @@ class SpindleTestRig1(Screen):
         self.load_value.text = str(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA)) + 'W'
         self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
+        self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
