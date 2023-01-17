@@ -237,11 +237,11 @@ Builder.load_string("""
                         rows: 1
                         
                         Label:
-                            id: pass_fail_img
                             text: 'Pass:'
                             bold: True
                             
                         Image:
+                            id: pass_fail_img
                             source: 'asmcnc/skavaUI/img/checkbox_inactive.png'
                     
                     BoxLayout:
