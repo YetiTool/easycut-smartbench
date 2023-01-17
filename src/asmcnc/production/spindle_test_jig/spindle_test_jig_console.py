@@ -20,7 +20,8 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.6
+                size_hint_x: 0.8
+                size_hint_y: 0.8
 
 """)
 
