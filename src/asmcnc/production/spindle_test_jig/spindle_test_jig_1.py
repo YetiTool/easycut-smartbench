@@ -77,7 +77,6 @@ Builder.load_string("""
                             
                             Label:
                                 id: target_rpm_value
-                                text: '10,000'
                         
                         GridLayout:
                             cols: 2
@@ -89,7 +88,6 @@ Builder.load_string("""
                             
                             Label:
                                 id: measured_rpm_value
-                                text: '10,510'
                     
                     GridLayout:
                         cols: 4
@@ -106,7 +104,6 @@ Builder.load_string("""
                                 
                             Label:
                                 id: voltage_value
-                                text: '231V'
                         
                         GridLayout:
                             cols: 1
@@ -118,7 +115,6 @@ Builder.load_string("""
                                 
                             Label:
                                 id: load_value
-                                text: '250W'
                                 
                         GridLayout:
                             cols: 1
@@ -130,7 +126,6 @@ Builder.load_string("""
                                 
                             Label:
                                 id: temp_value
-                                text: '30C'
                         
                         GridLayout:
                             cols: 1
@@ -142,7 +137,6 @@ Builder.load_string("""
                                 
                             Label:
                                 id: kill_time_value
-                                text: '255 S'
                     
                     BoxLayout:
                         orientation: 'vertical'
@@ -166,7 +160,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: serial_number_value
-                                    text: '16959'
                                     
                             GridLayout:
                                 cols: 1
@@ -178,7 +171,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: mains_value
-                                    text: '235V/50Hz'
                                     
                             GridLayout:
                                 cols: 1
@@ -190,7 +182,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: production_date_value
-                                    text: '15th wk 2022'
                                     
                             GridLayout:
                                 cols: 1
@@ -202,7 +193,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: up_time_value
-                                    text: '1wk, 1d, 9h, 33m, 52s'
                                     
                             GridLayout:
                                 cols: 1
@@ -214,7 +204,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: firmware_version_value
-                                    text: '10'
                                     
                             GridLayout:
                                 cols: 1
@@ -226,7 +215,6 @@ Builder.load_string("""
                                     
                                 Label:
                                     id: brush_time_value
-                                    text: '2d, 7h, 45m, 34s'
                             
                 GridLayout:
                     cols: 1
@@ -299,6 +287,7 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+        self.send_get_digital_spindle_info()
 
     def update_status_text(self, dt):
         try:
@@ -322,34 +311,34 @@ class SpindleTestJig1(Screen):
     def open_console(self):
         self.sm.current = 'spindle_test_console'
 
+    def send_get_digital_spindle_info(self):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        Clock.schedule_once(lambda dt: self.show_digital_spindle_info(), 1)
+
+    def show_digital_spindle_info(self):
+        def format_week_year(week, year):
+            return str(week) + 'th wk ' + str(year)
+
+        def format_seconds(seconds):
+            days = seconds // 86400
+            seconds = seconds % 86400
+            hours = seconds // 3600
+            seconds %= 3600
+            minutes = seconds // 60
+            seconds %= 60
+            return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
+
+        self.serial_number_value.text = str(self.m.s.spindle_serial_number)
+        self.mains_value.text = str(self.m.s.digital_spindle_mains_voltage) + '/ ' + \
+                                str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
+        self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
+                                                           self.m.s.spindle_production_year)
+        self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
+        self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
+        self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
+
     def run_spindle_test(self):
         self.toggle_run_button()
-
-        def send_get_digital_spindle_info():
-            self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(lambda dt: show_digital_spindle_info(), 1)
-
-        def show_digital_spindle_info():
-            def format_week_year(week, year):
-                return str(week) + 'th wk ' + str(year)
-
-            def format_seconds(seconds):
-                days = seconds // 86400
-                seconds = seconds % 86400
-                hours = seconds // 3600
-                seconds %= 3600
-                minutes = seconds // 60
-                seconds %= 60
-                return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
-
-            self.serial_number_value.text = str(self.m.s.spindle_serial_number)
-            self.mains_value.text = str(self.m.s.digital_spindle_mains_voltage) + '/ ' + \
-                                    str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
-            self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
-                                                               self.m.s.spindle_production_year)
-            self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
-            self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
-            self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
 
         def check_spindle_data_valid(rpm):
             def fail_test(message):
@@ -410,5 +399,4 @@ class SpindleTestJig1(Screen):
             Clock.schedule_once(lambda dt: self.toggle_run_button(), 34)
             Clock.schedule_once(lambda dt: show_spindle_brush_popup(), 35)
 
-        send_get_digital_spindle_info()
         Clock.schedule_once(lambda dt: run_full_test(), 2)
