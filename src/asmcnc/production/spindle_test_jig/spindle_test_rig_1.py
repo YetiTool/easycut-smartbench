@@ -396,7 +396,7 @@ class SpindleTestRig1(Screen):
                     for fail in self.fail_reasons:
                         print(str(fail[0]) + " - " + str(fail[1]))
                     print("Spindle brush time: " + str(spindle_brush_time))
-                    self.pass_fail_img.source = 'asmcnc/skavaUI/img/red_cross.png'
+                    self.pass_fail_img.source = 'asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png'
                     return
 
                 self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
