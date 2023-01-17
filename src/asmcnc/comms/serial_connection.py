@@ -987,6 +987,9 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        if self.sm.has_screen('spindle_test_1'):
+                            self.sm.get_screen('spindle_test_1').update_spindle_feedback()
+
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
                         elif self.digital_spindle_kill_time >= 80 : overload_mV_equivalent_state = 20

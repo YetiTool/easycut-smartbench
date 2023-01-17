@@ -316,6 +316,12 @@ class SpindleTestRig1(Screen):
         except:
             pass
 
+    def update_spindle_feedback(self):
+        self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
+        self.load_value.text = str(ld_qda_to_w(self.m.s.digital_spindle_ld_qdA)) + 'W'
+        self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
+        self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
+
     def run_spindle_test(self):
         def send_get_digital_spindle_info():
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
@@ -384,6 +390,7 @@ class SpindleTestRig1(Screen):
                 if len(self.fail_reasons) == 0:
                     self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
                 else:
+                    print("SPINDLE FAIL")
                     self.pass_fail_img.source = 'asmcnc/skavaUI/img/red_cross.png'
 
                     for item in self.fail_reasons:
