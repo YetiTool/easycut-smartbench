@@ -3,7 +3,7 @@ from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 from math import ceil, sqrt
-from asmcnc.production.spindle_test_jig.popups.reset_spindle_brush_popup import ResetSpindleBrushPopup
+from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -388,8 +388,8 @@ class SpindleTestJig1(Screen):
 
                 self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
 
-            def show_spindle_brush_popup():
-                ResetSpindleBrushPopup(self.m)
+            def show_post_test_summary():
+                PostTestSummaryPopup(self.m, self.fail_reasons)
 
             test_rpm(10000)
             Clock.schedule_once(lambda dt: test_rpm(13000), 6)
@@ -399,6 +399,6 @@ class SpindleTestJig1(Screen):
             Clock.schedule_once(lambda dt: stop_spindle(), 30)
             Clock.schedule_once(lambda dt: check_pass(), 32)
             Clock.schedule_once(lambda dt: self.toggle_run_button(), 34)
-            Clock.schedule_once(lambda dt: show_spindle_brush_popup(), 35)
+            Clock.schedule_once(lambda dt: show_post_test_summary(), 35)
 
         Clock.schedule_once(lambda dt: run_full_test(), 2)
