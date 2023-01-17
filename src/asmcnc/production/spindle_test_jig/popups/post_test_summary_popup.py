@@ -59,7 +59,6 @@ class PostTestSummaryPopup(Widget):
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=self.open_spindle_brush_popup)
-
         popup.open()
 
     def open_spindle_brush_popup(self, *args):
