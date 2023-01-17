@@ -1486,11 +1486,13 @@ class SerialConnection(object):
     _reset_grbl_after_stream = False
     _ready_to_send_first_sequential_stream = False
     _process_oks_from_sequential_streaming = False
+    _dwell_time = 0.5 # time for grbl to wait after sending dollar settings commands
+    _dwell_command = "G4 P" + str(_dwell_time)
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
-        if reset_grbl_after_stream: list_to_stream.append("G4 P1")
+        if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
@@ -1504,7 +1506,7 @@ class SerialConnection(object):
         if self._sequential_stream_buffer:
             try: 
                 self.write_direct(self._sequential_stream_buffer[0])
-                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = "G4 P1"
+                if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = self._dwell_command
                 else: del self._sequential_stream_buffer[0]
 
             except IndexError: 
@@ -1525,7 +1527,7 @@ class SerialConnection(object):
         if self._sequential_stream_buffer[0].startswith('$'):
             try: 
                 if not self._sequential_stream_buffer[1].startswith('$') \
-                and not self._sequential_stream_buffer[1] == "G4 P1":
+                and not self._sequential_stream_buffer[1] == self._dwell_command:
                     return True
             except: 
                 return True
