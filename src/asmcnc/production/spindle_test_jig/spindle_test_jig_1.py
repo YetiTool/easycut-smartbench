@@ -350,7 +350,7 @@ class SpindleTestJig1(Screen):
             return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
 
         self.serial_number_value.text = str(self.m.s.spindle_serial_number)
-        self.mains_value.text = str(self.m.s.digital_spindle_mains_voltage) + '/ ' + \
+        self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
                                 str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
         self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
                                                            self.m.s.spindle_production_year)
