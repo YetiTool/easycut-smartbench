@@ -349,7 +349,7 @@ class SpindleTestRig1(Screen):
 
             self.serial_number_value.text = str(self.m.s.spindle_serial_number)
             self.mains_value.text = str(self.m.s.digital_spindle_mains_voltage) + '/ ' + \
-                                    str(self.m.s.spindle_mains_frequency_hertz)
+                                    str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
             self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
                                                                self.m.s.spindle_production_year)
             self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
