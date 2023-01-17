@@ -309,6 +309,7 @@ class SpindleTestJig1(Screen):
     def stop(self):
         self.m.s.write_command('M5')
         [unschedule(clock) for clock in self.clocks]
+        self.run_test_button.disabled = False
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
