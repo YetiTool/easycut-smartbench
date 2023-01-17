@@ -223,6 +223,7 @@ Builder.load_string("""
                     
                     Button:
                         text: 'STOP'
+                        on_press: root.stop()
                         background_color: [1, 0, 0, 1]
                         
                     GridLayout:
@@ -274,8 +275,16 @@ Builder.load_string("""
 def ld_qda_to_w(voltage, ld_qda):
     return voltage * 0.1 * sqrt(ld_qda)
 
+
+def unschedule(clock):
+    if clock is not None:
+        Clock.unschedule(clock)
+        clock = None
+
+
 class SpindleTestJig1(Screen):
     fail_reasons = []
+    clocks = []
 
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
@@ -296,6 +305,10 @@ class SpindleTestJig1(Screen):
             self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
         except:
             pass
+
+    def stop(self):
+        self.m.s.write_command('M5')
+        [unschedule(clock) for clock in self.clocks]
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
@@ -391,14 +404,15 @@ class SpindleTestJig1(Screen):
             def show_post_test_summary():
                 PostTestSummaryPopup(self.m, self.fail_reasons)
 
+            self.clocks[:] = []
             test_rpm(10000)
-            Clock.schedule_once(lambda dt: test_rpm(13000), 6)
-            Clock.schedule_once(lambda dt: test_rpm(19000), 12)
-            Clock.schedule_once(lambda dt: test_rpm(22000), 18)
-            Clock.schedule_once(lambda dt: test_rpm(25000), 24)
-            Clock.schedule_once(lambda dt: stop_spindle(), 30)
-            Clock.schedule_once(lambda dt: check_pass(), 32)
-            Clock.schedule_once(lambda dt: self.toggle_run_button(), 34)
-            Clock.schedule_once(lambda dt: show_post_test_summary(), 35)
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 6))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 12))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(22000), 18))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(25000), 24))
+            self.clocks.append(Clock.schedule_once(lambda dt: stop_spindle(), 30))
+            self.clocks.append(Clock.schedule_once(lambda dt: check_pass(), 32))
+            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 34))
+            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 35))
 
-        Clock.schedule_once(lambda dt: run_full_test(), 2)
+        self.clocks.append(Clock.schedule_once(lambda dt: run_full_test(), 2))
