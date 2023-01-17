@@ -2,11 +2,11 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
-from math import ceil
+from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.reset_spindle_brush_popup import ResetSpindleBrushPopup
 
 Builder.load_string("""
-<SpindleTestRig1>:
+<SpindleTestJig1>:
     status_container:status_container
     console_status_text:console_status_text
     pass_fail_img:pass_fail_img
@@ -281,24 +281,15 @@ Builder.load_string("""
             pos: self.pos
 """)
 
-from math import sqrt
-
 
 def ld_qda_to_w(voltage, ld_qda):
     return voltage * 0.1 * sqrt(ld_qda)
 
-
-def unschedule(clock):
-    if clock is not None:
-        Clock.unschedule(clock)
-        clock = None
-
-
-class SpindleTestRig1(Screen):
+class SpindleTestJig1(Screen):
     fail_reasons = []
 
     def __init__(self, **kwargs):
-        super(SpindleTestRig1, self).__init__(**kwargs)
+        super(SpindleTestJig1, self).__init__(**kwargs)
 
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -326,6 +317,9 @@ class SpindleTestRig1(Screen):
             self.run_test_button.disabled = False
         else:
             self.run_test_button.disabled = True
+
+    def open_console(self):
+        self.sm.current = 'spindle_test_console'
 
     def run_spindle_test(self):
         self.toggle_run_button()
