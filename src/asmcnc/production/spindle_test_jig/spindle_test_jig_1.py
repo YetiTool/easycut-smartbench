@@ -317,7 +317,7 @@ class SpindleTestJig1(Screen):
 
     def print_receipt(self):
         unlock_code = self.generate_unlock_code()
-
+        print("Trying to print")
         print_unlock_receipt(unlock_code)
 
     def on_enter(self):
