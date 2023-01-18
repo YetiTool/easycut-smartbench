@@ -16,5 +16,6 @@ def print_unlock_receipt(unlock_code):
         p.text("\n\n\n\n")
         p.close()
         print("Printing complete")
-    except:
+    except Exception as e:
         print("Failed to print")
+        print(e)
