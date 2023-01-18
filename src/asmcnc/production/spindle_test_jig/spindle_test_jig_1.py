@@ -5,6 +5,7 @@ from kivy.clock import Clock
 from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
+from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -261,6 +262,7 @@ Builder.load_string("""
                         text: 'Print'    
                         bold: True
                         background_color: [1, 0.64, 0, 1]
+                        on_press: root.print_receipt()
                         
         ScrollableLabelStatus:
             size_hint_y: 0.12
@@ -307,6 +309,16 @@ class SpindleTestJig1(Screen):
         load = ld_qda_to_w(self.m.s.digital_spindle_mains_voltage,
                            self.m.s.digital_spindle_ld_qdA)
         self.spindle_load_samples.append(load)
+
+    def generate_unlock_code(self):
+        spindle_serial = self.m.s.spindle_serial_number
+
+        return spindle_serial * 2 + 42
+
+    def print_receipt(self):
+        unlock_code = self.generate_unlock_code()
+
+        print_unlock_receipt(unlock_code)
 
     def on_enter(self):
         self.send_get_digital_spindle_info()
