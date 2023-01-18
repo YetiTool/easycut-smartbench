@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from escpos.printer import Usb
+import sys
 
 
 def print_unlock_receipt(unlock_code):
@@ -23,3 +24,9 @@ def print_unlock_receipt(unlock_code):
     # Close connection with printer
     p.close()
     print("Printing complete")
+
+
+if __name__ == '__main__':
+    code = sys.argv[1]
+
+    print_unlock_receipt(code)
