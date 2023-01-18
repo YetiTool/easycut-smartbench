@@ -9,7 +9,7 @@ def print_unlock_receipt(unlock_code):
         # Add spacing for stapling
         p.text("\n\n\n")
         # Print top logo
-        p.image("asmcnc/production/spindle_test_jig/printer/img/logo.png")
+        p.image("logo.png")
         # Print "PrecisionPro + Unlock code"
         p.set("CENTER", "A", "normal", 2, 2, True, False)
         p.text("\n\n\nPrecisionPro +")
@@ -19,7 +19,7 @@ def print_unlock_receipt(unlock_code):
         p.set("CENTER", "A", "B", 2, 2, True, True)
         p.text(" " + str(unlock_code) + " " + "\n\n\n")
         # Print do not descard warning
-        p.image("asmcnc/production/spindle_test_jig/printer/img/do_not_discard.png")
+        p.image("do_not_discard.png")
         p.text("\n\n\n\n")
         # Close connection with printer
         p.close()
