@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+from escpos.printer import Usb
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -317,7 +317,21 @@ class SpindleTestJig1(Screen):
 
     def print_receipt(self):
         unlock_code = self.generate_unlock_code()
-        print_unlock_receipt(unlock_code)
+        self.print_unlock_receipt(unlock_code)
+
+    def print_unlock_receipt(self, unlock_code):
+        p = Usb(0x0416, 0x5011)
+        p.text("\n\n\n")
+        p.image("asmcnc/production/spindle_test_jig/printer/img/logo.png")
+        p.set("CENTER", "A", "normal", 2, 2, True, False)
+        p.text("\n\n\nPrecisionPro +")
+        p.set("CENTER", "A", "B", 2, 2, True, False)
+        p.text("\nUnlock Code:\n\n")
+        p.set("CENTER", "A", "B", 2, 2, True, True)
+        p.text(" " + str(unlock_code) + " " + "\n\n\n")
+        p.image("asmcnc/production/spindle_test_jig/printer/img/do_not_discard.png")
+        p.text("\n\n\n\n")
+        p.close()
 
     def on_enter(self):
         self.send_get_digital_spindle_info()
