@@ -1,5 +1,5 @@
 from escpos.printer import Usb
-
+import sys
 
 def print_unlock_receipt(unlock_code):
     try:
@@ -19,3 +19,8 @@ def print_unlock_receipt(unlock_code):
     except Exception as e:
         print("Failed to print")
         print(e)
+
+
+if __name__ == '__main__':
+    unlock_code = sys.argv[1]
+    print_unlock_receipt(unlock_code)

@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+from os import system
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -317,9 +317,7 @@ class SpindleTestJig1(Screen):
 
     def print_receipt(self):
         unlock_code = self.generate_unlock_code()
-        print(str(unlock_code))
-        print("Trying to print")
-        print_unlock_receipt(unlock_code)
+        system("python3 printer/receipt_printer.py " + str(unlock_code))
 
     def on_enter(self):
         self.send_get_digital_spindle_info()
