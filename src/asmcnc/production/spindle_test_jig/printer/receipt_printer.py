@@ -1,7 +1,5 @@
 from escpos.printer import Usb
 
-# this logic being in the source means anyone could release unlock codes?
-
 
 def print_unlock_receipt(unlock_code):
     try:

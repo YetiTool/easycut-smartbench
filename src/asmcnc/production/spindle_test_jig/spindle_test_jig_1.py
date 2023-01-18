@@ -287,6 +287,7 @@ def unschedule(clock):
 class SpindleTestJig1(Screen):
     fail_reasons = []
     clocks = []
+    spindle_load_samples = []
 
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
@@ -298,6 +299,14 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+
+    def add_spindle_load(self):
+        if len(self.spindle_load_samples) == 5:
+            self.spindle_load_samples.pop(0)
+
+        load = ld_qda_to_w(self.m.s.digital_spindle_mains_voltage,
+                           self.m.s.digital_spindle_ld_qdA)
+        self.spindle_load_samples.append(load)
 
     def on_enter(self):
         self.send_get_digital_spindle_info()
@@ -369,7 +378,7 @@ class SpindleTestJig1(Screen):
             measured_voltage = self.m.s.digital_spindle_mains_voltage
             measured_temp = self.m.s.digital_spindle_temperature
             measured_kill_time = self.m.s.digital_spindle_kill_time
-            measured_load = ld_qda_to_w(measured_voltage, self.m.s.digital_spindle_ld_qdA)
+            measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
 
             if abs(rpm - measured_rpm) > 2000:
                 fail_test("RPM out of range: " + str(measured_rpm))
