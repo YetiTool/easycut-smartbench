@@ -363,13 +363,17 @@ class SpindleTestJig1(Screen):
             return str(week) + 'th wk ' + str(year)
 
         def format_seconds(seconds):
-            days = seconds // 86400
-            seconds = seconds % 86400
-            hours = seconds // 3600
-            seconds %= 3600
-            minutes = seconds // 60
-            seconds %= 60
-            return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
+            try:
+                days = seconds // 86400
+                seconds = seconds % 86400
+                hours = seconds // 3600
+                seconds %= 3600
+                minutes = seconds // 60
+                seconds %= 60
+                return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
+            except:
+                self.send_get_digital_spindle_info()
+                return 'err'
 
         self.serial_number_value.text = str(self.m.s.spindle_serial_number)
         self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
