@@ -6,7 +6,6 @@ from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
 import os
-from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 
 Builder.load_string("""
 <SpindleTestJig1>:
