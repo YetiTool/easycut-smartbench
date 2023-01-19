@@ -395,7 +395,7 @@ class SpindleTestJig1(Screen):
             measured_voltage = self.m.s.digital_spindle_mains_voltage
             measured_temp = self.m.s.digital_spindle_temperature
             measured_kill_time = self.m.s.digital_spindle_kill_time
-            measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
+            measured_load = sum(self.spindle_load_samples) / 1 if len(self.spindle_load_samples) == 0 else len(self.spindle_load_samples)
 
             if abs(rpm - measured_rpm) > 2000:
                 fail_test("RPM out of range: " + str(measured_rpm))
