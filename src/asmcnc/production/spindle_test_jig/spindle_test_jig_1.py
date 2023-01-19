@@ -321,7 +321,8 @@ class SpindleTestJig1(Screen):
         # print_unlock_receipt(str(unlock_code))
 
     def on_enter(self):
-        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 5)
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 1)
 
     def update_status_text(self, dt):
         try:
@@ -433,7 +434,6 @@ class SpindleTestJig1(Screen):
 
             self.clocks[:] = []
             test_rpm(10000)
-            Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 1)
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 6))
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 12))
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(22000), 18))
