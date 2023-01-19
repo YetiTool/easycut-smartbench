@@ -318,8 +318,8 @@ class SpindleTestJig1(Screen):
 
     def print_receipt(self):
         unlock_code = self.generate_unlock_code()
-        # os.system('sudo python asmcnc/production/spindle_test_jig/printer/receipt_printer.py ' + str(unlock_code))
-        print_unlock_receipt(str(unlock_code))
+        os.system('sudo python3 asmcnc/production/spindle_test_jig/printer/receipt_printer.py ' + str(unlock_code))
+        # print_unlock_receipt(str(unlock_code))
 
     def on_enter(self):
         self.send_get_digital_spindle_info()
