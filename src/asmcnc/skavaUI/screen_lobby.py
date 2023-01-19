@@ -35,7 +35,7 @@ Builder.load_string("""
     update_app_label: update_app_label
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
-
+    upgrade_app_label:upgrade_app_label
 
     canvas.before:
         Color: 
@@ -275,6 +275,38 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 padding: [100, 20, 100, 50]
                 spacing: 20
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                
+                    Button:
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.upgrade_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        id: upgrade_app_label
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Upgrade'
+                        markup: True
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -462,7 +494,10 @@ class LobbyScreen(Screen):
         self.am.start_wifi_app()
     
     def update_app(self):
-        self.am.start_update_app()    
+        self.am.start_update_app()
+
+    def upgrade_app(self):
+        self.am.start_upgrade_app()
     
     def developer_app(self):
         # popup_info.PopupDeveloper(self.sm)
