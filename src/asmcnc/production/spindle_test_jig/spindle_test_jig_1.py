@@ -321,7 +321,7 @@ class SpindleTestJig1(Screen):
         # print_unlock_receipt(str(unlock_code))
 
     def on_enter(self):
-        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 3)
+        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 5)
 
     def update_status_text(self, dt):
         try:
