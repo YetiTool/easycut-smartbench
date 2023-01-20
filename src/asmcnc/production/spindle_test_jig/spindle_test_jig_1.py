@@ -319,16 +319,8 @@ class SpindleTestJig1(Screen):
     def generate_unlock_code(self):
         spindle_serial = self.m.s.spindle_serial_number
 
-        if spindle_serial is None:
-            return
-
-        spindle_serial_value = str(spindle_serial * (2 + 42 + 67))
-
-        for char in spindle_serial_value:
-            if spindle_serial_value.index(char) % 2 == 0:
-                spindle_serial_value = spindle_serial_value.replace(char, ascii_letters[int(char)])
-
-        self.unlock_code = spindle_serial_value
+        self.unlock_code = spindle_serial
+        self.unlock_code_label.text = str(self.unlock_code)
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
@@ -370,7 +362,7 @@ class SpindleTestJig1(Screen):
     def send_get_digital_spindle_info(self):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
         Clock.schedule_once(lambda dt: self.show_digital_spindle_info(), 1)
-        Clock.schedule_once(lambda dt: self.generate_unlock_code(), 1)
+        Clock.schedule_once(lambda dt: self.generate_unlock_code())
 
     def show_digital_spindle_info(self):
         def format_week_year(week, year):
@@ -397,8 +389,7 @@ class SpindleTestJig1(Screen):
         self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
         self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
         self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
-        self.unlock_code = self.generate_unlock_code()
-        self.unlock_code_label.text = self.unlock_code
+        self.generate_unlock_code()
 
     def run_spindle_test(self):
         self.toggle_run_button()
