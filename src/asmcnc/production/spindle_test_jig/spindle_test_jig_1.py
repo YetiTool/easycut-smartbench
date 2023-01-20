@@ -315,7 +315,7 @@ class SpindleTestJig1(Screen):
         serial = str(hex(serial))[2:]
 
         self.unlock_code = serial
-        self.unlock_code_label.text = "Unlock code:\nserial"
+        self.unlock_code_label.text = "Unlock code: " + serial
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
