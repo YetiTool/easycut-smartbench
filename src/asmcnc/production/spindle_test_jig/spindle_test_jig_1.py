@@ -332,6 +332,7 @@ class SpindleTestJig1(Screen):
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
         Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 2)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 3)
 
     def update_status_text(self, dt):
         try:
