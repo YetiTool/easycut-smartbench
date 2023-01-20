@@ -4,7 +4,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-
+from kivy.clock import Clock
 
 class ResetSpindleBrushPopup(Widget):
     def __init__(self, m, sm):
@@ -57,7 +57,10 @@ class ResetSpindleBrushPopup(Widget):
         popup.open()
 
     def reset_spindle_brush_timer(self, *args):
-        self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET BRUSH TIMER")
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET BRUSH TIMER"),
+                            1)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
 
         if self.sm.has_screen('spindle_test_1'):
             self.sm.get_screen('spindle_test_1').send_get_digital_spindle_info()
