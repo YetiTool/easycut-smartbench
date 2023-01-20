@@ -7,6 +7,8 @@ from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import Po
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
 import os
 
+from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+
 Builder.load_string("""
 <SpindleTestJig1>:
     status_container:status_container
@@ -318,7 +320,7 @@ class SpindleTestJig1(Screen):
     def print_receipt(self):
         unlock_code = self.generate_unlock_code()
         os.system('sudo python3 asmcnc/production/spindle_test_jig/printer/receipt_printer.py ' + str(unlock_code))
-        # print_unlock_receipt(str(unlock_code))
+        print_unlock_receipt(str(unlock_code))
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
