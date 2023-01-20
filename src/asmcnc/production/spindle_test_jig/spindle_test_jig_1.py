@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from math import ceil, sqrt
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-import os
+from string import ascii_letters
 
 from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 
@@ -317,8 +317,16 @@ class SpindleTestJig1(Screen):
         self.spindle_load_samples.append(load)
 
     def generate_unlock_code(self):
-        spindle_serial = self.m.s.spindle_serial_number or 0
-        return str(hex(spindle_serial * 2 + 10000))[2:]
+        spindle_serial = self.m.s.spindle_serial_number
+
+        spindle_serial_value = str(spindle_serial * (2 + 42 + 67))
+
+        for char in spindle_serial_value:
+            if spindle_serial_value.index(char) % 2 == 0:
+                spindle_serial_value = spindle_serial_value.replace(char, ascii_letters[int(char)])
+
+        return spindle_serial_value
+
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
