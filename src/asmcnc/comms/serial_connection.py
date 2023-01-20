@@ -947,7 +947,10 @@ class SerialConnection(object):
                     if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
-                            self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi', 0)
+                            try:
+                                self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi', 0)
+                            except:
+                                pass
                             self.m.set_pause(True)
                             log("Power loss or DC power supply")
                             self.power_loss_detected = True
