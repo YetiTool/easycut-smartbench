@@ -27,6 +27,7 @@ Builder.load_string("""
     firmware_version_value:firmware_version_value
     brush_time_value:brush_time_value
     run_test_button:run_test_button
+    unlock_code_label:unlock_code_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -258,6 +259,7 @@ Builder.load_string("""
                             bold: True
                             
                         Label:
+                            id: unlock_code_label
                             text: '123456'
                         
                     Button:
@@ -292,6 +294,7 @@ class SpindleTestJig1(Screen):
     fail_reasons = []
     clocks = []
     spindle_load_samples = []
+    unlock_code = None
 
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
@@ -314,12 +317,10 @@ class SpindleTestJig1(Screen):
 
     def generate_unlock_code(self):
         spindle_serial = self.m.s.spindle_serial_number or 0
-
-        return spindle_serial * 2 + 42
+        return str(hex(spindle_serial * 2 + 42))[2:]
 
     def print_receipt(self):
-        unlock_code = self.generate_unlock_code()
-        print_unlock_receipt(str(unlock_code))
+        print_unlock_receipt(self.unlock_code)
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
@@ -384,6 +385,8 @@ class SpindleTestJig1(Screen):
         self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
         self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
         self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
+        self.unlock_code = self.generate_unlock_code()
+        self.unlock_code_label.text = self.unlock_code
 
     def run_spindle_test(self):
         self.toggle_run_button()
