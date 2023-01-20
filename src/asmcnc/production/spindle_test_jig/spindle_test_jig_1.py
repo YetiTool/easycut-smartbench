@@ -318,7 +318,7 @@ class SpindleTestJig1(Screen):
 
     def generate_unlock_code(self):
         spindle_serial = self.m.s.spindle_serial_number or 0
-        return str(hex(spindle_serial * 2 + 42))[2:]
+        return str(hex(spindle_serial * 2 + 10000))[2:]
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
