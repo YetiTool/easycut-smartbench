@@ -1,9 +1,10 @@
-from escpos import *
+from escpos import printer
+import sys
+
 
 def print_unlock_receipt(code):
     p = printer.Serial('COM2')
     p.text(str(code))
-
 
 
 if __name__ == '__main__':
