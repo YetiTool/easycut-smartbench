@@ -248,14 +248,11 @@ Builder.load_string("""
                         orientation: 'vertical'
                         
                         Button:
+                            id: unlock_code_label
                             text: 'Unlock Code:'
                             bold: True
                             background_color: [0.62, 0.12, 0.94, 1]
                             on_press: root.update_unlock_code()
-                            
-                        Label:
-                            id: unlock_code_label
-                            text: '123456'
                         
                     Button:
                         text: 'Print'    
@@ -318,7 +315,7 @@ class SpindleTestJig1(Screen):
         serial = str(hex(serial))[2:]
 
         self.unlock_code = serial
-        self.unlock_code_label.text = serial
+        self.unlock_code_label.text = "Unlock code:\nserial"
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
