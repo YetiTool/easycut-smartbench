@@ -1,7 +1,7 @@
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
-import threading, Queue
+import threading, queue
 from time import sleep
 import traceback
 
