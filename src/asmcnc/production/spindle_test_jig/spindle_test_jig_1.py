@@ -397,6 +397,7 @@ class SpindleTestJig1(Screen):
 
     def run_spindle_test(self):
         self.toggle_run_button()
+        self.fail_reasons[:] = []
 
         def check_spindle_data_valid(rpm):
             def fail_test(message):
@@ -430,7 +431,7 @@ class SpindleTestJig1(Screen):
 
             def test_rpm(rpm):
                 set_spindle_rpm(rpm)
-                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 1)
+                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 1.5)
 
             def stop_spindle():
                 self.m.s.write_command('M5')
@@ -450,13 +451,13 @@ class SpindleTestJig1(Screen):
             self.clocks[:] = []
             self.send_get_digital_spindle_info()
             test_rpm(10000)
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 2))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 4))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(22000), 6))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(25000), 8))
-            self.clocks.append(Clock.schedule_once(lambda dt: stop_spindle(), 10))
-            self.clocks.append(Clock.schedule_once(lambda dt: check_pass(), 12))
-            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 13))
-            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 14))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 3))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 6))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(22000), 9))
+            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(25000), 12))
+            self.clocks.append(Clock.schedule_once(lambda dt: stop_spindle(), 15))
+            self.clocks.append(Clock.schedule_once(lambda dt: check_pass(), 18))
+            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 19))
+            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 20))
 
         self.clocks.append(Clock.schedule_once(lambda dt: run_full_test(), 2))
