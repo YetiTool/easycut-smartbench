@@ -439,7 +439,7 @@ class SpindleTestJig1(Screen):
                 self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
 
             def show_post_test_summary():
-                PostTestSummaryPopup(self.m, self.fail_reasons)
+                PostTestSummaryPopup(self.m, self.sm, self.fail_reasons)
 
             self.clocks[:] = []
             self.send_get_digital_spindle_info()

@@ -9,8 +9,9 @@ from asmcnc.production.spindle_test_jig.popups.reset_spindle_brush_popup import 
 
 
 class PostTestSummaryPopup(Widget):
-    def __init__(self, m, fail_reasons):
+    def __init__(self, m, sm, fail_reasons):
         self.m = m
+        self.sm = sm
 
         pass_test = len(fail_reasons) == 0
 
@@ -62,4 +63,4 @@ class PostTestSummaryPopup(Widget):
         popup.open()
 
     def open_spindle_brush_popup(self, *args):
-        ResetSpindleBrushPopup(self.m)
+        ResetSpindleBrushPopup(self.m, self.sm)
