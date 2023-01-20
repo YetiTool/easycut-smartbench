@@ -424,7 +424,7 @@ class SpindleTestJig1(Screen):
 
             def test_rpm(rpm):
                 set_spindle_rpm(rpm)
-                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 5)
+                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 1)
 
             def stop_spindle():
                 self.m.s.write_command('M5')
@@ -450,7 +450,7 @@ class SpindleTestJig1(Screen):
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(25000), 8))
             self.clocks.append(Clock.schedule_once(lambda dt: stop_spindle(), 10))
             self.clocks.append(Clock.schedule_once(lambda dt: check_pass(), 12))
-            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 12.5))
-            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 13))
+            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 13))
+            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 14))
 
         self.clocks.append(Clock.schedule_once(lambda dt: run_full_test(), 2))
