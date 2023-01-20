@@ -43,7 +43,7 @@ class USB_storage(object):
 
     def enable(self):
         if self.stick_enabled != True:
-            self.start_polling_for_usb()
+            # self.start_polling_for_usb()
             self.stick_enabled = True
 
     def disable(self):
