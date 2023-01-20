@@ -179,7 +179,7 @@ class JobData(object):
             # metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
-            print self.metadata_dict
+            print (self.metadata_dict)
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
