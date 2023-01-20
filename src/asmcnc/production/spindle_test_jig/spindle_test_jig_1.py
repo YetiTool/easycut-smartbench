@@ -247,16 +247,11 @@ Builder.load_string("""
                     BoxLayout:
                         orientation: 'vertical'
                         
-                        canvas:
-                            Color:
-                                rgba: 0.62, 0.12, 0.94, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                        
-                        Label:
+                        Button:
                             text: 'Unlock Code:'
                             bold: True
+                            background_color: [0.62, 0.12, 0.94, 1]
+                            on_press: root.update_unlock_code()
                             
                         Label:
                             id: unlock_code_label
@@ -306,7 +301,6 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        self.poll_for_spindle_info = Clock.schedule_interval(lambda dt: self.send_get_digital_spindle_info(), 1)
 
     def add_spindle_load(self):
         if len(self.spindle_load_samples) == 5:
@@ -367,7 +361,12 @@ class SpindleTestJig1(Screen):
     def send_get_digital_spindle_info(self):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
         Clock.schedule_once(lambda dt: self.show_digital_spindle_info(), 1)
-        Clock.schedule_once(lambda dt: self.generate_unlock_code())
+        Clock.schedule_once(lambda dt: self.generate_unlock_code(), 2)
+
+    def update_unlock_code(self):
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 1)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'))
 
     def show_digital_spindle_info(self):
         def format_week_year(week, year):
