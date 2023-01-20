@@ -3,7 +3,7 @@ import sys
 
 
 def print_unlock_receipt(code):
-    p = printer.Serial('COM2')
+    p = printer.Usb(0x0416, 0x5011)
     p.text(str(code))
 
 
