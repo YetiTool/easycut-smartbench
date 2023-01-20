@@ -313,7 +313,7 @@ class SpindleTestJig1(Screen):
         self.spindle_load_samples.append(load)
 
     def generate_unlock_code(self):
-        spindle_serial = self.m.s.spindle_serial_number
+        spindle_serial = self.m.s.spindle_serial_number or 0
 
         return spindle_serial * 2 + 42
 
