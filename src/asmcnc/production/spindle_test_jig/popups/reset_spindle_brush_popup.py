@@ -7,8 +7,9 @@ from kivy.uix.widget import Widget
 
 
 class ResetSpindleBrushPopup(Widget):
-    def __init__(self, m):
+    def __init__(self, m, sm):
         self.m = m
+        self.sm = sm
 
         description = "Would you like to reset the spindle's internal brush timer?"
         title_string = "Reset Spindle Brush"
@@ -57,4 +58,6 @@ class ResetSpindleBrushPopup(Widget):
 
     def reset_spindle_brush_timer(self, *args):
         self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET BRUSH TIMER")
-        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+
+        if self.sm.has_screen('spindle_test_1'):
+            self.sm.get_screen('spindle_test_1').send_get_digital_spindle_info()
