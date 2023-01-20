@@ -317,31 +317,14 @@ class SpindleTestJig1(Screen):
         self.spindle_load_samples.append(load)
 
     def generate_unlock_code(self):
-        serial_number = str(self.m.s.spindle_serial_number)
+        serial = self.m.s.spindle_serial_number
 
-        while len(serial_number) < 4:
-            serial_number = str(4 - len(serial_number)) + serial_number
+        serial += 42
+        serial *= 10000
+        serial = str(hex(serial))[2:]
 
-        original = serial_number
-
-        if len(serial_number) > 8:
-            serial_number = serial_number[:8]
-
-        serial_number = list(serial_number)
-
-        for i in range(len(serial_number)):
-            serial_number[i] = ord(serial_number[i]) + 20
-
-        for i in range(len(serial_number)):
-            serial_number[i] = chr(serial_number[i])
-
-        for i in range(len(str(original)), 0, -1):
-            serial_number.insert(i * 2, str(original)[i - 1])
-
-        serial_number = ''.join(serial_number)
-
-        self.unlock_code = serial_number
-        self.unlock_code_label.text = serial_number
+        self.unlock_code = serial
+        self.unlock_code_label.text = serial
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
