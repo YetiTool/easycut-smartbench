@@ -366,7 +366,7 @@ class SpindleTestJig1(Screen):
     def update_unlock_code(self):
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 1)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'))
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 3)
 
     def show_digital_spindle_info(self):
         def format_week_year(week, year):
