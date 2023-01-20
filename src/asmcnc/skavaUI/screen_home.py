@@ -340,7 +340,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print ('No G-code loaded.')
 
             self.gcode_summary_widget.hide_summary()
 
@@ -353,7 +353,7 @@ class HomeScreen(Screen):
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print ('Unable to draw gcode')
 
         log('DONE')
 
