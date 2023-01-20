@@ -60,8 +60,8 @@ class ResetSpindleBrushPopup(Widget):
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET BRUSH TIMER"),
                             1)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 3)
 
         if self.sm.has_screen('spindle_test_1'):
             Clock.schedule_once(lambda dt: self.sm.get_screen('spindle_test_1').send_get_digital_spindle_info(),
-                                3)
+                                2)
