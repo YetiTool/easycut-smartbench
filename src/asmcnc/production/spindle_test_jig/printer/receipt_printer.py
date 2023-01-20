@@ -4,9 +4,7 @@ import sys
 
 def print_unlock_receipt(code):
     p = printer.Usb(0x0416, 0x5011)
-    p.text(str(code))
     p.image('img/logo.png')
-    p.text('TEST')
 
 
 if __name__ == '__main__':
