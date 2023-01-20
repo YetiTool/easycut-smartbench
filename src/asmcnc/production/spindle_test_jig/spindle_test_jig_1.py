@@ -441,6 +441,7 @@ class SpindleTestJig1(Screen):
                 PostTestSummaryPopup(self.m, self.fail_reasons)
 
             self.clocks[:] = []
+            self.send_get_digital_spindle_info()
             test_rpm(10000)
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 6))
             self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 12))
