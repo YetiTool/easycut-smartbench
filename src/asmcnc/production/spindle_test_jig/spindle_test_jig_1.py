@@ -1,13 +1,14 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from asmcnc.skavaUI import widget_status_bar
-from kivy.clock import Clock
 from math import ceil, sqrt
-from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
-from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-from string import ascii_letters
 
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
 from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+from asmcnc.skavaUI import widget_status_bar
+from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
+
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -283,10 +284,8 @@ def unschedule(clock):
 
 
 class SpindleTestJig1(Screen):
-    fail_reasons = []
-    clocks = []
-    spindle_load_samples = []
     unlock_code = None
+    poll_for_spindle_info = None
 
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
@@ -298,14 +297,8 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-
-    def add_spindle_load(self):
-        if len(self.spindle_load_samples) == 5:
-            self.spindle_load_samples.pop(0)
-
-        load = ld_qda_to_w(self.m.s.digital_spindle_mains_voltage,
-                           self.m.s.digital_spindle_ld_qdA)
-        self.spindle_load_samples.append(load)
+        self.poll_for_spindle_info = Clock.schedule_interval(self)
+        self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
     def generate_unlock_code(self):
         serial = self.m.s.spindle_serial_number
@@ -315,15 +308,18 @@ class SpindleTestJig1(Screen):
         serial = str(hex(serial))[2:]
 
         self.unlock_code = serial
-        self.unlock_code_label.text = "Unlock code: " + serial
+        self.unlock_code_label.text = serial
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
 
+    def stop(self):
+        self.m.s.write_command('M3 S0')
+        [unschedule(clock) for clock in self.test.clocks]
+        self.run_test_button.disabled = False
+
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
-        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 2)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 3)
 
     def update_status_text(self, dt):
         try:
@@ -331,20 +327,8 @@ class SpindleTestJig1(Screen):
         except:
             pass
 
-    def stop(self):
-        self.m.s.write_command('M5')
-        [unschedule(clock) for clock in self.clocks]
-        self.run_test_button.disabled = False
-
     def shutdown(self):
         ConfirmShutdownPopup()
-
-    def update_spindle_feedback(self):
-        self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
-        self.load_value.text = str(ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
-        self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
-        self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
-        self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
     def toggle_run_button(self):
         if self.run_test_button.disabled:
@@ -352,109 +336,57 @@ class SpindleTestJig1(Screen):
         else:
             self.run_test_button.disabled = True
 
+    def update_spindle_feedback(self):
+        self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
+        self.load_value.text = str(
+            ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
+        self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
+        self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
+        self.measured_rpm_value.text = str(self.m.s.spindle_speed)
+
+    def get_spindle_info(self):
+        def show_spindle_info():
+            def format_week_year(week, year):
+                return str(week) + 'th wk ' + str(year)
+
+            def format_seconds(seconds):
+                try:
+                    days = seconds // 86400
+                    seconds = seconds % 86400
+                    hours = seconds // 3600
+                    seconds %= 3600
+                    minutes = seconds // 60
+                    seconds %= 60
+                    return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
+                except:
+                    self.get_spindle_info()
+                    return 'err'
+
+            self.serial_number_value.text = str(self.m.s.spindle_serial_number)
+            self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
+                                           str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
+            self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
+                                                                      self.m.s.spindle_production_year)
+            self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
+            self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
+            self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
+            self.update_unlock_code()
+
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        Clock.schedule_once(lambda dt: show_spindle_info(), 1)
+
+    def update_unlock_code(self):
+        serial = self.m.s.spindle_serial_number
+
+        serial += 42
+        serial *= 10000
+        serial = str(hex(serial))[2:]
+
+        self.unlock_code_label.text = serial
+        self.unlock_code = serial
+
     def open_console(self):
         self.sm.current = 'spindle_test_console'
 
-    def send_get_digital_spindle_info(self):
-        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(lambda dt: self.show_digital_spindle_info(), 1)
-        Clock.schedule_once(lambda dt: self.generate_unlock_code(), 2)
 
-    def update_unlock_code(self):
-        self.m.s.write_command('M3 S0')
-        Clock.schedule_once(lambda dt: self.send_get_digital_spindle_info(), 1)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 3)
 
-    def show_digital_spindle_info(self):
-        def format_week_year(week, year):
-            return str(week) + 'th wk ' + str(year)
-
-        def format_seconds(seconds):
-            try:
-                days = seconds // 86400
-                seconds = seconds % 86400
-                hours = seconds // 3600
-                seconds %= 3600
-                minutes = seconds // 60
-                seconds %= 60
-                return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
-            except:
-                self.send_get_digital_spindle_info()
-                return 'err'
-
-        self.serial_number_value.text = str(self.m.s.spindle_serial_number)
-        self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
-                                str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
-        self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
-                                                           self.m.s.spindle_production_year)
-        self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
-        self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
-        self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
-        self.generate_unlock_code()
-
-    def run_spindle_test(self):
-        self.toggle_run_button()
-        self.fail_reasons[:] = []
-
-        def check_spindle_data_valid(rpm):
-            def fail_test(message):
-                self.fail_reasons.append([rpm, message])
-
-            measured_rpm = int(self.m.s.spindle_speed)
-            measured_voltage = self.m.s.digital_spindle_mains_voltage
-            measured_temp = self.m.s.digital_spindle_temperature
-            measured_kill_time = self.m.s.digital_spindle_kill_time
-            measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
-
-            if abs(rpm - measured_rpm) > 2000:
-                fail_test("RPM out of range: " + str(measured_rpm))
-
-            if abs(230 - measured_voltage) > 15:
-                fail_test("Voltage out of range: " + str(measured_voltage))
-
-            if measured_temp < 10 or measured_temp > 40:
-                fail_test("Temperature out of range: " + str(measured_temp))
-
-            if not (measured_kill_time > 254):
-                fail_test("Kill time out of range: " + str(measured_kill_time))
-
-            if measured_load < 100 or measured_load > 400:
-                fail_test("Load out of range: " + str(measured_load))
-
-        def run_full_test():
-            def set_spindle_rpm(rpm):
-                self.m.s.write_command('M3 S' + str(rpm))
-                self.target_rpm_value.text = str(rpm)
-
-            def test_rpm(rpm):
-                set_spindle_rpm(rpm)
-                Clock.schedule_once(lambda dt: check_spindle_data_valid(rpm), 1.5)
-
-            def stop_spindle():
-                self.m.s.write_command('M5')
-
-            def check_pass():
-                total_fails = len(self.fail_reasons)
-
-                if total_fails > 0:
-                    self.pass_fail_img.source = 'asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png'
-                    return
-
-                self.pass_fail_img.source = 'asmcnc/skavaUI/img/green_tick.png'
-
-            def show_post_test_summary():
-                PostTestSummaryPopup(self.m, self.sm, self.fail_reasons)
-
-            self.clocks[:] = []
-            self.send_get_digital_spindle_info()
-            test_rpm(10000)
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(13000), 3))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(19000), 6))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(22000), 9))
-            self.clocks.append(Clock.schedule_once(lambda dt: test_rpm(25000), 12))
-            self.clocks.append(Clock.schedule_once(lambda dt: stop_spindle(), 15))
-            self.clocks.append(Clock.schedule_once(lambda dt: check_pass(), 18))
-            self.clocks.append(Clock.schedule_once(lambda dt: self.toggle_run_button(), 19))
-            self.clocks.append(Clock.schedule_once(lambda dt: show_post_test_summary(), 20))
-
-        self.clocks.append(Clock.schedule_once(lambda dt: run_full_test(), 2))
