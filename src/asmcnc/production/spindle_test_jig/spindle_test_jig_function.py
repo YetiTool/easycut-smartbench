@@ -75,6 +75,7 @@ class SpindleTest:
 
         self.clocks[:] = []
         for rpm_to_test in self.rpms_to_test:
+            print(rpm_to_test)
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(rpm_to_test), self.delay_between_rpm_change *
                                                    self.rpms_to_test.index(rpm_to_test)))
 
