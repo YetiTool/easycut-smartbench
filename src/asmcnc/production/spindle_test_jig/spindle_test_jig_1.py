@@ -51,7 +51,7 @@ Builder.load_string("""
                         text: 'Begin Test'
                         bold: True
                         background_color: [0, 1, 0, 1]
-                        on_press: root.run_spindle_test()
+                        on_press: root.test.run()
                         
                     Button:
                         text: 'Open Terminal'
