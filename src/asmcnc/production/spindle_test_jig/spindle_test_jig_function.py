@@ -74,12 +74,12 @@ class SpindleTest:
 
         self.clocks[:] = []
         set_rpm(10000)
-        schedule(set_rpm(13000), 4)
-        schedule(set_rpm(19000), 7)
-        schedule(set_rpm(22000), 10)
-        schedule(set_rpm(25000), 13)
-        schedule(show_result, 16)
-        schedule(set_rpm(0), 16)
-        schedule(self.screen.toggle_run_button, 16)
+        self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(13000), 3))
+        self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(19000), 6))
+        self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(22000), 9))
+        self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(25000), 12))
+        self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(0), 15))
+        self.clocks.append(Clock.schedule_once(lambda dt: show_result(), 15))
+        self.clocks.append(Clock.schedule_once(lambda dt: self.screen.toggle_run_button(), 15))
 
 
