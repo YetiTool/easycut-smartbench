@@ -12,9 +12,6 @@ class SpindleTest:
     fail_reasons = []
     spindle_load_samples = []
     clocks = []
-    delay_between_rpm_change = 2
-    delay_between_rpm_read = 1
-    unlock_code = None
 
     def __init__(self, **kwargs):
         self.sm = kwargs['screen_manager']
@@ -70,13 +67,13 @@ class SpindleTest:
         def set_rpm(rpm):
             self.m.s.write_command('M3 S' + str(rpm))
             self.screen.target_rpm_value.text = str(rpm)
-            self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), self.delay_between_rpm_read))
+            self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1))
 
         def schedule(func, delay):
             self.clocks.append(Clock.schedule_once(lambda dt: func, delay))
 
         self.clocks[:] = []
-        schedule(set_rpm(10000), 1)
+        set_rpm(10000)
         schedule(set_rpm(13000), 4)
         schedule(set_rpm(19000), 7)
         schedule(set_rpm(22000), 10)
