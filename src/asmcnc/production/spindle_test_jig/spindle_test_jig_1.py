@@ -381,7 +381,7 @@ class SpindleTestJig1(Screen):
         serial *= 10000
         serial = str(hex(serial))[2:]
 
-        self.unlock_code_label.text = serial
+        self.unlock_code_label.text = "Unlock code: " + str(serial)
         self.unlock_code = serial
 
     def open_console(self):
