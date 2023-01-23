@@ -67,7 +67,7 @@ class SpindleTest:
         def set_rpm(rpm):
             self.m.s.write_command('M3 S' + str(rpm))
             self.screen.target_rpm_value.text = str(rpm)
-            self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1))
+            self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
 
         def schedule(func, delay):
             self.clocks.append(Clock.schedule_once(lambda dt: func, delay))
