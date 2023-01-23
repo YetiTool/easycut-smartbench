@@ -295,7 +295,7 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        self.poll_for_spindle_info = Clock.schedule_interval(lambda dt: self.get_spindle_info, 2)
+        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
     def generate_unlock_code(self):
@@ -343,7 +343,7 @@ class SpindleTestJig1(Screen):
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
         self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
-    def get_spindle_info(self):
+    def get_spindle_info(self, dt):
         def show_spindle_info():
             def format_week_year(week, year):
                 return str(week) + 'th wk ' + str(year)

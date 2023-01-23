@@ -28,6 +28,7 @@ class SpindleTest:
 
     def run(self):
         self.screen.run_test_button.disabled = True
+        self.fail_reasons[:] = []
 
         def show_result():
             PostTestSummaryPopup(self.m, self.sm, self.fail_reasons)
@@ -68,9 +69,6 @@ class SpindleTest:
             self.m.s.write_command('M3 S' + str(rpm))
             self.screen.target_rpm_value.text = str(rpm)
             self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
-
-        def schedule(func, delay):
-            self.clocks.append(Clock.schedule_once(lambda dt: func, delay))
 
         self.clocks[:] = []
         set_rpm(10000)
