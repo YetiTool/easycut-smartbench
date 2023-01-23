@@ -343,7 +343,7 @@ class SpindleTestJig1(Screen):
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
         self.measured_rpm_value.text = str(self.m.s.spindle_speed)
 
-    def get_spindle_info(self, dt):
+    def get_spindle_info(self, dt=None):
         def show_spindle_info():
             def format_week_year(week, year):
                 return str(week) + 'th wk ' + str(year)
