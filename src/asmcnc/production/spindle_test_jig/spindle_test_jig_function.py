@@ -1,5 +1,6 @@
 from kivy.clock import Clock
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
+from math import sqrt
 
 
 def ld_qda_to_w(voltage, ld_qda):
