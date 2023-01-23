@@ -10,7 +10,6 @@ def ld_qda_to_w(voltage, ld_qda):
 class SpindleTest:
     test_pass = None
     fail_reasons = []
-    rpms_to_test = [10000, 13000, 19000, 22000, 25000]
     spindle_load_samples = []
     clocks = []
     delay_between_rpm_change = 2
@@ -73,11 +72,17 @@ class SpindleTest:
             self.screen.target_rpm_value.text = str(rpm)
             self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), self.delay_between_rpm_read))
 
-        self.clocks[:] = []
-        for rpm_to_test in self.rpms_to_test:
-            print(rpm_to_test)
-            self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(rpm_to_test), self.delay_between_rpm_change *
-                                                   self.rpms_to_test.index(rpm_to_test)))
+        def schedule(func, delay):
+            self.clocks.append(Clock.schedule_once(lambda dt: func, delay))
 
-        self.clocks.append(Clock.schedule_once(lambda dt: show_result(), (
-                self.delay_between_rpm_read + self.delay_between_rpm_read) * len(self.rpms_to_test)))
+        self.clocks[:] = []
+        schedule(set_rpm(10000), 1)
+        schedule(set_rpm(13000), 4)
+        schedule(set_rpm(19000), 7)
+        schedule(set_rpm(22000), 10)
+        schedule(set_rpm(25000), 13)
+        schedule(show_result, 16)
+        schedule(set_rpm(0), 16)
+        schedule(self.screen.toggle_run_button, 16)
+
+
