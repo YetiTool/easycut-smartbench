@@ -361,6 +361,7 @@ class SpindleTestJig1(Screen):
                     self.get_spindle_info()
                     return 'err'
 
+            print('here')
             self.serial_number_value.text = str(self.m.s.spindle_serial_number)
             self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
                                            str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
