@@ -296,7 +296,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
+                                source: "asmcnc/skavaUI/img/upgrade_app_icon.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height

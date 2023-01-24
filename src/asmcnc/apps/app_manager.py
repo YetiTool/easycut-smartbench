@@ -15,6 +15,7 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 from asmcnc.apps.upgrade_app import upgrade_app_home
+from asmcnc.apps.upgrade_app.already_upgraded import AlreadyUpgraded
 
 
 # import shape cutter managing object
@@ -98,8 +99,20 @@ class AppManagerClass(object):
         self.systemtools_sm.open_system_tools()
 
     def start_upgrade_app(self):
+        if os.path.exists('../../proplus.txt'):
+            if self.sm.has_screen('already_upgraded'):
+                self.sm.current = 'already_upgraded'
+                return
+
+            upgraded_screen = AlreadyUpgraded(name='already_upgraded', screen_manager=self.sm,
+                                              machine=self.m, localization=self.l)
+            self.sm.add_widget(upgraded_screen)
+            self.sm.current = 'already_upgraded'
+            return
+
         if not self.sm.has_screen('upgrade'):
-            upgrade_screen = upgrade_app_home.UpgradeAppHome(name='upgrade', screen_manager=self.sm, machine=self.m)
+            upgrade_screen = upgrade_app_home.UpgradeAppHome(name='upgrade', screen_manager=self.sm, machine=self.m,
+                                                             localization=self.l)
             self.sm.add_widget(upgrade_screen)
 
         self.current_app = 'upgrade'
