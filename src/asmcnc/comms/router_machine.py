@@ -1987,7 +1987,7 @@ class RouterMachine(object):
     reference_temp = 45.0
     temp_tolerance = 20.0
     upper_temp_limit = reference_temp + temp_tolerance
-    lower_temp_limit = reference_temp - temp_tolerance
+    lower_temp_limit = reference_temp - (temp_tolerance + 5) # it gets cold in the factory
 
 
     def reset_tuning_flags(self):
