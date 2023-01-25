@@ -119,6 +119,9 @@ class UpgradeAppHome(Screen):
     def get_serial_and_calculate_unlock_code(self):
         self.serial = self.m.s.spindle_serial_number
 
+        if self.serial is None:
+            return
+
         self.valid_unlock_code = str(hex((self.serial + 42) * 10000))[2:]
 
     def create_pro_plus_file(self):
