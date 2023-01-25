@@ -310,7 +310,6 @@ class SpindleTestJig1(Screen):
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
-        pass
 
     def stop(self):
         self.m.s.write_command('M3 S0')
