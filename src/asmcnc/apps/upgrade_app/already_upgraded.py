@@ -28,6 +28,7 @@ Builder.load_string("""
             color: hex('#f9f9f9ff')
             background_normal: "asmcnc/skavaUI/img/blank_long_button.png"
             font_size: dp(24)
+            size_hint: None, None
             width: dp(400)
             halign: 'center'
             
