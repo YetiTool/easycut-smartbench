@@ -52,18 +52,21 @@ Builder.load_string("""
                         bold: True
                         background_color: [0, 1, 0, 1]
                         on_press: root.test.run()
+                        background_normal: ''
                         
                     Button:
                         text: 'Open Terminal'
                         bold: True
                         background_color: [0.62, 0.12, 0.94, 1]
                         on_press: root.open_console()
+                        background_normal: ''
                         
                     Button:
                         text: 'Shutdown'
                         bold: True
                         on_press: root.shutdown()
                         background_color: [1, 0, 0, 1]
+                        background_normal: ''
                         
                 GridLayout:
                     cols: 1
@@ -232,6 +235,7 @@ Builder.load_string("""
                         text: 'STOP'
                         on_press: root.stop()
                         background_color: [1, 0, 0, 1]
+                        background_normal: ''
                         
                     GridLayout:
                         cols: 2
@@ -252,12 +256,14 @@ Builder.load_string("""
                             id: unlock_code_label
                             text: 'Unlock Code:'
                             bold: True
+                            background_normal: ''
                         
                     Button:
                         text: 'Print'    
                         bold: True
                         background_color: [1, 0.64, 0, 1]
                         on_press: root.print_receipt()
+                        background_normal: ''
                         
         ScrollableLabelStatus:
             size_hint_y: 0.12
