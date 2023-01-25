@@ -360,7 +360,7 @@ class SpindleTestJig1(Screen):
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
             self.update_unlock_code()
 
-            if self.m.s.spindle_mains_frequency_hertz == 50:
+            if self.m.s.spindle_mains_frequency_hertz == 60:
                 self.test.target_voltage = 120
             else:
                 self.test.target_voltage = 230

@@ -55,7 +55,6 @@ class SpindleTest:
                 fail_test(rpm, "RPM out of range: " + str(measured_rpm))
 
             if abs(self.target_voltage - measured_voltage) > 15:
-                print(str(self.target_voltage) + " failed")
                 fail_test(rpm, "Voltage out of range: " + str(measured_voltage))
 
             if measured_temp < 10 or measured_temp > 40:
