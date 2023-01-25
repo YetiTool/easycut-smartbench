@@ -23,7 +23,7 @@ Builder.load_string("""
             font_size: dp(28)
         
         BoxLayout:
-            padding: [400, 0, 0, 0]
+            padding: [dp(400), 0, 0, 0]
             Button:
                 text: 'Continue'
                 size_hint: None, None
