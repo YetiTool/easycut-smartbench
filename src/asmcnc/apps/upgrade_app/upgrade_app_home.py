@@ -24,9 +24,8 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             size_hint: None, None
-            width: dp(700)
-            height: dp(70)
-            halign: 'center'
+            width: dp(800)
+            height: dp(50)
             
             ClickableImage:
                 id: exit_button
