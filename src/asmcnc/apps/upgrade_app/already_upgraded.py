@@ -27,6 +27,9 @@ Builder.load_string("""
             on_press: root.exit()
             color: hex('#f9f9f9ff')
             background_normal: "asmcnc/skavaUI/img/blank_long_button.png"
+            font_size: dp(24)
+            width: dp(400)
+            halign: 'center'
             
         Label:
             text: ''
