@@ -51,20 +51,19 @@ Builder.load_string("""
             markup: True
             color: 0,0,0,1
             size_hint_y: None
-            font_size: dp(18)
-            
+            font_size: dp(16)
+    
         Label:
-            padding: [0, 0, 0, dp(50)]
             text: "Enter your unlock code:"
             halign: "center"
             markup: True
             color: 0,0,0,1
             size_hint_y: None
             id: error_label
-            font_size: dp(18)
+            font_size: dp(16)
         
         BoxLayout:
-            padding: [dp(200), 0, 0, dp(200)]
+            padding: [dp(200), 0, 0, dp(180)]
             TextInput:
                 id: unlock_code
                 multiline: False
