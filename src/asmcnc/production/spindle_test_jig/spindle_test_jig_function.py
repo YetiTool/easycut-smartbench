@@ -12,6 +12,7 @@ class SpindleTest:
     fail_reasons = []
     spindle_load_samples = []
     clocks = []
+    target_voltage = None
 
     def __init__(self, **kwargs):
         self.sm = kwargs['screen_manager']
@@ -53,7 +54,7 @@ class SpindleTest:
             if abs(rpm - measured_rpm) > 2000:
                 fail_test(rpm, "RPM out of range: " + str(measured_rpm))
 
-            if abs(230 - measured_voltage) > 15:
+            if abs(self.target_voltage - measured_voltage) > 15:
                 fail_test(rpm, "Voltage out of range: " + str(measured_voltage))
 
             if measured_temp < 10 or measured_temp > 40:

@@ -298,16 +298,6 @@ class SpindleTestJig1(Screen):
         self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
-    def generate_unlock_code(self):
-        serial = self.m.s.spindle_serial_number
-
-        serial += 42
-        serial *= 10000
-        serial = str(hex(serial))[2:]
-
-        self.unlock_code = serial
-        self.unlock_code_label.text = serial
-
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
 
@@ -369,6 +359,11 @@ class SpindleTestJig1(Screen):
             self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
             self.update_unlock_code()
+
+            if self.m.s.spindle_mains_frequency_hertz == 50:
+                self.test.target_voltage = 120
+            else:
+                self.test.target_voltage = 230
 
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
         Clock.schedule_once(lambda dt: show_spindle_info(), 1)
