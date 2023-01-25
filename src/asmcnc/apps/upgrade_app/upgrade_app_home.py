@@ -54,6 +54,7 @@ Builder.load_string("""
             font_size: dp(18)
             
         Label:
+            padding: [0, 0, 0, dp(50)]
             text: "Enter your unlock code:"
             halign: "center"
             markup: True
