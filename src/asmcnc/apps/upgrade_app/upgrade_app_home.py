@@ -28,6 +28,7 @@ Builder.load_string("""
             height: dp(50)
             
             ClickableImage:
+                padding: [50, 0, 0, 0]
                 id: exit_button
                 source: "asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                 size_hint: None, None
@@ -44,6 +45,7 @@ Builder.load_string("""
                     width: dp(50)
                     height: dp(50)
                     on_press: root.open_help()
+                    padding: [0, 0, 0, 50]
             
         Label:
             text: "This app allows you to upgrade your SmartBench v1.3 [b]PrecisionPro[/b] to a [b]PrecisionPro +[/b].\\nYou will have needed to purchase an upgrade package. For more information on the upgrade,\\n please visit www.yetitool.com/PRODUCTS/upgrades"
@@ -63,7 +65,7 @@ Builder.load_string("""
             id: error_label
         
         BoxLayout:
-            padding: [dp(400), 0, 0, 150]
+            padding: [dp(200), 0, 0, 150]
             TextInput:
                 id: unlock_code
                 multiline: False
