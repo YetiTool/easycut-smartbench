@@ -330,7 +330,7 @@ class SpindleTestJig1(Screen):
             ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
         self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
-        self.measured_rpm_value.text = str(self.m.convert_from_110_to_230(self.m.s.spindle_speed))
+        self.measured_rpm_value.text = str(self.m.s.spindle_speed) if self.test.target_voltage == 230 else self.m.convert_from_110_to_230(self.m.s.spindle_speed)
 
     def get_spindle_info(self, dt=None):
         def show_spindle_info():
