@@ -45,35 +45,38 @@ Builder.load_string("""
                     width: dp(50)
                     height: dp(50)
                     on_press: root.open_help()
-            
-        Label:
-            text: "This app allows you to upgrade your SmartBench v1.3 [b]PrecisionPro[/b] to a [b]PrecisionPro +[/b].\\nYou will have needed to purchase an upgrade package. For more information on the upgrade,\\n please visit www.yetitool.com/PRODUCTS/upgrades"
-            halign: "center"
-            markup: True
-            color: 0,0,0,1
-            size_hint_y: None
-            font_size: dp(16)
-    
-        Label:
-            text: "Enter your unlock code:"
-            halign: "center"
-            markup: True
-            color: 0,0,0,1
-            size_hint_y: None
-            id: error_label
-            font_size: dp(16)
         
         BoxLayout:
-            padding: [dp(200), 0, 0, dp(180)]
-            TextInput:
-                id: unlock_code
-                multiline: False
-                font_size: dp(30)
-                color: 0,0,0,1  
-                size_hint: None, None
-                height: dp(50)
-                width: dp(400)
-                on_text_validate: root.check_unlock_code()
+            orientation: 'vertical'
+            
+            Label:
+                text: "This app allows you to upgrade your SmartBench v1.3 [b]PrecisionPro[/b] to a [b]PrecisionPro +[/b].\\nYou will have needed to purchase an upgrade package. For more information on the upgrade,\\n please visit www.yetitool.com/PRODUCTS/upgrades"
+                halign: "center"
+                markup: True
+                color: 0,0,0,1
+                size_hint_y: None
+                font_size: dp(16)
+        
+            Label:
+                text: "Enter your unlock code:"
+                halign: "center"
+                markup: True
+                color: 0,0,0,1
+                size_hint_y: None
+                id: error_label
+                font_size: dp(16)
+            
+            BoxLayout:
+                padding: [dp(200), 0, 0, dp(180)]
+                TextInput:
+                    id: unlock_code
+                    multiline: False
+                    font_size: dp(30)
+                    color: 0,0,0,1  
+                    size_hint: None, None
+                    height: dp(50)
+                    width: dp(400)
+                    on_text_validate: root.check_unlock_code()
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
