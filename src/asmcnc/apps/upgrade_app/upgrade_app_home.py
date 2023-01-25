@@ -54,6 +54,7 @@ Builder.load_string("""
             color: 0,0,0,1
             size_hint_y: None
             height: dp(50)
+            font_size: dp(18)
             
         Label:
             text: "Enter your unlock code:"
@@ -63,6 +64,7 @@ Builder.load_string("""
             size_hint_y: None
             height: dp(60)
             id: error_label
+            font_size: dp(18)
         
         BoxLayout:
             padding: [dp(200), 0, 0, 150]
@@ -75,6 +77,9 @@ Builder.load_string("""
                 height: dp(50)
                 width: dp(400)
                 on_text_validate: root.check_unlock_code()
+        
+        Label:
+            height: dp(150)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
