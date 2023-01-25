@@ -152,4 +152,4 @@ class UpgradeAppHome(Screen):
         Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.5)
         Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
-        Clock.schedule_once(lambda dt: self.verify())
+        Clock.schedule_once(lambda dt: self.verify(), 3)
