@@ -24,9 +24,6 @@ Builder.load_string("""
         
         Button:
             text: 'Continue'
-            size_hint: None, None
-            width: dp(400)
-            height: dp(50)
             on_press: root.exit()
             color: hex('#f9f9f9ff')
             background_normal: "asmcnc/skavaUI/img/blank_long_button.png"
