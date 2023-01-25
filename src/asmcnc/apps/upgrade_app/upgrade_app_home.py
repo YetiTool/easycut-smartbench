@@ -93,6 +93,7 @@ class ClickableImage(ButtonBehavior, Image):
 class UpgradeAppHome(Screen):
     serial = None
     valid_unlock_code = None
+    activated = False
 
     def __init__(self, **kwargs):
         super(UpgradeAppHome, self).__init__(**kwargs)
@@ -110,6 +111,13 @@ class UpgradeAppHome(Screen):
 
     def exit_app(self):
         self.sm.current = 'lobby'
+
+    def on_enter(self):
+        self.m.send_any_gcode_command('$51=1')
+
+    def on_leave(self, *args):
+        if not self.activated:
+            self.m.send_any_gcode_command('$51=0')
 
     def get_serial_and_calculate_unlock_code(self):
         self.serial = self.m.s.spindle_serial_number
@@ -136,6 +144,7 @@ class UpgradeAppHome(Screen):
     def activate_pro_plus(self):
         self.m.send_any_gcode_command('$51=1')
         self.create_pro_plus_file()
+        self.activated = True
         self.go_to_complete_screen()
 
     def verify(self):
