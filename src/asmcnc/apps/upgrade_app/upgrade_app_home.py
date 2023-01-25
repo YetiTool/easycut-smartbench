@@ -111,11 +111,6 @@ class UpgradeAppHome(Screen):
     def exit_app(self):
         self.sm.current = 'lobby'
 
-    # def on_enter(self):
-    #     self.m.s.write_command('M3 S0')
-    #     Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
-    #     Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
-
     def get_serial_and_calculate_unlock_code(self):
         self.serial = self.m.s.spindle_serial_number
 
@@ -154,6 +149,7 @@ class UpgradeAppHome(Screen):
 
     def check_unlock_code(self):
         self.m.s.write_command('M3 S0')
+        Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.5)
         Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
         Clock.schedule_once(lambda dt: self.verify())
