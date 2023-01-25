@@ -45,7 +45,7 @@ class SpindleTest:
             self.fail_reasons.append([rpm, reason])
 
         def check(rpm):
-            measured_rpm = int(self.m.s.spindle_speed)
+            measured_rpm = self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
             measured_voltage = self.m.s.digital_spindle_mains_voltage
             measured_temp = self.m.s.digital_spindle_temperature
             measured_kill_time = self.m.s.digital_spindle_kill_time
