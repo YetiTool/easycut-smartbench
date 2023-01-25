@@ -13,6 +13,7 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
+        spacing: 5
 
         canvas:
             Color:
