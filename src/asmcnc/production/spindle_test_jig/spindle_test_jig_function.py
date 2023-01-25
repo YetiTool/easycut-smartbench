@@ -29,6 +29,7 @@ class SpindleTest:
 
     def run(self):
         self.screen.run_test_button.disabled = True
+        self.screen.run_test_button.text = "Running..."
         self.fail_reasons[:] = []
 
         def show_result():

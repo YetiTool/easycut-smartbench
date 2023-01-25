@@ -242,7 +242,7 @@ Builder.load_string("""
                         rows: 1
                         
                         Label:
-                            text: 'Pass:'
+                            text: 'Result:'
                             bold: True
                             
                         Image:
@@ -327,8 +327,10 @@ class SpindleTestJig1(Screen):
     def toggle_run_button(self):
         if self.run_test_button.disabled:
             self.run_test_button.disabled = False
+            self.run_test_button.text = "Begin Test"
         else:
             self.run_test_button.disabled = True
+            self.run_test_button.text = "Running Test..."
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
