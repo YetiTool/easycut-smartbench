@@ -57,6 +57,7 @@ Builder.load_string("""
                 color: 0,0,0,1
                 size_hint_y: None
                 font_size: dp(16)
+                height: dp(30)
         
             Label:
                 text: "Enter your unlock code:"
