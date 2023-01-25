@@ -114,14 +114,10 @@ class UpgradeAppHome(Screen):
     def on_enter(self):
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'))
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
 
     def get_serial_and_calculate_unlock_code(self):
         self.serial = self.m.s.spindle_serial_number
-
-        if self.serial is None or self.serial == 'N/A':
-            self.serial = 'N/A'
-            return
 
         self.valid_unlock_code = str(hex((self.serial + 42) * 10000))[2:]
 
