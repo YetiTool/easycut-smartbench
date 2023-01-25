@@ -25,10 +25,9 @@ Builder.load_string("""
             orientation: 'horizontal'
             size_hint: None, None
             width: dp(800)
-            height: dp(50)
+            height: dp()
             
             ClickableImage:
-                padding: [50, 0, 0, 0]
                 id: exit_button
                 source: "asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                 size_hint: None, None
@@ -45,7 +44,6 @@ Builder.load_string("""
                     width: dp(50)
                     height: dp(50)
                     on_press: root.open_help()
-                    padding: [0, 0, 0, 50]
             
         Label:
             text: "This app allows you to upgrade your SmartBench v1.3 [b]PrecisionPro[/b] to a [b]PrecisionPro +[/b].\\nYou will have needed to purchase an upgrade package. For more information on the upgrade,\\n please visit www.yetitool.com/PRODUCTS/upgrades"
@@ -53,7 +51,6 @@ Builder.load_string("""
             markup: True
             color: 0,0,0,1
             size_hint_y: None
-            height: dp(50)
             font_size: dp(18)
             
         Label:
@@ -62,7 +59,6 @@ Builder.load_string("""
             markup: True
             color: 0,0,0,1
             size_hint_y: None
-            height: dp(60)
             id: error_label
             font_size: dp(18)
         
@@ -79,7 +75,7 @@ Builder.load_string("""
                 on_text_validate: root.check_unlock_code()
         
         Label:
-            height: dp(150)
+            height: dp(50)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
