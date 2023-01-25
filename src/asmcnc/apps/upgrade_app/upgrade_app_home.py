@@ -63,7 +63,7 @@ Builder.load_string("""
             font_size: dp(18)
         
         BoxLayout:
-            padding: [dp(200), 0, 0, 150]
+            padding: [dp(200), 0, 0, 0]
             TextInput:
                 id: unlock_code
                 multiline: False
