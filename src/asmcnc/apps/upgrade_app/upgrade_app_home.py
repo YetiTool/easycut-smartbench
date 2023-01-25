@@ -141,7 +141,7 @@ class UpgradeAppHome(Screen):
         self.go_to_complete_screen()
 
     def check_unlock_code(self):
-        if self.unlock_code.text.lower() == str(self.valid_unlock_code):
+        if self.unlock_code.text.lower() == str(self.valid_unlock_code) and self.valid_unlock_code is not None:
             self.activate_pro_plus()
             return
 
