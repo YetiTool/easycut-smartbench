@@ -49,7 +49,7 @@ Builder.load_string("""
 
                 Label:
                     id: x_stored_threshold
-                    text: ''
+                    text: '?'
 
                 Label:
                     text: 'Y:'
@@ -68,7 +68,7 @@ Builder.load_string("""
 
                 Label:
                     id: y_stored_threshold
-                    text: ''
+                    text: '?'
 
                 Label:
                     text: 'Z:'
@@ -87,7 +87,7 @@ Builder.load_string("""
 
                 Label:
                     id: z_stored_threshold
-                    text: ''
+                    text: '?'
 
             BoxLayout:
                 orientation: 'vertical'
