@@ -48,6 +48,7 @@ Builder.load_string("""
         
         BoxLayout:
             orientation: 'vertical'
+            padding: [0,0,0,dp(180)]
             
             Label:
                 text: "This app allows you to upgrade your SmartBench v1.3 [b]PrecisionPro[/b] to a [b]PrecisionPro +[/b].\\nYou will have needed to purchase an upgrade package. For more information on the upgrade,\\n please visit www.yetitool.com/PRODUCTS/upgrades"
@@ -67,7 +68,7 @@ Builder.load_string("""
                 font_size: dp(16)
             
             BoxLayout:
-                padding: [dp(200), 0, 0, dp(180)]
+                padding: [dp(200), 0, 0, 0]
                 TextInput:
                     id: unlock_code
                     multiline: False
