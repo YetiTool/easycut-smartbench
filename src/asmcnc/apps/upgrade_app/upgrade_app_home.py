@@ -117,7 +117,7 @@ class UpgradeAppHome(Screen):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'))
 
     def get_serial_and_calculate_unlock_code(self):
-        self.serial = self.m.s.spindle_serial_number or 1
+        self.serial = self.m.s.spindle_serial_number
 
         self.valid_unlock_code = str(hex((self.serial + 42) * 10000))[2:]
 
