@@ -63,7 +63,7 @@ Builder.load_string("""
             font_size: dp(18)
         
         BoxLayout:
-            padding: [dp(200), 0, 0, 0]
+            padding: [dp(200), 0, 0, dp(200)]
             TextInput:
                 id: unlock_code
                 multiline: False
@@ -73,9 +73,6 @@ Builder.load_string("""
                 height: dp(50)
                 width: dp(400)
                 on_text_validate: root.check_unlock_code()
-        
-        Label:
-            height: dp(150)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
