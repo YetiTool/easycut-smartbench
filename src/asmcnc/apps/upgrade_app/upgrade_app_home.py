@@ -63,7 +63,7 @@ Builder.load_string("""
             id: error_label
         
         BoxLayout:
-            padding: [400, 0, 0, 150]
+            padding: [dp(400), 0, 0, 150]
             TextInput:
                 id: unlock_code
                 multiline: False
