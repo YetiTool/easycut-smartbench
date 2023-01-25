@@ -25,14 +25,14 @@ Builder.load_string("""
             orientation: 'horizontal'
             size_hint: None, None
             width: dp(800)
-            height: dp(90)
+            height: dp(50)
             
             ClickableImage:
                 id: exit_button
                 source: "asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                 size_hint: None, None
-                width: dp(90)
-                height: dp(90)
+                width: dp(50)
+                height: dp(50)
                 on_press: root.exit_app()
             
             AnchorLayout:
@@ -41,8 +41,8 @@ Builder.load_string("""
                     id: help_button
                     source: "./asmcnc/skavaUI/img/help_btn_orange_round.png"
                     size_hint: None, None
-                    width: dp(90)
-                    height: dp(90)
+                    width: dp(50)
+                    height: dp(50)
                     on_press: root.open_help()
             
         Label:
@@ -73,12 +73,6 @@ Builder.load_string("""
                 height: dp(50)
                 width: dp(400)
                 on_text_validate: root.check_unlock_code()
-                halign: 'center'
-                valign: 'middle'
-            
-        Label:
-            text: ''
-            height: dp(210)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
