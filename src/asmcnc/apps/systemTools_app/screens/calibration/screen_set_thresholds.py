@@ -17,6 +17,10 @@ Builder.load_string("""
     y_stored_threshold:y_stored_threshold
     z_stored_threshold:z_stored_threshold
 
+    x_set_threshold:x_set_threshold
+    y_set_threshold:y_set_threshold
+    z_set_threshold:z_set_threshold
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -28,7 +32,7 @@ Builder.load_string("""
 
             GridLayout:
                 size_hint_y: 1.5
-                cols: 5
+                cols: 7
                 rows: 3
                 spacing: dp(10)
 
@@ -52,6 +56,13 @@ Builder.load_string("""
                     text: '?'
 
                 Label:
+                    text: 'Set:'
+
+                Label:
+                    id: x_set_threshold
+                    text: ''
+
+                Label:
                     text: 'Y:'
 
                 TextInput:
@@ -71,6 +82,13 @@ Builder.load_string("""
                     text: '?'
 
                 Label:
+                    text: 'Set:'
+
+                Label:
+                    id: y_set_threshold
+                    text: ''
+
+                Label:
                     text: 'Z:'
 
                 TextInput:
@@ -88,6 +106,13 @@ Builder.load_string("""
                 Label:
                     id: z_stored_threshold
                     text: '?'
+
+                Label:
+                    text: 'Set:'
+
+                Label:
+                    id: z_set_threshold
+                    text: ''
 
             BoxLayout:
                 orientation: 'vertical'
@@ -113,6 +138,7 @@ class SetThresholdsScreen(Screen):
 
     def on_enter(self):
         self.show_thresholds()
+        self.update_set_thresholds()
 
     def show_thresholds(self):
         self.x_threshold_input.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
@@ -124,8 +150,14 @@ class SetThresholdsScreen(Screen):
         self.y_stored_threshold.text = str(self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold)
         self.z_stored_threshold.text = str(self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold)
 
+    def update_set_thresholds(self):
+        self.x_set_threshold.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
+        self.y_set_threshold.text = str(self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold)
+        self.z_set_threshold.text = str(self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold)
+
     def set_threshold(self, axis, value):
         self.m.set_threshold_for_axis(axis, int(value))
+        self.update_set_thresholds()
 
     def store_parameters(self):
         PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
