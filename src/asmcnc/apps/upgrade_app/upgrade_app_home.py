@@ -111,10 +111,10 @@ class UpgradeAppHome(Screen):
     def exit_app(self):
         self.sm.current = 'lobby'
 
-    def on_enter(self):
-        self.m.s.write_command('M3 S0')
-        Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
+    # def on_enter(self):
+    #     self.m.s.write_command('M3 S0')
+    #     Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 1)
+    #     Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 2)
 
     def get_serial_and_calculate_unlock_code(self):
         self.serial = self.m.s.spindle_serial_number
@@ -143,7 +143,7 @@ class UpgradeAppHome(Screen):
         self.create_pro_plus_file()
         self.go_to_complete_screen()
 
-    def check_unlock_code(self):
+    def verify(self):
         if self.unlock_code.text.lower() == str(self.valid_unlock_code) and self.valid_unlock_code is not None:
             self.activate_pro_plus()
             return
@@ -151,3 +151,9 @@ class UpgradeAppHome(Screen):
         self.error_label.text = "[color=FF0000]Unlock code incorrect, please check and try again.[/color]\n If the " \
                                 "problem persists, please submit a support ticket: www.yetitool.com/submit-a-ticket " \
                                 "\nquoting spindle serial number: " + str(self.serial)
+
+    def check_unlock_code(self):
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(lambda dt: self.get_serial_and_calculate_unlock_code(), 0.5)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 1)
+        Clock.schedule_once(lambda dt: self.verify())
