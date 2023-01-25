@@ -75,7 +75,7 @@ Builder.load_string("""
                 on_text_validate: root.check_unlock_code()
         
         Label:
-            height: dp(50)
+            height: dp(150)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
