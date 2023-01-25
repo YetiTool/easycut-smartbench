@@ -22,16 +22,19 @@ Builder.load_string("""
             color: [0, 0, 0, 1]
             font_size: dp(28)
         
-        Button:
-            text: 'Continue'
-            on_press: root.exit()
-            color: hex('#f9f9f9ff')
-            background_normal: "asmcnc/skavaUI/img/blank_long_button.png"
-            font_size: dp(24)
-            size_hint: None, None
-            width: dp(400)
-            height: dp(90)
-            halign: 'center'
+        BoxLayout:
+            padding: [dp(400),0,0,0]
+            
+            Button:
+                text: 'Continue'
+                on_press: root.exit()
+                color: hex('#f9f9f9ff')
+                background_normal: "asmcnc/skavaUI/img/blank_long_button.png"
+                font_size: dp(24)
+                size_hint: None, None
+                width: dp(400)
+                height: dp(90)
+                halign: 'center'
             
         Label:
             text: ''
