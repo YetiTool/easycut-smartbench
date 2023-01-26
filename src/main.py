@@ -267,7 +267,7 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
-
+        sm.current = 'go'
         return sm
 
 if __name__ == '__main__':
