@@ -1184,9 +1184,13 @@ class RouterMachine(object):
 # GRBL STATES AND SETTINGS
 
     def set_state(self, temp_state):
-        grbl_state_words = ['Idle', 'Run', 'Hold', 'Jog', 'Alarm', 'Door', 'Check', 'Home', 'Sleep']
+        grbl_state_words = ['Idle', 'Run', 'Hold', 'Jog', 'Alarm', 'Door', 'Check', 'Home', 'Sleep', 'Cal']
         if temp_state in grbl_state_words:
             self.s.m_state = temp_state
+
+    # Query if smartbench_is_busy: don't send commands yet :) 
+    def smartbench_is_busy(self): 
+        return False
 
     def get_grbl_status(self):
         self.s.write_command('$#')
@@ -1294,6 +1298,14 @@ class RouterMachine(object):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable z motor'):
             self.send_command_to_motor("Enable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
+    def disable_stall_detection(self):
+        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
+            self.send_command_to_motor("Disable stall detection", command=SET_SG_ALARM)
+
+    def enable_stall_detection(self):
+        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
+            self.send_command_to_motor("Enable stall detection", command=SET_SG_ALARM, value=1)
+
 
 # SETTINGS GETTERS
     def serial_number(self): 
@@ -1333,6 +1345,11 @@ class RouterMachine(object):
 
         log("SmartBench model detection failed")
         return "SmartBench model detection failed"
+
+    def get_setting_53(self):
+        try: self.s.setting_53
+        except: return 0
+        else: return self.s.setting_53
 
 # POSITONAL GETTERS            
         
@@ -1609,17 +1626,201 @@ class RouterMachine(object):
         
 # HOMING
 
-    def start_homing(self):
-        self.set_state('Home') 
-        self.s.start_sequential_stream(['$H'])
+    motor_adjustment_complete = False
+    homing_complete = False
+    stall_detection_disabling_complete = False
+    auto_squaring_complete = False
+    homing_calibration_complete = False
+    stall_detection_enabling_complete = False
+    laser_move_complete = False
+
+    homing_sequence_clocks = []
+
+    ## homing event handling (needs testing, might not work (: )
+    def schedule_home_seq_event(self, func, delay=0.1):
+        homing_sequence_clocks.append(Clock.schedule_once(lambda dt: func(), delay))
+
+    def reschedule_if_busy(self, func):
+        if self.smartbench_is_busy():
+            self.schedule_home_seq_event(func)
+            return True
+
+    def unschedule_home_seq_events(self):
+        for i in self.homing_sequence_clocks:
+            if self.homing_sequence_clocks[i]: Clock.unschedule(self.homing_sequence_clocks[i])
+
+        self.homing_sequence_clocks.clear()
 
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
+    # this calls the first screen in the homing sequence
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
-
         self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
         self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
         self.sm.current = 'squaring_decision'
 
+    ## use flags to track progress through sequence
+    def reset_homing_sequence_flags(self):
+        self.motor_adjustment_complete = False
+        self.homing_complete = False
+        self.stall_detection_disabling_complete = False
+        self.auto_squaring_complete = False
+        self.homing_calibration_complete = False
+        self.stall_detection_enabling_complete = False
+        self.laser_move_complete = False
+
+    ## handle all events in homing sequence
+    def do_standard_homing_sequence(self, squaring = False):
+
+        self.is_squaring_XY_needed_after_homing = squaring
+
+        def then_home():
+            if self.motor_adjustment_complete: self.start_homing()
+            else: self.schedule_home_seq_event(then_home)
+
+        def then_disable_stall_detection():
+            if self.homing_complete: self.disable_stall_detection_before_auto_squaring()
+            else: self.schedule_home_seq_event(then_disable_stall_detection)
+
+        def then_square():
+            if self.stall_detection_disabling_complete: self.start_auto_squaring()
+            else: self.schedule_home_seq_event(then_square)
+
+        def then_calibrate():
+            if self.auto_squaring_complete: self.start_calibrating_after_homing()
+            else: self.schedule_home_seq_event(then_calibrate)
+
+        def then_enable_stall_detection():
+            if self.homing_calibration_complete: self.enable_stall_detection_after_calibrating()
+            else: self.schedule_home_seq_event(then_enable_stall_detection)
+
+        def then_move_for_laser_offset():
+            if self.stall_detection_enabling_complete: self.move_to_accommodate_laser_offset()
+            else: self.schedule_home_seq_event(then_move_for_laser_offset)
+
+        def then_complete_homing_sequence():
+            if self.laser_move_complete:
+                self.reset_homing_sequence_flags()
+                self.unschedule_home_seq_events()
+            else: self.schedule_home_seq_event(then_complete_homing_sequence)
+
+        self.reset_homing_sequence_flags()
+        self.m.reset_pre_homing()
+        self.motor_self_adjustment()
+        then_home()
+        then_disable_stall_detection()
+        then_square()
+        then_calibrate()
+        then_enable_stall_detection()
+        then_move_for_laser_offset()
+        then_complete_homing_sequence()
+
+
+    # components of homing sequence
+    def motor_self_adjustment(self):
+        if self.reschedule_if_busy(self.motor_self_adjustment): return
+        self.disable_y_motors()
+        self.schedule_home_seq_event(self.enable_y_motors, delay=0.5)
+        self.schedule_home_seq_event(self.poll_for_motors_adjusted, delay=1.1)
+
+    def poll_for_motors_adjusted(self):
+        if self.reschedule_if_busy(self.poll_for_motors_adjusted): return
+        self.motor_adjustment_complete = True
+
+    def start_homing(self):
+        if self.reschedule_if_busy(self.start_homing): return
+        self.set_state('Home') 
+        self.s.start_sequential_stream(['$H'], end_dwell=True)
+        self.poll_for_homing_completion()
+
+    def poll_for_homing_completion(self):
+        if self.reschedule_if_busy(self.poll_for_homing_completion): return
+        self.homing_complete = True
+
+    def disable_stall_detection_before_auto_squaring(self):
+        if self.reschedule_if_busy(self.disable_stall_detection_before_auto_squaring): return
+        self.disable_stall_detection()
+        self.schedule_home_seq_event(self.poll_for_stall_detection_disabling_completion)
+
+    def poll_for_stall_detection_disabling_completion(self):
+        if self.reschedule_if_busy(self.poll_for_stall_detection_disabling_completion): return
+        self.stall_detection_disabling_complete = True
+
+    def start_auto_squaring(self):
+
+        '''
+        This function is designed to square the machine's X&Y axes
+        It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
+        The steppers will stall out, but the X frame will square against the mechanical deadstops.
+        Intended use is first home after power-up only.
+
+        We're waiting for grbl responses before we send each line, as we're editing GRBL dollar settings
+
+        Delays after $ settings will be auto-inserted by serial connection module
+        '''
+        if not self.is_squaring_XY_needed_after_homing:
+            self.auto_squaring_complete = True
+            return
+
+        if self.reschedule_if_busy(self.start_squaring): return
+        
+        square_homing_sequence =  [
+                                  '$20=0', # soft limits off
+                                  '$21=0', # hard limits off
+                                  'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
+                                  'G91', # relative coords
+                                  'G1 Y-28 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
+                                  'G1 Y28', # re-enter work area
+                                  'G90', # abs coords
+                                  'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)                                  
+                                  '$21=1', # soft limits on
+                                  '$20=1', # hard limits on
+                                  '$H'
+                                  ]
+        self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
+        self.poll_for_auto_squaring_completion()
+
+    def poll_for_auto_squaring_completion(self):
+        if self.reschedule_if_busy(self.poll_for_auto_squaring_completion): return
+        self.auto_squaring_complete = True
+
+    def start_calibrating_after_homing(self):
+        if self.reschedule_if_busy(self.start_calibrating_after_homing): return
+        if self.calibrate_all_three_axes(): self.s.set_state('Cal')
+        self.homing_calibration_completion()
+
+    def homing_calibration_completion(self):
+        if  self.reschedule_if_busy(self.homing_calibration_completion) or \
+            self.run_calibration: 
+            return
+
+        self.homing_calibration_complete = True
+
+    def enable_stall_detection_after_calibrating(self):
+        if self.reschedule_if_busy(self.enable_stall_detection_after_auto_squaring): return
+        self.enable_stall_detection()
+        self.schedule_home_seq_event(self.poll_for_stall_detection_enabling_completion)
+
+    def poll_for_stall_detection_enabling_completion(self):
+        if self.reschedule_if_busy(self.poll_for_stall_detection_enabling_completion): return
+        self.stall_detection_enabling_complete = True
+
+    def move_to_accommodate_laser_offset(self):
+        if self.reschedule_if_busy(self.move_to_accommodate_laser_offset): return
+        if not self.m.is_laser_enabled:
+            self.laser_move_complete = True
+            return
+
+        tolerance = 5 # mm
+        log("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
+        self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
+        self.schedule_home_seq_event(self.poll_for_laser_move_completion, delay=0.5)
+
+    def poll_for_laser_move_completion(self):
+        if self.reschedule_if_busy(self.poll_for_laser_move_completion): return
+        self.laser_move_complete = True
+
+
+# Z PROBE
 
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
@@ -1912,6 +2113,14 @@ class RouterMachine(object):
 
     # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
     run_calibration = False
+
+    def calibrate_all_three_axes(self):
+
+        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.6', 'triple axis calibration'):
+            self.run_calibration = True
+            log("Calibrating all axes together...")
+            self.prep_triple_axes_calibration()
+            return True
 
     def calibrate_X(self, zero_position=True, mod_soft_limits=True, fast=False):
 
@@ -2499,11 +2708,12 @@ class RouterMachine(object):
     poll_for_z_ready = None
 
     time_to_check_for_calibration_prep = 0
-
     disable_and_enable_soft_limits = True
-
     quick_calibration = False
 
+    calibration_files_folder_path = './asmcnc/production/calibration_gcode_files/'
+
+    ## Functions to calibrate each axis separately (fast or slow)
 
     def initialise_calibration(self, X=False, Y=False, Z=False, zero_position=True, mod_soft_limits=True, quick_calibration=False):
 
@@ -2553,7 +2763,6 @@ class RouterMachine(object):
             self.time_to_check_for_calibration_prep = time.time()
             self.check_idle_and_buffer_then_start_calibration('Y')
 
-
     def do_calibrate_z(self, dt):
 
         if self.z_ready_to_calibrate:
@@ -2570,10 +2779,9 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
-            path_start = './asmcnc/production/calibration_gcode_files/'
             if self.quick_calibration: path_end = '_cal_quick_n_coarse.gc'
             else: path_end = '_cal.gc'
-            calibration_file = path_start + axis + path_end
+            calibration_file = self.calibration_files_folder_path + axis + path_end
 
             if axis == 'X': 
                 calibrate_mode = 32
@@ -2600,6 +2808,26 @@ class RouterMachine(object):
         else: 
             Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 0.1)
 
+
+    ## Function to quickly calibrate all three axes in one go (FW v2.6 and up)
+
+    def prep_triple_axes_calibration(self):
+
+        if not self.state().startswith('Idle') or self.s.write_protocol_buffer:
+            Clock.schedule_once(lambda dt: self.prep_homing_sequence_calibration(axis), 0.1)
+            return
+
+        self.calibration_tuning_fail_info = ''
+        self.disable_and_enable_soft_limits = False
+        calibration_file = self.calibration_files_folder_path + 'triple_axis_cal.gc'
+        altDisplayText = "CALIBRATE ALL AXES"
+        calibrate_mode = "N"
+
+        self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+        Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.5)
+
+
+    ## Functions for all calibration modes
 
     def stream_calibration_file(self, filename):
 

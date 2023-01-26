@@ -1488,11 +1488,13 @@ class SerialConnection(object):
     _process_oks_from_sequential_streaming = False
     _dwell_time = 0.5 # time for grbl to wait after sending dollar settings commands
     _dwell_command = "G4 P" + str(_dwell_time)
+    _micro_dwell_command = "G4 P" + str(0.01)
 
-    def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
+    def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
+        elif end_dwell: list_to_stream.append(self._micro_dwell_command)
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
