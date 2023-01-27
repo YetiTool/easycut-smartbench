@@ -19,6 +19,8 @@ from serial.serialutil import SerialException
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
+from math import sqrt
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -61,7 +63,7 @@ class SerialConnection(object):
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
-        self.sett =settings_manager     
+        self.sett = settings_manager
         self.m = machine
         self.jd = job
         self.l = localization
@@ -69,9 +71,14 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
+        Clock.schedule_interval(lambda dt: self.reset_spindle_data_counter, 600)
+
     def __del__(self):
         if self.s: self.s.close()
         log('Serial connection destructor')
+
+    def reset_spindle_data_counter(self):
+        self.spindle_data_failures = 0
 
     def get_serial_screen(self, serial_error):
 
@@ -699,6 +706,8 @@ class SerialConnection(object):
     # Analogue spindle feedback
     spindle_load_voltage = None
 
+    feed_override_percentage = None
+
     # Digital spindle feedback
     digital_spindle_ld_qdA = None
     digital_spindle_temperature = None
@@ -784,6 +793,12 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
+    autopilot_flag = True
+    autopilot_instance = None
+
+    spindle_data_failures = 0
+    spindle_data_error_buffer = 0
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -841,6 +856,9 @@ class SerialConnection(object):
                     except:
                         log("ERROR status parse: Position invalid: " + message)
                         return
+
+                    if self.autopilot_instance:
+                        self.autopilot_instance.moving_in_z = self.m_z != pos[2]
 
                     self.m_x = pos[0]
                     self.m_y = pos[1]
@@ -987,6 +1005,27 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        if self.digital_spindle_ld_qdA < 0:
+                            self.spindle_data_failures += 1
+
+                        if self.spindle_data_failures >= 20:
+                            log("Spindle data failure limit reached")
+
+                            #TODO: notify user
+
+                        if self.digital_spindle_ld_qdA > 0:
+                            if self.autopilot_flag:
+                                if self.autopilot_instance:
+                                    if not self.autopilot_instance.spindle_mains_voltage:
+                                        if self.spindle_data_error_buffer == 3:
+                                            self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                            self.autopilot_instance.first_read_setup()
+                                        else:
+                                            self.spindle_data_error_buffer += 1
+
+                                    self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
+
+
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
                         elif self.digital_spindle_kill_time >= 80 : overload_mV_equivalent_state = 20
@@ -1087,6 +1126,20 @@ class SerialConnection(object):
                     self.PSU_mV = float(voltages[2])
                     self.spindle_speed_monitor_mV = float(voltages[3])
 
+                elif part.startswith('Ov:'):
+                    values = part[3:].split(',')
+
+                    try:
+                        int(values[0])
+                    except:
+                        log("ERROR status parse: Ov values invalid: " + message)
+                        return
+
+                    self.feed_override_percentage = int(values[0])
+
+                    if self.sm.get_screen('go').feedOverride:
+                        self.sm.get_screen('go').feedOverride.feed_override_percentage = self.feed_override_percentage
+                        self.sm.get_screen('go').feedOverride.update_feed_percentage_label()
 
                 # SG VALUES
                 elif part.startswith('SG:'):

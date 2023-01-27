@@ -179,7 +179,6 @@ class StopOrResumeDecisionScreen(Screen):
         self.sm.current = 'job_incomplete'
 
     def resume_job(self):
-
         self.m.resume_after_a_stream_pause()
 
         # Job resumed, send event
