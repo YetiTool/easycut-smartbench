@@ -1626,142 +1626,34 @@ class RouterMachine(object):
         
 # HOMING
 
-    motor_adjustment_complete = False
-    homing_complete = False
-    stall_detection_disabling_complete = False
-    auto_squaring_complete = False
-    homing_calibration_complete = False
-    stall_detection_enabling_complete = False
-    laser_move_complete = False
-
-    homing_sequence_clocks = []
-
-    ## homing event handling (needs testing, might not work (: )
-    def schedule_home_seq_event(self, func, delay=0.1):
-        homing_sequence_clocks.append(Clock.schedule_once(lambda dt: func(), delay))
-
-    def reschedule_if_busy(self, func):
-        if self.smartbench_is_busy():
-            self.schedule_home_seq_event(func)
-            return True
-
-    def unschedule_home_seq_events(self):
-        for i in self.homing_sequence_clocks:
-            if self.homing_sequence_clocks[i]: Clock.unschedule(self.homing_sequence_clocks[i])
-
-        self.homing_sequence_clocks.clear()
-
-    # ensure that return and cancel args match the names of the screen names defined in the screen manager
-    # this calls the first screen in the homing sequence
-    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
-        self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
-        self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
-        self.sm.current = 'squaring_decision'
-
-    ## use flags to track progress through sequence
-    def reset_homing_sequence_flags(self):
-        self.motor_adjustment_complete = False
-        self.homing_complete = False
-        self.stall_detection_disabling_complete = False
-        self.auto_squaring_complete = False
-        self.homing_calibration_complete = False
-        self.stall_detection_enabling_complete = False
-        self.laser_move_complete = False
-
-    ## handle all events in homing sequence
-    def do_standard_homing_sequence(self, squaring = False):
-
-        self.is_squaring_XY_needed_after_homing = squaring
-
-        def then_home():
-            if self.motor_adjustment_complete: self.start_homing()
-            else: self.schedule_home_seq_event(then_home)
-
-        def then_disable_stall_detection():
-            if self.homing_complete: self.disable_stall_detection_before_auto_squaring()
-            else: self.schedule_home_seq_event(then_disable_stall_detection)
-
-        def then_square():
-            if self.stall_detection_disabling_complete: self.start_auto_squaring()
-            else: self.schedule_home_seq_event(then_square)
-
-        def then_calibrate():
-            if self.auto_squaring_complete: self.start_calibrating_after_homing()
-            else: self.schedule_home_seq_event(then_calibrate)
-
-        def then_enable_stall_detection():
-            if self.homing_calibration_complete: self.enable_stall_detection_after_calibrating()
-            else: self.schedule_home_seq_event(then_enable_stall_detection)
-
-        def then_move_for_laser_offset():
-            if self.stall_detection_enabling_complete: self.move_to_accommodate_laser_offset()
-            else: self.schedule_home_seq_event(then_move_for_laser_offset)
-
-        def then_complete_homing_sequence():
-            if self.laser_move_complete:
-                self.reset_homing_sequence_flags()
-                self.unschedule_home_seq_events()
-            else: self.schedule_home_seq_event(then_complete_homing_sequence)
-
-        self.reset_homing_sequence_flags()
-        self.m.reset_pre_homing()
-        self.motor_self_adjustment()
-        then_home()
-        then_disable_stall_detection()
-        then_square()
-        then_calibrate()
-        then_enable_stall_detection()
-        then_move_for_laser_offset()
-        then_complete_homing_sequence()
-
-
     # components of homing sequence
-    def motor_self_adjustment(self):
-        if self.reschedule_if_busy(self.motor_self_adjustment): return
+    def motor_self_adjustment(self, dt=0):
+        if self.reschedule_if_busy(self.motor_self_adjustment, self.next_homing_task_event): return
         self.disable_y_motors()
-        self.schedule_home_seq_event(self.enable_y_motors, delay=0.5)
-        self.schedule_home_seq_event(self.poll_for_motors_adjusted, delay=1.1)
-
-    def poll_for_motors_adjusted(self):
-        if self.reschedule_if_busy(self.poll_for_motors_adjusted): return
-        self.motor_adjustment_complete = True
-
-    def start_homing(self):
-        if self.reschedule_if_busy(self.start_homing): return
+        self.schedule_homing_event(self.enable_y_motors, delay=0.5)
+    
+    def start_homing(self, dt=0):
+        if self.reschedule_if_busy(self.start_homing, self.next_homing_task_event): return
         self.set_state('Home') 
         self.s.start_sequential_stream(['$H'], end_dwell=True)
-        self.poll_for_homing_completion()
-
-    def poll_for_homing_completion(self):
-        if self.reschedule_if_busy(self.poll_for_homing_completion): return
-        self.homing_complete = True
-
-    def disable_stall_detection_before_auto_squaring(self):
-        if self.reschedule_if_busy(self.disable_stall_detection_before_auto_squaring): return
+    
+    def disable_stall_detection_before_auto_squaring(self, dt=0):
+        if self.reschedule_if_busy(self.disable_stall_detection_before_auto_squaring, self.next_homing_task_event): return
         self.disable_stall_detection()
-        self.schedule_home_seq_event(self.poll_for_stall_detection_disabling_completion)
-
-    def poll_for_stall_detection_disabling_completion(self):
-        if self.reschedule_if_busy(self.poll_for_stall_detection_disabling_completion): return
-        self.stall_detection_disabling_complete = True
-
-    def start_auto_squaring(self):
-
+    
+    def start_auto_squaring(self, dt=0):
         '''
         This function is designed to square the machine's X&Y axes
         It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
         The steppers will stall out, but the X frame will square against the mechanical deadstops.
         Intended use is first home after power-up only.
-
         We're waiting for grbl responses before we send each line, as we're editing GRBL dollar settings
-
         Delays after $ settings will be auto-inserted by serial connection module
         '''
         if not self.is_squaring_XY_needed_after_homing:
             self.auto_squaring_complete = True
             return
-
-        if self.reschedule_if_busy(self.start_squaring): return
+        if self.reschedule_if_busy(self.start_squaring, self.next_homing_task_event): return
         
         square_homing_sequence =  [
                                   '$20=0', # soft limits off
@@ -1777,47 +1669,108 @@ class RouterMachine(object):
                                   '$H'
                                   ]
         self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
-        self.poll_for_auto_squaring_completion()
-
-    def poll_for_auto_squaring_completion(self):
-        if self.reschedule_if_busy(self.poll_for_auto_squaring_completion): return
-        self.auto_squaring_complete = True
-
-    def start_calibrating_after_homing(self):
-        if self.reschedule_if_busy(self.start_calibrating_after_homing): return
+    
+    def start_calibrating_after_homing(self, dt=0):
+        if self.reschedule_if_busy(self.start_calibrating_after_homing, self.next_homing_task_event): return
         if self.calibrate_all_three_axes(): self.s.set_state('Cal')
-        self.homing_calibration_completion()
-
-    def homing_calibration_completion(self):
-        if  self.reschedule_if_busy(self.homing_calibration_completion) or \
-            self.run_calibration: 
-            return
-
-        self.homing_calibration_complete = True
-
-    def enable_stall_detection_after_calibrating(self):
-        if self.reschedule_if_busy(self.enable_stall_detection_after_auto_squaring): return
+    
+    def enable_stall_detection_after_calibrating(self, dt=0):
+        if self.reschedule_if_busy(self.enable_stall_detection_after_auto_squaring, self.next_homing_task_event): return
         self.enable_stall_detection()
-        self.schedule_home_seq_event(self.poll_for_stall_detection_enabling_completion)
-
-    def poll_for_stall_detection_enabling_completion(self):
-        if self.reschedule_if_busy(self.poll_for_stall_detection_enabling_completion): return
-        self.stall_detection_enabling_complete = True
-
-    def move_to_accommodate_laser_offset(self):
-        if self.reschedule_if_busy(self.move_to_accommodate_laser_offset): return
+    
+    def move_to_accommodate_laser_offset(self, dt=0):
+        if self.reschedule_if_busy(self.move_to_accommodate_laser_offset, self.next_homing_task_event): return
         if not self.m.is_laser_enabled:
             self.laser_move_complete = True
             return
-
         tolerance = 5 # mm
         log("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
         self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
-        self.schedule_home_seq_event(self.poll_for_laser_move_completion, delay=0.5)
+    
+    def complete_homing_sequence(self):
+        self.unschedule_homing_events()
+        self.reset_homing_sequence_flags()
+        self.homing_in_progress = False
 
-    def poll_for_laser_move_completion(self):
-        if self.reschedule_if_busy(self.poll_for_laser_move_completion): return
-        self.laser_move_complete = True
+
+    homing_in_progress = False
+    completed_homing_tasks = [False]*7
+    homing_completed_task_idx = 0
+    homing_seq_events = []
+
+    homing_funcs_list = [
+
+        motor_self_adjustment,
+        start_homing,
+        disable_stall_detection_before_auto_squaring,
+        start_auto_squaring,
+        start_calibrating_after_homing,
+        enable_stall_detection_after_calibrating,
+        move_to_accommodate_laser_offset,
+        complete_homing_sequence
+
+        ]
+
+    homing_seq_first_delay = [
+        1,
+        0,
+        0.1,
+        0,
+        0,
+        0.1,
+        0.5,
+    ]
+
+    ## homing event handling (needs testing, might not work (: )
+
+    def schedule_homing_event(self, func, delay=0.1):
+        self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
+        self.homing_seq_events.append(Clock.schedule_once(func, delay))
+
+    def resched_homing_task_if_busy(self, func, delay=0.1):
+        if self.smartbench_is_busy() or self.run_calibration:
+            self.schedule_homing_event(func, delay)
+
+    def unschedule_homing_events(self):
+        for i in self.homing_seq_events:
+            if self.homing_seq_events[i]: Clock.unschedule(self.homing_seq_events[i])
+
+        del self.homing_seq_events[:]
+
+    # ensure that return and cancel args match the names of the screen names defined in the screen manager
+    # this calls the first screen in the homing sequence
+    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
+        self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
+        self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
+        self.sm.current = 'squaring_decision'
+
+    ## use flags to track progress through sequence
+    def reset_homing_sequence_flags(self):
+        self.completed_homing_tasks = [False]*7
+        self.homing_completed_task_idx = 0
+
+    ## handle all events in homing sequence
+    def do_standard_homing_sequence(self):
+        self.homing_in_progress = True
+        self.reset_homing_sequence_flags()
+        self.m.reset_pre_homing()
+        self.homing_funcs_list[0]()
+
+    def complete_homing_task(self, dt):
+        if self.reschedule_if_busy(self.complete_homing_task): return
+        self.completed_homing_tasks[self.homing_completed_task_idx] = True
+
+    def if_last_task_complete(self):
+        if self.completed_homing_tasks[self.homing_completed_task_idx]: 
+            self.homing_completed_task_idx+=1
+            return True
+
+    def do_next_task_in_sequence(self, dt):
+        if self.if_last_task_complete: 
+            self.homing_funcs_list[self.homing_completed_task_idx]()
+            self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay)
+        else: 
+            self.schedule_homing_event(self.do_next_task_in_sequence)
 
 
 # Z PROBE
@@ -2819,11 +2772,9 @@ class RouterMachine(object):
 
         self.calibration_tuning_fail_info = ''
         self.disable_and_enable_soft_limits = False
-        calibration_file = self.calibration_files_folder_path + 'triple_axis_cal.gc'
-        altDisplayText = "CALIBRATE ALL AXES"
-        calibrate_mode = "N"
+        self.send_command_to_motor("CALIBRATE ALL AXES", command=SET_CALIBR_MODE, value=TMC_CALIBRATION_INIT_ALL)
 
-        self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+        calibration_file = self.calibration_files_folder_path + 'triple_axis_cal.gc'
         Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.5)
 
 

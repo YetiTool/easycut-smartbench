@@ -20,6 +20,9 @@ from asmcnc.comms import localization
 from datetime import datetime
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
+from kivy.clock import Clock
+from time import sleep
+
 
 '''
 ######################################
@@ -153,4 +156,66 @@ def test_set_current_without_correct_FW(m):
     m.is_machines_fw_version_equal_to_or_greater_than_version = Mock(return_value=False)
     m.send_command_to_motor = Mock()
     assert not m.set_motor_current(axis, current)
+
+
+# HOMING UNIT TESTS
+
+def test_motor_self_adjustment_disables_y_motors(m):
+    # spy on disable y motors
+    pass
+
+def test_start_homing(m):
+    pass
+
+def test_disable_stall_detection_before_auto_squaring(m):
+    pass
+
+def test_start_auto_squaring(m):
+    pass
+
+def test_start_calibrating_after_homing(m):
+    pass
+
+def test_enable_stall_detection_after_calibrating(m):
+    pass
+
+def test_move_to_accommodate_laser_offset(m):
+    pass
+
+# def test_schedule_home_seq_event(m):
+#     m.next_homing_seq_event = None
+#     def nested_func(): pass
+#     m.next_homing_seq_event = m.schedule_event(nested_func, 10)
+#     assert m.next_homing_seq_event != None
+
+
+# def test_quick_clock():
+
+#     def nested_func(a): return a
+#     new_event = Clock.schedule_once(lambda dt: nested_func(1), 0.01)
+#     # another_event = Clock.schedule_once(lambda dt: nested_func(1), 0.01)
+#     assert new_event.get_callback() == nested_func
+#     l = [new_event]
+#     new = [ev for ev in l if nested_func == ev.get_callback()]
+#     assert new == []
+
+
+
+# def test_unschedule_home_seq_events(m):
+#     m.next_homing_seq_event = None
+#     def nested_func(): pass
+#     m.schedule_event(nested_func, m.next_homing_seq_event, 10)
+#     assert m.next_homing_seq_event is not None
+#     m.clear_event(m.next_homing_seq_event)
+#     assert m.next_homing_seq_event is None
+
+# def test_reschedule_if_busy(m):
+#     m.homing_sequence_clocks = []
+#     def nested_func(): pass
+#     m.smartbench_is_busy = Mock(return_value=True)
+#     event = m.reschedule_if_busy(nested_func, delay=0.01)
+#     assert event
+#     assert event in m.homing_sequence_clocks
+#     m.unschedule_home_seq_events()
+#     assert m.homing_sequence_clocks == []
 
