@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*- 
 
 '''
 Created on 16 Nov 2017
@@ -84,7 +84,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.2.0'
+initial_version = 'v2.2.1'
 
 config_flag = False
         
@@ -267,7 +267,7 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
-
+        sm.current = 'go'
         return sm
 
 if __name__ == '__main__':

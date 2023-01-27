@@ -601,6 +601,49 @@ class RebootAfterLanguageChange(Widget):
         popup.open()
 
 
+class PopupSSHToggleFailed(Widget):
+    def __init__(self, localization):
+        self.l = localization
+
+        description = self.l.get_str("Reboot console and try again")
+        title_string = self.l.get_str("Failed to toggle SSH Service")
+        ok_string = self.l.get_str("Ok")
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=1.7, text_size=(260, None), halign='center', valign='middle', text=description,
+                      color=[0, 0, 0, 1], padding=[0, 0], markup=True)
+
+        ok_button = Button(text=ok_string, markup=True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 0, 0, 0])
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30, 20, 30, 0])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font='Roboto-Bold',
+                      title_size='20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 300),
+                      auto_dismiss=False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
 class PopupFailedToSendSSHKey(Widget):
     def __init__(self):
         description = "The public SSH key file failed to send, please contact Archie or Lettie"
@@ -975,7 +1018,7 @@ class PopupStopStallJig(Widget):
             self.sj.unschedule_all_events()
             self.sj.set_default_thresholds()
             self.sj.test_stopped = False
-            self.sj.restore_acceleration_and_soft_limits()
+            self.sj.restore_grbl_settings()
             self.sj.enable_all_buttons_except_run()
             self.sj.test_status_label.text = "STOPPED"
 
@@ -1033,16 +1076,15 @@ class PopupStopStallJig(Widget):
 
 class PopupConfirmStoreCurrentValues(Widget):
 
-    def __init__(self, machine, screen_manager, localization):
+    def __init__(self, machine, screen_manager, localization, current_adjustment_screen):
         self.m = machine
-        self.m.soft_stop()
-        self.test_stopped = True
-
         self.sm = screen_manager
         self.l = localization
 
+        self.cs = current_adjustment_screen
+
         def store_tmc_values(*args):
-            self.m.store_tmc_params_in_eeprom()
+            self.cs.store_values_and_wait_for_handshake()
 
         stop_description = self.l.get_str(
             "THIS WILL STORE ALL MODIFIED TMC PARAMS IN EEPROM. Only continue if you know what you're doing.")
