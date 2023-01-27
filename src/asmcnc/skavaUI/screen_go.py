@@ -425,7 +425,7 @@ class GoScreen(Screen):
 
         self.update_strings()
 
-        widget_yetipilot = YetiPilotWidget(screen_manager=self.sm)
+        widget_yetipilot = YetiPilotWidget(screen_manager=self.sm, machine=self.m)
         self.yetipilot_container.add_widget(widget_yetipilot)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen

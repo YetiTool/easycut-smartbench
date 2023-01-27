@@ -239,3 +239,12 @@ class Autopilot:
         self.spindle_load_stack[:] = []
         if self.autopilot_logger:
             self.autopilot_logger.reset()
+
+    def set_target_power(self, target_power):
+        self.spindle_target_watts = target_power
+
+    def toggle(self):
+        if self.m.s.autopilot_flag:
+            self.stop()
+        else:
+            self.start()

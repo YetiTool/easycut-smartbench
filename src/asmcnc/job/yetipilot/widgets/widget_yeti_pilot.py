@@ -4,6 +4,7 @@ from kivy.lang import Builder
 
 Builder.load_string("""
 <YetiPilotWidget>:
+    power_slider:power_slider
     BoxLayout:
         orientation: 'horizontal'
         size: self.parent.size
@@ -29,9 +30,11 @@ Builder.load_string("""
                 size_hint_x: 0.2
                 
             Slider:
+                id: power_slider
                 min: 0
                 max: 100
                 step: 1
+                on_value: root.on_slider_value_change()
             
             Label:
                 text: '100'
@@ -40,19 +43,18 @@ Builder.load_string("""
 
 """)
 
-from asmcnc.job.yetipilot.screens.screen_yeti_pilot_cancel import YetiPilotCancelScreen
-
 
 class YetiPilotWidget(Widget):
     def __init__(self, **kwargs):
         super(YetiPilotWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
 
     def toggle_yeti_pilot(self):
-        if not self.sm.has_screen('yeti_pilot_cancel'):
-            yeti_pilot_cancel = YetiPilotCancelScreen(name='yeti_pilot_cancel', screen_manager=self.sm)
-            self.sm.add_widget(yeti_pilot_cancel)
+        if self.m.s.autopilot_instance is not None:
+            self.m.s.autopilot_instance.toggle()
 
-        self.sm.current = 'yeti_pilot_cancel'
-
+    def on_slider_value_change(self):
+        if self.m.s.autopilot_instance is not None:
+            self.m.s.autopilot_instance.set_target_power(self.power_slider.value * 20)
 

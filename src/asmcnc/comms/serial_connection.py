@@ -793,7 +793,7 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
-    autopilot_flag = True
+    autopilot_flag = False
     autopilot_instance = None
 
     spindle_data_failures = 0
