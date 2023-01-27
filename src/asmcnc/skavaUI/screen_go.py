@@ -25,7 +25,7 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
     popup_info  # @UnresolvedImport
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
-from asmcnc.job.autopilot.widgets.widget_yeti_pilot import YetiPilotWidget
+from asmcnc.job.yetipilot.widgets.widget_yeti_pilot import YetiPilotWidget
 
 
 Builder.load_string("""
@@ -425,7 +425,7 @@ class GoScreen(Screen):
 
         self.update_strings()
 
-        widget_yetipilot = YetiPilotWidget()
+        widget_yetipilot = YetiPilotWidget(screen_manager=self.sm)
         self.yetipilot_container.add_widget(widget_yetipilot)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen

@@ -40,12 +40,19 @@ Builder.load_string("""
 
 """)
 
+from asmcnc.job.yetipilot.screens.screen_yeti_pilot_cancel import YetiPilotCancelScreen
+
 
 class YetiPilotWidget(Widget):
     def __init__(self, **kwargs):
         super(YetiPilotWidget, self).__init__(**kwargs)
+        self.sm = kwargs['screen_manager']
 
     def toggle_yeti_pilot(self):
-        pass
+        if not self.sm.has_screen('yeti_pilot_cancel'):
+            yeti_pilot_cancel = YetiPilotCancelScreen(name='yeti_pilot_cancel', screen_manager=self.sm)
+            self.sm.add_widget(yeti_pilot_cancel)
+
+        self.sm.current = 'yeti_pilot_cancel'
 
 
