@@ -1745,7 +1745,7 @@ class RouterMachine(object):
         ]
 
     homing_seq_first_delay = [
-        1,
+        10,
         0,
         0.1,
         0,
