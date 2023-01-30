@@ -1,5 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from asmcnc.job.yetipilot.main.yetipilot import YetiPilot
 
 
 Builder.load_string("""
@@ -51,8 +52,9 @@ class YetiPilotWidget(Widget):
         self.m = kwargs['machine']
 
     def toggle_yeti_pilot(self):
-        if self.m.s.autopilot_instance is not None:
-            self.m.s.autopilot_instance.toggle()
+        if not self.m.s.autopilot_instance:
+            self.m.s.autopilot_instance = YetiPilot(screen_manager=self.sm, machine=self.m)
+        self.m.s.autopilot_instance.toggle()
 
     def on_slider_value_change(self):
         if self.m.s.autopilot_instance is not None:
