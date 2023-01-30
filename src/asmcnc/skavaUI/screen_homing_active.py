@@ -110,76 +110,77 @@ class HomingScreenActive(Screen):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
             self.m.reset_pre_homing()
-            self.start_homing_event = Clock.schedule_once(lambda dt: self.start_homing(),0.4)
+            # self.start_homing_event = Clock.schedule_once(lambda dt: self.start_homing(),0.4)
+            self.m.do_standard_homing_sequence()
 
 
-    def start_homing(self):
+    # def start_homing(self):
 
-        # Issue homing commands
-        normal_homing_sequence = ['$H']
-        self.m.s.start_sequential_stream(normal_homing_sequence)
+    #     # Issue homing commands
+    #     normal_homing_sequence = ['$H']
+    #     self.m.s.start_sequential_stream(normal_homing_sequence)
 
-        # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-        self.m.set_state('Home') 
+    #     # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
+    #     self.m.set_state('Home') 
 
-        # Check for completion - since it's a sequential stream, need a poll loop
-        self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+    #     # Check for completion - since it's a sequential stream, need a poll loop
+    #     self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
        
      
-    def check_for_successful_completion(self, dt):
+    # def check_for_successful_completion(self, dt):
 
-        # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.m.state().startswith('Alarm'):
-            print "Poll for homing success unscheduled"
-            if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+    #     # if alarm state is triggered which prevents homing from completing, stop checking for success
+    #     if self.m.state().startswith('Alarm'):
+    #         print "Poll for homing success unscheduled"
+    #         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
-        # if sequential_stream completes successfully
-        elif self.m.s.is_sequential_streaming == False:
-            print "Homing detected as success!"
-            self.homing_detected_as_complete()
+    #     # if sequential_stream completes successfully
+    #     elif self.m.s.is_sequential_streaming == False:
+    #         print "Homing detected as success!"
+    #         self.homing_detected_as_complete()
 
 
-    def homing_detected_as_complete(self):
+    # def homing_detected_as_complete(self):
 
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-        self.m.is_machine_homed = True # clear this flag too
+    #     if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+    #     self.m.is_machine_homed = True # clear this flag too
         
-        if self.m.is_squaring_XY_needed_after_homing:
-            self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
-            self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
-            self.sm.current = 'squaring_active'
-        else: 
-            self.m.is_machine_completed_the_initial_squaring_decision = True
+    #     if self.m.is_squaring_XY_needed_after_homing:
+    #         self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
+    #         self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
+    #         self.sm.current = 'squaring_active'
+    #     else: 
+    #         self.m.is_machine_completed_the_initial_squaring_decision = True
 
-            # Chosen to sync with grbl after homing. Ensures that no clash of threads on boot, and that grbl is in definte ready state. So user must home!
-            # Enter any initial grbl settings into this list
-            # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
-            # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR.
-            # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost.
-            # Sequential streaming handles this
-            grbl_settings = [
-                        '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                        '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
-                        '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
-                        ]
-            self.m.s.start_sequential_stream(grbl_settings)
+    #         # Chosen to sync with grbl after homing. Ensures that no clash of threads on boot, and that grbl is in definte ready state. So user must home!
+    #         # Enter any initial grbl settings into this list
+    #         # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
+    #         # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR.
+    #         # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost.
+    #         # Sequential streaming handles this
+    #         grbl_settings = [
+    #                     '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+    #                     '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
+    #                     '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
+    #                     ]
+    #         self.m.s.start_sequential_stream(grbl_settings)
 
-            Clock.schedule_once(lambda dt: self.post_homing_sequence(), 1)
+    #         Clock.schedule_once(lambda dt: self.post_homing_sequence(), 1)
 
 
-    def post_homing_sequence(self):
+    # def post_homing_sequence(self):
 
-        # If laser is enabled, move by offset
-        if self.m.is_laser_enabled:
+    #     # If laser is enabled, move by offset
+    #     if self.m.is_laser_enabled:
 
-            tolerance = 5 # mm
+    #         tolerance = 5 # mm
 
-            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
-            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
+    #         print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
+    #         self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
 
-        # allow breather for sequential stream to process
-        Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
-        Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
+    #     # allow breather for sequential stream to process
+    #     Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
+    #     Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
 
 
     def after_successful_completion_return_to_screen(self):

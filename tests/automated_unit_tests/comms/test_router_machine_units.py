@@ -157,65 +157,208 @@ def test_set_current_without_correct_FW(m):
     m.send_command_to_motor = Mock()
     assert not m.set_motor_current(axis, current)
 
+# IS SMARTBENCH BUSY
+
+def make_smartbench_not_busy(m):
+    m.state = Mock(return_value="Idle")
+    m.s.is_sequential_streaming = False
+    m.s.write_command_buffer = []
+    m.s.write_realtime_buffer = []
+    m.s.write_protocol_buffer = []
+    m.s.serial_blocks_available = m.s.GRBL_BLOCK_SIZE
+    m.s.serial_chars_available = m.s.RX_BUFFER_SIZE
+    m.s.grbl_waiting_for_reset = False
+    m.is_machine_paused = False
+
+def test_smartbench_is_busy_in_alarm_state(m):
+    m.state = Mock(return_value="Alarm")
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_sequential_streaming(m):
+    m.s.is_sequential_streaming = True
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_command_buffer_full(m):
+    m.s.write_command_buffer = ["GRBL"]
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_realtime_buffer_full(m):
+    m.s.write_realtime_buffer = ["GRBL"]
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_protocol_buffer_full(m):
+    m.s.write_protocol_buffer = ["GRBL"]
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_serial_blocks_not_empty(m):
+    m.s.serial_blocks_available = str("14")
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_serial_chars_not_empty(m):
+    m.s.serial_chars_available = str("20")
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_grbl_waiting_for_reset(m):
+    m.s.grbl_waiting_for_reset = True
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_busy_if_machine_paused(m):
+    m.is_machine_paused = True
+    assert m.smartbench_is_busy()
+
+def test_smartbench_is_not_busy(m):
+    make_smartbench_not_busy(m)
+    assert not m.smartbench_is_busy()
 
 # HOMING UNIT TESTS
 
 def test_motor_self_adjustment_disables_y_motors(m):
     # spy on disable y motors
-    pass
+    m.motor_self_adjustment()
 
 def test_start_homing(m):
-    pass
+    m.start_homing()
 
 def test_disable_stall_detection_before_auto_squaring(m):
-    pass
+    m.disable_stall_detection_before_auto_squaring()
 
 def test_start_auto_squaring(m):
-    pass
+    m.start_auto_squaring()
 
 def test_start_calibrating_after_homing(m):
-    pass
+    m.start_calibrating_after_homing()
 
 def test_enable_stall_detection_after_calibrating(m):
-    pass
+    m.enable_stall_detection_after_calibrating()
 
 def test_move_to_accommodate_laser_offset(m):
-    pass
+    m.move_to_accommodate_laser_offset()
 
-# def test_schedule_home_seq_event(m):
-#     m.next_homing_seq_event = None
-#     def nested_func(): pass
-#     m.next_homing_seq_event = m.schedule_event(nested_func, 10)
-#     assert m.next_homing_seq_event != None
+def test_schedule_homing_event_works_and_does_not_duplicate_callbacks(m):
+    m.homing_seq_events = []
+    def nested_func(): pass
+    m.schedule_homing_event(nested_func)
+    m.schedule_homing_event(nested_func)
+    assert len(m.homing_seq_events) == 1
+    assert m.homing_seq_events[0].get_callback() == nested_func
 
+def test_schedule_homing_event_works_and_holds_multiple_funcs(m):
+    m.homing_seq_events = []
+    def nested_func(): pass
+    def another_nested_func(): pass
+    m.schedule_homing_event(nested_func)
+    m.schedule_homing_event(another_nested_func)
+    m.schedule_homing_event(nested_func)
+    assert len(m.homing_seq_events) == 2
+    # note that it's the earlier func that gets cleared & deleted when the same callback is scheduled again
+    assert m.homing_seq_events[0].get_callback() == another_nested_func
+    assert m.homing_seq_events[1].get_callback() == nested_func
 
-# def test_quick_clock():
+def test_resched_homing_task_if_busy(m):
+    m.homing_seq_events == []
+    m.smartbench_is_busy = Mock(return_value=True)
+    def nested_func(): pass
+    assert m.reschedule_homing_task_if_busy(nested_func, delay=1)
+    assert m.homing_seq_events[0].get_callback() == nested_func
 
-#     def nested_func(a): return a
-#     new_event = Clock.schedule_once(lambda dt: nested_func(1), 0.01)
-#     # another_event = Clock.schedule_once(lambda dt: nested_func(1), 0.01)
-#     assert new_event.get_callback() == nested_func
-#     l = [new_event]
-#     new = [ev for ev in l if nested_func == ev.get_callback()]
-#     assert new == []
+def test_resched_homing_task_if_busy_returns_false_if_not_busy(m):
+    m.homing_seq_events == []
+    m.smartbench_is_busy = Mock(return_value=False)
+    def nested_func(): pass
+    assert not m.reschedule_homing_task_if_busy(nested_func, delay=1)
+    assert m.homing_seq_events == []
 
+def test_unschedule_homing_events(m):
+    m.homing_seq_events = []
+    def nested_func(): pass
+    def another_nested_func(): pass
+    m.schedule_homing_event(nested_func)
+    m.unschedule_homing_events()
+    assert m.homing_seq_events == []
 
+def test_reset_homing_sequence_flags(m):
+    m.completed_homing_tasks = [True]*3
+    m.homing_completed_task_idx = "Dogs"
+    m.homing_seq_events = ["Eggs"]
+    m.reset_homing_sequence_flags()
+    assert m.completed_homing_tasks == [False]*7
+    assert m.homing_completed_task_idx == 0
+    assert m.homing_seq_events == []
 
-# def test_unschedule_home_seq_events(m):
-#     m.next_homing_seq_event = None
-#     def nested_func(): pass
-#     m.schedule_event(nested_func, m.next_homing_seq_event, 10)
-#     assert m.next_homing_seq_event is not None
-#     m.clear_event(m.next_homing_seq_event)
-#     assert m.next_homing_seq_event is None
+def test_do_standard_homing_sequence_with_spys(m):
+    m.homing_in_progress = False
+    m.reset_homing_sequence_flags = Mock()
+    m.reset_pre_homing = Mock()
+    m.homing_funcs_list[0] = Mock()
+    m.complete_homing_task = Mock()
+    m.do_next_task_in_sequence = Mock()
+    m.do_standard_homing_sequence()
+    assert m.homing_in_progress
+    m.reset_homing_sequence_flags.assert_called()
+    m.reset_pre_homing.assert_called()
+    m.homing_funcs_list[0].assert_called()
+    m.complete_homing_task.assert_called()
+    m.do_next_task_in_sequence.assert_called()
 
-# def test_reschedule_if_busy(m):
-#     m.homing_sequence_clocks = []
-#     def nested_func(): pass
-#     m.smartbench_is_busy = Mock(return_value=True)
-#     event = m.reschedule_if_busy(nested_func, delay=0.01)
-#     assert event
-#     assert event in m.homing_sequence_clocks
-#     m.unschedule_home_seq_events()
-#     assert m.homing_sequence_clocks == []
+def test_do_standard_homing_sequence_with_actual_funcs(m):
+    m.homing_in_progress = False
+    m.do_standard_homing_sequence()
+    assert m.homing_in_progress
 
+def test_complete_homing_sequence(m):
+    m.reset_homing_sequence_flags()
+    m.homing_in_progress = True
+    m.reset_homing_sequence_flags = Mock()
+    m.complete_homing_sequence()
+    m.reset_homing_sequence_flags.assert_called()
+    assert not m.homing_in_progress
+
+def test_complete_homing_task_when_busy(m):
+    m.reset_homing_sequence_flags()
+    m.homing_completed_task_idx = 0
+    m.smartbench_is_busy = Mock(return_value=True)
+    m.complete_homing_task()
+    assert not m.completed_homing_tasks[m.homing_completed_task_idx]
+
+def test_complete_homing_task_when_idle(m):
+    m.reset_homing_sequence_flags()
+    m.homing_completed_task_idx = 3
+    m.smartbench_is_busy = Mock(return_value=False)
+    m.complete_homing_task()
+    assert m.completed_homing_tasks[m.homing_completed_task_idx]
+
+def test_if_last_task_complete(m):
+    i = 2
+    m.homing_completed_task_idx = i
+    m.completed_homing_tasks[m.homing_completed_task_idx] = True
+    assert m.if_last_task_complete()
+    assert m.homing_completed_task_idx == i + 1
+
+def test_if_last_task_complete_when_not_ready(m):
+    i = 2
+    m.homing_completed_task_idx = i
+    m.completed_homing_tasks[m.homing_completed_task_idx] = False
+    assert not m.if_last_task_complete()
+    assert m.homing_completed_task_idx == i
+
+def test_do_next_task_in_sequence_when_ready(m):
+    m.reset_homing_sequence_flags()
+    m.homing_completed_task_idx = 3
+    m.homing_funcs_list[m.homing_completed_task_idx] = Mock()
+    m.if_last_task_complete = Mock(return_value=True)
+    m.do_next_task_in_sequence()
+    m.homing_funcs_list[m.homing_completed_task_idx].assert_called()
+    assert m.homing_seq_events[0].get_callback() == m.complete_homing_task
+
+def test_do_next_task_in_sequence_with_actual_funcs(m):
+    m.reset_homing_sequence_flags()
+    m.homing_completed_task_idx = 4
+    m.smartbench_is_busy = Mock(return_value=False)
+    m.if_last_task_complete = Mock(return_value=True)
+    m.do_next_task_in_sequence()
+    assert m.homing_seq_events[0].get_callback() == m.complete_homing_task
+
+def test_do_next_task_in_sequence_when_not_ready(m):
+    m.reset_homing_sequence_flags()
+    m.do_next_task_in_sequence()
+    assert m.homing_seq_events[0].get_callback() == m.do_next_task_in_sequence
