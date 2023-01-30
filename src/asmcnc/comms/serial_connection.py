@@ -21,6 +21,8 @@ from asmcnc.core_UI.sequence_alarm import alarm_manager
 
 from math import sqrt
 
+from asmcnc.job.yetipilot.main.yetipilot import YetiPilot
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -1014,17 +1016,15 @@ class SerialConnection(object):
                             #TODO: notify user
 
                         if self.digital_spindle_ld_qdA > 0:
-                            if self.autopilot_flag:
-                                if self.autopilot_instance:
-                                    if not self.autopilot_instance.spindle_mains_voltage:
-                                        if self.spindle_data_error_buffer == 3:
-                                            self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
-                                            self.autopilot_instance.first_read_setup()
-                                        else:
-                                            self.spindle_data_error_buffer += 1
+                            if self.autopilot_instance:
+                                if self.spindle_data_error_buffer == 3:
+                                    self.autopilot_instance.spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                else:
+                                    self.spindle_data_error_buffer += 1
 
-                                    self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
-
+                                self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA)
+                            else:
+                                self.autopilot_instance = YetiPilot(screen_manager=self.sm, machine=self.m)
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0

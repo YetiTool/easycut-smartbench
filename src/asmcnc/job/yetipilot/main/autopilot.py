@@ -9,7 +9,7 @@ from math import sqrt, floor
 
 from kivy.clock import Clock
 
-from autopilot_logger import AutoPilotLogger
+from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
 
 
 class Autopilot:
