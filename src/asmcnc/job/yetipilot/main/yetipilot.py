@@ -30,7 +30,8 @@ def get_adjustment(feed_multiplier):
 
 
 def limit_adjustments(adjustments):
-    return sorted(adjustments, key=abs)[0]
+    adjustments = sorted(adjustments, key=abs)
+    return adjustments[0] if len(adjustments) > 0 else None
 
 
 class YetiPilot:
@@ -96,6 +97,11 @@ class YetiPilot:
         feed_multiplier = self.get_feed_multiplier(load)
         adjustments = get_adjustment(feed_multiplier)
         adjustment = limit_adjustments(adjustments)
+
+        if adjustment is None:
+            return
+
+        print('Adjusting: ' + str(adjustment))
 
         if adjustment == 10:
             self.m.feed_override_up_10()
