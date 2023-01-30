@@ -79,6 +79,7 @@ class YetiPilot:
 
     def add_to_stack(self, load):
         if not self.enabled:
+            print('Not enabled')
             return
 
         if len(self.spindle_load_stack) == self.spindle_stack_max_length:
