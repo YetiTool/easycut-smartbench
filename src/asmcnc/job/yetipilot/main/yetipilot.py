@@ -78,6 +78,9 @@ class YetiPilot:
     def set_spindle_voltage(self, voltage):
         self.spindle_mains_voltage = voltage
 
+    def set_target_power(self, power):
+        self.spindle_target_watts = power
+
     def add_to_stack(self, load):
         if not self.enabled:
             print('Not enabled')
