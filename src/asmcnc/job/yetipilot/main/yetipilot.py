@@ -114,6 +114,8 @@ class YetiPilot:
                       float(self.bias_for_feed_increase)) * (float(self.spindle_target_watts) - float(current_power)) \
                      / float(self.spindle_target_watts) * float(self.m_coefficient) * float(self.c_coefficient)
 
+        print('Multiplier for ' + str(current_power) + ' = ' + str(multiplier))
+
         return multiplier
 
 
