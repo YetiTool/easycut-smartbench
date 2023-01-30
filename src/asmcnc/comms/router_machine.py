@@ -1192,30 +1192,39 @@ class RouterMachine(object):
     def smartbench_is_busy(self): 
 
         if not self.state().startswith("Idle"):
+            log("state is: " + self.state())
             return True
 
         if self.s.is_sequential_streaming:
+            log("seq stream: " + str(self.s.is_sequential_streaming))
             return True
 
         if self.s.write_command_buffer: 
+            log("command buffer got stuff")
             return True
 
         if self.s.write_realtime_buffer: 
+            log("realtime buffer got stuff")
             return True
 
         if self.s.write_protocol_buffer: 
+            log("protocol buffer got stuff")
             return True
 
         if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
+            log("serial blocks: " + str(self.s.serial_blocks_available))
             return True
 
         if int(self.s.serial_chars_available) != self.s.RX_BUFFER_SIZE:
+            log("serial chars: " + str(self.s.serial_chars_available))
             return True
 
         if self.s.grbl_waiting_for_reset:
+            log("waiting for reset: " + str(self.s.grbl_waiting_for_reset))
             return True
 
         if self.is_machine_paused:
+            log("machine paused: " + str(self.is_machine_paused))
             return True
 
         return False
@@ -1672,16 +1681,19 @@ class RouterMachine(object):
 
     # components of homing sequence
     def motor_self_adjustment(self, dt=0):
+        log("adjust motors")
         if self.reschedule_homing_task_if_busy(self.motor_self_adjustment): return
         self.disable_y_motors()
         self.schedule_homing_event(self.enable_y_motors, delay=0.5)
     
     def start_homing(self, dt=0):
+        log("homing time")
         if self.reschedule_homing_task_if_busy(self.start_homing): return
         self.set_state('Home') 
         self.s.start_sequential_stream(['$H'], end_dwell=True)
     
     def disable_stall_detection_before_auto_squaring(self, dt=0):
+        log("disable stall detection")
         if self.reschedule_homing_task_if_busy(self.disable_stall_detection_before_auto_squaring): return
         self.disable_stall_detection()
     
@@ -1782,15 +1794,18 @@ class RouterMachine(object):
 
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
+        log("complete homing task")
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
         self.completed_homing_tasks[self.homing_completed_task_idx] = True
 
     def if_last_task_complete(self):
         if self.completed_homing_tasks[self.homing_completed_task_idx]: 
             self.homing_completed_task_idx+=1
+            log("last task complete")
             return True
 
     def do_next_task_in_sequence(self, dt=0):
+        log("do next task")
         if self.if_last_task_complete(): 
             self.homing_funcs_list[self.homing_completed_task_idx](self)
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
