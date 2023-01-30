@@ -9,24 +9,14 @@ def get_adjustment(feed_multiplier):
 
     tens = int(feed_multiplier // 10)
     ones = int(feed_multiplier % 10)
-    moves = [[], []]
 
-    if ones > 5:
-        tens += 1
-        for _ in range(10 - ones):
-            moves[1].append(-1)
-        ones = 0
+    if tens > 0:
+        return -10 if negative else 10
 
-    for _ in range(tens):
-        moves.append(10)
+    if ones > 0:
+        return -1 if negative else 1
 
-    for _ in range(ones):
-        moves.append(1)
-
-    moves[0].extend(moves[1])
-    moves[0] = [-move if negative else move for move in moves[0]]
-
-    return moves[0]
+    return 0
 
 
 def limit_adjustments(adjustments):
