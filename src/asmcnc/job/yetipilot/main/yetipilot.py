@@ -79,7 +79,7 @@ class YetiPilot:
         print('Target power: ' + str(power))
 
     def add_to_stack(self, load):
-        if not self.enabled:
+        if not self.enabled or self.spindle_mains_voltage is None:
             return
 
         if len(self.spindle_load_stack) == self.spindle_stack_max_length:

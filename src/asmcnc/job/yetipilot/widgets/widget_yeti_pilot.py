@@ -23,6 +23,7 @@ Builder.load_string("""
                 
             Switch:
                 id: switch
+                on_touch_down: self.toggle_yeti_pilot()
             
         BoxLayout:
             spacing: 0
