@@ -1676,8 +1676,8 @@ class RouterMachine(object):
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
         self.homing_funcs_list[0](self)
-        self.schedule_homing_event(self.do_next_task_in_sequence()
-        self.schedule_homing_event(self.complete_homing_task(), 1)
+        self.schedule_homing_event(self.do_next_task_in_sequence)
+        self.schedule_homing_event(self.complete_homing_task, 1)
 
 
     # components of homing sequence
