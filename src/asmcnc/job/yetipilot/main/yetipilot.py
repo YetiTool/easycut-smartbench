@@ -76,6 +76,7 @@ class YetiPilot:
 
     def set_target_power(self, power):
         self.spindle_target_watts = power
+        print('Target power: ' + str(power))
 
     def add_to_stack(self, load):
         if not self.enabled:
@@ -98,8 +99,6 @@ class YetiPilot:
 
         if adjustment is None:
             return
-
-        print('Adjusting: ' + str(adjustment))
 
         if adjustment == 10:
             self.m.feed_override_up_10()
