@@ -33,7 +33,7 @@ Builder.load_string("""
                 
             Slider:
                 id: power_slider
-                min: 0
+                min: 1
                 max: 100
                 step: 1
                 on_value: root.on_slider_value_change()
