@@ -6,6 +6,7 @@ from asmcnc.job.yetipilot.main.yetipilot import YetiPilot
 Builder.load_string("""
 <YetiPilotWidget>:
     power_slider:power_slider
+    switch:switch
     BoxLayout:
         orientation: 'horizontal'
         size: self.parent.size
@@ -21,7 +22,7 @@ Builder.load_string("""
                 markup: True
                 
             Switch:
-                on_touch_down: root.toggle_yeti_pilot()
+                id: switch
             
         BoxLayout:
             spacing: 0
@@ -54,7 +55,7 @@ class YetiPilotWidget(Widget):
     def toggle_yeti_pilot(self):
         if not self.m.s.autopilot_instance:
             self.m.s.autopilot_instance = YetiPilot(screen_manager=self.sm, machine=self.m)
-        self.m.s.autopilot_instance.toggle()
+        self.m.s.autopilot_instance.set_enabled(self.switch.active)
 
     def on_slider_value_change(self):
         if self.m.s.autopilot_instance is not None:

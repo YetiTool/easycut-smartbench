@@ -68,12 +68,8 @@ class YetiPilot:
     def stop(self):
         self.enabled = False
 
-    def toggle(self):
-        if self.enabled:
-            self.stop()
-            return
-
-        self.start()
+    def set_enabled(self, enabled):
+        self.enabled = enabled
 
     def set_spindle_voltage(self, voltage):
         self.spindle_mains_voltage = voltage
@@ -83,7 +79,6 @@ class YetiPilot:
 
     def add_to_stack(self, load):
         if not self.enabled:
-            print('Not enabled')
             return
 
         if len(self.spindle_load_stack) == self.spindle_stack_max_length:
