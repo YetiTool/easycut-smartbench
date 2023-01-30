@@ -1313,7 +1313,7 @@ class RouterMachine(object):
             self.send_command_to_motor("Disable Y1 motor", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=0)
             self.send_command_to_motor("Disable Y2 motor", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=0)
 
-    def enable_y_motors(self):
+    def enable_y_motors(self, dt=0):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Enable y motors'):
             self.send_command_to_motor("Enable Y1 motor", motor=TMC_Y1, command=SET_MOTOR_ENERGIZED, value=1)
             self.send_command_to_motor("Enable Y2 motor", motor=TMC_Y2, command=SET_MOTOR_ENERGIZED, value=1)
