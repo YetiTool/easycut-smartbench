@@ -1676,8 +1676,9 @@ class RouterMachine(object):
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
         self.homing_funcs_list[0](self)
-        self.complete_homing_task()
-        self.do_next_task_in_sequence()
+        self.schedule_homing_event(self.do_next_task_in_sequence()
+        self.schedule_homing_event(self.complete_homing_task(), 1)
+
 
     # components of homing sequence
     def motor_self_adjustment(self, dt=0):
@@ -1794,14 +1795,15 @@ class RouterMachine(object):
 
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
-        log("complete homing task")
+        log("complete homing task " + str(self.homing_completed_task_idx))
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
         self.completed_homing_tasks[self.homing_completed_task_idx] = True
 
     def if_last_task_complete(self):
         if self.completed_homing_tasks[self.homing_completed_task_idx]: 
+            log("last task complete " + str(self.homing_completed_task_idx))
             self.homing_completed_task_idx+=1
-            log("last task complete")
+            log("next task " + str(self.homing_completed_task_idx))
             return True
 
     def do_next_task_in_sequence(self, dt=0):
@@ -1809,8 +1811,8 @@ class RouterMachine(object):
         if self.if_last_task_complete(): 
             self.homing_funcs_list[self.homing_completed_task_idx](self)
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
-        else: 
-            self.schedule_homing_event(self.do_next_task_in_sequence)
+
+        self.schedule_homing_event(self.do_next_task_in_sequence)
 
 
 # Z PROBE
