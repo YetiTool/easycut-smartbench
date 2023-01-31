@@ -1676,7 +1676,8 @@ class RouterMachine(object):
         log("Start homing sequence")
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
-        self.homing_funcs_list[0](self)
+        self.setup_homing_funcs_list()
+        self.homing_funcs_list[0]()
         self.schedule_homing_event(self.do_next_task_in_sequence)
         self.schedule_homing_event(self.complete_homing_task)
 
@@ -1754,19 +1755,7 @@ class RouterMachine(object):
         log("Complete homing sequence")
 
     ## homing event handling (needs testing, might not work (: )
-
-    homing_funcs_list = [
-
-        motor_self_adjustment,
-        start_homing,
-        disable_stall_detection_before_auto_squaring,
-        start_auto_squaring,
-        start_calibrating_after_homing,
-        enable_stall_detection_after_calibrating,
-        move_to_accommodate_laser_offset,
-        complete_homing_sequence
-
-        ]
+    homing_funcs_list = []
 
     homing_seq_first_delay = [
         2,
@@ -1782,6 +1771,21 @@ class RouterMachine(object):
     completed_homing_tasks = [False]*7
     homing_completed_task_idx = 0
     homing_seq_events = []
+
+    def setup_homing_funcs_list(self):
+
+        self.homing_funcs_list = [
+
+            self.motor_self_adjustment,
+            self.start_homing,
+            self.disable_stall_detection_before_auto_squaring,
+            self.start_auto_squaring,
+            self.start_calibrating_after_homing,
+            self.enable_stall_detection_after_calibrating,
+            self.move_to_accommodate_laser_offset,
+            self.complete_homing_sequence
+
+            ]
 
     def schedule_homing_event(self, func, delay=0.5):
         self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
@@ -1803,6 +1807,7 @@ class RouterMachine(object):
         self.unschedule_homing_events()
         self.completed_homing_tasks = [False]*7
         self.homing_completed_task_idx = 0
+        self.homing_funcs_list = []
 
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
