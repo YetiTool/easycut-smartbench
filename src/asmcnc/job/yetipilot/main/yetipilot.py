@@ -73,9 +73,6 @@ class YetiPilot:
     def stop(self):
         self.enabled = False
 
-        if self.logger is not None:
-            self.logger.export_to_gsheet()
-
     def set_enabled(self, enabled):
         if enabled:
             self.start()
