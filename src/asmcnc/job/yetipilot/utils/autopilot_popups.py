@@ -12,7 +12,7 @@ class PopupSendData(Widget):
         total_rows = 0
 
         if self.m.s.autopilot_instance:
-            total_rows = len(self.m.s.autopilot_instance.autopilot_logger.logs)
+            total_rows = len(self.m.s.autopilot_instance.logger.logs)
 
         description = "Would you like to export data to GSheets?\nThere are currently " + str(total_rows) + " rows of data."
         title_string = 'Export?'
