@@ -1330,7 +1330,7 @@ class RouterMachine(object):
         if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
             self.send_command_to_motor("SET SG ALARM: 0", command=SET_SG_ALARM)
 
-    def enable_stall_detection(self):
+    def enable_stall_detection(self, dt=0):
         if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
             self.send_command_to_motor("SET SG ALARM: 1", command=SET_SG_ALARM, value=1)
 
@@ -1687,21 +1687,14 @@ class RouterMachine(object):
 
     # components of homing sequence
     def motor_self_adjustment(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.motor_self_adjustment): return
         log("Adjust motors")
         self.disable_y_motors()
         self.schedule_homing_event(self.enable_y_motors, delay=0.5)
     
     def start_homing(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.start_homing): return
         log("Start GRBL Homing")
         self.set_state('Home') 
         self.s.start_sequential_stream(['$H'])
-    
-    def disable_stall_detection_before_auto_squaring(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.disable_stall_detection_before_auto_squaring): return
-        log("Disable stall detection")
-        self.disable_stall_detection()
     
     def start_auto_squaring(self, dt=0):
         '''
@@ -1712,7 +1705,6 @@ class RouterMachine(object):
         We're waiting for grbl responses before we send each line, as we're editing GRBL dollar settings
         Delays after $ settings will be auto-inserted by serial connection module
         '''
-        if self.reschedule_homing_task_if_busy(self.start_auto_squaring): return
         if not self.is_squaring_XY_needed_after_homing: 
             log("Skip auto squaring")
             return
@@ -1737,27 +1729,14 @@ class RouterMachine(object):
         self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
 
     def query_grbl_settings_modes_and_info(self, dt=0):
-            if self.reschedule_homing_task_if_busy(self.query_grbl_settings_modes_and_info): return
-
-            query_grbl_list_to_stream = [
-                        '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                        '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
-                        '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
-                        ]
-            self.s.start_sequential_stream(query_grbl_list_to_stream)
-    
-    def start_calibrating_after_homing(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.start_calibrating_after_homing): return
-        log("Start calibrating after homing")
-        self.calibrate_all_three_axes()
-    
-    def enable_stall_detection_after_calibrating(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.enable_stall_detection_after_calibrating): return
-        log("Enable stall detection")
-        self.enable_stall_detection()
+        query_grbl_list_to_stream = [
+                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                    '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
+                    '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
+                    ]
+        self.s.start_sequential_stream(query_grbl_list_to_stream)
     
     def move_to_accommodate_laser_offset(self, dt=0):
-        if self.reschedule_homing_task_if_busy(self.move_to_accommodate_laser_offset): return
         if not self.is_laser_enabled: return
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
@@ -1778,30 +1757,32 @@ class RouterMachine(object):
     homing_funcs_list = []
 
     homing_seq_first_delay = [
-        0,    # null
-        1,    # 0: motor_self_adjustment - start_homing
-        0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
-        0.1,  # 2: disable_stall_detection_before_auto_squaring - start_auto_squaring
-        0,    # 3: start_auto_squaring - query_grbl_settings_modes_and_info
-        0,    # 4: query_grbl_settings_modes_and_info - start_calibrating_after_homing
-        0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
-        0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
-        0,    # 7: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 0: null
+        0.5,  # 1: disable_y_motors - enable_y_motors
+        0.5,  # 2: enable_y_motors - start_homing
+        0,    # 3: start_homing - disable_stall_detection_before_auto_squaring
+        0.1,  # 4: disable_stall_detection_before_auto_squaring - start_auto_squaring
+        0,    # 5: start_auto_squaring - query_grbl_settings_modes_and_info
+        0,    # 6: query_grbl_settings_modes_and_info - start_calibrating_after_homing
+        0,    # 7: start_calibrating_after_homing - enable_stall_detection_after_calibrating
+        0.1,  # 8: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
+        0,    # 9: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
 
         self.homing_funcs_list = [
 
-            self.motor_self_adjustment,                         # 0
-            self.start_homing,                                  # 1
-            self.disable_stall_detection_before_auto_squaring,  # 2
-            self.start_auto_squaring,                           # 3
-            self.query_grbl_settings_modes_and_info,            # 4
-            self.start_calibrating_after_homing,                # 5
-            self.enable_stall_detection_after_calibrating,      # 6
-            self.move_to_accommodate_laser_offset,              # 7
-            self.complete_homing_sequence                       # 8
+            self.disable_y_motors,                              # 0
+            self.enable_y_motors,                               # 1
+            self.start_homing,                                  # 2
+            self.disable_stall_detection,                       # 3
+            self.start_auto_squaring,                           # 4
+            self.query_grbl_settings_modes_and_info,            # 5
+            self.calibrate_all_three_axes,                      # 6
+            self.enable_stall_detection,                        # 7
+            self.move_to_accommodate_laser_offset,              # 8
+            self.complete_homing_sequence                       # 9
 
             ]
 
@@ -1812,6 +1793,7 @@ class RouterMachine(object):
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
     def reschedule_homing_task_if_busy(self, func, delay=0.2):
+
         if self.smartbench_is_busy() or self.run_calibration:
             self.schedule_homing_event(func, delay)
             return True
@@ -1844,12 +1826,15 @@ class RouterMachine(object):
 
     def do_next_task_in_sequence(self, dt=0):
         if self.if_last_task_complete(): 
-            self.schedule_homing_event(self.homing_funcs_list[self.homing_task_idx], delay=self.homing_seq_first_delay[self.homing_task_idx])
+            self.schedule_homing_event(self.next_homing_task_wrapper, self.homing_seq_first_delay[self.homing_task_idx])
             if not self.homing_task_idx: return
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_task_idx])
 
         self.schedule_homing_event(self.do_next_task_in_sequence)
 
+    def next_homing_task_wrapper(self, dt=0):
+        if self.reschedule_homing_task_if_busy(self.next_homing_task_wrapper): return
+        self.homing_funcs_list[self.homing_task_idx]
 
 # Z PROBE
 

@@ -226,29 +226,14 @@ def test_get_setting_53_if_0(m):
 # HOMING UNIT TESTS
 
 # These need fleshing out - first pass was just to ensure they didn't throw errors
-def test_motor_self_adjustment_disables_y_motors(m):
-    m.reschedule_homing_task_if_busy = Mock(return_value=False)
-    m.motor_self_adjustment()
 
 def test_start_homing(m):
     m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.start_homing()
 
-def test_disable_stall_detection_before_auto_squaring(m):
-    m.reschedule_homing_task_if_busy = Mock(return_value=False)
-    m.disable_stall_detection_before_auto_squaring()
-
 def test_start_auto_squaring(m):
     m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.start_auto_squaring()
-
-def test_start_calibrating_after_homing(m):
-    m.reschedule_homing_task_if_busy = Mock(return_value=False)
-    m.start_calibrating_after_homing()
-
-def test_enable_stall_detection_after_calibrating(m):
-    m.reschedule_homing_task_if_busy = Mock(return_value=False)
-    m.enable_stall_detection_after_calibrating()
 
 def test_move_to_accommodate_laser_offset(m):
     m.reschedule_homing_task_if_busy = Mock(return_value=False)
@@ -301,25 +286,25 @@ def test_unschedule_homing_events(m):
 
 def test_reset_homing_sequence_flags(m):
     m.completed_homing_tasks = [True]*3
-    m.homing_completed_task_idx = "Dogs"
+    m.homing_task_idx = "Dogs"
     m.homing_seq_events = ["Eggs"]
     m.reset_homing_sequence_flags()
-    assert m.completed_homing_tasks == [False]*7
-    assert m.homing_completed_task_idx == 0
+    assert m.completed_homing_tasks == []
+    assert m.homing_task_idx == 0
     assert m.homing_seq_events == []
 
 def test_do_standard_homing_sequence_with_spys(m):
     m.homing_in_progress = False
     m.reset_homing_sequence_flags = Mock()
     m.reset_pre_homing = Mock()
-    m.motor_self_adjustment = Mock()
+    m.disable_y_motors = Mock()
     m.complete_homing_task = Mock()
     m.do_next_task_in_sequence = Mock()
     m.do_standard_homing_sequence()
     assert m.homing_in_progress
     m.reset_homing_sequence_flags.assert_called()
     m.reset_pre_homing.assert_called()
-    m.motor_self_adjustment.assert_called()
+    m.disable_y_motors.assert_called()
 
 def test_do_standard_homing_sequence_with_actual_funcs(m):
     m.homing_in_progress = False
@@ -336,46 +321,49 @@ def test_complete_homing_sequence(m):
 
 def test_complete_homing_task_when_busy(m):
     m.reset_homing_sequence_flags()
-    m.homing_completed_task_idx = 0
+    m.setup_homing_funcs_list()
+    m.homing_task_idx = 0
     m.smartbench_is_busy = Mock(return_value=True)
     m.complete_homing_task()
-    assert not m.completed_homing_tasks[m.homing_completed_task_idx]
+    assert not m.completed_homing_tasks[m.homing_task_idx]
 
 def test_complete_homing_task_when_idle(m):
     m.reset_homing_sequence_flags()
-    m.homing_completed_task_idx = 3
+    m.setup_homing_funcs_list()
+    m.homing_task_idx = 3
     m.smartbench_is_busy = Mock(return_value=False)
     m.complete_homing_task()
-    assert m.completed_homing_tasks[m.homing_completed_task_idx]
+    assert m.completed_homing_tasks[m.homing_task_idx]
 
 def test_if_last_task_complete(m):
     i = 2
-    m.homing_completed_task_idx = i
-    m.completed_homing_tasks[m.homing_completed_task_idx] = True
+    m.homing_task_idx = i
+    m.setup_homing_funcs_list()
+    m.completed_homing_tasks[m.homing_task_idx] = True
     assert m.if_last_task_complete()
-    assert m.homing_completed_task_idx == i + 1
+    assert m.homing_task_idx == i + 1
 
 def test_if_last_task_complete_when_not_ready(m):
     i = 2
-    m.homing_completed_task_idx = i
-    m.completed_homing_tasks[m.homing_completed_task_idx] = False
+    m.homing_task_idx = i
+    m.setup_homing_funcs_list()
+    m.completed_homing_tasks[m.homing_task_idx] = False
     assert not m.if_last_task_complete()
-    assert m.homing_completed_task_idx == i
+    assert m.homing_task_idx == i
 
 def test_do_next_task_in_sequence_when_ready(m):
     m.reset_homing_sequence_flags()
     m.setup_homing_funcs_list()
-    m.homing_completed_task_idx = 3
-    m.homing_funcs_list[m.homing_completed_task_idx] = Mock()
+    m.homing_task_idx = 3
     m.if_last_task_complete = Mock(return_value=True)
     m.do_next_task_in_sequence()
-    assert m.homing_seq_events[0].get_callback() == m.homing_funcs_list[m.homing_completed_task_idx]
+    assert m.homing_seq_events[0].get_callback() == m.next_homing_task_wrapper
     assert m.homing_seq_events[1].get_callback() == m.complete_homing_task
 
 def test_do_next_task_in_sequence_with_actual_funcs(m):
     m.reset_homing_sequence_flags()
     m.setup_homing_funcs_list()
-    m.homing_completed_task_idx = 4
+    m.homing_task_idx = 4
     m.smartbench_is_busy = Mock(return_value=False)
     m.if_last_task_complete = Mock(return_value=True)
     m.do_next_task_in_sequence()
@@ -383,5 +371,6 @@ def test_do_next_task_in_sequence_with_actual_funcs(m):
 
 def test_do_next_task_in_sequence_when_not_ready(m):
     m.reset_homing_sequence_flags()
+    m.setup_homing_funcs_list()
     m.do_next_task_in_sequence()
     assert m.homing_seq_events[0].get_callback() == m.do_next_task_in_sequence
