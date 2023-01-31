@@ -1772,8 +1772,8 @@ class RouterMachine(object):
 
     ## homing event handling (needs testing, might not work (: )
     homing_in_progress = False
-    completed_homing_tasks = [False]*7
     homing_task_idx = 0
+    completed_homing_tasks = []
     homing_seq_events = []
     homing_funcs_list = []
 
@@ -1805,6 +1805,8 @@ class RouterMachine(object):
 
             ]
 
+        self.completed_homing_tasks = [False]*len(self.homing_funcs_list-1)
+
     def schedule_homing_event(self, func, delay=0.2):
         self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
@@ -1823,7 +1825,7 @@ class RouterMachine(object):
     ## use flags to track progress through sequence
     def reset_homing_sequence_flags(self):
         self.unschedule_homing_events()
-        self.completed_homing_tasks = [False]*7
+        self.completed_homing_tasks = []
         self.homing_task_idx = 0
         self.homing_funcs_list = []
 
