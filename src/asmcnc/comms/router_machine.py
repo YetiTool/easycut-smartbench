@@ -1735,6 +1735,16 @@ class RouterMachine(object):
                                   '$H'
                                   ]
         self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
+
+    def query_grbl_settings_modes_and_info(self, dt=0):
+            if self.reschedule_homing_task_if_busy(self.query_grbl_settings_modes_and_info): return
+
+            query_grbl_list_to_stream = [
+                        '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                        '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
+                        '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
+                        ]
+            self.s.start_sequential_stream(query_grbl_list_to_stream)
     
     def start_calibrating_after_homing(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.start_calibrating_after_homing): return
@@ -1755,6 +1765,8 @@ class RouterMachine(object):
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
         self.reset_homing_sequence_flags()
+        self.is_machine_completed_the_initial_squaring_decision = True
+        self.is_machine_homed = True
         self.homing_in_progress = False
         log("Complete homing sequence")
 
@@ -1770,10 +1782,11 @@ class RouterMachine(object):
         1,    # 0: motor_self_adjustment - start_homing
         0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
         0.1,  # 2: disable_stall_detection_before_auto_squaring - start_auto_squaring
-        0,    # 3: start_auto_squaring - start_calibrating_after_homing
-        0,    # 4: start_calibrating_after_homing - enable_stall_detection_after_calibrating
-        0.1,  # 5: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
-        0,    # 6: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 3: start_auto_squaring - query_grbl_settings_modes_and_info
+        0,    # 4: query_grbl_settings_modes_and_info - start_calibrating_after_homing
+        0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
+        0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
+        0,    # 7: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
@@ -1784,10 +1797,11 @@ class RouterMachine(object):
             self.start_homing,                                  # 1
             self.disable_stall_detection_before_auto_squaring,  # 2
             self.start_auto_squaring,                           # 3
-            self.start_calibrating_after_homing,                # 4
-            self.enable_stall_detection_after_calibrating,      # 5
-            self.move_to_accommodate_laser_offset,              # 6
-            self.complete_homing_sequence                       # 7
+            self.query_grbl_settings_modes_and_info             # 4
+            self.start_calibrating_after_homing,                # 5
+            self.enable_stall_detection_after_calibrating,      # 6
+            self.move_to_accommodate_laser_offset,              # 7
+            self.complete_homing_sequence                       # 8
 
             ]
 
