@@ -1794,7 +1794,7 @@ class RouterMachine(object):
 
     def unschedule_homing_events(self):
         for event in self.homing_seq_events:
-            if event != None: Clock.unschedule(event)
+            if event: Clock.unschedule(event)
 
         del self.homing_seq_events[:]
 
@@ -1818,9 +1818,11 @@ class RouterMachine(object):
             return True
 
     def do_next_task_in_sequence(self, dt=0):
+        log("Polling do next task")
         if self.if_last_task_complete(): 
             log("do next task")
             self.homing_funcs_list[self.homing_completed_task_idx](self)
+            if self.homing_completed_task_idx == len(self.homing_funcs_list): return
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
 
         self.schedule_homing_event(self.do_next_task_in_sequence)
