@@ -1674,13 +1674,13 @@ class RouterMachine(object):
 
     def i_am_auto_squaring(self):
 
-        if self.m.homing_task_idx != 3:
+        if self.homing_task_idx != 3:
             return False
 
-        if not m.s.is_sequential_streaming: 
+        if not self.s.is_sequential_streaming: 
             return False
 
-        if len(self.m.s._sequential_stream_buffer) < 2:
+        if len(self.s._sequential_stream_buffer) < 2:
             return False
 
         return True 
