@@ -800,6 +800,8 @@ class SerialConnection(object):
     spindle_data_failures = 0
     spindle_data_error_buffer = 0
 
+    job_start_time = None
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
