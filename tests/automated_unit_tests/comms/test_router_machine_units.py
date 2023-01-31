@@ -232,6 +232,7 @@ def test_enable_stall_detection_after_calibrating(m):
     m.enable_stall_detection_after_calibrating()
 
 def test_move_to_accommodate_laser_offset(m):
+    m.is_laser_enabled = True
     m.move_to_accommodate_laser_offset()
 
 def test_schedule_homing_event_works_and_does_not_duplicate_callbacks(m):
