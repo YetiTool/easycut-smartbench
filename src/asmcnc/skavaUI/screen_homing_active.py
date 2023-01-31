@@ -87,6 +87,7 @@ class HomingScreenActive(Screen):
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
     start_homing_event = None
+    go_to_squaring_screen_event = None
    
     
     def __init__(self, **kwargs):
@@ -97,21 +98,54 @@ class HomingScreenActive(Screen):
         self.l=kwargs['localization']
         self.update_strings()
 
+    def on_enter(self):
+        if sys.platform == 'win32' or sys.platform == 'darwin': return
+        self.m.do_standard_homing_sequence()
+        self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
+
+    def after_successful_completion_return_to_screen(self):
+        self.sm.current = self.return_to_screen
     
+    def on_leave(self):
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
+
+    def poll_for_homing_status_func(self, dt=0):
+        if not self.m.homing_in_progress: self.after_successful_completion_return_to_screen()
+        if self.homing_completed_task_idx == 2: 
+            # in case the sequence quickly skips over auto-squaring, delay screen change
+            self.go_to_squaring_screen_event = Clock.schedule_once(self.go_to_auto_squaring_screen, 0.15)
+
+    def go_to_auto_squaring_screen(self, dt=0):
+        self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
+        self.sm.current = 'squaring_active'
+
+    def cancel_homing(self):
+
+        print('Cancelling homing...')
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        if self.start_homing_event: self.start_homing_event.cancel()
+        # ... will trigger an alarm screen
+        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+        self.m.reset_on_cancel_homing()
+        self.sm.current = self.cancel_to_screen
+
+
+    def update_strings(self):
+        self.homing_label.text = self.l.get_str('Homing') + '...'
+        
     def windows_cheat_to_procede(self):
 
-        if sys.platform == 'win32':
+        if sys.platform == 'win32' or sys.platform == 'darwin':
             self.homing_detected_as_complete()
         else: pass
 
+    def homing_detected_as_complete(self):
+        self.after_successful_completion_return_to_screen()
 
-    def on_enter(self):
+# OLD ------------------------------------------------
 
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-
-            self.m.reset_pre_homing()
-            # self.start_homing_event = Clock.schedule_once(lambda dt: self.start_homing(),0.4)
-            self.m.do_standard_homing_sequence()
+    # self.start_homing_event = Clock.schedule_once(lambda dt: self.start_homing(),0.4)
 
 
     # def start_homing(self):
@@ -181,27 +215,4 @@ class HomingScreenActive(Screen):
     #     # allow breather for sequential stream to process
     #     Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
     #     Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
-
-
-    def after_successful_completion_return_to_screen(self):
-        self.sm.current = self.return_to_screen
-
-
-    def cancel_homing(self):
-
-        print('Cancelling homing...')
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        if self.start_homing_event: self.start_homing_event.cancel()
-        # ... will trigger an alarm screen
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.reset_on_cancel_homing()
-        self.sm.current = self.cancel_to_screen
-
-    
-    def on_leave(self):
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
-
-    def update_strings(self):
-        self.homing_label.text = self.l.get_str('Homing') + '...'
-        
         

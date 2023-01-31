@@ -1750,6 +1750,7 @@ class RouterMachine(object):
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
     
     def complete_homing_sequence(self, dt=0):
+        self.set_led_colour("GREEN")
         self.reset_homing_sequence_flags()
         self.homing_in_progress = False
         log("Complete homing sequence")
@@ -1758,13 +1759,13 @@ class RouterMachine(object):
     homing_funcs_list = []
 
     homing_seq_first_delay = [
-        1,
-        0,
-        0.1,
-        0,
-        0,
-        0.1,
-        0,
+        1,    # 0: motor_self_adjustment - start_homing
+        0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
+        0.1,  # 2: disable_stall_detection_before_auto_squaring - start_auto_squaring
+        0,    # 3: start_auto_squaring - start_calibrating_after_homing
+        0,    # 4: start_calibrating_after_homing - enable_stall_detection_after_calibrating
+        0.1,  # 5: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
+        0,    # 6: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
 
     homing_in_progress = False
@@ -1776,14 +1777,14 @@ class RouterMachine(object):
 
         self.homing_funcs_list = [
 
-            self.motor_self_adjustment,
-            self.start_homing,
-            self.disable_stall_detection_before_auto_squaring,
-            self.start_auto_squaring,
-            self.start_calibrating_after_homing,
-            self.enable_stall_detection_after_calibrating,
-            self.move_to_accommodate_laser_offset,
-            self.complete_homing_sequence
+            self.motor_self_adjustment,                         # 0
+            self.start_homing,                                  # 1
+            self.disable_stall_detection_before_auto_squaring,  # 2
+            self.start_auto_squaring,                           # 3
+            self.start_calibrating_after_homing,                # 4
+            self.enable_stall_detection_after_calibrating,      # 5
+            self.move_to_accommodate_laser_offset,              # 6
+            self.complete_homing_sequence                       # 7
 
             ]
 
