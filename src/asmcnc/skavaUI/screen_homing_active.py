@@ -100,7 +100,7 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
-        self.m.do_standard_homing_sequence()
+        if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
         self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
 
     def after_successful_completion_return_to_screen(self):
