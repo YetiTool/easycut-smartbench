@@ -1693,7 +1693,7 @@ class RouterMachine(object):
         if self.reschedule_homing_task_if_busy(self.start_homing): return
         log("Start GRBL Homing")
         self.set_state('Home') 
-        self.s.start_sequential_stream(['$H'], end_dwell=True)
+        self.s.start_sequential_stream(['$H'])
     
     def disable_stall_detection_before_auto_squaring(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.disable_stall_detection_before_auto_squaring): return
@@ -1758,13 +1758,13 @@ class RouterMachine(object):
     homing_funcs_list = []
 
     homing_seq_first_delay = [
-        2,
+        1,
         0,
         0.1,
         0,
         0,
         0.1,
-        0.5,
+        0,
     ]
 
     homing_in_progress = False
@@ -1787,11 +1787,11 @@ class RouterMachine(object):
 
             ]
 
-    def schedule_homing_event(self, func, delay=0.5):
+    def schedule_homing_event(self, func, delay=0.2):
         self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
-    def reschedule_homing_task_if_busy(self, func, delay=0.5):
+    def reschedule_homing_task_if_busy(self, func, delay=0.2):
         if self.smartbench_is_busy() or self.run_calibration:
             self.schedule_homing_event(func, delay)
             return True
