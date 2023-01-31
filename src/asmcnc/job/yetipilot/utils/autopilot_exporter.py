@@ -23,7 +23,7 @@ credentials_path = prod_mode_credentials_path
 token_path = prod_mode_token_path
 
 
-def get_series_format(sheet_id, start_row, end_row, start_column, end_column):
+def get_series_format(sheet_id, start_row, end_row, start_column, end_column, target_axis):
     return {
         "series": {
             "sourceRange": {
@@ -37,7 +37,8 @@ def get_series_format(sheet_id, start_row, end_row, start_column, end_column):
                     }
                 ]
             }
-        }
+        },
+        "target_axis": target_axis
     }
 
 
@@ -240,16 +241,29 @@ class AutoPilotExporter:
         ]
 
         series = [
-            get_series_format(data_sheet_id, 0, 100000000, 11, 12),
-            get_series_format(data_sheet_id, 0, 100000000, 13, 14),
-            get_series_format(data_sheet_id, 0, 100000000, 16, 17),
-            get_series_format(data_sheet_id, 0, 100000000, 17, 18),
-            get_series_format(data_sheet_id, 0, 100000000, 18, 19),
-            get_series_format(data_sheet_id, 0, 100000000, 19, 20),
-            get_series_format(data_sheet_id, 0, 100000000, 20, 21),
-            get_series_format(data_sheet_id, 0, 100000000, 21, 22),
-            get_series_format(data_sheet_id, 0, 100000000, 22, 23),
-            get_series_format(data_sheet_id, 0, 100000000, 23, 24)
+            get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
+            get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT")
+        ]
+
+        self.add_chart("Data", "Time", "Value", domain, series)
+
+    def create_boris_chart(self, data_sheet_id):
+        domain = [
+            get_domain_format(data_sheet_id, 1, 100000000, 0, 1)
+        ]
+
+        series = [
+            get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
+            get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 18, 19, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 19, 20, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 20, 21, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 21, 22, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 22, 23, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 23, 24, "LEFT")
         ]
 
         self.add_chart("Data", "Time", "Value", domain, series)
@@ -257,9 +271,9 @@ class AutoPilotExporter:
     def create_sweep_chart(self, parameter_sheet_id):
         spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 1, 100000000, 24, 25)
 
-        spindle_load_feed_multiplier_series = get_series_format(parameter_sheet_id, 1, 100000000, 25, 26)
+        spindle_load_feed_multiplier_series = get_series_format(parameter_sheet_id, 1, 100000000, 25, 26, "LEFT")
 
-        self.add_chart('Spindle Load vs Feed Multiplier', 'Feed Multiplier', 'Spindle Load',
+        self.add_chart('Spindle Load vs Feed Multiplier', 'Spindle Load', 'Feed Multiplier',
                        [spindle_load_feed_multiplier_domain], [spindle_load_feed_multiplier_series])
 
 
@@ -275,6 +289,7 @@ def run(title, logger):
     exporter.write_feed_profile(logger.get_sweep())
     exporter.create_sweep_chart(parameters_sheet_id)
     exporter.create_data_chart(data_sheet_id)
+    exporter.create_boris_chart(data_sheet_id)
     exporter.rename_sheet('Spindle Load vs Feed Multiplier', exporter.get_sheet_id('Chart1'))
     exporter.rename_sheet('Spindle Load vs Time', exporter.get_sheet_id('Chart2'))
     exporter.move_spreadsheet_to_drive()

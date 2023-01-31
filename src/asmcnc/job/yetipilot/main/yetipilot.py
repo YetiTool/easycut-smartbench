@@ -1,5 +1,6 @@
 from math import ceil, floor
 from kivy.clock import Clock
+from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
 
 
 def get_adjustment(feed_multiplier):
@@ -46,7 +47,7 @@ class YetiPilot:
     enabled = False
     counter = 0
 
-    feed_adjustment_delay_ms = 60
+    logger = None
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -55,11 +56,24 @@ class YetiPilot:
     def start(self):
         self.enabled = True
 
+        job_name = self.sm.get_screen('go').file_data_label.text
+
+        self.logger = AutoPilotLogger(
+            self.spindle_mains_voltage, self.spindle_target_watts, self.bias_for_feed_increase, self.bias_for_feed_decrease,
+            self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, job_name,
+            self.m.serial_number(), self.status_count_before_adjustment, 0, self.cap_for_feed_increase_during_z_movement,
+            self)
+
     def stop(self):
         self.enabled = False
+        self.logger.export_to_gsheet()
 
     def set_enabled(self, enabled):
-        self.enabled = enabled
+        if enabled:
+            self.start()
+            return
+
+        self.stop()
 
     def set_spindle_voltage(self, voltage):
         self.spindle_mains_voltage = voltage
@@ -103,8 +117,6 @@ class YetiPilot:
         multiplier = (float(self.bias_for_feed_decrease) if current_power > self.spindle_target_watts else
                       float(self.bias_for_feed_increase)) * (float(self.spindle_target_watts) - float(current_power)) \
                      / float(self.spindle_target_watts) * float(self.m_coefficient) * float(self.c_coefficient)
-
-        print('Multiplier for ' + str(current_power) + ' = ' + str(multiplier))
 
         return multiplier
 
