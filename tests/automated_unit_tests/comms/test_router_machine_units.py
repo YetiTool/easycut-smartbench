@@ -210,8 +210,22 @@ def test_smartbench_is_not_busy(m):
     make_smartbench_not_busy(m)
     assert not m.smartbench_is_busy()
 
+# SETTINGS UNIT TESTS
+
+def test_get_setting_53_if_does_not_exist(m):
+    assert not m.get_setting_53()
+
+def test_get_setting_53_if_1(m):
+    m.s.setting_53 = 1
+    assert m.get_setting_53()
+
+def test_get_setting_53_if_0(m):
+    m.s.setting_53 = 0
+    assert not m.get_setting_53()
+
 # HOMING UNIT TESTS
 
+# These need fleshing out - first pass was just to ensure they didn't throw errors
 def test_motor_self_adjustment_disables_y_motors(m):
     m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.motor_self_adjustment()
@@ -240,6 +254,8 @@ def test_move_to_accommodate_laser_offset(m):
     m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.is_laser_enabled = True
     m.move_to_accommodate_laser_offset()
+
+## Homing Scheduling/sequencing tests
 
 def test_schedule_homing_event_works_and_does_not_duplicate_callbacks(m):
     m.homing_seq_events = []

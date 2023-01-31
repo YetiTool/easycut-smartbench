@@ -2722,7 +2722,7 @@ class RouterMachine(object):
     disable_and_enable_soft_limits = True
     quick_calibration = False
 
-    calibration_files_folder_path = './asmcnc/production/calibration_gcode_files/'
+    calibration_files_folder_path = './asmcnc/comms/motor_baselining_files/'
 
     ## Functions to calibrate each axis separately (fast or slow)
 
@@ -2832,7 +2832,7 @@ class RouterMachine(object):
         self.disable_and_enable_soft_limits = False
         self.send_command_to_motor("CALIBRATE ALL AXES", command=SET_CALIBR_MODE, value=TMC_CALIBRATION_INIT_ALL)
 
-        calibration_file = self.calibration_files_folder_path + 'triple_axis_cal.gc'
+        calibration_file = self.calibration_files_folder_path + 'triple_axis_baselining.gc'
         Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.5)
 
 
