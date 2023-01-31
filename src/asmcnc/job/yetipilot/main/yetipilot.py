@@ -61,6 +61,8 @@ class YetiPilot:
 
         job_name = self.sm.get_screen('go').file_data_label.text
 
+        print("Creating logger")
+
         self.logger = AutoPilotLogger(
             self.spindle_mains_voltage, self.spindle_target_watts, self.bias_for_feed_increase, self.bias_for_feed_decrease,
             self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, job_name,
