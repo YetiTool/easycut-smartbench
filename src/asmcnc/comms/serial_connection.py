@@ -1012,7 +1012,7 @@ class SerialConnection(object):
                         if self.spindle_data_failures >= 20:
                             log("Spindle data failure limit reached")
 
-                            #TODO: notify user
+                            # TODO: notify user
 
                         if self.digital_spindle_ld_qdA > 0:
                             if self.autopilot_instance:

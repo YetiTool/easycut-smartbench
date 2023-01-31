@@ -7,7 +7,7 @@ class AutoPilotLog:
     def __init__(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
                  feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
                  sg_x2_motor,
-                 sg_y1_motor, sg_y2_motor):
+                 sg_y1_motor, sg_y2_motor, target_load):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
@@ -24,6 +24,7 @@ class AutoPilotLog:
         self.sg_x2_motor = sg_x2_motor if sg_x2_motor > 0 else ''
         self.sg_y1_motor = sg_y1_motor if sg_y1_motor > 0 else ''
         self.sg_y2_motor = sg_y2_motor if sg_y2_motor > 0 else ''
+        self.target_load = target_load
 
 
 def get_safe(listt, index):
@@ -58,17 +59,18 @@ class AutoPilotLogger:
 
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
                 feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
-                sg_x2_motor, sg_y1_motor, sg_y2_motor):
+                sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
                                       adjustment_list, feed_override_percentage, moving_in_z, sg_x_motor_axis,
                                       sg_y_axis,
-                                      sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor))
+                                      sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
                  'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Average Load',
                  'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Moving in Z", "Feed Override % Status",
-                 "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor"]]
+                 "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor",
+                 "Target Load"]]
         for log in self.logs:
             data.append([log.time, get_safe(log.raw_loads, 0),
                          get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
@@ -77,7 +79,8 @@ class AutoPilotLogger:
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
                          log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
                          log.moving_in_z, log.feed_override_percentage, log.sg_x_motor_axis, log.sg_y_axis,
-                         log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor])
+                         log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor,
+                         log.target_load])
         return data
 
     def get_feed_multiplier(self, current_power):
@@ -150,7 +153,7 @@ if __name__ == '__main__':
         average = sum(raw_loads) / len(raw_loads)
 
         logger.add_log(average, logger.get_feed_multiplier(average), log_time.strftime('%H:%M:%S'), raw_loads, [], 0,
-                       [], 0, False, 1, 1, 1, 1, 1, 1, 1)
+                       [], 0, False, 1, 1, 1, 1, 1, 1, 1, 875)
 
     logger.export_to_gsheet(None)
 

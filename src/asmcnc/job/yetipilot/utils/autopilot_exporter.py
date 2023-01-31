@@ -243,7 +243,8 @@ class AutoPilotExporter:
         series = [
             get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
             get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT")
+            get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 24, 25, "LEFT")
         ]
 
         self.add_chart("Data", "Time", "Value", domain, series)
@@ -263,7 +264,8 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 20, 21, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 21, 22, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 22, 23, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 23, 24, "LEFT")
+            get_series_format(data_sheet_id, 0, 100000000, 23, 24, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 24, 25, "LEFT")
         ]
 
         self.add_chart("Data", "Time", "Value", domain, series)
@@ -292,4 +294,5 @@ def run(title, logger):
     exporter.create_boris_chart(data_sheet_id)
     exporter.rename_sheet('Spindle Load vs Feed Multiplier', exporter.get_sheet_id('Chart1'))
     exporter.rename_sheet('Spindle Load vs Time', exporter.get_sheet_id('Chart2'))
+    exporter.rename_sheet('Spindle Load vs Time', exporter.get_sheet_id('Chart3'))
     exporter.move_spreadsheet_to_drive()
