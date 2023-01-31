@@ -1192,39 +1192,30 @@ class RouterMachine(object):
     def smartbench_is_busy(self): 
 
         if not self.state().startswith("Idle"):
-            log("state is: " + self.state())
             return True
 
         if self.s.is_sequential_streaming:
-            log("seq stream: " + str(self.s.is_sequential_streaming))
             return True
 
         if self.s.write_command_buffer: 
-            log("command buffer got stuff")
             return True
 
         if self.s.write_realtime_buffer: 
-            log("realtime buffer got stuff")
             return True
 
         if self.s.write_protocol_buffer: 
-            log("protocol buffer got stuff")
             return True
 
         if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
-            log("serial blocks: " + str(self.s.serial_blocks_available))
             return True
 
         if int(self.s.serial_chars_available) != self.s.RX_BUFFER_SIZE:
-            log("serial chars: " + str(self.s.serial_chars_available))
             return True
 
         if self.s.grbl_waiting_for_reset:
-            log("waiting for reset: " + str(self.s.grbl_waiting_for_reset))
             return True
 
         if self.is_machine_paused:
-            log("machine paused: " + str(self.is_machine_paused))
             return True
 
         return False
