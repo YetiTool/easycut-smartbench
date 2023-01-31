@@ -1826,9 +1826,10 @@ class RouterMachine(object):
             log(self.homing_completed_task_idx)
             log(len(self.homing_funcs_list))
 
-            if self.homing_completed_task_idx >= (len(self.homing_funcs_list) - 1): 
+            if not self.homing_completed_task_idx: 
                 log("Don't schedule any more events")
                 return
+
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
 
         self.schedule_homing_event(self.do_next_task_in_sequence)
