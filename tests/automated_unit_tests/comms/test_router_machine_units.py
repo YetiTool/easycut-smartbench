@@ -213,25 +213,31 @@ def test_smartbench_is_not_busy(m):
 # HOMING UNIT TESTS
 
 def test_motor_self_adjustment_disables_y_motors(m):
-    # spy on disable y motors
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.motor_self_adjustment()
 
 def test_start_homing(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.start_homing()
 
 def test_disable_stall_detection_before_auto_squaring(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.disable_stall_detection_before_auto_squaring()
 
 def test_start_auto_squaring(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.start_auto_squaring()
 
 def test_start_calibrating_after_homing(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.start_calibrating_after_homing()
 
 def test_enable_stall_detection_after_calibrating(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.enable_stall_detection_after_calibrating()
 
 def test_move_to_accommodate_laser_offset(m):
+    m.reschedule_homing_task_if_busy = Mock(return_value=False)
     m.is_laser_enabled = True
     m.move_to_accommodate_laser_offset()
 

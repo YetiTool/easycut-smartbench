@@ -1747,7 +1747,7 @@ class RouterMachine(object):
         if self.reschedule_homing_task_if_busy(self.move_to_accommodate_laser_offset): return
         if not self.is_laser_enabled: return
         log("Move to laser offset")
-        self.m.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
+        self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
     
     def complete_homing_sequence(self, dt=0):
         self.reset_homing_sequence_flags()
