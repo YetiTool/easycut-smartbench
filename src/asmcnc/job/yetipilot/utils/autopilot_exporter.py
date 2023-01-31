@@ -38,7 +38,7 @@ def get_series_format(sheet_id, start_row, end_row, start_column, end_column, ta
                 ]
             }
         },
-        "target_axis": target_axis
+        "target_axis": target_axis + "_AXIS"
     }
 
 
