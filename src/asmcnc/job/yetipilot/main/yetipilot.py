@@ -21,6 +21,9 @@ def get_adjustment(feed_multiplier):
 
 
 def limit_adjustments(adjustments):
+    if isinstance(adjustments, int):
+        return adjustments
+
     adjustments = sorted(adjustments, key=abs)
     return adjustments[0] if len(adjustments) > 0 else None
 
