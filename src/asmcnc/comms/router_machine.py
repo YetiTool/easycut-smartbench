@@ -1797,7 +1797,7 @@ class RouterMachine(object):
             self.start_homing,                                  # 1
             self.disable_stall_detection_before_auto_squaring,  # 2
             self.start_auto_squaring,                           # 3
-            self.query_grbl_settings_modes_and_info             # 4
+            self.query_grbl_settings_modes_and_info,            # 4
             self.start_calibrating_after_homing,                # 5
             self.enable_stall_detection_after_calibrating,      # 6
             self.move_to_accommodate_laser_offset,              # 7
