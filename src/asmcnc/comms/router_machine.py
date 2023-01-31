@@ -1678,7 +1678,7 @@ class RouterMachine(object):
         self.reset_pre_homing()
         self.homing_funcs_list[0](self)
         self.schedule_homing_event(self.do_next_task_in_sequence)
-        self.schedule_homing_event(self.complete_homing_task, 1)
+        self.schedule_homing_event(self.complete_homing_task)
 
 
     # components of homing sequence
@@ -1818,19 +1818,10 @@ class RouterMachine(object):
             return True
 
     def do_next_task_in_sequence(self, dt=0):
-        log("Polling do next task")
         if self.if_last_task_complete(): 
-            log("do next task")
-            self.homing_funcs_list[self.homing_completed_task_idx](self)
-
-            log(self.homing_completed_task_idx)
-            log(len(self.homing_funcs_list))
-
-            if not self.homing_completed_task_idx: 
-                log("Don't schedule any more events")
-                return
-
-            self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
+            self.schedule_homing_event(self.homing_funcs_list[self.homing_completed_task_idx], self.homing_seq_first_delay[self.homing_completed_task_idx-1])
+            if not self.homing_completed_task_idx: return
+            self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx-1])
 
         self.schedule_homing_event(self.do_next_task_in_sequence)
 
