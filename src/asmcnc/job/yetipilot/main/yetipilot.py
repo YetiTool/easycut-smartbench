@@ -118,6 +118,7 @@ class YetiPilot:
         feed_multiplier = self.get_feed_multiplier(load)
         adjustments = get_adjustment(feed_multiplier)
         adjustment = limit_adjustments(adjustments)
+        adjustment = self.cap_multiplier(adjustment)
 
         self.logger.add_log(
             load, adjustment, datetime.now().strftime('%H:%M:%S:%f'), self.spindle_load_stack[:], self.spindle_load_stack[:],
