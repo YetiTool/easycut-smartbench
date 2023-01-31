@@ -1337,11 +1337,11 @@ class RouterMachine(object):
 
     def disable_stall_detection(self):
         if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
-            self.send_command_to_motor("Disable stall detection", command=SET_SG_ALARM)
+            self.send_command_to_motor("SET SG ALARM: 0", command=SET_SG_ALARM)
 
     def enable_stall_detection(self):
         if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
-            self.send_command_to_motor("Enable stall detection", command=SET_SG_ALARM, value=1)
+            self.send_command_to_motor("SET SG ALARM: 1", command=SET_SG_ALARM, value=1)
 
 
 # SETTINGS GETTERS
@@ -1794,7 +1794,7 @@ class RouterMachine(object):
 
     def unschedule_homing_events(self):
         for event in self.homing_seq_events:
-            if event: Clock.unschedule(event)
+            if event != None: Clock.unschedule(event)
 
         del self.homing_seq_events[:]
 
