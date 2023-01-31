@@ -165,7 +165,7 @@ class AutoPilotExporter:
             body=body
         ).execute()
 
-    def add_chart(self, chart_title, x_axis_title, y_axis_title, domains, series):
+    def add_chart(self, chart_title, bottom_axis_title, left_axis_title, domains, series, right_axis_title=''):
         service = build('sheets', 'v4', credentials=self.creds)
 
         requests = [
@@ -180,11 +180,15 @@ class AutoPilotExporter:
                                 "axis": [
                                     {
                                         "position": "BOTTOM_AXIS",
-                                        "title": x_axis_title
+                                        "title": bottom_axis_title
                                     },
                                     {
                                         "position": "LEFT_AXIS",
-                                        "title": y_axis_title
+                                        "title": left_axis_title
+                                    },
+                                    {
+                                        "position": "RIGHT_AXIS",
+                                        "title": right_axis_title
                                     }
                                 ],
                                 "domains": domains,
@@ -247,7 +251,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
-        self.add_chart("Data", "Time", "Value", domain, series)
+        self.add_chart("Data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
 
     def create_boris_chart(self, data_sheet_id):
         domain = [
@@ -268,7 +272,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
-        self.add_chart("Data", "Time", "Value", domain, series)
+        self.add_chart("Data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
 
     def create_sweep_chart(self, parameter_sheet_id):
         spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 1, 100000000, 24, 25)
@@ -294,5 +298,5 @@ def run(title, logger):
     exporter.create_boris_chart(data_sheet_id)
     exporter.rename_sheet('Spindle Load vs Feed Multiplier', exporter.get_sheet_id('Chart1'))
     exporter.rename_sheet('Spindle Load vs Time', exporter.get_sheet_id('Chart2'))
-    # exporter.rename_sheet('Spindle Load vs Time', exporter.get_sheet_id('Chart3'))
+    exporter.rename_sheet('Motor Loads', exporter.get_sheet_id('Chart3'))
     exporter.move_spreadsheet_to_drive()
