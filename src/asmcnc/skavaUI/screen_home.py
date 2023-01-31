@@ -292,7 +292,7 @@ class HomeScreen(Screen):
 
     def on_enter(self):
         if self.m.s.autopilot_instance:
-            if self.m.s.autopilot_instance.autopilot_logger:
+            if self.m.s.autopilot_instance.logger:
                 PopupSendData(machine=self.m)
 
         self.m.stylus_router_choice = 'router'
