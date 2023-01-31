@@ -1673,6 +1673,7 @@ class RouterMachine(object):
     # Call this function for whole sequence
     def do_standard_homing_sequence(self):
         self.homing_in_progress = True
+        log("Start homing sequence")
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
         self.homing_funcs_list[0](self)
@@ -1682,20 +1683,20 @@ class RouterMachine(object):
 
     # components of homing sequence
     def motor_self_adjustment(self, dt=0):
-        log("adjust motors")
         if self.reschedule_homing_task_if_busy(self.motor_self_adjustment): return
+        log("Adjust motors")
         self.disable_y_motors()
         self.schedule_homing_event(self.enable_y_motors, delay=0.5)
     
     def start_homing(self, dt=0):
-        log("homing time")
         if self.reschedule_homing_task_if_busy(self.start_homing): return
+        log("Start GRBL Homing")
         self.set_state('Home') 
         self.s.start_sequential_stream(['$H'], end_dwell=True)
     
     def disable_stall_detection_before_auto_squaring(self, dt=0):
-        log("disable stall detection")
         if self.reschedule_homing_task_if_busy(self.disable_stall_detection_before_auto_squaring): return
+        log("Disable stall detection")
         self.disable_stall_detection()
     
     def start_auto_squaring(self, dt=0):
@@ -1708,7 +1709,11 @@ class RouterMachine(object):
         Delays after $ settings will be auto-inserted by serial connection module
         '''
         if self.reschedule_homing_task_if_busy(self.start_auto_squaring): return
-        if not self.is_squaring_XY_needed_after_homing: return
+        if not self.is_squaring_XY_needed_after_homing: 
+            log("Skip auto squaring")
+            return
+
+        log("Start auto squaring")
         
         square_homing_sequence =  [
                                   '$20=0', # soft limits off
@@ -1718,29 +1723,35 @@ class RouterMachine(object):
                                   'G1 Y-28 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y28', # re-enter work area
                                   'G90', # abs coords
-                                  'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)                                  
+                                  'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response                                
                                   '$21=1', # soft limits on
                                   '$20=1', # hard limits on
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response   
                                   '$H'
                                   ]
         self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
     
     def start_calibrating_after_homing(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.start_calibrating_after_homing): return
+        log("Start calibrating after homing")
         self.calibrate_all_three_axes()
     
     def enable_stall_detection_after_calibrating(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.enable_stall_detection_after_calibrating): return
+        log("Enable stall detection")
         self.enable_stall_detection()
     
     def move_to_accommodate_laser_offset(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.move_to_accommodate_laser_offset): return
         if not self.is_laser_enabled: return
+        log("Move to laser offset")
         self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + 5 - self.m.laser_offset_x_value, 3000)
     
     def complete_homing_sequence(self, dt=0):
         self.reset_homing_sequence_flags()
         self.homing_in_progress = False
+        log("Complete homing sequence")
 
     ## homing event handling (needs testing, might not work (: )
 
@@ -1772,11 +1783,11 @@ class RouterMachine(object):
     homing_completed_task_idx = 0
     homing_seq_events = []
 
-    def schedule_homing_event(self, func, delay=0.1):
+    def schedule_homing_event(self, func, delay=0.5):
         self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
-    def reschedule_homing_task_if_busy(self, func, delay=0.1):
+    def reschedule_homing_task_if_busy(self, func, delay=0.5):
         if self.smartbench_is_busy() or self.run_calibration:
             self.schedule_homing_event(func, delay)
             return True
@@ -1795,8 +1806,8 @@ class RouterMachine(object):
 
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
-        log("complete homing task " + str(self.homing_completed_task_idx))
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
+        log("complete homing task " + str(self.homing_completed_task_idx))
         self.completed_homing_tasks[self.homing_completed_task_idx] = True
 
     def if_last_task_complete(self):
@@ -1807,8 +1818,8 @@ class RouterMachine(object):
             return True
 
     def do_next_task_in_sequence(self, dt=0):
-        log("do next task")
         if self.if_last_task_complete(): 
+            log("do next task")
             self.homing_funcs_list[self.homing_completed_task_idx](self)
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx])
 
