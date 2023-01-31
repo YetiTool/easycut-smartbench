@@ -1750,6 +1750,7 @@ class RouterMachine(object):
     homing_funcs_list = []
 
     homing_seq_first_delay = [
+        0,    # null
         1,    # 0: motor_self_adjustment - start_homing
         0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
         0.1,  # 2: disable_stall_detection_before_auto_squaring - start_auto_squaring
@@ -1761,7 +1762,7 @@ class RouterMachine(object):
 
     homing_in_progress = False
     completed_homing_tasks = [False]*7
-    homing_completed_task_idx = 0
+    homing_task_idx = 0
     homing_seq_events = []
 
     def setup_homing_funcs_list(self):
@@ -1798,27 +1799,27 @@ class RouterMachine(object):
     def reset_homing_sequence_flags(self):
         self.unschedule_homing_events()
         self.completed_homing_tasks = [False]*7
-        self.homing_completed_task_idx = 0
+        self.homing_task_idx = 0
         self.homing_funcs_list = []
 
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
-        log("complete homing task " + str(self.homing_completed_task_idx))
-        self.completed_homing_tasks[self.homing_completed_task_idx] = True
+        log("complete homing task " + str(self.homing_task_idx))
+        self.completed_homing_tasks[self.homing_task_idx] = True
 
     def if_last_task_complete(self):
-        if self.completed_homing_tasks[self.homing_completed_task_idx]: 
-            log("last task complete " + str(self.homing_completed_task_idx))
-            self.homing_completed_task_idx+=1
-            log("next task " + str(self.homing_completed_task_idx))
+        if self.completed_homing_tasks[self.homing_task_idx]: 
+            log("last task complete " + str(self.homing_task_idx))
+            self.homing_task_idx+=1
+            log("next task " + str(self.homing_task_idx))
             return True
 
     def do_next_task_in_sequence(self, dt=0):
         if self.if_last_task_complete(): 
-            self.schedule_homing_event(self.homing_funcs_list[self.homing_completed_task_idx], delay=self.homing_seq_first_delay[self.homing_completed_task_idx-1])
-            if not self.homing_completed_task_idx: return
-            self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_completed_task_idx-1])
+            self.schedule_homing_event(self.homing_funcs_list[self.homing_task_idx], delay=self.homing_seq_first_delay[self.homing_task_idx])
+            if not self.homing_task_idx: return
+            self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_task_idx])
 
         self.schedule_homing_event(self.do_next_task_in_sequence)
 
