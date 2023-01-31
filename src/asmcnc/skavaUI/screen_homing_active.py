@@ -86,7 +86,6 @@ class HomingScreenActive(Screen):
     return_to_screen = 'lobby'
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
-    start_homing_event = None
    
     
     def __init__(self, **kwargs):
@@ -120,14 +119,17 @@ class HomingScreenActive(Screen):
         self.sm.current = 'squaring_active'
 
     def cancel_homing(self):
-
-        print('Cancelling homing...')
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        if self.start_homing_event: self.start_homing_event.cancel()
-        # ... will trigger an alarm screen
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.reset_on_cancel_homing()
+        self.m.cancel_homing_sequence()
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
         self.sm.current = self.cancel_to_screen
+
+        # print('Cancelling homing...')
+        # if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        # if self.start_homing_event: self.start_homing_event.cancel()
+        # # ... will trigger an alarm screen
+        # self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+        # self.m.reset_on_cancel_homing()
+        # self.sm.current = self.cancel_to_screen
 
 
     def update_strings(self):

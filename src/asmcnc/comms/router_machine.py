@@ -1788,7 +1788,7 @@ class RouterMachine(object):
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
     def reschedule_homing_task_if_busy(self, func, delay=0.2):
-
+        if "Alarm" in self.state(): self.cancel_homing_sequence()
         if self.smartbench_is_busy() or self.run_calibration:
             self.schedule_homing_event(func, delay)
             return True
@@ -1830,6 +1830,18 @@ class RouterMachine(object):
     def next_homing_task_wrapper(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.next_homing_task_wrapper): return
         self.homing_funcs_list[self.homing_task_idx]()
+
+    def cancel_homing_sequence(self):
+        self.reset_homing_sequence_flags()
+        self.reset_on_cancel_homing()
+        if self.run_calibration: self.hard_reset_pcb_sequence() # If mid calibration, want to do a hard PCB reset
+        self.run_calibration = False
+        self.is_machine_homed = False
+        self.set_led_colour("YELLOW")
+        self.homing_in_progress = False
+        log("Cancel homing sequence")
+
+
 
 # Z PROBE
 

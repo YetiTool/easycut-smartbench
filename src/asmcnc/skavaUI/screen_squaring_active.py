@@ -123,15 +123,18 @@ class SquaringScreenActive(Screen):
         self.sm.current = 'homing_active'
 
     def cancel_squaring(self):
-
-        print('Cancelling squaring...')
-        # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-
-        # ... will trigger an alarm screen
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.reset_on_cancel_homing()
+        self.m.cancel_homing_sequence()
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
         self.sm.current = self.cancel_to_screen
+
+        # print('Cancelling squaring...')
+        # # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        # if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+
+        # # ... will trigger an alarm screen
+        # self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+        # self.m.reset_on_cancel_homing()
+        # self.sm.current = self.cancel_to_screen
 
     def update_strings(self):
 
