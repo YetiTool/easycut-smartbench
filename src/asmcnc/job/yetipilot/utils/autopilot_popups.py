@@ -53,7 +53,7 @@ class PopupSendData(Widget):
 
         def on_send_button(*args):
             if self.m.s.autopilot_instance:
-                self.m.s.autopilot_instance.export()
+                self.m.s.autopilot_instance.logger.export()
             popup.dismiss()
 
         def on_cancel_button(*args):

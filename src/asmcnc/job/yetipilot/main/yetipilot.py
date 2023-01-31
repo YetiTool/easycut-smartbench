@@ -134,4 +134,9 @@ class YetiPilot:
 
         return multiplier
 
+    def reset(self):
+        self.spindle_mains_voltage = None
+        self.spindle_load_stack[:] = []
+        if self.logger:
+            self.logger.reset()
 
