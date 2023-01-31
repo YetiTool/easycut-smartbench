@@ -16,8 +16,8 @@ DRIVE_FOLDER_ID = "1FwSQqN98_T39rtHd522KlLOTwxfcygsV"
 dev_mode_credentials_path = 'google/credentials.json'
 dev_mode_token_path = 'google/token.json'
 
-prod_mode_credentials_path = 'asmcnc/job/autopilot/google/credentials.json'
-prod_mode_token_path = 'asmcnc/job/autopilot/google/token.json'
+prod_mode_credentials_path = 'asmcnc/job/yetipilot/google/credentials.json'
+prod_mode_token_path = 'asmcnc/job/yetipilot/google/token.json'
 
 credentials_path = prod_mode_credentials_path
 token_path = prod_mode_token_path
