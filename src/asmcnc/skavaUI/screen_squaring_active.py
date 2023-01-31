@@ -118,8 +118,18 @@ class SquaringScreenActive(Screen):
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
     def poll_for_squaring_status_func(self, dt=0):
-        if not self.m.homing_in_progress: self.after_successful_completion_return_to_screen()
-        if self.m.homing_task_idx > 3: self.return_to_homing_active_screen()
+        if not self.m.homing_in_progress: self.sm.current = self.cancel_to_screen
+        if self.is_sb_still_squaring(): self.return_to_homing_active_screen()
+
+    def is_sb_still_squaring(self):
+
+        if self.m.homing_task_idx > 3:
+            return False
+
+        if len(self.m.s._sequential_stream_buffer) < 2 and m.s.is_sequential_streaming:
+            return False
+
+        return True 
 
     def return_to_homing_active_screen(self):        
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
