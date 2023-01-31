@@ -62,8 +62,8 @@ class AutoPilotLogger:
                 sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
                                       adjustment_list, feed_override_percentage, moving_in_z, sg_x_motor_axis,
-                                      sg_y_axis,
-                                      sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load))
+                                      sg_y_axis, sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor,
+                                      target_load))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
@@ -153,7 +153,7 @@ if __name__ == '__main__':
         average = sum(raw_loads) / len(raw_loads)
 
         logger.add_log(average, logger.get_feed_multiplier(average), log_time.strftime('%H:%M:%S'), raw_loads, [], 0,
-                       [], 0, False, 1, 1, 1, 1, 1, 1, 1, 875)
+                       [], 0, False, 1, 1, 1, 1, 1, 1, 1)
 
     logger.export_to_gsheet(None)
 

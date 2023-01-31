@@ -101,14 +101,27 @@ class YetiPilot:
             self.do_adjustment(load)
             self.counter = 0
 
+    def cap_multiplier(self, multiplier):
+        if self.moving_in_z:
+            return self.cap_for_feed_increase_during_z_movement if multiplier > 0 \
+                else -self.cap_for_feed_increase_during_z_movement
+
+        if multiplier < self.cap_for_feed_decrease:
+            return self.cap_for_feed_decrease
+
+        if multiplier > self.cap_for_feed_increase:
+            return self.cap_for_feed_increase
+
+        return multiplier
+
     def do_adjustment(self, load):
         feed_multiplier = self.get_feed_multiplier(load)
         adjustments = get_adjustment(feed_multiplier)
         adjustment = limit_adjustments(adjustments)
 
         self.logger.add_log(
-            load, adjustment, datetime.now().strftime('%H:%M:%S:%f'), [], [],
-            0, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
+            load, adjustment, datetime.now().strftime('%H:%M:%S:%f'), self.spindle_load_stack, self.spindle_load_stack,
+            adjustment, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
             self.m.s.sg_y_axis, self.m.s.sg_z_motor_axis, self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
             self.m.s.sg_y2_motor, self.spindle_target_watts)
 
