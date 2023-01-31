@@ -67,20 +67,18 @@ class AutoPilotLogger:
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
-                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Calculated Load',
+                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Calculated Load', "Target Load",
                  'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Moving in Z", "Feed Override % Status",
-                 "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor",
-                 "Target Load"]]
+                 "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor"]]
         for log in self.logs:
             data.append([log.time, get_safe(log.raw_loads, 0),
                          get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
                          get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0),
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
-                         log.current_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
+                         log.current_load, log.target_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
                          log.moving_in_z, log.feed_override_percentage, log.sg_x_motor_axis, log.sg_y_axis,
-                         log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor,
-                         log.target_load])
+                         log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor])
         return data
 
     def get_feed_multiplier(self, current_power):

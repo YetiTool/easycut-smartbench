@@ -244,7 +244,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
             get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 24, 25, "RIGHT")
+            get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
         self.add_chart("Data", "Time", "Value", domain, series)
@@ -265,7 +265,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 21, 22, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 22, 23, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 23, 24, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 24, 25, "RIGHT")
+            get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
         self.add_chart("Data", "Time", "Value", domain, series)
