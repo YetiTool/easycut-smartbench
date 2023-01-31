@@ -1,6 +1,7 @@
 from math import ceil, floor
 from kivy.clock import Clock
 from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
+from datetime import datetime
 
 
 def get_adjustment(feed_multiplier):
@@ -107,6 +108,12 @@ class YetiPilot:
         feed_multiplier = self.get_feed_multiplier(load)
         adjustments = get_adjustment(feed_multiplier)
         adjustment = limit_adjustments(adjustments)
+
+        self.logger.add_log(
+            load, adjustment, datetime.now().strftime('%H:%M:%S:%f'), self.spindle_load_stack, self.spindle_load_stack,
+            adjustment, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
+            self.m.s.sg_y_axis, self.m.s.sg_z_motor_axis, self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
+            self.m.s.sg_y2_motor)
 
         if adjustment is None:
             return
