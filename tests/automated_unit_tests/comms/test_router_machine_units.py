@@ -297,14 +297,14 @@ def test_do_standard_homing_sequence_with_spys(m):
     m.homing_in_progress = False
     m.reset_homing_sequence_flags = Mock()
     m.reset_pre_homing = Mock()
-    m.disable_y_motors = Mock()
+    m.next_homing_task_wrapper = Mock()
     m.complete_homing_task = Mock()
     m.do_next_task_in_sequence = Mock()
     m.do_standard_homing_sequence()
     assert m.homing_in_progress
     m.reset_homing_sequence_flags.assert_called()
     m.reset_pre_homing.assert_called()
-    m.disable_y_motors.assert_called()
+    m.next_homing_task_wrapper.assert_called()
 
 def test_do_standard_homing_sequence_with_actual_funcs(m):
     m.homing_in_progress = False

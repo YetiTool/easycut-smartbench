@@ -1668,7 +1668,7 @@ class RouterMachine(object):
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
         self.setup_homing_funcs_list()
-        self.homing_funcs_list[0]()
+        self.next_homing_task_wrapper()
         self.schedule_homing_event(self.do_next_task_in_sequence)
         self.schedule_homing_event(self.complete_homing_task)
 
@@ -1686,11 +1686,6 @@ class RouterMachine(object):
         return True 
 
     # components of homing sequence
-    def motor_self_adjustment(self, dt=0):
-        log("Adjust motors")
-        self.disable_y_motors()
-        self.schedule_homing_event(self.enable_y_motors, delay=0.5)
-    
     def start_homing(self, dt=0):
         log("Start GRBL Homing")
         self.set_state('Home') 
@@ -1834,7 +1829,7 @@ class RouterMachine(object):
 
     def next_homing_task_wrapper(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.next_homing_task_wrapper): return
-        self.homing_funcs_list[self.homing_task_idx]
+        self.homing_funcs_list[self.homing_task_idx]()
 
 # Z PROBE
 
