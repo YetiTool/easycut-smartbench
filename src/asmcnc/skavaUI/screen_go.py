@@ -598,8 +598,7 @@ class GoScreen(Screen):
             self._pause_job()
         else:
             self._start_running_job()
-            now = datetime.now()
-            self.m.s.job_start_time = int(time.mktime(now.utctimetuple()) * 1000 + now.microsecond / 1000)
+            self.m.s.job_start_time = datetime.now()
 
     def _pause_job(self):
 
