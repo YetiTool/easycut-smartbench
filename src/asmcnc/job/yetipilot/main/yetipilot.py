@@ -1,7 +1,7 @@
 from math import ceil, floor
-from kivy.clock import Clock
 from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
 from datetime import datetime
+import json
 
 
 def get_adjustment(feed_multiplier):
