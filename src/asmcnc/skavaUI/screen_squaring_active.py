@@ -105,10 +105,6 @@ class SquaringScreenActive(Screen):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
         self.update_strings()
-    
-    def on_pre_enter(self):
-         # in case the sequence quickly skips over auto-squaring
-        if self.m.homing_task_idx != 3: self.return_to_homing_active_screen()
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
@@ -119,17 +115,7 @@ class SquaringScreenActive(Screen):
 
     def poll_for_squaring_status_func(self, dt=0):
         if not self.m.homing_in_progress: self.sm.current = self.cancel_to_screen
-        if self.is_sb_still_squaring(): self.return_to_homing_active_screen()
-
-    def is_sb_still_squaring(self):
-
-        if self.m.homing_task_idx > 3:
-            return False
-
-        if len(self.m.s._sequential_stream_buffer) < 2 and m.s.is_sequential_streaming:
-            return False
-
-        return True 
+        if self.m.i_am_auto_squaring(): self.return_to_homing_active_screen()
 
     def return_to_homing_active_screen(self):        
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen

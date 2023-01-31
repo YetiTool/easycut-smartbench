@@ -1672,6 +1672,18 @@ class RouterMachine(object):
         self.schedule_homing_event(self.do_next_task_in_sequence)
         self.schedule_homing_event(self.complete_homing_task)
 
+    def i_am_auto_squaring(self):
+
+        if self.m.homing_task_idx != 3:
+            return False
+
+        if not m.s.is_sequential_streaming: 
+            return False
+
+        if len(self.m.s._sequential_stream_buffer) < 2:
+            return False
+
+        return True 
 
     # components of homing sequence
     def motor_self_adjustment(self, dt=0):
@@ -1747,6 +1759,10 @@ class RouterMachine(object):
         log("Complete homing sequence")
 
     ## homing event handling (needs testing, might not work (: )
+    homing_in_progress = False
+    completed_homing_tasks = [False]*7
+    homing_task_idx = 0
+    homing_seq_events = []
     homing_funcs_list = []
 
     homing_seq_first_delay = [
@@ -1759,11 +1775,6 @@ class RouterMachine(object):
         0.1,  # 5: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
         0,    # 6: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
-
-    homing_in_progress = False
-    completed_homing_tasks = [False]*7
-    homing_task_idx = 0
-    homing_seq_events = []
 
     def setup_homing_funcs_list(self):
 
