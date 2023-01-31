@@ -108,7 +108,7 @@ class SquaringScreenActive(Screen):
     
     def on_pre_enter(self):
          # in case the sequence quickly skips over auto-squaring
-        if self.m.homing_task_idx != 2: self.return_to_homing_active_screen()
+        if self.m.homing_task_idx != 3: self.return_to_homing_active_screen()
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
