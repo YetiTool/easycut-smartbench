@@ -289,16 +289,14 @@ def test_do_standard_homing_sequence_with_spys(m):
     m.homing_in_progress = False
     m.reset_homing_sequence_flags = Mock()
     m.reset_pre_homing = Mock()
-    m.homing_funcs_list[0] = Mock()
+    m.motor_self_adjustment = Mock()
     m.complete_homing_task = Mock()
     m.do_next_task_in_sequence = Mock()
     m.do_standard_homing_sequence()
     assert m.homing_in_progress
     m.reset_homing_sequence_flags.assert_called()
     m.reset_pre_homing.assert_called()
-    m.homing_funcs_list[0].assert_called()
-    # m.complete_homing_task.assert_called()
-    # m.do_next_task_in_sequence.assert_called()
+    m.motor_self_adjustment.assert_called()
 
 def test_do_standard_homing_sequence_with_actual_funcs(m):
     m.homing_in_progress = False
@@ -343,6 +341,7 @@ def test_if_last_task_complete_when_not_ready(m):
 
 def test_do_next_task_in_sequence_when_ready(m):
     m.reset_homing_sequence_flags()
+    m.setup_homing_funcs_list()
     m.homing_completed_task_idx = 3
     m.homing_funcs_list[m.homing_completed_task_idx] = Mock()
     m.if_last_task_complete = Mock(return_value=True)
@@ -352,6 +351,7 @@ def test_do_next_task_in_sequence_when_ready(m):
 
 def test_do_next_task_in_sequence_with_actual_funcs(m):
     m.reset_homing_sequence_flags()
+    m.setup_homing_funcs_list()
     m.homing_completed_task_idx = 4
     m.smartbench_is_busy = Mock(return_value=False)
     m.if_last_task_complete = Mock(return_value=True)
