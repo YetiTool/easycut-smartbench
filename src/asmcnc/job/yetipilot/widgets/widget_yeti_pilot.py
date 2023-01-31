@@ -56,8 +56,6 @@ class YetiPilotWidget(Widget):
     def toggle_yeti_pilot(self):
         if not self.m.s.autopilot_instance:
             self.m.s.autopilot_instance = YetiPilot(screen_manager=self.sm, machine=self.m)
-
-        print("Setting autopilot enabled: " + str(self.switch.active))
         self.m.s.autopilot_instance.set_enabled(self.switch.active)
 
     def on_slider_value_change(self):

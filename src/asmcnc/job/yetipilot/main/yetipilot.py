@@ -62,7 +62,7 @@ class YetiPilot:
 
         job_name = self.sm.get_screen('go').file_data_label.text
 
-        print("Creating logger")
+        self.load_parameters_from_json()
 
         self.logger = AutoPilotLogger(
             self.spindle_mains_voltage, self.spindle_target_watts, self.bias_for_feed_increase, self.bias_for_feed_decrease,
@@ -151,4 +151,13 @@ class YetiPilot:
         self.spindle_load_stack[:] = []
         if self.logger:
             self.logger.reset()
+
+    def load_parameters_from_json(self):
+        with open('asmcnc/job/yetipilot/main/yetipilot_parameters.json') as f:
+            data = json.load(f)
+            for item in data:
+                try:
+                    setattr(self, item["Name"], item["Value"])
+                except:
+                    print("Invalid parameter: " + item["Name"])
 

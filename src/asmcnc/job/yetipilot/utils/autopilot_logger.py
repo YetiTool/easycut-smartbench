@@ -67,7 +67,7 @@ class AutoPilotLogger:
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
-                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Average Load',
+                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Calculated Load',
                  'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Moving in Z", "Feed Override % Status",
                  "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor",
                  "Target Load"]]
