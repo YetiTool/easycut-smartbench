@@ -115,7 +115,7 @@ class SquaringScreenActive(Screen):
 
     def poll_for_squaring_status_func(self, dt=0):
         if not self.m.homing_in_progress: self.sm.current = self.cancel_to_screen
-        if self.m.i_am_auto_squaring(): self.return_to_homing_active_screen()
+        if not self.m.i_am_auto_squaring(): self.return_to_homing_active_screen()
 
     def return_to_homing_active_screen(self):        
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
