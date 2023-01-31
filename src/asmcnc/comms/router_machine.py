@@ -1805,7 +1805,7 @@ class RouterMachine(object):
 
             ]
 
-        self.completed_homing_tasks = [False]*len(self.homing_funcs_list-1)
+        self.completed_homing_tasks = [False]*(len(self.homing_funcs_list)-1)
 
     def schedule_homing_event(self, func, delay=0.2):
         self.homing_seq_events = [x for x in self.homing_seq_events if func != x.get_callback()]
