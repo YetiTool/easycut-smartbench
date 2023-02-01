@@ -80,8 +80,8 @@ class AlarmSequenceManager(object):
 
 		try:
 			if not self.is_alarm_sequence_already_running():
-				if self.is_error_screen_already_up():
-					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+				if self.get_another_screens_return_screen():
+					pass
 
 				elif self.m.s.is_job_streaming and self.m.s.m_state != "Check":
 					self.sm.get_screen('job_incomplete').prep_this_screen('Alarm', message)
@@ -177,11 +177,23 @@ class AlarmSequenceManager(object):
 			return True
 
 
-	def is_error_screen_already_up(self):
+	def get_another_screens_return_screen(self):
 
-		if self.sm.current == 'errorScreen':
+		screens_to_not_return_to = [
+			'errorScreen',
+			'door',
+			'homing_active',
+			'squaring_active'
+		]
+
+		if self.sm.current in screens_to_not_return_to:
+			potential_return_screen = self.sm.get_screen(self.sm.current).return_to_screen
+
+			if potential_return_screen in screens_to_not_return_to: # could loop this for a while, but going back twice should be enough
+				potential_return_screen = self.sm.get_screen(potential_return_screen).return_to_screen
+
+			self.return_to_screen = potential_return_screen
 			return True
-
 
 	def get_suspected_trigger(self):
 		limit_code = self.l.get_str("Unexpected limit reached:") + " "
