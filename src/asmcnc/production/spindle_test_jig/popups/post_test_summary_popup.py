@@ -33,9 +33,6 @@ class PostTestSummaryPopup(Widget):
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
 
-        scroll_view = ScrollView()
-        scroll_view.add_widget(label)
-
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
@@ -45,7 +42,7 @@ class PostTestSummaryPopup(Widget):
 
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30, 20, 30, 0])
         layout_plan.add_widget(img)
-        layout_plan.add_widget(scroll_view)
+        layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title=title_string,
@@ -54,7 +51,7 @@ class PostTestSummaryPopup(Widget):
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=('360dp', '360dp'),
+                      size=(360, 360),
                       auto_dismiss=False
                       )
 
