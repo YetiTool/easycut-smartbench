@@ -1795,7 +1795,7 @@ class RouterMachine(object):
 
     def unschedule_homing_events(self):
         for event in self.homing_seq_events:
-            if event: Clock.unschedule(event)
+            if event: event.cancel()
 
         del self.homing_seq_events[:]
 
@@ -1834,8 +1834,7 @@ class RouterMachine(object):
     def cancel_homing_sequence(self):
         self.reset_homing_sequence_flags()
         self.reset_on_cancel_homing()
-        if self.run_calibration: self.hard_reset_pcb_sequence() # If mid calibration, want to do a hard PCB reset
-        self.run_calibration = False
+        if self.run_calibration: self.cancel_triple_axes_calibration() # If mid calibration, want to do a hard PCB reset
         self.is_machine_homed = False
         self.set_led_colour("YELLOW")
         self.homing_in_progress = False
@@ -2836,8 +2835,10 @@ class RouterMachine(object):
 
     def prep_triple_axes_calibration(self):
 
+        if not self.run_calibration: return
+
         if not self.state().startswith('Idle') or self.s.write_protocol_buffer:
-            Clock.schedule_once(lambda dt: self.prep_homing_sequence_calibration(axis), 0.1)
+            Clock.schedule_once(lambda dt: self.prep_triple_axes_calibration(axis), 0.1)
             return
 
         self.calibration_tuning_fail_info = ''
@@ -2852,6 +2853,8 @@ class RouterMachine(object):
 
     def stream_calibration_file(self, filename):
 
+        if not self.run_calibration: return
+
         with open(filename) as f:
             calibration_gcode_pre_scrubbed = f.readlines()
 
@@ -2859,6 +2862,7 @@ class RouterMachine(object):
 
         log("Calibrating...")
 
+        if not self.run_calibration: return
         self.s.run_skeleton_buffer_stuffer(calibration_gcode)
         self.poll_end_of_calibration_file_stream = Clock.schedule_once(self.post_calibration_file_stream, 0.5)
 
@@ -2870,6 +2874,8 @@ class RouterMachine(object):
 
 
     def post_calibration_file_stream(self, dt):
+
+        if not self.run_calibration: return
 
         if self.state().startswith('Idle') and self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
             Clock.unschedule(self.poll_end_of_calibration_file_stream)
@@ -2884,13 +2890,17 @@ class RouterMachine(object):
 
     def do_next_axis_or_finish_calibration_sequence(self):
 
-            # X is always first, so check y and then z
-            if self.poll_for_y_ready != None: self.y_ready_to_calibrate = True
-            elif self.poll_for_z_ready != None: self.z_ready_to_calibrate = True
-            else: self.save_calibration_coefficients_to_motor_classes()
+        if not self.run_calibration: return
+
+        # X is always first, so check y and then z
+        if self.poll_for_y_ready != None: self.y_ready_to_calibrate = True
+        elif self.poll_for_z_ready != None: self.z_ready_to_calibrate = True
+        else: self.save_calibration_coefficients_to_motor_classes()
 
 
     def save_calibration_coefficients_to_motor_classes(self):
+
+        if not self.run_calibration: return
 
         if self.disable_and_enable_soft_limits: self.s.write_command('$20=1')
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
@@ -2912,6 +2922,14 @@ class RouterMachine(object):
         self.run_calibration = False
 
         log("Calibration complete")
+
+    # Don't use for all the different states yet, this is a quick hack solution
+    # Ideally want to refactor the whole sequence
+    def cancel_triple_axes_calibration(self):
+        self.run_calibration = False
+        self.complete_calibration()
+        self._stop_all_streaming()
+        self.hard_reset_pcb_sequence()
 
 
     # UPLOADING CALIBRATION TO FW:
