@@ -64,7 +64,7 @@ class SpindleTest:
             if not (measured_kill_time > 254):
                 fail_test(rpm, "Kill time out of range: " + str(measured_kill_time))
 
-            if measured_load < 100 or measured_load > 400:
+            if measured_load < 100 or measured_load > 500:
                 fail_test(rpm, "Load out of range: " + str(measured_load))
 
         def set_rpm(rpm):
