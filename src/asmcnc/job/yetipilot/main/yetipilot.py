@@ -1,6 +1,6 @@
 from math import ceil, floor
 from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
-from datetime import datetime
+import time
 import json
 
 
@@ -124,7 +124,7 @@ class YetiPilot:
         time_stamp = None
 
         if self.m.s.job_start_time is not None:
-            time_stamp = datetime.now() - self.m.s.job_start_time
+            time_stamp = time.time() - self.m.s.job_start_time
 
         self.logger.add_log(
             load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
