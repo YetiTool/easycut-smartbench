@@ -553,6 +553,7 @@ class MaintenanceScreenClass(Screen):
 
         # BRUSHES
         self.brush_use_widget.restore()
+        self.brush_life_widget.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
 
         # SPINDLE
         if self.m.spindle_digital: 
