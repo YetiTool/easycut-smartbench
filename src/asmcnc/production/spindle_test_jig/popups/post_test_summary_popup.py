@@ -35,7 +35,7 @@ class PostTestSummaryPopup(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = [0, 1, 0, 1] if pass_test else [1, 0, 0, 1]
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0])
         btn_layout.add_widget(ok_button)
