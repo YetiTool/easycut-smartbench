@@ -223,7 +223,7 @@ class AutoPilotExporter:
         service.spreadsheets().values().update(
             spreadsheetId=self.spreadsheet_id,
             range=sheet_title + "!" + range,
-            valueInputOption="USER_ENTERED",
+            valueInputOption="RAW",
             body=body
         ).execute()
 
