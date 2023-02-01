@@ -1788,7 +1788,10 @@ class RouterMachine(object):
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
     def reschedule_homing_task_if_busy(self, func, delay=0.2):
-        if "Alarm" in self.state(): self.cancel_homing_sequence()
+        if "Alarm" in self.state(): 
+            self.cancel_homing_sequence()
+            return True
+
         if self.smartbench_is_busy() or self.run_calibration:
             self.schedule_homing_event(func, delay)
             return True
