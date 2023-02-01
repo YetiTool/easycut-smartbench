@@ -29,6 +29,10 @@ def limit_adjustments(adjustments):
     return adjustments[0] if len(adjustments) > 0 else None
 
 
+def format_time(seconds):
+    return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
+
+
 class YetiPilot:
     status_count_before_adjustment = 1
 
@@ -124,7 +128,7 @@ class YetiPilot:
         time_stamp = None
 
         if self.m.s.job_start_time is not None:
-            time_stamp = time.time() - self.m.s.job_start_time
+            time_stamp = format_time(time.time() - self.m.s.job_start_time)
 
         self.logger.add_log(
             load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
