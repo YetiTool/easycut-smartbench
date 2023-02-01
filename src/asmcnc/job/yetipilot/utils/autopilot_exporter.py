@@ -275,9 +275,9 @@ class AutoPilotExporter:
         self.add_chart("Data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
 
     def create_sweep_chart(self, parameter_sheet_id):
-        spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 1, 100000000, 24, 25)
+        spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 0, 100000000, 24, 25)
 
-        spindle_load_feed_multiplier_series = get_series_format(parameter_sheet_id, 1, 100000000, 25, 26, "LEFT")
+        spindle_load_feed_multiplier_series = get_series_format(parameter_sheet_id, 0, 100000000, 25, 26, "LEFT")
 
         self.add_chart('Spindle Load vs Feed Multiplier', 'Spindle Load', 'Feed Multiplier',
                        [spindle_load_feed_multiplier_domain], [spindle_load_feed_multiplier_series])
