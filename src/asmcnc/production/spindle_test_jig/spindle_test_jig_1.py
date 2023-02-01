@@ -6,9 +6,8 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
 from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
-from asmcnc.skavaUI import widget_status_bar
 from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
-from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
+from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
 <SpindleTestJig1>:
@@ -303,7 +302,6 @@ class SpindleTestJig1(Screen):
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
         self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
-        PostTestSummaryPopup(m=self.m, sm=self.sm, fail_reasons=["Test" for _ in range(10)])
 
     def reset(self):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
