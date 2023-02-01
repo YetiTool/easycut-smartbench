@@ -174,7 +174,7 @@ class BrushUseWidget(Widget):
             self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
             self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
         else:
-            popup_info.PopupError(self.sm, self.l, "Could not get info - spindle not plugged in!")
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("Could not get info - spindle not plugged in!"))
 
     def reset_to_0(self):
         self.brush_use.text = '0'
