@@ -10,7 +10,6 @@ from asmcnc.skavaUI import widget_status_bar
 from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
 from asmcnc.production.spindle_test_jig.popups.post_test_summary_popup import PostTestSummaryPopup
 
-
 Builder.load_string("""
 <SpindleTestJig1>:
     status_container:status_container
@@ -52,7 +51,7 @@ Builder.load_string("""
                         text: 'Begin Test'
                         bold: True
                         background_color: [0, 1, 0, 1]
-                        on_press: root.test.run()
+                        on_press: root.run()
                         background_normal: ''
                         
                     Button:
@@ -301,11 +300,17 @@ class SpindleTestJig1(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-        #self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        #self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
         PostTestSummaryPopup(m=self.m, sm=self.sm, fail_reasons=["Test" for _ in range(10)])
 
+    def reset(self):
+        self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
+
+    def run(self):
+        self.reset()
+        self.test.run()
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
@@ -314,6 +319,7 @@ class SpindleTestJig1(Screen):
         self.m.s.write_command('M3 S0')
         [unschedule(clock) for clock in self.test.clocks]
         self.run_test_button.disabled = False
+        self.reset()
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
@@ -331,9 +337,11 @@ class SpindleTestJig1(Screen):
         if self.run_test_button.disabled:
             self.run_test_button.disabled = False
             self.run_test_button.text = "Begin Test"
+            self.run_test_button.color = [0, 1, 0, 1]
         else:
             self.run_test_button.disabled = True
             self.run_test_button.text = "Running Test..."
+            self.run_test_button.color = [1, 1, 0, 1]
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
@@ -341,7 +349,8 @@ class SpindleTestJig1(Screen):
             ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
         self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
         self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
-        self.measured_rpm_value.text = str(self.m.s.spindle_speed) if self.test.target_voltage == 230 else str(self.m.convert_from_110_to_230(self.m.s.spindle_speed))
+        self.measured_rpm_value.text = str(self.m.s.spindle_speed) if self.test.target_voltage == 230 else str(
+            self.m.convert_from_110_to_230(self.m.s.spindle_speed))
 
     def get_spindle_info(self, dt=None):
         def show_spindle_info():
@@ -363,9 +372,9 @@ class SpindleTestJig1(Screen):
 
             self.serial_number_value.text = str(self.m.s.spindle_serial_number)
             self.mains_value.text = ('230V' if self.m.s.spindle_mains_frequency_hertz == 50 else '120V') + '/ ' + \
-                                           str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
+                                    str(self.m.s.spindle_mains_frequency_hertz) + "Hz"
             self.production_date_value.text = format_week_year(self.m.s.spindle_production_week,
-                                                                      self.m.s.spindle_production_year)
+                                                               self.m.s.spindle_production_year)
             self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
             self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
@@ -389,6 +398,3 @@ class SpindleTestJig1(Screen):
 
     def open_console(self):
         self.sm.current = 'spindle_test_console'
-
-
-
