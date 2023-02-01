@@ -255,6 +255,7 @@ Builder.load_string("""
                             id: unlock_code_label
                             text: 'Unlock Code:'
                             bold: True
+                            background_color: [0.62, 0.12, 0.94, 1]
                             background_normal: ''
                         
                     Button:
