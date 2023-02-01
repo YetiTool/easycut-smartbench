@@ -2138,7 +2138,7 @@ class RouterMachine(object):
 
     def calibrate_all_three_axes(self):
 
-        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.6', 'triple axis calibration'):
+        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'triple axis calibration'):
             self.run_calibration = True
             log("Calibrating all axes together...")
             self.prep_triple_axes_calibration()
