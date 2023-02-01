@@ -3,6 +3,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.clock import Clock
 
 
 class PopupSendData(Widget):
@@ -53,7 +54,8 @@ class PopupSendData(Widget):
 
         def on_send_button(*args):
             if self.m.s.autopilot_instance:
-                self.m.s.autopilot_instance.logger.export_to_gsheet()
+                label.text = 'Exporting...'
+                Clock.schedule_once(lambda dt: self.m.s.autopilot_instance.logger.export_to_gsheet(), 1)
             popup.dismiss()
 
         def on_cancel_button(*args):
