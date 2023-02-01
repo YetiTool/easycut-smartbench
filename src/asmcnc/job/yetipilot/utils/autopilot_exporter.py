@@ -247,7 +247,7 @@ class AutoPilotExporter:
         series = [
             get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
             get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 16, 17, "LEFT"),
+            get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
