@@ -153,7 +153,7 @@ class BrushUseWidget(Widget):
         try:
             if self.m.s.setting_51:
                 self.m.s.write_command('M3 S0')
-                Clock.schedule_once(self.get_restore_info, 1)
+                Clock.schedule_once(self.get_restore_info, 0.2)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
                 return
         except:
@@ -163,7 +163,7 @@ class BrushUseWidget(Widget):
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_restore_info, 1)
+        Clock.schedule_once(self.read_restore_info, 0.2)
 
     def read_restore_info(self, dt):
         self.m.s.write_command('M5')
