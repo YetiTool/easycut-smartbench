@@ -171,10 +171,13 @@ class BrushUseWidget(Widget):
         # If info was not obtained successfully, spindle production year will equal 99
         # Update this code if the year is 2099
         if self.m.s.spindle_production_year != 99:
-            self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
-            self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
-        else:
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Could not get info - spindle not plugged in!"))
+            try: # Just in case of weird errors
+                self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
+                self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
+                return
+            except:
+                pass
+        popup_info.PopupError(self.sm, self.l, self.l.get_str("Could not get info - spindle not plugged in!"))
 
     def reset_to_0(self):
         self.brush_use.text = '0'
