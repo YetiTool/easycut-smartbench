@@ -231,7 +231,7 @@ class AutoPilotExporter:
         self._write(parameters, "A1:B", "Parameters")
 
     def write_data(self, data):
-        self._write(data, "A1:Z", "Data")
+        self._write(data, "A1:Z", "Raw data")
 
     def write_feed_profile(self, feed_profile):
         self._write(feed_profile, "Y1:Z", "Parameters")
@@ -251,7 +251,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
-        self.add_chart("Data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
+        self.add_chart("Raw data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
 
     def create_boris_chart(self, data_sheet_id):
         domain = [
@@ -272,7 +272,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
         ]
 
-        self.add_chart("Data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
+        self.add_chart("Raw data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
 
     def create_sweep_chart(self, parameter_sheet_id):
         spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 0, 100000000, 24, 25)
