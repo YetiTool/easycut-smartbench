@@ -1472,16 +1472,6 @@ class RouterMachine(object):
         self.s.write_command('G28.1')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
-# DIGITAL SPINDLE INFO
-
-    def get_digital_spindle_info(self):
-        self.s.write_command('M3 S0')
-        Clock.schedule_once(self.write_get_info_protocol, 0.1)
-
-    def write_get_info_protocol(self, dt):
-        self.s.write_protocol(self.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.spindle_off, 0.3)
-
 
 
 # MOVEMENT/ACTION
