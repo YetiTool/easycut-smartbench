@@ -1476,11 +1476,11 @@ class RouterMachine(object):
 
     def get_digital_spindle_info(self):
         self.s.write_command('M3 S0')
-        Clock.schedule_once(self.write_get_info_protocol, 1)
+        Clock.schedule_once(self.write_get_info_protocol, 0.1)
 
     def write_get_info_protocol(self, dt):
         self.s.write_protocol(self.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.spindle_off, 1)
+        Clock.schedule_once(self.spindle_off, 0.3)
 
 
 
