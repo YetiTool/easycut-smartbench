@@ -106,9 +106,8 @@ class YetiPilot:
             self.counter = 0
 
     def cap_multiplier(self, multiplier):
-        if self.moving_in_z:
-            return self.cap_for_feed_increase_during_z_movement if multiplier > 0 \
-                else -self.cap_for_feed_increase_during_z_movement
+        if self.moving_in_z and multiplier > 0:
+            return self.cap_for_feed_increase_during_z_movement
 
         if multiplier < self.cap_for_feed_decrease:
             return self.cap_for_feed_decrease
