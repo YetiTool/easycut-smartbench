@@ -154,7 +154,7 @@ class BrushUseWidget(Widget):
             if self.m.s.setting_51:
                 self.m.get_digital_spindle_info()
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-                Clock.schedule_once(self.read_restore_info, 0.2)
+                Clock.schedule_once(self.read_restore_info, 2)
                 return
         except:
             pass
