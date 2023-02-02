@@ -231,7 +231,7 @@ class AutoPilotExporter:
         self._write(parameters, "A1:B", "Parameters")
 
     def write_data(self, data):
-        self._write(data, "A1:Z", "Raw data")
+        self._write(data, "A1:ZZ", "Raw data")
 
     def write_feed_profile(self, feed_profile):
         self._write(feed_profile, "Y1:Z", "Parameters")
