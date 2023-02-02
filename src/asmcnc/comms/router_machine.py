@@ -1751,6 +1751,11 @@ class RouterMachine(object):
     homing_seq_events = []
     homing_funcs_list = []
 
+    interrupt_homing_states [
+        "Alarm",
+        "Door"
+    ]
+
     homing_seq_first_delay = [
         0,    # 0: null
         0.5,  # 1: disable_y_motors - enable_y_motors
@@ -1788,7 +1793,7 @@ class RouterMachine(object):
         self.homing_seq_events.append(Clock.schedule_once(func, delay))
 
     def reschedule_homing_task_if_busy(self, func, delay=0.2):
-        if "Alarm" in self.state() or "Door" in self.state(): 
+        if self.state() in self.interrupt_homing_states: 
             self.cancel_homing_sequence()
             return True
 
