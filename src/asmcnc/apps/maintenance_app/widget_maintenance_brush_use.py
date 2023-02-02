@@ -153,7 +153,7 @@ class BrushUseWidget(Widget):
         try:
             if self.m.s.setting_51:
                 self.m.s.write_command('M3 S0')
-                Clock.schedule_once(self.get_restore_info, 0.3)
+                Clock.schedule_once(self.get_restore_info, 0.1)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
                 return
         except:
