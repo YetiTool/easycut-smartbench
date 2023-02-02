@@ -186,16 +186,15 @@ class BrushSaveWidget(Widget):
     def attempt_reset(self):
         def read_info(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(get_info, 1)
+            Clock.schedule_once(get_info, 0.1)
 
         def get_info(dt):
-            self.initial_run_time = self.m.s.spindle_brush_run_time_seconds
             self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
             Clock.schedule_once(read_info_again, 3)
 
         def read_info_again(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(compare_info, 1)
+            Clock.schedule_once(compare_info, 0.1)
 
         def compare_info(dt):
             if self.m.s.spindle_brush_run_time_seconds != 0:
