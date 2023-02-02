@@ -152,16 +152,21 @@ class BrushUseWidget(Widget):
     def restore(self):
         try:
             if self.m.s.setting_51:
-                self.m.get_digital_spindle_info()
+                self.m.s.write_command('M3 S0')
+                Clock.schedule_once(self.get_restore_info, 0.1)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-                Clock.schedule_once(self.read_restore_info, 2)
                 return
         except:
             pass
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
         self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
 
+    def get_restore_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        Clock.schedule_once(self.read_restore_info, 0.1)
+
     def read_restore_info(self, dt):
+        self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
         # If info was not obtained successfully, spindle production year will equal 99
         # Update this code if the year is 2099
