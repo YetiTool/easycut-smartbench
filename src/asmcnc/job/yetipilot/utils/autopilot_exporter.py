@@ -165,7 +165,8 @@ class AutoPilotExporter:
             body=body
         ).execute()
 
-    def add_chart(self, chart_title, bottom_axis_title, left_axis_title, domains, series, right_axis_title=''):
+    def add_chart(self, chart_title, bottom_axis_title, left_axis_title, domains, series, right_axis_title='',
+                  left_axis_max=200, right_axis_max=3000):
         service = build('sheets', 'v4', credentials=self.creds)
 
         requests = [
@@ -184,11 +185,21 @@ class AutoPilotExporter:
                                     },
                                     {
                                         "position": "LEFT_AXIS",
-                                        "title": left_axis_title
+                                        "title": left_axis_title,
+                                        "viewWindowOptions": {
+                                            "viewWindow": {
+                                                "max": left_axis_max
+                                            }
+                                        }
                                     },
                                     {
                                         "position": "RIGHT_AXIS",
-                                        "title": right_axis_title
+                                        "title": right_axis_title,
+                                        "viewWindowOptions": {
+                                            "viewWindow": {
+                                                "max": right_axis_max
+                                            }
+                                        }
                                     }
                                 ],
                                 "domains": domains,
