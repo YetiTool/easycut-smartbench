@@ -145,7 +145,7 @@ class YetiPilot:
             time_stamp = format_time(now_time - self.m.s.job_start_time)
 
         self.logger.add_log(
-            load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
+            load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[-2:],
             adjustment, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
             self.m.s.sg_y_axis, self.m.s.sg_z_motor_axis, self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
             self.m.s.sg_y2_motor, self.spindle_target_watts, self.m.s.digital_spindle_ld_qdA, self.m.s.digital_spindle_mains_voltage,
