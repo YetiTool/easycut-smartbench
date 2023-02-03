@@ -64,7 +64,10 @@ class YetiPilot:
     def start(self):
         self.enabled = True
 
-        job_name = self.sm.get_screen('go').file_data_label.text
+        job_name = ''
+
+        if self.sm.has_screen('go'):
+            job_name = self.sm.get_screen('go').file_data_label.text
 
         self.load_parameters_from_json()
 
