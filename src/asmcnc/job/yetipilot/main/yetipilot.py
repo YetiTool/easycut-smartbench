@@ -1,4 +1,4 @@
-from math import ceil, floor
+from math import ceil, floor, sqrt
 from asmcnc.job.yetipilot.utils.autopilot_logger import AutoPilotLogger
 import time
 import json
@@ -94,9 +94,14 @@ class YetiPilot:
     def set_target_power(self, power):
         self.spindle_target_watts = power
 
+    def lda_to_watts(self, load):
+        return self.spindle_mains_voltage * 0.1 * sqrt(load)
+
     def add_to_stack(self, load):
         if not self.enabled or self.spindle_mains_voltage is None:
             return
+
+        load = self.lda_to_watts(load)
 
         if len(self.spindle_load_stack) == self.spindle_stack_max_length:
             self.spindle_load_stack.pop(0)
