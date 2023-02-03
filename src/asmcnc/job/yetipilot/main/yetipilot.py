@@ -57,7 +57,7 @@ class YetiPilot:
 
     logger = None
 
-    sample_count = 3
+    sample_count = 2
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']

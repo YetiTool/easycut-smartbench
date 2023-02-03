@@ -4,6 +4,10 @@
     "Value": 0.5
   },
   {
+    "Name": "sample_count",
+    "Value": 2
+  },
+  {
     "Name": "spindle_target_watts",
     "Value": 875
   },
