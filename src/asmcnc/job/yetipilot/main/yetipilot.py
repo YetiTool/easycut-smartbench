@@ -144,7 +144,8 @@ class YetiPilot:
             load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
             adjustment, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
             self.m.s.sg_y_axis, self.m.s.sg_z_motor_axis, self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
-            self.m.s.sg_y2_motor, self.spindle_target_watts, self.m.s.digital_spindle_ld_qdA, self.m.s.digital_spindle_mains_voltage)
+            self.m.s.sg_y2_motor, self.spindle_target_watts, self.m.s.digital_spindle_ld_qdA, self.m.s.digital_spindle_mains_voltage,
+            self.m.s.feed_rate)
 
         if adjustment is None:
             return
