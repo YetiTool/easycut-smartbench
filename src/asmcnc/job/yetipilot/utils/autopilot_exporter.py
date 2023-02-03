@@ -255,7 +255,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 11, 12, "RIGHT"),
             get_series_format(data_sheet_id, 0, 100000000, 13, 14, "LEFT"),
             get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT"),
-            get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT")
+            get_series_format(data_sheet_id, 0, 100000000, 12, 13, "RIGHT"),
         ]
 
         self.add_chart("Raw data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
@@ -280,6 +280,18 @@ class AutoPilotExporter:
         ]
 
         self.add_chart("Raw data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)")
+
+    def create_feed_chart(self, data_sheet_id):
+        domain = [
+            get_domain_format(data_sheet_id, 1, 100000000, 0, 1)
+        ]
+
+        series = [
+            get_series_format(data_sheet_id, 0, 100000000, 27, 28, "RIGHT"),
+            get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT")
+        ]
+
+        self.add_chart("Feed Rate vs Feed Override", "Time", "Feed Override (%)", domain, series, right_axis_title="Feed  Rate (mm/min)", left_axis_max=200, right_axis_max=7000)
 
     def create_sweep_chart(self, parameter_sheet_id):
         spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 0, 100000000, 24, 25)
