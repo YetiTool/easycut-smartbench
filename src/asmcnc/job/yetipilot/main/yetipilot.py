@@ -34,7 +34,7 @@ def format_time(seconds):
 
 
 class YetiPilot:
-    status_count_before_adjustment = 1
+    status_count_before_adjustment = 2
 
     # Algorithm Variables
     bias_for_feed_decrease = 2.0
@@ -51,6 +51,8 @@ class YetiPilot:
     spindle_mains_voltage = None
     spindle_load_stack = []
     spindle_target_watts = 400
+    spindle_sample_stack = []
+    spindle_sample_count = 2
 
     enabled = False
     counter = 0
@@ -106,11 +108,17 @@ class YetiPilot:
         if len(self.spindle_load_stack) == self.spindle_stack_max_length:
             self.spindle_load_stack.pop(0)
 
+        if len(self.spindle_sample_stack) == self.spindle_sample_count:
+            self.spindle_sample_stack.pop(0)
+
+        self.spindle_sample_stack.append(load)
         self.spindle_load_stack.append(load)
+
+        avg = sum(self.spindle_sample_stack) / len(self.spindle_sample_stack)
 
         self.counter += 1
         if self.counter == self.status_count_before_adjustment:
-            self.do_adjustment(load)
+            self.do_adjustment(avg)
             self.counter = 0
 
     def cap_multiplier(self, multiplier):
