@@ -57,6 +57,8 @@ class YetiPilot:
 
     logger = None
 
+    sample_count = 2
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -108,17 +110,10 @@ class YetiPilot:
 
         self.spindle_load_stack.append(load)
 
-        avg = 0
-
         if len(self.spindle_load_stack) > 1:
-            avg = sum(self.spindle_load_stack[-2:]) / self.status_count_before_adjustment
-        else:
-            avg = self.spindle_load_stack[0]
-
-        self.counter += 1
-        if self.counter == self.status_count_before_adjustment:
+            avg = sum(self.spindle_load_stack[-self.sample_count:]) / self.sample_count
             self.do_adjustment(avg)
-            self.counter = 0
+
 
     def cap_multiplier(self, multiplier):
         if self.moving_in_z and multiplier > 0:
