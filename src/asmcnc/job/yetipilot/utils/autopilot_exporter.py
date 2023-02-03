@@ -187,18 +187,14 @@ class AutoPilotExporter:
                                         "position": "LEFT_AXIS",
                                         "title": left_axis_title,
                                         "viewWindowOptions": {
-                                            "viewWindow": {
-                                                "max": left_axis_max
-                                            }
+                                            "viewWindowMax": left_axis_max
                                         }
                                     },
                                     {
                                         "position": "RIGHT_AXIS",
                                         "title": right_axis_title,
                                         "viewWindowOptions": {
-                                            "viewWindow": {
-                                                "max": right_axis_max
-                                            }
+                                            "viewWindowMax": right_axis_max
                                         }
                                     }
                                 ],
