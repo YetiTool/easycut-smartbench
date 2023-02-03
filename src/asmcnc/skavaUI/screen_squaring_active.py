@@ -113,10 +113,13 @@ class SquaringScreenActive(Screen):
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
     def poll_for_squaring_status_func(self, dt=0):
-        # if homing interrupted then eventually go back to cancel to screen (maybe from on_enter?)
 
-        if not self.m.homing_in_progress: self.sm.current = self.cancel_to_screen
-        if not self.m.i_am_auto_squaring(): self.return_to_homing_active_screen()
+        if not self.m.homing_in_progress or self.m.homing_interrupted: 
+            self.return_to_homing_active_screen()
+            return
+        
+        if not self.m.i_am_auto_squaring(): 
+            self.return_to_homing_active_screen()
 
     def check_next_screen_and_set_homing_flag(self):
         if self.sm.current not in [self.return_to_screen, 'homing_active']: self.m.homing_interrupted = True
@@ -127,21 +130,12 @@ class SquaringScreenActive(Screen):
         self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
 
-    def cancel_squaring(self):
-        self.m.cancel_homing_sequence()
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
-        self.sm.current = self.cancel_to_screen
-
     def update_strings(self):
-
         self.overdrive_label.text = self.l.get_str("This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.")
         self.squaring_label.text = self.l.get_bold("Squaring") + "..."
 
     def windows_cheat_to_procede(self):
-
         if sys.platform == 'win32' or sys.platform == 'darwin':
-            self.squaring_detected_as_complete()
+            self.return_to_homing_active_screen()
         else: pass
-
-    def squaring_detected_as_complete(self):
-        self.return_to_homing_active_screen()
+        

@@ -97,12 +97,18 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
-        if self.m.homing_interrupted: return
-        if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
+        if self.m.homing_interrupted: 
+            self.cancel_homing()
+            return
+
+        if not self.m.homing_in_progress: 
+            self.m.do_standard_homing_sequence()
+        
         self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
 
     def after_successful_completion_return_to_screen(self):
         self.sm.current = self.return_to_screen
+        self.m.homing_interrupted = False
     
     def on_leave(self):
         if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
@@ -113,10 +119,16 @@ class HomingScreenActive(Screen):
         else: self.m.homing_interrupted = False
 
     def poll_for_homing_status_func(self, dt=0):
+        if not self.m.homing_in_progress: 
+            self.after_successful_completion_return_to_screen()
+            return 
 
-        # if homing interrupted then eventually go back to cancel to screen (maybe from on_enter?)
-        if not self.m.homing_in_progress: self.after_successful_completion_return_to_screen()
-        if self.m.i_am_auto_squaring(): self.go_to_auto_squaring_screen()
+        if self.m.homing_interrupted: 
+            self.cancel_homing()
+            return
+        
+        if self.m.i_am_auto_squaring(): 
+            self.go_to_auto_squaring_screen()
 
     def go_to_auto_squaring_screen(self, dt=0):
         # in case the sequence quickly skips over auto-squaring, delay screen change
@@ -127,17 +139,14 @@ class HomingScreenActive(Screen):
 
     def cancel_homing(self):
         self.m.cancel_homing_sequence()
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
+        self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
 
     def update_strings(self):
         self.homing_label.text = self.l.get_str('Homing') + '...'
         
     def windows_cheat_to_procede(self):
-
         if sys.platform == 'win32' or sys.platform == 'darwin':
-            self.homing_detected_as_complete()
+            self.after_successful_completion_return_to_screen()
         else: pass
-
-    def homing_detected_as_complete(self):
-        self.after_successful_completion_return_to_screen()
+        

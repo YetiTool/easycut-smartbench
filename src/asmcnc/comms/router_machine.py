@@ -1842,13 +1842,13 @@ class RouterMachine(object):
 
     def cancel_homing_sequence(self):
         self.reset_homing_sequence_flags()
+        self.m.homing_interrupted = True
         self.reset_on_cancel_homing()
         if self.run_calibration: self.cancel_triple_axes_calibration() # If mid calibration, want to do a hard PCB reset
         self.is_machine_homed = False
         self.set_led_colour("YELLOW")
         self.homing_in_progress = False
         log("Cancel homing sequence")
-
 
 
 # Z PROBE
