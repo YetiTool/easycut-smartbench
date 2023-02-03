@@ -129,7 +129,7 @@ class SquaringScreenActive(Screen):
         else: self.m.homing_interrupted = False
 
     def cancel_squaring(self):
-        self.m.cancel_homing_sequence()
+        self.m.homing_interrupted = True
         self.return_to_homing_active_screen()
 
     def return_to_homing_active_screen(self):        
