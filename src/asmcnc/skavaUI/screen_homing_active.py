@@ -86,13 +86,6 @@ class HomingScreenActive(Screen):
     return_to_screen = 'lobby'
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
-    homing_interrupted = False
-
-    screens_to_not_start_homing_from_if_next = [
-            'errorScreen',
-            'door',
-            'alarm_1'
-        ]
 
     def __init__(self, **kwargs):
 
@@ -104,7 +97,7 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
-        if self.homing_interrupted: return
+        if self.m.homing_interrupted: return
         if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
         self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
 
@@ -116,10 +109,12 @@ class HomingScreenActive(Screen):
         self.check_next_screen_and_set_homing_flag()
 
     def check_next_screen_and_set_homing_flag(self):
-        if self.sm.current in self.screens_to_not_start_homing_from_if_next: self.homing_interrupted = True
-        else: self.homing_interrupted = False
+        if self.sm.current not in [self.return_to_screen, 'squaring_active']: self.m.homing_interrupted = True
+        else: self.m.homing_interrupted = False
 
     def poll_for_homing_status_func(self, dt=0):
+
+        # if homing interrupted then eventually go back to cancel to screen (maybe from on_enter?)
         if not self.m.homing_in_progress: self.after_successful_completion_return_to_screen()
         if self.m.i_am_auto_squaring(): self.go_to_auto_squaring_screen()
 

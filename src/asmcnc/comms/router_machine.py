@@ -1746,6 +1746,7 @@ class RouterMachine(object):
 
     ## homing event handling (needs testing, might not work (: )
     homing_in_progress = False
+    homing_interrupted = False
     homing_task_idx = 0
     completed_homing_tasks = []
     homing_seq_events = []

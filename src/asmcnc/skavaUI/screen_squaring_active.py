@@ -97,7 +97,6 @@ class SquaringScreenActive(Screen):
     cancel_to_screen = 'lobby'     
     poll_for_completion_loop = None
     
-    
     def __init__(self, **kwargs):
     
         super(SquaringScreenActive, self).__init__(**kwargs)
@@ -114,8 +113,14 @@ class SquaringScreenActive(Screen):
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
     def poll_for_squaring_status_func(self, dt=0):
+        # if homing interrupted then eventually go back to cancel to screen (maybe from on_enter?)
+
         if not self.m.homing_in_progress: self.sm.current = self.cancel_to_screen
         if not self.m.i_am_auto_squaring(): self.return_to_homing_active_screen()
+
+    def check_next_screen_and_set_homing_flag(self):
+        if self.sm.current not in [self.return_to_screen, 'homing_active']: self.m.homing_interrupted = True
+        else: self.m.homing_interrupted = False
 
     def return_to_homing_active_screen(self):        
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
