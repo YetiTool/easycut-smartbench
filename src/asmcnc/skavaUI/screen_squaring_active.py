@@ -128,6 +128,10 @@ class SquaringScreenActive(Screen):
         if self.sm.current not in [self.return_to_screen, 'homing_active']: self.m.homing_interrupted = True
         else: self.m.homing_interrupted = False
 
+    def cancel_squaring(self):
+        self.m.cancel_homing()
+        self.return_to_homing_active_screen()
+
     def return_to_homing_active_screen(self):        
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
