@@ -119,6 +119,9 @@ class HomingScreenActive(Screen):
         else: self.m.homing_interrupted = False
 
     def poll_for_homing_status_func(self, dt=0):
+
+        print("Polling for homing status")
+
         if not self.m.homing_in_progress: 
             self.after_successful_completion_return_to_screen()
             return 
@@ -132,7 +135,7 @@ class HomingScreenActive(Screen):
 
     def go_to_auto_squaring_screen(self, dt=0):
         # in case the sequence quickly skips over auto-squaring, delay screen change
-        if self.m.homing_task_idx > 3: return
+        if self.m.homing_task_idx > self.m.auto_squaring_idx: return
         self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
         self.sm.current = 'squaring_active'
