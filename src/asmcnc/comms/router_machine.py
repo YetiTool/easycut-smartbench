@@ -1663,6 +1663,7 @@ class RouterMachine(object):
 
     # Call this function for whole sequence
     def do_standard_homing_sequence(self):
+        self.homing_interrupted = False
         self.homing_in_progress = True
         log("Start homing sequence")
         self.reset_homing_sequence_flags()
@@ -1741,6 +1742,7 @@ class RouterMachine(object):
         self.reset_homing_sequence_flags()
         self.is_machine_completed_the_initial_squaring_decision = True
         self.is_machine_homed = True
+        self.homing_interrupted = False
         self.homing_in_progress = False
         log("Complete homing sequence")
 

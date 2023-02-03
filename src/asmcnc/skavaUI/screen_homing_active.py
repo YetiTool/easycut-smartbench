@@ -140,6 +140,7 @@ class HomingScreenActive(Screen):
 
     def cancel_homing(self):
         self.m.cancel_homing_sequence()
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
         self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
 
