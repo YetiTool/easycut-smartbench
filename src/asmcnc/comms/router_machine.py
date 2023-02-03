@@ -1674,7 +1674,7 @@ class RouterMachine(object):
 
     def i_am_auto_squaring(self):
 
-        if self.homing_task_idx != 3:
+        if self.homing_task_idx != self.auto_squaring_idx:
             return False
 
         if not self.s.is_sequential_streaming: 
@@ -1751,6 +1751,7 @@ class RouterMachine(object):
     completed_homing_tasks = []
     homing_seq_events = []
     homing_funcs_list = []
+    auto_squaring_idx = 4
 
     interrupt_homing_states = [
         "Alarm",
