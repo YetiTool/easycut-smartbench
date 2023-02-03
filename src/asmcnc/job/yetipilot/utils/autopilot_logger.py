@@ -83,7 +83,7 @@ class AutoPilotLogger:
                          log.current_load, log.target_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
                          log.moving_in_z, log.feed_override_percentage, log.sg_x_motor_axis, log.sg_y_axis,
                          log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor,
-                         log.raw_spindle_load, log.spindle_voltage, log.feed_rate])
+                         log.raw_spindle_load, log.spindle_voltage, int(log.feed_rate)])
         return data
 
     def get_feed_multiplier(self, current_power):
