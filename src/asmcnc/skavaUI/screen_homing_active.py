@@ -120,8 +120,6 @@ class HomingScreenActive(Screen):
 
     def poll_for_homing_status_func(self, dt=0):
 
-        print("Polling for homing status")
-
         if not self.m.homing_in_progress: 
             self.after_successful_completion_return_to_screen()
             return 
