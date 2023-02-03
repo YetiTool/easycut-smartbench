@@ -1752,7 +1752,7 @@ class RouterMachine(object):
     homing_seq_events = []
     homing_funcs_list = []
 
-    interrupt_homing_states [
+    interrupt_homing_states = [
         "Alarm",
         "Door"
     ]
