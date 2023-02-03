@@ -1,6 +1,7 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from asmcnc.job.yetipilot.main.yetipilot import YetiPilot
+from math import ceil
 
 
 Builder.load_string("""
@@ -27,24 +28,37 @@ Builder.load_string("""
             
         BoxLayout:
             spacing: 0
-            Label:
-                text: '0'
-                color: 0,0,0,1
-                size_hint_x: 0.2
-                
-            Slider:
-                id: power_slider
-                min: 1
-                max: 100
-                step: 1
-                on_value: root.on_slider_value_change()
+            orientation: 'vertical'
             
             Label:
-                text: '100'
+                text: str(int(root.power_slider.value * 20)) + 'W'
                 color: 0,0,0,1
-                size_hint_x: 0.2
+            
+            BoxLayout:
+                spacing: 0
+                Label:
+                    text: '0'
+                    color: 0,0,0,1
+                    size_hint_x: 0.2
+                    
+                Slider:
+                    id: power_slider
+                    min: 1
+                    max: 100
+                    step: 1
+                    on_value: root.on_slider_value_change()
+                
+                Label:
+                    text: '100'
+                    color: 0,0,0,1
+                    size_hint_x: 0.2
+                
 
 """)
+
+
+def get_closest_multiple(n, x):
+    return int(ceil(n / float(x))) * x
 
 
 class YetiPilotWidget(Widget):
@@ -52,6 +66,10 @@ class YetiPilotWidget(Widget):
         super(YetiPilotWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
+
+        self.switch.active = True
+        self.toggle_yeti_pilot()
+        self.power_slider.value = get_closest_multiple(self.m.s.autopilot_instance.spindle_target_watts, 20) / 20
 
     def toggle_yeti_pilot(self):
         if not self.m.s.autopilot_instance:
