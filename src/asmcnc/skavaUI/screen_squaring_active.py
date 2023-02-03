@@ -105,6 +105,9 @@ class SquaringScreenActive(Screen):
         self.l=kwargs['localization']
         self.update_strings()
 
+    def on_pre_enter(self):
+        if not self.m.homing_in_progress or self.m.homing_interrupted: self.return_to_homing_active_screen()
+
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
         self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_squaring_status_func, 0.2)
