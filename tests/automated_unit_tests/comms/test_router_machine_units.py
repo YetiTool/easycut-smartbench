@@ -287,7 +287,8 @@ def test_unschedule_homing_events(m):
 def test_reset_homing_sequence_flags(m):
     m.completed_homing_tasks = [True]*3
     m.homing_task_idx = "Dogs"
-    m.homing_seq_events = ["Eggs"]
+    def nested_func(dt): pass
+    m.homing_seq_events = [Clock.schedule_once(nested_func, 1)]
     m.reset_homing_sequence_flags()
     assert m.completed_homing_tasks == []
     assert m.homing_task_idx == 0
