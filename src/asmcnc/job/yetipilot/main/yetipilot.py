@@ -135,10 +135,7 @@ class YetiPilot:
 
         if self.m.s.job_start_time is not None:
             now_time = time.time()
-            print('now_time', now_time)
-            print('job_start_time', self.m.s.job_start_time)
             time_stamp = format_time(now_time - self.m.s.job_start_time)
-            print('time_stamp', time_stamp)
 
         self.logger.add_log(
             load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
