@@ -129,6 +129,7 @@ class SquaringScreenActive(Screen):
         else: self.m.homing_interrupted = False
 
     def cancel_squaring(self):
+        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
         self.m.homing_interrupted = True
         self.return_to_homing_active_screen()
 
