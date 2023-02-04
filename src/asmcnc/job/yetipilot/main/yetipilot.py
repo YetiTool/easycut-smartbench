@@ -57,7 +57,8 @@ class YetiPilot:
 
     logger = None
 
-    sample_count = 2
+    ema = None
+    ema_smoothing = 0.1
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -99,21 +100,21 @@ class YetiPilot:
     def lda_to_watts(self, load):
         return self.spindle_mains_voltage * 0.1 * sqrt(load)
 
+    def get_ema(self, load):
+        return self.ema_smoothing * load + (1 - self.ema_smoothing) * self.ema
+
     def add_to_stack(self, load):
         if not self.enabled or self.spindle_mains_voltage is None:
             return
 
         load = self.lda_to_watts(load)
 
-        if len(self.spindle_load_stack) == self.spindle_stack_max_length:
-            self.spindle_load_stack.pop(0)
+        if self.ema is None:
+            self.ema = load
+        else:
+            self.ema = self.get_ema(load)
 
-        self.spindle_load_stack.append(load)
-
-        if len(self.spindle_load_stack) > 1:
-            avg = sum(self.spindle_load_stack[-self.sample_count:]) / self.sample_count
-            self.do_adjustment(avg)
-
+        self.do_adjustment(self.ema)
 
     def cap_multiplier(self, multiplier):
         if self.moving_in_z and multiplier > 0:
@@ -140,7 +141,7 @@ class YetiPilot:
             time_stamp = format_time(now_time - self.m.s.job_start_time)
 
         self.logger.add_log(
-            load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[-self.sample_count:],
+            load, adjustment, time_stamp, self.spindle_load_stack[:], self.spindle_load_stack[:],
             adjustment, adjustment, self.m.s.feed_override_percentage, str(self.moving_in_z), self.m.s.sg_x_motor_axis,
             self.m.s.sg_y_axis, self.m.s.sg_z_motor_axis, self.m.s.sg_x1_motor, self.m.s.sg_x2_motor, self.m.s.sg_y1_motor,
             self.m.s.sg_y2_motor, self.spindle_target_watts, self.m.s.digital_spindle_ld_qdA, self.m.s.digital_spindle_mains_voltage,
