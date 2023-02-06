@@ -532,7 +532,7 @@ class SerialConnection(object):
     
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
-                self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
+                self.c_line.append(len(line_to_go) + 2) # Track number of characters in grbl serial read buffer
                 self.write_direct(line_to_go, show_in_sys = True, show_in_console = False) # Send g-code block to grbl
                 self.l_count += 1 # lines sent to grbl           
             else:
