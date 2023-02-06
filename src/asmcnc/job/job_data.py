@@ -170,9 +170,6 @@ class JobData(object):
 
         self.job_gcode_raw = map(remove_newlines, raw_gcode)
 
-        with open('../../line_numbers.txt', 'w+') as f:
-            f.writelines(gcode_with_line_numbers)
-
         try:
             metadata_start_index = self.job_gcode_raw.index('(YetiTool SmartBench MES-Data)')
             metadata_end_index = self.job_gcode_raw.index('(End of YetiTool SmartBench MES-Data)')
