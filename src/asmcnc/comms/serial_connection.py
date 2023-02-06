@@ -284,9 +284,9 @@ class SerialConnection(object):
 
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
-    VERBOSE_ALL_PUSH_MESSAGES = True
-    VERBOSE_ALL_RESPONSE = True
-    VERBOSE_STATUS = True
+    VERBOSE_ALL_PUSH_MESSAGES = False
+    VERBOSE_ALL_RESPONSE = False
+    VERBOSE_STATUS = False
 
 
     def grbl_scanner(self, run_grbl_scanner_once = False):
@@ -460,7 +460,7 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
-        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line
+        gcode_with_line_numbers = [line if self.is_excluded(line) else 'N' + str(i) + ' ' + line
                                    for i, line in enumerate(job_object)]
 
         self.jd.job_gcode_running = gcode_with_line_numbers
@@ -532,7 +532,7 @@ class SerialConnection(object):
     
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
-                self.c_line.append(len(line_to_go) + 2) # Track number of characters in grbl serial read buffer
+                self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
                 self.write_direct(line_to_go, show_in_sys = True, show_in_console = False) # Send g-code block to grbl
                 self.l_count += 1 # lines sent to grbl           
             else:
@@ -1496,8 +1496,8 @@ class SerialConnection(object):
     _dwell_time = 0.5 # time for grbl to wait after sending dollar settings commands
     _dwell_command = "G4 P" + str(_dwell_time)
 
-    def is_comment(self, line):
-        return '(' in line or ')' in line or '$' in line
+    def is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
