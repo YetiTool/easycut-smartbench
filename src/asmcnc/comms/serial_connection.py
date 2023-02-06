@@ -896,8 +896,12 @@ class SerialConnection(object):
 
                     total_feed_rate = self.feed_override_percentage * last_feed_rate / 100
 
-                    print('total_feed_rate', total_feed_rate)
-                    print('feed_rate', self.feed_rate)
+                    if total_feed_rate > self.feed_rate + 50:
+                        print('accelerating')
+                    elif total_feed_rate < self.feed_rate - 50:
+                        print('decelerating')
+                    else:
+                        print('constant')
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
