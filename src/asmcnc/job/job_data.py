@@ -183,7 +183,12 @@ class JobData(object):
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
-            
+
+            gcode_with_line_numbers = [str(i) + ' ' + line for i, line in enumerate(gcode_without_metadata)]
+
+            with open('../../line_numbers.txt', 'w+') as f:
+                f.writelines(gcode_with_line_numbers)
+
             self.comments_list = [''.join(re.findall('\(.*?\)',s)) for s in gcode_without_metadata if "(" in s]
 
         except:
