@@ -101,9 +101,6 @@ class HomingScreenActive(Screen):
             self.cancel_homing()
             return
 
-        if not self.m.homing_in_progress: 
-            self.return_to_ec_if_homing_not_in_progress()
-
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
         if self.m.homing_interrupted: return
