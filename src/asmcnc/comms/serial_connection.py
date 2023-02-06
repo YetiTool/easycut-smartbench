@@ -1493,11 +1493,16 @@ class SerialConnection(object):
     _dwell_time = 0.5 # time for grbl to wait after sending dollar settings commands
     _dwell_command = "G4 P" + str(_dwell_time)
 
+    def is_comment(self, line):
+        return '(' in line or ')' in line
+
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
-        self._sequential_stream_buffer = list_to_stream
+        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line for i, line in
+                                   enumerate(list_to_stream)]
+        self._sequential_stream_buffer = gcode_with_line_numbers
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
                 
@@ -1509,7 +1514,6 @@ class SerialConnection(object):
 
         if self._sequential_stream_buffer:
             try:
-                print("Sending: " + self._sequential_stream_buffer[0])
                 self.write_direct(self._sequential_stream_buffer[0])
                 if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = self._dwell_command
                 else: del self._sequential_stream_buffer[0]

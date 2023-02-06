@@ -166,14 +166,12 @@ class JobData(object):
         else:
             self.job_name = self.filename.split("/")[-1]
 
-    def is_comment(self, line):
-        return '(' in line and ')' in line
-
     def generate_job_data(self, raw_gcode):
 
-        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line for i, line in enumerate(raw_gcode)]
+        self.job_gcode_raw = map(remove_newlines, raw_gcode)
 
-        self.job_gcode_raw = map(remove_newlines, gcode_with_line_numbers)
+        with open('../../line_numbers.txt', 'w+') as f:
+            f.writelines(gcode_with_line_numbers)
 
         try:
             metadata_start_index = self.job_gcode_raw.index('(YetiTool SmartBench MES-Data)')
