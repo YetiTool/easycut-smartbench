@@ -1502,6 +1502,7 @@ class SerialConnection(object):
         if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
         gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line for i, line in
                                    enumerate(list_to_stream)]
+        print(gcode_with_line_numbers[0])
         self._sequential_stream_buffer = gcode_with_line_numbers
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
