@@ -21,7 +21,6 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.rst import RstDocument
 
-
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
     def __init__(self, screen_manager, localization):

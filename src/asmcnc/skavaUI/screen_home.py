@@ -6,25 +6,17 @@ Created on 19 Aug 2017
 '''
 # config
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from __builtin__ import file
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
-import os, sys, threading
 from datetime import datetime
-from multiprocessing import Process, Manager
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
 from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view # @UnresolvedImport
-from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
-from time import sleep
 
+from asmcnc.job.yetipilot.utils.autopilot_popups import PopupSendData
 
 Builder.load_string("""
 
@@ -299,6 +291,9 @@ class HomeScreen(Screen):
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
     def on_enter(self):
+        if self.m.s.autopilot_instance:
+            if self.m.s.autopilot_instance.logger:
+                PopupSendData(machine=self.m)
 
         self.m.stylus_router_choice = 'router'
 
