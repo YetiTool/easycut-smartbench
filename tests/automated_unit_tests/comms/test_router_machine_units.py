@@ -21,7 +21,6 @@ from datetime import datetime
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 from kivy.clock import Clock
-from time import sleep
 
 
 '''
