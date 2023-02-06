@@ -86,6 +86,7 @@ class HomingScreenActive(Screen):
     return_to_screen = 'lobby'
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
+    expected_next_screen = 'squaring_active'
 
     def __init__(self, **kwargs):
 
@@ -100,31 +101,33 @@ class HomingScreenActive(Screen):
             self.cancel_homing()
             return
 
+        if not self.m.homing_in_progress: 
+            self.return_to_ec_if_homing_not_in_progress()
+
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
         if self.m.homing_interrupted: return
         if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
         self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
 
-    def after_successful_completion_return_to_screen(self):
+    def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
         self.m.homing_interrupted = False
     
     def on_leave(self):
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
+        self.cancel_poll()
         self.check_next_screen_and_set_homing_flag()
 
     def check_next_screen_and_set_homing_flag(self):
-        if self.sm.current not in [self.return_to_screen, 'squaring_active']: self.m.homing_interrupted = True
-        else: self.m.homing_interrupted = False
+        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen] else False
 
     def poll_for_homing_status_func(self, dt=0):
 
         if not self.m.homing_in_progress: 
-            self.after_successful_completion_return_to_screen()
+            self.return_to_ec_if_homing_not_in_progress()
             return 
 
-        if self.m.homing_interrupted: 
+        if self.m.homing_interrupted:
             self.cancel_homing()
             return
         
@@ -140,15 +143,18 @@ class HomingScreenActive(Screen):
 
     def cancel_homing(self):
         self.m.cancel_homing_sequence()
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
+        self.cancel_poll()
         self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
+
+    def cancel_poll(self):
+        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
         self.homing_label.text = self.l.get_str('Homing') + '...'
         
     def windows_cheat_to_procede(self):
         if sys.platform == 'win32' or sys.platform == 'darwin':
-            self.after_successful_completion_return_to_screen()
+            self.return_to_ec_if_homing_not_in_progress()
         else: pass
         
