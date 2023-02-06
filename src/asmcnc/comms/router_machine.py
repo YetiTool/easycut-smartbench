@@ -1197,6 +1197,9 @@ class RouterMachine(object):
         if self.s.is_sequential_streaming:
             return True
 
+        if self.s.is_job_streaming:
+            return True
+
         if self.s.write_command_buffer: 
             return True
 

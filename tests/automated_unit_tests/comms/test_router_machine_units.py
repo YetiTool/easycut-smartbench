@@ -177,6 +177,10 @@ def test_smartbench_is_busy_if_sequential_streaming(m):
     m.s.is_sequential_streaming = True
     assert m.smartbench_is_busy()
 
+def test_smartbench_is_busy_if_job_streaming(m):
+    m.s.is_job_streaming = True
+    assert m.smartbench_is_busy()
+
 def test_smartbench_is_busy_if_command_buffer_full(m):
     m.s.write_command_buffer = ["GRBL"]
     assert m.smartbench_is_busy()
