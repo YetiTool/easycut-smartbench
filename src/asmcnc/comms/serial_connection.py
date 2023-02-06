@@ -892,20 +892,16 @@ class SerialConnection(object):
                 elif part.startswith('Ln:'):
                     self.current_line_number = part[3:]
 
-                    print('current_line_number', self.current_line_number)
-
                     last_feed_rate = self.jd.find_last_feedrate(int(self.current_line_number))
-
-                    print('last_feed_rate', last_feed_rate)
 
                     total_feed_rate = self.feed_override_percentage * last_feed_rate
 
                     if total_feed_rate > self.feed_rate + 50:
                         print('decelerating')
-
-                    if total_feed_rate < self.feed_rate - 50:
+                    elif total_feed_rate < self.feed_rate - 50:
                         print('accelerating')
-
+                    else:
+                        print('constant')
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
