@@ -876,7 +876,7 @@ class SerialConnection(object):
                 elif part.startswith('Ln:'):
                     self.line_number = part[3:]
 
-                    print("Line number: " + self.line_number
+                    print("Line number: " + self.line_number)
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
