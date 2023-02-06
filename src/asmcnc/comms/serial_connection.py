@@ -787,7 +787,8 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
-    current_line_number = 0
+    feed_override_percentage = None
+    current_line_number = None
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -878,6 +879,16 @@ class SerialConnection(object):
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
                     self.wco_z = pos[2]
+                elif part.startswith('Ov:'):
+                    values = part[3:].split(',')
+
+                    try:
+                        int(values[0])
+                    except:
+                        log("ERROR status parse: Ov values invalid: " + message)
+                        return
+
+                    self.feed_override_percentage = int(values[0])
                 elif part.startswith('Ln:'):
                     self.current_line_number = part[3:]
 
@@ -886,6 +897,15 @@ class SerialConnection(object):
                     last_feed_rate = self.jd.find_last_feedrate(int(self.current_line_number))
 
                     print('last_feed_rate', last_feed_rate)
+
+                    total_feed_rate = self.feed_override_percentage * last_feed_rate
+
+                    if total_feed_rate > self.feed_rate + 50:
+                        print('decelerating')
+
+                    if total_feed_rate < self.feed_rate - 50:
+                        print('accelerating')
+
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
