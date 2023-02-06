@@ -80,7 +80,6 @@ class RouterMachine(object):
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
-
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
 
@@ -122,8 +121,6 @@ class RouterMachine(object):
     amb_cooldown_rpm_default = 10000
     yeti_cooldown_rpm_default = 12000
     spindle_cooldown_rpm_override = False
-
-
 
     ## DEVICE LABEL
     device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
@@ -276,6 +273,9 @@ class RouterMachine(object):
         self.read_device_label()
         self.read_device_location()
 
+
+    def look_at(self, f):
+        return path.isfile(f)
 
     ## SET UP OPTIONS
     def read_set_up_options(self):
@@ -684,6 +684,9 @@ class RouterMachine(object):
             log("Unable to write device location")
             return False
 
+    sing_path = '../../multiply.txt'
+    theateam_path =  '../../plus.txt'
+
 # GRBL SETTINGS
     def write_dollar_50_setting(self, serial_number):
         dollar_50_setting = [
@@ -933,6 +936,12 @@ class RouterMachine(object):
             log(error_description)
 
             return False
+
+    def sing(self):
+        return self.look_at(self.sing_path)
+
+    def theateam(self):
+        return self.look_at(self.theateam_path)
 
 # HW/FW ADJUSTMENTS
 
@@ -2149,7 +2158,8 @@ class RouterMachine(object):
 
     def calibrate_all_three_axes(self):
 
-        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'triple axis calibration'):
+        if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'triple axis calibration') and self.sing() and \
+            self.get_setting_53():
             self.run_calibration = True
             log("Calibrating all axes together...")
             self.prep_triple_axes_calibration()
