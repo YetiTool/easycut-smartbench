@@ -787,6 +787,8 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
+    current_line_number = 0
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -877,10 +879,7 @@ class SerialConnection(object):
                     self.wco_y = pos[1]
                     self.wco_z = pos[2]
                 elif part.startswith('Ln:'):
-                    self.line_number = part[3:]
-
-                    print("Line number: " + self.line_number)
-
+                    self.current_line_number = part[3:]
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
                     buffer_info = part[3:].split(',')
@@ -1497,7 +1496,7 @@ class SerialConnection(object):
     _dwell_command = "G4 P" + str(_dwell_time)
 
     def is_excluded(self, line):
-        return '(' in line or ')' in line or '$' in line or 'AE' in line
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
