@@ -896,9 +896,9 @@ class SerialConnection(object):
 
                     total_feed_rate = self.feed_override_percentage * last_feed_rate / 100
 
-                    if total_feed_rate > self.feed_rate + 50:
+                    if total_feed_rate > int(self.feed_rate) + 50:
                         print('accelerating')
-                    elif total_feed_rate < self.feed_rate - 50:
+                    elif total_feed_rate < int(self.feed_rate) - 50:
                         print('decelerating')
                     else:
                         print('constant')
