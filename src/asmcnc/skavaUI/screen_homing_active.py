@@ -112,6 +112,7 @@ class HomingScreenActive(Screen):
     def on_leave(self):
         self.cancel_poll()
         self.check_next_screen_and_set_homing_flag()
+        self.update_strings()
 
     def check_next_screen_and_set_homing_flag(self):
         self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen] else False
@@ -130,6 +131,10 @@ class HomingScreenActive(Screen):
             self.go_to_auto_squaring_screen()
             return
 
+        # Placeholder until we've finalised on UX & language
+        # if self.m.run_calibration:
+        #     self.homing_label.text = self.l.get_str('Finding motor baselines') + '...'
+
         self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_homing_status_func, 0.2)
 
     def go_to_auto_squaring_screen(self, dt=0):
@@ -140,6 +145,7 @@ class HomingScreenActive(Screen):
         self.sm.current = 'squaring_active'
 
     def cancel_homing(self):
+        self.homing_label.text = self.l.get_str('Please wait') + '...'
         self.m.cancel_homing_sequence()
         self.cancel_poll()
         self.m.homing_interrupted = False
