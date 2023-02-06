@@ -460,7 +460,10 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
-        self.jd.job_gcode_running = job_object
+        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line for i, line in
+                                   enumerate(job_object)]
+
+        self.jd.job_gcode_running = gcode_with_line_numbers
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -1500,10 +1503,7 @@ class SerialConnection(object):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
-        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line for i, line in
-                                   enumerate(list_to_stream)]
-        print(gcode_with_line_numbers[0])
-        self._sequential_stream_buffer = gcode_with_line_numbers
+        self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
                 
