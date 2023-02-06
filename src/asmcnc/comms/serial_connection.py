@@ -460,8 +460,8 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
-        gcode_with_line_numbers = [line if self.is_comment(line) or line is '' else 'N' + str(i) + ' ' + line for i, line in
-                                   enumerate(job_object)]
+        gcode_with_line_numbers = [line if self.is_comment(line) else 'N' + str(i) + ' ' + line
+                                   for i, line in enumerate(job_object)]
 
         self.jd.job_gcode_running = gcode_with_line_numbers
 
