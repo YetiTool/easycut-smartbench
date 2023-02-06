@@ -894,7 +894,7 @@ class SerialConnection(object):
 
                     last_feed_rate = self.jd.find_last_feedrate(int(self.current_line_number))
 
-                    total_feed_rate = self.feed_override_percentage * last_feed_rate
+                    total_feed_rate = self.feed_override_percentage * last_feed_rate / 100
 
                     print('total_feed_rate', total_feed_rate)
                     print('feed_rate', self.feed_rate)
