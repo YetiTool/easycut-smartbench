@@ -29,7 +29,7 @@ class JobData(object):
     job_gcode_raw = []
     job_gcode_modified = []
     job_gcode_running = []
-    
+
     ## METADATA
     # job info scraped from file
     comments_list = []
@@ -37,7 +37,7 @@ class JobData(object):
     feedrate_min = None
     spindle_speed_max = None
     spindle_speed_min = None
-    
+
     # boundary info
     x_max = None
     x_min = None
@@ -45,27 +45,27 @@ class JobData(object):
     y_min = None
     z_max = None
     z_min = None
-    
+
     # check info
     checked = False
     check_warning = ''
-    
+
     # SmartTransfer metadata container
     metadata_dict = {}
 
     # DURING JOB
     screen_to_return_to_after_job = 'home'
     screen_to_return_to_after_cancel = 'home'
-    
+
     percent_thru_job = 0
-    
+
     ## END OF JOB
-    
+
     # Time taken
     actual_runtime = ''
     pause_duration = ''
     total_time = ''
-    
+
     # Production notes
     post_production_notes = ''
     batch_number = ''
@@ -74,7 +74,7 @@ class JobData(object):
     gcode_summary_string = ''
     smarttransfer_metadata_string = ''
     feeds_speeds_and_boundaries_string = ''
-    check_info_string = ''    
+    check_info_string = ''
     comments_string = ''
 
     def __init__(self, **kwargs):
@@ -154,7 +154,7 @@ class JobData(object):
         self.gcode_summary_string = ''
         self.smarttransfer_metadata_string = ''
         self.feeds_speeds_and_boundaries_string = ''
-        self.check_info_string = ''    
+        self.check_info_string = ''
         self.comments_string = ''
 
     def set_job_filename(self, job_path_and_name):
@@ -199,7 +199,7 @@ class JobData(object):
         self.scraped_feeds_speeds_and_boundaries_into_string()
         self.check_info_into_string()
         self.comments_into_string()
-        
+
         self.gcode_summary_string = (
 
             self.smarttransfer_metadata_string + \
@@ -216,21 +216,21 @@ class JobData(object):
 
         self.check_info_into_string()
         self.smarttransfer_metadata_into_string()
-        
+
         self.gcode_summary_string = (
 
             self.smarttransfer_metadata_string + \
             self.feeds_speeds_and_boundaries_string + \
             self.check_info_string  + \
             self.comments_string
-            
+
             )
 
 
     def smarttransfer_metadata_into_string(self):
 
         summary_list = []
-        
+
         # metadata_list = self.metadata_dict.items()
         # if len(metadata_list) > 0:
 
@@ -239,7 +239,7 @@ class JobData(object):
 
             [summary_list.append('[b]:[/b] '.join([self.l.get_bold(sublist[0]), sublist[1]])) for sublist in metadata_list]
 
-            try: 
+            try:
                 summary_list.sort(key = lambda i: self.metadata_order[i.split('[b]:[/b]')[0]])
 
             except Exception as e:
@@ -372,7 +372,7 @@ class JobData(object):
 
                 if '(YetiTool SmartBench MES-Data)' in first_line:
 
-                    all_lines = [first_line] + previewed_file.readlines()                    
+                    all_lines = [first_line] + previewed_file.readlines()
                     metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) ])
                     all_lines[1: len(metadata) + 1] = metadata
                     previewed_file.seek(0)
@@ -383,12 +383,16 @@ class JobData(object):
             print("Could not update file")
             print(str(traceback.format_exc()))
 
-    def find_last_feedrate(self, line_number):
-        feedrate_line = next((s for s in reversed(self.job_gcode_running[:line_number]) if 'F' in s), None)
-        if feedrate_line:
-            return re.match('\d+', feedrate_line[feedrate_line.find("F") + 1:]).group()
-
-        return None
+    def find_last_feedrate(self, index):
+        for i in range(index, -1, -1):
+            if 'F' in self.job_gcode_running[i]:
+                f_index = self.job_gcode_running[i].index('F')
+                end_index = f_index + 1
+                while end_index < len(self.job_gcode_running[i]) and not self.job_gcode_running[i][end_index].isalpha():
+                    end_index += 1
+                f_value = float(self.job_gcode_running[i][f_index + 1:end_index].strip())
+                return f_value
+        return -1
 
     def post_job_data_update_post_send(self):
 
