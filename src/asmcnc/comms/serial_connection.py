@@ -880,6 +880,12 @@ class SerialConnection(object):
                     self.wco_z = pos[2]
                 elif part.startswith('Ln:'):
                     self.current_line_number = part[3:]
+
+                    last_feed_rate = self.jd.find_last_feedrate(self.current_line_number)
+
+                    print('current_line_number', self.current_line_number)
+                    print('last_feed_rate', last_feed_rate)
+
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
                     buffer_info = part[3:].split(',')

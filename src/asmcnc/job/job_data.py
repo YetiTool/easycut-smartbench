@@ -383,6 +383,12 @@ class JobData(object):
             print("Could not update file")
             print(str(traceback.format_exc()))
 
+    def find_last_feedrate(self, line_number):
+        feedrate_line = next((s for s in reversed(self.job_gcode_running[:line_number]) if 'F' in s), None)
+        if feedrate_line:
+            return re.match('\d+', feedrate_line[feedrate_line.find("F") + 1:]).group()
+
+        return None
 
     def post_job_data_update_post_send(self):
 
