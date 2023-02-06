@@ -1494,7 +1494,7 @@ class SerialConnection(object):
     _dwell_command = "G4 P" + str(_dwell_time)
 
     def is_comment(self, line):
-        return '(' in line or ')' in line
+        return '(' in line or ')' in line or '$H' in line
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         self.is_sequential_streaming = True
