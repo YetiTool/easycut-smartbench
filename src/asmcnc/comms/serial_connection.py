@@ -789,6 +789,7 @@ class SerialConnection(object):
 
     feed_override_percentage = None
     current_line_number = None
+    constant_speed = False
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -894,14 +895,10 @@ class SerialConnection(object):
 
                     last_feed_rate = self.jd.find_last_feedrate(int(self.current_line_number))
 
-                    total_feed_rate = self.feed_override_percentage * last_feed_rate / 100
+                    total_feed_rate = last_feed_rate * self.feed_override_percentage / 100
 
-                    if total_feed_rate > int(self.feed_rate) + 50:
-                        print('accelerating')
-                    elif total_feed_rate < int(self.feed_rate) - 50:
-                        print('decelerating')
-                    else:
-                        print('constant')
+                    self.constant_speed = int(self.feed_rate) - 50 < total_feed_rate < int(self.feed_rate) + 50
+                    print('constant_speed', self.constant_speed, total_feed_rate, self.feed_rate)
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
