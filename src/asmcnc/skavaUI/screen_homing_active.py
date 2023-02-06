@@ -79,9 +79,7 @@ Builder.load_string("""
 
 """)
 
-
 class HomingScreenActive(Screen):
-
 
     return_to_screen = 'lobby'
     cancel_to_screen = 'lobby'    
@@ -105,7 +103,7 @@ class HomingScreenActive(Screen):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
         if self.m.homing_interrupted: return
         if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
-        self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_homing_status_func, 0.2)
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_homing_status_func, 0.2)
 
     def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
@@ -130,6 +128,9 @@ class HomingScreenActive(Screen):
         
         if self.m.i_am_auto_squaring(): 
             self.go_to_auto_squaring_screen()
+            return
+
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_homing_status_func, 0.2)
 
     def go_to_auto_squaring_screen(self, dt=0):
         # in case the sequence quickly skips over auto-squaring, delay screen change

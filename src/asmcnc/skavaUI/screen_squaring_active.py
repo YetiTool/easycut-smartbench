@@ -90,7 +90,6 @@ Builder.load_string("""
 
 """)
 
-
 class SquaringScreenActive(Screen):
     
     return_to_screen = 'lobby'
@@ -116,7 +115,7 @@ class SquaringScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == 'win32' or sys.platform == 'darwin': return
-        self.poll_for_completion_loop = Clock.schedule_interval(self.poll_for_squaring_status_func, 0.2)
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_squaring_status_func, 0.2)
 
     def on_leave(self):
         self.cancel_poll()
@@ -137,6 +136,9 @@ class SquaringScreenActive(Screen):
         
         if not self.m.i_am_auto_squaring(): 
             self.return_to_homing_active_screen()
+            return
+
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_squaring_status_func, 0.2)
 
     def check_next_screen_and_set_homing_flag(self):
         if self.sm.current not in [self.return_to_screen, 'homing_active']: self.m.homing_interrupted = True
