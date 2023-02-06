@@ -384,14 +384,17 @@ class JobData(object):
             print(str(traceback.format_exc()))
 
     def find_last_feedrate(self, index):
-        for i in range(index, -1, -1):
-            if 'F' in self.job_gcode_running[i]:
-                f_index = self.job_gcode_running[i].index('F')
-                end_index = f_index + 1
-                while end_index < len(self.job_gcode_running[i]) and not self.job_gcode_running[i][end_index].isalpha():
-                    end_index += 1
-                f_value = float(self.job_gcode_running[i][f_index + 1:end_index].strip())
-                return f_value
+        try:
+            for i in range(index, -1, -1):
+                if 'F' in self.job_gcode_running[i]:
+                    f_index = self.job_gcode_running[i].index('F')
+                    end_index = f_index + 1
+                    while end_index < len(self.job_gcode_running[i]) and not self.job_gcode_running[i][end_index].isalpha():
+                        end_index += 1
+                    f_value = float(self.job_gcode_running[i][f_index + 1:end_index].strip())
+                    return f_value
+        except IndexError:
+            return -1
         return -1
 
     def post_job_data_update_post_send(self):
