@@ -168,9 +168,9 @@ class JobData(object):
 
     def generate_job_data(self, raw_gcode):
 
-        self.job_gcode_raw = map(remove_newlines, raw_gcode)
+        gcode_with_line_numbers = ['N' + str(i) + ' ' + line for i, line in enumerate(raw_gcode)]
 
-        gcode_with_line_numbers = [str(i) + ' ' + line for i, line in enumerate(self.job_gcode_raw)]
+        self.job_gcode_raw = map(remove_newlines, gcode_with_line_numbers)
 
         with open('../../line_numbers.txt', 'w+') as f:
             f.writelines(gcode_with_line_numbers)
