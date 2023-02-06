@@ -285,7 +285,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
 
@@ -873,6 +873,10 @@ class SerialConnection(object):
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
                     self.wco_z = pos[2]
+                elif part.startswith('Ln:'):
+                    self.line_number = part[3:]
+
+                    print("Line number: " + self.line_number
 
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
@@ -1504,7 +1508,8 @@ class SerialConnection(object):
             self._process_oks_from_sequential_streaming = True
 
         if self._sequential_stream_buffer:
-            try: 
+            try:
+                print("Sending: " + self._sequential_stream_buffer[0])
                 self.write_direct(self._sequential_stream_buffer[0])
                 if self._after_grbl_settings_insert_dwell(): self._sequential_stream_buffer[0] = self._dwell_command
                 else: del self._sequential_stream_buffer[0]
