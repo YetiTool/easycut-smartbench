@@ -66,7 +66,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.cancel_homing()
+                on_press: root.stop_button_press()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -100,6 +100,9 @@ class HomingScreenActive(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
+
+        log("Open homing screen")
+
         if self.m.homing_interrupted:
             log("Homing already interrupted on pre-enter")
             self.cancel_homing()

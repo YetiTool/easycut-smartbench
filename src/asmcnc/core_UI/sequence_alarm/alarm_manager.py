@@ -146,6 +146,7 @@ class AlarmSequenceManager(object):
 		
 		if self.sm.has_screen(self.return_to_screen):
 			self.sm.current = self.return_to_screen
+			print("Returning to: " + str(self.return_to_screen))
 
 		else: 
 			self.sm.current = 'lobby'
