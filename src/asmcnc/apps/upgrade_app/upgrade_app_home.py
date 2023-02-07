@@ -170,7 +170,7 @@ class UpgradeAppHome(Screen):
         self.sm.current = 'lobby'
 
     def poll_for_spindle(self, dt):
-        if self.m.s.spindle_serial_number is not None and self.m.s.spindle_serial_number is not -999:
+        if self.m.s.spindle_serial_number is not None and self.m.s.spindle_serial_number != -999:
             self.poll_for_spindle.cancel()
             self.get_spindle_serial()
 
