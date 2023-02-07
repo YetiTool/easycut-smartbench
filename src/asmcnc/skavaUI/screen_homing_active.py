@@ -121,6 +121,7 @@ class HomingScreenActive(Screen):
 
     def on_pre_leave(self):
         log("Run on pre-leave")
+        self.m.homing_interrupted = False
     
     def on_leave(self):
         log("Run on leave for homing screen")
