@@ -18,7 +18,7 @@ Builder.load_string("""
             height: dp(200)
         
         Label:
-            text: 'Your machine is already unlocked to PrecisionPro +!'
+            text: 'Your machine is already upgraded to PrecisionPro +!'
             color: [0, 0, 0, 1]
             font_size: dp(28)
         

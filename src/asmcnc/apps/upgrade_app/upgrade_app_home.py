@@ -10,6 +10,7 @@ Builder.load_string("""
     context_label_2:context_label_2
     qr_code_img:qr_code_img
     unlock_code_input:unlock_code_input
+    serial_hint_label:serial_hint_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -17,7 +18,6 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             size_hint: None, None
-            height: dp(50)
             width: dp(800)
             
             canvas:
@@ -69,7 +69,7 @@ Builder.load_string("""
                     font_size: dp(16)
                     
                 Label:
-                    text: '2. Type in your unlock code below'
+                    text: '2. Type in your upgrade code below'
                     color: 0, 0, 0, 1
                     font_size: dp(16)
                     
@@ -77,6 +77,11 @@ Builder.load_string("""
                     text: '3. Press the "Enter" key on the keyboard'
                     color: 0, 0, 0, 1
                     font_size: dp(16)
+            
+            Label:
+                id: serial_hint_label
+                text: 'Your spindle serial number is: '
+                color: 0, 0, 0, 1
             
             BoxLayout:
                 padding: [dp(200), 0, 0, 0]
@@ -94,9 +99,9 @@ Builder.load_string("""
             
             Label:
                 id: error_label
-                text: 'Unlock code incorrect, please check and try again.'
+                text: 'Upgrade code incorrect, please check and try again.'
                 color: 1, 0, 0, 1
-                font_size: dp(16)
+                font_size: dp(18)
                 halign: 'center'
                 opacity: 0
                 
@@ -105,18 +110,22 @@ Builder.load_string("""
                 text: 'This app allows you to upgrade your SmartBench v1.3 PrecisionPro to a PrecisionPro +.'
                 color: 0, 0, 0, 1
                 halign: 'center'
-                font_size: dp(16)
+                font_size: dp(18)
                 
             Label:
                 id: context_label_2
-                text: 'You will have needed to purchase an upgrade package.\\nFor more information on the upgrade, please visit www.yetitool.com'
+                text: 'For more information on upgrades, please contact your place or purchase or visit www.yetitool.com'
                 color: 0, 0, 0, 1
                 halign: 'center'
-                font_size: dp(16)
+                font_size: dp(18)
             
             Image:
                 id: qr_code_img
                 source: 'asmcnc/apps/upgrade_app/img/qr_code.png'
+                width: dp(60)
+                
+            Label:
+                text: ''
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
@@ -145,12 +154,25 @@ class UpgradeAppHome(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
+        self.poll_for_spindle = Clock.schedule_interval(self.poll_for_spindle, 0.5)
+
     def exit_app(self):
         self.sm.current = 'lobby'
 
+    def poll_for_spindle(self, dt):
+        if self.m.s.spindle_serial_number is not None and self.m.s.spindle_serial_number is not -999:
+            self.poll_for_spindle.cancel()
+            self.on_enter()
+
     def on_enter(self):
         self.m.send_any_gcode_command('$51=1')
-        self.unlock_code_input.text = get_correct_unlock_code(1)
+        serial = self.m.s.spindle_serial_number
+
+        if serial is None or serial is -999:
+            self.show_failed_to_get_spindle()
+            return
+
+        self.serial_hint_label.text = 'Your spindle serial number is: ' + str(serial)
 
     def on_leave(self):
         if not self.activated:
@@ -164,9 +186,9 @@ class UpgradeAppHome(Screen):
         self.qr_code_img.opacity = 0
 
     def check_unlock_code(self):
-        serial = self.m.s.spindle_serial_number or 1
+        serial = self.m.s.spindle_serial_number
 
-        if serial is None:
+        if serial is None or serial is -999:
             self.show_failed_to_get_spindle()
             return
 
@@ -183,7 +205,7 @@ class UpgradeAppHome(Screen):
             self.show_wrong_code_input()
 
     def show_wrong_code_input(self):
-        self.error_label.text = 'Unlock code incorrect, please check and try again.'
+        self.error_label.text = 'Upgrade code incorrect, please check and try again.'
         self.error_label.opacity = 1
         self.context_label_2.opacity = 0
         self.qr_code_img.opacity = 1
