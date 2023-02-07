@@ -119,14 +119,10 @@ class HomingScreenActive(Screen):
         self.m.homing_interrupted = False
         log("Return to EC because homing not in progress")
 
-    def on_pre_leave(self):
-        log("Run on pre-leave")
-        self.m.homing_interrupted = False
-    
     def on_leave(self):
         log("Run on leave for homing screen")
         self.cancel_poll()
-        self.check_next_screen_and_set_homing_flag()
+        # self.check_next_screen_and_set_homing_flag()
         self.update_strings()
         log("Screen: Homing interrupted flag set as: " + str(self.m.homing_interrupted))
 
@@ -164,11 +160,12 @@ class HomingScreenActive(Screen):
     def stop_button_press(self):
         log("Homing cancelled by user")
         self.cancel_homing()
+        self.m.homing_interrupted = False
+        self.sm.current = self.cancel_to_screen
 
     def cancel_homing(self):
         self.cancel_poll()
         if self.m.homing_in_progress: self.m.cancel_homing_sequence()
-        self.sm.current = self.cancel_to_screen
 
     def cancel_poll(self):
         log("Cancel home screen poll")
