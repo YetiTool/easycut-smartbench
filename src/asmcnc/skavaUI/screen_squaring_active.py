@@ -141,7 +141,6 @@ class SquaringScreenActive(Screen):
         self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_squaring_status_func, 0.2)
 
     def stop_button_press(self):
-        log("Homing cancelled by user")
         self.cancel_squaring()
         self.go_to_cancel_to_screen()
 
