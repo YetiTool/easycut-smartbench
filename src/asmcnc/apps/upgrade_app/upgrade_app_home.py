@@ -172,19 +172,11 @@ class UpgradeAppHome(Screen):
     def poll_for_spindle(self, dt):
         if self.m.s.spindle_serial_number is not None and self.m.s.spindle_serial_number is not -999:
             self.poll_for_spindle.cancel()
-            self.set_serial_on_label()
+            self.get_spindle_serial()
 
     def on_enter(self):
         self.m.send_any_gcode_command('$51=1')
-        Clock.schedule_once(lambda dt: self.set_serial_on_label(), 0.5)
-
-    def set_serial_on_label(self):
-        serial = self.m.s.spindle_serial_number
-
-        if serial is None or serial is -999:
-            return
-
-        self.serial_hint_label.text = 'Your spindle serial number is: ' + str(serial)
+        self.get_spindle_serial()
 
     def on_leave(self):
         if not self.activated:
@@ -255,6 +247,7 @@ class UpgradeAppHome(Screen):
             lambda dt: self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.2)
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 0.25)
         Clock.schedule_once(lambda dt: self.check_unlock_code(), 0.5)
+        self.serial_hint_label.text = 'Your spindle serial number is: ' + str(self.m.s.spindle_serial_number or 'N/A')
 
     def on_input_enter(self):
         self.show_verifying()
