@@ -169,7 +169,6 @@ class UpgradeAppHome(Screen):
         serial = self.m.s.spindle_serial_number
 
         if serial is None or serial is -999:
-            self.show_failed_to_get_spindle()
             return
 
         self.serial_hint_label.text = 'Your spindle serial number is: ' + str(serial)
