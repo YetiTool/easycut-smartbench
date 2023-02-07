@@ -246,9 +246,9 @@ class UpgradeAppHome(Screen):
         Clock.schedule_once(
             lambda dt: self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.2)
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 0.25)
-        Clock.schedule_once(lambda dt: self.check_unlock_code(), 0.5)
         self.serial_hint_label.text = 'Your spindle serial number is: ' + str(self.m.s.spindle_serial_number or 'N/A')
 
     def on_input_enter(self):
         self.show_verifying()
         self.get_spindle_serial()
+        Clock.schedule_once(lambda dt: self.check_unlock_code(), 0.5)
