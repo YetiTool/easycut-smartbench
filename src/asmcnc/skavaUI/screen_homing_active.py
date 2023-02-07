@@ -105,7 +105,7 @@ class HomingScreenActive(Screen):
 
         if self.m.homing_interrupted:
             log("Homing already interrupted on pre-enter")
-            self.cancel_homing()
+            self.go_to_cancel_to_screen()
             return
 
     def on_enter(self):
@@ -160,6 +160,9 @@ class HomingScreenActive(Screen):
     def stop_button_press(self):
         log("Homing cancelled by user")
         self.cancel_homing()
+        self.go_to_cancel_to_screen()
+
+    def go_to_cancel_to_screen(self):
         self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
 
