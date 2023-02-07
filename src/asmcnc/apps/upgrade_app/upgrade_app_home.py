@@ -19,6 +19,7 @@ Builder.load_string("""
             orientation: 'horizontal'
             size_hint: None, None
             width: dp(800)
+            height: dp(50)
             
             canvas:
                 Color:
@@ -110,14 +111,14 @@ Builder.load_string("""
                 text: 'This app allows you to upgrade your SmartBench v1.3 PrecisionPro to a PrecisionPro +.'
                 color: 0, 0, 0, 1
                 halign: 'center'
-                font_size: dp(18)
+                font_size: dp(16)
                 
             Label:
                 id: context_label_2
                 text: 'For more information on upgrades, please contact your place or purchase or visit www.yetitool.com'
                 color: 0, 0, 0, 1
                 halign: 'center'
-                font_size: dp(18)
+                font_size: dp(16)
             
             Image:
                 id: qr_code_img
