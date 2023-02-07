@@ -158,29 +158,20 @@ class BrushSaveWidget(Widget):
                 return
 
 
-            # write new values to file
-            if self.m.write_spindle_brush_values(use, lifetime):
+            # Store into variable that is accessible from functions called by clock, after reset is performed
+            self.use = use
+            self.lifetime = lifetime
 
-                saved_success = self.l.get_str("Settings saved!")
-                popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+            try:
+                if self.m.s.setting_51 and use == 0:
+                    self.reset_brush_time()
+                    # New values written after reset if it is successful, so stop here
+                    return
+            except:
+                pass
 
-                try:
-                    if self.m.s.setting_51 and use == 0:
-                        self.reset_brush_time()
-                except:
-                    pass
-
-            else:
-                warning_message = (
-                        self.l.get_str("There was a problem saving your settings.") + \
-                        "\n\n" + \
-                        self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
-                    )
-                popup_info.PopupError(self.sm, self.l, warning_message)
-
-
-            # Update the monitor :)
-            self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
+            # If not SC2, then just write values as is
+            self.write_new_values()
 
         except:
             # throw popup, return without saving
@@ -191,6 +182,25 @@ class BrushSaveWidget(Widget):
                 )
             popup_info.PopupError(self.sm, self.l, warning_message)
             return
+
+    def write_new_values(self):
+    
+        # write new values to file
+        if self.m.write_spindle_brush_values(self.use, self.lifetime):
+
+            saved_success = self.l.get_str("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+
+        else:
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the problem persists please contact the YetiTool support team.")
+                )
+            popup_info.PopupError(self.sm, self.l, warning_message)
+
+        # Update the monitor :)
+        self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
 
     def reset_brush_time(self):
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
@@ -219,6 +229,7 @@ class BrushSaveWidget(Widget):
                 self.m.s.write_command('M5')
                 self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
                 self.wait_popup.popup.dismiss()
+                self.write_new_values()
 
         self.brush_reset_test_count += 1
 
