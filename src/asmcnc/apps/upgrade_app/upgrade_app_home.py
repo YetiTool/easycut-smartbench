@@ -120,13 +120,21 @@ Builder.load_string("""
                 halign: 'center'
                 font_size: dp(16)
             
-            Image:
-                id: qr_code_img
-                source: 'asmcnc/apps/upgrade_app/img/qr_code.png'
-                width: dp(60)
-                
+            BoxLayout:
+                padding: [dp(360), dp(25), 0, 0]
+                size_hint_y: None
+                height: dp(90)
+                Image:
+                    id: qr_code_img
+                    source: 'asmcnc/apps/upgrade_app/img/qr_code.png'
+                    size_hint: None, None
+                    width: dp(80)
+                    height: dp(80)
+                    
             Label:
                 text: ''
+                size_hint: None, None
+                height: dp(10)
 """)
 
 from kivy.uix.behaviors.button import ButtonBehavior
@@ -158,15 +166,19 @@ class UpgradeAppHome(Screen):
         self.poll_for_spindle = Clock.schedule_interval(self.poll_for_spindle, 0.5)
 
     def exit_app(self):
+        self.sm.remove_widget(self)
         self.sm.current = 'lobby'
 
     def poll_for_spindle(self, dt):
         if self.m.s.spindle_serial_number is not None and self.m.s.spindle_serial_number is not -999:
             self.poll_for_spindle.cancel()
-            self.on_enter()
+            self.set_serial_on_label()
 
     def on_enter(self):
         self.m.send_any_gcode_command('$51=1')
+        Clock.schedule_once(lambda dt: self.set_serial_on_label(), 0.5)
+
+    def set_serial_on_label(self):
         serial = self.m.s.spindle_serial_number
 
         if serial is None or serial is -999:
