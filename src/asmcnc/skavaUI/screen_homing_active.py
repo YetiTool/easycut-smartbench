@@ -118,8 +118,12 @@ class HomingScreenActive(Screen):
         self.sm.current = self.return_to_screen
         self.m.homing_interrupted = False
         log("Return to EC because homing not in progress")
+
+    def on_pre_leave(self):
+        log("Run on pre-leave")
     
     def on_leave(self):
+        log("Run on leave for homing screen")
         self.cancel_poll()
         self.check_next_screen_and_set_homing_flag()
         self.update_strings()
@@ -166,6 +170,7 @@ class HomingScreenActive(Screen):
         self.sm.current = self.cancel_to_screen
 
     def cancel_poll(self):
+        log("Cancel home screen poll")
         if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
