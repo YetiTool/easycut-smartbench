@@ -107,7 +107,7 @@ class SquaringScreenActive(Screen):
 
     def on_pre_enter(self):
         if self.m.homing_interrupted:
-            self.cancel_squaring()
+            self.go_to_cancel_to_screen()
             return
 
         if not self.m.homing_in_progress: 
@@ -119,7 +119,7 @@ class SquaringScreenActive(Screen):
 
     def on_leave(self):
         self.cancel_poll()
-        self.check_next_screen_and_set_homing_flag()
+        # self.check_next_screen_and_set_homing_flag()
 
     def check_next_screen_and_set_homing_flag(self):
         self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True
@@ -140,11 +140,18 @@ class SquaringScreenActive(Screen):
 
         self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_squaring_status_func, 0.2)
 
-    def cancel_squaring(self):
-        self.m.cancel_homing_sequence()
-        self.cancel_poll()
+    def stop_button_press(self):
+        log("Homing cancelled by user")
+        self.cancel_squaring()
+        self.go_to_cancel_to_screen()
+
+    def go_to_cancel_to_screen(self):
         self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
+
+    def cancel_squaring(self):
+        self.cancel_poll()
+        if self.m.homing_in_progress: self.m.cancel_homing_sequence()
 
     def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
