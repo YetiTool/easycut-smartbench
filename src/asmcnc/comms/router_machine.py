@@ -1682,8 +1682,8 @@ class RouterMachine(object):
         self.reset_pre_homing()
         self.setup_homing_funcs_list()
         self.next_homing_task_wrapper()
-        self.schedule_homing_event(self.do_next_task_in_sequence)
-        self.schedule_homing_event(self.complete_homing_task)
+        self.schedule_homing_event(self.do_next_task_in_sequence, self.homing_initial_delay_after_reset)
+        self.schedule_homing_event(self.complete_homing_task, self.homing_initial_delay_after_reset + 0.1)
 
     def i_am_auto_squaring(self):
 
@@ -1780,6 +1780,8 @@ class RouterMachine(object):
         0,    # 9: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
 
+    homing_initial_delay_after_reset = 0.4
+
     def setup_homing_funcs_list(self):
 
         self.homing_funcs_list = [
@@ -1833,7 +1835,7 @@ class RouterMachine(object):
         self.completed_homing_tasks[self.homing_task_idx] = True
 
     def if_last_task_complete(self):
-        if self.completed_homing_tasks[self.homing_task_idx]: 
+        if self.get_current_homing_task_complete(): 
             log("last task complete " + str(self.homing_task_idx))
             self.homing_task_idx+=1
             log("next task " + str(self.homing_task_idx))
@@ -1850,6 +1852,18 @@ class RouterMachine(object):
     def next_homing_task_wrapper(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.next_homing_task_wrapper): return
         self.homing_funcs_list[self.homing_task_idx]()
+
+    def set_current_homing_task_complete(self):
+        try: self.completed_homing_tasks[self.homing_task_idx] = True
+        except: 
+            log("Could not set completed homing task")
+            pass
+
+    def get_current_homing_task_complete(self):
+        try: return self.completed_homing_tasks[self.homing_task_idx]
+        except: 
+            log("Could not get completed homing task")
+            return False
 
     def cancel_homing_sequence(self):
         self.reset_homing_sequence_flags()

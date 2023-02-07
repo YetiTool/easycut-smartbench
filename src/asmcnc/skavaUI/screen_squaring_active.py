@@ -122,7 +122,7 @@ class SquaringScreenActive(Screen):
         self.check_next_screen_and_set_homing_flag()
 
     def check_next_screen_and_set_homing_flag(self):
-        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen] else False
+        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True
 
     def poll_for_squaring_status_func(self, dt=0):
 
@@ -139,10 +139,6 @@ class SquaringScreenActive(Screen):
             return
 
         self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_squaring_status_func, 0.2)
-
-    def check_next_screen_and_set_homing_flag(self):
-        if self.sm.current not in [self.return_to_screen, 'homing_active']: self.m.homing_interrupted = True
-        else: self.m.homing_interrupted = False
 
     def cancel_squaring(self):
         self.m.cancel_homing_sequence()

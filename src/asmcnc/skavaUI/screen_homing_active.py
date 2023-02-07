@@ -79,6 +79,10 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 class HomingScreenActive(Screen):
 
     return_to_screen = 'lobby'
@@ -96,6 +100,7 @@ class HomingScreenActive(Screen):
 
     def on_pre_enter(self):
         if self.m.homing_interrupted:
+            log("Homing already interrupted on pre-enter")
             self.cancel_homing()
             return
 
@@ -108,6 +113,7 @@ class HomingScreenActive(Screen):
     def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
         self.m.homing_interrupted = False
+        log("Return to EC because homing not in progress")
     
     def on_leave(self):
         self.cancel_poll()
@@ -115,16 +121,17 @@ class HomingScreenActive(Screen):
         self.update_strings()
 
     def check_next_screen_and_set_homing_flag(self):
-        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen] else False
+        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True
 
     def poll_for_homing_status_func(self, dt=0):
 
-        if not self.m.homing_in_progress: 
+        if not self.m.homing_in_progress:
             self.return_to_ec_if_homing_not_in_progress()
-            return 
+            return
 
         if self.m.homing_interrupted:
             self.cancel_homing()
+            log("Homing interrupted - detected by home screen poll")
             return
         
         if self.m.i_am_auto_squaring(): 
@@ -144,11 +151,13 @@ class HomingScreenActive(Screen):
         self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
         self.sm.current = 'squaring_active'
 
+    def stop_button_press(self):
+        log("Homing cancelled by user")
+        self.cancel_homing()
+
     def cancel_homing(self):
-        self.homing_label.text = self.l.get_str('Please wait') + '...'
-        self.m.cancel_homing_sequence()
         self.cancel_poll()
-        self.m.homing_interrupted = False
+        if self.m.homing_in_progress: self.m.cancel_homing_sequence()
         self.sm.current = self.cancel_to_screen
 
     def cancel_poll(self):
