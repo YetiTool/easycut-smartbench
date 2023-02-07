@@ -163,7 +163,7 @@ class UpgradeAppHome(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
-        self.poll_for_spindle = Clock.schedule_interval(self.poll_for_spindle, 0.5)
+        self.poll_for_spindle = Clock.schedule_interval(self.poll_for_spindle, 10)
 
     def exit_app(self):
         self.sm.remove_widget(self)
