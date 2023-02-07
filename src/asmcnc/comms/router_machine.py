@@ -1864,6 +1864,7 @@ class RouterMachine(object):
             return False
 
     def cancel_homing_sequence(self):
+        self.reset_on_cancel_homing()
         self.reset_homing_sequence_flags()
         self.homing_interrupted = True
         self.reset_on_cancel_homing()
