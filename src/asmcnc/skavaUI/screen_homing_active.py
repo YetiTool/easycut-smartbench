@@ -123,6 +123,7 @@ class HomingScreenActive(Screen):
         self.cancel_poll()
         self.check_next_screen_and_set_homing_flag()
         self.update_strings()
+        log("Screen: Homing interrupted flag set as: " + str(self.m.homing_interrupted))
 
     def check_next_screen_and_set_homing_flag(self):
         self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True

@@ -1809,6 +1809,7 @@ class RouterMachine(object):
 
         if self.state().startswith("Alarm") or self.state().startswith("Door"):
             self.cancel_homing_sequence()
+            log("Cancel homing from router_machine bc alarm or door state")
             return True
 
         if self.smartbench_is_busy() or self.run_calibration:
@@ -1874,6 +1875,7 @@ class RouterMachine(object):
         self.set_led_colour("YELLOW")
         self.homing_in_progress = False
         log("Cancel homing sequence")
+        log("M: Homing interrupted flag set as: " + str(self.homing_interrupted))
 
 
 # Z PROBE
