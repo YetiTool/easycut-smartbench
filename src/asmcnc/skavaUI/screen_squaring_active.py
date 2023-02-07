@@ -119,10 +119,6 @@ class SquaringScreenActive(Screen):
 
     def on_leave(self):
         self.cancel_poll()
-        # self.check_next_screen_and_set_homing_flag()
-
-    def check_next_screen_and_set_homing_flag(self):
-        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True
 
     def poll_for_squaring_status_func(self, dt=0):
 

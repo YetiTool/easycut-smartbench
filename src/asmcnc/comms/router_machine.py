@@ -1809,7 +1809,7 @@ class RouterMachine(object):
 
         if self.state().startswith("Alarm") or self.state().startswith("Door"):
             self.cancel_homing_sequence()
-            log("Cancel homing from router_machine bc alarm or door state")
+            log("Cancel homing from router_machine due to: " + self.state())
             return True
 
         if self.smartbench_is_busy() or self.run_calibration:
@@ -1832,14 +1832,11 @@ class RouterMachine(object):
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
-        log("complete homing task " + str(self.homing_task_idx))
         self.completed_homing_tasks[self.homing_task_idx] = True
 
     def if_last_task_complete(self):
         if self.get_current_homing_task_complete(): 
-            log("last task complete " + str(self.homing_task_idx))
             self.homing_task_idx+=1
-            log("next task " + str(self.homing_task_idx))
             return True
 
     def do_next_task_in_sequence(self, dt=0):
@@ -1875,7 +1872,6 @@ class RouterMachine(object):
         self.set_led_colour("YELLOW")
         self.homing_in_progress = False
         log("Cancel homing sequence")
-        log("M: Homing interrupted flag set as: " + str(self.homing_interrupted))
 
 
 # Z PROBE

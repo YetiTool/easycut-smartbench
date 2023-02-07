@@ -102,9 +102,7 @@ class HomingScreenActive(Screen):
     def on_pre_enter(self):
 
         log("Open homing screen")
-
         if self.m.homing_interrupted:
-            log("Homing already interrupted on pre-enter")
             self.go_to_cancel_to_screen()
             return
 
@@ -117,17 +115,10 @@ class HomingScreenActive(Screen):
     def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
         self.m.homing_interrupted = False
-        log("Return to EC because homing not in progress")
 
     def on_leave(self):
-        log("Run on leave for homing screen")
         self.cancel_poll()
-        # self.check_next_screen_and_set_homing_flag()
         self.update_strings()
-        log("Screen: Homing interrupted flag set as: " + str(self.m.homing_interrupted))
-
-    def check_next_screen_and_set_homing_flag(self):
-        self.m.homing_interrupted = False if self.sm.current in [self.return_to_screen, self.expected_next_screen, self.cancel_to_screen] else True
 
     def poll_for_homing_status_func(self, dt=0):
 
@@ -137,7 +128,6 @@ class HomingScreenActive(Screen):
 
         if self.m.homing_interrupted:
             self.cancel_homing()
-            log("Homing interrupted - detected by home screen poll")
             return
         
         if self.m.i_am_auto_squaring(): 
@@ -171,7 +161,6 @@ class HomingScreenActive(Screen):
         if self.m.homing_in_progress: self.m.cancel_homing_sequence()
 
     def cancel_poll(self):
-        log("Cancel home screen poll")
         if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
