@@ -67,7 +67,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.cancel_squaring()
+                on_press: root.stop_button_press()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
