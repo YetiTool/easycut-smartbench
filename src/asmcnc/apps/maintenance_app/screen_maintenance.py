@@ -581,7 +581,10 @@ class MaintenanceScreenClass(Screen):
         # Only show SC2 options if machine supports it
         self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc1
         try:
-            if os.path.exists('/home/pi/proplus.txt') and self.m.s.setting_51:
+            # Check if $51 exists
+            self.m.s.setting_51
+            # Check if PRO+ is activated
+            if os.path.exists('/home/pi/proplus.txt'):
                 self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc2
         except:
             pass
