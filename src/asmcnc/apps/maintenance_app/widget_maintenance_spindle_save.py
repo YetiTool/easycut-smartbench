@@ -201,6 +201,12 @@ class SpindleSaveWidget(Widget):
             self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and \
             self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
 
+            if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Set $51 based on selected spindle'):
+                if "SC2" in brand:
+                    self.m.write_dollar_51_setting(1)
+                else:
+                    self.m.write_dollar_51_setting(0)
+
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
 
