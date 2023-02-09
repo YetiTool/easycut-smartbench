@@ -152,12 +152,14 @@ class BrushUseWidget(Widget):
     def restore(self):
         try:
             if self.m.s.setting_51:
+                self.brush_use.disabled = True
                 self.m.s.write_command('M3 S0')
                 Clock.schedule_once(self.get_restore_info, 0.1)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
                 return
         except:
             pass
+        self.brush_use.disabled = False
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
         self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
 

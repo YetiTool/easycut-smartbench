@@ -115,23 +115,8 @@ class BrushSaveWidget(Widget):
                 popup_info.PopupError(self.sm, self.l, brush_use_validation_error)
                 return
 
-            # Brush life for SC2
-            try:
-                # Don't allow saving non 0 brush use values
-                if self.m.s.setting_51 and use != 0:
-                    # throw popup, return without saving
-                    brush_use_validation_error = (
-                            self.l.get_str("The number of hours the brushes have been used for should be 0.") + \
-                            "\n\n" + \
-                            self.l.get_str("Please enter a new value.")
-                        )
 
-                    popup_info.PopupError(self.sm, self.l, brush_use_validation_error)
-                    return
-            except:
-                pass
-
-            # Brush life for SC1
+            # Brush life
             if lifetime >= 100*3600 and lifetime <= 999*3600: pass # all good, carry on
             else: 
                 # throw popup, return without saving
