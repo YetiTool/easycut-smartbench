@@ -173,7 +173,7 @@ Builder.load_string("""
                 text_size: self.size
                 multiline: False
                 color: 0,0,0,1
-                values: root.brand_list
+                values: root.brand_list_sc1
                 option_cls: Factory.get("SpindleSpinner")
                 background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
                 on_text: root.autofill_rpm_time()
