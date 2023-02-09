@@ -88,7 +88,7 @@ class BrushSaveWidget(Widget):
 
         # Machine must be idle if a spindle brush reset is attempted
         if not self.m.state().startswith('Idle'):
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure the machine is idle before attempting to save."))
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("There was a problem saving your settings."))
             return
 
         # TIME FOR DATA VALIDATION
@@ -207,7 +207,7 @@ class BrushSaveWidget(Widget):
                 if self.brush_reset_test_count == 5:
                     self.m.s.write_command('M5')
                     self.wait_popup.popup.dismiss()
-                    popup_info.PopupError(self.sm, self.l, self.l.get_str("Could not reset brush timer! Please try again."))
+                    popup_info.PopupError(self.sm, self.l, self.l.get_str("There was a problem saving your settings."))
                 else:
                     self.attempt_reset()
             else:

@@ -179,7 +179,7 @@ class BrushUseWidget(Widget):
                 return
             except:
                 pass
-        popup_info.PopupError(self.sm, self.l, self.l.get_str("Could not get info - spindle not plugged in!"))
+        popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def reset_to_0(self):
         self.brush_use.text = '0'
