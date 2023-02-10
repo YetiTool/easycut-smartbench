@@ -237,6 +237,7 @@ class UpgradeAppHome(Screen):
             self.sm.add_widget(upgrade_complete)
 
     def activate_pro_plus(self):
+        self.activated = True
         self.add_upgrade_complete_screen()
         self.sm.current = 'upgrade_complete'
         self.create_pro_plus_file()
