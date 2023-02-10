@@ -176,7 +176,7 @@ class UpgradeAppHome(Screen):
 
     def on_enter(self):
         self.m.send_any_gcode_command('$51=1')
-        self.get_spindle_serial()
+        Clock.schedule_once(lambda dt: self.get_spindle_serial(), 0.5)
 
     def on_leave(self):
         if not self.activated:
