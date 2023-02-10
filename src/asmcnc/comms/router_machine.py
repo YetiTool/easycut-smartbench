@@ -1590,6 +1590,12 @@ class RouterMachine(object):
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
+    def feed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
+
+    def feed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
+
     def feed_override_up_1(self, final_percentage=''): 
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
 
