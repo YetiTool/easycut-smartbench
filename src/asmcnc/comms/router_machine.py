@@ -693,6 +693,13 @@ class RouterMachine(object):
                             ]
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
+    def write_dollar_51_setting(self, value):
+        dollar_51_setting = [
+                            '$51=' + str(value),
+                            '$$'
+                            ]
+        self.s.start_sequential_stream(dollar_51_setting, reset_grbl_after_stream=True)
+
     def write_dollar_54_setting(self, value):
         dollar_54_setting = [
                             '$54=' + str(value),
