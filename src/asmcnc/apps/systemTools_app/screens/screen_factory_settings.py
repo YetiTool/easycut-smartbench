@@ -516,7 +516,7 @@ class FactorySettingsScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
-    pro_plus_unlock_filepath = '/home/pi/proplus.txt'
+    pro_plus_unlock_filepath = '../../proplus.txt'
 
     dev_mode = False
 
@@ -563,7 +563,7 @@ class FactorySettingsScreen(Screen):
         self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
 
         # Set initial state of PRO+ toggle button
-        if os.path.exists(self.pro_plus_unlock_filepath):
+        if self.m.machine_is_pro_plus():
             self.pro_plus_toggle.state = 'down'
             self.pro_plus_toggle.text = 'Disable PRO+'
 

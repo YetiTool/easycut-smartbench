@@ -79,6 +79,7 @@ class RouterMachine(object):
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
+    pro_plus_unlock_filepath = '../../proplus.txt'
 
 
     ## LOCALIZATION
@@ -933,6 +934,12 @@ class RouterMachine(object):
             log(error_description)
 
             return False
+
+    def machine_is_pro_plus(self):
+        # Activation indicated by presence of file
+        if os.path.exists(self.pro_plus_unlock_filepath):
+            return True
+        return False
 
 # HW/FW ADJUSTMENTS
 
