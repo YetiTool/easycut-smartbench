@@ -1673,6 +1673,8 @@ class RouterMachine(object):
         self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
         self.sm.current = 'squaring_decision'
 
+    homing_initial_delay_after_reset = 0.5
+
     # Call this function for whole sequence
     def do_standard_homing_sequence(self):
         self.homing_interrupted = False
@@ -1681,9 +1683,9 @@ class RouterMachine(object):
         self.reset_homing_sequence_flags()
         self.reset_pre_homing()
         self.setup_homing_funcs_list()
-        self.next_homing_task_wrapper()
-        self.schedule_homing_event(self.do_next_task_in_sequence, self.homing_initial_delay_after_reset)
-        self.schedule_homing_event(self.complete_homing_task, self.homing_initial_delay_after_reset + 0.1)
+        self.schedule_homing_event(self.next_homing_task_wrapper, self.homing_initial_delay_after_reset)
+        self.schedule_homing_event(self.do_next_task_in_sequence, self.homing_initial_delay_after_reset + 0.1)
+        self.schedule_homing_event(self.complete_homing_task, self.homing_initial_delay_after_reset + 0.2)
 
     def i_am_auto_squaring(self):
 
@@ -1779,8 +1781,6 @@ class RouterMachine(object):
         0.1,  # 8: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
         0,    # 9: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
-
-    homing_initial_delay_after_reset = 0.4
 
     def setup_homing_funcs_list(self):
 
