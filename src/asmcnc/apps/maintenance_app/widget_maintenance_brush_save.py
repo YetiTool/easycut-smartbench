@@ -149,6 +149,8 @@ class BrushSaveWidget(Widget):
 
             try:
                 if self.m.s.setting_51 and use == 0:
+                    # SC2 should not save spindle brush use, so write old value
+                    self.use = self.m.spindle_brush_use_seconds
                     self.reset_brush_time()
                     # New values written after reset if it is successful, so stop here
                     return
