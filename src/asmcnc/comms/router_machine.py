@@ -1832,7 +1832,7 @@ class RouterMachine(object):
     ## handle all events in homing sequence
     def complete_homing_task(self, dt=0):
         if self.reschedule_homing_task_if_busy(self.complete_homing_task): return
-        self.completed_homing_tasks[self.homing_task_idx] = True
+        self.set_current_homing_task_complete()
 
     def if_last_task_complete(self):
         if self.get_current_homing_task_complete(): 
