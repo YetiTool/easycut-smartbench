@@ -939,6 +939,7 @@ class FactorySettingsScreen(Screen):
     def toggle_pro_plus(self):
         if self.pro_plus_toggle.state == 'normal':
             self.pro_plus_toggle.text = 'Enable PRO+'
+            self.m.write_dollar_51_setting(0)
             try:
                 os.remove(self.pro_plus_unlock_filepath)
             except:
@@ -946,6 +947,7 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
         else:
             self.pro_plus_toggle.text = 'Disable PRO+'
+            self.m.write_dollar_51_setting(1)
             try:
                 open(self.pro_plus_unlock_filepath, 'a').close()
             except:
