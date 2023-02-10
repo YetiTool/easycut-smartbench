@@ -126,11 +126,11 @@ class FeedOverride(Widget):
             if self.disable_buttons():
                 self.feed_override_percentage += 5
                 self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(final_percentage=self.feed_override_percentage), 0.05) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(final_percentage=self.feed_override_percentage), 0.1) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(final_percentage=self.feed_override_percentage), 0.15) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(final_percentage=self.feed_override_percentage), 0.2)
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.25)
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
                 
@@ -146,11 +146,11 @@ class FeedOverride(Widget):
             if self.disable_buttons():
                 self.feed_override_percentage -= 5
                 self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(final_percentage=self.feed_override_percentage), 0.05) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(final_percentage=self.feed_override_percentage), 0.1) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(final_percentage=self.feed_override_percentage), 0.15) 
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(final_percentage=self.feed_override_percentage), 0.2)
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.25)
                 Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
