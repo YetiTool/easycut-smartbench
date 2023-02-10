@@ -46,6 +46,7 @@ Builder.load_string("""
     setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
+    pro_plus_toggle:pro_plus_toggle
 
     BoxLayout:
         height: dp(800)
@@ -367,11 +368,10 @@ Builder.load_string("""
                         halign: "center"
                         valign: "middle"
 
-                    Button:
-                        text: 'FT B4'
-                        background_normal: ''
-                        background_color: [0.8,0.2,0.2,1]
-                        on_press: root.final_test("red")
+                    ToggleButton:
+                        id: pro_plus_toggle
+                        text: 'Enable PRO+'
+                        on_press: root.toggle_pro_plus()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -560,6 +560,12 @@ class FactorySettingsScreen(Screen):
         self.usb_stick.usb_notifications = False
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
+
+        # Set initial state of PRO+ toggle button
+        if os.path.exists('/home/pi/proplus.txt'):
+            self.pro_plus_toggle.state = 'down'
+            self.pro_plus_toggle.text = 'Disable PRO+'
+
 
     def connect_to_db_when_creds_loaded(self, dt):
 
@@ -928,6 +934,12 @@ class FactorySettingsScreen(Screen):
         Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
+
+    def toggle_pro_plus(self):
+        if self.pro_plus_toggle.state == 'normal':
+            self.pro_plus_toggle.text = 'Enable PRO+'
+        else:
+            self.pro_plus_toggle.text = 'Disable PRO+'
 
 
     def write_serial_number_to_file(self):
