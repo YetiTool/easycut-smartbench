@@ -372,7 +372,7 @@ Builder.load_string("""
                     ToggleButton:
                         id: pro_plus_toggle
                         text: 'Enable PRO+'
-                        on_press: root.pro_plus_decision_popup()
+                        on_press: root.show_pro_plus_decision_popup()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
