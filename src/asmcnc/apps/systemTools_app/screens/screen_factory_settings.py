@@ -14,6 +14,7 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import popup_factory_settings
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
@@ -371,7 +372,7 @@ Builder.load_string("""
                     ToggleButton:
                         id: pro_plus_toggle
                         text: 'Enable PRO+'
-                        on_press: root.toggle_pro_plus()
+                        on_press: root.pro_plus_decision_popup()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -936,6 +937,9 @@ class FactorySettingsScreen(Screen):
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
 
+    def show_pro_plus_decision_popup(self):
+        popup_factory_settings.PopupProPlusDecision(self.systemtools_sm.sm, self.l)
+
     def toggle_pro_plus(self):
         if self.pro_plus_toggle.state == 'normal':
             self.pro_plus_toggle.text = 'Enable PRO+'
@@ -953,6 +957,12 @@ class FactorySettingsScreen(Screen):
             except:
                 warning_message = 'Problem creating PRO+ file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+    def undo_toggle(self):
+        if self.pro_plus_toggle.state == 'normal':
+            self.pro_plus_toggle.state = 'down'
+        else:
+            self.pro_plus_toggle.state = 'normal'
 
 
     def write_serial_number_to_file(self):
