@@ -1767,35 +1767,31 @@ class RouterMachine(object):
     completed_homing_tasks = []
     homing_seq_events = []
     homing_funcs_list = []
-    auto_squaring_idx = 4
+    auto_squaring_idx = 2
 
     homing_seq_first_delay = [
         0,    # 0: null
-        0.5,  # 1: disable_y_motors - enable_y_motors
-        0.5,  # 2: enable_y_motors - start_homing
-        0,    # 3: start_homing - disable_stall_detection_before_auto_squaring
-        0.1,  # 4: disable_stall_detection_before_auto_squaring - start_auto_squaring
-        0,    # 5: start_auto_squaring - query_grbl_settings_modes_and_info
-        0,    # 6: query_grbl_settings_modes_and_info - start_calibrating_after_homing
-        0,    # 7: start_calibrating_after_homing - enable_stall_detection_after_calibrating
-        0.1,  # 8: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
-        0,    # 9: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
+        0.1,  # 2: disable_stall_detection_before_auto_squaring - start_auto_squaring
+        0,    # 3: start_auto_squaring - query_grbl_settings_modes_and_info
+        0,    # 4: query_grbl_settings_modes_and_info - start_calibrating_after_homing
+        0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
+        0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
+        0,    # 7: move_to_accommodate_laser_offset - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
 
         self.homing_funcs_list = [
 
-            self.disable_y_motors,                              # 0
-            self.enable_y_motors,                               # 1
-            self.start_homing,                                  # 2
-            self.disable_stall_detection,                       # 3
-            self.start_auto_squaring,                           # 4
-            self.query_grbl_settings_modes_and_info,            # 5
-            self.calibrate_all_three_axes,                      # 6
-            self.enable_stall_detection,                        # 7
-            self.move_to_accommodate_laser_offset,              # 8
-            self.complete_homing_sequence                       # 9
+            self.start_homing,                                  # 0
+            self.disable_stall_detection,                       # 1
+            self.start_auto_squaring,                           # 2
+            self.query_grbl_settings_modes_and_info,            # 3
+            self.calibrate_all_three_axes,                      # 4
+            self.enable_stall_detection,                        # 5
+            self.move_to_accommodate_laser_offset,              # 6
+            self.complete_homing_sequence                       # 7
 
             ]
 
