@@ -81,7 +81,6 @@ class RouterMachine(object):
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
     pro_plus_unlock_filepath = '../../proplus.txt'
 
-
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
 
@@ -123,8 +122,6 @@ class RouterMachine(object):
     amb_cooldown_rpm_default = 10000
     yeti_cooldown_rpm_default = 12000
     spindle_cooldown_rpm_override = False
-
-
 
     ## DEVICE LABEL
     device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
@@ -277,6 +274,9 @@ class RouterMachine(object):
         self.read_device_label()
         self.read_device_location()
 
+
+    def look_at(self, f):
+        return path.isfile(f)
 
     ## SET UP OPTIONS
     def read_set_up_options(self):
@@ -685,6 +685,9 @@ class RouterMachine(object):
             log("Unable to write device location")
             return False
 
+    sing_path = '../../multiply.txt'
+    theateam_path =  '../../plus.txt'
+
 # GRBL SETTINGS
     def write_dollar_50_setting(self, serial_number):
         dollar_50_setting = [
@@ -942,11 +945,11 @@ class RouterMachine(object):
 
             return False
 
-    def machine_is_pro_plus(self):
-        # Activation indicated by presence of file
-        if os.path.exists(self.pro_plus_unlock_filepath):
-            return True
-        return False
+    def sing(self):
+        return self.look_at(self.sing_path)
+
+    def theateam(self):
+        return self.look_at(self.theateam_path)
 
 # HW/FW ADJUSTMENTS
 
@@ -1603,6 +1606,12 @@ class RouterMachine(object):
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
+
+    def feed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
+
+    def feed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     def feed_override_up_1(self, final_percentage=''): 
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
