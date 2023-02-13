@@ -47,7 +47,7 @@ Builder.load_string("""
     setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
-    pro_plus_toggle:pro_plus_toggle
+    sc2_compatability_toggle:sc2_compatability_toggle
 
     BoxLayout:
         height: dp(800)
@@ -370,9 +370,9 @@ Builder.load_string("""
                         valign: "middle"
 
                     ToggleButton:
-                        id: pro_plus_toggle
-                        text: 'Enable PRO+'
-                        on_press: root.show_pro_plus_decision_popup()
+                        id: sc2_compatability_toggle
+                        text: 'Enable SC2 compatability'
+                        on_press: root.show_sc2_decision_popup()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -517,7 +517,7 @@ class FactorySettingsScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
-    pro_plus_unlock_filepath = '../../proplus.txt'
+    theateam_path =  '../../plus.txt'
 
     dev_mode = False
 
@@ -563,10 +563,10 @@ class FactorySettingsScreen(Screen):
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
 
-        # Set initial state of PRO+ toggle button
-        if self.m.machine_is_pro_plus():
-            self.pro_plus_toggle.state = 'down'
-            self.pro_plus_toggle.text = 'Disable PRO+'
+        # Set initial state of SC2 compatability toggle button
+        if self.m.theateam():
+            self.sc2_compatability_toggle.state = 'down'
+            self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
 
 
     def connect_to_db_when_creds_loaded(self, dt):
@@ -937,32 +937,37 @@ class FactorySettingsScreen(Screen):
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
 
-    def show_pro_plus_decision_popup(self):
-        popup_factory_settings.PopupProPlusDecision(self.systemtools_sm.sm, self.l)
+    def show_sc2_decision_popup(self):
+        if self.sc2_compatability_toggle.state == 'normal':
+            message = "This will disable SC2 compatability, are you sure you want to continue?"
+        else:
+            message = "This will enable SC2 compatability, are you sure you want to continue?"
 
-    def toggle_pro_plus(self):
-        if self.pro_plus_toggle.state == 'normal':
-            self.pro_plus_toggle.text = 'Enable PRO+'
+        popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
+
+    def toggle_sc2_compatability(self):
+        if self.sc2_compatability_toggle.state == 'normal':
+            self.sc2_compatability_toggle.text = 'Enable SC2 compatability'
             self.m.write_dollar_51_setting(0)
             try:
-                os.remove(self.pro_plus_unlock_filepath)
+                os.remove(self.theateam_path)
             except:
-                warning_message = 'Problem removing PRO+ file!!'
+                warning_message = 'Problem removing SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
         else:
-            self.pro_plus_toggle.text = 'Disable PRO+'
+            self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
             self.m.write_dollar_51_setting(1)
             try:
-                open(self.pro_plus_unlock_filepath, 'a').close()
+                open(self.theateam_path, 'a').close()
             except:
-                warning_message = 'Problem creating PRO+ file!!'
+                warning_message = 'Problem creating SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
     def undo_toggle(self):
-        if self.pro_plus_toggle.state == 'normal':
-            self.pro_plus_toggle.state = 'down'
+        if self.sc2_compatability_toggle.state == 'normal':
+            self.sc2_compatability_toggle.state = 'down'
         else:
-            self.pro_plus_toggle.state = 'normal'
+            self.sc2_compatability_toggle.state = 'normal'
 
 
     def write_serial_number_to_file(self):

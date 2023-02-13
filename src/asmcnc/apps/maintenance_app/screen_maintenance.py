@@ -583,8 +583,7 @@ class MaintenanceScreenClass(Screen):
         try:
             # Check if $51 exists
             self.m.s.setting_51
-            # Check if PRO+ is activated
-            if self.m.machine_is_pro_plus():
+            if self.m.theateam():
                 self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc2
         except:
             pass

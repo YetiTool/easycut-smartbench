@@ -5,20 +5,19 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 
-class PopupProPlusDecision(Widget):
+class PopupSC2Decision(Widget):
 
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, description):
         
         self.sm = screen_manager
         self.l = localization
 
-        description = "This will toggle PRO+, are you sure you want to continue?"
-        title_string = "PRO+ unlock"
+        title_string = "SC2 compatability"
         ok_string = "Continue"
         cancel_string = "Cancel"
 
-        def toggle_pro_plus(*args):
-            self.sm.get_screen('factory_settings').toggle_pro_plus()
+        def toggle_sc2_compatability(*args):
+            self.sm.get_screen('factory_settings').toggle_sc2_compatability()
 
         def undo_toggle(*args):
             self.sm.get_screen('factory_settings').undo_toggle()
@@ -58,7 +57,7 @@ class PopupProPlusDecision(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=toggle_pro_plus)
+        ok_button.bind(on_press=toggle_sc2_compatability)
         ok_button.bind(on_press=popup.dismiss)
         cancel_button.bind(on_press=undo_toggle)
         cancel_button.bind(on_press=popup.dismiss)

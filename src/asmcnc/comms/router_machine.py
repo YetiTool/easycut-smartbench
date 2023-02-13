@@ -79,7 +79,6 @@ class RouterMachine(object):
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
-    pro_plus_unlock_filepath = '../../proplus.txt'
 
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
