@@ -460,7 +460,10 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
-        self.jd.job_gcode_running = job_object
+        gcode_with_line_numbers = [line if self.is_excluded(line) else 'N' + str(i) + ' ' + line
+                                   for i, line in enumerate(job_object)]
+
+        self.jd.job_gcode_running = gcode_with_line_numbers
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -519,6 +522,8 @@ class SerialConnection(object):
         self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
         log('Job running')
 
+    def is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
