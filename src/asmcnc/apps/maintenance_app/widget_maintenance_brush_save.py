@@ -214,7 +214,6 @@ class BrushSaveWidget(Widget):
                     self.attempt_reset()
             else:
                 self.m.s.write_command('M5')
-                self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
                 self.wait_popup.popup.dismiss()
                 self.write_new_values()
 
