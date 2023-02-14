@@ -1773,7 +1773,6 @@ class RouterMachine(object):
         self.homing_in_progress = False
         log("Complete homing sequence")
 
-    ## homing event handling (needs testing, might not work (: )
     homing_in_progress = False
     homing_interrupted = False
     homing_task_idx = 0
@@ -1864,7 +1863,6 @@ class RouterMachine(object):
         try: self.completed_homing_tasks[self.homing_task_idx] = True
         except: 
             log("Could not set completed homing task")
-            pass
 
     def get_current_homing_task_complete(self):
         try: return self.completed_homing_tasks[self.homing_task_idx]

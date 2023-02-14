@@ -88,10 +88,10 @@ def test_clean_up_after_buffer_is_empty_after_reset_requested(sc):
     run_scanner(sc)
     sc.grbl_scanner(run_grbl_scanner_once = True)
     assert sc._sequential_stream_buffer == []
-    assert sc.is_sequential_streaming == False
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == False
+    assert not sc.is_sequential_streaming
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert not sc._process_oks_from_sequential_streaming
 
 def test_clean_up_after_buffer_is_empty_after_end_dwell_requested(sc):
     sc.start_sequential_stream(['a'], end_dwell=True)
@@ -99,41 +99,41 @@ def test_clean_up_after_buffer_is_empty_after_end_dwell_requested(sc):
     run_scanner(sc)
     sc.grbl_scanner(run_grbl_scanner_once = True)
     assert sc._sequential_stream_buffer == []
-    assert sc.is_sequential_streaming == False
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == False
+    assert not sc.is_sequential_streaming
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert not sc._process_oks_from_sequential_streaming
 
 def test_clean_up_after_sequential_streaming_is_cancelled(sc):
     sc.start_sequential_stream(['a'], True)
     sc.grbl_scanner(run_grbl_scanner_once = True)
     sc.cancel_sequential_stream()
-    assert sc.is_sequential_streaming == False
+    assert not sc.is_sequential_streaming
     assert sc._sequential_stream_buffer == []
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == False
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert not sc._process_oks_from_sequential_streaming
 
 def test_clean_up_after_sequential_streaming_is_cancelled_with_reset(sc):
     sc.start_sequential_stream(['a', 'b'])
     sc.grbl_scanner(run_grbl_scanner_once = True)
     sc.m._grbl_soft_reset = Mock()
     sc.cancel_sequential_stream(True)
-    assert sc.is_sequential_streaming == False
+    assert not sc.is_sequential_streaming
     assert sc._sequential_stream_buffer == []
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == False
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert not sc._process_oks_from_sequential_streaming
     sc.m._grbl_soft_reset.assert_called()
 
 def test_clean_up_adter_sequential_streaming_is_immediately_cancelled(sc):
     sc.start_sequential_stream(['a'], True)
     sc.cancel_sequential_stream()
-    assert sc.is_sequential_streaming == False
+    assert not sc.is_sequential_streaming
     assert sc._sequential_stream_buffer == []
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == False
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert not sc._process_oks_from_sequential_streaming
 
 def test_that_seq_streaming_does_not_start_if_grbl_buffer_occupied(sc):
     sc.start_sequential_stream(['a'], True)
@@ -156,19 +156,19 @@ def test_dwell_appended_at_end_of_seq_stream_with_reset_requested(sc):
     sc.start_sequential_stream(['a'], True)
     run_scanner(sc)
     assert sc._sequential_stream_buffer == ["G4 P0.5"]
-    assert sc.is_sequential_streaming == True
-    assert sc._reset_grbl_after_stream == True
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == True
+    assert sc.is_sequential_streaming
+    assert sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert sc._process_oks_from_sequential_streaming
 
 def test_dwell_appended_at_end_of_seq_stream_with_end_dwell_requested(sc):
     sc.start_sequential_stream(['a'], end_dwell=True)
     run_scanner(sc)
     assert sc._sequential_stream_buffer == ["G4 P0.01"]
-    assert sc.is_sequential_streaming == True
-    assert sc._reset_grbl_after_stream == False
-    assert sc._ready_to_send_first_sequential_stream == False
-    assert sc._process_oks_from_sequential_streaming == True
+    assert sc.is_sequential_streaming
+    assert not sc._reset_grbl_after_stream
+    assert not sc._ready_to_send_first_sequential_stream
+    assert sc._process_oks_from_sequential_streaming
 
 written_gcodes_list = []
 
