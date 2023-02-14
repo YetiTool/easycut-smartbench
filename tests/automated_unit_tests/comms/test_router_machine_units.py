@@ -215,16 +215,16 @@ def test_smartbench_is_not_busy(m):
 
 # SETTINGS UNIT TESTS
 
-def test_get_setting_53_if_does_not_exist(m):
-    assert not m.get_setting_53()
+def test_get_setting_53_when_does_not_exist(m):
+    assert m.get_dollar_setting(53) == 0
 
-def test_get_setting_53_if_1(m):
+def test_get_setting_53_when_1(m):
     m.s.setting_53 = 1
-    assert m.get_setting_53()
+    assert m.get_dollar_setting(53) == 1
 
-def test_get_setting_53_if_0(m):
+def test_get_setting_53_when_0(m):
     m.s.setting_53 = 0
-    assert not m.get_setting_53()
+    assert m.get_dollar_setting(53) == 0
 
 # HOMING UNIT TESTS
 
@@ -376,14 +376,3 @@ def test_do_next_task_in_sequence_when_not_ready(m):
     m.setup_homing_funcs_list()
     m.do_next_task_in_sequence()
     assert m.homing_seq_events[0].get_callback() == m.do_next_task_in_sequence
-
-def test_get_setting_53_when_does_not_exist(m):
-    assert m.get_setting_53() == 0
-
-def test_get_setting_53_when_does_exist_and_1(m):
-    m.s.setting_53 = 1
-    assert m.get_setting_53() == 1
-
-def test_get_setting_53_when_does_exist_and_0(m):
-    m.s.setting_53 = 0
-    assert m.get_setting_53() == 0

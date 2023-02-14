@@ -1346,11 +1346,11 @@ class RouterMachine(object):
             self.send_command_to_motor("Enable Z motor", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1)
 
     def disable_stall_detection(self):
-        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
+        if self.get_dollar_setting(53) and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
             self.send_command_to_motor("SET SG ALARM: 0", command=SET_SG_ALARM)
 
     def enable_stall_detection(self, dt=0):
-        if self.get_setting_53() and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
+        if self.get_dollar_setting(53) and self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Disable SG'):
             self.send_command_to_motor("SET SG ALARM: 1", command=SET_SG_ALARM, value=1)
 
 
@@ -1393,10 +1393,8 @@ class RouterMachine(object):
         log("SmartBench model detection failed")
         return "SmartBench model detection failed"
 
-    def get_setting_53(self):
-        try: self.s.setting_53
-        except: return 0
-        else: return self.s.setting_53
+    def get_dollar_setting(self, setting_num):
+        return getattr(self.s, "setting_" + str(setting_num), 0)
 
 # POSITONAL GETTERS            
         
@@ -2179,7 +2177,7 @@ class RouterMachine(object):
     def calibrate_all_three_axes(self):
 
         if  self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'triple axis calibration') and self.sing() and \
-            self.get_setting_53():
+            self.get_dollar_setting(53):
             self.run_calibration = True
             log("Calibrating all axes together...")
             self.prep_triple_axes_calibration()
