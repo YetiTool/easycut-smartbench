@@ -697,7 +697,7 @@ class SerialConnection(object):
     feed_rate = 0
 
     # Feed override feedback
-    feed_override_percentage = None
+    feed_override_percentage = 100
 
     # Analogue spindle feedback
     spindle_load_voltage = None
@@ -1052,6 +1052,9 @@ class SerialConnection(object):
 
                     try:
                         int(values[0])
+                        int(values[1])
+                        int(values[2])
+
                     except:
                         log("ERROR status parse: Ov values invalid: " + message)
                         return
