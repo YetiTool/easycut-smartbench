@@ -695,6 +695,13 @@ class RouterMachine(object):
                             ]
         self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
+    def write_dollar_51_setting(self, value):
+        dollar_51_setting = [
+                            '$51=' + str(value),
+                            '$$'
+                            ]
+        self.s.start_sequential_stream(dollar_51_setting, reset_grbl_after_stream=True)
+
     def write_dollar_54_setting(self, value):
         dollar_54_setting = [
                             '$54=' + str(value),
@@ -1646,6 +1653,12 @@ class RouterMachine(object):
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
+
+    def feed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
+
+    def feed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     def feed_override_up_1(self, final_percentage=''): 
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
