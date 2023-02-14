@@ -938,12 +938,16 @@ class FactorySettingsScreen(Screen):
         return Final_Activation_Code
 
     def show_sc2_decision_popup(self):
-        if self.sc2_compatability_toggle.state == 'normal':
-            message = "This will disable SC2 compatability, are you sure you want to continue?"
-        else:
-            message = "This will enable SC2 compatability, are you sure you want to continue?"
+        if self.m.state().startswith('Idle'):
+            if self.sc2_compatability_toggle.state == 'normal':
+                message = "This will disable SC2 compatability, are you sure you want to continue?"
+            else:
+                message = "This will enable SC2 compatability, are you sure you want to continue?"
 
-        popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
+            popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Please ensure machine is idle before continuing")
+            self.undo_toggle()
 
     def toggle_sc2_compatability(self):
         if self.sc2_compatability_toggle.state == 'normal':
