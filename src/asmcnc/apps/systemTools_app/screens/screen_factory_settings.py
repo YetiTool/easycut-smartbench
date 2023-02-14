@@ -940,10 +940,14 @@ class FactorySettingsScreen(Screen):
     def show_sc2_decision_popup(self):
         if self.m.state().startswith('Idle'):
             if self.sc2_compatability_toggle.state == 'normal':
-                message = "This will disable SC2 compatability, are you sure you want to continue?"
+                message = "This will disable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
             else:
-                message = "This will enable SC2 compatability, are you sure you want to continue?"
+                message = "This will enable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
 
+            try:
+                message += str(self.m.s.setting_51)
+            except:
+                message += "N/A"
             popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
         else:
             popup_info.PopupError(self.systemtools_sm, self.l, "Please ensure machine is idle before continuing")
