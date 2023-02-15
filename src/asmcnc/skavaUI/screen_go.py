@@ -25,6 +25,7 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
     popup_info  # @UnresolvedImport
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
+from asmcnc.job.yetipilot.widgets.widget_yeti_pilot import YetiPilotWidget
 
 Builder.load_string("""
 
@@ -55,7 +56,8 @@ Builder.load_string("""
     job_time_label : job_time_label
     file_lines_streamed_label : file_lines_streamed_label
     spindle_overload_label:spindle_overload_label
-    
+    yetipilot_container:yetipilot_container
+
     BoxLayout:
         padding: 0
         spacing: 0
@@ -115,7 +117,7 @@ Builder.load_string("""
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
-                            
+
                             Label:
                                 size_hint_x: 5
                                 text_size: self.size
@@ -125,7 +127,7 @@ Builder.load_string("""
                                 valign: 'middle'
                                 id: file_data_label
                                 color: hex('#333333ff')
-                                
+
                             Button:
                                 id: stop_start
                                 size_hint_x: 1
@@ -197,7 +199,7 @@ Builder.load_string("""
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
-    
+
 
                         BoxLayout:
                             id: speed_override_container
@@ -243,64 +245,80 @@ Builder.load_string("""
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
-    
 
                         BoxLayout:
-                            id: job_progress_container
                             size_hint_x: 0.8
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 00
+                            spacing: 10
 
-                            canvas:
-                                Color:
-                                    rgba: hex('#FFFFFFFF')
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
+                            BoxLayout:
+                                id: yetipilot_container
+                                size_hint_y: 0.25
+                                orientation: 'vertical'
 
-                            Label:
-                                id: file_lines_streamed_label
-                                size_hint_y: 1
-                                # text: '[color=808080]File lines streamed:[/color]'
-                                markup: True                           
-                                font_size: '16px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 3
-                                id: progress_percentage_label
-                                color: hex('#333333ff')
-                                text: '0 %'
-                                markup: True                           
-                                font_size: '100px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size 
-                            Label:
-                                id: job_time_label
-                                size_hint_y: 0.9
-                                markup: True                           
-                                font_size: '16px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 1.1
-                                id: run_time_label
-                                markup: True                           
-                                font_size: '18px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#333333ff')
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+
+                            BoxLayout:
+                                id: job_progress_container
+                                size_hint_y: 0.75
+                                orientation: 'vertical'
+                                padding: 20
+                                spacing: 00
+
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+
+                                Label:
+                                    id: file_lines_streamed_label
+                                    size_hint_y: 1
+                                    # text: '[color=808080]File lines streamed:[/color]'
+                                    markup: True                           
+                                    font_size: '16px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    size_hint_y: 3
+                                    id: progress_percentage_label
+                                    color: hex('#333333ff')
+                                    text: '0 %'
+                                    markup: True                           
+                                    font_size: '100px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size 
+                                Label:
+                                    id: job_time_label
+                                    size_hint_y: 0.9
+                                    markup: True                           
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    size_hint_y: 1.1
+                                    id: run_time_label
+                                    markup: True                           
+                                    font_size: '18px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#333333ff')
 
                 BoxLayout:
                     id: spindle_widgets
@@ -327,14 +345,14 @@ Builder.load_string("""
                         size_hint_y: 0.25
                         padding: [0, 0, 0, -10]
                         spacing: 10
- 
+
                         Label:
                             id: spindle_overload_label
                             halign: 'center'
                             font_size: '16px' 
                             text: '[color=808080]Spindle\\noverload:[/color]'
                             markup: True
-                        
+
                         Label:
                             font_size: '32px' 
                             id: overload_status_label
@@ -388,8 +406,10 @@ class GoScreen(Screen):
         self.l = kwargs['localization']
         self.database = kwargs['database']
 
-        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
-        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
+        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm,
+                                                              database=self.database)
+        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm,
+                                                                 database=self.database)
 
         # Graphics commands
         self.z_height_container.add_widget(
@@ -405,6 +425,9 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         self.update_strings()
+
+        widget_yetipilot = YetiPilotWidget(screen_manager=self.sm, machine=self.m, job_data=self.jd)
+        self.yetipilot_container.add_widget(widget_yetipilot)
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
@@ -463,7 +486,7 @@ class GoScreen(Screen):
     def on_enter(self):
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
-            # Check brush use and lifetime: 
+            # Check brush use and lifetime:
             if self.m.spindle_brush_use_seconds >= 0.9 * self.m.spindle_brush_lifetime_seconds:
                 brush_use_string = "[b]" + str(int(self.m.spindle_brush_use_seconds / 3600)) + "[/b]"
                 brush_lifetime_string = "[b]" + str(int(self.m.spindle_brush_lifetime_seconds / 3600)) + "[/b]"
@@ -576,6 +599,10 @@ class GoScreen(Screen):
             self._pause_job()
         else:
             self._start_running_job()
+            self.m.s.job_start_time = time.time()
+            if self.m.s.autopilot_instance is not None:
+                self.m.s.autopilot_instance.logger.job_name = self.file_data_label.text
+                self.m.s.autopilot_instance.logger.job_start_time = datetime.now().strftime('%H:%M:%S:%f')
 
     def _pause_job(self):
 
@@ -599,7 +626,7 @@ class GoScreen(Screen):
 
         modified_job_gcode = []
 
-        # Spindle command?? 
+        # Spindle command??
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
@@ -665,7 +692,7 @@ class GoScreen(Screen):
 
     def poll_for_job_progress(self, dt):
 
-        # % progress    
+        # % progress
         if len(self.jd.job_gcode_running) != 0:
             self.jd.percent_thru_job = int(
                 round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0) * 100.0))
@@ -747,7 +774,8 @@ class GoScreen(Screen):
         self.spindle_label.text = self.l.get_str("Spindle") + '\n' + self.l.get_str("speed")
         self.job_time_label.text = self.l.get_str("Total job time") + ":"
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
-        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n', 1) + "[/color]"
+        self.spindle_overload_label.text = "[color=808080]" + self.l.get_str("Spindle overload").replace(' ', '\n',
+                                                                                                         1) + "[/color]"
 
         self.update_font_size(self.feed_label)
         self.update_font_size(self.spindle_label)
