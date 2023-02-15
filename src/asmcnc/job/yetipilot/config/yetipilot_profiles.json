@@ -1,0 +1,50 @@
+{
+    "Materials": [
+        {
+            "Name": "MDF",
+            "Cutters": [
+                {
+                    "Diameter": 3,
+                    "Parameters": [
+                        {
+                            "Name": "digital_spindle_target_watts",
+                            "Value": 600
+                        }
+                    ]
+                },
+                {
+                    "Diameter": 6,
+                    "Parameters": [
+                        {
+                            "Name": "digital_spindle_target_watts",
+                            "Value": 800
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Plywood",
+            "Cutters": [
+                {
+                    "Diameter": 3,
+                    "Parameters": [
+                        {
+                            "Name": "digital_spindle_target_watts",
+                            "Value": 600
+                        }
+                    ]
+                },
+                {
+                    "Diameter": 6,
+                    "Parameters": [
+                        {
+                            "Name": "digital_spindle_target_watts",
+                            "Value": 800
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

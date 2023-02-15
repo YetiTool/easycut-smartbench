@@ -1,0 +1,52 @@
+[
+  {
+    "Name": "digital_spindle_stack_max",
+    "Value": 2,
+    "Description": "Maximum number of values in stack (avg applied to this many values)"
+  },
+  {
+    "Name": "counter_max",
+    "Value": 2,
+    "Description": "How many statuses to wait for before running adjustment"
+  },
+  {
+    "Name": "digital_spindle_target_watts",
+    "Value": 880
+  },
+  {
+    "Name": "adjustment_count",
+    "Value": 2
+  },
+  {
+    "Name": "adjustment_delay",
+    "Value": 0.06
+  },
+  {
+    "Name": "bias_for_feed_increase",
+    "Value": 1.0
+  },
+  {
+    "Name": "bias_for_feed_decrease",
+    "Value": 2.0
+  },
+  {
+    "Name": "m_coefficient",
+    "Value": 1.0
+  },
+  {
+    "Name": "c_coefficient",
+    "Value": 35.0
+  },
+  {
+    "Name": "cap_for_feed_increase",
+    "Value": 20
+  },
+  {
+    "Name": "cap_for_feed_decrease",
+    "Value": -40
+  },
+  {
+    "Name": "cap_for_feed_increase_during_z_movement",
+    "Value": 0
+  }
+]
