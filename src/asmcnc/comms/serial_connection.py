@@ -368,6 +368,9 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
+
+                        # here
+
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
@@ -1061,6 +1064,9 @@ class SerialConnection(object):
 
                     self.feed_override_percentage = int(values[0])
 
+                    if self.sm.has_screen('go').feedOverride:
+                        self.sm.get_screen('go').feedOverride.update_feed_percentage_override_label()
+
                 # TEMPERATURES
                 elif part.startswith('TC:'):
                     temps = part[3:].split(',')
@@ -1662,3 +1668,14 @@ class SerialConnection(object):
         
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    def send_status_to_yeti_pilot(self):
+        try:
+            if self.current_line_number is not None and \
+                    self.digital_spindle_ld_qdA is not None and \
+                    self.autopilot_instance is not None and \
+                    self.m_state == 'Run':
+                self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
+                                                     float(self.feed_rate), int(self.current_line_number))
+        except Exception as e:
+            log(e)

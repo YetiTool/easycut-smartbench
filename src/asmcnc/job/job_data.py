@@ -389,3 +389,17 @@ class JobData(object):
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
+
+    def find_last_feedrate(self, index):
+        try:
+            for i in range(index, -1, -1):
+                if 'F' in self.job_gcode_running[i]:
+                    f_index = self.job_gcode_running[i].index('F')
+                    end_index = f_index + 1
+                    while end_index < len(self.job_gcode_running[i]) and not self.job_gcode_running[i][end_index].isalpha():
+                        end_index += 1
+                    f_value = float(self.job_gcode_running[i][f_index + 1:end_index].strip())
+                    return f_value
+        except IndexError:
+            return -1
+        return -1
