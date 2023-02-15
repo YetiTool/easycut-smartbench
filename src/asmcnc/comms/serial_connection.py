@@ -793,6 +793,12 @@ class SerialConnection(object):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    # YETI PILOT
+    gcode_feed = None
+    current_line_number = None
+    constant_speed = False
+    autopilot_instance = None
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
