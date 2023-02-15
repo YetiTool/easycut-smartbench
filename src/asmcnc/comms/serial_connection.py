@@ -1064,7 +1064,7 @@ class SerialConnection(object):
 
                     self.feed_override_percentage = int(values[0])
 
-                    if self.sm.has_screen('go').feedOverride:
+                    if self.sm.get_screen('go').feedOverride:
                         self.sm.get_screen('go').feedOverride.update_feed_percentage_override_label()
 
                 # TEMPERATURES
