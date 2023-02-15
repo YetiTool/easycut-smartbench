@@ -368,6 +368,7 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
+                        self.send_status_to_yeti_pilot()
 
                         # here
 
