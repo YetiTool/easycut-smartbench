@@ -342,3 +342,51 @@ def test_pin_selection_singles_v13(sc):
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
+
+## TEST OVERRIDE READ IN
+## --------------------------------
+
+def construct_status_with_override(feed_ov = None, rapid_ov = None, speed_ov = None):
+
+    # Use this to construct the test status passed out by mock serial object
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0"
+    if feed_ov or rapid_ov or speed_ov:
+
+        if feed_ov == None: feed_ov = 100
+        if rapid_ov == None: rapid_ov = 100
+        if speed_ov == None: speed_ov = 100
+
+        override_appendage = "|Ov:" + str(feed_ov) + "," + str(rapid_ov) + "," + str(speed_ov)
+        status += override_appendage
+
+    status += "|TC:1,2>"
+
+    return status
+
+def assert_status_end_processed(serial_comms):
+    assert serial_comms.motor_driver_temp == 1
+    assert serial_comms.pcb_temp == 2
+
+
+def test_feed_override_read_in(sc):
+    ov = 123
+    status = construct_status_with_override(feed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.feed_override_percentage == ov
+    assert_status_end_processed(sc)
+
+def test_not_feed_override_read_in(sc):
+    ov = 123
+    status = construct_status_with_override(rapid_ov=ov, speed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.feed_override_percentage != ov
+    assert_status_end_processed(sc)
+
+def test_feed_override_read_in_fails_if_bad(sc):
+    ov = ";"
+    status = construct_status_with_override(feed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.feed_override_percentage != ov
+    assert sc.motor_driver_temp != 1
+    assert sc.pcb_temp != 2
+

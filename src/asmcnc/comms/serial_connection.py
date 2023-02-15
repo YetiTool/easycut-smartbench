@@ -696,6 +696,9 @@ class SerialConnection(object):
     spindle_speed = 0
     feed_rate = 0
 
+    # Feed override feedback
+    feed_override_percentage = 100
+
     # Analogue spindle feedback
     spindle_load_voltage = None
 
@@ -1043,6 +1046,20 @@ class SerialConnection(object):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
+
+                elif part.startswith('Ov:'):
+                    values = part[3:].split(',')
+
+                    try:
+                        int(values[0])
+                        int(values[1])
+                        int(values[2])
+
+                    except:
+                        log("ERROR status parse: Ov values invalid: " + message)
+                        return
+
+                    self.feed_override_percentage = int(values[0])
 
                 # TEMPERATURES
                 elif part.startswith('TC:'):
