@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+from datetime import datetime
 
 Builder.load_string("""
 
@@ -65,7 +66,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.cancel_homing()
+                on_press: root.stop_button_press()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -79,16 +80,17 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class HomingScreenActive(Screen):
-
 
     return_to_screen = 'lobby'
     cancel_to_screen = 'lobby'    
     poll_for_completion_loop = None
-    start_homing_event = None
-   
-    
+    expected_next_screen = 'squaring_active'
+
     def __init__(self, **kwargs):
 
         super(HomingScreenActive, self).__init__(**kwargs)
@@ -97,110 +99,75 @@ class HomingScreenActive(Screen):
         self.l=kwargs['localization']
         self.update_strings()
 
-    
-    def windows_cheat_to_procede(self):
+    def on_pre_enter(self):
 
-        if sys.platform == 'win32':
-            self.homing_detected_as_complete()
-        else: pass
-
+        log("Open homing screen")
+        if self.m.homing_interrupted:
+            self.go_to_cancel_to_screen()
+            return
 
     def on_enter(self):
+        if sys.platform == 'win32' or sys.platform == 'darwin': return
+        if self.m.homing_interrupted: return
+        if not self.m.homing_in_progress: self.m.do_standard_homing_sequence()
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_homing_status_func, 0.2)
 
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-
-            self.m.reset_pre_homing()
-            self.start_homing_event = Clock.schedule_once(lambda dt: self.start_homing(),0.4)
-
-
-    def start_homing(self):
-
-        # Issue homing commands
-        normal_homing_sequence = ['$H']
-        self.m.s.start_sequential_stream(normal_homing_sequence)
-
-        # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-        self.m.set_state('Home') 
-
-        # Check for completion - since it's a sequential stream, need a poll loop
-        self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
-       
-     
-    def check_for_successful_completion(self, dt):
-
-        # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.m.state().startswith('Alarm'):
-            print "Poll for homing success unscheduled"
-            if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-
-        # if sequential_stream completes successfully
-        elif self.m.s.is_sequential_streaming == False:
-            print "Homing detected as success!"
-            self.homing_detected_as_complete()
-
-
-    def homing_detected_as_complete(self):
-
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-        self.m.is_machine_homed = True # clear this flag too
-        
-        if self.m.is_squaring_XY_needed_after_homing:
-            self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
-            self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
-            self.sm.current = 'squaring_active'
-        else: 
-            self.m.is_machine_completed_the_initial_squaring_decision = True
-
-            # Chosen to sync with grbl after homing. Ensures that no clash of threads on boot, and that grbl is in definte ready state. So user must home!
-            # Enter any initial grbl settings into this list
-            # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
-            # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR.
-            # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost.
-            # Sequential streaming handles this
-            grbl_settings = [
-                        '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                        '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
-                        '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
-                        ]
-            self.m.s.start_sequential_stream(grbl_settings)
-
-            Clock.schedule_once(lambda dt: self.post_homing_sequence(), 1)
-
-
-    def post_homing_sequence(self):
-
-        # If laser is enabled, move by offset
-        if self.m.is_laser_enabled:
-
-            tolerance = 5 # mm
-
-            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
-            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
-
-        # allow breather for sequential stream to process
-        Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
-        Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
-
-
-    def after_successful_completion_return_to_screen(self):
+    def return_to_ec_if_homing_not_in_progress(self):
         self.sm.current = self.return_to_screen
+        self.m.homing_interrupted = False
 
+    def on_leave(self):
+        self.cancel_poll()
+        self.update_strings()
 
-    def cancel_homing(self):
+    def poll_for_homing_status_func(self, dt=0):
 
-        print('Cancelling homing...')
-        if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        if self.start_homing_event: self.start_homing_event.cancel()
-        # ... will trigger an alarm screen
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.reset_on_cancel_homing()
+        if not self.m.homing_in_progress:
+            self.return_to_ec_if_homing_not_in_progress()
+            return
+
+        if self.m.homing_interrupted:
+            self.cancel_homing()
+            return
+        
+        if self.m.i_am_auto_squaring(): 
+            self.go_to_auto_squaring_screen()
+            return
+
+        # Placeholder until we've finalised on UX & language
+        # if self.m.run_calibration:
+        #     self.homing_label.text = self.l.get_str('Finding motor baselines') + '...'
+
+        self.poll_for_completion_loop = Clock.schedule_once(self.poll_for_homing_status_func, 0.2)
+
+    def go_to_auto_squaring_screen(self, dt=0):
+        # in case the sequence quickly skips over auto-squaring, delay screen change
+        if self.m.homing_task_idx > self.m.auto_squaring_idx: return
+        self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
+        self.sm.current = 'squaring_active'
+
+    def stop_button_press(self):
+        log("Homing cancelled by user")
+        self.cancel_homing()
+        self.go_to_cancel_to_screen()
+
+    def go_to_cancel_to_screen(self):
+        self.m.homing_interrupted = False
         self.sm.current = self.cancel_to_screen
 
-    
-    def on_leave(self):
+    def cancel_homing(self):
+        self.cancel_poll()
+        if self.m.homing_in_progress: self.m.cancel_homing_sequence()
+
+    def cancel_poll(self):
         if self.poll_for_completion_loop: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):
         self.homing_label.text = self.l.get_str('Homing') + '...'
         
+    def windows_cheat_to_procede(self):
+        if sys.platform == 'win32' or sys.platform == 'darwin':
+            self.return_to_ec_if_homing_not_in_progress()
+        else: pass
         
