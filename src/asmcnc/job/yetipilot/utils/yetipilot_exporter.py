@@ -368,7 +368,8 @@ class AutoPilotExporter:
         spindle_load_feed_multiplier_series = get_series_format(parameter_sheet_id, 0, 100000000, 25, 26, "LEFT", 0, 0, 0, 1)
 
         self.add_chart('Spindle Load vs Feed Multiplier', 'Spindle Load', 'Feed Multiplier',
-                       [spindle_load_feed_multiplier_domain], [spindle_load_feed_multiplier_series])
+                       [spindle_load_feed_multiplier_domain], [spindle_load_feed_multiplier_series],
+                       left_axis_min=-40, left_axis_max=20)
 
     def freeze_first_row_and_first_column(self, sheet_id):
         service = build('sheets', 'v4', credentials=self.creds)
