@@ -945,7 +945,7 @@ class FactorySettingsScreen(Screen):
                 message = "This will enable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
 
             try:
-                message += str(self.m.s.setting_51)
+                message += str(int(self.m.s.setting_51))
             except:
                 message += "N/A"
             popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
