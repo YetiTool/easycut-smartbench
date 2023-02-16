@@ -461,10 +461,16 @@ class SerialConnection(object):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
-        
+
+    def is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+
     def run_job(self, job_object):
 
-        self.jd.job_gcode_running = job_object
+        gcode_with_line_numbers = [line if self.is_excluded(line) else 'N' + str(i) + ' ' + line
+                                   for i, line in enumerate(job_object)]
+
+        self.jd.job_gcode_running = gcode_with_line_numbers
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -1677,10 +1683,6 @@ class SerialConnection(object):
 
     def send_status_to_yeti_pilot(self):
         try:
-            print(self.current_line_number)
-            print(self.digital_spindle_ld_qdA)
-            print(self.autopilot_instance)
-            print(self.m_state)
             if self.current_line_number is not None and \
                     self.digital_spindle_ld_qdA is not None and \
                     self.autopilot_instance is not None and \
