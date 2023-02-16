@@ -356,7 +356,7 @@ class AutoPilotExporter:
         ]
 
         series = [
-            get_series_format(data_sheet_id, 0, 100000000, 27, 28, "RIGHT", 1, 0.75, 0.8, 1),  # actual feed
+            get_series_format(data_sheet_id, 0, 100000000, 27, 28, "RIGHT", 0.98, 0.8, 0, 1),  # actual feed
             get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT", 1, 1, 0, 1)  # feed override %
         ]
 
