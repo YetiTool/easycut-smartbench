@@ -1677,6 +1677,10 @@ class SerialConnection(object):
 
     def send_status_to_yeti_pilot(self):
         try:
+            print(self.current_line_number)
+            print(self.digital_spindle_ld_qdA)
+            print(self.autopilot_instance)
+            print(self.m_state)
             if self.current_line_number is not None and \
                     self.digital_spindle_ld_qdA is not None and \
                     self.autopilot_instance is not None and \
