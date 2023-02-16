@@ -140,6 +140,8 @@ class YetiPilot:
         if not self.enabled or self.digital_spindle_mains_voltage is None:
             return
 
+        print("here2")
+
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
         if len(self.digital_spindle_load_stack) == self.digital_spindle_stack_max:
@@ -150,6 +152,7 @@ class YetiPilot:
 
         if len(self.digital_spindle_load_stack) > 1 and self.counter >= self.counter_max:
             self.counter = 0
+            print("here3")
 
             average_digital_spindle_load = sum(
                 self.digital_spindle_load_stack[-self.digital_spindle_stack_max:]) / self.digital_spindle_stack_max
