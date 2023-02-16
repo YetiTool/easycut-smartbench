@@ -1695,7 +1695,6 @@ class SerialConnection(object):
                     self.digital_spindle_ld_qdA is not None and \
                     self.autopilot_instance is not None and \
                     self.m_state == 'Run':
-                print("a")
                 self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
                                                      float(self.feed_rate), int(self.current_line_number))
         except Exception as e:
