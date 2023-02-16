@@ -1675,11 +1675,14 @@ class SerialConnection(object):
 
     def send_status_to_yeti_pilot(self):
         try:
+            print(self.current_line_number)
+            print(self.digital_spindle_ld_qdA)
+            print(self.autopilot_instance)
+            print(self.m_state)
             if self.current_line_number is not None and \
                     self.digital_spindle_ld_qdA is not None and \
                     self.autopilot_instance is not None and \
                     self.m_state == 'Run':
-                print("Adding to stack")
                 self.autopilot_instance.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
                                                      float(self.feed_rate), int(self.current_line_number))
         except Exception as e:
