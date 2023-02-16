@@ -193,7 +193,7 @@ class AutoPilotExporter:
         ).execute()
 
     def add_chart(self, chart_title, bottom_axis_title, left_axis_title, domains, series, right_axis_title='',
-                  left_axis_max=None, right_axis_max=None):
+                  left_axis_max=None, right_axis_max=None, left_axis_min=None, right_axis_min=None):
         service = build('sheets', 'v4', credentials=self.creds)
 
         requests = []
@@ -253,14 +253,16 @@ class AutoPilotExporter:
                                             "position": "LEFT_AXIS",
                                             "title": left_axis_title,
                                             "viewWindowOptions": {
-                                                "viewWindowMax": left_axis_max
+                                                "viewWindowMax": left_axis_max,
+                                                "viewWindowMin": left_axis_min
                                             }
                                         },
                                         {
                                             "position": "RIGHT_AXIS",
                                             "title": right_axis_title,
                                             "viewWindowOptions": {
-                                                "viewWindowMax": right_axis_max
+                                                "viewWindowMax": right_axis_max,
+                                                "viewWindowMin": right_axis_min
                                             }
                                         }
                                     ],
@@ -325,7 +327,7 @@ class AutoPilotExporter:
         ]
 
         self.add_chart("Raw data", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
-                       right_axis_max=3000, left_axis_max=200)
+                       right_axis_max=3000, left_axis_max=200, left_axis_min=0, right_axis_min=0)
 
     def create_boris_chart(self, data_sheet_id):
         domain = [
@@ -358,7 +360,7 @@ class AutoPilotExporter:
             get_series_format(data_sheet_id, 0, 100000000, 17, 18, "LEFT", 1, 1, 0, 1)  # feed override %
         ]
 
-        self.add_chart("Feed Rate vs Feed Override", "Time", "Feed Override (%)", domain, series, right_axis_title="Feed  Rate (mm/min)", left_axis_max=200, right_axis_max=7000)
+        self.add_chart("Feed Rate vs Feed Override", "Time", "Feed Override (%)", domain, series, right_axis_title="Feed  Rate (mm/min)", left_axis_max=200, right_axis_max=8000, left_axis_min=0, right_axis_min=0)
 
     def create_sweep_chart(self, parameter_sheet_id):
         spindle_load_feed_multiplier_domain = get_domain_format(parameter_sheet_id, 0, 100000000, 24, 25)

@@ -603,6 +603,7 @@ class GoScreen(Screen):
             if self.m.s.autopilot_instance is not None:
                 self.m.s.autopilot_instance.logger.job_name = self.file_data_label.text
                 self.m.s.autopilot_instance.logger.job_start_time = datetime.now().strftime('%H:%M:%S:%f')
+                self.m.s.autopilot_instance.reset()
 
     def _pause_job(self):
 

@@ -145,6 +145,7 @@ class AutoPilotLogger:
 
             parameter_format.append(["Spindle Mains Voltage", self.autopilot_instance.digital_spindle_mains_voltage])
             parameter_format.append(["Job Start Time", self.job_start_time])
+            parameter_format.append(["Branch", self.autopilot_instance.m.sett.sw_branch])
 
             return parameter_format
 
