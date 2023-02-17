@@ -2877,6 +2877,7 @@ class RouterMachine(object):
         if not self.run_calibration: return
 
         if not self.state().startswith('Idle') or self.s.write_protocol_buffer or True:
+            log("Resched prep triple axes cal")
             Clock.schedule_once(lambda dt: self.prep_triple_axes_calibration(), 0.1)
             return
 
