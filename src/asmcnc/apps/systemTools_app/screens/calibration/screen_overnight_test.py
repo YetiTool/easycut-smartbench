@@ -120,7 +120,6 @@ Builder.load_string("""
                     Button:
                         id: cal_and_post_button
                         text: 'CAL+POST'
-                        on_press: root.start_full_overnight_test()
                         background_color: [0,1,1,1]
                         on_press: root.start_cal_and_post_cal()
 
