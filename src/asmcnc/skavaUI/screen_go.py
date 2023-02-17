@@ -463,70 +463,95 @@ class GoScreen(Screen):
     def on_enter(self):
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
-            # Check brush use and lifetime: 
-            if self.m.spindle_brush_use_seconds >= 0.9 * self.m.spindle_brush_lifetime_seconds:
-                brush_use_string = "[b]" + str(int(self.m.spindle_brush_use_seconds / 3600)) + "[/b]"
-                brush_lifetime_string = "[b]" + str(int(self.m.spindle_brush_lifetime_seconds / 3600)) + "[/b]"
-
-                brush_warning = (
-                        self.l.get_bold("Check your spindle brushes before starting your job!") + "\n\n" + \
-                        (
-                            self.l.get_str(
-                                "You have used your SmartBench for N00 hours since you updated your spindle brush settings."
-                            ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
-                        ).replace("N00", brush_use_string) + \
-                        " " + \
-                        (
-                            self.l.get_str(
-                                "You have told us they only have a lifetime of N00 hours!"
-                            ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
-                        ).replace("N00", brush_lifetime_string)
-                )
-
-                brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, brush_warning,
-                                                                'brushes')
-
-            if self.m.time_since_z_head_lubricated_seconds >= self.m.time_to_remind_user_to_lube_z_seconds:
-                time_since_lubricated_string = "[b]" + str(
-                    int(self.m.time_since_z_head_lubricated_seconds / 3600)) + "[/b]"
-
-                lubrication_warning = (
-                        self.l.get_bold("Lubricate the z head before starting your job!") + "\n\n" + \
-                        (
-                            self.l.get_str(
-                                "You have used SmartBench for N00 hours since you last told us that you lubricated the Z head."
-                            ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
-                        ).replace("N00", time_since_lubricated_string) + \
-                        "\n\n" + \
-                        self.l.get_str("Will you lubricate the Z head now?") + "\n\n" + \
-                        self.l.get_str("Saying 'OK' will reset this reminder.")
-                )
-
-                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l,
-                                                                      lubrication_warning, 'lubrication')
-
-            if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
-                time_since_calibration_string = "[b]" + str(int(self.m.time_since_calibration_seconds / 3600)) + "[/b]"
-
-                calibration_warning = (
-                        (
-                            self.l.get_str(
-                                "You have used SmartBench for N00 hours since its last calibration."
-                            ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
-                        ).replace("N00", time_since_calibration_string) + \
-                        "\n\n" + \
-                        self.l.get_str(
-                            "A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.") + "\n\n" + \
-                        self.l.get_str(
-                            "A calibration procedure can take approximately 10 minutes with basic tools.") + "\n\n" + \
-                        self.l.get_str("Calibration is not compulsory.") + "\n\n" + \
-                        self.l.get_str("Will you calibrate SmartBench now?")
-                )
-
-                caibration_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l,
-                                                                     calibration_warning, 'calibration')
+            if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
+                and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
+                self.m.s.write_command('M3 S0')
+                Clock.schedule_once(self.get_spindle_info, 0.1)
+                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            else:
+                self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
+
+    def get_spindle_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        Clock.schedule_once(self.read_spindle_info, 0.3)
+
+    def read_spindle_info(self, dt):
+        self.m.s.write_command('M5')
+        self.wait_popup.popup.dismiss()
+        # If info was not obtained successfully, spindle production year will equal 99
+        if self.m.s.spindle_production_year != 99:
+            try: # Just in case of weird errors
+                self.check_brush_use_and_lifetime(self.m.s.spindle_brush_run_time_seconds, self.m.spindle_brush_lifetime_seconds)
+                return
+            except:
+                pass
+        popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
+
+    def check_brush_use_and_lifetime(self, use, lifetime):
+        # Check brush use and lifetime: 
+        if use >= 0.9 * lifetime:
+            brush_use_string = "[b]" + str(int(use / 3600)) + "[/b]"
+            brush_lifetime_string = "[b]" + str(int(lifetime / 3600)) + "[/b]"
+
+            brush_warning = (
+                    self.l.get_bold("Check your spindle brushes before starting your job!") + "\n\n" + \
+                    (
+                        self.l.get_str(
+                            "You have used your SmartBench for N00 hours since you updated your spindle brush settings."
+                        ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                    ).replace("N00", brush_use_string) + \
+                    " " + \
+                    (
+                        self.l.get_str(
+                            "You have told us they only have a lifetime of N00 hours!"
+                        ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                    ).replace("N00", brush_lifetime_string)
+            )
+
+            brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, brush_warning,
+                                                            'brushes')
+
+        if self.m.time_since_z_head_lubricated_seconds >= self.m.time_to_remind_user_to_lube_z_seconds:
+            time_since_lubricated_string = "[b]" + str(
+                int(self.m.time_since_z_head_lubricated_seconds / 3600)) + "[/b]"
+
+            lubrication_warning = (
+                    self.l.get_bold("Lubricate the z head before starting your job!") + "\n\n" + \
+                    (
+                        self.l.get_str(
+                            "You have used SmartBench for N00 hours since you last told us that you lubricated the Z head."
+                        ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                    ).replace("N00", time_since_lubricated_string) + \
+                    "\n\n" + \
+                    self.l.get_str("Will you lubricate the Z head now?") + "\n\n" + \
+                    self.l.get_str("Saying 'OK' will reset this reminder.")
+            )
+
+            lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l,
+                                                                    lubrication_warning, 'lubrication')
+
+        if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
+            time_since_calibration_string = "[b]" + str(int(self.m.time_since_calibration_seconds / 3600)) + "[/b]"
+
+            calibration_warning = (
+                    (
+                        self.l.get_str(
+                            "You have used SmartBench for N00 hours since its last calibration."
+                        ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                    ).replace("N00", time_since_calibration_string) + \
+                    "\n\n" + \
+                    self.l.get_str(
+                        "A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.") + "\n\n" + \
+                    self.l.get_str(
+                        "A calibration procedure can take approximately 10 minutes with basic tools.") + "\n\n" + \
+                    self.l.get_str("Calibration is not compulsory.") + "\n\n" + \
+                    self.l.get_str("Will you calibrate SmartBench now?")
+            )
+
+            caibration_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l,
+                                                                    calibration_warning, 'calibration')
 
     ### COMMON SCREEN PREP METHOD
 
