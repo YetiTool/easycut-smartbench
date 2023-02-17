@@ -866,6 +866,9 @@ class SerialConnection(object):
                     self.m_y = pos[1]
                     self.m_z = pos[2]
 
+                    if self.autopilot_instance:
+                        self.autopilot_instance.moving_in_z = self.m_z != pos[2]
+
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
                     pos = part[5:].split(',')
