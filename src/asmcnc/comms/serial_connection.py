@@ -1670,5 +1670,7 @@ class SerialConnection(object):
         return serialCommand
 
     def send_machine_status(self):
+        if self.digital_spindle_ld_qdA is None:
+            return
         status = MachineStatus(self.m_x, self.m_y, self.m_z, self.digital_spindle_ld_qdA, datetime.now().strftime("%H:%M:%S.%f"))
         self.flurry.update_machine_status(status)
