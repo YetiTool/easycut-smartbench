@@ -707,6 +707,9 @@ class SerialConnection(object):
     spindle_speed = 0
     feed_rate = 0
 
+    # Feed override feedback
+    feed_override_percentage = 100
+
     # Analogue spindle feedback
     spindle_load_voltage = None
 
@@ -1105,6 +1108,20 @@ class SerialConnection(object):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
+
+                elif part.startswith('Ov:'):
+                    values = part[3:].split(',')
+
+                    try:
+                        int(values[0])
+                        int(values[1])
+                        int(values[2])
+
+                    except:
+                        log("ERROR status parse: Ov values invalid: " + message)
+                        return
+
+                    self.feed_override_percentage = int(values[0])
 
                 # TEMPERATURES
                 elif part.startswith('TC:'):
@@ -1564,14 +1581,16 @@ class SerialConnection(object):
     _process_oks_from_sequential_streaming = False
     _dwell_time = 0.5 # time for grbl to wait after sending dollar settings commands
     _dwell_command = "G4 P" + str(_dwell_time)
+    _micro_dwell_command = "G4 P" + str(0.01)
 
     def is_excluded(self, line):
         return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
 
-    def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
+    def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream: list_to_stream.append(self._dwell_command)
+        elif end_dwell: list_to_stream.append(self._micro_dwell_command)
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True

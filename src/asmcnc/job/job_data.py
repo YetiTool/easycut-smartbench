@@ -77,6 +77,9 @@ class JobData(object):
     check_info_string = ''
     comments_string = ''
 
+    # G0 Tracking
+    g0_lines = []
+
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
         self.set = kwargs['settings_manager']
