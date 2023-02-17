@@ -19,6 +19,8 @@ from serial.serialutil import SerialException
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
+from asmcnc.comms.flurry.flurry_experiment import Flurry, MachineStatus
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -58,6 +60,8 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+    flurry = None
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -68,6 +72,7 @@ class SerialConnection(object):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+        self.flurry = Flurry()
 
     def __del__(self):
         if self.s: self.s.close()
@@ -368,6 +373,7 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
+                        self.send_machine_status()
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
@@ -1662,3 +1668,7 @@ class SerialConnection(object):
         
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    def send_machine_status(self):
+        status = MachineStatus(self.m_x, self.m_y, self.m_z, self.digital_spindle_ld_qdA, datetime.now().strftime("%H:%M:%S.%f"))
+        self.flurry.update_machine_status(status)
