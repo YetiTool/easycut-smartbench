@@ -34,7 +34,7 @@ class Flurry:
     Update Machine Status
     """
     _update_machine_status_queue = []
-    _update_machine_status_max = 1
+    _update_machine_status_max = 2
 
     def _update_machine_status(self):
         send_post_request(
