@@ -1428,6 +1428,11 @@ class RouterMachine(object):
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
 
+    def get_is_constant_feed_rate(self, feed_override_percentage, feed_rate, current_line_number):
+        last_modal_feed_rate = self.jd.scrape_last_feed_command(self.job_gcode_running, current_line_number)
+        constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
+        return abs(constant_feed_target - feed_rate) < 50, last_modal_feed_rate
+
     def spindle_speed(self): 
         if self.spindle_voltage == 110: 
             # if not self.spindle_digital or not self.fw_can_operate_digital_spindle(): # this is only relevant much later on
