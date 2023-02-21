@@ -108,11 +108,14 @@ class YetiPilot:
 
         return multiplier
 
-    def calculate_adjustment(self, average_digital_spindle_load):
+    def calculate_adjustment(self, average_digital_spindle_load, constant_feed):
         multiplier = self.get_multiplier(average_digital_spindle_load)
         capped_multiplier = self.cap_multiplier(multiplier)
 
         adjustments = get_adjustment(capped_multiplier)
+
+        if not constant_feed:
+            return [], multiplier, capped_multiplier
 
         return adjustments, multiplier, capped_multiplier
 
@@ -155,10 +158,11 @@ class YetiPilot:
             average_digital_spindle_load = sum(
                 self.digital_spindle_load_stack[-self.digital_spindle_stack_max:]) / self.digital_spindle_stack_max
 
-            adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load)
-
             constant_feed, gcode_feed = self.get_is_constant_feed_rate(
                 feed_override_percentage, feed_rate, current_line_number)
+
+            adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
+                                                                                      constant_feed)
 
             if constant_feed or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
