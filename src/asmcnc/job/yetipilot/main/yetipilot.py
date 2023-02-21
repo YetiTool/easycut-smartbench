@@ -114,7 +114,7 @@ class YetiPilot:
 
         adjustments = get_adjustment(capped_multiplier)
 
-        if not constant_feed:
+        if not constant_feed and multiplier > 0:
             return [], multiplier, capped_multiplier
 
         return adjustments, multiplier, capped_multiplier
