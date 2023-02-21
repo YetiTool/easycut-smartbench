@@ -392,7 +392,10 @@ class SpindleTestJig1(Screen):
     def update_unlock_code(self):
         serial = self.m.s.spindle_serial_number
 
-        serial = str(hex((serial + 42) * 10000))[2:]
+        if serial != 999:
+            serial = str(hex((serial + 42) * 10000))[2:]
+        else:
+            serial = 'N/A'
 
         self.unlock_code_label.text = "Unlock code: " + str(serial)
         self.unlock_code = serial
