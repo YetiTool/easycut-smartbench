@@ -417,7 +417,7 @@ class AutoPilotExporter:
         ]
 
         self.add_chart("Test Chart", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
-                       right_axis_max=3000, left_axis_max=200, left_axis_min=0, right_axis_min=0)
+                       right_axis_max=3000, left_axis_max=200, left_axis_min=-20, right_axis_min=0)
 
     def create_test_boris_chart(self, sheet_id):
         domain = [
@@ -435,7 +435,7 @@ class AutoPilotExporter:
             series.append(get_series_format(sheet_id, 0, MAX, i, i+1, "LEFT"))
 
         self.add_chart("Motor Loads", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
-                       right_axis_max=3000, left_axis_max=200, left_axis_min=0, right_axis_min=0)
+                       right_axis_max=3000, left_axis_max=200, left_axis_min=-20, right_axis_min=0)
 
 
 def run(title, logger):

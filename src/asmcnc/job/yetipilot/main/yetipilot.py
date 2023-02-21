@@ -160,7 +160,7 @@ class YetiPilot:
             constant_feed, gcode_feed = self.get_is_constant_feed_rate(
                 feed_override_percentage, feed_rate, current_line_number)
 
-            if constant_feed:
+            if constant_feed or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
             time_stamp = None
