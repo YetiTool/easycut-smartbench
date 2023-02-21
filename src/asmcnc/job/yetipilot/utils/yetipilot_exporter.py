@@ -356,8 +356,8 @@ class AutoPilotExporter:
         ]
 
         series = [
-            get_series_format(data_sheet_id, 0, MAX, 27, 28, "RIGHT", 1, 0, 1, 1),  # actual feed
-            get_series_format(data_sheet_id, 0, MAX, 17, 18, "LEFT", 0.98, 0.8, 0, 1)  # feed override %
+            get_series_format(data_sheet_id, 0, MAX, 14, 15, "RIGHT", 1, 0, 1, 1),  # actual feed
+            get_series_format(data_sheet_id, 0, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1)  # feed override %
         ]
 
         self.add_chart("Feed Rate vs Feed Override", "Time", "Feed Override (%)", domain, series, right_axis_title="Feed  Rate (mm/min)", left_axis_max=200, right_axis_max=8000, left_axis_min=0, right_axis_min=0)
@@ -443,6 +443,8 @@ def run(title, logger):
     exporter.create_spreadsheet()
     parameters_sheet_id = exporter.get_sheet_id("Sheet1")
     exporter.rename_sheet("Parameters", parameters_sheet_id)
+    exporter.write_feed_profile(logger.get_sweep())
+    exporter.create_sweep_chart(parameters_sheet_id)
     exporter.add_sheet("Test Data")
     test_data_sheet_id = exporter.get_sheet_id("Test Data")
     exporter.write_test_data(logger.get_data_for_test_data_sheet())
@@ -451,14 +453,14 @@ def run(title, logger):
     exporter.write_chart_data(logger.get_data_for_chart_data_sheet())
     exporter.create_test_chart(chart_data_sheet_id)
     exporter.create_test_boris_chart(chart_data_sheet_id)
-    exporter.write_feed_profile(logger.get_sweep())
-    exporter.create_sweep_chart(parameters_sheet_id)
+    exporter.create_feed_chart(chart_data_sheet_id)
     exporter.write_parameters(logger.get_parameters())
     exporter.freeze_first_row_and_first_column(test_data_sheet_id)
     exporter.freeze_first_row_and_first_column(chart_data_sheet_id)
     exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart1"))
     exporter.rename_sheet("Motor Loads Chart", exporter.get_sheet_id("Chart2"))
     exporter.rename_sheet("Feed Multiplier", exporter.get_sheet_id("Chart3"))
+    exporter.rename_sheet("Feed Rate vs Override", exporter.get_sheet_id("Chart4"))
     exporter.move_spreadsheet_to_drive()
 
 
