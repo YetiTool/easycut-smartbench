@@ -10,6 +10,10 @@
     "Description": "How many statuses to wait for before running adjustment"
   },
   {
+    "Name": "tolerance_for_acceleration_detection",
+    "Value": 50
+  },
+  {
     "Name": "digital_spindle_target_watts",
     "Value": 880
   },

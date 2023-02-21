@@ -9,7 +9,7 @@ class AutoPilotLog:
                  feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
                  sg_x2_motor,
                  sg_y1_motor, sg_y2_motor, target_load, raw_spindle_load, spindle_voltage, feed_rate, constant_speed,
-                 line_number, gcode_feed, target_feed):
+                 line_number, gcode_feed, target_feed, g0_move, allow_feedup):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
@@ -34,6 +34,8 @@ class AutoPilotLog:
         self.gcode_feed = gcode_feed
         self.target_feed = target_feed
         self.constant_speed = constant_speed
+        self.g0_move = g0_move
+        self.allow_feedup = allow_feedup
 
 
 def get_safe(listt, index):
@@ -70,16 +72,17 @@ class AutoPilotLogger:
     def add_log(self, current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier, adjustment_list,
                 feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
                 sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load, raw_spindle_load, spindle_voltage, feed_rate,
-                constant_speed, line_number, gcode_feed, target_feed):
+                constant_speed, line_number, gcode_feed, target_feed, g0_move, allow_feedup):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
                                       adjustment_list, feed_override_percentage, moving_in_z, sg_x_motor_axis,
                                       sg_y_axis, sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor,
                                       target_load, raw_spindle_load, spindle_voltage, feed_rate, constant_speed,
-                                      line_number, gcode_feed, target_feed))
+                                      line_number, gcode_feed, target_feed, g0_move, allow_feedup))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
-                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Calculated Load', "Target Load",
+                 'Average Load 2', 'Average Load 3', 'Average Load 4', 'Average Load 5', 'Calculated Load',
+                 "Target Load",
                  'Raw Multiplier', 'Capped Multiplier', 'Adjustment List', "Moving in Z", "Feed Override % Status",
                  "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor", "Y2 Motor",
                  "Raw Spindle Load", "Spindle Voltage", "Actual Feed", "Line #", "GCode Feed", "Actual Feed Override %",
@@ -90,12 +93,50 @@ class AutoPilotLogger:
                          get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0),
                          get_safe(log.average_loads, 1), get_safe(log.average_loads, 2),
                          get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
-                         log.current_load, log.target_load, log.raw_multiplier, log.feed_multiplier, log.adjustment_list,
+                         log.current_load, log.target_load, log.raw_multiplier, log.feed_multiplier,
+                         log.adjustment_list,
                          log.moving_in_z, log.feed_override_percentage, log.sg_x_motor_axis, log.sg_y_axis,
                          log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor, log.sg_y1_motor, log.sg_y2_motor,
                          log.raw_spindle_load, log.spindle_voltage, int(log.feed_rate), log.line_number,
                          log.gcode_feed, log.feed_override_percentage, log.target_feed,
                          log.constant_speed])
+        return data
+
+    def get_data_for_test_data_sheet(self):
+        data = [["Time", "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor",
+                 "Y2 Motor", "Spindle Voltage", "Raw Load 1", "Raw Load 2", "Raw Load 3", "Raw Load 4", "Raw Load 5",
+                 "Average Load 1", "Average Load 2", "Average Load 3", "Average Load 4", "Average Load 5",
+                 "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode Feed", "Feed Override % Status",
+                 "Target Feed", "Actual Feed", "Difference", "Accelerating", "G0 Move", "Allow FeedUp", "Moving in Z",
+                 "Raw Multiplier", "Capped Multiplier", "Adjustment List"]]
+
+        for log in self.logs:
+            data.append([
+                log.time, log.sg_x_motor_axis, log.sg_y_axis, log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor,
+                log.sg_y1_motor, log.sg_y2_motor, log.spindle_voltage, get_safe(log.raw_loads, 0),
+                get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
+                get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0), get_safe(log.average_loads, 1),
+                get_safe(log.average_loads, 2), get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
+                log.current_load, log.target_load, log.raw_multiplier, log.line_number, log.gcode_feed,
+                log.feed_override_percentage, log.target_feed, int(log.feed_rate), log.target_feed - int(log.feed_rate),
+                not log.constant_speed, log.g0_move, log.allow_feedup, log.moving_in_z, log.raw_multiplier,
+                log.feed_multiplier, log.adjustment_list
+            ])
+
+        return data
+
+    def get_data_for_chart_data_sheet(self):
+        data = [["Time", "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor",
+                 "Y2 Motor", "Calculated Load", "Target Load", "Raw Multiplier", "GCode Feed", "Feed Override % Status",
+                 "Target Feed", "Actual Feed", "Capped Multiplier"]]
+
+        for log in self.logs:
+            data.append([
+                log.time, log.sg_x_motor_axis, log.sg_y_axis, log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor,
+                log.sg_y1_motor, log.sg_y2_motor, log.current_load, log.target_load, log.raw_multiplier, log.gcode_feed,
+                log.feed_override_percentage, log.target_feed, log.feed_rate, log.feed_multiplier
+            ])
+
         return data
 
     def get_feed_multiplier(self, current_power):
@@ -191,7 +232,7 @@ if __name__ == '__main__':
 
     time = datetime.datetime.now()
 
-    for i in range(1):
+    for i in range(5):
         log_time = time + datetime.timedelta(seconds=i)
 
         logger.add_log(
@@ -218,7 +259,9 @@ if __name__ == '__main__':
             gcode_feed=1000,
             target_feed=1000,
             constant_speed=1000,
-            time=log_time.strftime('%H:%M:%S')
+            time=log_time.strftime('%H:%M:%S'),
+            g0_move=False,
+            allow_feedup=True
         )
 
     logger.export_to_gsheet()

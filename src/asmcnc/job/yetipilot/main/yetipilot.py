@@ -50,6 +50,7 @@ class YetiPilot:
     digital_spindle_load_stack = []
     adjustment_count = 2
     adjustment_delay = 0.06
+    tolerance_for_acceleration_detection = 50
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -168,6 +169,9 @@ class YetiPilot:
                 now_time = time.time()
                 time_stamp = format_time(now_time - self.m.s.job_start_time)
 
+            g0_move = False
+            allow_feedup = not g0_move and constant_feed
+
             self.logger.add_log(
                 current_load=average_digital_spindle_load,
                 feed_multiplier=capped_multiplier,
@@ -192,7 +196,9 @@ class YetiPilot:
                 constant_speed=constant_feed,
                 line_number=current_line_number,
                 gcode_feed=gcode_feed,
-                target_feed=gcode_feed * feed_override_percentage / 100
+                target_feed=gcode_feed * feed_override_percentage / 100,
+                g0_move=g0_move,
+                allow_feedup=allow_feedup
             )
 
     def load_parameters_from_json(self, path_override=None):
