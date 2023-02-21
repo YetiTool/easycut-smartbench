@@ -28,6 +28,7 @@ Builder.load_string("""
     brush_time_value:brush_time_value
     run_test_button:run_test_button
     unlock_code_label:unlock_code_label
+    print_receipt_button:print_receipt_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -259,6 +260,7 @@ Builder.load_string("""
                             background_normal: ''
                         
                     Button:
+                        id: print_receipt_button
                         text: 'Print'    
                         bold: True
                         background_color: [1, 0.64, 0, 1]
@@ -394,8 +396,10 @@ class SpindleTestJig1(Screen):
 
         if serial != 999:
             serial = str(hex((serial + 42) * 10000))[2:]
+            self.print_receipt_button.disabled = False
         else:
             serial = 'N/A'
+            self.print_receipt_button.disabled = True
 
         self.unlock_code_label.text = "Unlock code: " + str(serial)
         self.unlock_code = serial
