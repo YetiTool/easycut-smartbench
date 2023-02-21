@@ -134,7 +134,7 @@ class YetiPilot:
         last_modal_feed_rate = self.jd.find_last_feedrate(current_line_number)
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
 
-        return abs(constant_feed_target - feed_rate) < 50, last_modal_feed_rate
+        return abs(constant_feed_target - feed_rate) < self.tolerance_for_acceleration_detection, last_modal_feed_rate
 
     def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage,
                      feed_rate, current_line_number):
