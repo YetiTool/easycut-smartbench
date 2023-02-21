@@ -49,6 +49,7 @@ Builder.load_string("""
     spindle_widgets: spindle_widgets
     speed_override_container: speed_override_container
     override_and_progress_container: override_and_progress_container
+    yetipilot_container:yetipilot_container
 
     feed_label : feed_label
     spindle_label : spindle_label
@@ -244,63 +245,78 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
     
-
                         BoxLayout:
-                            id: job_progress_container
                             size_hint_x: 0.8
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 00
+                            spacing: 10
+                            
+                            BoxLayout:
+                                id: yetipilot_container
+                                orientation: 'vertical'
+                                
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
 
-                            canvas:
-                                Color:
-                                    rgba: hex('#FFFFFFFF')
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-
-                            Label:
-                                id: file_lines_streamed_label
-                                size_hint_y: 1
-                                # text: '[color=808080]File lines streamed:[/color]'
-                                markup: True                           
-                                font_size: '16px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
+                            BoxLayout:
+                                id: job_progress_container
                                 size_hint_y: 3
-                                id: progress_percentage_label
-                                color: hex('#333333ff')
-                                text: '0 %'
-                                markup: True                           
-                                font_size: '100px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size 
-                            Label:
-                                id: job_time_label
-                                size_hint_y: 0.9
-                                markup: True                           
-                                font_size: '16px' 
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#808080ff')
-                            Label:
-                                size_hint_y: 1.1
-                                id: run_time_label
-                                markup: True                           
-                                font_size: '18px'
-                                valign: 'middle'
-                                halign: 'left'
-                                size:self.texture_size
-                                text_size: self.size
-                                color: hex('#333333ff')
+                                orientation: 'vertical'
+                                padding: 20
+                                spacing: 00
+
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+
+                                Label:
+                                    id: file_lines_streamed_label
+                                    size_hint_y: 1
+                                    # text: '[color=808080]File lines streamed:[/color]'
+                                    markup: True                           
+                                    font_size: '16px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    size_hint_y: 3
+                                    id: progress_percentage_label
+                                    color: hex('#333333ff')
+                                    text: '0 %'
+                                    markup: True                           
+                                    font_size: '100px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size 
+                                Label:
+                                    id: job_time_label
+                                    size_hint_y: 0.9
+                                    markup: True                           
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#808080ff')
+                                Label:
+                                    size_hint_y: 1.1
+                                    id: run_time_label
+                                    markup: True                           
+                                    font_size: '18px'
+                                    valign: 'middle'
+                                    halign: 'left'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                    color: hex('#333333ff')
 
                 BoxLayout:
                     id: spindle_widgets
@@ -466,8 +482,16 @@ class GoScreen(Screen):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
             and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
             sc2_compatible = True
+            # Show yetipilot container
+            self.yetipilot_container.size_hint_y = 1
+            self.yetipilot_container.opacity = 1
+            self.yetipilot_container.parent.spacing = 10
         else:
             sc2_compatible = False
+            # Hide yetipilot container
+            self.yetipilot_container.size_hint_y = 0
+            self.yetipilot_container.opacity = 0
+            self.yetipilot_container.parent.spacing = 0
 
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             if sc2_compatible:
