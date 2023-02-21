@@ -457,9 +457,9 @@ def run(title, logger):
     exporter.write_parameters(logger.get_parameters())
     exporter.freeze_first_row_and_first_column(test_data_sheet_id)
     exporter.freeze_first_row_and_first_column(chart_data_sheet_id)
-    exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart1"))
-    exporter.rename_sheet("Motor Loads Chart", exporter.get_sheet_id("Chart2"))
-    exporter.rename_sheet("Feed Multiplier", exporter.get_sheet_id("Chart3"))
+    exporter.rename_sheet("Feed Multiplier", exporter.get_sheet_id("Chart1"))
+    exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart2"))
+    exporter.rename_sheet("Motor Loads", exporter.get_sheet_id("Chart3"))
     exporter.rename_sheet("Feed Rate vs Override", exporter.get_sheet_id("Chart4"))
     exporter.move_spreadsheet_to_drive()
 
