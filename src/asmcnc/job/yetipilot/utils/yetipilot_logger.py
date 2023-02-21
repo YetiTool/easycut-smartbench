@@ -46,9 +46,10 @@ def get_safe(listt, index):
 
 
 def limit(value):
-    if value is float:
+    try:
         return round(value, 2)
-    return value
+    except:
+        return value
 
 
 class AutoPilotLogger:
