@@ -121,7 +121,7 @@ class YetiPilot:
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
-            if i > self.adjustment_count:
+            if i == self.adjustment_count:
                 break
 
             if adjustment == 10:
