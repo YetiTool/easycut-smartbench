@@ -122,16 +122,21 @@ class YetiPilot:
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
             if i == self.adjustment_count:
+                print("broke: " + str(i) + ": " + str(self.adjustment_count))
                 break
 
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.adjustment_delay)
+                print("sent 10")
             elif adjustment == 1:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), i * self.adjustment_delay)
+                print("sent 1")
             elif adjustment == -10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_10(), i * self.adjustment_delay)
+                print("sent -10")
             elif adjustment == -1:
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), i * self.adjustment_delay)
+                print("sent -1")
 
     def get_is_constant_feed_rate(self, feed_override_percentage, feed_rate, current_line_number):
         last_modal_feed_rate = self.jd.find_last_feedrate(current_line_number)
