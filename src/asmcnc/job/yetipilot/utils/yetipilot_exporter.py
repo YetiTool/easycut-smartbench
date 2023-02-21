@@ -458,7 +458,7 @@ def run(title, logger):
     exporter.freeze_first_row_and_first_column(chart_data_sheet_id)
     exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart1"))
     exporter.rename_sheet("Motor Loads Chart", exporter.get_sheet_id("Chart2"))
-    exporter.rename_sheet("Spindle Load vs Feed Multiplier", exporter.get_sheet_id("Chart3"))
+    exporter.rename_sheet("Feed Multiplier", exporter.get_sheet_id("Chart3"))
     exporter.move_spreadsheet_to_drive()
 
 
