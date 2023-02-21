@@ -158,6 +158,3 @@ def test_are_sg_values_in_range_after_calibration_fails_as_expected(m):
 
 
 
-
-
-
