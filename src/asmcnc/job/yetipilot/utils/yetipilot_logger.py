@@ -45,6 +45,12 @@ def get_safe(listt, index):
         return 'n/a'
 
 
+def limit(value):
+    if value is float:
+        return round(value, 2)
+    return value
+
+
 class AutoPilotLogger:
     logs = []
     exported = False
@@ -113,11 +119,11 @@ class AutoPilotLogger:
         for log in self.logs:
             data.append([
                 log.time, log.sg_x_motor_axis, log.sg_y_axis, log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor,
-                log.sg_y1_motor, log.sg_y2_motor, log.spindle_voltage, get_safe(log.raw_loads, 0),
-                get_safe(log.raw_loads, 1), get_safe(log.raw_loads, 2), get_safe(log.raw_loads, 3),
-                get_safe(log.raw_loads, 4), get_safe(log.average_loads, 0), get_safe(log.average_loads, 1),
-                get_safe(log.average_loads, 2), get_safe(log.average_loads, 3), get_safe(log.average_loads, 4),
-                log.current_load, log.target_load, log.raw_multiplier, log.line_number, log.gcode_feed,
+                log.sg_y1_motor, log.sg_y2_motor, log.spindle_voltage, limit(get_safe(log.raw_loads, 0)),
+                limit(get_safe(log.raw_loads, 1)), limit(get_safe(log.raw_loads, 2)), limit(get_safe(log.raw_loads, 3)),
+                limit(get_safe(log.raw_loads, 4)), limit(get_safe(log.average_loads, 0)), limit(get_safe(log.average_loads, 1)),
+                limit(get_safe(log.average_loads, 2)), limit(get_safe(log.average_loads, 3)), limit(get_safe(log.average_loads, 4)),
+                limit(log.current_load), log.target_load, limit(log.raw_multiplier), log.line_number, log.gcode_feed,
                 log.feed_override_percentage, log.target_feed, int(log.feed_rate), log.target_feed - int(log.feed_rate),
                 not log.constant_speed, log.g0_move, log.allow_feedup, log.moving_in_z, log.raw_multiplier,
                 log.feed_multiplier, log.adjustment_list

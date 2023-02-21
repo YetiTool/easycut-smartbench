@@ -455,6 +455,7 @@ def run(title, logger):
     exporter.create_sweep_chart(parameters_sheet_id)
     exporter.write_parameters(logger.get_parameters())
     exporter.freeze_first_row_and_first_column(test_data_sheet_id)
+    exporter.freeze_first_row_and_first_column(chart_data_sheet_id)
     exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart1"))
     exporter.rename_sheet("Motor Loads Chart", exporter.get_sheet_id("Chart2"))
     exporter.rename_sheet("Spindle Load vs Feed Multiplier", exporter.get_sheet_id("Chart3"))
