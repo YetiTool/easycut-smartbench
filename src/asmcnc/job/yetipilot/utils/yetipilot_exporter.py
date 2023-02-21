@@ -406,14 +406,14 @@ class AutoPilotExporter:
 
     def create_test_chart(self, sheet_id):
         domain = [
-            get_domain_format(sheet_id, 1, MAX, 0, 1)
+            get_domain_format(sheet_id, 0, MAX, 0, 1)
         ]
 
         series = [
-            get_series_format(sheet_id, 1, MAX, 8, 9, "RIGHT", 0, 0, 1, 1),
-            get_series_format(sheet_id, 1, MAX, 15, 16, "LEFT", 1, 0, 0, 1),
-            get_series_format(sheet_id, 1, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1),
-            get_series_format(sheet_id, 1, MAX, 9, 10, "RIGHT", 0, 1, 0, 1),
+            get_series_format(sheet_id, 0, MAX, 8, 9, "RIGHT", 0, 0, 1, 1),
+            get_series_format(sheet_id, 0, MAX, 15, 16, "LEFT", 1, 0, 0, 1),
+            get_series_format(sheet_id, 0, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1),
+            get_series_format(sheet_id, 0, MAX, 9, 10, "RIGHT", 0, 1, 0, 1),
         ]
 
         self.add_chart("Test Chart", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
@@ -421,18 +421,18 @@ class AutoPilotExporter:
 
     def create_test_boris_chart(self, sheet_id):
         domain = [
-            get_domain_format(sheet_id, 1, 100000000, 0, 1)
+            get_domain_format(sheet_id, 0, 100000000, 0, 1)
         ]
 
         series = [
-            get_series_format(sheet_id, 1, MAX, 8, 9, "RIGHT", 0, 0, 1, 1),
-            get_series_format(sheet_id, 1, MAX, 15, 16, "LEFT", 1, 0, 0, 1),
-            get_series_format(sheet_id, 1, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1),
-            get_series_format(sheet_id, 1, MAX, 9, 10, "RIGHT", 0, 1, 0, 1)
+            get_series_format(sheet_id, 0, MAX, 8, 9, "RIGHT", 0, 0, 1, 1),
+            get_series_format(sheet_id, 0, MAX, 15, 16, "LEFT", 1, 0, 0, 1),
+            get_series_format(sheet_id, 0, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1),
+            get_series_format(sheet_id, 0, MAX, 9, 10, "RIGHT", 0, 1, 0, 1)
         ]
 
         for i in range(1, 7):
-            series.append(get_series_format(sheet_id, 1, MAX, i, i+1, "LEFT"))
+            series.append(get_series_format(sheet_id, 0, MAX, i, i+1, "LEFT"))
 
         self.add_chart("Motor Loads", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
                        right_axis_max=3000, left_axis_max=200, left_axis_min=0, right_axis_min=0)
@@ -457,7 +457,7 @@ def run(title, logger):
     exporter.freeze_first_row_and_first_column(test_data_sheet_id)
     exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart1"))
     exporter.rename_sheet("Motor Loads Chart", exporter.get_sheet_id("Chart2"))
-    exporter.rename_sheet("spindle Load vs Feed Multiplier", exporter.get_sheet_id("Chart3"))
+    exporter.rename_sheet("Spindle Load vs Feed Multiplier", exporter.get_sheet_id("Chart3"))
 
 
 # def run(title, logger):
