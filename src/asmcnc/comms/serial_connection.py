@@ -862,13 +862,12 @@ class SerialConnection(object):
                         log("ERROR status parse: Position invalid: " + message)
                         return
 
+                    if self.autopilot_instance:
+                        self.autopilot_instance.moving_in_z = self.m_z != pos[2]
+
                     self.m_x = pos[0]
                     self.m_y = pos[1]
                     self.m_z = pos[2]
-
-                    if self.autopilot_instance:
-                        self.autopilot_instance.moving_in_z = self.m_z != pos[2]
-                        print(self.autopilot_instance.moving_in_z)
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
