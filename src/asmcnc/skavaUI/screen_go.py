@@ -462,9 +462,15 @@ class GoScreen(Screen):
 
     def on_enter(self):
 
+        # Check for SC2 compatability
+        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
+            and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
+            sc2_compatible = True
+        else:
+            sc2_compatible = False
+
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
-            if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
-                and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
+            if sc2_compatible:
                 self.m.s.write_command('M3 S0')
                 Clock.schedule_once(self.get_spindle_info, 0.1)
                 self.wait_popup = popup_info.PopupWait(self.sm, self.l)
