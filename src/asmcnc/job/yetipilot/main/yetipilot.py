@@ -153,7 +153,7 @@ class YetiPilot:
             adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
                                                                                       constant_feed)
 
-            g0_move = current_line_number in self.jd.g0_moves
+            g0_move = current_line_number in self.jd.g0_lines
             allow_feedup = not g0_move and constant_feed
 
             if allow_feedup or raw_multiplier < 0:
