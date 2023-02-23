@@ -115,7 +115,7 @@ class AutoPilotLogger:
                  "Average Load 1", "Average Load 2", "Average Load 3", "Average Load 4", "Average Load 5",
                  "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode Feed", "Feed Override % Status",
                  "Target Feed", "Actual Feed", "Difference", "Accelerating", "G0 Move", "Allow FeedUp", "Moving in Z",
-                 "Raw Multiplier", "Capped Multiplier", "Adjustment List"]]
+                 "Raw Multiplier", "Capped Multiplier", "Adjustment List", "Feed Override % Status"]]
 
         for log in self.logs:
             data.append([
@@ -127,7 +127,7 @@ class AutoPilotLogger:
                 limit(log.current_load), log.target_load, limit(log.raw_multiplier), log.line_number, log.gcode_feed,
                 log.feed_override_percentage, log.target_feed, int(log.feed_rate), log.target_feed - int(log.feed_rate),
                 not log.constant_speed, log.g0_move, log.allow_feedup, log.moving_in_z, log.raw_multiplier,
-                log.feed_multiplier, log.adjustment_list
+                log.feed_multiplier, log.adjustment_list, log.feed_override_percentage
             ])
 
         return data
