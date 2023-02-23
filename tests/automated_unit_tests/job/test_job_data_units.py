@@ -146,6 +146,10 @@ def test_setup_running_job_gcode_empty(jd):
     jd.setup_running_job_gcode(job_gcode_object)
     assert jd.job_gcode_running == expected_gcode_with_line_numbers
 
+
+import timeit
+import functools
+
 def test_add_line_numbers_to_gcode(jd):
     job_gcode_object = [
         "G91X0F1000",
@@ -165,10 +169,20 @@ def test_add_line_numbers_to_gcode(jd):
 
     assert jd.add_line_numbers_to_gcode(job_gcode_object) == expected_gcode_with_line_numbers
 
+
 def test_gcode_line_is_excluded(jd):
+
+    uncountable_gcodes = [
+        '(',
+        ')',
+        '$',
+        'AE',
+        'AF'
+    ]
+
     jd.uncounted_gcodes = 0
     number_gcodes = 1
-    for line in jd.uncountable_gcodes:
+    for line in uncountable_gcodes:
         assert jd.gcode_line_is_excluded(line)
         assert jd.uncounted_gcodes == number_gcodes
         number_gcodes+=1

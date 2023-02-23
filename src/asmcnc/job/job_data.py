@@ -173,27 +173,20 @@ class JobData(object):
 
     # LINE COUNTING
 
-    uncountable_gcodes = [
-        '(',
-        ')',
-        '$',
-        'AE',
-        'AF'
-    ]
-
     uncounted_gcodes = 0
 
     def add_line_numbers_to_gcode(self, raw_gcode):
+
         self.uncounted_gcodes = 0
         gcode_with_line_numbers = [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
                                    for i, line in enumerate(raw_gcode)]
+
         return gcode_with_line_numbers
 
     def gcode_line_is_excluded(self, line):
-        if any(g in line for g in self.uncountable_gcodes):
+        if '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line:
             self.uncounted_gcodes +=1
             return True
-
 
     # JOB DATA
 
@@ -208,7 +201,6 @@ class JobData(object):
 
         except: 
             return 0
-
 
     def generate_job_data(self, raw_gcode):
 
