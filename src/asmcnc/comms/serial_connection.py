@@ -672,6 +672,9 @@ class SerialConnection(object):
 
     m_state = 'Unknown'
 
+    # Line number
+    grbl_ln = 0
+
     # Machine co-ordinates
     m_x = '0.0'
     m_y = '0.0'
@@ -834,8 +837,12 @@ class SerialConnection(object):
 
             for part in status_parts:
 
+                # Get line number first so that all other data is in relation to this
+                if part.startswith('Ln:'):
+                    self.grbl_ln = part[3:]
+
                 # Get machine's position (may not be displayed, depending on mask)
-                if part.startswith('MPos:'):
+                elif part.startswith('MPos:'):
                     pos = part[5:].split(',')
                     try:
                         float(pos[0])
