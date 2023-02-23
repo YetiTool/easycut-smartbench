@@ -9,14 +9,6 @@ def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
 
 
-def get_single_adjustment(adjustments):
-    if isinstance(adjustments, int):
-        return adjustments
-
-    adjustments = sorted(adjustments, key=abs)
-    return adjustments[0] if len(adjustments) > 0 else None
-
-
 def get_adjustment(feed_multiplier):
     feed_multiplier = ceil(feed_multiplier) if feed_multiplier < 0 else floor(feed_multiplier)
     negative = feed_multiplier < 0
@@ -59,10 +51,7 @@ class YetiPilot:
 
     def start(self):
         self.enabled = True
-        job_name = ''
-
-        if self.sm.has_screen('go'):
-            job_name = self.sm.get_screen('go').file_data_label.text
+        job_name = '' if not self.sm.has_screen('go') else self.sm.get_screen('go').file_data_label.text
 
         self.load_parameters_from_json()
 
@@ -152,7 +141,7 @@ class YetiPilot:
         self.digital_spindle_load_stack.append(digital_spindle_ld_w)
         self.counter += 1
 
-        if len(self.digital_spindle_load_stack) > 1 and self.counter >= self.statuses_per_adjustment:
+        if len(self.digital_spindle_load_stack) >= 1 and self.counter >= self.statuses_per_adjustment:
             self.counter = 0
 
             average_digital_spindle_load = sum(
