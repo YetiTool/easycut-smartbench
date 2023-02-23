@@ -27,7 +27,6 @@ python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_uni
 ######################################
 '''
 
-
 # FIXTURES
 @pytest.fixture
 def jd():
@@ -39,8 +38,7 @@ def jd():
 def test_get_jd(jd):
     jd.reset_values()
 
-
-def test_scrape_last_feed_command(jd):
+def test_scrape_last_feed_command_float(jd):
     index = 6
     job_gcode_object = [
         "G91X0F1000",
@@ -50,4 +48,63 @@ def test_scrape_last_feed_command(jd):
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240F824.88"
     ]
-    assert jd.scrape_last_feed_command(job_gcode_object, index) == 824
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 824.88
+
+def test_scrape_last_feed_command_int_mid_job(jd):
+    index = 2
+    job_gcode_object = [
+        "G91X0F1000",
+        "G1X0F8000",
+        "X6.776Y6.776Z-0.720F769.25",
+        "X2.259Y2.259Z-0.240F796.74",
+        "X2.259Y2.259Z-0.240F824.88"
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 8000
+
+def test_scrape_last_end_of_job(jd):
+    job_gcode_object = [
+        "G91X0F1000",
+        "G1X0F8000",
+        "X6.776Y6.776Z-0.720F769.25",
+        "CUY",
+        "X2.259Y2.259Z-0.240F796.74",
+        "X2.259Y2.259Z-0.240F824.88"
+    ]
+    index = len(job_gcode_object)
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 824.88
+
+def test_scrape_last_feed_command_start_of_job(jd):
+    index = 0
+    job_gcode_object = [
+        "G91X0F1000",
+        "G1X0F8000",
+        "X6.776Y6.776Z-0.720F769.25",
+        "CUY",
+        "X2.259Y2.259Z-0.240F796.74",
+        "X2.259Y2.259Z-0.240F824.88"
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
+
+def test_scrape_last_feed_command_no_feeds(jd):
+    index = 3
+    job_gcode_object = [
+        "G91",
+        "G1",
+        "G90",
+        "G0"
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
+
+def test_scrape_last_feed_command_no_obj(jd):
+    index = 3
+    job_gcode_object = []
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
+
+def test_scrape_last_feed_command_no_F(jd):
+    index = 3
+    job_gcode_object = [
+        "G91X0F1000",
+        "G1X0F8000",
+        "X6.776Y6.776Z-0.720F",
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
