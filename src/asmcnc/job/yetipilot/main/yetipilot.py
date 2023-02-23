@@ -185,6 +185,9 @@ class YetiPilot:
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
+            if current_line_number in self.jd.spindle_speeds:
+                self.adjust_spindle_speed(current_line_number)
+
             # END OF LOGIC
 
             time_stamp = None
