@@ -44,12 +44,12 @@ class YetiPilot:
     enabled = False
     logger = None
     counter = 0
-    counter_max = 2
-    digital_spindle_stack_max = 2
-    digital_spindle_target_watts = 880
+    statuses_per_adjustment = 2
+    spindle_load_stack_size = 2
+    spindle_target_load_watts = 880
     digital_spindle_load_stack = []
-    adjustment_count = 2
-    adjustment_delay = 0.06
+    override_commands_per_adjustment = 2
+    override_command_delay = 0.06
     tolerance_for_acceleration_detection = 50
 
     def __init__(self, **kwargs):
@@ -67,10 +67,10 @@ class YetiPilot:
         self.load_parameters_from_json()
 
         self.logger = AutoPilotLogger(
-            self.digital_spindle_mains_voltage, self.digital_spindle_target_watts, self.bias_for_feed_increase,
+            self.digital_spindle_mains_voltage, self.spindle_target_load_watts, self.bias_for_feed_increase,
             self.bias_for_feed_decrease,
             self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, job_name,
-            self.m.get_smartbench_name(), self.digital_spindle_stack_max, 0,
+            self.m.get_smartbench_name(), self.spindle_load_stack_size, 0,
             self.cap_for_feed_increase_during_z_movement,
             self, None
         )
@@ -89,10 +89,10 @@ class YetiPilot:
 
     def get_multiplier(self, digital_spindle_ld_w):
         multiplier = (float(
-            self.bias_for_feed_decrease) if digital_spindle_ld_w > self.digital_spindle_target_watts else
+            self.bias_for_feed_decrease) if digital_spindle_ld_w > self.spindle_target_load_watts else
                       float(self.bias_for_feed_increase)) * (
-                                 float(self.digital_spindle_target_watts) - float(digital_spindle_ld_w)) \
-                     / float(self.digital_spindle_target_watts) * float(self.m_coefficient) * float(self.c_coefficient)
+                             float(self.spindle_target_load_watts) - float(digital_spindle_ld_w)) \
+                     / float(self.spindle_target_load_watts) * float(self.m_coefficient) * float(self.c_coefficient)
 
         return multiplier
 
@@ -121,23 +121,17 @@ class YetiPilot:
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
-            if i == self.adjustment_count:
-                print("I: " + str(i))
-                print("adjustment_count: " + str(self.adjustment_count))
+            if i == self.override_commands_per_adjustment:
                 break
 
             if adjustment == 10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.adjustment_delay)
-                print("sent 10")
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
             elif adjustment == 1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), i * self.adjustment_delay)
-                print("sent 1")
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), i * self.override_command_delay)
             elif adjustment == -10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(), i * self.adjustment_delay)
-                print("sent -10")
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(), i * self.override_command_delay)
             elif adjustment == -1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), i * self.adjustment_delay)
-                print("sent -1")
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), i * self.override_command_delay)
 
     def get_is_constant_feed_rate(self, feed_override_percentage, feed_rate, current_line_number):
         last_modal_feed_rate = self.jd.find_last_feedrate(current_line_number)
@@ -152,17 +146,17 @@ class YetiPilot:
 
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
-        if len(self.digital_spindle_load_stack) == self.digital_spindle_stack_max:
+        if len(self.digital_spindle_load_stack) == self.spindle_load_stack_size:
             self.digital_spindle_load_stack.pop(0)
 
         self.digital_spindle_load_stack.append(digital_spindle_ld_w)
         self.counter += 1
 
-        if len(self.digital_spindle_load_stack) > 1 and self.counter >= self.counter_max:
+        if len(self.digital_spindle_load_stack) > 1 and self.counter >= self.statuses_per_adjustment:
             self.counter = 0
 
             average_digital_spindle_load = sum(
-                self.digital_spindle_load_stack[-self.digital_spindle_stack_max:]) / self.digital_spindle_stack_max
+                self.digital_spindle_load_stack[-self.spindle_load_stack_size:]) / self.spindle_load_stack_size
 
             constant_feed, gcode_feed = self.get_is_constant_feed_rate(
                 feed_override_percentage, feed_rate, current_line_number)
@@ -186,10 +180,10 @@ class YetiPilot:
                 current_load=average_digital_spindle_load,
                 feed_multiplier=capped_multiplier,
                 time=time_stamp,
-                raw_loads=self.digital_spindle_load_stack[-self.digital_spindle_stack_max:],
-                average_loads=self.digital_spindle_load_stack[-self.digital_spindle_stack_max:],
+                raw_loads=self.digital_spindle_load_stack[-self.spindle_load_stack_size:],
+                average_loads=self.digital_spindle_load_stack[-self.spindle_load_stack_size:],
                 raw_multiplier=raw_multiplier,
-                adjustment_list=adjustment[:self.adjustment_count],
+                adjustment_list=adjustment[:self.override_commands_per_adjustment],
                 feed_override_percentage=feed_override_percentage,
                 moving_in_z=str(self.moving_in_z),
                 sg_x_motor_axis=self.m.s.sg_x_motor_axis,
@@ -199,7 +193,7 @@ class YetiPilot:
                 sg_x2_motor=self.m.s.sg_x2_motor,
                 sg_y1_motor=self.m.s.sg_y1_motor,
                 sg_y2_motor=self.m.s.sg_y2_motor,
-                target_load=self.digital_spindle_target_watts,
+                target_load=self.spindle_target_load_watts,
                 raw_spindle_load=self.m.s.digital_spindle_ld_qdA,
                 spindle_voltage=self.m.s.digital_spindle_mains_voltage,
                 feed_rate=feed_rate,
@@ -227,4 +221,4 @@ class YetiPilot:
             self.logger.reset()
 
     def set_target_power(self, target_power):
-        self.digital_spindle_target_watts = target_power
+        self.spindle_target_load_watts = target_power

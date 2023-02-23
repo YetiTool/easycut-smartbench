@@ -485,6 +485,9 @@ class GoScreen(Screen):
 
     def on_enter(self):
 
+        if self.m.s.autopilot_instance:
+            self.m.s.autopilot_instance.load_parameters_from_json()
+
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime:
             if self.m.spindle_brush_use_seconds >= 0.9 * self.m.spindle_brush_lifetime_seconds:

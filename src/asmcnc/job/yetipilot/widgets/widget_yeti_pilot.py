@@ -70,7 +70,7 @@ class YetiPilotWidget(Widget):
 
         self.switch.active = True
         self.toggle_yeti_pilot()
-        self.power_slider.value = get_closest_multiple(self.m.s.autopilot_instance.digital_spindle_target_watts, 20) / 20
+        self.power_slider.value = get_closest_multiple(self.m.s.autopilot_instance.spindle_target_load_watts, 20) / 20
 
     def toggle_yeti_pilot(self):
         if not self.m.s.autopilot_instance:
