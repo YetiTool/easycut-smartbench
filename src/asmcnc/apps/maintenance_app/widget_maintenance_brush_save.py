@@ -205,6 +205,7 @@ class BrushSaveWidget(Widget):
             Clock.schedule_once(check_info, 0.3)
 
         def check_info(dt):
+            # Value of -999 represents disconnected spindle
             if self.m.s.digital_spindle_ld_qdA == -999:
                 self.m.s.write_command('M5')
                 self.wait_popup.popup.dismiss()

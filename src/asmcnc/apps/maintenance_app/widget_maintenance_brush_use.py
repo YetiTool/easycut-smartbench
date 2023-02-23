@@ -170,6 +170,7 @@ class BrushUseWidget(Widget):
     def read_restore_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
+        # Value of -999 represents disconnected spindle
         if self.m.s.digital_spindle_ld_qdA != -999:
             try: # Just in case of weird errors
                 self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
