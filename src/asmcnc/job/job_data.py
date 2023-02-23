@@ -166,7 +166,6 @@ class JobData(object):
         else:
             self.job_name = self.filename.split("/")[-1]
 
-
     def setup_running_job_gcode(self, raw_gcode):
         # Want to set this up so that it will eventually handle everything that gets appended to/modifies a file
         modded_gcode = self.add_line_numbers_to_gcode(raw_gcode)
@@ -186,14 +185,30 @@ class JobData(object):
 
     def add_line_numbers_to_gcode(self, raw_gcode):
         self.uncounted_gcodes = 0
-        gcode_with_line_numbers = [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + ' ' + line
+        gcode_with_line_numbers = [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
                                    for i, line in enumerate(raw_gcode)]
         return gcode_with_line_numbers
 
     def gcode_line_is_excluded(self, line):
-        if any(g in line for g in uncountable_gcodes):
-            uncounted_gcodes +=1
+        if any(g in line for g in self.uncountable_gcodes):
+            self.uncounted_gcodes +=1
             return True
+
+
+    # JOB DATA
+
+    def scrape_last_feed_command(self, job_gcode_object, index): 
+
+        try:
+            feedrate_line = next((s for s in reversed(job_gcode_object[:index]) if 'F' in s), None)
+            if feedrate_line:
+                feedrate = re.match('\d+(\.\d+)?$',feedrate_line[feedrate_line.find("F")+1:]).group()
+
+            return float(feedrate)
+
+        except: 
+            return 0
+
 
     def generate_job_data(self, raw_gcode):
 
