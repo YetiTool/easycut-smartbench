@@ -172,21 +172,12 @@ class JobData(object):
         self.job_gcode_running = modded_gcode
 
     # LINE COUNTING
-
-    uncounted_gcodes = 0
-
     def add_line_numbers_to_gcode(self, raw_gcode):
-
-        self.uncounted_gcodes = 0
-        gcode_with_line_numbers = [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
+        return [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
                                    for i, line in enumerate(raw_gcode)]
 
-        return gcode_with_line_numbers
-
     def gcode_line_is_excluded(self, line):
-        if '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line:
-            self.uncounted_gcodes +=1
-            return True
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
 
     # JOB DATA
 

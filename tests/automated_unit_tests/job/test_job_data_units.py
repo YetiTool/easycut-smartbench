@@ -123,6 +123,7 @@ def test_setup_running_job_gcode(jd):
     job_gcode_object = [
         "G91X0F1000",
         "G1X0F8000",
+        "AE",
         "X6.776Y6.776Z-0.720F769.25",
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240F824.88"
@@ -131,9 +132,10 @@ def test_setup_running_job_gcode(jd):
     expected_gcode_with_line_numbers = [
         "N0G91X0F1000",
         "N1G1X0F8000",
-        "N2X6.776Y6.776Z-0.720F769.25",
-        "N3X2.259Y2.259Z-0.240F796.74",
-        "N4X2.259Y2.259Z-0.240F824.88"
+        "AE",
+        "N3X6.776Y6.776Z-0.720F769.25",
+        "N4X2.259Y2.259Z-0.240F796.74",
+        "N5X2.259Y2.259Z-0.240F824.88"
     ]
 
     jd.setup_running_job_gcode(job_gcode_object)
@@ -179,22 +181,15 @@ def test_gcode_line_is_excluded(jd):
         'AE',
         'AF'
     ]
-
-    jd.uncounted_gcodes = 0
     number_gcodes = 1
     for line in uncountable_gcodes:
         assert jd.gcode_line_is_excluded(line)
-        assert jd.uncounted_gcodes == number_gcodes
-        number_gcodes+=1
     assert jd.gcode_line_is_excluded("(AHHH)")
-    assert jd.uncounted_gcodes == number_gcodes
 
 def test_gcode_line_is_not_excluded(jd):
-    jd.uncounted_gcodes = 0
     assert not jd.gcode_line_is_excluded("G90")
     assert not jd.gcode_line_is_excluded("GX1Y4F600")
     assert not jd.gcode_line_is_excluded("GX1Y4F600")
-    assert not jd.uncounted_gcodes
 
 
 
