@@ -437,6 +437,42 @@ class AutoPilotExporter:
         self.add_chart("Motor Loads", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",
                        right_axis_max=3000, left_axis_max=200, left_axis_min=-40, right_axis_min=0)
 
+    def set_column_colour(self, col, r=0.5, g=0.5, b=0.5):
+        service = build('sheets', 'v4', credentials=self.creds)
+
+        requests = [
+            {
+                "repeatCell": {
+                    "range": {
+                        "sheetId": self.get_sheet_id("Test Data"),
+                        "startRowIndex": 0,
+                        "endRowIndex": 100000000,
+                        "startColumnIndex": col,
+                        "endColumnIndex": col+1
+                    },
+                    "cell": {
+                        "userEnteredFormat": {
+                            "backgroundColor": {
+                                "red": r,
+                                "green": g,
+                                "blue": b
+                            }
+                        }
+                    },
+                    "fields": "userEnteredFormat.backgroundColor"
+                }
+            }
+        ]
+
+        body = {
+            'requests': requests
+        }
+
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=self.spreadsheet_id,
+            body=body
+        ).execute()
+
 
 def run(title, logger):
     exporter = AutoPilotExporter(title)
@@ -461,6 +497,10 @@ def run(title, logger):
     exporter.rename_sheet("Test Chart", exporter.get_sheet_id("Chart2"))
     exporter.rename_sheet("Motor Loads", exporter.get_sheet_id("Chart3"))
     exporter.rename_sheet("Feed Rate vs Override", exporter.get_sheet_id("Chart4"))
+    exporter.set_column_colour(8)
+    exporter.set_column_colour(21)
+    exporter.set_column_colour(27)
+    exporter.set_column_colour(30)
     exporter.move_spreadsheet_to_drive()
 
 
