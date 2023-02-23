@@ -77,6 +77,9 @@ class JobData(object):
     check_info_string = ''    
     comments_string = ''
 
+    # YetiPilot
+    g0_lines = []
+
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
         self.set = kwargs['settings_manager']
@@ -403,3 +406,15 @@ class JobData(object):
         except IndexError:
             return -1
         return -1
+
+    def get_excluded_line_numbers(self, gcode):
+        self.g0_lines[:] = []
+        for i, line in enumerate(gcode):
+            if 'G0' in line:
+                self.g0_lines.append(i)
+                for j, next_line in enumerate(gcode[i + 1:]):
+                    if 'G1' in next_line or 'G2' in next_line or 'G3' in next_line:
+                        break
+                    else:
+                        self.g0_lines.append(i + j + 1)
+        return self.g0_lines

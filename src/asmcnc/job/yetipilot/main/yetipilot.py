@@ -153,17 +153,19 @@ class YetiPilot:
             adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
                                                                                       constant_feed)
 
-            if constant_feed or raw_multiplier < 0:
+            g0_move = current_line_number in self.jd.g0_moves
+            allow_feedup = not g0_move and constant_feed
+
+            if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
+
+            # END OF LOGIC
 
             time_stamp = None
 
             if self.m.s.job_start_time is not None:
                 now_time = time.time()
                 time_stamp = format_time(now_time - self.m.s.job_start_time)
-
-            g0_move = False
-            allow_feedup = not g0_move and constant_feed
 
             self.logger.add_log(
                 current_load=average_digital_spindle_load,

@@ -472,6 +472,8 @@ class SerialConnection(object):
 
         self.jd.job_gcode_running = gcode_with_line_numbers
 
+        self.jd.get_excluded_line_numbers(self.jd.job_gcode_running)
+
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)    
