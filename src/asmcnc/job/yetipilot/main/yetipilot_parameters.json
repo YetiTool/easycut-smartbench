@@ -1,11 +1,11 @@
 [
   {
-    "Name": "digital_spindle_stack_max",
+    "Name": "spindle_load_stack_size",
     "Value": 2,
     "Description": "Maximum number of values in stack (avg applied to this many values)"
   },
   {
-    "Name": "counter_max",
+    "Name": "statuses_per_adjustment",
     "Value": 2,
     "Description": "How many statuses to wait for before running adjustment"
   },
@@ -14,15 +14,15 @@
     "Value": 50
   },
   {
-    "Name": "digital_spindle_target_watts",
+    "Name": "spindle_target_load_watts",
     "Value": 880
   },
   {
-    "Name": "adjustment_count",
+    "Name": "override_commands_per_adjustment",
     "Value": 2
   },
   {
-    "Name": "adjustment_delay",
+    "Name": "override_command_delay",
     "Value": 0.06
   },
   {
