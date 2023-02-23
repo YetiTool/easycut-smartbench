@@ -79,6 +79,7 @@ class JobData(object):
 
     # YetiPilot
     g0_lines = []
+    spindle_speeds = []
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
@@ -418,3 +419,15 @@ class JobData(object):
                     else:
                         self.g0_lines.append(i + j + 1)
         return self.g0_lines
+
+    def get_spindle_speeds(self, gcode):
+        self.spindle_speeds[:] = []
+        for i, line in enumerate(gcode):
+            if 'S' in line:
+                s_index = line.index('S')
+                end_index = s_index + 1
+                while end_index < len(line) and not line[end_index].isalpha():
+                    end_index += 1
+                s_value = float(line[s_index + 1:end_index].strip())
+                self.spindle_speeds.append([i, s_value])
+        return self.spindle_speeds

@@ -473,6 +473,7 @@ class SerialConnection(object):
         self.jd.job_gcode_running = gcode_with_line_numbers
 
         self.jd.get_excluded_line_numbers(self.jd.job_gcode_running)
+        self.jd.get_spindle_speeds(self.jd.job_gcode_running)
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -710,6 +711,7 @@ class SerialConnection(object):
 
     # Feed override feedback
     feed_override_percentage = 100
+    speed_override_percentage = 100
 
     # Analogue spindle feedback
     spindle_load_voltage = None
@@ -1089,6 +1091,7 @@ class SerialConnection(object):
                         return
 
                     self.feed_override_percentage = int(values[0])
+                    self.speed_override_percentage = int(values[2])
                 elif part.startswith('Ln:'):
                     self.current_line_number = part[3:]
 

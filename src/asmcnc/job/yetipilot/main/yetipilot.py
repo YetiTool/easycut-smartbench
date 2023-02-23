@@ -43,6 +43,7 @@ class YetiPilot:
     override_commands_per_adjustment = 2
     override_command_delay = 0.06
     tolerance_for_acceleration_detection = 50
+    target_spindle_speed = 25000
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -127,6 +128,31 @@ class YetiPilot:
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
 
         return abs(constant_feed_target - feed_rate) < self.tolerance_for_acceleration_detection, last_modal_feed_rate
+
+    def adjust_spindle_speed(self, line_number):
+        current_speed = 0
+        for spindle_speed in self.jd.spindle_speeds:
+            if line_number >= spindle_speed[0]:
+                current_speed = spindle_speed[1]
+
+        total_override_required = (self.target_spindle_speed / current_speed) * 100
+        current_override = self.m.s.speed_override_percentage
+        difference = total_override_required - current_override
+
+        adjustments = get_adjustment(difference)
+
+        self.do_spindle_adjustment(adjustments)
+
+    def do_spindle_adjustment(self, adjustments):
+        for i, adjustment in enumerate(adjustments):
+            if adjustment == 10:
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_10(), i * self.override_command_delay)
+            elif adjustment == 1:
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(), i * self.override_command_delay)
+            elif adjustment == -10:
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_10(), i * self.override_command_delay)
+            elif adjustment == -1:
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), i * self.override_command_delay)
 
     def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage,
                      feed_rate, current_line_number):
