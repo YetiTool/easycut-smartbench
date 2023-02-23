@@ -168,13 +168,16 @@ class JobData(object):
 
     def setup_running_job_gcode(self, raw_gcode):
         # Want to set this up so that it will eventually handle everything that gets appended to/modifies a file
-        modded_gcode = self.add_line_numbers_to_gcode(raw_gcode)
-        self.job_gcode_running = modded_gcode
+        # modded_gcode = self.add_line_numbers_to_gcode(raw_gcode)
+        self.job_gcode_running = raw_gcode
 
     # LINE COUNTING
     def add_line_numbers_to_gcode(self, raw_gcode):
         return [line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
                                    for i, line in enumerate(raw_gcode)]
+
+    def add_line_number_to_gcode_line(self, line, i):
+        return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
 
     def gcode_line_is_excluded(self, line):
         return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line

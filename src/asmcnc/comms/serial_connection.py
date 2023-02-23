@@ -521,7 +521,7 @@ class SerialConnection(object):
 
         while self.l_count < len(self.jd.job_gcode_running):
             
-            line_to_go = self.jd.job_gcode_running[self.l_count]
+            line_to_go = self.jd.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line

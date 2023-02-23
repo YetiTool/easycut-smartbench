@@ -129,17 +129,8 @@ def test_setup_running_job_gcode(jd):
         "X2.259Y2.259Z-0.240F824.88"
     ]
 
-    expected_gcode_with_line_numbers = [
-        "N0G91X0F1000",
-        "N1G1X0F8000",
-        "AE",
-        "N3X6.776Y6.776Z-0.720F769.25",
-        "N4X2.259Y2.259Z-0.240F796.74",
-        "N5X2.259Y2.259Z-0.240F824.88"
-    ]
-
     jd.setup_running_job_gcode(job_gcode_object)
-    assert jd.job_gcode_running == expected_gcode_with_line_numbers
+    assert jd.job_gcode_running == job_gcode_object
 
 def test_setup_running_job_gcode_empty(jd):
     jd.job_gcode_running = ["ahh"]
@@ -190,6 +181,10 @@ def test_gcode_line_is_not_excluded(jd):
     assert not jd.gcode_line_is_excluded("G90")
     assert not jd.gcode_line_is_excluded("GX1Y4F600")
     assert not jd.gcode_line_is_excluded("GX1Y4F600")
+
+def test_add_line_number_to_gcode_line(jd):
+    assert jd.add_line_number_to_gcode_line("G1", 4) == "N4G1"
+    assert jd.add_line_number_to_gcode_line("AE", 2) == "AE"
 
 
 
