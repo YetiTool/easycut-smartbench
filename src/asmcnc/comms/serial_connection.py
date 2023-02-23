@@ -460,7 +460,7 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
-        self.jd.setup_running_job_gcode(job_object)
+        self.jd.job_gcode_running = job_object
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -487,7 +487,7 @@ class SerialConnection(object):
 
     # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
     def run_skeleton_buffer_stuffer(self, gcode_obj):
-        self.jd.setup_running_job_gcode(gcode_obj)
+        self.jd.job_gcode_running = gcode_obj
 
         log('Skeleton buffer stuffing starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -521,7 +521,7 @@ class SerialConnection(object):
 
         while self.l_count < len(self.jd.job_gcode_running):
             
-            line_to_go = self.jd.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
+            line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -533,6 +533,15 @@ class SerialConnection(object):
                 return
  
         self.is_stream_lines_remaining = False
+
+    # line counting for buffer stuffing
+    def add_line_number_to_gcode_line(self, line, i):
+        return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
+
+    def gcode_line_is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+
+    # PROCESSING GRBL RESPONSES
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):    
