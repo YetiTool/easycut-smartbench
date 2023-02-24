@@ -109,6 +109,13 @@ class YetiPilot:
 
         return adjustments, multiplier, capped_multiplier
 
+    def stop_and_show_error(self):
+        self.stop()
+        self.sm.get_screen('go').start_or_pause_button_press()
+        print("ERROR: Feed override percentage is too low.")
+
+        # ??
+
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
             if i == self.override_commands_per_adjustment:
@@ -116,6 +123,10 @@ class YetiPilot:
 
             if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
                 adjustment = 1
+
+            if self.m.s.feed_override_percentage + adjustment < 10:
+                self.stop_and_show_error()
+                return
 
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
