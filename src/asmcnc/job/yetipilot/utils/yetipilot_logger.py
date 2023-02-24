@@ -120,10 +120,10 @@ class AutoPilotLogger:
         data = [["Time", "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor",
                  "Y2 Motor", "Spindle Voltage", "Raw Load 1", "Raw Load 2", "Raw Load 3", "Raw Load 4", "Raw Load 5",
                  "Average Load 1", "Average Load 2", "Average Load 3", "Average Load 4", "Average Load 5",
-                 "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode Feed", "Feed Override % Status",
+                 "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode", "GCode Feed", "Feed Override % Status",
                  "Target Feed", "Actual Feed", "Difference", "Accelerating", "G0 Move", "Allow FeedUp", "Moving in Z",
                  "Raw Multiplier", "Capped Multiplier", "Adjustment List", "Feed Override % Status", "Target Spindle Speed",
-                 "Spindle Override %", "Spindle RPM", "GCode"]]
+                 "Spindle Override %", "Spindle RPM"]]
 
         for log in self.logs:
             data.append([
@@ -132,11 +132,11 @@ class AutoPilotLogger:
                 limit(get_safe(log.raw_loads, 1)), limit(get_safe(log.raw_loads, 2)), limit(get_safe(log.raw_loads, 3)),
                 limit(get_safe(log.raw_loads, 4)), limit(get_safe(log.average_loads, 0)), limit(get_safe(log.average_loads, 1)),
                 limit(get_safe(log.average_loads, 2)), limit(get_safe(log.average_loads, 3)), limit(get_safe(log.average_loads, 4)),
-                limit(log.current_load), log.target_load, limit(log.raw_multiplier), log.line_number, log.gcode_feed,
+                limit(log.current_load), log.target_load, limit(log.raw_multiplier), log.line_number, log.gcode, log.gcode_feed,
                 log.feed_override_percentage, log.target_feed, int(log.feed_rate), log.target_feed - int(log.feed_rate),
                 not log.constant_speed, log.g0_move, log.allow_feedup, log.moving_in_z, log.raw_multiplier,
                 log.feed_multiplier, log.adjustment_list, log.feed_override_percentage, log.target_spindle_speed,
-                log.spindle_override_percentage, log.spindle_rpm, log.gcode
+                log.spindle_override_percentage, log.spindle_rpm
             ])
 
         return data
