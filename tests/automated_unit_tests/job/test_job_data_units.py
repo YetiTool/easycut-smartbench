@@ -77,11 +77,7 @@ def test_scrape_last_feed_command_start_of_job(jd):
     index = 0
     job_gcode_object = [
         "G91X0F1000",
-        "G1X0F8000",
-        "X6.776Y6.776Z-0.720F769.25",
-        "CUY",
-        "X2.259Y2.259Z-0.240F796.74",
-        "X2.259Y2.259Z-0.240F824.88"
+        "G1X0F8000"
     ]
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
 
@@ -108,3 +104,19 @@ def test_scrape_last_feed_command_no_F(jd):
         "X6.776Y6.776Z-0.720F",
     ]
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
+
+def test_scrape_last_feed_command_feed_start_of_line(jd):
+    index = 3
+    job_gcode_object = [
+        "G91X0F1000",
+        "G1X0F8000",
+        "F6000X6.776Y6.776Z-0.720",
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 6000
+
+def test_scrape_last_feed_command_feed_mid_line(jd):
+    index = 1
+    job_gcode_object = [
+        "G91F1000X0",
+    ]
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 1000
