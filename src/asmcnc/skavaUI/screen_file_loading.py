@@ -355,8 +355,8 @@ class LoadingScreen(Screen):
                             except: print 'Failed to extract feed rate. Probable G-code error!'
 
                         # strip line numbers
-                        if l_block.find("N") >=0:
-                            self.jd.remove_line_number(l_block)
+                        if "N" in l_block:
+                            l_block = self.jd.remove_line_number(l_block)
 
                         self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
