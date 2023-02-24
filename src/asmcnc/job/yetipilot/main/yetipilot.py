@@ -141,6 +141,8 @@ class YetiPilot:
 
         adjustments = get_adjustment(difference)
 
+        print("Adjustments: " + str(adjustments))
+
         self.do_spindle_adjustment(adjustments)
 
     def do_spindle_adjustment(self, adjustments):

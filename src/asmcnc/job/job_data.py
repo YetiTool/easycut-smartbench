@@ -430,4 +430,5 @@ class JobData(object):
                     end_index += 1
                 s_value = float(line[s_index + 1:end_index].strip())
                 self.spindle_speeds.append([i, s_value])
+        print(self.spindle_speeds)
         return self.spindle_speeds
