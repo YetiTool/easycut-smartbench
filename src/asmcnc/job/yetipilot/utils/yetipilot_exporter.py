@@ -429,7 +429,7 @@ class AutoPilotExporter:
             get_series_format(sheet_id, 0, MAX, 15, 16, "LEFT", 1, 0, 0, 1),
             get_series_format(sheet_id, 0, MAX, 12, 13, "LEFT", 0.98, 0.8, 0, 1),
             get_series_format(sheet_id, 0, MAX, 9, 10, "RIGHT", 0, 1, 0, 1),
-            get_series_format(sheet_id, 0, MAX, 39, 40, "RIGHT", 0, 0.6, 0.6, 1)
+            get_series_format(sheet_id, 0, MAX, 16, 17, "RIGHT", 0, 0.6, 0.6, 1)
         ]
 
         self.add_chart("Spindle RPM Chart", "Time", "Feed Values (%)", domain, series, right_axis_title="Load Values (W)",

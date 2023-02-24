@@ -144,13 +144,13 @@ class AutoPilotLogger:
     def get_data_for_chart_data_sheet(self):
         data = [["Time", "X Motor Axis", "Y Motor Axis", "Z Motor Axis", "X1 Motor", "X2 Motor", "Y1 Motor",
                  "Y2 Motor", "Calculated Load", "Target Load", "Raw Multiplier", "GCode Feed", "Feed Override % Status",
-                 "Target Feed", "Actual Feed", "Capped Multiplier"]]
+                 "Target Feed", "Actual Feed", "Capped Multiplier", "Spindle RPM"]]
 
         for log in self.logs:
             data.append([
                 log.time, log.sg_x_motor_axis, log.sg_y_axis, log.sg_z_motor_axis, log.sg_x1_motor, log.sg_x2_motor,
                 log.sg_y1_motor, log.sg_y2_motor, log.current_load, log.target_load, log.raw_multiplier, log.gcode_feed,
-                log.feed_override_percentage, log.target_feed, log.feed_rate, log.feed_multiplier
+                log.feed_override_percentage, log.target_feed, log.feed_rate, log.feed_multiplier, log.spindle_rpm
             ])
 
         return data
