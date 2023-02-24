@@ -219,7 +219,10 @@ class YetiPilot:
                 gcode_feed=gcode_feed,
                 target_feed=gcode_feed * feed_override_percentage / 100,
                 g0_move=g0_move,
-                allow_feedup=allow_feedup
+                allow_feedup=allow_feedup,
+                target_spindle_speed=self.target_spindle_speed,
+                spindle_override_percentage=self.m.s.speed_override_percentage,
+                spindle_rpm=self.m.s.spindle_speed,
             )
 
     def load_parameters_from_json(self, path_override=None):
