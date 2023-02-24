@@ -26,6 +26,8 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
+from asmcnc.core_UI.job_go.widgets.widget_yetipilot import YetiPilotWidget
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -403,6 +405,7 @@ class GoScreen(Screen):
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
         self.database = kwargs['database']
+        self.yp = kwargs['yetipilot']
 
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
@@ -419,6 +422,9 @@ class GoScreen(Screen):
         # initialise for db send
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
+
+        # Optional containers
+        self.yetipilot_container.add_widget(YetiPilotWidget(yetipilot=self.yp))
 
         self.update_strings()
 

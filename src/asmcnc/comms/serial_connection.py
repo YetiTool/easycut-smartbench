@@ -36,6 +36,9 @@ class SerialConnection(object):
     s = None    # Serial comms object
     sm = None   # Screen manager object
 
+    yp = None # Yetipilot object
+    using_yp = False
+
     grbl_out = ""
     response_log = []
     suppress_error_screens = False
@@ -368,6 +371,7 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
+
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
@@ -378,6 +382,7 @@ class SerialConnection(object):
                 # Job streaming: stuff butter
                 if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
+                        if self.using_yp: self.yp.add_to_stack()
                         self.stuff_buffer()
                     else: 
                         if self.g_count == self.l_count:
@@ -509,12 +514,14 @@ class SerialConnection(object):
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
+        self.using_yp = False
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
+        self.using_yp = self.yp.use_yp
         self.is_stream_lines_remaining = True
         self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
         log('Job running')
