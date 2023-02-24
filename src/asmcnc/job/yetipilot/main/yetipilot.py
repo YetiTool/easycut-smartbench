@@ -129,12 +129,7 @@ class YetiPilot:
 
         return abs(constant_feed_target - feed_rate) < self.tolerance_for_acceleration_detection, last_modal_feed_rate
 
-    def adjust_spindle_speed(self, line_number):
-        current_speed = 0
-        for spindle_speed in self.jd.spindle_speeds:
-            if line_number >= spindle_speed[0]:
-                current_speed = spindle_speed[1]
-
+    def adjust_spindle_speed(self, current_speed):
         total_override_required = (self.target_spindle_speed / current_speed) * 100
         current_override = self.m.s.speed_override_percentage
         difference = total_override_required - current_override
@@ -187,8 +182,9 @@ class YetiPilot:
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if current_line_number in self.jd.spindle_speeds:
-                self.adjust_spindle_speed(current_line_number)
+            if abs(current_line_number - self.jd.spindle_speeds[0]) < 5:
+                self.adjust_spindle_speed(self.jd.spindle_speeds[0])
+                self.jd.spindle_speeds.pop(0)
 
             # END OF LOGIC
 
