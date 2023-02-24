@@ -180,9 +180,10 @@ class YetiPilot:
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if abs(current_line_number - self.jd.spindle_speeds[0][0]) < 5:
-                self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
-                self.jd.spindle_speeds.pop(0)
+            if len(self.jd.spindle_speeds) > 0:
+                if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
+                    self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
+                    self.jd.spindle_speeds.pop(0)
 
             # END OF LOGIC
 

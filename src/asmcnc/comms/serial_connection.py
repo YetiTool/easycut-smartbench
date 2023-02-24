@@ -1708,3 +1708,4 @@ class SerialConnection(object):
                                                      float(self.feed_rate), int(self.current_line_number))
         except Exception as e:
             log(e)
+            log(e.message)
