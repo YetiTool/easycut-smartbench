@@ -390,3 +390,37 @@ def test_feed_override_read_in_fails_if_bad(sc):
     assert sc.motor_driver_temp != 1
     assert sc.pcb_temp != 2
 
+## TEST LINE NUMBER READ IN
+
+def construct_status_with_line_numbers(l=None):
+
+    # Use this to construct the test status passed out by mock serial object
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255"
+
+    if l: 
+        line_appendage = "|Ln:" + str(l)
+        status+=line_appendage
+
+    status += "|FS:0,0|Ld:0|TC:1,2>"
+
+    return status
+
+def test_line_number_read_in(sc):
+    status = construct_status_with_line_numbers(123)
+    sc.process_grbl_push(status)
+    assert sc.grbl_ln == 123
+    assert_status_end_processed(sc)
+
+def test_line_number_read_in_when_nonsense(sc):
+    status = construct_status_with_line_numbers("nonsense")
+    sc.process_grbl_push(status)
+    assert sc.grbl_ln == None
+    assert sc.motor_driver_temp != 1
+    assert sc.pcb_temp != 2
+
+def test_line_number_read_in_when_no_number(sc):
+    status = construct_status_with_line_numbers()
+    sc.process_grbl_push(status)
+    assert sc.grbl_ln == None
+    assert_status_end_processed(sc)
+
