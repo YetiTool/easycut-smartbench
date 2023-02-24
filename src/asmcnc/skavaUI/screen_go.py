@@ -425,7 +425,8 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         # Optional containers
-        self.yetipilot_container.add_widget(YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp))
+        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp)
+        self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
 
@@ -628,6 +629,9 @@ class GoScreen(Screen):
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
         self.sm.get_screen('home').z_datum_reminder_flag = False
+
+        # Reset YP toggle
+        self.yp_widget.toggle_yeti_pilot(self.yp_widget.switch)
 
     ### GENERAL ACTIONS
 
