@@ -10,6 +10,11 @@
     "Description": "Number of statuses per adjustment"
   },
   {
+    "Name": "target_spindle_speed",
+    "Value": 25000,
+    "Description": "Target spindle speed"
+  },
+  {
     "Name": "tolerance_for_acceleration_detection",
     "Value": 50,
     "Description": "Allowable delta between actual feed and target feed to determine if GRBL is accelerating or at constant speed"
