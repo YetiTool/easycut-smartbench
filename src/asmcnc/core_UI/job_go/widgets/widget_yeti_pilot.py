@@ -35,5 +35,5 @@ class YetiPilotWidget(Widget):
         self.toggle_yeti_pilot(self.switch)
 
     def toggle_yeti_pilot(self, switch):
-        if switch.active: self.yp.start()
-        else: self.yp.stop()
+        if switch.active: self.yp.enable()
+        else: self.yp.disable()

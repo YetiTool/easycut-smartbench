@@ -1,5 +1,6 @@
 import json
 from kivy.clock import Clock
+from datetime import datetime
 
 def log(message):
     timestamp = datetime.now()
@@ -39,11 +40,11 @@ class YetiPilot(object):
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
 
-    def start(self):
+    def enable(self):
         self.load_parameters_from_json()
         self.use_yp = True
 
-    def stop(self):
+    def disable(self):
         self.use_yp = False
 
     def load_parameters_from_json(self):
@@ -55,7 +56,7 @@ class YetiPilot(object):
         Clock.schedule_once(lambda dt: self.feed_override_wrapper(dummy_override), 1)
 
     # Keep this - ensures that commands are only sent if job is streaming & not paused
-    def feed_override_wrapper(feed_override_func):
+    def feed_override_wrapper(self, feed_override_func):
         if self.m.s.is_job_streaming and not self.m.is_machine_paused:
             feed_override_func()
 
