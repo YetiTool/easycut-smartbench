@@ -476,8 +476,8 @@ class GoScreen(Screen):
             self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
-        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds,
-                                                                 0.2)  # then poll repeatedly
+        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
+        self.yp_widget.switch_reflects_yp()
 
         if self.is_job_started_already:
             pass

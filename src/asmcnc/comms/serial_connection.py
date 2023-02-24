@@ -432,6 +432,7 @@ class SerialConnection(object):
         log('Checking job...')
 
         self.m.enable_check_mode()
+        self.yp.use_yp = False
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
@@ -576,6 +577,7 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
+        self.yp.use_yp = False
 
         if self.NOT_SKELETON_STUFF:
 
@@ -610,6 +612,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
         self.jd.job_gcode_running = []
+        self.yp.use_yp = False
 
         if self.m_state != "Check":
             
