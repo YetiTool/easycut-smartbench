@@ -53,7 +53,7 @@ class YetiPilot(object):
     # placeholder - confirm that YP is running
     def add_to_stack(self):
         log("Hi it's YetiPilot, let's have a safe flight")
-        Clock.schedule_once(lambda dt: self.feed_override_wrapper(dummy_override), 1)
+        Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.dummy_override), 1)
 
     # Keep this - ensures that commands are only sent if job is streaming & not paused
     def feed_override_wrapper(self, feed_override_func):
