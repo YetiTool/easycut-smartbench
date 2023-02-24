@@ -50,6 +50,7 @@ from asmcnc.comms import localization
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport

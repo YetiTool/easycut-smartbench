@@ -424,7 +424,7 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         # Optional containers
-        self.yetipilot_container.add_widget(YetiPilotWidget(yetipilot=self.yp))
+        self.yetipilot_container.add_widget(YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp))
 
         self.update_strings()
 
