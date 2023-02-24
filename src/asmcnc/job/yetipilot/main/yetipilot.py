@@ -136,8 +136,6 @@ class YetiPilot:
 
         adjustments = get_adjustment(difference)
 
-        print("Adjustments: " + str(adjustments))
-
         self.do_spindle_adjustment(adjustments)
 
     def do_spindle_adjustment(self, adjustments):
@@ -182,8 +180,8 @@ class YetiPilot:
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if abs(current_line_number - self.jd.spindle_speeds[0]) < 5:
-                self.adjust_spindle_speed(self.jd.spindle_speeds[0])
+            if abs(current_line_number - self.jd.spindle_speeds[0][0]) < 5:
+                self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
                 self.jd.spindle_speeds.pop(0)
 
             # END OF LOGIC
