@@ -122,7 +122,7 @@ class AutoPilotLogger:
                  "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode Feed", "Feed Override % Status",
                  "Target Feed", "Actual Feed", "Difference", "Accelerating", "G0 Move", "Allow FeedUp", "Moving in Z",
                  "Raw Multiplier", "Capped Multiplier", "Adjustment List", "Feed Override % Status", "Target Spindle Speed",
-                 "Spindle Speed Override %", "Spindle RPM"]]
+                 "Spindle Override %", "Spindle RPM"]]
 
         for log in self.logs:
             data.append([
