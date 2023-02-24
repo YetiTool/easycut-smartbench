@@ -114,6 +114,9 @@ class YetiPilot:
             if i == self.override_commands_per_adjustment:
                 break
 
+            if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
+                adjustment = 1
+
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
             elif adjustment == 1:
