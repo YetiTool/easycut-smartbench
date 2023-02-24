@@ -46,6 +46,9 @@ class YetiPilot(object):
     def stop(self):
         self.use_yp = False
 
+    def load_parameters_from_json(self):
+        pass
+
     # placeholder - confirm that YP is running
     def add_to_stack(self):
         log("Hi it's YetiPilot, let's have a safe flight")
