@@ -223,6 +223,7 @@ class YetiPilot:
                 target_spindle_speed=self.target_spindle_speed,
                 spindle_override_percentage=self.m.s.speed_override_percentage,
                 spindle_rpm=self.m.s.spindle_speed,
+                gcode=self.jd.job_gcode_running[current_line_number]
             )
 
     def load_parameters_from_json(self, path_override=None):
@@ -233,6 +234,7 @@ class YetiPilot:
                     setattr(self, item["Name"], item["Value"])
                 except:
                     print("Invalid parameter: " + item["Name"])
+        self.initial_spindle_target_load_watts = self.spindle_target_load_watts
 
     def reset(self):
         self.digital_spindle_mains_voltage = None

@@ -10,7 +10,7 @@ class AutoPilotLog:
                  sg_x2_motor,
                  sg_y1_motor, sg_y2_motor, target_load, raw_spindle_load, spindle_voltage, feed_rate, constant_speed,
                  line_number, gcode_feed, target_feed, g0_move, allow_feedup, target_spindle_speed, spindle_override_percentage,
-                 spindle_rpm):
+                 spindle_rpm, gcode):
         self.current_load = current_load
         self.feed_multiplier = feed_multiplier
         self.time = time
@@ -40,6 +40,7 @@ class AutoPilotLog:
         self.target_spindle_speed = target_spindle_speed
         self.spindle_override_percentage = spindle_override_percentage
         self.spindle_rpm = spindle_rpm
+        self.gcode = gcode
 
 
 def get_safe(listt, index):
@@ -84,13 +85,13 @@ class AutoPilotLogger:
                 feed_override_percentage, moving_in_z, sg_x_motor_axis, sg_y_axis, sg_z_motor_axis, sg_x1_motor,
                 sg_x2_motor, sg_y1_motor, sg_y2_motor, target_load, raw_spindle_load, spindle_voltage, feed_rate,
                 constant_speed, line_number, gcode_feed, target_feed, g0_move, allow_feedup, target_spindle_speed,
-                spindle_override_percentage, spindle_rpm):
+                spindle_override_percentage, spindle_rpm, gcode):
         self.logs.append(AutoPilotLog(current_load, feed_multiplier, time, raw_loads, average_loads, raw_multiplier,
                                       adjustment_list, feed_override_percentage, moving_in_z, sg_x_motor_axis,
                                       sg_y_axis, sg_z_motor_axis, sg_x1_motor, sg_x2_motor, sg_y1_motor, sg_y2_motor,
                                       target_load, raw_spindle_load, spindle_voltage, feed_rate, constant_speed,
                                       line_number, gcode_feed, target_feed, g0_move, allow_feedup, target_spindle_speed,
-                                      spindle_override_percentage, spindle_rpm))
+                                      spindle_override_percentage, spindle_rpm, gcode))
 
     def get_data_for_sheet(self):
         data = [['Time', 'Raw Load 1', 'Raw Load 2', 'Raw Load 3', 'Raw Load 4', 'Raw Load 5', 'Average Load 1',
@@ -122,7 +123,7 @@ class AutoPilotLogger:
                  "Calculated Load", "Target Load", "Raw Multiplier", "Line #", "GCode Feed", "Feed Override % Status",
                  "Target Feed", "Actual Feed", "Difference", "Accelerating", "G0 Move", "Allow FeedUp", "Moving in Z",
                  "Raw Multiplier", "Capped Multiplier", "Adjustment List", "Feed Override % Status", "Target Spindle Speed",
-                 "Spindle Override %", "Spindle RPM"]]
+                 "Spindle Override %", "Spindle RPM", "GCode"]]
 
         for log in self.logs:
             data.append([
@@ -135,7 +136,7 @@ class AutoPilotLogger:
                 log.feed_override_percentage, log.target_feed, int(log.feed_rate), log.target_feed - int(log.feed_rate),
                 not log.constant_speed, log.g0_move, log.allow_feedup, log.moving_in_z, log.raw_multiplier,
                 log.feed_multiplier, log.adjustment_list, log.feed_override_percentage, log.target_spindle_speed,
-                log.spindle_override_percentage, log.spindle_rpm
+                log.spindle_override_percentage, log.spindle_rpm, log.gcode
             ])
 
         return data
