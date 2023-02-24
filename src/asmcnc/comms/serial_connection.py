@@ -54,6 +54,9 @@ class SerialConnection(object):
 
     power_loss_detected = False
 
+    poll_for_reset_spindle_data_failures = None
+    spindle_data_failures = 0
+
     # Flag to kill grbl scanner (used in zhead cycle app)
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
@@ -68,10 +71,16 @@ class SerialConnection(object):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+        self.poll_for_reset_spindle_data_failures = Clock.schedule_interval(lambda dt: self.reset_spindle_data_failures,
+                                                                            10 * 60)
+
 
     def __del__(self):
         if self.s: self.s.close()
         log('Serial connection destructor')
+
+    def reset_spindle_data_failures(self):
+        self.spindle_data_failures = 0
 
     def get_serial_screen(self, serial_error):
 
@@ -789,6 +798,8 @@ class SerialConnection(object):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    #
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -989,6 +1000,12 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.digital_spindle_ld_qdA < 0:
+                            self.spindle_data_failures += 1
+
+                        if self.spindle_data_failures >= 20:
+                            log("Spindle data failure limit reached")
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
