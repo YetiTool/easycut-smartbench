@@ -382,6 +382,7 @@ class SerialConnection(object):
                 # Job streaming: stuff butter
                 if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
+                        log(self.using_yp)
                         if self.using_yp: self.yp.add_to_stack()
                         self.stuff_buffer()
                     else: 

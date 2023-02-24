@@ -16,6 +16,7 @@ from kivy.uix.widget import Widget
 from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
+import traceback
 
 import os, sys, time
 
@@ -522,7 +523,7 @@ class GoScreen(Screen):
                 self.check_brush_use_and_lifetime(self.m.s.spindle_brush_run_time_seconds, self.m.spindle_brush_lifetime_seconds)
                 return
             except:
-                pass
+                print(traceback.format_exc())
         popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
