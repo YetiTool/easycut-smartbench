@@ -26,7 +26,7 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
-from asmcnc.core_UI.job_go.widgets.widget_yetipilot import YetiPilotWidget
+from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
 
 Builder.load_string("""
 
