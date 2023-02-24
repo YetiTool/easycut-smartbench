@@ -31,9 +31,13 @@ class YetiPilotWidget(Widget):
         self.sm = kwargs['screen_manager']
         self.yp = kwargs['yetipilot']
 
-        self.switch.active = False
-        self.toggle_yeti_pilot(self.switch)
+        self.disable_yeti_pilot()
 
     def toggle_yeti_pilot(self, switch):
         if switch.active: self.yp.enable()
         else: self.yp.disable()
+
+    def disable_yeti_pilot(self):
+        self.switch.active = False
+        self.toggle_yeti_pilot(self.switch)
+
