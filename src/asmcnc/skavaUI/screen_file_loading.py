@@ -356,7 +356,7 @@ class LoadingScreen(Screen):
 
                         # strip line numbers
                         if l_block.find("N") >=0:
-                            jd.remove_line_number(l_block)
+                            self.jd.remove_line_number(l_block)
 
                         self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
