@@ -519,6 +519,9 @@ class GoScreen(Screen):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
         # If info was not obtained successfully, spindle production year will equal 99
+
+        print("Spindle year:" + str(self.m.s.spindle_production_year))
+
         if self.m.s.spindle_production_year != 99:
             try: # Just in case of weird errors
                 self.check_brush_use_and_lifetime(self.m.s.spindle_brush_run_time_seconds, self.m.spindle_brush_lifetime_seconds)
