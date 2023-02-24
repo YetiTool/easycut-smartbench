@@ -58,7 +58,8 @@ class YetiPilot(object):
     # Keep this - ensures that commands are only sent if job is streaming & not paused
     # Use it when scheduling feed overrides
     def feed_override_wrapper(self, feed_override_func):
-        if self.use_yp and self.m.s.is_job_streaming and not self.m.is_machine_paused:
+        if self.use_yp and self.m.s.is_job_streaming and \
+           not self.m.is_machine_paused and not "Alarm" in self.m.state():
             feed_override_func()
 
     # For simulating feed overrides
