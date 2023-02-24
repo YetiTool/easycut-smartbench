@@ -121,7 +121,8 @@ class SpeedOverride(Widget):
         self.spindle_rpm.text = str(self.m.spindle_speed())
 
     def update_speed_percentage_override_label(self):
-        self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + '%'
+        self.speed_override_percentage = self.m.s.speed_override_percentage
+        self.speed_rate_label.text = str(self.speed_override_percentage) + '%'
 
     def speed_up(self):
         self.push =+ 1 
