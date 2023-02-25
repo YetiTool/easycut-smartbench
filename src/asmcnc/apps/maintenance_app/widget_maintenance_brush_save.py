@@ -202,7 +202,7 @@ class BrushSaveWidget(Widget):
 
         def read_info(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(check_info, 0.3)
+            Clock.schedule_once(check_info, 0.5)
 
         def check_info(dt):
             # Value of -999 represents disconnected spindle

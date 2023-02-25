@@ -165,7 +165,7 @@ class BrushUseWidget(Widget):
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_restore_info, 0.3)
+        Clock.schedule_once(self.read_restore_info, 0.5)
 
     def read_restore_info(self, dt):
         self.m.s.write_command('M5')
