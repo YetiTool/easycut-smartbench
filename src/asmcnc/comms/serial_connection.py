@@ -1068,8 +1068,6 @@ class SerialConnection(object):
 
                     self.feed_override_percentage = int(values[0])
 
-                    log("Override: " + str(self.feed_override_percentage) + "%")
-
                 # TEMPERATURES
                 elif part.startswith('TC:'):
                     temps = part[3:].split(',')
