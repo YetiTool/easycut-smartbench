@@ -692,6 +692,9 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # Line number
+    grbl_ln = None
+
     # Feeds and speeds
     spindle_speed = 0
     feed_rate = 0
@@ -902,6 +905,19 @@ class SerialConnection(object):
                     # print if change flagged
                     if self.print_buffer_status == True:
                         self.print_buffer_status = False
+
+                # Get line number first so that all other data is in relation to this
+                elif part.startswith('Ln:'):
+                    value = part[3:]
+
+                    try: 
+                        int(value)
+
+                    except: 
+                        log("ERROR status parse: Line number invalid: " + message)
+                        return
+
+                    self.grbl_ln = int(value)
 
                 # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith('Pn:'):
