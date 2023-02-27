@@ -1428,6 +1428,10 @@ class RouterMachine(object):
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
 
+    def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate):
+        constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
+        return abs(constant_feed_target - current_feed_rate) < 50, last_modal_feed_rate
+
     def spindle_speed(self): 
         if self.spindle_voltage == 110:
             converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
