@@ -213,7 +213,7 @@ class BrushSaveWidget(Widget):
             else: # Keep trying for a few seconds
                 Clock.schedule_once(wait_for_successful_read, 0.3)
 
-        def check_info(dt):
+        def check_info():
             # Value of -999 represents disconnected spindle
             if self.m.s.digital_spindle_ld_qdA == -999:
                 self.m.s.write_command('M5')
