@@ -56,6 +56,8 @@ def test_add_to_stack(yp):
 
 def test_feed_override_wrapper(yp):
     test_func = Mock()
+    yp.use_yp = True
+    yp.m.state = Mock(return_value="Idle")
     yp.m.s.is_job_streaming = True
     yp.m.is_machine_paused = False
     yp.feed_override_wrapper(test_func)

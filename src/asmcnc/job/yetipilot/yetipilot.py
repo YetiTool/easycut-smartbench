@@ -32,8 +32,7 @@ class YetiPilot(object):
     # override_command_delay = 0.06
     # tolerance_for_acceleration_detection = 50
 
-    # List for override events, that can be unscheduled/cleared when a job is paused or stopped
-    scheduled_overrides = []
+    use_yp = False
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
