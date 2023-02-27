@@ -497,6 +497,7 @@ class GoScreen(Screen):
         if not self.getting_brush_data and self.show_maintenance_prompts():
             self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
+        self.getting_brush_data = False
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
     def show_hide_yp_container(self, use_sc2):
@@ -516,6 +517,7 @@ class GoScreen(Screen):
         return not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled
 
     def get_sc2_brush_data(self):
+        self.getting_brush_data = True
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(self.get_spindle_info, 0.1)
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
