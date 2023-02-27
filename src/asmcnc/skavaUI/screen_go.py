@@ -513,7 +513,7 @@ class GoScreen(Screen):
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_spindle_info, 0.8)
+        Clock.schedule_once(self.read_spindle_info, 1)
 
     def read_spindle_info(self, dt):
         self.m.s.write_command('M5')
