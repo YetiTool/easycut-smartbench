@@ -165,14 +165,13 @@ class BrushUseWidget(Widget):
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_restore_info, 0.3)
+        Clock.schedule_once(self.read_restore_info, 0.5)
 
     def read_restore_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        # If info was not obtained successfully, spindle production year will equal 99
-        # Update this code if the year is 2099
-        if self.m.s.spindle_production_year != 99:
+        # Value of -999 represents disconnected spindle
+        if self.m.s.digital_spindle_ld_qdA != -999:
             try: # Just in case of weird errors
                 self.brush_use.text = str(int(self.m.s.spindle_brush_run_time_seconds/3600))
                 self.sm.get_screen('maintenance').brush_monitor_widget.update_percentage()
