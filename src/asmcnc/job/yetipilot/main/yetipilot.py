@@ -10,7 +10,7 @@ def format_time(seconds):
 
 
 def get_adjustment(feed_multiplier):
-    feed_multiplier = ceil(feed_multiplier) if feed_multiplier < 0 else floor(feed_multiplier)
+    feed_multiplier = floor(feed_multiplier)
     negative = feed_multiplier < 0
     feed_multiplier = abs(feed_multiplier) if negative else feed_multiplier
 
@@ -21,8 +21,11 @@ def get_adjustment(feed_multiplier):
 
 
 class YetiPilot:
-    # Algorithm Variables
+    enabled = False
+    logger = None
+
     digital_spindle_mains_voltage = None
+
     bias_for_feed_decrease = 2.0
     bias_for_feed_increase = 1.0
     m_coefficient = 1.0
@@ -30,19 +33,17 @@ class YetiPilot:
     cap_for_feed_increase = 20
     cap_for_feed_decrease = -40
     cap_for_feed_increase_during_z_movement = 0
-    moving_in_z = False
 
-    # System Variables
-    enabled = False
-    logger = None
+    moving_in_z = False
     counter = 0
     statuses_per_adjustment = 2
     spindle_load_stack_size = 2
-    spindle_target_load_watts = 880
     digital_spindle_load_stack = []
     override_commands_per_adjustment = 2
     override_command_delay = 0.06
     tolerance_for_acceleration_detection = 50
+
+    spindle_target_load_watts = 880
     target_spindle_speed = 25000
 
     def __init__(self, **kwargs):
@@ -51,11 +52,10 @@ class YetiPilot:
         self.jd = kwargs['job_data']
 
     def start(self):
-        self.enabled = True
-        job_name = '' if not self.sm.has_screen('go') else self.sm.get_screen('go').file_data_label.text
-
         self.load_parameters_from_json()
 
+        # END OF LOGIC
+        job_name = '' if not self.sm.has_screen('go') else self.sm.get_screen('go').file_data_label.text
         self.logger = AutoPilotLogger(
             self.digital_spindle_mains_voltage, self.spindle_target_load_watts, self.bias_for_feed_increase,
             self.bias_for_feed_decrease,
@@ -65,14 +65,10 @@ class YetiPilot:
             self, None
         )
 
-    def stop(self):
-        self.enabled = False
-
     def set_enabled(self, enabled):
+        self.enabled = enabled
         if enabled:
             self.start()
-        else:
-            self.stop()
 
     def ldA_to_watts(self, load):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
@@ -110,7 +106,6 @@ class YetiPilot:
         return adjustments, multiplier, capped_multiplier
 
     def stop_and_show_error(self):
-        self.stop()
         self.sm.get_screen('go').start_or_pause_button_press()
         print("ERROR: Feed override percentage is too low.")
 
@@ -240,6 +235,7 @@ class YetiPilot:
                 gcode=self.jd.job_gcode_running[current_line_number]
             )
 
+    # TO BE REMOVED
     def load_parameters_from_json(self, path_override=None):
         with open('asmcnc/job/yetipilot/main/yetipilot_parameters.json' if not path_override else path_override) as f:
             data = json.load(f)
@@ -248,13 +244,19 @@ class YetiPilot:
                     setattr(self, item["Name"], item["Value"])
                 except:
                     print("Invalid parameter: " + item["Name"])
-        self.initial_spindle_target_load_watts = self.spindle_target_load_watts
 
     def reset(self):
         self.digital_spindle_mains_voltage = None
         self.digital_spindle_load_stack[:] = []
+
+        # END OF LOGIC
         if self.logger:
             self.logger.reset()
 
+    # USE THESE FUNCTIONS FOR ADVANCED PROFILE
     def set_target_power(self, target_power):
         self.spindle_target_load_watts = target_power
+
+    def set_target_spindle_speed(self, target_spindle_speed):
+        self.target_spindle_speed = target_spindle_speed
+
