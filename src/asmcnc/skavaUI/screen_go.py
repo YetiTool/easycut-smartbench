@@ -515,7 +515,7 @@ class GoScreen(Screen):
     def show_maintenance_prompts(self):
         return not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled
 
-    def get_sc2_brush_data(self, use_sc2):
+    def get_sc2_brush_data(self):
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(self.get_spindle_info, 0.1)
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
