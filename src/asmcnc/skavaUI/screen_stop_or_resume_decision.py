@@ -136,7 +136,7 @@ class StopOrResumeDecisionScreen(Screen):
         info = (
             self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
             "\n" + \
-            self.l.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
+            self.l.get_str("Pressing cancel will cancel the job.") + \
             "\n\n" + \
             self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
             "\n" + \
