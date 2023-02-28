@@ -3525,3 +3525,11 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
+
+    def get_smartbench_name(self):
+        try:
+            with open('/home/pi/smartbench_name.txt', 'r') as f:
+                smartbench_name = f.read().replace('\n', ' ').strip()
+                return smartbench_name
+        except:
+            return 'My SmartBench'
