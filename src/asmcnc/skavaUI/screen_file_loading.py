@@ -270,7 +270,7 @@ class LoadingScreen(Screen):
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
-    max_lines = 10
+    max_lines = 100
 
     def _scrub_file_loop(self, dt):
 
