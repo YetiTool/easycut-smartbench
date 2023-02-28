@@ -56,6 +56,7 @@ class YetiPilot(object):
     available_material_types = []
 
     active_profile = None
+    using_advanced_profile = False
 
     use_yp = False
 
@@ -158,10 +159,11 @@ class YetiPilot(object):
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if len(self.jd.spindle_speeds) > 0:
-                if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
-                    self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
-                    self.jd.spindle_speeds.pop(0)
+            if not self.using_advanced_profile:
+                if len(self.jd.spindle_speeds) > 0:
+                    if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
+                        self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
+                        self.jd.spindle_speeds.pop(0)
 
             # END OF LOGIC
             if not self.logger:
