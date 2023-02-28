@@ -173,7 +173,7 @@ class YetiPilot(object):
 
             if self.jd.job_start_time is not None:
                 now_time = time.time()
-                time_stamp = format_time(now_time - self.m.s.job_start_time)
+                time_stamp = format_time(now_time - self.jd.job_start_time)
 
             self.logger.add_log(
                 current_load=average_digital_spindle_load,
