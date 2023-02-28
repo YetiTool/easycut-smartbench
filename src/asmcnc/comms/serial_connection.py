@@ -490,7 +490,6 @@ class SerialConnection(object):
         self._reset_counters()
         return True
 
-
     # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
     def run_skeleton_buffer_stuffer(self, gcode_obj):
         self.jd.job_gcode_running = gcode_obj
@@ -507,7 +506,6 @@ class SerialConnection(object):
         if self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
 
-
     def _reset_counters(self):
         
         # Reset counters & flags
@@ -523,13 +521,12 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = True
         self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
         log('Job running')
-
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.jd.job_gcode_running):
             
-            line_to_go = self.jd.job_gcode_running[self.l_count]
+            line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -541,6 +538,15 @@ class SerialConnection(object):
                 return
  
         self.is_stream_lines_remaining = False
+
+    # line counting for buffer stuffing
+    def add_line_number_to_gcode_line(self, line, i):
+        return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
+
+    def gcode_line_is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+
+    # PROCESSING GRBL RESPONSES
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):    
