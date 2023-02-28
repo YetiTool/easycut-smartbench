@@ -26,6 +26,7 @@ from kivy.graphics import Color, Rectangle
 import sys, os, time
 from datetime import datetime
 import re
+import traceback
 
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
@@ -269,115 +270,118 @@ class LoadingScreen(Screen):
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
+    max_lines = 10
 
     def _scrub_file_loop(self, dt):
 
-        self.update_screen('Could not load')
+        try:
+            if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
+                raise Exception("File exceeds 10 million lines!")
 
-        # try:
-        #     # clear out undesirable lines
+            # clear out undesirable lines
 
-        #     # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
-        #     if self.lines_scrubbed < self.total_lines_in_job_file_pre_scrubbed:
+            # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
+            if self.lines_scrubbed < self.total_lines_in_job_file_pre_scrubbed:
                 
-        #         break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
+                break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
 
-        #         # main scrubbing loop
-        #         while self.lines_scrubbed < break_threshold:
+                # main scrubbing loop
+                while self.lines_scrubbed < break_threshold:
                     
-        #             line = self.job_file_as_list[self.lines_scrubbed]
+                    line = self.job_file_as_list[self.lines_scrubbed]
         
-        #             # Strip comments/spaces/new line and capitalize:
-        #             l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
+                    # Strip comments/spaces/new line and capitalize:
+                    l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
                     
-        #             if (l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1
-        #                 and l_block.find('M30') == -1 and l_block.find('M2') == -1 and l_block.find('M02') == -1):    # Drop undesirable lines
+                    if (l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1
+                        and l_block.find('M30') == -1 and l_block.find('M2') == -1 and l_block.find('M02') == -1):    # Drop undesirable lines
                         
-        #                 # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
-        #                 if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
-        #                     self.sm.get_screen('check_job').flag_spindle_off = False
+                        # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
+                        if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
+                            self.sm.get_screen('check_job').flag_spindle_off = False
 
-        #                     if l_block.find ('S') >= 0:
+                            if l_block.find ('S') >= 0:
                                 
-        #                         # find 'S' prefix and strip out the value associated with it
-        #                         rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
+                                # find 'S' prefix and strip out the value associated with it
+                                rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
 
-        #                         # Use opportunity to add min/max spindle speeds for job data module
-        #                         if rpm > self.jd.spindle_speed_max or self.jd.spindle_speed_max == None:
-        #                             self.jd.spindle_speed_max = rpm
-        #                         if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
-        #                             self.jd.spindle_speed_min = rpm
+                                # Use opportunity to add min/max spindle speeds for job data module
+                                if rpm > self.jd.spindle_speed_max or self.jd.spindle_speed_max == None:
+                                    self.jd.spindle_speed_max = rpm
+                                if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
+                                    self.jd.spindle_speed_min = rpm
 
-        #                         # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
-        #                         # in order for the electronics to send the right voltage for the desired RPM
-        #                         if self.m.spindle_voltage == 110:
-        #                             # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
-        #                             rpm = self.m.convert_from_110_to_230(rpm)
-        #                             l_block = "M3S" + str(rpm)
+                                # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
+                                # in order for the electronics to send the right voltage for the desired RPM
+                                if self.m.spindle_voltage == 110:
+                                    # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
+                                    rpm = self.m.convert_from_110_to_230(rpm)
+                                    l_block = "M3S" + str(rpm)
 
-        #                         # Ensure all rpms are above the minimum (assuming a 230V spindle)
-        #                         if rpm < self.minimum_spindle_rpm:
-        #                             l_block = "M3S" + str(self.minimum_spindle_rpm)
+                                # Ensure all rpms are above the minimum (assuming a 230V spindle)
+                                if rpm < self.minimum_spindle_rpm:
+                                    l_block = "M3S" + str(self.minimum_spindle_rpm)
 
-        #                         if rpm > self.maximum_spindle_rpm: 
-        #                             l_block = "M3S" + str(self.maximum_spindle_rpm)
+                                if rpm > self.maximum_spindle_rpm: 
+                                    l_block = "M3S" + str(self.maximum_spindle_rpm)
 
 
-        #                 elif l_block.find('S0'):
-        #                     l_block = l_block.replace('S0','')
+                        elif l_block.find('S0'):
+                            l_block = l_block.replace('S0','')
 
         
-        #                 if l_block.find ('F') >= 0:
+                        if l_block.find ('F') >= 0:
 
-        #                     try: 
+                            try: 
 
-        #                         feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+                                feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
-        #                         # Use opportunity to add min/max feedrates for job data module
-        #                         if int(feed_rate) > self.jd.feedrate_max or self.jd.feedrate_max == None:
-        #                             self.jd.feedrate_max = int(feed_rate)
-        #                         if int(feed_rate) < self.jd.feedrate_min or self.jd.feedrate_min == None:
-        #                             self.jd.feedrate_min = int(feed_rate)
+                                # Use opportunity to add min/max feedrates for job data module
+                                if int(feed_rate) > self.jd.feedrate_max or self.jd.feedrate_max == None:
+                                    self.jd.feedrate_max = int(feed_rate)
+                                if int(feed_rate) < self.jd.feedrate_min or self.jd.feedrate_min == None:
+                                    self.jd.feedrate_min = int(feed_rate)
 
-        #                         if float(feed_rate) < self.minimum_feed_rate:
+                                if float(feed_rate) < self.minimum_feed_rate:
                                     
-        #                             self.sm.get_screen('check_job').flag_min_feed_rate = True
+                                    self.sm.get_screen('check_job').flag_min_feed_rate = True
 
-        #                             if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
-        #                                 self.sm.get_screen('check_job').as_low_as = float(feed_rate)
-
-
-        #                         if float(feed_rate) > self.maximum_feed_rate:
-
-        #                             self.sm.get_screen('check_job').flag_max_feed_rate = True
-
-        #                             if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
-        #                                 self.sm.get_screen('check_job').as_high_as = float(feed_rate)
-
-        #                     except: print 'Failed to extract feed rate. Probable G-code error!'
+                                    if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
+                                        self.sm.get_screen('check_job').as_low_as = float(feed_rate)
 
 
-        #                 self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
+                                if float(feed_rate) > self.maximum_feed_rate:
+
+                                    self.sm.get_screen('check_job').flag_max_feed_rate = True
+
+                                    if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
+                                        self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+
+                            except: print 'Failed to extract feed rate. Probable G-code error!'
+
+
+                        self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
-        #             self.lines_scrubbed += 1
+                    self.lines_scrubbed += 1
 
-        #         # take a breather and update progress report
-        #         self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
-        #         percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-        #         self.update_screen('Preparing', percentage_progress)
-        #         Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
+                # take a breather and update progress report
+                self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
+                percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
+                self.update_screen('Preparing', percentage_progress)
+                Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
-        #     else: 
+            else: 
 
-        #         log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
-        #         self.jd.job_gcode = self.preloaded_job_gcode
-        #         # Generated info is displayed in summary
-        #         self.jd.create_gcode_summary_string()
-        #         self._get_gcode_preview_and_ranges()
+                log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+                self.jd.job_gcode = self.preloaded_job_gcode
+                # Generated info is displayed in summary
+                self.jd.create_gcode_summary_string()
+                self._get_gcode_preview_and_ranges()
 
-        # except:
-        #     self.update_screen('Could not load')
-        #     self.jd.reset_values()
+        except:
+            log(traceback.format_exc())
+            self.update_screen('Could not load')
+            self.jd.reset_values()
 
 
     def _get_gcode_preview_and_ranges(self):
