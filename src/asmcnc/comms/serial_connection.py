@@ -36,6 +36,8 @@ class SerialConnection(object):
     s = None    # Serial comms object
     sm = None   # Screen manager object
 
+    yp = None # Yetipilot object
+
     grbl_out = ""
     response_log = []
     suppress_error_screens = False
@@ -368,6 +370,7 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
+
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
@@ -375,8 +378,9 @@ class SerialConnection(object):
                     # What happens here? 
                         # - this bit grinds to a halt
     
-                # Job streaming: stuff butter
-                if (self.is_job_streaming and not self.m.is_machine_paused):
+                # Job streaming: stuff buffer
+                if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
+                    if self.yp.use_yp: self.yp.add_to_stack()
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: 
@@ -428,6 +432,7 @@ class SerialConnection(object):
         log('Checking job...')
 
         self.m.enable_check_mode()
+        self.yp.use_yp = False
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
@@ -485,7 +490,6 @@ class SerialConnection(object):
         self._reset_counters()
         return True
 
-
     # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
     def run_skeleton_buffer_stuffer(self, gcode_obj):
         self.jd.job_gcode_running = gcode_obj
@@ -502,7 +506,6 @@ class SerialConnection(object):
         if self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
 
-
     def _reset_counters(self):
         
         # Reset counters & flags
@@ -518,13 +521,12 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = True
         self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
         log('Job running')
-
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.jd.job_gcode_running):
             
-            line_to_go = self.jd.job_gcode_running[self.l_count]
+            line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -536,6 +538,15 @@ class SerialConnection(object):
                 return
  
         self.is_stream_lines_remaining = False
+
+    # line counting for buffer stuffing
+    def add_line_number_to_gcode_line(self, line, i):
+        return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
+
+    def gcode_line_is_excluded(self, line):
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+
+    # PROCESSING GRBL RESPONSES
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):    
@@ -572,6 +583,7 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
+        self.yp.use_yp = False
 
         if self.NOT_SKELETON_STUFF:
 
@@ -606,6 +618,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
         self.jd.job_gcode_running = []
+        self.yp.use_yp = False
 
         if self.m_state != "Check":
             
@@ -653,7 +666,7 @@ class SerialConnection(object):
         ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
-        if self.m.stylus_router_choice == 'router':
+        if self.m.stylus_router_choice == 'router' and not self.m.get_dollar_setting(51):
             self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 

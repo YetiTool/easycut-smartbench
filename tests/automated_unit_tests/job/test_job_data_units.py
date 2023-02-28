@@ -38,6 +38,9 @@ def jd():
 def test_get_jd(jd):
     jd.reset_values()
 
+
+# FEED RATE SCRAPE
+
 def test_scrape_last_feed_command_float(jd):
     index = 6
     job_gcode_object = [
@@ -120,3 +123,4 @@ def test_scrape_last_feed_command_feed_mid_line(jd):
         "G91F1000X0",
     ]
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 1000
+
