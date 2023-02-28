@@ -744,7 +744,7 @@ class RouterMachine(object):
                     '$121=130.0',     #Y Acceleration, mm/sec^2
                     '$122=200.0',     #Z Acceleration, mm/sec^2
                     '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2502.0',    #Y Max travel, mm
+                    '$131=2503.0',    #Y Max travel, mm
                     '$132=150.0'     #Z Max travel, mm       
             ]
 
