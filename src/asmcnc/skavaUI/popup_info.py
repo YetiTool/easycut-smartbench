@@ -260,8 +260,8 @@ class PopupStop(Widget):
           self.m.resume_from_a_soft_door()
         
       stop_description = self.l.get_str("Is everything OK? You can resume the job, or cancel it completely.")
-      resume_string = self.l.get_bold("Resume") + '[b]' +  " (>)" +'[/b]'
-      cancel_string = self.l.get_bold("Cancel") + '[b]' +  " (X)" +'[/b]'
+      resume_string = self.l.get_bold("Resume")
+      cancel_string = self.l.get_bold("Cancel")
       title_string = self.l.get_str("Warning!")
       
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)

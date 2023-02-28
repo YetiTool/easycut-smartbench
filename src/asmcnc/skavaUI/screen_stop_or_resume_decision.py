@@ -134,11 +134,11 @@ class StopOrResumeDecisionScreen(Screen):
     def popup_help(self):
 
         info = (
-            self.l.get_bold('Cancel') + \
+            self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
             "\n" + \
             self.l.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
             "\n\n" + \
-            self.l.get_bold('Resume') + \
+            self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
             "\n" + \
             self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
         )
