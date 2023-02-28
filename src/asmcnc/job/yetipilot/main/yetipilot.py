@@ -1,10 +1,12 @@
 from math import sqrt, ceil, floor
 from asmcnc.job.yetipilot.utils.yetipilot_logger import AutoPilotLogger
+from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 import time
 import json
 from kivy.clock import Clock
 
 
+# TO BE REMOVED
 def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
 
@@ -46,10 +48,18 @@ class YetiPilot:
     spindle_target_load_watts = 880
     target_spindle_speed = 25000
 
+    available_profiles = []
+    available_cutter_diameters = []
+    available_cutter_types = []
+    available_material_types = []
+
+    active_profile = None
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+        self.get_available_profiles()
 
     def start(self):
         self.load_parameters_from_json()
@@ -260,3 +270,44 @@ class YetiPilot:
     def set_target_spindle_speed(self, target_spindle_speed):
         self.target_spindle_speed = target_spindle_speed
 
+    # USE THESE FUNCTIONS FOR BASIC PROFILES
+    def get_available_profiles(self):
+        with open('asmcnc/job/yetipilot/config/profiles.json') as f:
+            profiles_json = json.load(f)
+
+        for profile_json in profiles_json:
+            self.available_profiles.append(
+                YetiPilotProfile(
+                    cutter_diameter=profile_json["Cutter Diameter"],
+                    cutter_type=profile_json["Cutter Type"],
+                    material_type=profile_json["Material Type"],
+                    parameters=profile_json["Parameters"]
+                )
+            )
+
+        # Get available options for dropdowns
+        self.available_cutter_diameters = {str(profile.cutter_diameter) for profile in self.available_profiles}
+        self.available_material_types = {str(profile.material_type) for profile in self.available_profiles}
+        self.available_cutter_types = {str(profile.cutter_type) for profile in self.available_profiles}
+
+    def get_profile(self, cutter_diameter, cutter_type, material_type):
+        for profile in self.available_profiles:
+            if profile.cutter_diameter == cutter_diameter and \
+                    profile.cutter_type == cutter_type and \
+                    profile.material_type == material_type:
+                return profile
+
+    def use_profile(self, profile):
+        self.active_profile = profile
+        for parameter in profile.parameters:
+            setattr(self, parameter["Name"], parameter["Value"])
+
+    # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
+    def get_available_cutter_diameters(self):
+        return self.available_cutter_diameters
+
+    def get_available_cutter_types(self):
+        return self.available_cutter_types
+
+    def get_available_material_types(self):
+        return self.available_material_types
