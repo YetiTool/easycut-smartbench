@@ -21,7 +21,7 @@ def get_adjustment(feed_multiplier):
     return [-10 if negative else 10 for _ in range(tens)] + [-1 if negative else 1 for _ in range(ones)]
 
 
-DEV_MODE = False
+DEV_MODE = True
 
 
 class YetiPilot(object):
@@ -131,7 +131,6 @@ class YetiPilot(object):
     # placeholder - confirm that YP is running
     def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number):
         if not self.use_yp or self.digital_spindle_mains_voltage is None or self.active_profile is None:
-            print(self.use_yp, self.digital_spindle_mains_voltage, self.active_profile)
             return
 
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)

@@ -381,7 +381,7 @@ class SerialConnection(object):
                         if self.digital_spindle_ld_qdA is not None and self.feed_override_percentage is not None \
                                 and self.feed_rate is not None and self.grbl_ln is not None:
                             self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
-                                                 float(self.feed_rate), int(self.grbl_ln))
+                                                 self.feed_rate, self.grbl_ln)
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else:
@@ -1107,7 +1107,7 @@ class SerialConnection(object):
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
-                    self.feed_rate = feed_speed[0]
+                    self.feed_rate = float(feed_speed[0])
                     self.spindle_speed = feed_speed[1]
 
                 elif part.startswith('Ov:'):
