@@ -1,0 +1,27 @@
+{
+  "Version": 1.0,
+  "Profiles": [
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": 3,
+      "Cutter Type": "EXAMPLE",
+      "Parameters": [
+        {
+          "Name": "digital_spindle_target_watts",
+          "Value": 100
+        }
+      ]
+    },
+    {
+      "Material Type": "Plywood",
+      "Cutter Diameter": 3,
+      "Cutter Type": "EXAMPLE2",
+      "Parameters": [
+        {
+          "Name": "digital_spindle_target_watts",
+          "Value": 800
+        }
+      ]
+    }
+  ]
+}
