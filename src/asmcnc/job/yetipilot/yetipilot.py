@@ -147,7 +147,7 @@ class YetiPilot(object):
             average_digital_spindle_load = sum(
                 self.digital_spindle_load_stack[-self.spindle_load_stack_size:]) / self.spindle_load_stack_size
 
-            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(self.jd.find_last_feedrate(current_line_number),
+            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(self.jd.scrape_last_feed_command(self.jd.job_gcode_running, current_line_number),
                                                                          feed_override_percentage, feed_rate)
 
             adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
