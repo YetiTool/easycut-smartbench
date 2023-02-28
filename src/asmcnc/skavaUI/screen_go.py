@@ -16,6 +16,7 @@ from kivy.uix.widget import Widget
 from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
+import traceback
 
 import os, sys, time
 
@@ -25,6 +26,8 @@ from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, wi
     popup_info  # @UnresolvedImport
 from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
+
+from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
 
 Builder.load_string("""
 
@@ -403,6 +406,7 @@ class GoScreen(Screen):
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
         self.database = kwargs['database']
+        self.yp = kwargs['yetipilot']
 
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
@@ -419,6 +423,10 @@ class GoScreen(Screen):
         # initialise for db send
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
+
+        # Optional containers
+        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp)
+        self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
 
@@ -468,8 +476,8 @@ class GoScreen(Screen):
             self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
-        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds,
-                                                                 0.2)  # then poll repeatedly
+        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
+        self.yp_widget.switch_reflects_yp()
 
         if self.is_job_started_already:
             pass
@@ -505,18 +513,19 @@ class GoScreen(Screen):
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_spindle_info, 0.3)
+        Clock.schedule_once(self.read_spindle_info, 1)
 
     def read_spindle_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
+
         # If info was not obtained successfully, spindle production year will equal 99
         if self.m.s.spindle_production_year != 99:
             try: # Just in case of weird errors
                 self.check_brush_use_and_lifetime(self.m.s.spindle_brush_run_time_seconds, self.m.spindle_brush_lifetime_seconds)
                 return
             except:
-                pass
+                print(traceback.format_exc())
         popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
@@ -621,6 +630,9 @@ class GoScreen(Screen):
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
         self.sm.get_screen('home').z_datum_reminder_flag = False
+
+        # Reset YP toggle
+        self.yp_widget.disable_yeti_pilot()
 
     ### GENERAL ACTIONS
 

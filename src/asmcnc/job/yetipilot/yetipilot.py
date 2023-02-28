@@ -1,4 +1,10 @@
 import json
+from kivy.clock import Clock
+from datetime import datetime
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 class YetiPilot(object):
 
@@ -26,7 +32,35 @@ class YetiPilot(object):
     # override_command_delay = 0.06
     # tolerance_for_acceleration_detection = 50
 
+    use_yp = False
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+
+    def enable(self):
+        self.load_parameters_from_json()
+        self.use_yp = True
+
+    def disable(self):
+        self.use_yp = False
+
+    def load_parameters_from_json(self):
+        pass
+
+    # placeholder - confirm that YP is running
+    def add_to_stack(self):
+        log("Hi it's YetiPilot, let's have a safe flight")
+        Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.dummy_override), 1)
+
+    # Keep this - ensures that commands are only sent if job is streaming & not paused
+    # Use it when scheduling feed overrides
+    def feed_override_wrapper(self, feed_override_func):
+        if self.use_yp and self.m.s.is_job_streaming and \
+           not self.m.is_machine_paused and not "Alarm" in self.m.state():
+            feed_override_func()
+
+    # For simulating feed overrides
+    def dummy_override(self):
+        log("Pilot sends feed override")

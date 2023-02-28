@@ -17,11 +17,12 @@ except:
 
 from asmcnc.comms import serial_connection
 from asmcnc.comms import localization
+from asmcnc.job import job_data
 
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_sequential_streaming_units.py
+python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_streaming_units.py
 ######################################
 '''
 
@@ -32,8 +33,8 @@ def sc():
     machine = Mock()
     screen_manager = Mock()
     settings_manager = Mock()
-    job = Mock()
-    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, job)
+    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, jd)
     sc_obj.next_poll_time = 0
     sc_obj.write_direct = Mock()
     sc_obj.s = MagicMock()
@@ -184,8 +185,8 @@ def sc_write_spy():
     machine = Mock()
     screen_manager = Mock()
     settings_manager = Mock()
-    job = Mock()
-    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, job)
+    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, jd)
     sc_obj.next_poll_time = 0
     sc_obj.write_direct = Mock(side_effect=write_direct_spy)
     sc_obj.s = MagicMock()
@@ -244,8 +245,8 @@ def sc_test_index_error():
     machine = Mock()
     screen_manager = Mock()
     settings_manager = Mock()
-    job = Mock()
-    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, job)
+    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, jd)
     sc_obj.next_poll_time = 0
 
     def write_direct_mock(gcode, realtime = True, show_in_sys = False, show_in_console = False):
@@ -275,4 +276,65 @@ def test_after_grbl_settings_insert_dwell(sc):
     assert not sc._after_grbl_settings_insert_dwell()
     sc._sequential_stream_buffer = ["G","$"]
     assert not sc._after_grbl_settings_insert_dwell()
+
+# LINE COUNTING
+
+def test_buffer_stuffer_with_line_number_tracking(sc_write_spy):
+    test_gcode = ["G90", "G0X4Y5F100", "AE", "G1", "G91"]
+    expected_line_count = ["N0G90", "N1G0X4Y5F100", "AE", "N3G1", "N4G91"]
+    global written_gcodes_list
+    written_gcodes_list = []
+
+    sc_write_spy.l_count = 0
+    sc_write_spy.c_line = []
+    sc_write_spy.jd.job_gcode_running = test_gcode
+    sc_write_spy.stuff_buffer()
+    assert written_gcodes_list == expected_line_count
+
+def test_gcode_line_is_excluded(sc):
+
+    uncountable_gcodes = [
+        '(',
+        ')',
+        '$',
+        'AE',
+        'AF'
+    ]
+    number_gcodes = 1
+    for line in uncountable_gcodes:
+        assert sc.gcode_line_is_excluded(line)
+    assert sc.gcode_line_is_excluded("(AHHH)")
+
+def test_gcode_line_is_not_excluded(sc):
+    assert not sc.gcode_line_is_excluded("G90")
+    assert not sc.gcode_line_is_excluded("GX1Y4F600")
+    assert not sc.gcode_line_is_excluded("GX1Y4F600")
+
+def test_add_line_number_to_gcode_line(sc):
+    assert sc.add_line_number_to_gcode_line("G1", 4) == "N4G1"
+    assert sc.add_line_number_to_gcode_line("AE", 2) == "AE"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
