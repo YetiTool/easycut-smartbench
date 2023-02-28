@@ -171,7 +171,7 @@ class YetiPilot(object):
 
             time_stamp = None
 
-            if self.m.s.job_start_time is not None:
+            if self.jd.job_start_time is not None:
                 now_time = time.time()
                 time_stamp = format_time(now_time - self.m.s.job_start_time)
 

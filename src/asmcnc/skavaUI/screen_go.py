@@ -643,6 +643,7 @@ class GoScreen(Screen):
             self._pause_job()
         else:
             self._start_running_job()
+            self.jd.job_start_time = time.time()
 
     def _pause_job(self):
 

@@ -78,6 +78,7 @@ class JobData(object):
     comments_string = ''
 
     # YetiPilot
+    job_start_time = None
     g0_lines = []
     spindle_speeds = []
 
