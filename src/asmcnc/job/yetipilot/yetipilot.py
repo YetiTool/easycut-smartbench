@@ -277,7 +277,7 @@ class YetiPilot(object):
         with open('asmcnc/job/yetipilot/config/profiles.json') as f:
             profiles_json = json.load(f)
 
-        for profile_json in profiles_json:
+        for profile_json in profiles_json["Profiles"]:
             self.available_profiles.append(
                 YetiPilotProfile(
                     cutter_diameter=profile_json["Cutter Diameter"],
