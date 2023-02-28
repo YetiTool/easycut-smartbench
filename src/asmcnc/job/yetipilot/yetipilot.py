@@ -129,8 +129,9 @@ class YetiPilot(object):
         return multiplier
 
     # placeholder - confirm that YP is running
-    def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number):
+    def add_to_stack(self, digital_spindle_mains_voltage, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number):
         if not self.use_yp or self.digital_spindle_mains_voltage is None or self.active_profile is None:
+            print(self.use_yp, self.digital_spindle_mains_voltage, self.active_profile)
             return
 
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)

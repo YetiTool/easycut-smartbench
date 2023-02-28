@@ -289,7 +289,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
@@ -804,6 +804,9 @@ class SerialConnection(object):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    # YETI PILOT
+    spindle_data_error_buffer = 0
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -1024,6 +1027,13 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.digital_spindle_ld_qdA > 0:
+                            if self.yp:
+                                if self.spindle_data_error_buffer == 3:
+                                    self.yp.digital_spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                else:
+                                    self.spindle_data_error_buffer += 1
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
