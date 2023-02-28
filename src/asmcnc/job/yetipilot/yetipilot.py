@@ -65,7 +65,6 @@ class YetiPilot(object):
         self.jd = kwargs['job_data']
         self.get_available_profiles()
         self.use_profile(self.available_profiles[0])
-        self.enable()
 
     # System
     def enable(self):

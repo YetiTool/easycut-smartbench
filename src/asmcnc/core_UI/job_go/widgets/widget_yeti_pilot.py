@@ -1,7 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 
-
 Builder.load_string("""
 <YetiPilotWidget>:
     switch:switch
@@ -25,6 +24,7 @@ Builder.load_string("""
                 
 """)
 
+
 class YetiPilotWidget(Widget):
     def __init__(self, **kwargs):
         super(YetiPilotWidget, self).__init__(**kwargs)
@@ -37,10 +37,11 @@ class YetiPilotWidget(Widget):
         self.switch.active = self.yp.use_yp
 
     def toggle_yeti_pilot(self, switch):
-        if switch.active: self.yp.enable()
-        else: self.yp.disable()
+        if switch.active:
+            self.yp.enable()
+        else:
+            self.yp.disable()
 
     def disable_yeti_pilot(self):
         self.switch.active = False
         self.toggle_yeti_pilot(self.switch)
-
