@@ -166,6 +166,7 @@ class JobData(object):
         else:
             self.job_name = self.filename.split("/")[-1]
 
+    # JOB DATA
 
     def scrape_last_feed_command(self, job_gcode_object, index): 
 
@@ -178,7 +179,6 @@ class JobData(object):
 
         except: 
             return 0
-
 
     def generate_job_data(self, raw_gcode):
 
