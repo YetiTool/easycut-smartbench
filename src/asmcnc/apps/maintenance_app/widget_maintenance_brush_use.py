@@ -165,9 +165,18 @@ class BrushUseWidget(Widget):
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(self.read_restore_info, 0.5)
+        self.check_info_count = 0
+        Clock.schedule_once(self.check_restore_info, 0.3)
 
-    def read_restore_info(self, dt):
+    def check_restore_info(self, dt):
+        self.check_info_count += 1
+        # Value of -999 represents disconnected spindle - if detected then stop waiting
+        if (self.m.s.digital_spindle_ld_qdA != -999) or (self.check_info_count > 10):
+            self.read_restore_info()
+        else: # Keep trying for a few seconds
+            Clock.schedule_once(self.check_restore_info, 0.3)
+
+    def read_restore_info(self):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
         # Value of -999 represents disconnected spindle

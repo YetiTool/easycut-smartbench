@@ -202,9 +202,18 @@ class BrushSaveWidget(Widget):
 
         def read_info(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-            Clock.schedule_once(check_info, 0.5)
+            self.check_info_count = 0
+            Clock.schedule_once(wait_for_successful_read, 0.3)
 
-        def check_info(dt):
+        def wait_for_successful_read(dt):
+            self.check_info_count += 1
+            # Value of -999 represents disconnected spindle - if detected then stop waiting
+            if (self.m.s.digital_spindle_ld_qdA != -999) or (self.check_info_count > 10):
+                check_info()
+            else: # Keep trying for a few seconds
+                Clock.schedule_once(wait_for_successful_read, 0.3)
+
+        def check_info():
             # Value of -999 represents disconnected spindle
             if self.m.s.digital_spindle_ld_qdA == -999:
                 self.m.s.write_command('M5')
