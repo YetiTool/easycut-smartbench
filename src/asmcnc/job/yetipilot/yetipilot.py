@@ -285,6 +285,7 @@ class YetiPilot(object):
                     cutter_diameter=profile_json["Cutter Diameter"],
                     cutter_type=profile_json["Cutter Type"],
                     material_type=profile_json["Material Type"],
+                    step_down=profile_json["Step Down"],
                     parameters=profile_json["Parameters"]
                 )
             )
@@ -315,3 +316,15 @@ class YetiPilot(object):
 
     def get_available_material_types(self):
         return self.available_material_types
+
+    def get_active_cutter_type(self):
+        return self.active_profile.cutter_type
+
+    def get_active_cutter_diameter(self):
+        return self.active_profile.cutter_diameter
+
+    def get_active_material_type(self):
+        return self.active_profile.material_type
+
+    def get_active_step_down(self):
+        return self.active_profile.step_down
