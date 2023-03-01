@@ -277,7 +277,7 @@ class YetiPilot(object):
         self.target_spindle_speed = target_spindle_speed
 
     def load_parameters(self):
-        with open('asmcnc/job/yetipilot/yetipilot_parameters.json') as f:
+        with open('asmcnc/job/yetipilot/config/yetipilot_parameters.json') as f:
             parameters_json = json.load(f)["Parameters"]
 
             for parameter in parameters_json:
