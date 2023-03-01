@@ -5,7 +5,7 @@
     [
     {
       "Name": "spindle_load_stack_size",
-      "Value": 2,
+      "Value": 1,
       "Description": "Maximum number of values in stack (avg applied to this many values)"
     },
     {
@@ -15,7 +15,7 @@
     },
     {
       "Name": "tolerance_for_acceleration_detection",
-      "Value": 50,
+      "Value": 5,
       "Description": "Allowable delta between actual feed and target feed to determine if GRBL is accelerating or at constant speed"
     },
     {
