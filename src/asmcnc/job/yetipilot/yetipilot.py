@@ -41,11 +41,11 @@ class YetiPilot(object):
     moving_in_z = False
     counter = 0
     statuses_per_adjustment = 2
-    spindle_load_stack_size = 2
+    spindle_load_stack_size = 1
     digital_spindle_load_stack = []
     override_commands_per_adjustment = 2
     override_command_delay = 0.06
-    tolerance_for_acceleration_detection = 50
+    tolerance_for_acceleration_detection = 5
 
     spindle_target_load_watts = 880
     target_spindle_speed = 25000
@@ -65,6 +65,7 @@ class YetiPilot(object):
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
         self.get_available_profiles()
+        self.load_parameters()
 
     # System
     def enable(self):
@@ -274,6 +275,13 @@ class YetiPilot(object):
 
     def set_target_spindle_speed(self, target_spindle_speed):
         self.target_spindle_speed = target_spindle_speed
+
+    def load_parameters(self):
+        with open('asmcnc/job/yetipilot/yetipilot_parameters.json') as f:
+            parameters_json = json.load(f)
+
+            for parameter in parameters_json:
+                setattr(self, parameter["Name"], parameter["Value"])
 
     # USE THESE FUNCTIONS FOR BASIC PROFILES
     def get_available_profiles(self):

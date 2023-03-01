@@ -10,7 +10,11 @@
       "Parameters": [
         {
           "Name": "digital_spindle_target_watts",
-          "Value": 100
+          "Value": 880
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000
         }
       ]
     },
