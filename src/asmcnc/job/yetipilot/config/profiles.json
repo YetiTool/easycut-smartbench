@@ -6,6 +6,7 @@
       "Material Type": "MDF",
       "Cutter Diameter": 3,
       "Cutter Type": "EXAMPLE",
+      "Step Down": "3-6mm",
       "Parameters": [
         {
           "Name": "digital_spindle_target_watts",
@@ -17,6 +18,7 @@
       "Material Type": "Plywood",
       "Cutter Diameter": 3,
       "Cutter Type": "EXAMPLE2",
+      "Step Down": "3-6mm",
       "Parameters": [
         {
           "Name": "digital_spindle_target_watts",
