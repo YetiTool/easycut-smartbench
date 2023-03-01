@@ -88,7 +88,7 @@ class ScreenTest(App):
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name='stop_or_resume_job_decision', screen_manager = sm, machine = m, job = jd, database=db, localization = l)
         sm.add_widget(stop_or_resume_decision_screen)
 
-        stop_or_resume_decision_screen.reason_for_pause = 'yetipilot'
+        stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_spindle_data_loss'
 
         sm.current = 'stop_or_resume_job_decision'
         
