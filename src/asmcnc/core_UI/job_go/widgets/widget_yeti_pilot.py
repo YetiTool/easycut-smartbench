@@ -32,6 +32,7 @@ class YetiPilotWidget(Widget):
         self.yp = kwargs['yetipilot']
 
         self.disable_yeti_pilot()
+        self.update_toggle_img("on")
 
     def switch_reflects_yp(self):
         self.switch.active = self.yp.use_yp
@@ -44,3 +45,8 @@ class YetiPilotWidget(Widget):
         self.switch.active = False
         self.toggle_yeti_pilot(self.switch)
 
+    def update_toggle_img(self, on_off):
+        self.switch.canvas.children[-1].source = './asmcnc/core_UI/job_go/img/'+ on_off + '_toggle_fg.png' # slider 
+        self.switch.canvas.children[2].source = './asmcnc/core_UI/job_go/img/'+ on_off + '_toggle_bg.png' # background
+
+        
