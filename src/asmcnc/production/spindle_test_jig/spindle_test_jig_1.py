@@ -394,10 +394,12 @@ class SpindleTestJig1(Screen):
     def update_unlock_code(self):
         serial = self.m.s.spindle_serial_number
 
-        if serial != 999:
+        # Check if spindle is connected
+        if self.m.s.digital_spindle_ld_qdA != -999:
             serial = str(hex((serial + 42) * 10000))[2:]
             self.print_receipt_button.disabled = False
         else:
+            # If not, hide unlock code
             serial = 'N/A'
             self.print_receipt_button.disabled = True
 
