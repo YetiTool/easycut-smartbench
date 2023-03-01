@@ -26,6 +26,7 @@ from kivy.graphics import Color, Rectangle
 import sys, os, time
 from datetime import datetime
 import re
+import traceback
 
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
@@ -269,10 +270,14 @@ class LoadingScreen(Screen):
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
+    max_lines = 9999990
 
     def _scrub_file_loop(self, dt):
 
         try:
+            if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
+                raise Exception("File exceeds 10 million lines!")
+
             # clear out undesirable lines
 
             # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
@@ -374,6 +379,7 @@ class LoadingScreen(Screen):
                 self._get_gcode_preview_and_ranges()
 
         except:
+            log(traceback.format_exc())
             self.update_screen('Could not load')
             self.jd.reset_values()
 
