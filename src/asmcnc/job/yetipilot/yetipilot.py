@@ -65,7 +65,6 @@ class YetiPilot(object):
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
         self.get_available_profiles()
-        self.use_profile(self.available_profiles[0])
 
     # System
     def enable(self):
@@ -73,6 +72,7 @@ class YetiPilot(object):
 
         if DEV_MODE:
             self.use_logger()
+            self.use_profile(self.available_profiles[0])
 
     def disable(self):
         self.use_yp = False
