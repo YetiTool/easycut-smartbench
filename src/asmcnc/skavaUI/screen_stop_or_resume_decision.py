@@ -167,6 +167,21 @@ class StopOrResumeDecisionScreen(Screen):
             self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
             self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
 
+        if self.reason_for_pause == 'yetipilot':
+            self.pause_reason_label.text = self.l.get_str("Feed rate too slow!")
+
+            self.pause_description_label.text = (
+
+                self.l.get_str('YetiPilot has tried to reduce the feed rate to less than 10% of the feed rate in the job file.') + \
+                "\n\n" + \
+                self.l.get_str("This may be because the chosen feed rate in the job file was set too high, or because of a problem with the cut which means the Spindle motor's target power cannot be reached.") + \
+                " " + \
+                self.l.get_str('Press "?" for more information.') + "\n\n" + \
+                self.l.get_bold('We recommend that you cancel the job and correct the issue.') + " " + \
+                self.l.get_str('Or, you may resume the job with YetiPilot initially disabled.').replace(self.l.get_str('Or, you may resume'),self.l.get_bold('Or, you may resume')) + " " + \
+                self.l.get_str('If you choose to resume, SmartBench may struggle.')
+                )
+
     
     def cancel_job(self):
         popup_info.PopupConfirmJobCancel(self.sm, self.l)
