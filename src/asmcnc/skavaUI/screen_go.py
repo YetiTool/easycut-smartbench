@@ -489,8 +489,9 @@ class GoScreen(Screen):
             self.reset_go_screen_prior_to_job_start()
 
         if self.show_maintenance_prompts():
-            if use_sc2: self.get_sc2_brush_data()
-            else: self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+            # if use_sc2: self.get_sc2_brush_data()
+            # else: 
+            self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
