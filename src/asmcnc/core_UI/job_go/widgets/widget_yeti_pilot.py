@@ -32,7 +32,6 @@ class YetiPilotWidget(Widget):
         self.yp = kwargs['yetipilot']
 
         self.disable_yeti_pilot()
-        self.update_toggle_img("on")
 
     def switch_reflects_yp(self):
         self.switch.active = self.yp.use_yp
