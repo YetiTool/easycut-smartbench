@@ -176,7 +176,7 @@ class JobData(object):
     def scrape_last_feed_command(self, job_gcode_object, index): 
 
         try:
-            feedrate_line = next((s for s in reversed(job_gcode_object[:index]) if 'F' in s), None)
+            feedrate_line = next((s for s in reversed(job_gcode_object[:index+1]) if 'F' in s), None)
             if feedrate_line:
                 feedrate = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
 
