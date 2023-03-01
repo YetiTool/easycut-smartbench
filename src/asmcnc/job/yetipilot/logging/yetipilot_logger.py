@@ -193,7 +193,7 @@ class AutoPilotLogger:
         ]
 
     def get_parameters(self):
-        parameter_file_location = "asmcnc/job/yetipilot/config/yetipilot_parameters.json"
+        parameter_file_location = "asmcnc/job/yetipilot/config/algorithm_parameters.json"
 
         with open(parameter_file_location) as json_file:
             data = json.load(json_file)["Parameters"]
