@@ -278,7 +278,7 @@ class YetiPilot(object):
 
     def load_parameters(self):
         with open('asmcnc/job/yetipilot/yetipilot_parameters.json') as f:
-            parameters_json = json.load(f)
+            parameters_json = json.load(f)["Parameters"]
 
             for parameter in parameters_json:
                 setattr(self, parameter["Name"], parameter["Value"])
