@@ -502,7 +502,6 @@ class GoScreen(Screen):
         if use_sc2:
             # Show yetipilot container
             self.yetipilot_container.size_hint_y = 1
-            self.yp_widget.update_toggle_img("on")
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
             self.yp_widget.switch.disabled = False
