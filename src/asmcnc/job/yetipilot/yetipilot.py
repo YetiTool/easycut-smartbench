@@ -242,9 +242,9 @@ class YetiPilot(object):
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), i * self.override_command_delay)
 
     def stop_and_show_error(self):
-        self.sm.get_screen('go').start_or_pause_button_press()
         self.disable()
-        print("ERROR: Feed override percentage is too low.")
+        self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot'
+        self.sm.get_screen('go').start_or_pause_button_press()
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
