@@ -133,27 +133,20 @@ class StopOrResumeDecisionScreen(Screen):
     
     def popup_help(self):
 
-        if 'yetipilot' not in self.reason_for_pause:
-            info = (
-                self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
-                "\n" + \
-                self.l.get_str("Pressing cancel will cancel the job.") + \
-                "\n\n" + \
-                self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
-                "\n" + \
-                self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
-            )
+        info = (
+            self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
+            "\n" + \
+            self.l.get_str("Pressing cancel will cancel the job.") + \
+            "\n\n" + \
+            self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
+            "\n" + \
+            self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
+        )
 
+        if 'yetipilot' not in self.reason_for_pause:
             popup_info.PopupInfo(self.sm, self.l, 500, info)
         else:
-            info = (
-                self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
-                "\n" + \
-                self.l.get_str("Pressing cancel will cancel the job.") + \
-                "\n\n" + \
-                self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
-                "\n" + \
-                self.l.get_str("Pressing resume will continue the job from the point at which it was paused.") + \
+            info += (
                 "\n\n" + \
                 self.l.get_bold('Scan the QR code to learn more about this error.') + \
                 "\n" + \
