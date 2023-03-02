@@ -19,7 +19,7 @@ from kivy.uix.spinner import Spinner
 
 class PopupYetiPilotSettings(Widget):
 
-  def __init__(self, screen_manager, localization):
+  def __init__(self, screen_manager, localization, version=False):
 
       self.sm = screen_manager
       self.l = localization
@@ -48,13 +48,17 @@ class PopupYetiPilotSettings(Widget):
       close_button_BL_height = vertical_BL_height - sum_of_middle_heights
 
       dropdowns_container_width = 350
-      dropdowns_cols_dict = {0: dp(70), 1: dp(270)}
+      dropdowns_width = 270
+      dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
       advice_container_width = pop_width - dropdowns_container_width - 30
 
       transparent = [0,0,0,0]
       subtle_white = [249 / 255., 249 / 255., 249 / 255., 1.]
       blue = [33 / 255., 150 / 255., 243 / 255., 1.]
       dark_grey = [51 / 255., 51 / 255., 51 / 255., 1.]
+
+      def switch_version(*args):
+        PopupYetiPilotSettings(self.sm, self.l, version=not version)
 
       # Title
       title_string = self.l.get_str('YetiPilot Settings')
@@ -80,7 +84,7 @@ class PopupYetiPilotSettings(Widget):
                             height=radio_BL_height
                           )
 
-      radio_btn = Button(markup=True, background_normal= '', background_color=[0,1,0,1])
+      radio_btn = Button(background_normal= '', background_color=[0,1,0,1])
       radio_BL.add_widget(radio_btn)
 
       # Body boxlayout
@@ -88,83 +92,9 @@ class PopupYetiPilotSettings(Widget):
                             size_hint_y=None,
                             height=body_BL_height
         )
-
-      # Drop down menus (i.e. actual profile selection)
+      
       left_BL = BoxLayout(orientation='horizontal', padding=[10,10])
-      left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
-
-      optn_img_1 = Image(source=img_1_src)
-      optn_img_2 = Image(source=img_2_src)
-      optn_img_3 = Image(source=img_3_src)
-
-      def select_diameter(spinner, val):
-        print(val)
-        return val
-
-      def select_tool(spinner, val):
-        print(val)
-        return val
-
-      def select_material(spinner, val):
-        print(val)
-        return val
-
-      diameter_choice = Spinner(values=diameter_values)
-      tool_choice = Spinner(values=tool_values)
-      material_choice = Spinner(values=material_values)
-
-      diameter_choice.bind(text=select_diameter)
-      tool_choice.bind(text=select_tool)
-      material_choice.bind(text=select_material)
-
-      left_BL_grid.add_widget(optn_img_1)
-      left_BL_grid.add_widget(diameter_choice)
-      left_BL_grid.add_widget(optn_img_2)
-      left_BL_grid.add_widget(tool_choice)
-      left_BL_grid.add_widget(optn_img_3)
-      left_BL_grid.add_widget(material_choice)
-
-      left_BL.add_widget(left_BL_grid)
-
-      # Step down advice labels
       right_BL = BoxLayout(orientation= "vertical", size_hint_x=None, width=advice_container_width)
-
-      step_downs_msg_string = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                              "\n[b]" + \
-                              "3-6mm" \
-                              + "[/b]"
-      unexpected_results_string = "  (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
-
-      step_downs_msg_label = Label(
-                              text_size=(advice_container_width, body_BL_height/2),
-                              markup=True,
-                              font= 'Roboto',
-                              font_size='15sp',
-                              halign='left', 
-                              valign='top', 
-                              text=step_downs_msg_string, 
-                              color=[0,0,0,1], 
-                              padding=[10,10]
-                              )
-
-
-      unexpected_results_label = Label(
-                              text_size=(advice_container_width, body_BL_height/2),
-                              markup=True,
-                              font= 'Roboto',
-                              font_size='15sp',
-                              halign='left', 
-                              valign='top', 
-                              text=unexpected_results_string,
-                              color=[0,0,0,1], 
-                              padding=[10,0]
-                              )
-
-      right_BL.add_widget(step_downs_msg_label)
-      right_BL.add_widget(unexpected_results_label)
-
-      body_BL.add_widget(left_BL)
-      body_BL.add_widget(right_BL)
 
       # Close button
       close_string = self.l.get_bold('Close')
@@ -176,6 +106,115 @@ class PopupYetiPilotSettings(Widget):
                                   # padding=[190,20,190,20]
                                   )
       close_button_BL.add_widget(close_button)
+
+      # BODY PRE CUT PROFILES ---------------------------
+
+      def build_pre_cut_profiles():
+
+        # Drop down menus (i.e. actual profile selection)
+        left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
+
+        optn_img_1 = Image(source=img_1_src)
+        optn_img_2 = Image(source=img_2_src)
+        optn_img_3 = Image(source=img_3_src)
+
+        def select_diameter(spinner, val):
+          print(val)
+          return val
+
+        def select_tool(spinner, val):
+          print(val)
+          return val
+
+        def select_material(spinner, val):
+          print(val)
+          return val
+
+        diameter_choice = Spinner(values=diameter_values)
+        tool_choice = Spinner(values=tool_values)
+        material_choice = Spinner(values=material_values)
+
+        diameter_choice.bind(text=select_diameter)
+        tool_choice.bind(text=select_tool)
+        material_choice.bind(text=select_material)
+
+        diameter_BL = BoxLayout(orientation='vertical', padding=[5,0])
+        tool_BL = BoxLayout(orientation='vertical', padding=[5,0])
+        material_BL = BoxLayout(orientation='vertical', padding=[5,0])
+
+        diameter_label = Label(text = self.l.get_str('Tool diameter'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
+        tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
+        material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
+
+        diameter_BL.add_widget(diameter_label)
+        diameter_BL.add_widget(diameter_choice)
+        tool_BL.add_widget(tool_label)
+        tool_BL.add_widget(tool_choice)
+        material_BL.add_widget(material_label)
+        material_BL.add_widget(material_choice)
+
+        left_BL_grid.add_widget(optn_img_1)
+        left_BL_grid.add_widget(diameter_BL)
+        left_BL_grid.add_widget(optn_img_2)
+        left_BL_grid.add_widget(tool_BL)
+        left_BL_grid.add_widget(optn_img_3)
+        left_BL_grid.add_widget(material_BL)
+
+        left_BL.add_widget(left_BL_grid)
+
+        # Step down advice labels
+
+        step_downs_msg_string = self.l.get_str("Recommended step downs based on these profile settings:") + \
+                                "\n[b]" + \
+                                "3-6mm" \
+                                + "[/b]"
+        unexpected_results_string = "  (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
+
+        step_downs_msg_label = Label(
+                                text_size=(advice_container_width, body_BL_height/2),
+                                markup=True,
+                                font= 'Roboto',
+                                font_size='15sp',
+                                halign='left', 
+                                valign='top', 
+                                text=step_downs_msg_string, 
+                                color=[0,0,0,1], 
+                                padding=[10,10]
+                                )
+
+
+        unexpected_results_label = Label(
+                                text_size=(advice_container_width, body_BL_height/2),
+                                markup=True,
+                                font= 'Roboto',
+                                font_size='15sp',
+                                halign='left', 
+                                valign='top', 
+                                text=unexpected_results_string,
+                                color=[0,0,0,1], 
+                                padding=[10,0]
+                                )
+
+        right_BL.add_widget(step_downs_msg_label)
+        right_BL.add_widget(unexpected_results_label)
+
+
+      # END OF BODY PRE-CUT PROFILES --------------------------------
+
+
+      # BODY CUSTOM PROFILES
+      def build_advanced_settings():
+        left_BL.add_widget(Button())
+
+
+      if version: 
+        build_pre_cut_profiles()
+      else: 
+        build_advanced_settings()
+
+      body_BL.add_widget(left_BL)
+      body_BL.add_widget(right_BL)
+
 
       vertical_BL = BoxLayout(orientation='vertical',
                               size_hint_y=None,
@@ -208,40 +247,9 @@ class PopupYetiPilotSettings(Widget):
       popup.separator_height = '0dp'
 
       close_button.bind(on_press=popup.dismiss)
-
+      radio_btn.bind(on_press=switch_version)
+      radio_btn.bind(on_press=popup.dismiss)
 
       popup.open()
 
-        
 
-        
-        # def set_trigger_to_false(*args):
-        #   self.m.write_set_up_options(False)
-        #   self.sm.get_screen('lobby').carousel.load_next(mode='next')
-
-        # def set_trigger_to_true(*args):
-        #   self.m.write_set_up_options(True)
-
-        # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        # label = Label(size_hint_y=2, text_size=(420, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
-        
-
-        # remind_me_button = Button(text=remind_string, markup = True)
-        # remind_me_button.background_normal = ''
-        # remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-
-        # btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[20,10,20,0])
-        # btn_layout.add_widget(remind_me_button)       
-        # btn_layout.add_widget(ok_button)
-        
-        # layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
-        # layout_plan.add_widget(img)
-        # layout_plan.add_widget(label)
-        # layout_plan.add_widget(btn_layout)
-        
-
-
-        
-        # ok_button.bind(on_press=set_trigger_to_false)
-        # remind_me_button.bind(on_press=popup.dismiss)
-        # remind_me_button.bind(on_press=set_trigger_to_true)
