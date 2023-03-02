@@ -1,6 +1,8 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 
+from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
+
 
 Builder.load_string("""
 <YetiPilotWidget>:
@@ -37,12 +39,18 @@ class YetiPilotWidget(Widget):
         self.switch.active = self.yp.use_yp
 
     def toggle_yeti_pilot(self, switch):
-        if switch.active: self.yp.enable()
-        else: self.yp.disable()
+        if switch.active:
+            self.yp.enable()
+            self.open_yp_settings()
+        else: 
+            self.yp.disable()
 
     def disable_yeti_pilot(self):
         self.switch.active = False
         self.toggle_yeti_pilot(self.switch)
+
+    def open_yp_settings(self):
+        PopupYetiPilotSettings(self.sm, self.l)
 
     # # DOES NOT WORK
     # def update_toggle_img(self, on_off):
