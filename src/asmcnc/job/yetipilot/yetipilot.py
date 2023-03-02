@@ -179,6 +179,8 @@ class YetiPilot(object):
                 now_time = time.time()
                 time_stamp = format_time(now_time - self.jd.job_start_time)
 
+            current_gcode = self.jd.job_gcode_running[current_line_number] if len(self.jd.job_gcode_running) - 1 >= current_line_number else ''
+
             self.logger.add_log(
                 current_load=average_digital_spindle_load,
                 feed_multiplier=capped_multiplier,
@@ -209,7 +211,7 @@ class YetiPilot(object):
                 target_spindle_speed=self.target_spindle_speed,
                 spindle_override_percentage=self.m.s.speed_override_percentage,
                 spindle_rpm=int(self.m.s.spindle_speed),
-                gcode=self.jd.job_gcode_running[current_line_number]
+                gcode=current_gcode
             )
 
     # For simulating feed overrides
