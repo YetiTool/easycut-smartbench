@@ -668,7 +668,7 @@ class SerialConnection(object):
         ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
-        if self.m.stylus_router_choice == 'router' and not self.m.get_dollar_setting(51):
+        if self.m.stylus_router_choice == 'router': # and not self.m.get_dollar_setting(51):
             self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 

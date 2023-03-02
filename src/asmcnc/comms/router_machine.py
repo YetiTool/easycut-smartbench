@@ -744,7 +744,7 @@ class RouterMachine(object):
                     '$121=130.0',     #Y Acceleration, mm/sec^2
                     '$122=200.0',     #Z Acceleration, mm/sec^2
                     '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2502.0',    #Y Max travel, mm
+                    '$131=2503.0',    #Y Max travel, mm
                     '$132=150.0'     #Z Max travel, mm       
             ]
 
@@ -874,9 +874,9 @@ class RouterMachine(object):
 
 # HW/FW VERSION CAPABILITY
 
-    def fw_can_operate_digital_spindle(self):
-        # log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
-        return False
+    def is_using_sc2(self):
+        return self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'SC2 capable') \
+            and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
 
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
@@ -1434,8 +1434,7 @@ class RouterMachine(object):
         return abs(constant_feed_target - current_feed_rate) < tolerance_for_acceleration_detection, last_modal_feed_rate
 
     def spindle_speed(self): 
-        if self.spindle_voltage == 110: 
-            # if not self.spindle_digital or not self.fw_can_operate_digital_spindle(): # this is only relevant much later on
+        if self.spindle_voltage == 110:
             converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
             return int(converted_speed)
         else: 

@@ -256,6 +256,7 @@ Builder.load_string("""
                             BoxLayout:
                                 id: yetipilot_container
                                 orientation: 'vertical'
+                                size_hint_y: 0
                                 
                                 canvas:
                                     Color:
@@ -475,6 +476,9 @@ class GoScreen(Screen):
         else:
             self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
 
+        use_sc2 = self.m.is_using_sc2()
+        self.show_hide_yp_container(use_sc2)
+
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
         self.yp_widget.switch_reflects_yp()
@@ -484,32 +488,37 @@ class GoScreen(Screen):
         else:
             self.reset_go_screen_prior_to_job_start()
 
-    def on_enter(self):
+        if self.show_maintenance_prompts():
+            # if use_sc2: self.get_sc2_brush_data()
+            # else: 
+            self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
-        # Check for SC2 compatability
-        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
-            and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
-            sc2_compatible = True
+        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
+
+    def show_hide_yp_container(self, use_sc2):
+
+        if use_sc2:
             # Show yetipilot container
             self.yetipilot_container.size_hint_y = 1
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
+            self.yp_widget.switch.disabled = False
+
         else:
-            sc2_compatible = False
             # Hide yetipilot container
             self.yetipilot_container.size_hint_y = 0
             self.yetipilot_container.opacity = 0
             self.yetipilot_container.parent.spacing = 0
+            self.yp_widget.disable_yeti_pilot()
+            self.yp_widget.switch.disabled = True
 
-        if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
-            if sc2_compatible:
-                self.m.s.write_command('M3 S0')
-                Clock.schedule_once(self.get_spindle_info, 0.1)
-                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-            else:
-                self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+    def show_maintenance_prompts(self):
+        return not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled
 
-        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
+    def get_sc2_brush_data(self):
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(self.get_spindle_info, 0.1)
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")

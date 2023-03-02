@@ -172,6 +172,8 @@ class JobData(object):
             self.job_name = self.filename.split("/")[-1]
 
     # JOB DATA
+    def remove_line_number(self, line):
+        return re.sub('N\d+?', '', line)
 
     def scrape_last_feed_command(self, job_gcode_object, index): 
 
