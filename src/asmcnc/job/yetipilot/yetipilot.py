@@ -70,7 +70,10 @@ class YetiPilot(object):
     # System
     def enable(self):
         self.use_yp = True
-        self.sm.get_screen('go').feedOverride.set_button_status(False)
+
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').feedOverride.set_button_status(False)
+
         if DEV_MODE:
             self.use_logger()
             self.get_available_profiles()
@@ -78,8 +81,11 @@ class YetiPilot(object):
 
     def disable(self):
         self.use_yp = False
-        self.sm.get_screen('go').yp_widget.switch_reflects_yp()
-        self.sm.get_screen('go').feedOverride.set_button_status(True)
+
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').yp_widget.switch_reflects_yp()
+            self.sm.get_screen('go').feedOverride.set_button_status(True)
+
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
 
