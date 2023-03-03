@@ -292,6 +292,7 @@ class YetiPilot(object):
                 setattr(self, parameter["Name"], parameter["Value"])
 
         self.target_spindle_speed = self.target_spindle_speed - 1300
+        print("Target spindle speed: " + str(self.target_spindle_speed))
 
     # USE THESE FUNCTIONS FOR BASIC PROFILES
     def get_available_profiles(self):
