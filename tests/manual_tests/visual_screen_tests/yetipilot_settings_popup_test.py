@@ -16,6 +16,8 @@ Run from easycut-smartbench folder, with
 python -m tests.manual_tests.visual_screen_tests.yetipilot_settings_popup_test
 
 '''
+try: from mock import Mock
+except: pass
 
 import sys, os
 sys.path.append('./src')
@@ -28,6 +30,11 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
 from asmcnc.comms import localization
+from asmcnc.comms import router_machine
+from settings import settings_manager
+from asmcnc.comms import smartbench_flurry_database_connection
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
+
 from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
 
 
@@ -43,10 +50,15 @@ class BasicScreen(Screen):
         super(BasicScreen, self).__init__(**kwargs)
         self.sm = kwargs['sm']
         self.l = kwargs['l']
+        self.m = kwargs['m']
+        self.db = kwargs['db']
+        self.yp = kwargs['yp']
+
 
     def on_enter(self):
-        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l)
+        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp)
 
+Cmport = "COM3"
 
 class TestApp(App):
 
@@ -59,10 +71,27 @@ class TestApp(App):
         l = localization.Localization()
         l.load_in_new_language(l.approved_languages[self.lang_idx])
 
-        sm.add_widget(BasicScreen(name='basic', sm=sm, l=l))
+        # Initialise 'j'ob 'd'ata object
+        jd = Mock()
+        jd.job_name = ""
+        jd.gcode_summary_string = ""
+        jd.screen_to_return_to_after_job = ""
+        jd.job_gcode_running = []
 
+        # Initialise settings object
+        sett = settings_manager.Settings(sm)
+
+        # Initialise 'm'achine object
+        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+
+        # Initialise YP
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+
+        # Create database object to talk to
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
         sm.current = 'basic'
-
         return sm
 
 if __name__ == '__main__':
