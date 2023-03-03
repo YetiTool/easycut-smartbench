@@ -252,7 +252,7 @@ class PopupYetiPilotSettings(Widget):
                             height=radio_BL_height
                           )
 
-      radio_btn = Button(background_normal= '', background_color=[0,1,0,1])
+      radio_btn = Button(background_normal= '', background_color=[0,1,0,1], text="Press me")
       radio_BL.add_widget(radio_btn)
 
 

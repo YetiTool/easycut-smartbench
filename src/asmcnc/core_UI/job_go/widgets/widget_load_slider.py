@@ -21,6 +21,7 @@ Builder.load_string("""
             halign: "center" 
             valign: "middle"
             color: 0, 0, 0, 1
+            font_size: '20sp'
 
         BoxLayout:
             orientation: 'horizontal'
@@ -31,8 +32,8 @@ Builder.load_string("""
                 markup: True
                 halign: "center" 
                 valign: "middle"
-                font_size: '20sp'
-                size_hint_x: 0.2
+                size_hint_x: 0.1
+                font_size: '14sp'
 
             Slider:
                 id: power_slider
@@ -40,7 +41,7 @@ Builder.load_string("""
                 max: 1000
                 step: 10
                 on_value: root.on_slider_value_change()
-                size_hint_x: 0.6
+                size_hint_x: 0.8
 
             Label: 
                 text: "1000 W"
@@ -48,7 +49,8 @@ Builder.load_string("""
                 markup: True
                 halign: "center" 
                 valign: "middle"
-                size_hint_x: 0.2
+                size_hint_x: 0.1
+                font_size: '14sp'
 
         BoxLayout:
             id: button_container
