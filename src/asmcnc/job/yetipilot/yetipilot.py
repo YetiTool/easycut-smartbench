@@ -146,8 +146,6 @@ class YetiPilot(object):
                 or (self.active_profile is None and not self.using_advanced_profile) or digital_spindle_ld_qdA < 0:
             return
 
-        print("Current target power:" + str(self.spindle_target_load_watts) + "W")
-
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
         if len(self.digital_spindle_load_stack) == self.spindle_load_stack_size:
