@@ -662,10 +662,10 @@ class GoScreen(Screen):
             self.jd.job_start_time = time.time()
 
     def _pause_job(self):
-
-        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
-        self.sm.get_screen('spindle_shutdown').return_screen = "go"
-        self.sm.current = 'spindle_shutdown'
+        self.m.set_pause(True, "job_pause")
+        # self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        # self.sm.get_screen('spindle_shutdown').return_screen = "go"
+        # self.sm.current = 'spindle_shutdown'
 
     def _start_running_job(self):
         self.database.send_job_start()
