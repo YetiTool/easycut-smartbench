@@ -310,13 +310,14 @@ class YetiPilot(object):
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         for profile in self.available_profiles:
-            if profile.cutter_diameter == cutter_diameter and \
-                    profile.cutter_type == cutter_type and \
-                    profile.material_type == material_type:
+            if str(profile.cutter_diameter) == cutter_diameter and \
+                    str(profile.cutter_type) == cutter_type and \
+                    str(profile.material_type) == material_type:
                 return profile
 
     def use_profile(self, profile):
         self.active_profile = profile
+        self.using_advanced_profile = False
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
