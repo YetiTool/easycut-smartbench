@@ -217,10 +217,6 @@ class YetiPilot(object):
                 gcode=current_gcode
             )
 
-    # For simulating feed overrides
-    def dummy_override(self):
-        pass
-
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_speed):
         total_override_required = (self.target_spindle_speed / current_speed) * 100
