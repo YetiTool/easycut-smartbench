@@ -276,6 +276,8 @@ class YetiPilot(object):
                 self.stop_and_show_error()
                 return
 
+            self.feed_too_low_counter = 0
+
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
             elif adjustment == 1:
