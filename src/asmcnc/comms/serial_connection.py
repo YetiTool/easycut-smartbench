@@ -298,7 +298,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
@@ -819,6 +819,7 @@ class SerialConnection(object):
 
     # YETI PILOT
     spindle_data_error_buffer = 0
+    is_spindle_sending_data = False
     
     def process_grbl_push(self, message):
 
@@ -862,6 +863,8 @@ class SerialConnection(object):
 
             # Get machine's status
             self.m_state = status_parts[0]
+
+            self.is_spindle_sending_data = 'Ld' in status_parts
 
             for part in status_parts:
 

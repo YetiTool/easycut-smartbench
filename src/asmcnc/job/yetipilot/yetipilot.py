@@ -143,7 +143,7 @@ class YetiPilot(object):
 
     # placeholder - confirm that YP is running
     def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number):
-        if not self.use_yp or self.digital_spindle_mains_voltage is None \
+        if not self.use_yp or self.digital_spindle_mains_voltage is None or not self.m.s.is_spindle_sending_data \
                 or (self.active_profile is None and not self.using_advanced_profile) or digital_spindle_ld_qdA < 0:
             return
 
