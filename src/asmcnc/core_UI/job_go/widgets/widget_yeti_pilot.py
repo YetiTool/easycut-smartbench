@@ -32,6 +32,8 @@ class YetiPilotWidget(Widget):
         super(YetiPilotWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
+        self.m = kwargs['machine']
+        self.db = kwargs['database']
         self.yp = kwargs['yetipilot']
 
         self.disable_yeti_pilot()
