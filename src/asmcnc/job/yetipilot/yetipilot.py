@@ -332,16 +332,20 @@ class YetiPilot(object):
         return self.available_material_types
 
     def get_active_cutter_type(self):
-        return self.active_profile.cutter_type
+        if self.active_profile:
+            return self.active_profile.cutter_type
 
     def get_active_cutter_diameter(self):
-        return self.active_profile.cutter_diameter
+        if self.active_profile:
+            return self.active_profile.cutter_diameter
 
     def get_active_material_type(self):
-        return self.active_profile.material_type
+        if self.active_profile:
+            return self.active_profile.material_type
 
     def get_active_step_down(self):
-        return self.active_profile.step_down
+        if self.active_profile:
+            return self.active_profile.step_down
 
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
