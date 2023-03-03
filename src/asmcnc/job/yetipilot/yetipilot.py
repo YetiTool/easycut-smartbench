@@ -60,9 +60,6 @@ class YetiPilot(object):
 
     use_yp = False
 
-    feed_too_low_counter = 0
-    feed_too_low_max = 40
-
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -253,6 +250,10 @@ class YetiPilot(object):
         self.disable()
         print("YETIPILOT: ERROR: Feed override is too low.")
 
+    def check_if_feed_too_low(self):
+        if self.m.s.feed_override_percentage == 10:
+            self.stop_and_show_error()
+
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
             if i == self.override_commands_per_adjustment:
@@ -266,14 +267,7 @@ class YetiPilot(object):
                 adjustment = 1
 
             if self.m.s.feed_override_percentage + adjustment < 10:
-                if self.feed_too_low_counter < self.feed_too_low_max:
-                    self.feed_too_low_counter += 1
-                    return
-
-                self.stop_and_show_error()
-                return
-
-            self.feed_too_low_counter = 0
+                Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
 
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
