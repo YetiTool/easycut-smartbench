@@ -65,3 +65,16 @@ def test_feed_override_wrapper(yp):
 
 def test_dummy_override(yp):
     yp.dummy_override()
+
+def test_get_adjustment():
+    adjustment = yetipilot.get_adjustment(12)
+    adjustment_negative = yetipilot.get_adjustment(-12)
+    assert adjustment == [10, 1, 1]
+    assert adjustment_negative == [-10, -1, -1]
+
+def test_cap_multiplier(yp):
+    capped_multiplier = yp.cap_multiplier(25)
+    capped_multiplier_negative = yp.cap_multiplier(-45)
+
+    assert capped_multiplier == 20
+    assert capped_multiplier_negative == -40
