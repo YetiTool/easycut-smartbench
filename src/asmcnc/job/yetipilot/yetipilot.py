@@ -317,7 +317,6 @@ class YetiPilot(object):
         self.active_profile = profile
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
-            print(getattr(self, parameter["Name"]))
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
