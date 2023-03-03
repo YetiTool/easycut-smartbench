@@ -31,6 +31,7 @@ Builder.load_string("""
                 markup: True
                 halign: "center" 
                 valign: "middle"
+                font_size: '20sp'
                 size_hint_x: 0.2
 
             Slider:
@@ -80,4 +81,4 @@ class LoadSliderWidget(Widget):
         self.power_slider.value+=val
 
     def on_slider_value_change(self):
-        self.load_label.text = str(int(self.power_slider.value)) + " W"
+        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
