@@ -213,7 +213,6 @@ class PopupYetiPilotSettings(Widget):
         left_BL.add_widget(load_slider_container)
 
         speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
-        speedOverride.speed_norm()
         right_BL.add_widget(speedOverride)
 
         clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
