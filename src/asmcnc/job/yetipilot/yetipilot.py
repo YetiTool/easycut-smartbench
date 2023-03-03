@@ -60,6 +60,8 @@ class YetiPilot(object):
 
     use_yp = False
 
+    waiting_for_feed_too_low_decision = False
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -267,7 +269,9 @@ class YetiPilot(object):
                 adjustment = 1
 
             if self.m.s.feed_override_percentage + adjustment < 10:
-                Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
+                if not self.waiting_for_feed_too_low_decision:
+                    Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
+                    self.waiting_for_feed_too_low_decision = True
 
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
