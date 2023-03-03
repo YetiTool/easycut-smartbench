@@ -68,7 +68,6 @@ class LoadSliderWidget(Widget):
         self.yp = kwargs['yetipilot']
 
         self.power_slider.value = self.yp.get_target_power()
-        self.on_slider_value_change()
 
         self.make_buttons(self.button_container, self.power_slider, -100)
         self.make_buttons(self.button_container, self.power_slider, -10)
@@ -83,7 +82,6 @@ class LoadSliderWidget(Widget):
         self.power_slider.value+=val
 
     def on_slider_value_change(self):
-
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
         self.yp.set_using_advanced_profile(True)
         self.yp.set_target_power(self.power_slider.value)
