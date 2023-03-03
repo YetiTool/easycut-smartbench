@@ -122,9 +122,9 @@ class FeedOverride(Widget):
         self.down_5.disabled = enabled
 
         if enabled:
-            self.opacity = 1.0
+            self.parent.opacity = 1.0
         else:
-            self.opacity = 0.1
+            self.parent.opacity = 0.3
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
