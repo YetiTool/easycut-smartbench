@@ -67,7 +67,7 @@ class LoadSliderWidget(Widget):
         # self.l = kwargs['localization']
         self.yp = kwargs['yetipilot']
 
-        self.power_slider.value = 700
+        self.power_slider.value = self.yp.get_target_power()
         self.on_slider_value_change()
 
         self.make_buttons(self.button_container, self.power_slider, -100)

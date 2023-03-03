@@ -351,3 +351,6 @@ class YetiPilot(object):
 
     def set_target_power(self, target_power):
         self.spindle_target_load_watts = target_power
+
+    def get_target_power(self):
+        return self.spindle_target_load_watts
