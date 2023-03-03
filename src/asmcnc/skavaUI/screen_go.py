@@ -397,8 +397,6 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
 
-    poll_for_is_paused = None
-
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
@@ -432,11 +430,6 @@ class GoScreen(Screen):
         self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
-        self.poll_for_is_paused = Clock.schedule_interval(self.poll_for_pause, 0.5)
-
-    def poll_for_pause(self, dt):
-        if self.m.is_machine_paused:
-            self.sm.current = 'stop_or_resume_job_decision'
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
@@ -662,10 +655,10 @@ class GoScreen(Screen):
             self.jd.job_start_time = time.time()
 
     def _pause_job(self):
-        self.m.set_pause(True, "job_pause")
-        # self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
-        # self.sm.get_screen('spindle_shutdown').return_screen = "go"
-        # self.sm.current = 'spindle_shutdown'
+
+        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        self.sm.get_screen('spindle_shutdown').return_screen = "go"
+        self.sm.current = 'spindle_shutdown'
 
     def _start_running_job(self):
         self.database.send_job_start()

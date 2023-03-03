@@ -1060,7 +1060,6 @@ class RouterMachine(object):
     '''
 
     # START/STOP COMMANDS
-    reason_for_pause = ""
 
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
@@ -1110,9 +1109,7 @@ class RouterMachine(object):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
-    def set_pause(self, pauseBool, reason_for_pause=""):
-        if self.sm.has_screen('stop_or_resume_job_decision'):
-            self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = reason_for_pause
+    def set_pause(self, pauseBool):
 
         prev_state = self.is_machine_paused
         self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)

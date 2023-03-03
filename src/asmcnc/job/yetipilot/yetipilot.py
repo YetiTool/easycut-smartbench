@@ -248,7 +248,6 @@ class YetiPilot(object):
 
     def stop_and_show_error(self):
         self.disable()
-        self.m.set_pause(True, reason_for_pause="yetipilot_low_feed")
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
