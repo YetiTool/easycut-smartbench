@@ -486,7 +486,7 @@ class DatabaseEventManager():
 	### FEEDS AND SPEEDS
 	def send_spindle_speed_info(self):
 
-		if pika:
+		if pika and self.sm.has_screen('go'):
 
 			data = {
 				"payload_type": "spindle_speed",
