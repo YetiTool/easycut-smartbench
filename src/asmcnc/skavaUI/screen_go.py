@@ -780,6 +780,7 @@ class GoScreen(Screen):
 
         # Spindle speed and feed rate
         self.speedOverride.update_spindle_speed_label()
+        self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
 

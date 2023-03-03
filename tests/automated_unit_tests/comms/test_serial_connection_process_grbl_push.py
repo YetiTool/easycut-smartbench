@@ -390,6 +390,29 @@ def test_feed_override_read_in_fails_if_bad(sc):
     assert sc.motor_driver_temp != 1
     assert sc.pcb_temp != 2
 
+
+def test_speed_override_read_in(sc):
+    ov = 123
+    status = construct_status_with_override(speed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.speed_override_percentage == ov
+    assert_status_end_processed(sc)
+
+def test_not_speed_override_read_in(sc):
+    ov = 123
+    status = construct_status_with_override(rapid_ov=ov, feed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.speed_override_percentage != ov
+    assert_status_end_processed(sc)
+
+def test_speed_override_read_in_fails_if_bad(sc):
+    ov = ";"
+    status = construct_status_with_override(speed_ov=ov)
+    sc.process_grbl_push(status)
+    assert sc.feed_override_percentage != ov
+    assert sc.motor_driver_temp != 1
+    assert sc.pcb_temp != 2
+
 ## TEST LINE NUMBER READ IN
 
 def construct_status_with_line_numbers(l=None):

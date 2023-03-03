@@ -714,6 +714,7 @@ class SerialConnection(object):
 
     # Feed override feedback
     feed_override_percentage = 100
+    speed_override_percentage = 100
 
     # Analogue spindle feedback
     spindle_load_voltage = None
@@ -1089,6 +1090,7 @@ class SerialConnection(object):
                         return
 
                     self.feed_override_percentage = int(values[0])
+                    self.speed_override_percentage = int(values[2])
 
                 # TEMPERATURES
                 elif part.startswith('TC:'):
