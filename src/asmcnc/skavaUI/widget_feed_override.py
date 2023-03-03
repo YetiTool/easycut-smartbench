@@ -117,6 +117,15 @@ class FeedOverride(Widget):
         self.sm=kwargs['screen_manager']
         self.db=kwargs['database']
 
+    def set_button_enabled(self, enabled):
+        self.up_5.disabled = enabled
+        self.down_5.disabled = enabled
+
+        if enabled:
+            self.opacity = 1.0
+        else:
+            self.opacity = 0.1
+
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
 
