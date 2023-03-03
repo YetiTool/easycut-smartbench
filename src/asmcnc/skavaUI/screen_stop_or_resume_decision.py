@@ -134,16 +134,26 @@ class StopOrResumeDecisionScreen(Screen):
     def popup_help(self):
 
         info = (
-            self.l.get_bold('Cancel') + \
+            self.l.get_bold('Cancel')  + '[b]' +  " (X)" +'[/b]' + \
             "\n" + \
-            self.l.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
+            self.l.get_str("Pressing cancel will cancel the job.") + \
             "\n\n" + \
-            self.l.get_bold('Resume') + \
+            self.l.get_bold('Resume') + '[b]' +  " (>)" +'[/b]' + \
             "\n" + \
             self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
         )
 
-        popup_info.PopupInfo(self.sm, self.l, 500, info)
+        if 'yetipilot' not in self.reason_for_pause:
+            popup_info.PopupInfo(self.sm, self.l, 500, info)
+        else:
+            info += (
+                "\n\n" + \
+                self.l.get_bold('Scan the QR code to learn more about this error.') + \
+                "\n" + \
+                self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
+            )
+
+            popup_info.PopupQRInfo(self.sm, self.l, 500, info, "./asmcnc/skavaUI/img/qr_yetipilot_info.png")
  
     
     def on_enter(self):
@@ -166,6 +176,34 @@ class StopOrResumeDecisionScreen(Screen):
         if self.reason_for_pause == 'job_pause':
             self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
             self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
+
+        if self.reason_for_pause == 'yetipilot_low_feed':
+            self.pause_reason_label.text = self.l.get_str("Feed rate too slow!")
+
+            self.pause_description_label.text = (
+
+                self.l.get_str('YetiPilot has tried to reduce the feed rate to less than 10% of the feed rate in the job file.') + \
+                "\n\n" + \
+                self.l.get_str("This may be because the chosen feed rate in the job file was set too high, or because of a problem with the cut which means the Spindle motor's target power cannot be reached.") + \
+                " " + \
+                self.l.get_str('Press "?" for more information.') + "\n\n" + \
+                self.l.get_bold('We recommend that you cancel the job and correct the issue.') + " " + \
+                self.l.get_str('Or, you may resume the job with YetiPilot initially disabled.').replace(self.l.get_str('Or, you may resume'),self.l.get_bold('Or, you may resume')) + " " + \
+                self.l.get_str('If you choose to resume, SmartBench may struggle.')
+                )
+
+        if self.reason_for_pause == 'yetipilot_spindle_data_loss':
+            self.pause_reason_label.text = self.l.get_str("Can't read spindle data!")
+
+            self.pause_description_label.text = (
+
+                self.l.get_str('Cannot read the data from the SC2 Spindle motor, which is needed to measure the load.') + \
+                "\n\n" + \
+                self.l.get_str("Please check that you are using your SC2 Spindle motor, and check that your data cable is connected.") + \
+                " " + \
+                self.l.get_str('Press "?" for more information.') + "\n\n" + \
+                self.l.get_str('You may resume the job with YetiPilot disabled, or cancel the job altogether.').replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume'))
+                )
 
     
     def cancel_job(self):

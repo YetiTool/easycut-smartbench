@@ -1,0 +1,34 @@
+{
+  "Version": 1.0,
+  "Easycut Requirement": "1.0.0",
+  "Profiles": [
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": 3,
+      "Cutter Type": "EXAMPLE",
+      "Step Down": "3-6mm",
+      "Parameters": [
+        {
+          "Name": "digital_spindle_target_watts",
+          "Value": 880
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000
+        }
+      ]
+    },
+    {
+      "Material Type": "Plywood",
+      "Cutter Diameter": 3,
+      "Cutter Type": "EXAMPLE2",
+      "Step Down": "3-6mm",
+      "Parameters": [
+        {
+          "Name": "digital_spindle_target_watts",
+          "Value": 800
+        }
+      ]
+    }
+  ]
+}

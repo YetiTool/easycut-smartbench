@@ -14,7 +14,6 @@ try:
 except: 
     print("Can't import mocking packages, are you on a dev machine?")
 
-
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
 from datetime import datetime
@@ -37,8 +36,8 @@ def m():
 
     screen_manager = Mock()
     settings_manager = Mock()
-    job = Mock()
-    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, job)
+    jd = Mock()
+    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, jd)
     m.s.next_poll_time = 0
     m.s.write_direct = Mock()
     m.s.s = MagicMock()
@@ -376,3 +375,29 @@ def test_do_next_task_in_sequence_when_not_ready(m):
     m.setup_homing_funcs_list()
     m.do_next_task_in_sequence()
     assert m.homing_seq_events[0].get_callback() == m.do_next_task_in_sequence
+
+# FEED RATE TESTS
+
+def test_get_is_constant_feed_rate_accel(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    last_feed_rate = 8000
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    assert last == last_feed_rate
+    assert not val
+
+def test_get_is_constant_feed_rate_decel(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    last_feed_rate = 4000
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    assert last == last_feed_rate
+    assert not val
+
+def test_get_is_constant_feed_rate_true_within_range(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    last_feed_rate = 6010
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    assert last == last_feed_rate
+    assert val
