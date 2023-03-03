@@ -70,6 +70,7 @@ class PopupYetiPilotSettings(Widget):
       def switch_version(*args):
         PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version)
 
+
       # Title
       title_string = self.l.get_str('YetiPilot Settings')
 
@@ -105,20 +106,19 @@ class PopupYetiPilotSettings(Widget):
         optn_img_3 = Image(source=img_3_src)
 
         def select_diameter(spinner, val):
-          print(val)
-          return val
+          self.yp.diameter = val
 
         def select_tool(spinner, val):
-          print(val)
+          self.yp.tool = val
           return val
 
         def select_material(spinner, val):
-          print(val)
+          self.yp.material = val
           return val
 
-        diameter_choice = Spinner(values=diameter_values)
-        tool_choice = Spinner(values=tool_values)
-        material_choice = Spinner(values=material_values)
+        diameter_choice = Spinner(values=diameter_values, text=self.yp.diameter)
+        tool_choice = Spinner(values=tool_values, text=self.yp.tool)
+        material_choice = Spinner(values=material_values, text=self.yp.material)
 
         diameter_choice.bind(text=select_diameter)
         tool_choice.bind(text=select_tool)
@@ -207,7 +207,8 @@ class PopupYetiPilotSettings(Widget):
 
 
         load_slider_container = BoxLayout(size_hint_y=0.8)
-        load_slider_container.add_widget(widget_load_slider.LoadSliderWidget(screen_manager=self.sm))
+        load_slider = widget_load_slider.LoadSliderWidget(screen_manager=self.sm, yetipilot=self.yp)
+        load_slider_container.add_widget(load_slider)
 
         left_BL.add_widget(target_ml_label)
         left_BL.add_widget(load_slider_container)

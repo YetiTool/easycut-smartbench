@@ -65,9 +65,9 @@ class LoadSliderWidget(Widget):
         super(LoadSliderWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         # self.l = kwargs['localization']
-        # self.yp = kwargs['yetipilot']
+        self.yp = kwargs['yetipilot']
 
-        self.power_slider.value = 700
+        self.power_slider.value = self.yp.target_ld
         self.on_slider_value_change()
 
         self.make_buttons(self.button_container, self.power_slider, -100)
@@ -80,7 +80,8 @@ class LoadSliderWidget(Widget):
         container.add_widget(Button(text=str(val), on_press=button_adjust_func))
 
     def button_adjust_slider(self, val, instance=None):
-        self.power_slider.value+=val
+        if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
 
     def on_slider_value_change(self):
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
+        self.yp.target_ld = int(self.power_slider.value)
