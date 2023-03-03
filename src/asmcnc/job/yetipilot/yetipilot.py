@@ -245,8 +245,7 @@ class YetiPilot(object):
 
     def stop_and_show_error(self):
         self.disable()
-        self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot'
-        self.sm.get_screen('go').start_or_pause_button_press()
+        self.m.set_pause(True, reason_for_pause="yetipilot_low_feed")
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):

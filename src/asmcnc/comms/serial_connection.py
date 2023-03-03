@@ -1049,6 +1049,7 @@ class SerialConnection(object):
 
                         if self.spindle_data_failures >= 20:
                             log("Spindle data failure limit reached")
+
                         if self.digital_spindle_ld_qdA > 0:
                             if self.yp:
                                 if self.spindle_data_error_buffer == 3:

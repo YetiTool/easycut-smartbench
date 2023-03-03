@@ -397,6 +397,8 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
 
+    poll_for_is_paused = None
+
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
@@ -430,6 +432,11 @@ class GoScreen(Screen):
         self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
+        self.poll_for_is_paused = Clock.schedule_interval(self.poll_for_pause, 0.5)
+
+    def poll_for_pause(self, dt):
+        if self.m.s.is_paused:
+            self.sm.current = 'stop_or_resume_decision'
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
