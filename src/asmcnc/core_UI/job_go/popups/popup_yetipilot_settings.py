@@ -157,7 +157,7 @@ class PopupYetiPilotSettings(Widget):
         unexpected_results_string = "  (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
 
         step_downs_msg_label = Label(
-                                text_size=(advice_container_width, body_BL_height/2),
+                                text_size=(advice_container_width, body_BL_height*0.6),
                                 markup=True,
                                 font= 'Roboto',
                                 font_size='15sp',
@@ -165,12 +165,12 @@ class PopupYetiPilotSettings(Widget):
                                 valign='top', 
                                 text=step_downs_msg_string, 
                                 color=[0,0,0,1], 
-                                padding=[10,10]
+                                padding=[10,10],
+                                size_hint_y=0.6
                                 )
 
-
         unexpected_results_label = Label(
-                                text_size=(advice_container_width, body_BL_height/2),
+                                text_size=(advice_container_width, body_BL_height*0.4),
                                 markup=True,
                                 font= 'Roboto',
                                 font_size='15sp',
@@ -178,7 +178,8 @@ class PopupYetiPilotSettings(Widget):
                                 valign='top', 
                                 text=unexpected_results_string,
                                 color=[0,0,0,1], 
-                                padding=[10,0]
+                                padding=[10,0],
+                                size_hint_y=0.4
                                 )
 
         right_BL.add_widget(step_downs_msg_label)
