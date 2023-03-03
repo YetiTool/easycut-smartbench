@@ -866,9 +866,6 @@ class SerialConnection(object):
 
             self.is_spindle_sending_data = len([part for part in status_parts if part.startswith('Ld:')]) > 0
 
-            print("is_spindle_sending_data: " + str(self.is_spindle_sending_data))
-            print(status_parts)
-
             for part in status_parts:
 
                 # Get machine's position (may not be displayed, depending on mask)
