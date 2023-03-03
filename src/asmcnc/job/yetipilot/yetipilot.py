@@ -79,6 +79,9 @@ class YetiPilot(object):
     def disable(self):
         self.use_yp = False
 
+        if self.m.s.feed_override_percentage != 100:
+            self.m.feed_override_reset()
+
     def use_logger(self):
         job_name = '' if not self.sm.has_screen('go') else self.sm.get_screen('go').file_data_label.text
         self.logger = AutoPilotLogger(
@@ -318,6 +321,7 @@ class YetiPilot(object):
         self.active_profile = profile
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
+            print(parameter["Name"], parameter["Value"])
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
