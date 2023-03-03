@@ -18,13 +18,17 @@ from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
 
 from asmcnc.core_UI.job_go.widgets import widget_load_slider
+from asmcnc.skavaUI import widget_speed_override
 
 class PopupYetiPilotSettings(Widget):
 
-  def __init__(self, screen_manager, localization, version=False):
+  def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False):
 
       self.sm = screen_manager
       self.l = localization
+      self.m = machine
+      self.db = database
+      self.yp = yetipilot
 
       diameter_values = ('3mm','6mm','8mm')
       tool_values = ('2 flute upcut spiral','2 flute downcut spiral')
@@ -60,7 +64,7 @@ class PopupYetiPilotSettings(Widget):
       dark_grey = [51 / 255., 51 / 255., 51 / 255., 1.]
 
       def switch_version(*args):
-        PopupYetiPilotSettings(self.sm, self.l, version=not version)
+        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version)
 
       # Title
       title_string = self.l.get_str('YetiPilot Settings')
@@ -204,11 +208,10 @@ class PopupYetiPilotSettings(Widget):
         left_BL.add_widget(target_ml_label)
         left_BL.add_widget(load_slider_container)
 
+        right_BL.add_widget(widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db))
 
-        right_BL.add_widget(self.sm.get_screen('go').speedOverride)
 
-
-      if version: 
+      if version:
         build_pre_cut_profiles()
         subtitle_string = self.l.get_str('Auto adjust feed rate to optimise Spindle motor load')
       else: 
