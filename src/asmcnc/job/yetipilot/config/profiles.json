@@ -9,7 +9,7 @@
       "Step Down": "3-6mm",
       "Parameters": [
         {
-          "Name": "digital_spindle_target_watts",
+          "Name": "spindle_target_load_watts",
           "Value": 880
         },
         {
@@ -25,7 +25,7 @@
       "Step Down": "3-6mm",
       "Parameters": [
         {
-          "Name": "digital_spindle_target_watts",
+          "Name": "spindle_target_load_watts",
           "Value": 800
         }
       ]
