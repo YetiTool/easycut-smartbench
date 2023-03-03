@@ -1106,7 +1106,7 @@ class RouterMachine(object):
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        self._grbl_resume()        
+        self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool):
@@ -1428,9 +1428,10 @@ class RouterMachine(object):
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
 
-    def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate):
+    def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate,
+                                  tolerance_for_acceleration_detection):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
-        return abs(constant_feed_target - current_feed_rate) < 50, last_modal_feed_rate
+        return abs(constant_feed_target - current_feed_rate) < tolerance_for_acceleration_detection, last_modal_feed_rate
 
     def spindle_speed(self): 
         if self.spindle_voltage == 110:
@@ -1676,6 +1677,12 @@ class RouterMachine(object):
 
     def speed_override_down_1(self, final_percentage=''):
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+
+    def speed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
+
+    def speed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
         
 # HOMING
@@ -3524,3 +3531,11 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
+
+    def get_smartbench_name(self):
+        try:
+            with open('/home/pi/smartbench_name.txt', 'r') as f:
+                smartbench_name = f.read().replace('\n', ' ').strip()
+                return smartbench_name
+        except:
+            return 'My SmartBench'

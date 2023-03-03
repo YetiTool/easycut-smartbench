@@ -652,6 +652,7 @@ class GoScreen(Screen):
             self._pause_job()
         else:
             self._start_running_job()
+            self.jd.job_start_time = time.time()
 
     def _pause_job(self):
 
@@ -783,6 +784,7 @@ class GoScreen(Screen):
         self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
+        self.speedOverride.update_speed_percentage_override_label()
 
         if abs(self.speedOverride.speed_override_percentage - 100) > abs(self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage
