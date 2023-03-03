@@ -78,7 +78,7 @@ class YetiPilot(object):
 
     def disable(self):
         self.use_yp = False
-
+        self.sm.get_screen('go').yp_widget.switch_reflects_yp()
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
 
