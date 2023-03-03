@@ -436,7 +436,7 @@ class GoScreen(Screen):
 
     def poll_for_pause(self, dt):
         if self.m.is_machine_paused:
-            self.sm.current = 'stop_or_resume_decision'
+            self.sm.current = 'stop_or_resume_job_decision'
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
