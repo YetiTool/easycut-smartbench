@@ -1111,8 +1111,8 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool, reason_for_pause=""):
-        if self.sm.has_screen('stop_or_resume_decision'):
-            self.sm.has_screen('stop_or_resume_decision').reason_for_pause = reason_for_pause
+        if self.sm.has_screen('stop_or_resume_job_decision'):
+            self.sm.has_screen('stop_or_resume_job_decision').reason_for_pause = reason_for_pause
 
         prev_state = self.is_machine_paused
         self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
