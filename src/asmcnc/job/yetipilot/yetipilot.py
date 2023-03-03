@@ -76,8 +76,6 @@ class YetiPilot(object):
 
         if DEV_MODE:
             self.use_logger()
-            self.get_available_profiles()
-            self.use_profile(self.available_profiles[0])
 
     def disable(self):
         self.use_yp = False
@@ -352,9 +350,9 @@ class YetiPilot(object):
 
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
-
         if self.using_advanced_profile:
             self.active_profile = None
+            print("AP: Using advanced profile")
 
     def set_target_power(self, target_power):
         self.spindle_target_load_watts = target_power

@@ -83,6 +83,7 @@ class LoadSliderWidget(Widget):
         self.power_slider.value+=val
 
     def on_slider_value_change(self):
+
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
         self.yp.set_using_advanced_profile(True)
         self.yp.set_target_power(self.power_slider.value)
