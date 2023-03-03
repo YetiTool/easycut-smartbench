@@ -121,9 +121,9 @@ class PopupYetiPilotSettings(Widget):
                 get_profile()
                 return val
 
-            diameter_choice = Spinner(values=diameter_values, text=self.yp.get_active_cutter_diameter() or "")
-            tool_choice = Spinner(values=tool_values, text=self.yp.get_active_cutter_type() or "")
-            material_choice = Spinner(values=material_values, text=self.yp.get_active_material_type() or "")
+            diameter_choice = Spinner(values=diameter_values, text=self.yp.get_active_cutter_diameter())
+            tool_choice = Spinner(values=tool_values, text=self.yp.get_active_cutter_type())
+            material_choice = Spinner(values=material_values, text=self.yp.get_active_material_type())
 
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
