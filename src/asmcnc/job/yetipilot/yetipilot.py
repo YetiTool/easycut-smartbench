@@ -34,11 +34,16 @@ class YetiPilot(object):
 
     use_yp = False
 
+    standard_profiles = True
+
     diameter = "3mm"
     tool = "2 flute upcut spiral"
     material = "MDF"
 
     target_ld = 700
+
+    step_min = 3
+    step_max = 6
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
