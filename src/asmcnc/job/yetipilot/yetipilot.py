@@ -305,6 +305,8 @@ class YetiPilot(object):
                 )
             )
 
+        print("Profiles: " + str(len(self.available_profiles)))
+
         # Get available options for dropdowns
         self.available_cutter_diameters = {str(profile.cutter_diameter) for profile in self.available_profiles}
         self.available_material_types = {str(profile.material_type) for profile in self.available_profiles}
