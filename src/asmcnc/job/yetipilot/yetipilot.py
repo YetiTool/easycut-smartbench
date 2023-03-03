@@ -294,6 +294,8 @@ class YetiPilot(object):
             for parameter in parameters_json:
                 setattr(self, parameter["Name"], parameter["Value"])
 
+        self.target_spindle_speed = self.target_spindle_speed - 1300
+
     # USE THESE FUNCTIONS FOR BASIC PROFILES
     def get_available_profiles(self):
         with open('asmcnc/job/yetipilot/config/profiles.json') as f:
