@@ -29,6 +29,8 @@ class PopupYetiPilotSettings(Widget):
         self.db = database
         self.yp = yetipilot
 
+        self.yp.get_available_profiles()
+
         clock_speed_1 = None
         clock_speed_2 = None
 
