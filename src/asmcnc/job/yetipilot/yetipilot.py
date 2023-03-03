@@ -79,7 +79,7 @@ class YetiPilot(object):
     def disable(self):
         self.use_yp = False
 
-        if self.m.s.feed_override_percentage != 100:
+        if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
 
     def use_logger(self):
