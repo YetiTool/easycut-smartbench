@@ -174,8 +174,10 @@ class YetiPilot(object):
                 self.do_adjustment(adjustment)
 
             if not self.using_advanced_profile:
+                print(len(self.jd.spindle_speeds))
                 if len(self.jd.spindle_speeds) > 0:
                     if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
+                        print("Trying to adjust")
                         self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
                         self.jd.spindle_speeds.pop(0)
 
