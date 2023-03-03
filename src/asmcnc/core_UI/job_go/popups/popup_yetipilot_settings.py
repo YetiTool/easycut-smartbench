@@ -17,6 +17,8 @@ from kivy.uix.image import Image
 from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
 
+from asmcnc.core_UI.job_go.widgets import widget_load_slider
+
 class PopupYetiPilotSettings(Widget):
 
   def __init__(self, screen_manager, localization, version=False):
@@ -63,37 +65,13 @@ class PopupYetiPilotSettings(Widget):
       # Title
       title_string = self.l.get_str('YetiPilot Settings')
 
-      # Subtitle
-      subtitle_string = self.l.get_str('Auto adjust feed rate to optimise Spindle motor load')
-      subtitle_label = Label( size_hint_y=None,
-                              height=subtitle_height,
-                              text_size=(pop_width, subtitle_height),
-                              markup=True,
-                              font= 'Roboto',
-                              font_size='15sp',
-                              halign='center', 
-                              valign='middle', 
-                              text=subtitle_string, 
-                              color=[0,0,0,1], 
-                              padding=[0,0]
-                              )
-
-      # Profile radio buttons
-      radio_BL = BoxLayout( orientation='horizontal',
-                            size_hint_y=None,
-                            height=radio_BL_height
-                          )
-
-      radio_btn = Button(background_normal= '', background_color=[0,1,0,1])
-      radio_BL.add_widget(radio_btn)
-
       # Body boxlayout
       body_BL = BoxLayout(orientation='horizontal',
                             size_hint_y=None,
                             height=body_BL_height
         )
       
-      left_BL = BoxLayout(orientation='horizontal', padding=[10,10])
+      left_BL = BoxLayout(orientation='vertical', padding=[10,10])
       right_BL = BoxLayout(orientation= "vertical", size_hint_x=None, width=advice_container_width)
 
       # Close button
@@ -204,16 +182,78 @@ class PopupYetiPilotSettings(Widget):
 
       # BODY CUSTOM PROFILES
       def build_advanced_settings():
-        left_BL.add_widget(Button())
+        
+
+        target_ml_string = self.l.get_str("Target Spindle motor load")
+        target_ml_label = Label( size_hint_y=0.2,
+                                text_size=(dropdowns_width-10, self.height),
+                                markup=True,
+                                font= 'Roboto',
+                                font_size='15sp',
+                                halign='center', 
+                                valign='middle', 
+                                text=target_ml_string, 
+                                color=[0,0,0,1], 
+                                padding=[0,0]
+                                )
+
+
+        load_slider_container = BoxLayout(size_hint_y=0.8)
+        load_slider_container.add_widget(widget_load_slider.LoadSliderWidget(screen_manager=self.sm))
+
+        left_BL.add_widget(target_ml_label)
+        left_BL.add_widget(load_slider_container)
+
+
+        right_BL.add_widget(self.sm.get_screen('go').speedOverride)
 
 
       if version: 
         build_pre_cut_profiles()
+        subtitle_string = self.l.get_str('Auto adjust feed rate to optimise Spindle motor load')
       else: 
         build_advanced_settings()
+        subtitle_string = self.l.get_str('Create your own custom spindle motor load profile')
 
       body_BL.add_widget(left_BL)
       body_BL.add_widget(right_BL)
+
+
+
+      # Subtitle
+      subtitle_label = Label( size_hint_y=None,
+                              height=subtitle_height,
+                              text_size=(pop_width, subtitle_height),
+                              markup=True,
+                              font= 'Roboto',
+                              font_size='15sp',
+                              halign='center', 
+                              valign='middle', 
+                              text=subtitle_string, 
+                              color=[0,0,0,1], 
+                              padding=[0,0]
+                              )
+
+      # Profile radio buttons
+      radio_BL = BoxLayout( orientation='horizontal',
+                            size_hint_y=None,
+                            height=radio_BL_height
+                          )
+
+      radio_btn = Button(background_normal= '', background_color=[0,1,0,1])
+      radio_BL.add_widget(radio_btn)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
       vertical_BL = BoxLayout(orientation='vertical',
