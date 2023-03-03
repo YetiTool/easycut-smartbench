@@ -60,6 +60,9 @@ class YetiPilot(object):
 
     use_yp = False
 
+    feed_too_low_counter = 0
+    feed_too_low_max = 40
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -266,6 +269,10 @@ class YetiPilot(object):
                 adjustment = 1
 
             if self.m.s.feed_override_percentage + adjustment < 10:
+                if self.feed_too_low_counter < self.feed_too_low_max:
+                    self.feed_too_low_counter += 1
+                    return
+
                 self.stop_and_show_error()
                 return
 
