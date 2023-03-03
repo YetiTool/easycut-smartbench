@@ -16,6 +16,7 @@ from kivy.uix.button import  Button
 from kivy.uix.image import Image
 from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
+from kivy.clock import Clock
 
 from asmcnc.core_UI.job_go.widgets import widget_load_slider
 from asmcnc.skavaUI import widget_speed_override
@@ -29,6 +30,9 @@ class PopupYetiPilotSettings(Widget):
       self.m = machine
       self.db = database
       self.yp = yetipilot
+
+      clock_speed_1 = None
+      clock_speed_2 = None
 
       diameter_values = ('3mm','6mm','8mm')
       tool_values = ('2 flute upcut spiral','2 flute downcut spiral')
@@ -208,8 +212,16 @@ class PopupYetiPilotSettings(Widget):
         left_BL.add_widget(target_ml_label)
         left_BL.add_widget(load_slider_container)
 
-        right_BL.add_widget(widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db))
+        speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
+        speedOverride.speed_norm()
+        right_BL.add_widget(speedOverride)
 
+        clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
+        clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1)
+
+      def unschedule_clocks(*args):
+        if clock_speed_1: Clock.unschedule(clock_speed_1)
+        if clock_speed_2: Clock.unschedule(clock_speed_2)
 
       if version:
         build_pre_cut_profiles()
@@ -220,8 +232,6 @@ class PopupYetiPilotSettings(Widget):
 
       body_BL.add_widget(left_BL)
       body_BL.add_widget(right_BL)
-
-
 
       # Subtitle
       subtitle_label = Label( size_hint_y=None,
@@ -270,7 +280,6 @@ class PopupYetiPilotSettings(Widget):
       vertical_BL.add_widget(close_button_BL)
 
 
-
       # Create popup & format
 
       popup = Popup(title=title_string,
@@ -289,8 +298,10 @@ class PopupYetiPilotSettings(Widget):
       popup.separator_color = transparent
       popup.separator_height = '0dp'
 
+      close_button.bind(on_press=unschedule_clocks)
       close_button.bind(on_press=popup.dismiss)
       radio_btn.bind(on_press=switch_version)
+      radio_btn.bind(on_press=unschedule_clocks)
       radio_btn.bind(on_press=popup.dismiss)
 
       popup.open()
