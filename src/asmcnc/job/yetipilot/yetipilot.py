@@ -146,6 +146,8 @@ class YetiPilot(object):
                 or digital_spindle_ld_qdA < 0:
             return
 
+        print("Current target power:" + str(self.spindle_target_load_watts) + "W")
+
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
         if len(self.digital_spindle_load_stack) == self.spindle_load_stack_size:
@@ -278,13 +280,6 @@ class YetiPilot(object):
             elif adjustment == -1:
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), i * self.override_command_delay)
 
-    # USE THESE FUNCTIONS FOR ADVANCED PROFILE
-    def set_target_power(self, target_power):
-        self.spindle_target_load_watts = target_power
-
-    def set_target_spindle_speed(self, target_spindle_speed):
-        self.target_spindle_speed = target_spindle_speed
-
     def load_parameters(self):
         with open('asmcnc/job/yetipilot/config/algorithm_parameters.json') as f:
             parameters_json = json.load(f)["Parameters"]
@@ -346,3 +341,12 @@ class YetiPilot(object):
 
     def get_active_step_down(self):
         return self.active_profile.step_down
+
+    def set_using_advanced_profile(self, using_advanced_profile):
+        self.using_advanced_profile = using_advanced_profile
+
+        if self.using_advanced_profile:
+            self.active_profile = None
+
+    def set_target_power(self, target_power):
+        self.spindle_target_load_watts = target_power

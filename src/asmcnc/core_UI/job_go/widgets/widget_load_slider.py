@@ -65,7 +65,7 @@ class LoadSliderWidget(Widget):
         super(LoadSliderWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         # self.l = kwargs['localization']
-        # self.yp = kwargs['yetipilot']
+        self.yp = kwargs['yetipilot']
 
         self.power_slider.value = 700
         self.on_slider_value_change()
@@ -83,4 +83,6 @@ class LoadSliderWidget(Widget):
         self.power_slider.value+=val
 
     def on_slider_value_change(self):
-        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
+        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
+        self.yp.set_using_advanced_profile(True)
+        self.yp.set_target_power(self.power_slider.value)

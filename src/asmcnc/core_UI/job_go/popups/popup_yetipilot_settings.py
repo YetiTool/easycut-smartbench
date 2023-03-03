@@ -21,8 +21,8 @@ from asmcnc.skavaUI import widget_speed_override
 
 class PopupYetiPilotSettings(Widget):
 
-    def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False):
-
+    def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False, **kwargs):
+        super(PopupYetiPilotSettings, self).__init__(**kwargs)
         self.sm = screen_manager
         self.l = localization
         self.m = machine
@@ -102,16 +102,23 @@ class PopupYetiPilotSettings(Widget):
             optn_img_2 = Image(source=img_2_src)
             optn_img_3 = Image(source=img_3_src)
 
+            def get_profile():
+                profile = yetipilot.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
+                if profile is None:
+                    return
+
+                yetipilot.use_profile(profile)
+
             def select_diameter(spinner, val):
-                print(val)
+                get_profile()
                 return val
 
             def select_tool(spinner, val):
-                print(val)
+                get_profile()
                 return val
 
             def select_material(spinner, val):
-                print(val)
+                get_profile()
                 return val
 
             diameter_choice = Spinner(values=diameter_values)
@@ -204,7 +211,7 @@ class PopupYetiPilotSettings(Widget):
                                     )
 
             load_slider_container = BoxLayout(size_hint_y=0.8)
-            load_slider_container.add_widget(widget_load_slider.LoadSliderWidget(screen_manager=self.sm))
+            load_slider_container.add_widget(widget_load_slider.LoadSliderWidget(screen_manager=self.sm, yetipilot=yetipilot))
 
             left_BL.add_widget(target_ml_label)
             left_BL.add_widget(load_slider_container)
