@@ -248,11 +248,16 @@ class YetiPilot(object):
 
     def stop_and_show_error(self):
         self.disable()
+        print("YETIPILOT: ERROR: Feed override is too low.")
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
             if i == self.override_commands_per_adjustment:
                 break
+
+            if not self.use_yp or not self.m.s.is_job_streaming or \
+                    self.m.is_machine_paused or "Alarm" in self.m.state():
+                continue
 
             if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
                 adjustment = 1
@@ -260,10 +265,6 @@ class YetiPilot(object):
             if self.m.s.feed_override_percentage + adjustment < 10:
                 self.stop_and_show_error()
                 return
-
-            if not self.use_yp or not self.m.s.is_job_streaming or \
-                    self.m.is_machine_paused or "Alarm" in self.m.state():
-                continue
 
             if adjustment == 10:
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
@@ -304,8 +305,6 @@ class YetiPilot(object):
                 )
             )
 
-        print("Profiles: " + str(len(self.available_profiles)))
-
         # Get available options for dropdowns
         self.available_cutter_diameters = {str(profile.cutter_diameter) for profile in self.available_profiles}
         self.available_material_types = {str(profile.material_type) for profile in self.available_profiles}
@@ -322,7 +321,7 @@ class YetiPilot(object):
         self.active_profile = profile
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
-            print(parameter["Name"], parameter["Value"])
+            print(getattr(self, parameter["Name"]))
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
