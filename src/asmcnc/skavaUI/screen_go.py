@@ -426,7 +426,7 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         # Optional containers
-        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp)
+        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, localization=self.l, machine=self.m, database=self.database, yetipilot=self.yp)
         self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
@@ -781,6 +781,7 @@ class GoScreen(Screen):
 
         # Spindle speed and feed rate
         self.speedOverride.update_spindle_speed_label()
+        self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
         self.speedOverride.update_speed_percentage_override_label()

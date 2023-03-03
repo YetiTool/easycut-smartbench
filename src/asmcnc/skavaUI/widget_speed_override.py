@@ -117,7 +117,7 @@ class SpeedOverride(Widget):
 
     def update_speed_percentage_override_label(self):
         self.speed_override_percentage = self.m.s.speed_override_percentage
-        self.speed_rate_label.text = str(self.speed_override_percentage) + '%'
+        self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + '%'
 
     def speed_up(self):
         self.push =+ 1
@@ -133,8 +133,8 @@ class SpeedOverride(Widget):
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def speed_norm(self):
-        self.speed_override_percentage = 100
         self.m.speed_override_reset()
+        self.update_speed_percentage_override_label()
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
 
     def speed_down(self):
@@ -153,13 +153,19 @@ class SpeedOverride(Widget):
     def disable_buttons(self):
         self.down_5.disabled = True
         self.up_5.disabled = True
-        self.sm.get_screen('go').feedOverride.down_5.disabled = True
-        self.sm.get_screen('go').feedOverride.up_5.disabled = True
+        try: 
+            self.sm.get_screen('go').feedOverride.down_5.disabled = True
+            self.sm.get_screen('go').feedOverride.up_5.disabled = True
+        except: 
+            pass
         return True
 
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
-        self.sm.get_screen('go').feedOverride.down_5.disabled = False
-        self.sm.get_screen('go').feedOverride.up_5.disabled = False      
+        try: 
+            self.sm.get_screen('go').feedOverride.down_5.disabled = False
+            self.sm.get_screen('go').feedOverride.up_5.disabled = False      
+        except:
+            pass
         self.push = 0
