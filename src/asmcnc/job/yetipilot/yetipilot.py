@@ -256,9 +256,9 @@ class YetiPilot(object):
             if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
                 adjustment = 1
 
-            # if self.m.s.feed_override_percentage + adjustment < 10:
-            #     self.stop_and_show_error()
-            #     return
+            if self.m.s.feed_override_percentage + adjustment < 10:
+                self.stop_and_show_error()
+                return
 
             if not self.use_yp or not self.m.s.is_job_streaming or \
                     self.m.is_machine_paused or "Alarm" in self.m.state():
