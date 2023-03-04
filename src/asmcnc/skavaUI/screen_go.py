@@ -605,7 +605,7 @@ class GoScreen(Screen):
 
     def reset_go_screen_prior_to_job_start(self):
 
-        print "RESET GO SCREEN FIRES"
+        print("RESET GO SCREEN FIRES")
 
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
@@ -649,7 +649,11 @@ class GoScreen(Screen):
 
         log('start/pause button pressed')
         if self.is_job_started_already:
-            self._pause_job()
+            if not self.m.is_machine_paused:
+                self._pause_job()
+            else:
+                self.m.resume_after_a_stream_pause()
+                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         else:
             self._start_running_job()
 
