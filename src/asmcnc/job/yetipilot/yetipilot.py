@@ -280,7 +280,7 @@ class YetiPilot(object):
 
     def stop_and_show_error(self):
         self.disable()
-        self.m.set_pause(True, 'yetipilot_low_feed')
+        self.m.stop_for_a_stream_pause('yetipilot_low_feed')
 
     def check_if_feed_too_low(self):
         if self.m.s.feed_override_percentage == 10:
