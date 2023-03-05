@@ -1632,6 +1632,12 @@ class SerialConnection(object):
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
 
+    def is_line_spindle_speed(self, line):
+        return 'S' in line and 'M3' in line
+
+    def alter_line(self, line, speed):
+        return line.replace(line[line.index('S'):].split()[0], "S" + str(speed))
+
     def _send_next_sequential_stream(self):
 
         if self._ready_to_send_first_sequential_stream:
@@ -1640,7 +1646,13 @@ class SerialConnection(object):
 
         if self._sequential_stream_buffer:
             try:
-                self.write_direct(self._sequential_stream_buffer[0])
+                line_to_stream = self._sequential_stream_buffer[0]
+
+                if self.is_line_spindle_speed(line_to_stream):
+                    line_to_stream = self.alter_line(line_to_stream, self.yp.target_spindle_speed)
+
+                self.write_direct(line_to_stream)
+
                 if self._after_grbl_settings_insert_dwell():
                     self._sequential_stream_buffer[0] = self._dwell_command
                 else:
