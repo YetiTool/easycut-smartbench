@@ -231,7 +231,7 @@ class YetiPilot(object):
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
         try:
-            current_rpm = int(current_rpm)
+            current_rpm = float(current_rpm)
         except:
             return
 
