@@ -1648,7 +1648,9 @@ class SerialConnection(object):
             try:
                 line_to_stream = self._sequential_stream_buffer[0]
 
-                if self.is_line_spindle_speed(line_to_stream):
+                print('a')
+
+                if self.is_line_spindle_speed(line_to_stream) and self.yp.use_yp:
                     line_to_stream = self.alter_line(line_to_stream, self.yp.target_spindle_speed)
 
                 self.write_direct(line_to_stream)
