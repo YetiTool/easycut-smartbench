@@ -67,7 +67,8 @@ class YetiPilot(object):
 
     waiting_for_feed_too_low_decision = False
 
-    last_spindle_speed = 0
+    spindle_110v_correction_factor = 1000
+    spindle_230v_correction_factor = 1300
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -179,6 +180,12 @@ class YetiPilot(object):
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
+            if not self.using_advanced_profile:
+                if len(self.jd.spindle_speeds) > 0:
+                    if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
+                        self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
+                        self.jd.spindle_speeds.pop(0)
+
             # END OF LOGIC
             if not self.logger:
                 return
@@ -234,18 +241,18 @@ class YetiPilot(object):
 
     def do_spindle_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
-            if not self.use_yp or not self.m.s.is_job_streaming or \
-                    self.m.is_machine_paused or "Alarm" in self.m.state():
-                continue
-
             if adjustment == 10:
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_10(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10),
+                                    i * self.override_command_delay)
             elif adjustment == 1:
-                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1),
+                                    i * self.override_command_delay)
             elif adjustment == -10:
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_10(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10),
+                                    i * self.override_command_delay)
             elif adjustment == -1:
-                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
+                                    i * self.override_command_delay)
 
     def stop_and_show_error(self):
         self.disable()
@@ -256,14 +263,15 @@ class YetiPilot(object):
             self.stop_and_show_error()
         self.waiting_for_feed_too_low_decision = False
 
+    def feed_override_wrapper(self, feed_override_func):
+        if self.use_yp and self.m.s.is_job_streaming and \
+                not self.m.is_machine_paused and not "Alarm" in self.m.state():
+            feed_override_func()
+
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
             if i == self.override_commands_per_adjustment:
                 break
-
-            if not self.use_yp or not self.m.s.is_job_streaming or \
-                    self.m.is_machine_paused or "Alarm" in self.m.state():
-                continue
 
             if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
                 adjustment = 1
@@ -274,13 +282,17 @@ class YetiPilot(object):
                     self.waiting_for_feed_too_low_decision = True
 
             if adjustment == 10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_10(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
+                                    i * self.override_command_delay)
             elif adjustment == 1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1),
+                                    i * self.override_command_delay)
             elif adjustment == -10:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_10(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10),
+                                    i * self.override_command_delay)
             elif adjustment == -1:
-                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), i * self.override_command_delay)
+                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1),
+                                    i * self.override_command_delay)
 
     def load_parameters(self):
         with open('asmcnc/job/yetipilot/config/algorithm_parameters.json') as f:
@@ -323,6 +335,8 @@ class YetiPilot(object):
         self.using_basic_profile = True
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
+
+        self.target_spindle_speed = self.target_spindle_speed - self.spindle_230v_correction_factor
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
