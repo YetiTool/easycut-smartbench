@@ -1,11 +1,13 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
-from kivy.uix.button import Button
+from kivy.uix.button import  Button
 from functools import partial
+from kivy.graphics import Color
+
 
 Builder.load_string("""
 
-<PowerUpDownButtons@Button>:
+<RoundedButton@Button>:
     background_color: 0,0,0,0
     canvas.before:
         Color:
@@ -81,15 +83,13 @@ Builder.load_string("""
                 
 """)
 
-
-class PowerUpDownButtons(Button):
+class RoundedButton(Button):
     pass
-
 
 dark_grey = [51 / 255., 51 / 255., 51 / 255., 1.]
 
-
 class LoadSliderWidget(Widget):
+
 
     def __init__(self, **kwargs):
         super(LoadSliderWidget, self).__init__(**kwargs)
@@ -113,12 +113,11 @@ class LoadSliderWidget(Widget):
     def make_buttons(self, container, slider, val):
         btn_str = str(val) if val < 0 else "+" + str(val)
         button_adjust_func = partial(self.button_adjust_slider, val)
-        container.add_widget(PowerUpDownButtons(text=btn_str, on_press=button_adjust_func, color=dark_grey))
+        container.add_widget(RoundedButton(text=btn_str, on_press=button_adjust_func, color=dark_grey))
 
     def button_adjust_slider(self, val, instance=None):
-        if 400 <= self.power_slider.value + val <= 1000:
-            self.power_slider.value += val
+        if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
 
     def on_slider_value_change(self):
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
-        self.yp.set_target_power(self.power_slider.value)
+        self.yp.target_ld = int(self.power_slider.value)
