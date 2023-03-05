@@ -1,3 +1,8 @@
+"""
+@author Archie
+YetiPilot Functionality
+"""
+
 import json
 from kivy.clock import Clock
 from math import sqrt, floor
