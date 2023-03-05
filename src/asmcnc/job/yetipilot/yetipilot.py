@@ -68,7 +68,7 @@ class YetiPilot(object):
     waiting_for_feed_too_low_decision = False
 
     waiting_for_spindle_accel = False
-    last_spindle_speed = None
+    last_spindle_speed = 0
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
