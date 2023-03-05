@@ -60,12 +60,26 @@ Builder.load_string("""
             size: self.size
             radius: [dp(5), dp(5)]
 
+<CloseButton@Button>:
+    background_color: 0,0,0,0
+    background_normal: ''
+    canvas.before:
+        Color:
+            rgba: hex('#2196f3ff')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10), dp(10)]
+
 
 
 
 """)
 
 class Choices(Spinner):
+    pass
+
+class CloseButton(Button):
     pass
 
 class PopupYetiPilotSettings(Widget):
@@ -135,9 +149,9 @@ class PopupYetiPilotSettings(Widget):
 
         # Close button
         close_string = self.l.get_bold('Close')
-        close_button = Button(text=close_string, markup = True, color=subtle_white, font_size='15sp')
-        close_button.background_normal = ''
-        close_button.background_color = blue
+        close_button = CloseButton(text=close_string, markup = True, color=subtle_white, font_size='15sp')
+        # close_button.background_normal = ''
+        # close_button.background_color = blue
         close_button_BL = BoxLayout(orientation='horizontal',
                                   padding = [160,0]
                                   # padding=[190,20,190,20]
