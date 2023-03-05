@@ -102,7 +102,8 @@ class LoadSliderWidget(Widget):
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
 
-        self.power_slider.value = self.yp.target_ld
+        # SET TO 700 W FOR NOW
+        self.power_slider.value = 700
         self.on_slider_value_change()
 
         self.make_buttons(self.button_container, self.power_slider, -100)
