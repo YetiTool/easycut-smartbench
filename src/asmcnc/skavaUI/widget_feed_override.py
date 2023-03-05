@@ -122,9 +122,9 @@ class FeedOverride(Widget):
         self.db=kwargs['database']
 
     def set_widget_visibility(self, visible):
-        self.up_5.disabled = visible
-        self.down_5.disabled = visible
-        self.norm_button.disabled = visible
+        self.up_5.disabled = not visible
+        self.down_5.disabled = not visible
+        self.norm_button.disabled = not visible
 
         if visible:
             self.up_5.opacity = 1
