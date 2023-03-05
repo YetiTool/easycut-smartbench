@@ -13,6 +13,7 @@ Builder.load_string("""
     yp_toggle_img:yp_toggle_img
     profile_label:profile_label
     profile_selection:profile_selection
+    bl: bl
 
     BoxLayout:
         orientation: 'horizontal'
@@ -28,13 +29,15 @@ Builder.load_string("""
                 id: yetipilot_two_tone
                 size_hint_y: 0.6
                 markup: True
-                halign: 'left'
+                halign: 'center'
                 text_size: self.size
                 font_size: '20sp'
                 valign: "bottom"
 
             BoxLayout: 
+                id: bl
                 size_hint_y: 0.4
+                padding: [14.09649122,0]
 
                 ToggleButton:
                     id: switch
@@ -43,6 +46,7 @@ Builder.load_string("""
                     background_normal: ''
                     background_down: ''
                     on_press: root.toggle_yeti_pilot(self)
+
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -86,7 +90,6 @@ Builder.load_string("""
             Label:
                 id: profile_selection
                 size_hint_y: 0.4
-                text: "MDF; 3mm 2 flue upcut spiral"
                 color: hex('#333333ff')
                 markup: True
                 halign: 'left'
@@ -151,6 +154,7 @@ class YetiPilotWidget(Widget):
 
     def open_yp_settings(self):
         PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles, closing_func=self.update_profile_selection)
+        print(self.bl.size)
 
     def update_profile_selection(self, *args):
         if self.yp.standard_profiles:
