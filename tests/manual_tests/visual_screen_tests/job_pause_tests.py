@@ -145,8 +145,9 @@ class ScreenTest(App):
 
         def stream_and_pause(dt=0):
             m.s.is_job_streaming = True
-            # m.set_pause(True, 'yetipilot_low_feed')
-            m.set_pause(True, 'yetipilot_spindle_data_loss')
+            m.set_pause(True, 'yetipilot_low_feed')
+            print("STOP FOR STREAM PAUSE")
+            # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
 
         Clock.schedule_once(stream_and_pause, 5)
 

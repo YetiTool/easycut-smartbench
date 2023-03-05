@@ -1102,8 +1102,8 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
-    def stop_for_a_stream_pause(self):
-        self.set_pause(True)
+    def stop_for_a_stream_pause(self, reason_for_pause=None):
+        self.set_pause(True, reason_for_pause=reason_for_pause)
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):

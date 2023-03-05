@@ -682,7 +682,7 @@ class GoScreen(Screen):
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
 
-        if self.m.s.is_job_streaming and self.m.is_machine_paused and self.m.reason_for_machine_pause:
+        if self.m.s.is_job_streaming and self.m.is_machine_paused and self.m.reason_for_machine_pause and self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png":
             if self.listen_for_pauses != None: self.listen_for_pauses.cancel()
             log("RAISE PAUSE SCREEN")
             self.sm.get_screen('spindle_shutdown').reason_for_pause = self.m.reason_for_machine_pause
