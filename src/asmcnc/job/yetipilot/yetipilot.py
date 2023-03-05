@@ -197,7 +197,8 @@ class YetiPilot(object):
                 now_time = time.time()
                 time_stamp = format_time(now_time - self.jd.job_start_time)
 
-            current_gcode = self.jd.job_gcode_running[current_line_number] if len(self.jd.job_gcode_running) - 1 >= current_line_number else ''
+            current_gcode = self.jd.job_gcode_running[current_line_number] if len(
+                self.jd.job_gcode_running) - 1 >= current_line_number else ''
 
             self.logger.add_log(
                 current_load=average_digital_spindle_load,
@@ -266,7 +267,7 @@ class YetiPilot(object):
 
     def feed_override_wrapper(self, feed_override_func):
         if self.use_yp and self.m.s.is_job_streaming and \
-                not self.m.is_machine_paused and not "Alarm" in self.m.state():
+                not self.m.is_machine_paused and "Alarm" not in self.m.state():
             feed_override_func()
 
     def do_adjustment(self, adjustments):
