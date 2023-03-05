@@ -1115,7 +1115,7 @@ class RouterMachine(object):
         prev_state = self.is_machine_paused
         self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
         if not pauseBool: reason_for_pause=None # ideally, don't include a reason when setting to False, but this is here in case
-        else: self.m.reason_for_machine_pause = reason_for_pause
+        else: self.reason_for_machine_pause = reason_for_pause
 
         def record_pause_time(prev_state, pauseBool):
             # record pause time
