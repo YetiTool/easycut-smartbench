@@ -238,7 +238,7 @@ class YetiPilot(object):
         rpm_difference = self.target_spindle_speed - current_rpm
         percentage_more = (rpm_difference / current_rpm) * 100
 
-        print(percentage_more)
+        print(self.target_spindle_speed, current_rpm, rpm_difference, percentage_more)
 
         adjustments = get_adjustment(percentage_more)
         self.do_spindle_adjustment(adjustments)
