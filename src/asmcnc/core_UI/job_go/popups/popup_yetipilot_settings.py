@@ -89,7 +89,7 @@ class PopupYetiPilotSettings(Widget):
 
     """
 
-    def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False):
+    def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False, closing_func=None):
 
         self.sm = screen_manager
         self.l = localization
@@ -328,7 +328,7 @@ class PopupYetiPilotSettings(Widget):
         def switch_version(*args):
             self.yp.standard_profiles = not version
             unschedule_clocks()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not version)
+            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not version, closing_func=closing_func)
             popup.dismiss()
 
         radio_button_width = 40
@@ -392,6 +392,7 @@ class PopupYetiPilotSettings(Widget):
         popup.separator_color = transparent
         popup.separator_height = '0dp'
 
+        if closing_func: close_button.bind(on_press=closing_func)
         close_button.bind(on_press=unschedule_clocks)
         close_button.bind(on_press=popup.dismiss)
         # radio_btn.bind(on_press=switch_version)
