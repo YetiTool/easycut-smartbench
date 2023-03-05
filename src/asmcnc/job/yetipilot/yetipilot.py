@@ -67,7 +67,6 @@ class YetiPilot(object):
 
     waiting_for_feed_too_low_decision = False
 
-    waiting_for_spindle_accel = False
     last_spindle_speed = 0
 
     def __init__(self, **kwargs):
@@ -152,10 +151,6 @@ class YetiPilot(object):
         if not self.use_yp or self.digital_spindle_mains_voltage is None or not self.m.s.is_spindle_sending_data \
                 or (self.active_profile is None and not self.using_advanced_profile) or digital_spindle_ld_qdA < 0:
             return
-
-        if not self.using_advanced_profile and not self.waiting_for_spindle_accel:
-            if abs(self.target_spindle_speed - self.m.s.spindle_speed) > 100:
-                self.adjust_spindle_speed(self.m.s.spindle_speed)
 
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
@@ -251,16 +246,6 @@ class YetiPilot(object):
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_10(), i * self.override_command_delay)
             elif adjustment == -1:
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), i * self.override_command_delay)
-
-        self.waiting_for_spindle_accel = True
-        Clock.schedule_once(lambda dt: self.wait_for_spindle_accel(), self.override_command_delay * len(adjustments) + 1)
-
-    def wait_for_spindle_accel(self):
-        print(abs(self.m.s.spindle_speed - self.last_spindle_speed) < 100)
-        if abs(self.m.s.spindle_speed - self.last_spindle_speed) < 100:
-            self.waiting_for_spindle_accel = False
-            return
-        Clock.schedule_once(lambda dt: self.wait_for_spindle_accel(), 0.1)
 
     def stop_and_show_error(self):
         self.disable()
