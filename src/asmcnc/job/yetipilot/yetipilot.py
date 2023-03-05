@@ -180,7 +180,7 @@ class YetiPilot(object):
             if not self.using_advanced_profile:
                 if len(self.jd.spindle_speeds) > 0:
                     if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
-                        self.adjust_spindle_speed(self.jd.spindle_speeds[0][1])
+                        self.adjust_spindle_speed(self.m.s.spindle_speed)
                         self.jd.spindle_speeds.pop(0)
 
             # END OF LOGIC
@@ -329,8 +329,6 @@ class YetiPilot(object):
         self.using_basic_profile = True
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
-
-        self.target_spindle_speed = self.target_spindle_speed - 1300
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
