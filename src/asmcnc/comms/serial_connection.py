@@ -532,11 +532,21 @@ class SerialConnection(object):
         self.is_job_streaming = True  # allow grbl_scanner() to start stuffing buffer
         log('Job running')
 
+    def is_line_spindle_speed(self, line):
+        return 'S' in line and 'M3' in line
+
+    def set_line_speed(self, line, speed):
+        return line.replace(line[line.index('S'):].split()[0], "S" + str(speed))
+
     def stuff_buffer(self):  # attempt to fill GRBLS's serial buffer, if there's room
 
         while self.l_count < len(self.jd.job_gcode_running):
 
             line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
+
+            if self.is_line_spindle_speed(line_to_go) and self.yp.use_yp and self.yp.using_basic_profile:
+                line_to_go = self.set_line_speed(line_to_go, self.yp.target_spindle_speed)
+
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
             # if there's room in the serial buffer, send the line
@@ -1632,12 +1642,6 @@ class SerialConnection(object):
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._ready_to_send_first_sequential_stream = True
 
-    def is_line_spindle_speed(self, line):
-        return 'S' in line and 'M3' in line
-
-    def alter_line(self, line, speed):
-        return line.replace(line[line.index('S'):].split()[0], "S" + str(speed))
-
     def _send_next_sequential_stream(self):
 
         if self._ready_to_send_first_sequential_stream:
@@ -1646,15 +1650,7 @@ class SerialConnection(object):
 
         if self._sequential_stream_buffer:
             try:
-                line_to_stream = self._sequential_stream_buffer[0]
-
-                print('a')
-
-                if self.is_line_spindle_speed(line_to_stream) and self.yp.use_yp:
-                    line_to_stream = self.alter_line(line_to_stream, self.yp.target_spindle_speed)
-
-                self.write_direct(line_to_stream)
-
+                self.write_direct(self._sequential_stream_buffer[0])
                 if self._after_grbl_settings_insert_dwell():
                     self._sequential_stream_buffer[0] = self._dwell_command
                 else:
