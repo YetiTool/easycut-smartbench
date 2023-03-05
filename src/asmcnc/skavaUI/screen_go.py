@@ -267,7 +267,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 id: job_progress_container
-                                size_hint_y: 3
+                                size_hint_y: 2.5
                                 orientation: 'vertical'
                                 padding: 20
                                 spacing: 00
@@ -499,6 +499,7 @@ class GoScreen(Screen):
 
         if use_sc2:
             # Show yetipilot container
+            self.job_progress_container.padding = [20,10]
             self.yetipilot_container.size_hint_y = 1
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
@@ -506,6 +507,7 @@ class GoScreen(Screen):
 
         else:
             # Hide yetipilot container
+            self.job_progress_container.padding = 20
             self.yetipilot_container.size_hint_y = 0
             self.yetipilot_container.opacity = 0
             self.yetipilot_container.parent.spacing = 0
