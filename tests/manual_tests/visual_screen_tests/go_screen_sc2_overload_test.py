@@ -28,6 +28,7 @@ from settings import settings_manager
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 try: 
     from mock import Mock
@@ -102,6 +103,10 @@ class ScreenTest(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m.is_using_sc2 = Mock(return_value=True)
+
+        # Initialise YP
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
@@ -115,6 +120,7 @@ class ScreenTest(App):
         m.s.s.fd = 1 # this is needed to force it to run
         m.s.fw_version = self.fw_version
         m.s.setting_50 = 0.03
+        m.s.yp = yp
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
@@ -122,7 +128,7 @@ class ScreenTest(App):
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
         sm.add_widget(job_feedback_screen)
 
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
         sm.current = 'go'
         
