@@ -221,8 +221,6 @@ class StopOrResumeDecisionScreen(Screen):
         if self.reason_for_pause == 'yetipilot_low_feed':
             self.sm.get_screen('go').yp_widget.disable_yeti_pilot()
 
-        self.sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-
         # Job resumed, send event
         self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
 
