@@ -25,7 +25,7 @@ DEV_MODE = True
 
 
 class YetiPilot(object):
-    enabled = False
+    use_yp = False
     logger = None
 
     digital_spindle_mains_voltage = None
@@ -56,10 +56,9 @@ class YetiPilot(object):
     available_material_types = []
 
     active_profile = None
+
     using_advanced_profile = False
     using_basic_profile = False
-
-    use_yp = False
 
     waiting_for_feed_too_low_decision = False
 
@@ -256,6 +255,7 @@ class YetiPilot(object):
     def check_if_feed_too_low(self):
         if self.m.s.feed_override_percentage == 10:
             self.stop_and_show_error()
+        self.waiting_for_feed_too_low_decision = False
 
     def do_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
