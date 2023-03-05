@@ -482,7 +482,7 @@ class GoScreen(Screen):
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
-        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
+        self.listen_for_pauses = Clock.schedule_interval(self.raise_pause_screens_if_paused, self.POLL_FOR_PAUSE_SCREENS)
         self.yp_widget.switch_reflects_yp()
 
         if self.is_job_started_already:
@@ -676,7 +676,7 @@ class GoScreen(Screen):
 
     POLL_FOR_PAUSE_SCREENS = 0.5
 
-    def raise_pause_screens_if_paused(self):
+    def raise_pause_screens_if_paused(self, dt):
         # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
