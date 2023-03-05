@@ -187,7 +187,7 @@ class PopupYetiPilotSettings(Widget):
 
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
-            material_choice = Choices(values=material_values, text=self.yp.get_active_material_types())
+            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
