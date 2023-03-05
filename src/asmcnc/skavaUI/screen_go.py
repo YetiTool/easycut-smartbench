@@ -675,7 +675,7 @@ class GoScreen(Screen):
 
     POLL_FOR_PAUSE_SCREENS = 0.5
 
-    def raise_pause_screens_if_paused(self):
+    def raise_pause_screens_if_paused(self, dt=0):
         # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
