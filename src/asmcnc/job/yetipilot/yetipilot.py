@@ -256,6 +256,7 @@ class YetiPilot(object):
         Clock.schedule_once(lambda dt: self.wait_for_spindle_accel(), self.override_command_delay * len(adjustments) + 1)
 
     def wait_for_spindle_accel(self):
+        print(abs(self.m.s.spindle_speed - self.last_spindle_speed) < 100)
         if abs(self.m.s.spindle_speed - self.last_spindle_speed) < 100:
             self.waiting_for_spindle_accel = False
             return
