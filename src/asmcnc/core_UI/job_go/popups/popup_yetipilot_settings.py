@@ -213,11 +213,11 @@ class PopupYetiPilotSettings(Widget):
                                     text_size=(advice_container_width, body_BL_height*0.6),
                                     markup=True,
                                     font= 'Roboto',
-                                    font_size='15sp',
+                                    font_size='14sp',
                                     halign='left', 
                                     valign='top',
                                     color=dark_grey,
-                                    padding=[10,5],
+                                    padding=[10,10],
                                     size_hint_y=0.6
                                     )
             def update_step_down(step_down_min, step_down_max):
@@ -227,12 +227,12 @@ class PopupYetiPilotSettings(Widget):
                                       + "[/b]"
             update_step_down(self.yp.step_min, self.yp.step_max)
     
-            unexpected_results_string = "  (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
+            unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
             unexpected_results_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.4),
                                     markup=True,
                                     font= 'Roboto',
-                                    font_size='15sp',
+                                    font_size='14sp',
                                     halign='left', 
                                     valign='top', 
                                     text=unexpected_results_string,
