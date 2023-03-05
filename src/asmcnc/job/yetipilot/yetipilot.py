@@ -67,8 +67,9 @@ class YetiPilot(object):
 
     waiting_for_feed_too_low_decision = False
 
-    spindle_110v_correction_factor = 1000
     spindle_230v_correction_factor = 1300
+    # to be found
+    spindle_110v_correction_factor = 1000
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -336,7 +337,9 @@ class YetiPilot(object):
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
-        self.target_spindle_speed = self.target_spindle_speed - self.spindle_230v_correction_factor
+        is_230v = self.m.s.digital_spindle_mains_voltage > 225
+        self.target_spindle_speed = self.target_spindle_speed - self.spindle_230v_correction_factor if is_230v else \
+            self.spindle_110v_correction_factor
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
