@@ -158,5 +158,5 @@ class YetiPilotWidget(Widget):
     def update_profile_selection(self, *args):
         if self.yp.using_basic_profile:
             self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + " " + self.yp.get_active_cutter_type()
-        else:
+        elif self.yp.using_advanced_profile:
             self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(self.yp.get_target_power()) + " W"
