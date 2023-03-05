@@ -37,7 +37,7 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#f9f9f9ff')
+            rgba: hex('#ccccccff')
         RoundedRectangle:
             pos: self.pos
             size: self.size
