@@ -321,7 +321,7 @@ class PopupYetiPilotSettings(Widget):
         def switch_version(*args):
             self.yp.standard_profiles = not version
             unschedule_clocks()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
+            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not version, closing_func=closing_func)
             popup.dismiss()
 
         radio_button_width = 40

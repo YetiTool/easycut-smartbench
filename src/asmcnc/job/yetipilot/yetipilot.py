@@ -70,18 +70,7 @@ class YetiPilot(object):
 
     spindle_230v_correction_factor = 1300
     # to be found
-    spindle_110v_correction_factor = 1000
-
-    standard_profiles = True
-
-    diameter = "3mm"
-    tool = "2 flute upcut spiral"
-    material = "MDF"
-
-    target_ld = 700
-
-    step_min = 3
-    step_max = 6
+    spindle_110v_correction_factor = 1300
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
