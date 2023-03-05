@@ -230,7 +230,12 @@ class YetiPilot(object):
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_speed):
-        total_override_required = (self.target_spindle_speed / current_speed) * 100
+        try:
+            int(current_speed)
+        except:
+            return
+
+        total_override_required = (self.target_spindle_speed / int(current_speed)) * 100
         current_override = self.m.s.speed_override_percentage
         difference = total_override_required - current_override
 
