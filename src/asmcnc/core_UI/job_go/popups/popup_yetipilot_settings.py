@@ -217,13 +217,13 @@ class PopupYetiPilotSettings(Widget):
                                     halign='left', 
                                     valign='top',
                                     color=dark_grey,
-                                    padding=[10,10],
+                                    padding=[10,5],
                                     size_hint_y=0.6
                                     )
             def update_step_down(step_down_min, step_down_max):
               step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                                      "\n[b]" + \
-                                      str(step_down_min) + "-" + str(step_down_max) + " mm" \
+                                      "\n" + \
+                                      "[size=16sp][b]" + str(step_down_min) + "-" + str(step_down_max) + " mm" + "[/size]"\
                                       + "[/b]"
             update_step_down(self.yp.step_min, self.yp.step_max)
     
@@ -289,7 +289,7 @@ class PopupYetiPilotSettings(Widget):
             subtitle_string = self.l.get_str('Auto adjust feed rate to optimise Spindle motor load')
         else: 
             build_advanced_settings()
-            subtitle_string = self.l.get_str('Create your own custom spindle motor load profile')
+            subtitle_string = self.l.get_str('Create your own custom Spindle motor load profile')
 
         body_BL.add_widget(left_BL)
         body_BL.add_widget(right_BL)
@@ -305,7 +305,7 @@ class PopupYetiPilotSettings(Widget):
                               valign='middle', 
                               text=subtitle_string,
                               color=dark_grey, 
-                              padding=[0,0]
+                              padding=[10,0]
                               )
 
         # Profile radio buttons
@@ -331,8 +331,8 @@ class PopupYetiPilotSettings(Widget):
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
-        make_option("Pre-set profiles", version)
-        make_option("Advanced profile", not version)
+        make_option(self.l.get_str("Pre-set profiles"), version)
+        make_option(self.l.get_str("Advanced profile"), not version)
 
 
         vertical_BL = BoxLayout(orientation='vertical',
