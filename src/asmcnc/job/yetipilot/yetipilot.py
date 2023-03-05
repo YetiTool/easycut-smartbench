@@ -66,6 +66,7 @@ class YetiPilot(object):
     using_basic_profile = False
 
     waiting_for_feed_too_low_decision = False
+    waiting_for_spindle_to_accel = False
 
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
@@ -177,9 +178,11 @@ class YetiPilot(object):
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if not self.using_advanced_profile:
+            if not self.using_advanced_profile and not self.waiting_for_spindle_to_accel:
                 if abs(self.target_spindle_speed - self.m.s.spindle_speed) > 100:
                     self.adjust_spindle_speed(self.m.s.spindle_speed)
+                    self.waiting_for_spindle_to_accel = True
+                    Clock.schedule_once(lambda dt: self.reset_waiting_for_spindle_to_accel(), 2)
 
             # END OF LOGIC
             if not self.logger:
@@ -225,6 +228,9 @@ class YetiPilot(object):
                 spindle_rpm=int(self.m.s.spindle_speed),
                 gcode=current_gcode
             )
+
+    def reset_waiting_for_spindle_to_accel(self):
+        self.waiting_for_spindle_to_accel = False
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
