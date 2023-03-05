@@ -237,7 +237,7 @@ class PopupYetiPilotSettings(Widget):
             def update_step_down(step_down_range):
                 step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
                                             "\n[b]" + \
-                                            str(step_down_range) + " mm" \
+                                            str(step_down_range) \
                                             + "[/b]"
 
             update_step_down(self.yp.get_active_step_down())
