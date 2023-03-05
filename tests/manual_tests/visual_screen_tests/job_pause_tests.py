@@ -28,7 +28,9 @@ from settings import settings_manager
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.skavaUI import screen_spindle_shutdown
+from asmcnc.skavaUI import screen_stop_or_resume_decision
 
 try: 
     from mock import Mock
@@ -103,6 +105,9 @@ class ScreenTest(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
+        # Initialise YP
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
@@ -115,6 +120,8 @@ class ScreenTest(App):
         m.s.s.fd = 1 # this is needed to force it to run
         m.s.fw_version = self.fw_version
         m.s.setting_50 = 0.03
+        m.s.yp = yp
+        m.s.setting_27 = 1
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
@@ -125,13 +132,23 @@ class ScreenTest(App):
         spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(spindle_shutdown_screen)
 
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(stop_or_resume_decision_screen)
+
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
         sm.current = 'go'
 
+        sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
         Clock.schedule_once(m.s.start_services, 0.1)
 
-        Clock.schedule_once(lambda dt: m.set_pause(True, 'yetipilot_low_feed'), 1)
+        def stream_and_pause(dt=0):
+            m.s.is_job_streaming = True
+            # m.set_pause(True, 'yetipilot_low_feed')
+            m.set_pause(True, 'yetipilot_spindle_data_loss')
+
+        Clock.schedule_once(stream_and_pause, 5)
 
         return sm
 

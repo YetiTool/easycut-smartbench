@@ -684,9 +684,11 @@ class GoScreen(Screen):
 
         if self.m.s.is_job_streaming and self.m.is_machine_paused and self.m.reason_for_machine_pause:
             if self.listen_for_pauses != None: self.listen_for_pauses.cancel()
+            log("RAISE PAUSE SCREEN")
             self.sm.get_screen('spindle_shutdown').reason_for_pause = self.m.reason_for_machine_pause
             self.sm.get_screen('spindle_shutdown').return_screen = "go"
             self.sm.current = 'spindle_shutdown'
+            self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
 
     # Running
 
