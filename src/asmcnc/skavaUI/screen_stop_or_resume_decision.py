@@ -218,6 +218,9 @@ class StopOrResumeDecisionScreen(Screen):
 
     def resume_job(self):
 
+        if self.reason_for_pause == 'yetipilot_low_feed':
+            self.sm.get_screen('go').yp_widget.disable_yeti_pilot()
+
         self.m.resume_after_a_stream_pause()
 
         # Job resumed, send event
