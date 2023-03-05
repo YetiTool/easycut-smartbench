@@ -239,8 +239,6 @@ class YetiPilot(object):
         current_override = self.m.s.speed_override_percentage
         difference = total_override_required - current_override
         adjustments = get_adjustment(difference)
-
-        print(self.target_spindle_speed, current_rpm, total_override_required, current_override, difference, adjustments)
         self.do_spindle_adjustment(adjustments)
 
     def do_spindle_adjustment(self, adjustments):
@@ -341,8 +339,8 @@ class YetiPilot(object):
             setattr(self, parameter["Name"], parameter["Value"])
 
         is_230v = self.m.s.digital_spindle_mains_voltage > 225
-        self.target_spindle_speed = self.target_spindle_speed - self.spindle_230v_correction_factor if is_230v else \
-            self.spindle_110v_correction_factor
+        self.target_spindle_speed = self.target_spindle_speed - (self.spindle_230v_correction_factor if is_230v else
+                                                                 self.spindle_110v_correction_factor)
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
