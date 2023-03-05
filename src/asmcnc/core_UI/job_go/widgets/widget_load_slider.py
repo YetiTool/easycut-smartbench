@@ -7,7 +7,7 @@ from kivy.graphics import Color
 
 Builder.load_string("""
 
-<RoundedButton@Button>:
+<PowerUpDownButtons@Button>:
     background_color: 0,0,0,0
     canvas.before:
         Color:
@@ -83,7 +83,7 @@ Builder.load_string("""
                 
 """)
 
-class RoundedButton(Button):
+class PowerUpDownButtons(Button):
     pass
 
 dark_grey = [51 / 255., 51 / 255., 51 / 255., 1.]
@@ -112,7 +112,7 @@ class LoadSliderWidget(Widget):
     def make_buttons(self, container, slider, val):
         btn_str = str(val) if val < 0 else "+" + str(val)
         button_adjust_func = partial(self.button_adjust_slider, val)
-        container.add_widget(RoundedButton(text=btn_str, on_press=button_adjust_func, color=dark_grey))
+        container.add_widget(PowerUpDownButtons(text=btn_str, on_press=button_adjust_func, color=dark_grey))
 
     def button_adjust_slider(self, val, instance=None):
         if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
