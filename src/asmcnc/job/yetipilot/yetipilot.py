@@ -57,6 +57,7 @@ class YetiPilot(object):
 
     active_profile = None
     using_advanced_profile = False
+    using_basic_profile = False
 
     use_yp = False
 
@@ -320,6 +321,7 @@ class YetiPilot(object):
     def use_profile(self, profile):
         self.active_profile = profile
         self.using_advanced_profile = False
+        self.using_basic_profile = True
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
@@ -359,7 +361,7 @@ class YetiPilot(object):
         self.using_advanced_profile = using_advanced_profile
 
         if using_advanced_profile:
-            self.active_profile = None
+            self.using_basic_profile = False
 
     def set_target_power(self, target_power):
         self.spindle_target_load_watts = target_power
