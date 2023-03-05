@@ -167,7 +167,11 @@ class PopupYetiPilotSettings(Widget):
                     return
 
                 yetipilot.use_profile(profile)
-                update_step_down(self.yp.get_active_step_down())
+
+                try:
+                    update_step_down(self.yp.get_active_step_down())
+                except:
+                    pass
 
             def select_diameter(spinner, val):
                 get_profile()
