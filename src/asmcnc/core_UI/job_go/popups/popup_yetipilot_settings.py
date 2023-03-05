@@ -41,7 +41,6 @@ Builder.load_string("""
         Rectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(10), dp(10)]
 
 
 <Choices@Spinner>
