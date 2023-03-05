@@ -139,8 +139,6 @@ class SpeedOverride(Widget):
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
     def speed_norm(self):
-        # self.speed_override_percentage = 100
-        # self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
         self.update_speed_percentage_override_label()
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
