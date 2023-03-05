@@ -52,6 +52,7 @@ class RouterMachine(object):
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
 
     is_machine_paused = False
+    reason_for_machine_pause = None
 
     # empty dictionary to hold TMC motors
     TMC_motor = {}
@@ -1109,10 +1110,12 @@ class RouterMachine(object):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
-    def set_pause(self, pauseBool):
+    def set_pause(self, pauseBool, reason_for_pause=None):
 
         prev_state = self.is_machine_paused
         self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
+        if not pauseBool: reason_for_pause=None # ideally, don't include a reason when setting to False, but this is here in case
+        else: self.m.reason_for_machine_pause = reason_for_pause
 
         def record_pause_time(prev_state, pauseBool):
             # record pause time
