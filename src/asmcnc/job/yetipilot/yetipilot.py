@@ -361,7 +361,7 @@ class YetiPilot(object):
     def get_active_step_down(self):
         if self.active_profile:
             return self.active_profile.step_down
-        return ""
+        return "N/A"
 
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
