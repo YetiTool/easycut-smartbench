@@ -53,7 +53,7 @@ class YetiPilotWidget(Widget):
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles)
+        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.using_basic_profile)
 
     # # DOES NOT WORK
     # def update_toggle_img(self, on_off):
