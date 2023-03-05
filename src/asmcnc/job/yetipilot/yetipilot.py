@@ -241,6 +241,8 @@ class YetiPilot(object):
 
         adjustments = get_adjustment(difference)
 
+        print(self.target_spindle_speed, int(current_speed), total_override_required, current_override, difference, adjustments)
+
         self.do_spindle_adjustment(adjustments)
 
     def do_spindle_adjustment(self, adjustments):
