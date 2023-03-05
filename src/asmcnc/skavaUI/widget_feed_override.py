@@ -127,11 +127,13 @@ class FeedOverride(Widget):
         self.norm_button.disabled = visible
 
         if visible:
-            self.parent.parent.opacity = 1.0
+            self.up_5.opacity = 1
+            self.down_5.opacity = 1
+            self.norm_button.opacity = 1
         else:
-            self.parent.parent.opacity = 0.5
-            self.feed_override.opacity = 1.0
-            self.feed_rate_label.opacity = 1.0
+            self.up_5.opacity = 0.5
+            self.down_5.opacity = 0.5
+            self.norm_button.opacity = 0.5
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
