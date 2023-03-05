@@ -178,10 +178,8 @@ class YetiPilot(object):
                 self.do_adjustment(adjustment)
 
             if not self.using_advanced_profile:
-                if len(self.jd.spindle_speeds) > 0:
-                    if 0 < current_line_number - self.jd.spindle_speeds[0][0] < 3:
-                        self.adjust_spindle_speed(self.m.s.spindle_speed)
-                        self.jd.spindle_speeds.pop(0)
+                if abs(self.target_spindle_speed - self.m.s.spindle_speed) > 100:
+                    self.adjust_spindle_speed(self.m.s.spindle_speed)
 
             # END OF LOGIC
             if not self.logger:
@@ -230,11 +228,6 @@ class YetiPilot(object):
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
-        try:
-            current_rpm = float(current_rpm)
-        except:
-            return
-
         rpm_difference = self.target_spindle_speed - current_rpm
         percentage_more = (rpm_difference / current_rpm) * 100
 

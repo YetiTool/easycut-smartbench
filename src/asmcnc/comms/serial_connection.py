@@ -1129,7 +1129,7 @@ class SerialConnection(object):
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = float(feed_speed[0])
-                    self.spindle_speed = feed_speed[1]
+                    self.spindle_speed = float(feed_speed[1])
 
                 elif part.startswith('Ov:'):
                     values = part[3:].split(',')
