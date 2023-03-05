@@ -108,9 +108,6 @@ class ScreenTest(App):
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
 
-        # Initialise YP
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
-
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
