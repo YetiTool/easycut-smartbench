@@ -103,6 +103,7 @@ class ScreenTest(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m.is_using_sc2 = Mock(return_value=True)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
