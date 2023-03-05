@@ -3,7 +3,7 @@ import json
 
 # TO DO: Change this to the correct URL
 PROFILES_URL = "https://localhost:7293/Download"
-PROFILES_PATH = "profiles.json"
+PROFILES_PATH = "asmcnc/job/yetipilot/config/profiles.json"
 DEV_MODE = True
 
 
@@ -38,7 +38,7 @@ def check_for_new_profiles(profiles_version, easycut_version):
 def get_new_profiles():
     # type: () -> bool
     try:
-        response = requests.get(PROFILES_URL, verify=not DEV_MODE)
+        response = requests.get(PROFILES_URL, timeout=2, verify=not DEV_MODE)
         response.raise_for_status()
     except requests.exceptions.RequestException:
         return False

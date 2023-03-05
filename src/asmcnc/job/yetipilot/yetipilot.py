@@ -7,6 +7,7 @@ import json
 from kivy.clock import Clock
 from math import sqrt, floor
 import time
+from asmcnc.job.yetipilot.config.yetipilot_profile_updater import run as update_profiles
 from asmcnc.job.yetipilot.logging.yetipilot_logger import AutoPilotLogger
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 
@@ -75,6 +76,16 @@ class YetiPilot(object):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+
+        try:
+            updated = update_profiles(self.m.sett.sw_version)
+
+            if updated:
+                print("Updated YetiPilot profiles")
+        except Exception as e:
+            print("Failed to update YetiPilot profiles")
+            print(e)
+
         self.get_available_profiles()
         self.load_parameters()
 
