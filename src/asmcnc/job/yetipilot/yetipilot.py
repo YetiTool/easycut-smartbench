@@ -237,7 +237,7 @@ class YetiPilot(object):
 
         total_override_required = (self.target_spindle_speed / int(current_speed)) * 100
         current_override = self.m.s.speed_override_percentage
-        difference = total_override_required - current_override
+        difference = current_override - total_override_required
 
         adjustments = get_adjustment(difference)
 
