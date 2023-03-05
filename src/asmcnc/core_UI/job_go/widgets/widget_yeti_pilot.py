@@ -153,7 +153,7 @@ class YetiPilotWidget(Widget):
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles, closing_func=self.update_profile_selection)
+        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
         if self.yp.standard_profiles:
