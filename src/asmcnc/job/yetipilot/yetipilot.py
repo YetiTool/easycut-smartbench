@@ -229,20 +229,13 @@ class YetiPilot(object):
             )
 
     # SPINDLE SPEED ADJUSTMENTS
-    def adjust_spindle_speed(self, current_speed):
-        try:
-            int(current_speed)
-        except:
-            return
+    def adjust_spindle_speed(self, current_rpm):
+        rpm_difference = self.target_spindle_speed - current_rpm
+        percentage_more = (rpm_difference / current_rpm) * 100
 
-        total_override_required = (self.target_spindle_speed / int(current_speed)) * 100
-        current_override = self.m.s.speed_override_percentage
-        difference = current_override - total_override_required
+        print(percentage_more)
 
-        adjustments = get_adjustment(difference)
-
-        print(self.target_spindle_speed, int(current_speed), total_override_required, current_override, difference, adjustments)
-
+        adjustments = get_adjustment(percentage_more)
         self.do_spindle_adjustment(adjustments)
 
     def do_spindle_adjustment(self, adjustments):
