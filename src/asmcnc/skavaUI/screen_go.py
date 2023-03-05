@@ -389,6 +389,7 @@ class GoScreen(Screen):
     cancel_to_screen = 'home'  # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
     loop_for_feeds_and_speeds = None
+    listen_for_pauses = None
     lift_z_on_job_pause = False
     overload_peak = 0
 
@@ -481,6 +482,7 @@ class GoScreen(Screen):
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
+        self.listen_for_pauses = Clock.schedule_interval(self.raise_pause_screens_if_paused, self.POLL_FOR_PAUSE_SCREENS)
         self.yp_widget.switch_reflects_yp()
 
         if self.is_job_started_already:
@@ -663,11 +665,28 @@ class GoScreen(Screen):
         else:
             self._start_running_job()
 
+    # Pausing
+
     def _pause_job(self):
 
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
+
+    POLL_FOR_PAUSE_SCREENS = 0.5
+
+    def raise_pause_screens_if_paused(self):
+        # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
+        # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
+        # For now, this is enough:
+
+        if self.m.s.is_job_streaming and self.m.is_machine_paused and self.m.reason_for_machine_pause:
+            if self.listen_for_pauses != None: self.listen_for_pauses.cancel()
+            self.sm.get_screen('spindle_shutdown').reason_for_pause = self.m.reason_for_machine_pause
+            self.sm.get_screen('spindle_shutdown').return_screen = "go"
+            self.sm.current = 'spindle_shutdown'
+
+    # Running
 
     def _start_running_job(self):
         self.database.send_job_start()
@@ -746,6 +765,7 @@ class GoScreen(Screen):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
+        if self.listen_for_pauses != None: self.listen_for_pauses.cancel()
 
     ### SCREEN UPDATES
 
