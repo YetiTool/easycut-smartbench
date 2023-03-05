@@ -21,7 +21,6 @@ from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
-from asmcnc.core_UI.job_go.widgets.widget_settings_version import YPSettingsTypeWidget
 from asmcnc.skavaUI import widget_speed_override
 
 Builder.load_string("""
@@ -84,12 +83,6 @@ class CloseButton(Button):
 
 class PopupYetiPilotSettings(Widget):
 
-    """
-        Still to do: 
-        - Add separators to background
-
-    """
-
     def __init__(self, screen_manager, localization, machine, database, yetipilot, version=False):
 
         self.sm = screen_manager
@@ -103,8 +96,13 @@ class PopupYetiPilotSettings(Widget):
         clock_step_down = None
 
         diameter_values = ('3mm','6mm','8mm')
-        tool_values = ('2 flute upcut spiral','2 flute downcut spiral')
-        material_values = ('MDF',)
+        tool_values = (
+                            '2 flute upcut spiral',
+                            '2 flute downcut spiral')
+
+        material_values = (
+                            'MDF',
+                        )
 
         img_path = './asmcnc/core_UI/job_go/img/'
         sep_top_img_src = img_path + 'yp_settings_sep_top.png'
