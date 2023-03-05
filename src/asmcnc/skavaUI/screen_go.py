@@ -655,6 +655,11 @@ class GoScreen(Screen):
             else:
                 self.m.resume_after_a_stream_pause()
                 self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
+                # Job resumed, send event
+                self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+
+                self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             self._start_running_job()
 
