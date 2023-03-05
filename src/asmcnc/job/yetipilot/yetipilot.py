@@ -74,7 +74,7 @@ class YetiPilot(object):
         self.use_yp = True
 
         if self.sm.has_screen('go'):
-            self.sm.get_screen('go').feedOverride.set_button_enabled(False)
+            self.sm.get_screen('go').feedOverride.set_widget_disabled(False)
 
         if DEV_MODE:
             self.use_logger()
@@ -84,7 +84,7 @@ class YetiPilot(object):
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').yp_widget.switch_reflects_yp()
-            self.sm.get_screen('go').feedOverride.set_button_enabled(True)
+            self.sm.get_screen('go').feedOverride.set_widget_disabled(True)
 
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()

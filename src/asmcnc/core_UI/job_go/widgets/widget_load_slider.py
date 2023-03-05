@@ -42,6 +42,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.2
+            padding: [15,0]
 
             Label: 
                 id: min_label

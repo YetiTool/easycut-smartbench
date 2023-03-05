@@ -21,6 +21,8 @@ Builder.load_string("""
     feed_absolute:feed_absolute
     up_5: up_5
     down_5: down_5
+    norm_button:norm_button
+    feed_override:feed_override
 
     BoxLayout:
         size: self.parent.size
@@ -47,9 +49,11 @@ Builder.load_string("""
                     allow_stretch: True  
        
         FloatLayout:
+            id: feed_override
             size: self.parent.size
             pos: self.parent.pos  
             Button:
+                id: norm_button
                 on_press: root.feed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
@@ -117,14 +121,16 @@ class FeedOverride(Widget):
         self.sm=kwargs['screen_manager']
         self.db=kwargs['database']
 
-    def set_button_enabled(self, enabled):
-        self.up_5.disabled = enabled
-        self.down_5.disabled = enabled
+    def set_widget_visibility(self, visible):
+        self.up_5.disabled = visible
+        self.down_5.disabled = visible
+        self.norm_button.disabled = visible
 
-        if enabled:
+        if visible:
             self.parent.parent.opacity = 1.0
         else:
             self.parent.parent.opacity = 0.5
+            self.feed_override.opacity = 1.0
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
