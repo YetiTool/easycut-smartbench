@@ -175,6 +175,7 @@ class PopupYetiPilotSettings(Widget):
                     return
 
                 yetipilot.use_profile(profile)
+                update_step_down(self.yp.get_active_step_down())
 
             def select_diameter(spinner, val):
                 get_profile()
@@ -258,8 +259,8 @@ class PopupYetiPilotSettings(Widget):
 
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
-            clock_step_down = Clock.schedule_interval(lambda dt: update_step_down(self.yp.step_min, self.yp.step_max),
-                                                      0.1)
+            # clock_step_down = Clock.schedule_interval(lambda dt: update_step_down(self.yp.step_min, self.yp.step_max),
+            #                                           0.1)
 
         # END OF BODY PRE-CUT PROFILES --------------------------------
 
