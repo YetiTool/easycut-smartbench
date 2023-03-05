@@ -230,6 +230,11 @@ class YetiPilot(object):
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
+        try:
+            current_rpm = int(current_rpm)
+        except:
+            return
+
         rpm_difference = self.target_spindle_speed - current_rpm
         percentage_more = (rpm_difference / current_rpm) * 100
 
