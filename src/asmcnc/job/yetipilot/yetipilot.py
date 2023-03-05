@@ -258,7 +258,7 @@ class YetiPilot(object):
 
     def stop_and_show_error(self):
         self.disable()
-        print("YETIPILOT: ERROR: Feed override is too low.")
+        self.m.set_pause(True, 'yetipilot_low_feed')
 
     def check_if_feed_too_low(self):
         if self.m.s.feed_override_percentage == 10:
