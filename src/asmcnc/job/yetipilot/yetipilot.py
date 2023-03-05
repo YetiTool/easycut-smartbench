@@ -150,6 +150,10 @@ class YetiPilot(object):
                 or (self.active_profile is None and not self.using_advanced_profile) or digital_spindle_ld_qdA < 0:
             return
 
+        if not self.using_advanced_profile:
+            if abs(self.target_spindle_speed - self.m.s.spindle_speed) > 100:
+                self.adjust_spindle_speed(self.m.s.spindle_speed)
+
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
         if len(self.digital_spindle_load_stack) == self.spindle_load_stack_size:
@@ -176,10 +180,6 @@ class YetiPilot(object):
 
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
-
-            if not self.using_advanced_profile:
-                if abs(self.target_spindle_speed - self.m.s.spindle_speed) > 100:
-                    self.adjust_spindle_speed(self.m.s.spindle_speed)
 
             # END OF LOGIC
             if not self.logger:
@@ -226,22 +226,13 @@ class YetiPilot(object):
                 gcode=current_gcode
             )
 
-    def reset_waiting_for_spindle_to_accel(self):
-        self.waiting_for_spindle_to_accel = False
-
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
         rpm_difference = self.target_spindle_speed - current_rpm
         percentage_more = (rpm_difference / current_rpm) * 100
+        adjustment = get_adjustment(percentage_more)
 
-        if percentage_more >= 10:
-            self.do_spindle_adjustment([10])
-        elif percentage_more >= 1:
-            self.do_spindle_adjustment([1])
-        elif percentage_more <= -10:
-            self.do_spindle_adjustment([-10])
-        elif percentage_more <= -1:
-            self.do_spindle_adjustment([-1])
+        self.do_spindle_adjustment(adjustment)
 
     def do_spindle_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
