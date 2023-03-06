@@ -686,6 +686,7 @@ class GoScreen(Screen):
         if  self.m.s.is_job_streaming and \
             self.m.is_machine_paused and \
             self.m.reason_for_machine_pause and \
+            self.m.reason_for_machine_pause != "Resuming" \
             not str(self.m.state()).startswith('Door:3') and \
             self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png":
 

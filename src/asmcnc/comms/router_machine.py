@@ -1107,6 +1107,7 @@ class RouterMachine(object):
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
+        self.reason_for_machine_pause = "Resuming"
         self._grbl_resume()        
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
@@ -1133,10 +1134,12 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.6) 
 
     def resume_from_a_soft_door(self):
+        self.reason_for_machine_pause = "Resuming"
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def resume_after_a_hard_door(self):
+        self.reason_for_machine_pause = "Resuming"
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
