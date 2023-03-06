@@ -410,7 +410,7 @@ class JobData(object):
         self.batch_number = ''
         self.percent_thru_job = 0
 
-    def get_excluded_line_numbers(self, gcode):
+    def get_lines_where_g0_mode(self, gcode):
         self.g0_lines[:] = []
         for i, line in enumerate(gcode):
             if 'G0' in line:

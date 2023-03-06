@@ -466,7 +466,7 @@ class SerialConnection(object):
     def run_job(self, job_object):
 
         self.jd.job_gcode_running = job_object
-        self.jd.get_excluded_line_numbers(self.jd.job_gcode_running)
+        self.jd.get_lines_where_g0_mode(self.jd.job_gcode_running)
         self.jd.get_spindle_speeds(self.jd.job_gcode_running)
 
         log('Job starting...')
