@@ -327,7 +327,7 @@ class PopupYetiPilotSettings(Widget):
                           )
         def make_option(version_text, version):
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
-            label_radio_container.add_widget(CheckBox(group="settings", color=blue, on_press=switch_version, active=version, disabled=version, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
+            label_radio_container.add_widget(CheckBox(group="settings", color=blue, on_press=switch_version, active=version, disabled=version)) #, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
