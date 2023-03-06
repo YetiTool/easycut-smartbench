@@ -45,6 +45,10 @@ class YetiPilot(object):
     step_min = 3
     step_max = 6
 
+    moving_in_z = False
+
+    digital_spindle_mains_voltage = None
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']

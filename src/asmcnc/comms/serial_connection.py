@@ -466,6 +466,7 @@ class SerialConnection(object):
     def run_job(self, job_object):
 
         self.jd.job_gcode_running = job_object
+        self.spindle_data_error_buffer = 0
 
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -806,6 +807,10 @@ class SerialConnection(object):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    # YETI PILOT
+    spindle_data_error_buffer = 0
+    is_spindle_sending_data = False
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -849,6 +854,8 @@ class SerialConnection(object):
             # Get machine's status
             self.m_state = status_parts[0]
 
+            self.is_spindle_sending_data = len([part for part in status_parts if part.startswith('Ld:')]) > 0
+
             for part in status_parts:
 
                 # Get machine's position (may not be displayed, depending on mask)
@@ -861,6 +868,9 @@ class SerialConnection(object):
                     except:
                         log("ERROR status parse: Position invalid: " + message)
                         return
+
+                    if self.yp:
+                        self.yp.moving_in_z = self.m_z != pos[2]
 
                     self.m_x = pos[0]
                     self.m_y = pos[1]
@@ -1019,6 +1029,13 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.digital_spindle_ld_qdA > 0:
+                            if self.yp:
+                                if self.spindle_data_error_buffer == 3:
+                                    self.yp.digital_spindle_mains_voltage = self.digital_spindle_mains_voltage
+                                else:
+                                    self.spindle_data_error_buffer += 1
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
