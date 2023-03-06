@@ -118,7 +118,7 @@ class SpindleShutdownScreen(Screen):
     def on_enter(self):
 
         log('Pausing job...')
-        self.m.stop_for_a_stream_pause()
+        # self.m.stop_for_a_stream_pause(self.reason_for_pause)
 
         if self.reason_for_pause == 'spindle_overload':
             # Job paused due to overload, send event

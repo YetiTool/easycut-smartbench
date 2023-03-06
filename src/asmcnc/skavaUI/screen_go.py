@@ -389,6 +389,7 @@ class GoScreen(Screen):
     cancel_to_screen = 'home'  # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
     loop_for_feeds_and_speeds = None
+    listen_for_pauses = None
     lift_z_on_job_pause = False
     overload_peak = 0
 
@@ -653,7 +654,7 @@ class GoScreen(Screen):
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
                 self._pause_job()
-                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
             else:
                 self.m.resume_after_a_stream_pause()
                 self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
@@ -665,11 +666,42 @@ class GoScreen(Screen):
         else:
             self._start_running_job()
 
+        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
+
+    # Pausing
+
     def _pause_job(self):
 
+        self.m.stop_for_a_stream_pause("job_pause")
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
+
+    POLL_FOR_PAUSE_SCREENS = 0.5
+
+    def raise_pause_screens_if_paused(self, dt=0):
+        # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
+        # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
+        # For now, this is enough:
+
+        if  self.m.s.is_job_streaming and \
+            self.m.is_machine_paused and \
+            self.m.reason_for_machine_pause and \
+            self.m.reason_for_machine_pause != "Resuming" and \
+            not str(self.m.state()).startswith('Door:3') and \
+            self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png":
+
+            if self.listen_for_pauses != None: 
+                self.listen_for_pauses.cancel()
+                self.listen_for_pauses = None
+
+            log("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
+            self.sm.get_screen('spindle_shutdown').reason_for_pause = self.m.reason_for_machine_pause
+            self.sm.get_screen('spindle_shutdown').return_screen = "go"
+            self.sm.current = 'spindle_shutdown'
+            self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+
+    # Running
 
     def _start_running_job(self):
         self.database.send_job_start()
@@ -748,6 +780,9 @@ class GoScreen(Screen):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
+        if self.listen_for_pauses != None: 
+            self.listen_for_pauses.cancel()
+            self.listen_for_pauses = None
 
     ### SCREEN UPDATES
 
