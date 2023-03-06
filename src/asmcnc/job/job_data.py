@@ -423,13 +423,7 @@ class JobData(object):
         return self.g0_lines
 
     def get_spindle_speeds(self, gcode):
-        self.spindle_speeds[:] = []
-        for i, line in enumerate(gcode):
-            if 'S' in line:
-                s_index = line.index('S')
-                end_index = s_index + 1
-                while end_index < len(line) and not line[end_index].isalpha():
-                    end_index += 1
-                s_value = float(line[s_index + 1:end_index].strip())
-                self.spindle_speeds.append([i, s_value])
+        pattern = re.compile(r"S\d+\.?\d*")
+        self.spindle_speeds = [[i, float(match.group()[1:])]
+                               for i, line in enumerate(gcode) for match in [pattern.search(line)] if match]
         return self.spindle_speeds
