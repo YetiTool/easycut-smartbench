@@ -20,8 +20,13 @@ from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
+
+from functools import partial
+
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
+
+
 
 Builder.load_string("""
 
@@ -310,11 +315,15 @@ class PopupYetiPilotSettings(Widget):
 
         # Profile radio buttons
 
-        def switch_version(*args):
+        def switch_version(state, instance=None):
+            if state: 
+                instance.active=True
+                return
+
             self.yp.standard_profiles = not version
             unschedule_clocks()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
             popup.dismiss()
+            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
         radio_button_width = 40
         pad_width = 40      
@@ -327,7 +336,8 @@ class PopupYetiPilotSettings(Widget):
                           )
         def make_option(version_text, version):
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
-            label_radio_container.add_widget(CheckBox(group="settings", color=blue, on_press=switch_version, active=version, disabled=version, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
+            checkbox_func =partial(switch_version, version)
+            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version))
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
