@@ -672,6 +672,7 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
+        self.m.stop_for_a_stream_pause("job_pause")
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
