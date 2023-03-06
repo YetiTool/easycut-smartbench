@@ -77,6 +77,10 @@ class JobData(object):
     check_info_string = ''    
     comments_string = ''
 
+    # Yeti Pilot
+    g0_lines = []
+    spindle_speeds = []
+
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
         self.set = kwargs['settings_manager']
@@ -405,3 +409,27 @@ class JobData(object):
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
+
+    def get_excluded_line_numbers(self, gcode):
+        self.g0_lines[:] = []
+        for i, line in enumerate(gcode):
+            if 'G0' in line:
+                self.g0_lines.append(i)
+                for j, next_line in enumerate(gcode[i + 1:]):
+                    if 'G1' in next_line or 'G2' in next_line or 'G3' in next_line:
+                        break
+                    else:
+                        self.g0_lines.append(i + j + 1)
+        return self.g0_lines
+
+    def get_spindle_speeds(self, gcode):
+        self.spindle_speeds[:] = []
+        for i, line in enumerate(gcode):
+            if 'S' in line:
+                s_index = line.index('S')
+                end_index = s_index + 1
+                while end_index < len(line) and not line[end_index].isalpha():
+                    end_index += 1
+                s_value = float(line[s_index + 1:end_index].strip())
+                self.spindle_speeds.append([i, s_value])
+        return self.spindle_speeds
