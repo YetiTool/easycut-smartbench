@@ -128,7 +128,7 @@ class PopupYetiPilotSettings(Widget):
         sum_of_middle_heights = subtitle_height  + radio_BL_height + body_BL_height
         close_button_BL_height = vertical_BL_height - sum_of_middle_heights
 
-        dropdowns_container_width = 350 - 10
+        dropdowns_container_width = 350 - 20
         dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
@@ -325,8 +325,8 @@ class PopupYetiPilotSettings(Widget):
             popup.dismiss()
             PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
-        radio_button_width = 40
-        pad_width = 40      
+        radio_button_width = 30
+        pad_width = 30      
         text_width = (pop_width - pad_width)/2 -radio_button_width
 
         radio_BL = BoxLayout( orientation='horizontal',
