@@ -869,7 +869,7 @@ class SerialConnection(object):
                         log("ERROR status parse: Position invalid: " + message)
                         return
 
-                    if self.yp:
+                    if self.yp.use_yp:
                         self.yp.moving_in_z = self.m_z != pos[2]
 
                     self.m_x = pos[0]
@@ -1031,11 +1031,10 @@ class SerialConnection(object):
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
                         if self.digital_spindle_ld_qdA > 0:
-                            if self.yp:
-                                if self.spindle_data_error_buffer == 3:
-                                    self.yp.digital_spindle_mains_voltage = self.digital_spindle_mains_voltage
-                                else:
-                                    self.spindle_data_error_buffer += 1
+                            if self.spindle_data_error_buffer == 3:
+                                self.yp.digital_spindle_mains_voltage = self.digital_spindle_mains_voltage
+                            else:
+                                self.spindle_data_error_buffer += 1
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160 : overload_mV_equivalent_state = 0
