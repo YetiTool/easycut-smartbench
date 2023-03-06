@@ -693,7 +693,7 @@ class GoScreen(Screen):
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
 
-            log("RAISE PAUSE SCREEN: " + str(self.m.reason_for_pause))
+            log("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
             self.sm.get_screen('spindle_shutdown').reason_for_pause = self.m.reason_for_machine_pause
             self.sm.get_screen('spindle_shutdown').return_screen = "go"
             self.sm.current = 'spindle_shutdown'
