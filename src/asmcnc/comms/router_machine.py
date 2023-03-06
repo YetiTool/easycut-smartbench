@@ -1102,12 +1102,13 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
-    def stop_for_a_stream_pause(self):
-        self.set_pause(True)
+    def stop_for_a_stream_pause(self, reason_for_pause=None):
+        self.set_pause(True, reason_for_pause=reason_for_pause)
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        self._grbl_resume()
+        self.reason_for_machine_pause = "Resuming"
+        self._grbl_resume()        
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool, reason_for_pause=None):
@@ -1115,7 +1116,7 @@ class RouterMachine(object):
         prev_state = self.is_machine_paused
         self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
         if not pauseBool: reason_for_pause=None # ideally, don't include a reason when setting to False, but this is here in case
-        else: self.reason_for_machine_pause = reason_for_pause
+        self.reason_for_machine_pause = reason_for_pause
 
         def record_pause_time(prev_state, pauseBool):
             # record pause time
@@ -1133,10 +1134,12 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.6) 
 
     def resume_from_a_soft_door(self):
+        self.reason_for_machine_pause = "Resuming"
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def resume_after_a_hard_door(self):
+        self.reason_for_machine_pause = "Resuming"
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
