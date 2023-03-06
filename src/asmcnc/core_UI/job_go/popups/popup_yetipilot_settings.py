@@ -336,16 +336,6 @@ class PopupYetiPilotSettings(Widget):
                             padding=[pad_width, 0]
                           )
         def make_option(version_text, version):
-
-
-            # def make_buttons(self, container, slider, val):
-            #     btn_str = str(val) if val < 0 else "+" + str(val)
-            #     button_adjust_func = partial(self.button_adjust_slider, val)
-            #     container.add_widget(PowerAdjustButtons(text=btn_str, on_press=button_adjust_func, color=dark_grey))
-
-            # def button_adjust_slider(self, val, instance=None):
-            #     if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
-
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
             checkbox_func =partial(switch_version, version)
             label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version, disabled=version, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
