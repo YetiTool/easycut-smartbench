@@ -317,8 +317,8 @@ class PopupYetiPilotSettings(Widget):
 
         def switch_version(state, instance=None):
             if state: 
-                # instance.active=True
-                # instance.disabled=True
+                instance.active=True
+                instance.disabled=True
                 return
 
             self.yp.standard_profiles = not version
@@ -348,7 +348,7 @@ class PopupYetiPilotSettings(Widget):
 
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
             checkbox_func =partial(switch_version, version)
-            label_radio_container.add_widget(CheckBox(group=str(version), color=blue, on_press=checkbox_func, active=version, disabled=version)) #, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
+            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version, disabled=version)) #, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
