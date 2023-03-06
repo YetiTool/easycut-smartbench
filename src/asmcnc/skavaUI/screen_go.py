@@ -654,7 +654,7 @@ class GoScreen(Screen):
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
                 self._pause_job()
-                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
             else:
                 self.m.resume_after_a_stream_pause()
                 self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"

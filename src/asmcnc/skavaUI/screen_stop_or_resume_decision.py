@@ -158,6 +158,10 @@ class StopOrResumeDecisionScreen(Screen):
     
     def on_enter(self):
 
+        # Update go screen button in case this screen was called from outside go screen (e.g. spindle overload)
+        try: self.sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
+        except: pass
+
         if self.reason_for_pause == 'spindle_overload':
             self.pause_reason_label.text = self.l.get_str("Spindle motor was overloaded!").replace(self.l.get_str('overloaded'), self.l.get_bold('overloaded'))
 
