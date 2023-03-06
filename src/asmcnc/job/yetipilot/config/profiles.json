@@ -5,28 +5,48 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": 3,
-      "Cutter Type": "EXAMPLE",
-      "Step Down": "3-6mm",
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "6mm",
       "Parameters": [
         {
           "Name": "spindle_target_load_watts",
-          "Value": 880
+          "Value": 550
         },
         {
           "Name": "target_spindle_speed",
-          "Value": 19000
+          "Value": 23800
         }
       ]
     },
     {
-      "Material Type": "Plywood",
-      "Cutter Diameter": 3,
-      "Cutter Type": "EXAMPLE2",
-      "Step Down": "3-6mm",
+      "Material Type": "MDF",
+      "Cutter Diameter": 6,
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "6mm",
       "Parameters": [
         {
           "Name": "spindle_target_load_watts",
-          "Value": 800
+          "Value": 710
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": 8,
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "8mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 960
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 23800
         }
       ]
     }
