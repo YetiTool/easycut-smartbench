@@ -38,7 +38,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             spacing: 00
-            padding: (0,10,0,20)
+            padding: (0,0,0,10)
             size_hint_y: 5
             
 
@@ -105,8 +105,6 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
                         
-        Label:
-            size_hint_y: .5                
 
 """)
 
@@ -209,6 +207,8 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('You may resume the job with YetiPilot disabled, or cancel the job altogether.').replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume'))
                 )
 
+        self.update_font_size(self.pause_description_label)
+
     
     def cancel_job(self):
         popup_info.PopupConfirmJobCancel(self.sm, self.l)
@@ -226,3 +226,11 @@ class StopOrResumeDecisionScreen(Screen):
             self.sm.get_screen('go').yp_widget.disable_yeti_pilot()
 
         self.sm.current = self.return_screen
+
+    def update_font_size(self, value):
+        if len(value.text) > 700:
+            value.font_size = 16
+        if len(value.text) > 570:
+            value.font_size = 17
+        else: 
+            value.font_size = 18
