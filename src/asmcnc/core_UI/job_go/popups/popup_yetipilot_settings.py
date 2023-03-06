@@ -318,7 +318,6 @@ class PopupYetiPilotSettings(Widget):
         def switch_version(state, instance=None):
             if state: 
                 instance.active=True
-                instance.disabled=True
                 return
 
             self.yp.standard_profiles = not version
