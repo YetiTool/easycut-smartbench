@@ -666,7 +666,7 @@ class SerialConnection(object):
         ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
-        if self.m.stylus_router_choice == 'router' and not self.m.get_dollar_setting(51):
+        if self.m.stylus_router_choice == 'router': # and not self.m.get_dollar_setting(51):
             self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
@@ -714,6 +714,7 @@ class SerialConnection(object):
 
     # Feed override feedback
     feed_override_percentage = 100
+    speed_override_percentage = 100
 
     # Analogue spindle feedback
     spindle_load_voltage = None
@@ -1089,6 +1090,7 @@ class SerialConnection(object):
                         return
 
                     self.feed_override_percentage = int(values[0])
+                    self.speed_override_percentage = int(values[2])
 
                 # TEMPERATURES
                 elif part.startswith('TC:'):
