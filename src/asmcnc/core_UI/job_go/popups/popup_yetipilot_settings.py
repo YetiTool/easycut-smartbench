@@ -316,7 +316,7 @@ class PopupYetiPilotSettings(Widget):
         # Profile radio buttons
 
         def switch_version(state, instance=None):
-            if instance.active: 
+            if state: 
                 instance.active=True
                 instance.disabled=True
                 return
