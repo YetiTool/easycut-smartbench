@@ -256,6 +256,7 @@ Builder.load_string("""
                             BoxLayout:
                                 id: yetipilot_container
                                 orientation: 'vertical'
+                                size_hint_y: 0
                                 
                                 canvas:
                                     Color:
@@ -266,7 +267,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 id: job_progress_container
-                                size_hint_y: 3
+                                size_hint_y: 2.5
                                 orientation: 'vertical'
                                 padding: 20
                                 spacing: 00
@@ -425,7 +426,7 @@ class GoScreen(Screen):
         self.jd.percent_thru_job = 0
 
         # Optional containers
-        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, yetipilot=self.yp)
+        self.yp_widget = YetiPilotWidget(screen_manager=self.sm, localization=self.l, machine=self.m, database=self.database, yetipilot=self.yp)
         self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
@@ -475,6 +476,9 @@ class GoScreen(Screen):
         else:
             self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
 
+        use_sc2 = self.m.is_using_sc2()
+        self.show_hide_yp_container(use_sc2)
+
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
         self.yp_widget.switch_reflects_yp()
@@ -484,32 +488,39 @@ class GoScreen(Screen):
         else:
             self.reset_go_screen_prior_to_job_start()
 
-    def on_enter(self):
+        if self.show_maintenance_prompts():
+            # if use_sc2: self.get_sc2_brush_data()
+            # else: 
+            self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
-        # Check for SC2 compatability
-        if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Spindle lifetime check') \
-            and self.m.theateam() and self.m.get_dollar_setting(51) and self.m.stylus_router_choice != 'stylus':
-            sc2_compatible = True
+        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
+
+    def show_hide_yp_container(self, use_sc2):
+
+        if use_sc2:
             # Show yetipilot container
+            self.job_progress_container.padding = [20,10]
             self.yetipilot_container.size_hint_y = 1
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
+            self.yp_widget.switch.disabled = False
+
         else:
-            sc2_compatible = False
             # Hide yetipilot container
+            self.job_progress_container.padding = 20
             self.yetipilot_container.size_hint_y = 0
             self.yetipilot_container.opacity = 0
             self.yetipilot_container.parent.spacing = 0
+            self.yp_widget.disable_yeti_pilot()
+            self.yp_widget.switch.disabled = True
 
-        if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
-            if sc2_compatible:
-                self.m.s.write_command('M3 S0')
-                Clock.schedule_once(self.get_spindle_info, 0.1)
-                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-            else:
-                self.check_brush_use_and_lifetime(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+    def show_maintenance_prompts(self):
+        return not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled
 
-        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
+    def get_sc2_brush_data(self):
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(self.get_spindle_info, 0.1)
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
@@ -596,7 +607,7 @@ class GoScreen(Screen):
 
     def reset_go_screen_prior_to_job_start(self):
 
-        print "RESET GO SCREEN FIRES"
+        print("RESET GO SCREEN FIRES")
 
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
@@ -640,7 +651,17 @@ class GoScreen(Screen):
 
         log('start/pause button pressed')
         if self.is_job_started_already:
-            self._pause_job()
+            if not self.m.is_machine_paused:
+                self._pause_job()
+                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+            else:
+                self.m.resume_after_a_stream_pause()
+                self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
+                # Job resumed, send event
+                self.database.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+
+                self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             self._start_running_job()
 
@@ -771,6 +792,7 @@ class GoScreen(Screen):
 
         # Spindle speed and feed rate
         self.speedOverride.update_spindle_speed_label()
+        self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
 

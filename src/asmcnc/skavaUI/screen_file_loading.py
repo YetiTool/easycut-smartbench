@@ -26,6 +26,7 @@ from kivy.graphics import Color, Rectangle
 import sys, os, time
 from datetime import datetime
 import re
+import traceback
 
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
@@ -269,10 +270,14 @@ class LoadingScreen(Screen):
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
+    max_lines = 9999990
 
     def _scrub_file_loop(self, dt):
 
         try:
+            if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
+                raise Exception("File exceeds 10 million lines!")
+
             # clear out undesirable lines
 
             # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
@@ -309,7 +314,6 @@ class LoadingScreen(Screen):
                                 # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                                 # in order for the electronics to send the right voltage for the desired RPM
                                 if self.m.spindle_voltage == 110:
-                                    # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
                                     rpm = self.m.convert_from_110_to_230(rpm)
                                     l_block = "M3S" + str(rpm)
 
@@ -354,6 +358,9 @@ class LoadingScreen(Screen):
 
                             except: print 'Failed to extract feed rate. Probable G-code error!'
 
+                        # strip line numbers
+                        if "N" in l_block:
+                            l_block = self.jd.remove_line_number(l_block)
 
                         self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
@@ -374,6 +381,7 @@ class LoadingScreen(Screen):
                 self._get_gcode_preview_and_ranges()
 
         except:
+            log(traceback.format_exc())
             self.update_screen('Could not load')
             self.jd.reset_values()
 
