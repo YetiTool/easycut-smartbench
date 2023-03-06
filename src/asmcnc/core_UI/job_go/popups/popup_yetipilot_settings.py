@@ -20,8 +20,13 @@ from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
+
+from functools import partial
+
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
+
+
 
 Builder.load_string("""
 
@@ -310,8 +315,10 @@ class PopupYetiPilotSettings(Widget):
 
         # Profile radio buttons
 
-        def switch_version(instance=None):
-            if instance.active: return
+        def switch_version(state, instance=None):
+            if state: 
+                return
+
             self.yp.standard_profiles = not version
             unschedule_clocks()
             popup.dismiss()
@@ -327,8 +334,19 @@ class PopupYetiPilotSettings(Widget):
                             padding=[pad_width, 0]
                           )
         def make_option(version_text, version):
+
+
+            # def make_buttons(self, container, slider, val):
+            #     btn_str = str(val) if val < 0 else "+" + str(val)
+            #     button_adjust_func = partial(self.button_adjust_slider, val)
+            #     container.add_widget(PowerAdjustButtons(text=btn_str, on_press=button_adjust_func, color=dark_grey))
+
+            # def button_adjust_slider(self, val, instance=None):
+            #     if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
+
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
-            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=switch_version, active=version, disabled=version)) #, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
+            checkbox_func =partial(switch_version, version)
+            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version, disabled=version)) #, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
