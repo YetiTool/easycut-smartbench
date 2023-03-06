@@ -124,3 +124,19 @@ def test_scrape_last_feed_command_feed_mid_line(jd):
     ]
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 1000
 
+def test_remove_line_numbers(jd):
+    assert jd.remove_line_number("N4G1X90") == "G1X90"
+
+def test_remove_line_numbers_mid(jd):
+    assert jd.remove_line_number("G1N4X90") == "G1X90"
+
+
+
+
+
+
+
+
+
+
+
