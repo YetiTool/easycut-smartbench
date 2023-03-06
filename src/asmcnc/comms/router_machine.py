@@ -161,7 +161,10 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
-        Clock.schedule_interval(lambda dt: print("REASON FOR PAUSE: " + str(self.reason_for_machine_pause)), 0.5)
+        Clock.schedule_interval(lambda dt: self.print_reason_for_pause(), 0.5)
+
+    def print_reason_for_pause(self):
+        print("REASON FOR PAUSE: " + str(self.reason_for_machine_pause))
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
