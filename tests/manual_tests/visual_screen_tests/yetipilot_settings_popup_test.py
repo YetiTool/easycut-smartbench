@@ -62,7 +62,7 @@ Cmport = "COM3"
 
 class TestApp(App):
 
-    lang_idx = 4
+    lang_idx = 0
 
     # 0 - English (y)
     # 1 - Italian (y)
