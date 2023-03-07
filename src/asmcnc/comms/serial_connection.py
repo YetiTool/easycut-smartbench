@@ -465,6 +465,7 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
 
+        self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = job_object
 
         log('Job starting...')
@@ -492,6 +493,7 @@ class SerialConnection(object):
 
     # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
     def run_skeleton_buffer_stuffer(self, gcode_obj):
+        self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = gcode_obj
 
         log('Skeleton buffer stuffing starting...')
@@ -525,8 +527,11 @@ class SerialConnection(object):
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.jd.job_gcode_running):
-            
+        
             line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
+            self.scrape_last_sent_modes(line_to_go)
+            self.add_to_g_mode_tracker(self.last_sent_motion_mode, self.last_sent_feed, self.last_sent_speed)
+
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -539,12 +544,44 @@ class SerialConnection(object):
  
         self.is_stream_lines_remaining = False
 
+    ## GCODE BUFFER STUFFING TRACKING
+    last_line_executed = 0
+
+    last_sent_motion_mode = ""
+    last_sent_feed = 0
+    last_sent_speed = 0
+
+    feed_pattern = re.compile(r"F\d+\.?\d*")
+    speed_pattern = re.compile(r"S\d+\.?\d*")
+
     # line counting for buffer stuffing
     def add_line_number_to_gcode_line(self, line, i):
         return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
 
     def gcode_line_is_excluded(self, line):
         return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+
+    def get_spindle_speed_for_line(self, line):
+        return float(re.search(self.speed_pattern, line).group()[1:])
+
+    def get_feed_rate_for_line(self, line):
+        return float(re.search(self.feed_pattern, line).group()[1:])
+
+    def scrape_last_sent_modes(self, line_to_go):
+        if "G0" in line_to_go: self.last_sent_motion_mode = "G0"
+        if "G1" in line_to_go: self.last_sent_motion_mode = "G1"
+        if "G2" in line_to_go: self.last_sent_motion_mode = "G2"
+        if "G3" in line_to_go: self.last_sent_motion_mode = "G3"
+        if "F" in line_to_go: self.last_sent_feed = self.get_feed_rate_for_line(line_to_go)
+        if "S" in line_to_go: self.last_sent_speed = self.get_spindle_speed_for_line(line_to_go)
+
+    def add_to_g_mode_tracker(self, motion, feed, speed):
+        self.jd.grbl_mode_tracker+= (   motion, 
+                                        feed, 
+                                        speed),
+
+    def remove_from_g_mode_tracker(self, line_diff):
+        if line_diff: del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
 
@@ -610,6 +647,7 @@ class SerialConnection(object):
             self.NOT_SKELETON_STUFF = True
 
         self.jd.job_gcode_running = []
+        self.jd.grbl_mode_tracker = []
         self.jd.percent_thru_job = 100
 
     def cancel_stream(self):
@@ -619,6 +657,7 @@ class SerialConnection(object):
         self.m.set_pause(False)
         self.jd.job_gcode_running = []
         self.yp.use_yp = False
+        self.jd.grbl_mode_tracker = []
 
         if self.m_state != "Check":
             
@@ -931,6 +970,7 @@ class SerialConnection(object):
                         log("ERROR status parse: Line number invalid: " + message)
                         return
 
+                    if self.grbl_ln: self.remove_from_g_mode_tracker(int(value)-self.grbl_ln)
                     self.grbl_ln = int(value)
 
                 # Get limit switch states: Pn:PxXyYZ

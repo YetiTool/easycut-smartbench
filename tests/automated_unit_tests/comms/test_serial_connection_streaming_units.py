@@ -315,6 +315,66 @@ def test_add_line_number_to_gcode_line(sc):
     assert sc.add_line_number_to_gcode_line("AE", 2) == "AE"
 
 
+# GRBL mode tracking
+
+def construct_status_with_line_numbers_feeds_speeds(l=None, f=0, s=0):
+
+    # Use this to construct the test status passed out by mock serial object
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255"
+
+    if l != None: 
+        line_appendage = "|Ln:" + str(l)
+        status+=line_appendage
+
+    status += "|FS:"+str(f)+","+str(s)+"|Ld:0|TC:1,2>"
+
+    return status
+
+def assert_process_data_matches_ln(ser_con, modes, n):
+    ser_con.process_grbl_push(construct_status_with_line_numbers_feeds_speeds(n, modes[n][1], modes[n][2]))
+    assert ser_con.grbl_ln == n
+    assert ser_con.jd.grbl_mode_tracker[0] == modes[n]
+
+
+def test_grbl_mode_tracking_over_scanner_run(sc):
+
+    expected_modes = [
+                    ("G0",6,7),   #1
+                    ("G1",6,8),   #2
+                    ("G0",7,9),   #3
+                    ("G0",8,9),   #4
+                    ("G0",9,11),  #5
+                    ("G0",10,19) #6
+    ]
+
+    test_gcode = [
+                    "G0X4Y5F" + str(expected_modes[0][1]) + "S" + str(expected_modes[0][2]),
+                    "G1X4Y5" + "S" + str(expected_modes[1][2]),
+                    "G0X4Y5F" + str(expected_modes[2][1]) + "S" + str(expected_modes[2][2]),
+                    "G0X4Y5F" + str(expected_modes[3][1]),
+                    "G0X4Y5F" + str(expected_modes[4][1]) + "S" + str(expected_modes[4][2]),
+                    "G0X4Y5F" + str(expected_modes[5][1]) + "S" + str(expected_modes[5][2])
+    ]
+
+    sc.jd.grbl_mode_tracker = []
+    sc.last_sent_motion_mode = ""
+    sc.last_sent_feed = 0
+    sc.last_sent_speed = 0
+    sc.jd.job_gcode_running = test_gcode
+    sc._reset_counters()
+    sc.stuff_buffer()
+
+    # If it gets to here then the output has worked correctly
+    assert sc.jd.grbl_mode_tracker == expected_modes
+
+    # Now to test that line number read in is working as expected
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 1)
+    assert_process_data_matches_ln(sc, expected_modes, 1)
+    assert_process_data_matches_ln(sc, expected_modes, 3)
+    assert_process_data_matches_ln(sc, expected_modes, 4)
 
 
 
@@ -325,6 +385,112 @@ def test_add_line_number_to_gcode_line(sc):
 
 
 
+
+
+
+
+def test_get_spindle_speed_for_line(sc):
+    assert sc.get_spindle_speed_for_line("GX1Y4S600F80") == 600
+
+def test_get_spindle_speed_for_line_float(sc):
+    assert sc.get_spindle_speed_for_line("GX1Y4S80000.9876F90") == 80000.9876
+
+def test_get_feed_rate_for_line(sc):
+    assert sc.get_feed_rate_for_line("G0X1Y4F600Y9S0") == 600
+
+def test_get_feed_rate_for_line_float(sc):
+    assert sc.get_feed_rate_for_line("G91F9000.9876X6Y7S3") == 9000.9876
+
+def test_scrape_last_sent_modes_no_new_info(sc):
+    sc.scrape_last_sent_modes("G91")
+    assert sc.last_sent_feed == 0
+    assert sc.last_sent_speed == 0
+    assert sc.last_sent_motion_mode == ""
+
+def test_scrape_last_sent_modes_changing_info(sc):
+    sc.last_sent_feed = 6
+    sc.last_sent_speed = 6
+    sc.last_sent_motion_mode = "G2"
+    sc.scrape_last_sent_modes("G3F700.89")
+    assert sc.last_sent_feed == 700.89
+    assert sc.last_sent_speed == 6
+    assert sc.last_sent_motion_mode == "G3"
+    sc.scrape_last_sent_modes("M3S23000")
+    assert sc.last_sent_feed == 700.89
+    assert sc.last_sent_speed == 23000
+    assert sc.last_sent_motion_mode == "G3"
+    sc.scrape_last_sent_modes("G0S0X1Y6")
+    assert sc.last_sent_feed == 700.89
+    assert sc.last_sent_speed == 0
+    assert sc.last_sent_motion_mode == "G0"
+    sc.scrape_last_sent_modes("G1S20.90F5000")
+    assert sc.last_sent_feed == 5000
+    assert sc.last_sent_speed == 20.90
+    assert sc.last_sent_motion_mode == "G1"
+    sc.scrape_last_sent_modes("G2X800Y700")
+    assert sc.last_sent_feed == 5000
+    assert sc.last_sent_speed == 20.90
+    assert sc.last_sent_motion_mode == "G2"
+
+def test_add_to_g_mode_tracker(sc):
+    sc.jd.grbl_mode_tracker = []
+    sc.add_to_g_mode_tracker("G0",5,7)
+    assert sc.jd.grbl_mode_tracker == [("G0",5,7)]
+    sc.add_to_g_mode_tracker("G1",400,6)
+    assert sc.jd.grbl_mode_tracker == [("G0",5,7), ("G1",400,6)]
+    assert sc.jd.grbl_mode_tracker[0][1] == 5
+
+def test_remove_from_g_mode_tracker_with_change(sc):
+    sc.jd.grbl_mode_tracker = [
+                                ("G0",7,8),
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+    sc.remove_from_g_mode_tracker(4-3)
+    assert sc.jd.grbl_mode_tracker == [
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+def test_remove_from_g_mode_tracker_with_no_change(sc):
+    sc.jd.grbl_mode_tracker = [
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+    sc.remove_from_g_mode_tracker(10-10)
+    assert sc.jd.grbl_mode_tracker == [
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+
+def test_remove_from_g_mode_tracker_with_line_skip(sc):
+    sc.jd.grbl_mode_tracker = [
+                                ("G0",7,8),
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+    sc.remove_from_g_mode_tracker(5-3)
+    assert sc.jd.grbl_mode_tracker == [
+                                ("G1",7,9),
+    ]
+
+def test_remove_from_g_mode_tracker_at_job_start(sc):
+    sc.jd.grbl_mode_tracker = [
+                                ("G0",7,8),
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+    sc.remove_from_g_mode_tracker(0-0)
+    assert sc.jd.grbl_mode_tracker == [
+                                ("G0",7,8),
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
 
 
 

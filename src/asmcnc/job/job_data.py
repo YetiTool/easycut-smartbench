@@ -29,6 +29,9 @@ class JobData(object):
     job_gcode_raw = []
     job_gcode_modified = []
     job_gcode_running = []
+
+    # GRBL state tracking
+    grbl_mode_tracker = []
     
     ## METADATA
     # job info scraped from file
