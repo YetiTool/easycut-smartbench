@@ -505,18 +505,17 @@ class GoScreen(Screen):
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
             self.yp_widget.switch.disabled = False
+            self.yp_widget.yp_cog_button.disabled = False
 
         else:
             # Hide yetipilot container
             self.job_progress_container.padding = 20
-            # self.yetipilot_container.size_hint_y = 0
-            # self.yetipilot_container.opacity = 0
-            self.yetipilot_container.size_hint_y = 1 # TO TEST
-            self.yetipilot_container.opacity = 1 # TO TEST
-
+            self.yetipilot_container.size_hint_y = 0
+            self.yetipilot_container.opacity = 0
             self.yetipilot_container.parent.spacing = 0
             self.yp_widget.disable_yeti_pilot()
             self.yp_widget.switch.disabled = True
+            self.yp_widget.yp_cog_button.disabled = True
 
     def show_maintenance_prompts(self):
         return not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled
