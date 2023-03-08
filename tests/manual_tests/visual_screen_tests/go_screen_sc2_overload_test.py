@@ -59,7 +59,7 @@ class ScreenTest(App):
 
     alarm_message = "\n"
 
-    killtime = 9
+    killtime = 255
     killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
 
     def give_status(self):
@@ -103,7 +103,7 @@ class ScreenTest(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        # m.is_using_sc2 = Mock(return_value=True)
+        m.is_using_sc2 = Mock(return_value=True)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
