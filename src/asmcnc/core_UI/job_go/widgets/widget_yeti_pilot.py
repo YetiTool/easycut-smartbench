@@ -14,6 +14,7 @@ Builder.load_string("""
     profile_label:profile_label
     profile_selection:profile_selection
     bl: bl
+    yp_cog_button:yp_cog_button
 
     BoxLayout:
         orientation: 'horizontal'
@@ -104,6 +105,7 @@ Builder.load_string("""
             size_hint_x: 0.1
             padding: [0,0,10,0]
             Button:
+                id: yp_cog_button
                 background_normal: ''
                 on_press: root.open_yp_settings()
                 BoxLayout:
