@@ -335,11 +335,6 @@ def assert_process_data_matches_ln(ser_con, modes, n):
     assert ser_con.grbl_ln == n
     assert ser_con.jd.grbl_mode_tracker[0] == modes[n]
 
-def assert_process_data_matches_g_mode(ser_con, modes, n):
-    ser_con.process_grbl_push(construct_status_with_line_numbers_feeds_speeds(n, modes[n][1], modes[n][2]))
-    assert ser_con.grbl_ln == n
-    assert ser_con.jd.grbl_mode_tracker[0][0] == 0
-
 
 def test_grbl_mode_tracking_over_scanner_run(sc):
 
@@ -380,6 +375,11 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     assert_process_data_matches_ln(sc, expected_modes, 1)
     assert_process_data_matches_ln(sc, expected_modes, 3)
     assert_process_data_matches_ln(sc, expected_modes, 4)
+
+def assert_process_data_matches_g_mode(ser_con, modes, n):
+    ser_con.process_grbl_push(construct_status_with_line_numbers_feeds_speeds(n, modes[n][1], modes[n][2]))
+    assert ser_con.grbl_ln == n
+    assert ser_con.jd.grbl_mode_tracker[0][0] == 0
 
 def test_grbl_mode_tracking_over_scanner_run_with_just_G0(sc):
 
