@@ -985,6 +985,9 @@ class SerialConnection(object):
                     if self.grbl_ln is not None:
                         self.remove_from_g_mode_tracker(int(value) - self.grbl_ln)
 
+                    if self.grbl_ln is None:
+                        self.remove_from_g_mode_tracker(int(value))
+
                     self.grbl_ln = int(value)
 
                     print ("Diff: " + str(len(self.jd.grbl_mode_tracker) - (self.l_count - self.grbl_ln)))
