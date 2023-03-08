@@ -562,6 +562,9 @@ class SerialConnection(object):
         return float(re.search(self.feed_pattern, line).group()[1:])
 
     def scrape_last_sent_modes(self, line_to_go):
+
+        print("Line to go: " + str(self.l_count) + ": " + str(line_to_go))
+
         if "G0" in line_to_go:
             self.last_sent_motion_mode = "G0"
         if "G1" in line_to_go:
@@ -575,13 +578,24 @@ class SerialConnection(object):
         if "S" in line_to_go:
             self.last_sent_speed = self.get_spindle_speed_for_line(line_to_go)
 
+        print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
+
     def add_to_g_mode_tracker(self, motion, feed, speed):
         self.jd.grbl_mode_tracker += (motion,
                                       feed,
                                       speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff: del self.jd.grbl_mode_tracker[:line_diff]
+
+
+
+        if line_diff: 
+            print("GRBL line: " + str(self.grbl_ln))
+            print("Tracker before: " + str(self.jd.grbl_mode_tracker))
+
+            del self.jd.grbl_mode_tracker[:line_diff]
+
+            print("Tracker after: " + str(self.jd.grbl_mode_tracker))
 
     # PROCESSING GRBL RESPONSES
 
