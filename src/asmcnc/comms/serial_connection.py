@@ -565,13 +565,13 @@ class SerialConnection(object):
 
     def scrape_last_sent_modes(self, line_to_go):
 
-        print("Line to go: " + str(self.l_count) + ": " + str(line_to_go))
+        # print("Line to go: " + str(self.l_count) + ": " + str(line_to_go))
 
         self.last_sent_motion_mode = self.get_grbl_mode(line_to_go, self.g_motion_pattern, self.last_sent_motion_mode)
         self.last_sent_feed = self.get_grbl_float(line_to_go, self.feed_pattern, self.last_sent_feed)
         self.last_sent_speed = self.get_grbl_float(line_to_go, self.speed_pattern, self.last_sent_speed)
 
-        if self.jd.grbl_mode_tracker: print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
+        # if self.jd.grbl_mode_tracker: print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
 
     def add_to_g_mode_tracker(self, motion, feed, speed):
         self.jd.grbl_mode_tracker += (motion,
