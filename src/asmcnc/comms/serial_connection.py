@@ -528,7 +528,7 @@ class SerialConnection(object):
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
                 self.scrape_last_sent_modes(line_to_go)
-                self.add_to_g_mode_tracker(self.last_sent_motion_mode, self.last_sent_feed, self.last_sent_speed)
+                self.add_to_g_mode_tracker(self.l_count, self.last_sent_motion_mode, self.last_sent_feed, self.last_sent_speed)
                 self.c_line.append(len(line_to_go) + 1)  # Track number of characters in grbl serial read buffer
                 self.write_direct(line_to_go, show_in_sys=True, show_in_console=False)  # Send g-code block to grbl
                 self.l_count += 1  # lines sent to grbl
@@ -573,10 +573,11 @@ class SerialConnection(object):
 
         # if self.jd.grbl_mode_tracker: print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
 
-    def add_to_g_mode_tracker(self, motion, feed, speed):
-        self.jd.grbl_mode_tracker += (motion,
-                                      feed,
-                                      speed),
+    def add_to_g_mode_tracker(self, line_no, motion, feed, speed):
+        self.jd.grbl_mode_tracker += (  line_no,
+                                        motion,
+                                        feed,
+                                        speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
 
