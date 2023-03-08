@@ -523,13 +523,12 @@ class SerialConnection(object):
         while self.l_count < len(self.jd.job_gcode_running):
 
             line_to_go = self.add_line_number_to_gcode_line(self.jd.job_gcode_running[self.l_count], self.l_count)
-            self.scrape_last_sent_modes(line_to_go)
-            self.add_to_g_mode_tracker(self.last_sent_motion_mode, self.last_sent_feed, self.last_sent_speed)
-
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
+                self.scrape_last_sent_modes(line_to_go)
+                self.add_to_g_mode_tracker(self.last_sent_motion_mode, self.last_sent_feed, self.last_sent_speed)
                 self.c_line.append(len(line_to_go) + 1)  # Track number of characters in grbl serial read buffer
                 self.write_direct(line_to_go, show_in_sys=True, show_in_console=False)  # Send g-code block to grbl
                 self.l_count += 1  # lines sent to grbl
