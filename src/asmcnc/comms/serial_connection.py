@@ -988,7 +988,7 @@ class SerialConnection(object):
                     self.grbl_ln = int(value)
 
                     print ("Diff: " + str(len(self.jd.grbl_mode_tracker) - (self.l_count - self.grbl_ln)))
-                    print("Top: " + self.jd.grbl_mode_tracker[0])
+                    print("Top: " + str(self.jd.grbl_mode_tracker[0]))
 
                 # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith('Pn:'):
