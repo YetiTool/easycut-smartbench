@@ -335,6 +335,11 @@ def assert_process_data_matches_ln(ser_con, modes, n):
     assert ser_con.grbl_ln == n
     assert ser_con.jd.grbl_mode_tracker[0] == modes[n]
 
+def assert_process_data_matches_g_mode(ser_con, modes, n):
+    ser_con.process_grbl_push(construct_status_with_line_numbers_feeds_speeds(n, modes[n][1], modes[n][2]))
+    assert ser_con.grbl_ln == n
+    assert ser_con.jd.grbl_mode_tracker[0][0] == 0
+
 
 def test_grbl_mode_tracking_over_scanner_run(sc):
 
@@ -350,6 +355,46 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     test_gcode = [
                     "G0X4Y5F" + str(expected_modes[0][1]) + "S" + str(expected_modes[0][2]),
                     "G1X4Y5" + "S" + str(expected_modes[1][2]),
+                    "G0X4Y5F" + str(expected_modes[2][1]) + "S" + str(expected_modes[2][2]),
+                    "G0X4Y5F" + str(expected_modes[3][1]),
+                    "G0X4Y5F" + str(expected_modes[4][1]) + "S" + str(expected_modes[4][2]),
+                    "G0X4Y5F" + str(expected_modes[5][1]) + "S" + str(expected_modes[5][2])
+    ]
+
+    sc.jd.grbl_mode_tracker = []
+    sc.last_sent_motion_mode = ""
+    sc.last_sent_feed = 0
+    sc.last_sent_speed = 0
+    sc.jd.job_gcode_running = test_gcode
+    sc._reset_counters()
+    sc.stuff_buffer()
+
+    # If it gets to here then the output has worked correctly
+    assert sc.jd.grbl_mode_tracker == expected_modes
+
+    # Now to test that line number read in is working as expected
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 0)
+    assert_process_data_matches_ln(sc, expected_modes, 1)
+    assert_process_data_matches_ln(sc, expected_modes, 1)
+    assert_process_data_matches_ln(sc, expected_modes, 3)
+    assert_process_data_matches_ln(sc, expected_modes, 4)
+
+def test_grbl_mode_tracking_over_scanner_run_with_just_G0(sc):
+
+    expected_modes = [
+                    (0,6,7),   #1
+                    (0,6,8),   #2
+                    (0,7,9),   #3
+                    (0,8,9),   #4
+                    (0,9,11),  #5
+                    (0,10,19) #6
+    ]
+
+    test_gcode = [
+                    "G0X4Y5F" + str(expected_modes[0][1]) + "S" + str(expected_modes[0][2]),
+                    "G0X4Y5" + "S" + str(expected_modes[1][2]),
                     "G0X4Y5F" + str(expected_modes[2][1]) + "S" + str(expected_modes[2][2]),
                     "G0X4Y5F" + str(expected_modes[3][1]),
                     "G0X4Y5F" + str(expected_modes[4][1]) + "S" + str(expected_modes[4][2]),
