@@ -430,6 +430,7 @@ def construct_status_with_line_numbers(l=None):
 
 def test_line_number_read_in(sc):
     status = construct_status_with_line_numbers(123)
+    sc.remove_from_g_mode_tracker = Mock()
     sc.process_grbl_push(status)
     assert sc.grbl_ln == 123
     assert_status_end_processed(sc)

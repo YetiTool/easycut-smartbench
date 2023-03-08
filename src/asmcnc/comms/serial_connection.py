@@ -459,6 +459,7 @@ class SerialConnection(object):
 
     def run_job(self, job_object):
 
+        self.grbl_ln = None
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = job_object
 
@@ -487,6 +488,7 @@ class SerialConnection(object):
 
     # USED FOR RUNNING THINGS THAT ARE NOT CUSTOMER FACING
     def run_skeleton_buffer_stuffer(self, gcode_obj):
+        self.grbl_ln = None
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = gcode_obj
 
@@ -644,6 +646,7 @@ class SerialConnection(object):
 
         self.jd.job_gcode_running = []
         self.jd.grbl_mode_tracker = []
+        self.grbl_ln = None
         self.jd.percent_thru_job = 100
 
     def cancel_stream(self):
@@ -654,6 +657,7 @@ class SerialConnection(object):
         self.jd.job_gcode_running = []
         self.yp.use_yp = False
         self.jd.grbl_mode_tracker = []
+        self.grbl_ln = None
 
         if self.m_state != "Check":
 
