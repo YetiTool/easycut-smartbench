@@ -509,8 +509,11 @@ class GoScreen(Screen):
         else:
             # Hide yetipilot container
             self.job_progress_container.padding = 20
-            self.yetipilot_container.size_hint_y = 0
-            self.yetipilot_container.opacity = 0
+            # self.yetipilot_container.size_hint_y = 0
+            # self.yetipilot_container.opacity = 0
+            self.yetipilot_container.size_hint_y = 1 # TO TEST
+            self.yetipilot_container.opacity = 1 # TO TEST
+
             self.yetipilot_container.parent.spacing = 0
             self.yp_widget.disable_yeti_pilot()
             self.yp_widget.switch.disabled = True
