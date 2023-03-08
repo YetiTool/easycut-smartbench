@@ -584,11 +584,14 @@ class SerialConnection(object):
 
         if line_diff: 
             print("GRBL line: " + str(self.grbl_ln))
-            print("Tracker before: " + str(self.jd.grbl_mode_tracker))
+            # print("Tracker before: " + str(self.jd.grbl_mode_tracker))
+
+            print("Tracker length: " + str(len(self.jd.grbl_mode_tracker)))
+            print("Sent/exec line diff: " + str(self.l_count - self.grbl_ln))
 
             del self.jd.grbl_mode_tracker[:line_diff]
 
-            print("Tracker after: " + str(self.jd.grbl_mode_tracker))
+            # print("Tracker after: " + str(self.jd.grbl_mode_tracker))
 
     # PROCESSING GRBL RESPONSES
 
