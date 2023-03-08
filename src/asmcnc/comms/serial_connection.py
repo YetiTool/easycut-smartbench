@@ -578,7 +578,7 @@ class SerialConnection(object):
         if "S" in line_to_go:
             self.last_sent_speed = self.get_spindle_speed_for_line(line_to_go)
 
-        print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
+        if self.jd.grbl_mode_tracker: print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
 
     def add_to_g_mode_tracker(self, motion, feed, speed):
         self.jd.grbl_mode_tracker += (motion,
