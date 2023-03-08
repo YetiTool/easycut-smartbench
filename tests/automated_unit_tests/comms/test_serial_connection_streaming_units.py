@@ -339,12 +339,12 @@ def assert_process_data_matches_ln(ser_con, modes, n):
 def test_grbl_mode_tracking_over_scanner_run(sc):
 
     expected_modes = [
-                    ("G0",6,7),   #1
-                    ("G1",6,8),   #2
-                    ("G0",7,9),   #3
-                    ("G0",8,9),   #4
-                    ("G0",9,11),  #5
-                    ("G0",10,19) #6
+                    (0,6,7),   #1
+                    (1,6,8),   #2
+                    (0,7,9),   #3
+                    (0,8,9),   #4
+                    (0,9,11),  #5
+                    (0,10,19) #6
     ]
 
     test_gcode = [
@@ -376,17 +376,26 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     assert_process_data_matches_ln(sc, expected_modes, 3)
     assert_process_data_matches_ln(sc, expected_modes, 4)
 
-def test_get_spindle_speed_for_line(sc):
-    assert sc.get_spindle_speed_for_line("GX1Y4S600F80") == 600
+def test_is_spindle_speed_in_line(sc):
+    assert sc.get_grbl_float("GX1Y4S600F80", sc.speed_pattern) == 600
 
-def test_get_spindle_speed_for_line_float(sc):
-    assert sc.get_spindle_speed_for_line("GX1Y4S80000.9876F90") == 80000.9876
+def test_is_spindle_speed_in_line_float(sc):
+    assert sc.get_grbl_float("GX1Y4S80000.9876F90", sc.speed_pattern) == 80000.9876
 
-def test_get_feed_rate_for_line(sc):
-    assert sc.get_feed_rate_for_line("G0X1Y4F600Y9S0") == 600
+def test_is_feed_rate_in_line(sc):
+    assert sc.get_grbl_float("G0X1Y4F600Y9S0", sc.feed_pattern) == 600
 
-def test_get_feed_rate_for_line_float(sc):
-    assert sc.get_feed_rate_for_line("G91F9000.9876X6Y7S3") == 9000.9876
+def test_is_feed_rate_in_line_float(sc):
+    assert sc.get_grbl_float("G91F9000.9876X6Y7S3", sc.feed_pattern) == 9000.9876
+
+def test_get_motion_mode_for_line(sc):
+    assert sc.get_grbl_mode("G1X6Y7", sc.g_motion_pattern) == 1
+    assert sc.get_grbl_mode("G2X6Y7", sc.g_motion_pattern) == 2
+    assert sc.get_grbl_mode("G0X6Y7", sc.g_motion_pattern) == 0
+    assert sc.get_grbl_mode("G011X6Y7", sc.g_motion_pattern) == None
+    assert sc.get_grbl_mode("G20X6Y7", sc.g_motion_pattern) == None
+    assert sc.get_grbl_mode("G4X6Y7", sc.g_motion_pattern) == None
+    assert sc.get_grbl_mode("G91F66X7Y7G2S20.67F600", sc.g_motion_pattern) == 2
 
 def test_scrape_last_sent_modes_no_new_info(sc):
     sc.scrape_last_sent_modes("G91")
@@ -397,97 +406,97 @@ def test_scrape_last_sent_modes_no_new_info(sc):
 def test_scrape_last_sent_modes_changing_info(sc):
     sc.last_sent_feed = 6
     sc.last_sent_speed = 6
-    sc.last_sent_motion_mode = "G2"
+    sc.last_sent_motion_mode = 2
     sc.scrape_last_sent_modes("G3F700.89")
     assert sc.last_sent_feed == 700.89
     assert sc.last_sent_speed == 6
-    assert sc.last_sent_motion_mode == "G3"
+    assert sc.last_sent_motion_mode == 3
     sc.scrape_last_sent_modes("M3S23000")
     assert sc.last_sent_feed == 700.89
     assert sc.last_sent_speed == 23000
-    assert sc.last_sent_motion_mode == "G3"
+    assert sc.last_sent_motion_mode == 3
     sc.scrape_last_sent_modes("G0S0X1Y6")
     assert sc.last_sent_feed == 700.89
     assert sc.last_sent_speed == 0
-    assert sc.last_sent_motion_mode == "G0"
+    assert sc.last_sent_motion_mode == 0
     sc.scrape_last_sent_modes("G1S20.90F5000")
     assert sc.last_sent_feed == 5000
     assert sc.last_sent_speed == 20.90
-    assert sc.last_sent_motion_mode == "G1"
+    assert sc.last_sent_motion_mode == 1
     sc.scrape_last_sent_modes("G2X800Y700")
     assert sc.last_sent_feed == 5000
     assert sc.last_sent_speed == 20.90
-    assert sc.last_sent_motion_mode == "G2"
+    assert sc.last_sent_motion_mode == 2
 
 def test_add_to_g_mode_tracker(sc):
     sc.jd.grbl_mode_tracker = []
-    sc.add_to_g_mode_tracker("G0",5,7)
-    assert sc.jd.grbl_mode_tracker == [("G0",5,7)]
-    sc.add_to_g_mode_tracker("G1",400,6)
-    assert sc.jd.grbl_mode_tracker == [("G0",5,7), ("G1",400,6)]
+    sc.add_to_g_mode_tracker(0,5,7)
+    assert sc.jd.grbl_mode_tracker == [(0,5,7)]
+    sc.add_to_g_mode_tracker(1,400,6)
+    assert sc.jd.grbl_mode_tracker == [(0,5,7), (1,400,6)]
     assert sc.jd.grbl_mode_tracker[0][1] == 5
 
 def test_remove_from_g_mode_tracker_with_change(sc):
     sc.jd.grbl_mode_tracker = [
-                                ("G0",7,8),
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,8),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
     sc.remove_from_g_mode_tracker(4-3)
     assert sc.jd.grbl_mode_tracker == [
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
 def test_remove_from_g_mode_tracker_with_0_to_1_change(sc):
     sc.jd.grbl_mode_tracker = [
-                                ("G0",7,8),
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,8),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
     sc.remove_from_g_mode_tracker(1-0)
     assert sc.jd.grbl_mode_tracker == [
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
 def test_remove_from_g_mode_tracker_with_no_change(sc):
     sc.jd.grbl_mode_tracker = [
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
     sc.remove_from_g_mode_tracker(10-10)
     assert sc.jd.grbl_mode_tracker == [
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
 
 def test_remove_from_g_mode_tracker_with_line_skip(sc):
     sc.jd.grbl_mode_tracker = [
-                                ("G0",7,8),
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,8),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
     sc.remove_from_g_mode_tracker(5-3)
     assert sc.jd.grbl_mode_tracker == [
-                                ("G1",7,9),
+                                (1,7,9),
     ]
 
 def test_remove_from_g_mode_tracker_at_job_start(sc):
     sc.jd.grbl_mode_tracker = [
-                                ("G0",7,8),
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,8),
+                                (0,7,9),
+                                (1,7,9),
     ]
 
     sc.remove_from_g_mode_tracker(0-0)
     assert sc.jd.grbl_mode_tracker == [
-                                ("G0",7,8),
-                                ("G0",7,9),
-                                ("G1",7,9),
+                                (0,7,8),
+                                (0,7,9),
+                                (1,7,9),
     ]

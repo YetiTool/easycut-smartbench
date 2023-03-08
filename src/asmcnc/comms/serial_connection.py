@@ -547,6 +547,7 @@ class SerialConnection(object):
 
     feed_pattern = re.compile(r"F\d+\.?\d*")
     speed_pattern = re.compile(r"S\d+\.?\d*")
+    g_motion_pattern = re.compile(r"G([0-3])(\D|$)")
 
     # line counting for buffer stuffing
     def add_line_number_to_gcode_line(self, line, i):
@@ -555,28 +556,21 @@ class SerialConnection(object):
     def gcode_line_is_excluded(self, line):
         return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
 
-    def get_spindle_speed_for_line(self, line):
-        return float(re.search(self.speed_pattern, line).group()[1:])
+    def get_grbl_float(self, line, pattern, last_thing=None):
+        match_obj = re.search(pattern, line)
+        return float(match_obj.group()[1:]) if match_obj else last_thing
 
-    def get_feed_rate_for_line(self, line):
-        return float(re.search(self.feed_pattern, line).group()[1:])
+    def get_grbl_mode(self, line, grbl_pattern, last_thing=None):
+        match_obj = re.search(grbl_pattern, line)
+        return int(match_obj.group()[1]) if match_obj else last_thing
 
     def scrape_last_sent_modes(self, line_to_go):
 
         print("Line to go: " + str(self.l_count) + ": " + str(line_to_go))
 
-        if "G0" in line_to_go:
-            self.last_sent_motion_mode = "G0"
-        if "G1" in line_to_go:
-            self.last_sent_motion_mode = "G1"
-        if "G2" in line_to_go:
-            self.last_sent_motion_mode = "G2"
-        if "G3" in line_to_go:
-            self.last_sent_motion_mode = "G3"
-        if "F" in line_to_go:
-            self.last_sent_feed = self.get_feed_rate_for_line(line_to_go)
-        if "S" in line_to_go:
-            self.last_sent_speed = self.get_spindle_speed_for_line(line_to_go)
+        self.last_sent_motion_mode = self.get_grbl_mode(line_to_go, self.g_motion_pattern, self.last_sent_motion_mode)
+        self.last_sent_feed = self.get_grbl_float(line_to_go, self.feed_pattern, self.last_sent_feed)
+        self.last_sent_speed = self.get_grbl_float(line_to_go, self.speed_pattern, self.last_sent_speed)
 
         if self.jd.grbl_mode_tracker: print("New tracker line: "  + str(self.l_count) + ": " + str(self.jd.grbl_mode_tracker[-1]))
 
