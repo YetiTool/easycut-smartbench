@@ -376,19 +376,6 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     assert_process_data_matches_ln(sc, expected_modes, 3)
     assert_process_data_matches_ln(sc, expected_modes, 4)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def test_get_spindle_speed_for_line(sc):
     assert sc.get_spindle_speed_for_line("GX1Y4S600F80") == 600
 
@@ -453,6 +440,19 @@ def test_remove_from_g_mode_tracker_with_change(sc):
                                 ("G1",7,9),
     ]
 
+def test_remove_from_g_mode_tracker_with_0_to_1_change(sc):
+    sc.jd.grbl_mode_tracker = [
+                                ("G0",7,8),
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
+    sc.remove_from_g_mode_tracker(1-0)
+    assert sc.jd.grbl_mode_tracker == [
+                                ("G0",7,9),
+                                ("G1",7,9),
+    ]
+
 def test_remove_from_g_mode_tracker_with_no_change(sc):
     sc.jd.grbl_mode_tracker = [
                                 ("G0",7,9),
@@ -491,16 +491,3 @@ def test_remove_from_g_mode_tracker_at_job_start(sc):
                                 ("G0",7,9),
                                 ("G1",7,9),
     ]
-
-
-
-
-
-
-
-
-
-
-
-
-
