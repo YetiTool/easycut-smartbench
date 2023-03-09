@@ -414,4 +414,13 @@ def test_get_is_constant_feed_rate_false_when_tolerance_small(m):
     assert last == last_feed_rate
     assert not val
 
+def test_get_is_constant_feed_rate_true_when_diff_equal_to_tolerance(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    tolerance = 10
+    last_feed_rate = feed_rate + tolerance
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
+    assert last == last_feed_rate
+    assert val
+
     
