@@ -1250,6 +1250,9 @@ class RouterMachine(object):
 
     def get_grbl_settings(self):
         self.s.write_command('$$')
+
+    def get_grbl_motion_mode(self): 
+        return self.jd.grbl_mode_tracker[0][0] if self.jd.grbl_mode_tracker else None
         
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
