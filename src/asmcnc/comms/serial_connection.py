@@ -725,6 +725,10 @@ class SerialConnection(object):
     digital_spindle_kill_time = None
     digital_spindle_mains_voltage = None
 
+    # Spindle data "inrush" counter
+    digital_load_pattern = re.compile(r"Ld:\d+,\d+,\d+,\d+")
+    inrush_counter = 0
+
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
     limit_X = False # convention: MAX is UPPER_CASE
@@ -845,6 +849,14 @@ class SerialConnection(object):
                 self.stall_X = False
                 self.stall_Z = False
                 self.stall_Y = False
+
+            # If "Ld:x,x,x,x" is in the status, the spindle is communicating
+            # If spindle is not sending data, reset the "inrush" counter, which discards any weird loads from the spindle starting
+            if not re.search(self.digital_load_pattern, message):
+                self.inrush_counter = 0
+
+            elif self.inrush_counter <= 5:
+                self.inrush_counter += 1
 
             # Get machine's status
             self.m_state = status_parts[0]
