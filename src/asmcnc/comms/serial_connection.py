@@ -690,6 +690,11 @@ class SerialConnection(object):
     m_y = '0.0'
     m_z = '0.0'
 
+    # Track co-ordinate change in each axis
+    x_change = False
+    y_change = False
+    z_change = False
+
     # Work co-ordinates
     w_x = '0.0'
     w_y = '0.0'
@@ -861,6 +866,10 @@ class SerialConnection(object):
                     except:
                         log("ERROR status parse: Position invalid: " + message)
                         return
+
+                    self.x_change = self.m_x != pos[0]
+                    self.y_change = self.m_y != pos[1]
+                    self.z_change = self.m_z != pos[2]
 
                     self.m_x = pos[0]
                     self.m_y = pos[1]
