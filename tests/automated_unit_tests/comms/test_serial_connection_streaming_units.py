@@ -357,6 +357,7 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     ]
 
     sc.jd.grbl_mode_tracker = []
+    sc.grbl_ln = None
     sc.last_sent_motion_mode = ""
     sc.last_sent_feed = 0
     sc.last_sent_speed = 0
@@ -376,12 +377,7 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
     assert_process_data_matches_ln(sc, expected_modes, 3)
     assert_process_data_matches_ln(sc, expected_modes, 4)
 
-def assert_process_data_matches_g_mode(ser_con, modes, n):
-    ser_con.process_grbl_push(construct_status_with_line_numbers_feeds_speeds(n, modes[n][1], modes[n][2]))
-    assert ser_con.grbl_ln == n
-    assert ser_con.jd.grbl_mode_tracker[0][0] == 0
-
-def test_grbl_mode_tracking_over_scanner_run_with_just_G0(sc):
+def test_grbl_mode_tracking_over_scanner_run_with_jump_from_no_ln_no_to_start(sc):
 
     expected_modes = [
                     (0,6,7),   #1
@@ -402,6 +398,7 @@ def test_grbl_mode_tracking_over_scanner_run_with_just_G0(sc):
     ]
 
     sc.jd.grbl_mode_tracker = []
+    sc.grbl_ln = None
     sc.last_sent_motion_mode = ""
     sc.last_sent_feed = 0
     sc.last_sent_speed = 0
@@ -413,13 +410,9 @@ def test_grbl_mode_tracking_over_scanner_run_with_just_G0(sc):
     assert sc.jd.grbl_mode_tracker == expected_modes
 
     # Now to test that line number read in is working as expected
-    assert_process_data_matches_ln(sc, expected_modes, 0)
-    assert_process_data_matches_ln(sc, expected_modes, 0)
-    assert_process_data_matches_ln(sc, expected_modes, 0)
-    assert_process_data_matches_ln(sc, expected_modes, 1)
-    assert_process_data_matches_ln(sc, expected_modes, 1)
     assert_process_data_matches_ln(sc, expected_modes, 3)
     assert_process_data_matches_ln(sc, expected_modes, 4)
+    assert_process_data_matches_ln(sc, expected_modes, 5)
 
 def test_is_spindle_speed_in_line(sc):
     assert sc.get_grbl_float("GX1Y4S600F80", sc.speed_pattern) == 600

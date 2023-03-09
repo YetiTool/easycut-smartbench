@@ -972,7 +972,7 @@ class SerialConnection(object):
                     if self.grbl_ln is not None:
                         self.remove_from_g_mode_tracker(int(value) - self.grbl_ln)
 
-                    elif self.grbl_ln is None:
+                    else:
                         self.remove_from_g_mode_tracker(int(value))
 
                     self.grbl_ln = int(value)
