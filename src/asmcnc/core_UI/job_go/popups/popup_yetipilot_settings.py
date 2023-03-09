@@ -20,8 +20,13 @@ from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
+
+from functools import partial
+
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
+
+
 
 Builder.load_string("""
 
@@ -123,8 +128,8 @@ class PopupYetiPilotSettings(Widget):
         sum_of_middle_heights = subtitle_height  + radio_BL_height + body_BL_height
         close_button_BL_height = vertical_BL_height - sum_of_middle_heights
 
-        dropdowns_container_width = 350
-        dropdowns_width = 270
+        dropdowns_container_width = 330
+        dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
 
@@ -146,7 +151,7 @@ class PopupYetiPilotSettings(Widget):
         right_BL = BoxLayout(orientation= "vertical", size_hint_x=None, width=advice_container_width)
 
         # Close button
-        close_string = self.l.get_bold('Close')
+        close_string = self.l.get_bold('Ok')
         close_button = CloseButton(text=close_string, markup = True, color=subtle_white, font_size='15sp')
         # close_button.background_normal = ''
         # close_button.background_color = blue
@@ -310,14 +315,18 @@ class PopupYetiPilotSettings(Widget):
 
         # Profile radio buttons
 
-        def switch_version(*args):
+        def switch_version(state, instance=None):
+            if state: 
+                instance.active=True
+                return
+
             self.yp.standard_profiles = not version
             unschedule_clocks()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
             popup.dismiss()
+            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
-        radio_button_width = 40
-        pad_width = 40      
+        radio_button_width = 30
+        pad_width = 30      
         text_width = (pop_width - pad_width)/2 -radio_button_width
 
         radio_BL = BoxLayout( orientation='horizontal',
@@ -327,7 +336,8 @@ class PopupYetiPilotSettings(Widget):
                           )
         def make_option(version_text, version):
             label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
-            label_radio_container.add_widget(CheckBox(group="settings", color=blue, on_press=switch_version, active=version, disabled=version, background_radio_disabled_down="atlas://data/images/defaulttheme/checkbox_radio_on"))
+            checkbox_func =partial(switch_version, version)
+            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version))
             label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
@@ -352,7 +362,7 @@ class PopupYetiPilotSettings(Widget):
         # Little warning icon
         if version: 
             floating_warning = FloatLayout()
-            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(274, -15)))
+            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(dropdowns_container_width-76, -15)))
             AL.add_widget(floating_warning)
 
         # Create popup & format

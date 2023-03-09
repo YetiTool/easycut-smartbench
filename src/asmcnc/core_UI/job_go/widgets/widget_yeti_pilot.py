@@ -14,17 +14,20 @@ Builder.load_string("""
     profile_label:profile_label
     profile_selection:profile_selection
     bl: bl
+    yp_cog_button:yp_cog_button
 
     BoxLayout:
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
         padding: [10,8]
+
         
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.25
             spacing: 10
+
             Label:
                 id: yetipilot_two_tone
                 size_hint_y: 0.6
@@ -33,6 +36,7 @@ Builder.load_string("""
                 text_size: self.size
                 font_size: '20sp'
                 valign: "bottom"
+                font: 'Roboto Bold'
 
             BoxLayout: 
                 id: bl
@@ -101,6 +105,7 @@ Builder.load_string("""
             size_hint_x: 0.1
             padding: [0,0,10,0]
             Button:
+                id: yp_cog_button
                 background_normal: ''
                 on_press: root.open_yp_settings()
                 BoxLayout:
@@ -129,7 +134,8 @@ class YetiPilotWidget(Widget):
         self.yp = kwargs['yetipilot']
 
         self.disable_yeti_pilot()
-        self.yetipilot_two_tone.text = '[b][color=2196f3ff]Yeti[/color][color=333333ff]Pilot[/b][/color]'
+        # self.yetipilot_two_tone.text = '[b][color=2196f3ff]YetiPilot[/b][/color]' # [/color][color=333333ff]
+        self.yetipilot_two_tone.text = '[b][color=1976d2ff]YetiPilot[/b][/color]' # [/color][color=333333ff] 
         self.profile_label.text = self.l.get_str("Profile")
 
     def toggle_button_img(self, state):
