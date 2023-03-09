@@ -1683,6 +1683,12 @@ class RouterMachine(object):
     def speed_override_down_1(self, final_percentage=''):
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
+    def speed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
+
+    def speed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
+
         
 # HOMING
 
