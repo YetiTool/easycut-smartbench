@@ -64,6 +64,14 @@ class TestApp(App):
 
     lang_idx = 0
 
+    # 0 - English (y)
+    # 1 - Italian (y)
+    # 2 - Finnish (y)
+    # 3 - German (y)
+    # 4 - French (y)
+    # 5 - Polish (y)
+    # 6 - Danish (y)
+
     def build(self):
         # Create the screen manager
         sm = ScreenManager()
