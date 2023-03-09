@@ -514,7 +514,7 @@ class LobbyScreen(Screen):
         self.am.start_maintenance_app('laser_tab') 
 
     def upgrade_app(self):
-        pass
+        self.am.start_upgrade_app()
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
