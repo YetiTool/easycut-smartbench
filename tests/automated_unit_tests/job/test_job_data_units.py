@@ -42,7 +42,7 @@ def test_get_jd(jd):
 # FEED RATE SCRAPE
 
 def test_scrape_last_feed_command_float(jd):
-    index = 6
+    index = 5
     job_gcode_object = [
         "G91X0F1000",
         "G1X0F8000",
@@ -54,7 +54,7 @@ def test_scrape_last_feed_command_float(jd):
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 824.88
 
 def test_scrape_last_feed_command_int_mid_job(jd):
-    index = 2
+    index = 1
     job_gcode_object = [
         "G91X0F1000",
         "G1X0F8000",
@@ -82,7 +82,7 @@ def test_scrape_last_feed_command_start_of_job(jd):
         "G91X0F1000",
         "G1X0F8000"
     ]
-    assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
+    assert jd.scrape_last_feed_command(job_gcode_object, index) == 1000
 
 def test_scrape_last_feed_command_no_feeds(jd):
     index = 3
@@ -100,7 +100,7 @@ def test_scrape_last_feed_command_no_obj(jd):
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
 
 def test_scrape_last_feed_command_no_F(jd):
-    index = 3
+    index = 2
     job_gcode_object = [
         "G91X0F1000",
         "G1X0F8000",
@@ -109,7 +109,7 @@ def test_scrape_last_feed_command_no_F(jd):
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 0
 
 def test_scrape_last_feed_command_feed_start_of_line(jd):
-    index = 3
+    index = 2
     job_gcode_object = [
         "G91X0F1000",
         "G1X0F8000",
@@ -118,7 +118,7 @@ def test_scrape_last_feed_command_feed_start_of_line(jd):
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 6000
 
 def test_scrape_last_feed_command_feed_mid_line(jd):
-    index = 1
+    index = 0
     job_gcode_object = [
         "G91F1000X0",
     ]
