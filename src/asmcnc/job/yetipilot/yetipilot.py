@@ -17,6 +17,7 @@ def format_time(seconds):
 
 
 def get_adjustment_list(feed_adjustment_percentage):
+    feed_adjustment_percentage = int(round(feed_adjustment_percentage))
     tens = [10 if feed_adjustment_percentage > 0 else -10 for _ in range(abs(feed_adjustment_percentage) // 10)]
     ones = [1 if feed_adjustment_percentage > 0 else -1 for _ in range(abs(feed_adjustment_percentage) % 10)]
     return tens + ones
