@@ -178,17 +178,17 @@ class YetiPilot(object):
     def get_command_dictionary(self, feed):
         if feed:
             return {
-                10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10()),
-                1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1()),
-                -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1()),
-                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10())
+                10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
+                1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1),
+                -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1),
+                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10)
             }
 
         return {
-            10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10()),
-            1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1()),
-            -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1()),
-            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10())
+            10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10),
+            1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1),
+            -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
+            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10)
         }
 
     def add_status_to_yetipilot(self, digital_spindle_ld_qdA, digital_spindle_mains_voltage,
