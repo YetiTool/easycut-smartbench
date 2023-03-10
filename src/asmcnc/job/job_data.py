@@ -68,6 +68,7 @@ class JobData(object):
     actual_runtime = ''
     pause_duration = ''
     total_time = ''
+    job_start_time = None
     
     # Production notes
     post_production_notes = ''
