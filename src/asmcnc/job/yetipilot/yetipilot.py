@@ -342,10 +342,10 @@ class YetiPilot(object):
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
-
         if using_advanced_profile:
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
+
             self.using_basic_profile = False
 
     def set_target_power(self, target_power):
