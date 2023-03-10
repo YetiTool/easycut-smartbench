@@ -27,9 +27,6 @@ def get_adjustment(feed_multiplier):
     return [-10 if negative else 10 for _ in range(tens)] + [-1 if negative else 1 for _ in range(ones)]
 
 
-DEV_MODE = True
-
-
 class YetiPilot(object):
     use_yp = False
 

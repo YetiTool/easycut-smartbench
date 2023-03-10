@@ -1,6 +1,4 @@
 {
-  "Version": 1.0,
-  "Easycut Requirement": "1.0.0",
   "Parameters": [
     {
       "Name": "spindle_load_stack_size",
