@@ -507,10 +507,6 @@ def test_line_number_read_in_when_no_number(sc):
     assert sc.grbl_ln == None
     assert_status_end_processed(sc)
 
-<<<<<<< HEAD
-## 
-
-=======
 # TEST INRUSH COUNTER
 
 def construct_status_with_load_string(load_string = ""):
@@ -547,4 +543,4 @@ def test_inrush_counter_resets_after_no_comms(sc):
     status = construct_status_with_load_string()
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 0
->>>>>>> master
+
