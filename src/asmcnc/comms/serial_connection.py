@@ -377,15 +377,17 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: 
+                    if self.yp.use_yp:
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
                                 and self.inrush_counter == 12:
 
-                            self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA, self.feed_override_percentage,
-                                                 int(self.feed_rate), self.grbl_ln, self.digital_spindle_mains_voltage)
+                            self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA,
+                                                            self.digital_spindle_mains_voltage,
+                                                            self.feed_override_percentage,
+                                                            int(self.feed_rate))
 
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
@@ -585,7 +587,7 @@ class SerialConnection(object):
                                         speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff: 
+        if line_diff:
             del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
