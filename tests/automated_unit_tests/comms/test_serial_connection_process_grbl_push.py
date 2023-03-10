@@ -23,6 +23,7 @@ from asmcnc.comms import localization
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push.py
+To run individual tests add < -k 'test_name_here' >, where test_name_here can be a partial string (that will then match as many tests as it's in)
 ######################################
 '''
 
@@ -447,3 +448,39 @@ def test_line_number_read_in_when_no_number(sc):
     assert sc.grbl_ln == None
     assert_status_end_processed(sc)
 
+# TEST INRUSH COUNTER
+
+def construct_status_with_load_string(load_string = ""):
+    # Use this to construct the test status passed out by mock serial object
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0" + load_string
+    status += "|TC:1,2>"
+    return status
+
+def test_inrush_counter_0_when_no_load(sc):
+    status = construct_status_with_load_string()
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 0
+
+def test_inrush_counter_1_when_1_load(sc):
+    sc.inrush_counter == 0
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 1
+
+def test_inrush_counter_increases_to_6_and_stops(sc):
+    sc.inrush_counter == 0
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 6
+
+def test_inrush_counter_resets_after_no_comms(sc):
+    sc.inrush_counter == 3
+    status = construct_status_with_load_string()
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 0
