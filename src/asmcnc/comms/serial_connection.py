@@ -377,7 +377,17 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: self.yp.add_to_stack()
+                    if self.yp.use_yp: 
+
+                        if self.digital_spindle_ld_qdA >= 0 \
+                                and self.grbl_ln is not None \
+                                and self.digital_spindle_mains_voltage >= 0 \
+                                and self.inrush_counter == 6:
+
+                            self.yp.add_to_stack()
+                            # self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
+                            #                      self.feed_rate, self.grbl_ln, self.digital_spindle_mains_voltage)
+
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else:
