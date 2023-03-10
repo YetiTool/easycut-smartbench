@@ -5,6 +5,8 @@ Builder.load_string("""
 <UpgradeScreen>:
 
     instruction_label:instruction_label
+    support_label:support_label
+    spindle_label:spindle_label
 
     BoxLayout:
         orientation: 'vertical'
@@ -55,6 +57,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
+            padding: [0,0,0,dp(20)]
 
             canvas: 
                 Color:
@@ -69,15 +72,44 @@ Builder.load_string("""
                 Label:
                     id: instruction_label
                     size_hint_y: 2
-                    font_size: dp(20)
+                    font_size: dp(24)
                     color: 0,0,0,1
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
 
-                TextInput
+                BoxLayout:
+                    padding: [dp(200),0,dp(200),dp(20)]
 
-            BoxLayout
+                    TextInput:
+                        font_size: dp(30)
+                        multiline: False
+                        valign: 'middle'
+                        halign: 'center'
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                Label:
+                    id: support_label
+                    size_hint_y: 1.5
+                    font_size: dp(24)
+                    color: 0,0,0,1
+                    halign: 'center'
+                    valign: 'middle'
+                    text_size: self.size
+
+                Image:
+                    size_hint_y: 2
+                    source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
+
+                Label:
+                    id: spindle_label
+                    font_size: dp(24)
+                    color: 0,0,0,1
+                    halign: 'center'
+                    valign: 'middle'
+                    text_size: self.size
 
 """)
 
@@ -90,7 +122,6 @@ class UpgradeScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
-    def on_pre_enter(self):
         self.update_strings()
 
     def quit_to_lobby(self):
@@ -102,3 +133,7 @@ class UpgradeScreen(Screen):
             '2. ' + self.l.get_str('Type in your upgrade code below') + '\n' + \
             '3. ' + self.l.get_str('Press "Enter" on the keyboard')
         )
+
+        self.support_label.text = self.l.get_str("For more information about upgrades, please contact your place of purchase or visit www.yetitool.com")
+
+        self.spindle_label.text = self.l.get_str("Looking for Spindle motor...")
