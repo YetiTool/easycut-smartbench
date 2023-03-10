@@ -384,9 +384,8 @@ class SerialConnection(object):
                                 and self.digital_spindle_mains_voltage >= 0 \
                                 and self.inrush_counter == 6:
 
-                            self.yp.add_to_stack()
-                            # self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
-                            #                      self.feed_rate, self.grbl_ln, self.digital_spindle_mains_voltage)
+                            self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
+                                                 self.feed_rate, self.grbl_ln, self.digital_spindle_mains_voltage)
 
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
