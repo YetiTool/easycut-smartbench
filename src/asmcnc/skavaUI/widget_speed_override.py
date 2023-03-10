@@ -22,6 +22,7 @@ Builder.load_string("""
     spindle_rpm:spindle_rpm
     up_5: up_5
     down_5: down_5
+    norm_button:norm_button
 
     BoxLayout:
         size: self.parent.size
@@ -51,6 +52,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
+                id: norm_button
                 on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
@@ -180,3 +182,17 @@ class SpeedOverride(Widget):
                 pass
 
         self.push = 0
+
+    def set_widget_visibility(self, visible):
+        self.up_5.disabled = not visible
+        self.down_5.disabled = not visible
+        self.norm_button.disabled = not visible
+
+        if visible:
+            self.up_5.opacity = 1
+            self.down_5.opacity = 1
+            self.norm_button.opacity = 1
+        else:
+            self.up_5.opacity = 0.5
+            self.down_5.opacity = 0.5
+            self.norm_button.opacity = 0.5

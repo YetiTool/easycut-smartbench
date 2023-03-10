@@ -82,6 +82,7 @@ class YetiPilot(object):
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
+            self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
 
     def disable(self):
         self.use_yp = False
@@ -89,6 +90,7 @@ class YetiPilot(object):
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').yp_widget.switch_reflects_yp()
             self.sm.get_screen('go').feedOverride.set_widget_visibility(True)
+            self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
 
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
