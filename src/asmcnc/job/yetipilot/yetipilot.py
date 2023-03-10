@@ -69,10 +69,18 @@ class YetiPilot(object):
 
     spindle_230v_correction_factor = 1350
 
+    profiles_path = 'asmcnc/job/yetipilot/config/profiles.json'
+    parameters_path = 'asmcnc/job/yetipilot/config/algorithm_parameters.json'
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+
+        if kwargs.get('test', False):
+            self.profiles_path = 'src/' + self.profiles_path
+            self.parameters_path = 'src/' + self.parameters_path
+
         self.get_available_profiles()
         self.load_parameters()
 
@@ -244,7 +252,7 @@ class YetiPilot(object):
                                     i * self.override_command_delay)
 
     def load_parameters(self):
-        with open('asmcnc/job/yetipilot/config/algorithm_parameters.json') as f:
+        with open(self.parameters_path) as f:
             parameters_json = json.load(f)["Parameters"]
 
             for parameter in parameters_json:
@@ -252,7 +260,7 @@ class YetiPilot(object):
 
     # USE THESE FUNCTIONS FOR BASIC PROFILES
     def get_available_profiles(self):
-        with open('asmcnc/job/yetipilot/config/profiles.json') as f:
+        with open(self.profiles_path) as f:
             profiles_json = json.load(f)
 
         for profile_json in profiles_json["Profiles"]:
