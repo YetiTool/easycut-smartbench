@@ -45,10 +45,33 @@ class YetiPilot(object):
     step_min = 3
     step_max = 6
 
+    available_cutter_diameters = ["a", "b", "c"]
+    available_cutter_types = ["a", "b", "c"]
+    available_material_types = ["a", "b", "c"]
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+
+    def get_available_cutter_diameters(self):
+        return self.available_cutter_diameters
+
+    def get_available_cutter_types(self):
+        return self.available_cutter_types
+
+    def get_available_material_types(self):
+        return self.available_material_types
+
+    def get_active_cutter_diameter(self):
+        return ""
+
+    def get_active_cutter_type(self):
+        return ""
+
+    def get_active_material_type(self):
+        return ""
+
 
     def enable(self):
         self.load_parameters_from_json()

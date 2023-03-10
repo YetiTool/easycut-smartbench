@@ -43,11 +43,10 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#f9f9f9ff')
-        RoundedRectangle:
+            rgba: hex('#e5e5e5ff')
+        Rectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(10), dp(10)]
 
 
 <Choices@Spinner>
@@ -58,7 +57,7 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#e5e5e5ff')
+            rgba: hex('ccccccff')
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -98,16 +97,10 @@ class PopupYetiPilotSettings(Widget):
 
         clock_speed_1 = None
         clock_speed_2 = None
-        clock_step_down = None
 
-        diameter_values = ('3mm','6mm','8mm')
-        tool_values = (
-                            '2 flute upcut spiral',
-                            '2 flute downcut spiral')
-
-        material_values = (
-                            'MDF',
-                        )
+        diameter_values = self.yp.get_available_cutter_diameters()
+        tool_values = self.yp.get_available_cutter_types()
+        material_values = self.yp.get_available_material_types()
 
         img_path = './asmcnc/core_UI/job_go/img/'
         sep_top_img_src = img_path + 'yp_settings_sep_top.png'
@@ -165,6 +158,19 @@ class PopupYetiPilotSettings(Widget):
 
         def build_pre_cut_profiles():
 
+            def get_profile():
+                # profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
+                # if profile is None:
+                #     return
+
+                # self.yp.use_profile(profile)
+
+                # try:
+                #     update_step_down(self.yp.get_active_step_down())
+                # except:
+                #     pass
+                pass
+
             # Drop down menus (i.e. actual profile selection)
             left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
     
@@ -173,17 +179,19 @@ class PopupYetiPilotSettings(Widget):
             optn_img_3 = Image(source=img_3_src)
     
             def select_diameter(spinner, val):
-              self.yp.diameter = val
+              get_profile()
     
             def select_tool(spinner, val):
-              self.yp.tool = val
+              get_profile()
     
             def select_material(spinner, val):
-              self.yp.material = val
+              get_profile()
     
-            diameter_choice = Choices(values=diameter_values, text=self.yp.diameter)
-            tool_choice = Choices(values=tool_values, text=self.yp.tool)
-            material_choice = Choices(values=material_values, text=self.yp.material)
+            diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
+            tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
+            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
+
+            get_profile()
     
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
@@ -247,8 +255,7 @@ class PopupYetiPilotSettings(Widget):
                                     )
     
             right_BL.add_widget(step_downs_msg_label)
-            right_BL.add_widget(unexpected_results_label)    
-            clock_step_down = Clock.schedule_interval(lambda dt: update_step_down(self.yp.step_min, self.yp.step_max), 0.1)
+            right_BL.add_widget(unexpected_results_label)
     
     
         # END OF BODY PRE-CUT PROFILES --------------------------------
@@ -287,7 +294,6 @@ class PopupYetiPilotSettings(Widget):
         def unschedule_clocks(*args):
             if clock_speed_1: Clock.unschedule(clock_speed_1)
             if clock_speed_2: Clock.unschedule(clock_speed_2)
-            if clock_step_down: Clock.unschedule(clock_step_down)
 
         if version:
             build_pre_cut_profiles()
