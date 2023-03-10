@@ -177,7 +177,7 @@ class YetiPilot(object):
             adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
                                                                                       constant_feed)
 
-            g0_move = self.m.s.is_machine_in_g0_mode()
+            g0_move = self.m.get_grbl_motion_mode() == 0
             allow_feedup = not g0_move and constant_feed
 
             if allow_feedup or raw_multiplier < 0:
