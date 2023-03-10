@@ -273,7 +273,10 @@ class YetiPilot(object):
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True
-        self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
                     str(profile.cutter_type) == cutter_type and \
@@ -329,7 +332,9 @@ class YetiPilot(object):
 
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
-        self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
+
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
 
         if using_advanced_profile:
             self.using_basic_profile = False
