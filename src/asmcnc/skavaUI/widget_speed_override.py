@@ -160,19 +160,23 @@ class SpeedOverride(Widget):
     def disable_buttons(self):
         self.down_5.disabled = True
         self.up_5.disabled = True
-        try: 
+
+        try:
             self.sm.get_screen('go').feedOverride.down_5.disabled = True
             self.sm.get_screen('go').feedOverride.up_5.disabled = True
-        except: 
+        except:
             pass
         return True
 
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
-        try: 
-            self.sm.get_screen('go').feedOverride.down_5.disabled = False
-            self.sm.get_screen('go').feedOverride.up_5.disabled = False      
-        except:
-            pass
+
+        if self.m.s.yp.use_yp:
+            if not self.m.s.yp.using_basic_profile:
+                try:
+                    self.sm.get_screen('go').feedOverride.down_5.disabled = False
+                    self.sm.get_screen('go').feedOverride.up_5.disabled = False
+                except:
+                    pass
         self.push = 0
