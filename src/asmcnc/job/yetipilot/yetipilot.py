@@ -72,6 +72,9 @@ class YetiPilot(object):
     def get_active_material_type(self):
         return ""
 
+    def get_active_step_down(self):
+        return "x-x mm"
+
 
     def enable(self):
         self.load_parameters_from_json()

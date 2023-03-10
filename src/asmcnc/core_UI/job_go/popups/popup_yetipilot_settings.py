@@ -233,12 +233,13 @@ class PopupYetiPilotSettings(Widget):
                                     padding=[10,10],
                                     size_hint_y=0.6
                                     )
-            def update_step_down(step_down_min, step_down_max):
+            def update_step_down(step_down_range):
               step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
                                       "\n" + \
-                                      "[size=16sp][b]" + str(step_down_min) + "-" + str(step_down_max) + " mm" + "[/size]"\
+                                      "[size=16sp][b]" + str(step_down_range) + "[/size]"\
                                       + "[/b]"
-            update_step_down(self.yp.step_min, self.yp.step_max)
+
+            update_step_down(self.yp.get_active_step_down())
     
             unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
             unexpected_results_label = Label(
