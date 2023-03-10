@@ -95,6 +95,8 @@ class YetiPilot(object):
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
 
+        self.m.speed_override_reset()
+
     # Utils
     def ldA_to_watts(self, load):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
