@@ -138,7 +138,7 @@ class YetiPilot(object):
         return adjustments, multiplier, capped_multiplier
 
     def cap_multiplier(self, multiplier):
-        if self.moving_in_z and multiplier > 0:
+        if self.m.s.z_change and multiplier > 0:
             return self.cap_for_feed_increase_during_z_movement
 
         if multiplier < self.cap_for_feed_decrease:
@@ -209,7 +209,7 @@ class YetiPilot(object):
                 raw_multiplier=raw_multiplier,
                 adjustment_list=adjustment[:self.override_commands_per_adjustment],
                 feed_override_percentage=feed_override_percentage,
-                moving_in_z=str(self.moving_in_z),
+                moving_in_z=self.m.s.z_change,
                 sg_x_motor_axis=self.m.s.sg_x_motor_axis,
                 sg_y_axis=self.m.s.sg_y_axis,
                 sg_z_motor_axis=self.m.s.sg_z_motor_axis,
