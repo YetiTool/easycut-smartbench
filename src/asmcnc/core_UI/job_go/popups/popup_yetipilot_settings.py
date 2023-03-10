@@ -14,7 +14,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.uix.button import Button
+from kivy.uix.button import  Button
 from kivy.uix.image import Image
 from kivy.metrics import dp
 from kivy.uix.spinner import Spinner
@@ -25,6 +25,8 @@ from functools import partial
 
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
+
+
 
 Builder.load_string("""
 
@@ -41,10 +43,11 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#e5e5e5ff')
-        Rectangle:
+            rgba: hex('#f9f9f9ff')
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [dp(10), dp(10)]
 
 
 <Choices@Spinner>
@@ -55,7 +58,7 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#ccccccff')
+            rgba: hex('#e5e5e5ff')
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -77,14 +80,11 @@ Builder.load_string("""
 
 """)
 
-
 class Choices(Spinner):
     pass
 
-
 class CloseButton(Button):
     pass
-
 
 class PopupYetiPilotSettings(Widget):
 
@@ -120,15 +120,15 @@ class PopupYetiPilotSettings(Widget):
         vertical_BL_height = pop_height - title_height
         radio_BL_height = 50
         body_BL_height = 210
-        sum_of_middle_heights = subtitle_height + radio_BL_height + body_BL_height
+        sum_of_middle_heights = subtitle_height  + radio_BL_height + body_BL_height
         close_button_BL_height = vertical_BL_height - sum_of_middle_heights
 
-        dropdowns_container_width = 350
-        dropdowns_width = 270
+        dropdowns_container_width = 330
+        dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
 
-        transparent = [0, 0, 0, 0]
+        transparent = [0,0,0,0]
         subtle_white = [249 / 255., 249 / 255., 249 / 255., 1.]
         blue = [33 / 255., 150 / 255., 243 / 255., 1.]
         dark_grey = [51 / 255., 51 / 255., 51 / 255., 1.]
@@ -140,20 +140,20 @@ class PopupYetiPilotSettings(Widget):
         body_BL = BoxLayout(orientation='horizontal',
                             size_hint_y=None,
                             height=body_BL_height
-                            )
+        )
 
-        left_BL = BoxLayout(orientation='vertical', padding=[10, 10])
-        right_BL = BoxLayout(orientation="vertical", size_hint_x=None, width=advice_container_width)
+        left_BL = BoxLayout(orientation='vertical', padding=[10,10])
+        right_BL = BoxLayout(orientation= "vertical", size_hint_x=None, width=advice_container_width)
 
         # Close button
-        close_string = self.l.get_bold('Close')
-        close_button = CloseButton(text=close_string, markup=True, color=subtle_white, font_size='15sp')
+        close_string = self.l.get_bold('Ok')
+        close_button = CloseButton(text=close_string, markup = True, color=subtle_white, font_size='15sp')
         # close_button.background_normal = ''
         # close_button.background_color = blue
         close_button_BL = BoxLayout(orientation='horizontal',
-                                    padding=[160, 0]
-                                    # padding=[190,20,190,20]
-                                    )
+                                  padding = [160,0]
+                                  # padding=[190,20,190,20]
+                                  )
         close_button_BL.add_widget(close_button)
 
         # BODY PRE CUT PROFILES ---------------------------
@@ -192,22 +192,17 @@ class PopupYetiPilotSettings(Widget):
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
             material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
-            get_profile()
-
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
             material_choice.bind(text=select_material)
 
-            diameter_BL = BoxLayout(orientation='vertical', padding=[5, 2.5])
-            tool_BL = BoxLayout(orientation='vertical', padding=[5, 2.5])
-            material_BL = BoxLayout(orientation='vertical', padding=[5, 2.5])
+            diameter_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
+            tool_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
+            material_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
 
-            diameter_label = Label(text=self.l.get_str('Tool diameter'), color=dark_grey, markup=True, halign='left',
-                                   text_size=(dropdowns_width - 10, None), size_hint_y=0.4)
-            tool_label = Label(text=self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left',
-                               text_size=(dropdowns_width - 10, None), size_hint_y=0.4)
-            material_label = Label(text=self.l.get_str('Material'), color=dark_grey, markup=True, halign='left',
-                                   text_size=(dropdowns_width - 10, None), size_hint_y=0.4)
+            diameter_label = Label(text = self.l.get_str('Tool diameter'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
+            tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
+            material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
 
             diameter_BL.add_widget(diameter_label)
             diameter_BL.add_widget(diameter_choice)
@@ -227,16 +222,16 @@ class PopupYetiPilotSettings(Widget):
 
             # Step down advice labels
             step_downs_msg_label = Label(
-                text_size=(advice_container_width, body_BL_height * 0.6),
-                markup=True,
-                font='Roboto',
-                font_size='15sp',
-                halign='left',
-                valign='top',
-                color=dark_grey,
-                padding=[10, 10],
-                size_hint_y=0.6
-            )
+                                    text_size=(advice_container_width, body_BL_height*0.6),
+                                    markup=True,
+                                    font= 'Roboto',
+                                    font_size='14sp',
+                                    halign='left',
+                                    valign='top',
+                                    color=dark_grey,
+                                    padding=[10,10],
+                                    size_hint_y=0.6
+                                    )
 
             def update_step_down(step_down_range):
                 step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
@@ -246,43 +241,43 @@ class PopupYetiPilotSettings(Widget):
 
             update_step_down(self.yp.get_active_step_down())
 
-            unexpected_results_string = "  (!)  " + self.l.get_str(
-                "Exceeding this range may produce unexpected results.")
+            unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
             unexpected_results_label = Label(
-                text_size=(advice_container_width, body_BL_height * 0.4),
-                markup=True,
-                font='Roboto',
-                font_size='14sp',
-                halign='left',
-                valign='top',
-                text=unexpected_results_string,
-                color=dark_grey,
-                padding=[10, 0],
-                size_hint_y=0.4
-            )
+                                    text_size=(advice_container_width, body_BL_height*0.4),
+                                    markup=True,
+                                    font= 'Roboto',
+                                    font_size='14sp',
+                                    halign='left',
+                                    valign='top',
+                                    text=unexpected_results_string,
+                                    color=dark_grey,
+                                    padding=[10,0],
+                                    size_hint_y=0.4
+                                    )
 
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
-            # clock_step_down = Clock.schedule_interval(lambda dt: update_step_down(self.yp.step_min, self.yp.step_max),
-            #                                           0.1)
+
 
         # END OF BODY PRE-CUT PROFILES --------------------------------
+
 
         # BODY CUSTOM PROFILES
         def build_advanced_settings():
 
             target_ml_string = self.l.get_str("Target Spindle motor load")
-            target_ml_label = Label(size_hint_y=0.1,
-                                    text_size=(dropdowns_width - 10, self.height),
+            target_ml_label = Label( size_hint_y=0.1,
+                                    text_size=(dropdowns_width-10, self.height),
                                     markup=True,
-                                    font='Roboto',
+                                    font= 'Roboto',
                                     font_size='17sp',
                                     halign='center',
                                     valign='middle',
                                     text=target_ml_string,
                                     color=dark_grey,
-                                    padding=[0, 0]
+                                    padding=[0,0]
                                     )
+
 
             load_slider_container = BoxLayout(size_hint_y=0.9)
             load_slider = LoadSliderWidget(screen_manager=self.sm, yetipilot=self.yp)
@@ -291,13 +286,11 @@ class PopupYetiPilotSettings(Widget):
             left_BL.add_widget(target_ml_label)
             left_BL.add_widget(load_slider_container)
 
-            speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm,
-                                                                database=self.db)
+            speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
             right_BL.add_widget(speedOverride)
 
             clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
-            clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(),
-                                                    0.1)
+            clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1)
 
         def unschedule_clocks(*args):
             if clock_speed_1: Clock.unschedule(clock_speed_1)
@@ -315,60 +308,56 @@ class PopupYetiPilotSettings(Widget):
         body_BL.add_widget(right_BL)
 
         # Subtitle
-        subtitle_label = Label(size_hint_y=None,
-                               height=subtitle_height,
-                               text_size=(pop_width, subtitle_height),
-                               markup=True,
-                               font='Roboto',
-                               font_size='15sp',
-                               halign='center',
-                               valign='middle',
-                               text=subtitle_string,
-                               color=dark_grey,
-                               padding=[0, 0]
-                               )
+        subtitle_label = Label( size_hint_y=None,
+                              height=subtitle_height,
+                              text_size=(pop_width, subtitle_height),
+                              markup=True,
+                              font= 'Roboto',
+                              font_size='15sp',
+                              halign='center',
+                              valign='middle',
+                              text=subtitle_string,
+                              color=dark_grey,
+                              padding=[10,0]
+                              )
 
         # Profile radio buttons
 
         def switch_version(state, instance=None):
             if state:
-                instance.active = True
+                instance.active=True
                 return
 
-            # self.yp.standard_profiles = not version
+            self.yp.standard_profiles = not version
             unschedule_clocks()
             popup.dismiss()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not version,
-                                   closing_func=closing_func)
+            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
-        radio_button_width = 40
-        pad_width = 40
-        text_width = (pop_width - pad_width) / 2 - radio_button_width
+        radio_button_width = 30
+        pad_width = 30
+        text_width = (pop_width - pad_width)/2 -radio_button_width
 
-        radio_BL = BoxLayout(orientation='horizontal',
-                             size_hint_y=None,
-                             height=radio_BL_height,
-                             padding=[pad_width, 0]
-                             )
-
+        radio_BL = BoxLayout( orientation='horizontal',
+                            size_hint_y=None,
+                            height=radio_BL_height,
+                            padding=[pad_width, 0]
+                          )
         def make_option(version_text, version):
-            label_radio_container = GridLayout(cols=2, rows=1,
-                                               cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
-            checkbox_func = partial(switch_version, version)
-            label_radio_container.add_widget(
-                CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version))
-            label_radio_container.add_widget(
-                Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
+            label_radio_container = GridLayout(cols=2, rows=1, cols_minimum={0: dp(radio_button_width), 1: dp(text_width)})
+            checkbox_func =partial(switch_version, version)
+            label_radio_container.add_widget(CheckBox(group="yp_settings", color=blue, on_press=checkbox_func, active=version))
+            label_radio_container.add_widget(Label(text=version_text, color=dark_grey, markup=True, halign='left', text_size=(text_width, None)))
             radio_BL.add_widget(label_radio_container)
 
         make_option(self.l.get_str("Pre-set profiles"), version)
         make_option(self.l.get_str("Advanced profile"), not version)
 
+
         vertical_BL = BoxLayout(orientation='vertical',
-                                size_hint_y=None,
-                                height=vertical_BL_height,
-                                spacing=0
-                                )
+                              size_hint_y=None,
+                              height=vertical_BL_height,
+                              spacing=0
+        )
 
         vertical_BL.add_widget(subtitle_label)
         vertical_BL.add_widget(radio_BL)
@@ -381,22 +370,22 @@ class PopupYetiPilotSettings(Widget):
         # Little warning icon
         if version:
             floating_warning = FloatLayout()
-            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(274, -15)))
+            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(dropdowns_container_width-76, -15)))
             AL.add_widget(floating_warning)
 
         # Create popup & format
 
         popup = Popup(title=title_string,
-                      title_color=subtle_white,
-                      title_font='Roboto-Bold',
-                      title_size='20sp',
-                      title_align='center',
-                      content=AL,
-                      size_hint=(None, None),
-                      size=(pop_width, pop_height),
-                      auto_dismiss=False,
-                      padding=[0, 0]
-                      )
+                    title_color= subtle_white,
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    title_align = 'center',
+                    content=AL,
+                    size_hint=(None, None),
+                    size=(pop_width, pop_height),
+                    auto_dismiss= False,
+                    padding=[0,0]
+                    )
 
         popup.background = './asmcnc/core_UI/job_go/img/yp_settings_bg.png'
         popup.separator_color = transparent
@@ -407,3 +396,5 @@ class PopupYetiPilotSettings(Widget):
         close_button.bind(on_press=popup.dismiss)
 
         popup.open()
+
+
