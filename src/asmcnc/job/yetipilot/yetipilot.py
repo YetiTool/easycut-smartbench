@@ -116,8 +116,6 @@ class YetiPilot(object):
         feed_multiplier = self.get_multiplier(load=average_spindle_load)
         allowed_to_feed_up = constant_feed and gcode_mode != 0 and not is_z_moving
 
-        print(feed_multiplier, allowed_to_feed_up)
-
         # If not allowed to feed up
         if not allowed_to_feed_up:
             return 0 if feed_multiplier > 0 else feed_multiplier
@@ -161,6 +159,9 @@ class YetiPilot(object):
             command_delay = self.override_command_delay * i
 
             if feed:
+                if self.m.s.feed_override_percentage == 200:
+                    return adjustment_list[:i]
+
                 percentage_after_adjustments = adjustment + self.m.s.feed_override_percentage
 
                 # If doing feed adjustments and the feed drops below 10% (theoretical), then start the low feed check
@@ -222,8 +223,6 @@ class YetiPilot(object):
 
             feed_adjustment_percentage = self.get_feed_adjustment_percentage(average_spindle_load, constant_feed,
                                                                              gcode_mode, is_z_moving)
-
-            print(feed_adjustment_percentage)
 
             # Adjust feeds & speeds
 
