@@ -382,10 +382,12 @@ class SerialConnection(object):
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
                     if self.yp.use_yp: 
 
-                        if  self.digital_spindle_ld_qdA is not None \
-                            and self.feed_override_percentage is not None \
-                            and self.feed_rate is not None \
-                            and self.grbl_ln is not None:
+                        if self.digital_spindle_ld_qdA >= 0 \
+                                and self.feed_override_percentage is not None \
+                                and self.feed_rate is not None \
+                                and self.grbl_ln is not None \
+                                and self.digital_spindle_mains_voltage >= 0 \
+                                and self.inrush_counter == 5:
 
                             self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
                                                  self.feed_rate, self.grbl_ln, self.digital_spindle_mains_voltage)
