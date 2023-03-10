@@ -166,11 +166,11 @@ class PopupYetiPilotSettings(Widget):
             optn_img_3 = Image(source=img_3_src)
 
             def get_profile():
-                profile = yetipilot.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
+                profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
                 if profile is None:
                     return
 
-                yetipilot.use_profile(profile)
+                self.yp.use_profile(profile)
 
                 try:
                     update_step_down(self.yp.get_active_step_down())

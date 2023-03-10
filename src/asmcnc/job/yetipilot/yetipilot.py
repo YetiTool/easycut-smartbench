@@ -268,6 +268,7 @@ class YetiPilot(object):
         self.available_cutter_types = sorted({str(profile.cutter_type) for profile in self.available_profiles})
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
+        self.using_basic_profile = True
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
                     str(profile.cutter_type) == cutter_type and \
