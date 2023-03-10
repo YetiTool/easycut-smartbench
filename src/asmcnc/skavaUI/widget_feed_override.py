@@ -170,3 +170,17 @@ class FeedOverride(Widget):
         self.sm.get_screen('go').speedOverride.down_5.disabled = False
         self.sm.get_screen('go').speedOverride.up_5.disabled = False
         self.push = 0
+
+    def set_widget_visibility(self, visible):
+        self.up_5.disabled = not visible
+        self.down_5.disabled = not visible
+        self.norm_button.disabled = not visible
+
+        if visible:
+            self.up_5.opacity = 1
+            self.down_5.opacity = 1
+            self.norm_button.opacity = 1
+        else:
+            self.up_5.opacity = 0.5
+            self.down_5.opacity = 0.5
+            self.norm_button.opacity = 0.5
