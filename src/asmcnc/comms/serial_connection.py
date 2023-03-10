@@ -548,7 +548,7 @@ class SerialConnection(object):
 
     feed_pattern = re.compile(r"F\d+\.?\d*")
     speed_pattern = re.compile(r"S\d+\.?\d*")
-    g_motion_pattern = re.compile(r"G([0-3])(\D|$)")
+    g_motion_pattern = re.compile(r"((?<=G)|(?<=G0))([0-3])((?=\D)|(?=$))")
 
     # line counting for buffer stuffing
     def add_line_number_to_gcode_line(self, line, i):
@@ -563,7 +563,7 @@ class SerialConnection(object):
 
     def get_grbl_mode(self, line, grbl_pattern, last_thing=None):
         match_obj = re.search(grbl_pattern, line)
-        return int(match_obj.group()[1]) if match_obj else last_thing
+        return int(match_obj.group()) if match_obj else last_thing
 
     def scrape_last_sent_modes(self, line_to_go):
         self.last_sent_motion_mode = self.get_grbl_mode(line_to_go, self.g_motion_pattern, self.last_sent_motion_mode)

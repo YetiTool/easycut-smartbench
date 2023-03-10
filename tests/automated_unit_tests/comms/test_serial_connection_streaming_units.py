@@ -342,7 +342,7 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
                     (0,6,7),   #1
                     (1,6,8),   #2
                     (0,7,9),   #3
-                    (0,8,9),   #4
+                    (2,8,9),   #4
                     (0,9,11),  #5
                     (0,10,19) #6
     ]
@@ -351,8 +351,8 @@ def test_grbl_mode_tracking_over_scanner_run(sc):
                     "G0X4Y5F" + str(expected_modes[0][1]) + "S" + str(expected_modes[0][2]),
                     "G1X4Y5" + "S" + str(expected_modes[1][2]),
                     "G0X4Y5F" + str(expected_modes[2][1]) + "S" + str(expected_modes[2][2]),
-                    "G0X4Y5F" + str(expected_modes[3][1]),
-                    "G0X4Y5F" + str(expected_modes[4][1]) + "S" + str(expected_modes[4][2]),
+                    "G02X4Y5F" + str(expected_modes[3][1]),
+                    "F" + str(expected_modes[4][1]) + "G0X4Y5" + "S" + str(expected_modes[4][2]),
                     "G0X4Y5F" + str(expected_modes[5][1]) + "S" + str(expected_modes[5][2])
     ]
 
@@ -428,11 +428,12 @@ def test_is_feed_rate_in_line_float(sc):
 
 def test_get_motion_mode_for_line(sc):
     assert sc.get_grbl_mode("G1X6Y7", sc.g_motion_pattern) == 1
-    assert sc.get_grbl_mode("G2X6Y7", sc.g_motion_pattern) == 2
-    assert sc.get_grbl_mode("G0X6Y7", sc.g_motion_pattern) == 0
+    assert sc.get_grbl_mode("G02X6Y7", sc.g_motion_pattern) == 2
+    assert sc.get_grbl_mode("G00X6Y7", sc.g_motion_pattern) == 0
     assert sc.get_grbl_mode("G011X6Y7", sc.g_motion_pattern) == None
     assert sc.get_grbl_mode("G20X6Y7", sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode("G4X6Y7", sc.g_motion_pattern) == None
+    assert sc.get_grbl_mode("GX4X6Y7", sc.g_motion_pattern) == None
+    assert sc.get_grbl_mode("GX3X6Y7", sc.g_motion_pattern) == None
     assert sc.get_grbl_mode("G91F66X7Y7G2S20.67F600", sc.g_motion_pattern) == 2
 
 def test_scrape_last_sent_modes_no_new_info(sc):
