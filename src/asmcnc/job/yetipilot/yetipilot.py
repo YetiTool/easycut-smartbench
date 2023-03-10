@@ -178,17 +178,17 @@ class YetiPilot(object):
     def get_command_dictionary(self, feed):
         if feed:
             return {
-                10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10()),
-                1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1()),
-                -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1()),
-                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10())
+                10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
+                1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1),
+                -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1),
+                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10)
             }
 
         return {
-            10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10()),
-            1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1()),
-            -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1()),
-            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10())
+            10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10),
+            1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1),
+            -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
+            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10)
         }
 
     def add_status_to_yetipilot(self, digital_spindle_ld_qdA, digital_spindle_mains_voltage,
@@ -221,7 +221,6 @@ class YetiPilot(object):
             feed_adjustment_percentage = self.get_feed_adjustment_percentage(average_spindle_load, constant_feed,
                                                                              gcode_mode, is_z_moving)
 
-            speed_adjustment_percentage = self.get_speed_adjustment_percentage()
 
             # Adjust feeds & speeds
 
@@ -229,13 +228,15 @@ class YetiPilot(object):
                                                            self.get_command_dictionary(feed=True),
                                                            feed=True)
 
-            speed_adjustments = self.do_override_adjustment(speed_adjustment_percentage,
-                                                            self.get_command_dictionary(feed=False),
-                                                            feed=False)
-
-            # Logs
             print("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
-            print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
+
+            if not self.using_advanced_profile:
+                speed_adjustment_percentage = self.get_speed_adjustment_percentage()
+                speed_adjustments = self.do_override_adjustment(speed_adjustment_percentage,
+                                                                self.get_command_dictionary(feed=False),
+                                                                feed=False)
+
+                print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
 
     def stop_and_show_error(self):
         self.disable()
