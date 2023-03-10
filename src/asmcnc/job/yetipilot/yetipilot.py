@@ -40,7 +40,6 @@ class YetiPilot(object):
     cap_for_feed_decrease = -40
     cap_for_feed_increase_during_z_movement = 0
 
-    moving_in_z = False
     counter = 0
     statuses_per_adjustment = 2
     spindle_load_stack_size = 1
