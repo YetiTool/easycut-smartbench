@@ -179,6 +179,64 @@ def test_temp_sg_array_append_4_drivers(m):
     m.s.process_grbl_push(status)
     assert m.temp_sg_array[0] == four_driver_list
 
+
+## TEST MACHINE COORD VALUE CHANGE
+## --------------------------------
+
+def default_pos_values(serial_comms):
+    serial_comms.x_change = False
+    serial_comms.y_change = False
+    serial_comms.z_change = False
+    serial_comms.m_x = '0.000'
+    serial_comms.m_y = '0.000'
+    serial_comms.m_z = '0.000'
+
+def test_value_change_x(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:4.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert not sc.y_change
+    assert not sc.z_change
+
+def test_value_change_y(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert sc.y_change
+    assert not sc.z_change
+
+def test_value_change_z(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert not sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_x(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,7.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_y(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:5.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert not sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_z(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert sc.y_change
+    assert not sc.z_change
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.z_change
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.z_change
+
 ## TEST PIN VALUES READ IN PROPERLY 
 ## --------------------------------
 
