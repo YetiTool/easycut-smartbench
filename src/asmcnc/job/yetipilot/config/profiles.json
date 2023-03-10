@@ -1,0 +1,54 @@
+{
+  "Version": 1.0,
+  "Easycut Requirement": "1.0.0",
+  "Profiles": [
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3mm",
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "6mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 550
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 23800
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6mm",
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "6mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 710
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "8mm",
+      "Cutter Type": "2 flute spiral upcut",
+      "Step Down": "8mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 960
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 23800
+        }
+      ]
+    }
+  ]
+}
