@@ -10,7 +10,6 @@ from math import sqrt, floor
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
-from asmcnc.job.yetipilot.logging.yetipilot_logger import AutoPilotLogger
 
 
 def format_time(seconds):
@@ -33,7 +32,6 @@ DEV_MODE = True
 
 class YetiPilot(object):
     use_yp = False
-    logger = None
 
     digital_spindle_mains_voltage = None
 
@@ -85,9 +83,6 @@ class YetiPilot(object):
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
 
-        if DEV_MODE:
-            self.use_logger()
-
     def disable(self):
         self.use_yp = False
 
@@ -97,21 +92,6 @@ class YetiPilot(object):
 
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
-
-    def use_logger(self):
-        job_name = '' if not self.sm.has_screen('go') else self.sm.get_screen('go').file_data_label.text
-        self.logger = AutoPilotLogger(
-            self.digital_spindle_mains_voltage, self.spindle_target_load_watts, self.bias_for_feed_increase,
-            self.bias_for_feed_decrease,
-            self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, job_name,
-            self.m.device_label, self.spindle_load_stack_size, 0,
-            self.cap_for_feed_increase_during_z_movement,
-            self, None
-        )
-
-    def reset(self):
-        if self.logger:
-            self.logger.reset()
 
     # Utils
     def ldA_to_watts(self, load):
@@ -186,52 +166,6 @@ class YetiPilot(object):
             if not self.using_advanced_profile:
                 if abs(int(self.m.s.spindle_speed) - self.jd.grbl_mode_tracker[0][2]) > 500:
                     self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
-
-            # END OF LOGIC
-            if not self.logger:
-                return
-
-            time_stamp = None
-
-            if self.jd.job_start_time is not None:
-                now_time = time.time()
-                time_stamp = format_time(now_time - self.jd.job_start_time)
-
-            current_gcode = self.jd.job_gcode_running[current_line_number] if len(
-                self.jd.job_gcode_running) - 1 >= current_line_number else ''
-
-            self.logger.add_log(
-                current_load=average_digital_spindle_load,
-                feed_multiplier=capped_multiplier,
-                time=time_stamp,
-                raw_loads=self.digital_spindle_load_stack[-self.spindle_load_stack_size:],
-                average_loads=self.digital_spindle_load_stack[-self.spindle_load_stack_size:],
-                raw_multiplier=raw_multiplier,
-                adjustment_list=adjustment[:self.override_commands_per_adjustment],
-                feed_override_percentage=feed_override_percentage,
-                moving_in_z=self.m.s.z_change,
-                sg_x_motor_axis=self.m.s.sg_x_motor_axis,
-                sg_y_axis=self.m.s.sg_y_axis,
-                sg_z_motor_axis=self.m.s.sg_z_motor_axis,
-                sg_x1_motor=self.m.s.sg_x1_motor,
-                sg_x2_motor=self.m.s.sg_x2_motor,
-                sg_y1_motor=self.m.s.sg_y1_motor,
-                sg_y2_motor=self.m.s.sg_y2_motor,
-                target_load=self.spindle_target_load_watts,
-                raw_spindle_load=self.m.s.digital_spindle_ld_qdA,
-                spindle_voltage=self.m.s.digital_spindle_mains_voltage,
-                feed_rate=feed_rate,
-                constant_speed=constant_feed,
-                line_number=current_line_number,
-                gcode_feed=gcode_feed,
-                target_feed=gcode_feed * feed_override_percentage / 100,
-                g0_move=g0_move,
-                allow_feedup=allow_feedup,
-                target_spindle_speed=self.target_spindle_speed,
-                spindle_override_percentage=self.m.s.speed_override_percentage,
-                spindle_rpm=int(self.m.s.spindle_speed),
-                gcode=current_gcode
-            )
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
