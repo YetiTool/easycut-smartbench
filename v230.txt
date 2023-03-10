@@ -3,9 +3,7 @@
 Technical release
 ===================
 
-This release contains the technical foundations to keep making SmartBench smarter. 
-
-This includes:
+This release contains the technical foundations to keep making SmartBench smarter, including: 
 
 * improved feedback handling
 * tracking of the machine code
