@@ -209,6 +209,11 @@ class YetiPilot(object):
         self.m.stop_for_a_stream_pause('yetipilot_low_feed')
 
     def check_if_feed_too_low(self):
+        if not(self.use_yp and self.m.s.is_job_streaming and
+               not self.m.is_machine_paused and "Alarm" not in self.m.state()):
+            self.waiting_for_feed_too_low_decision = False
+            return
+
         if self.m.s.feed_override_percentage == 10:
             self.stop_and_show_error()
         self.waiting_for_feed_too_low_decision = False
