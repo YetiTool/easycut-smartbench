@@ -165,6 +165,8 @@ class YetiPilotWidget(Widget):
         if self.yp.using_basic_profile:
             if self.yp.active_profile is None:
                 self.disable_yeti_pilot()
+                self.profile_selection.text = ""
+                return
 
             self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
         elif self.yp.using_advanced_profile:
