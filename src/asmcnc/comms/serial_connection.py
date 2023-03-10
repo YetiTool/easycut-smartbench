@@ -728,6 +728,11 @@ class SerialConnection(object):
     m_y = '0.0'
     m_z = '0.0'
 
+    # Track co-ordinate change in each axis
+    x_change = False
+    y_change = False
+    z_change = False
+
     # Work co-ordinates
     w_x = '0.0'
     w_y = '0.0'
@@ -762,6 +767,10 @@ class SerialConnection(object):
     digital_spindle_temperature = None
     digital_spindle_kill_time = None
     digital_spindle_mains_voltage = None
+
+    # Spindle data "inrush" counter
+    digital_load_pattern = re.compile(r"Ld:\d+,\d+,\d+,\d+")
+    inrush_counter = 0
 
     # IO Pins for switches etc
     limit_x = False  # convention: min is lower_case
@@ -884,6 +893,14 @@ class SerialConnection(object):
                 self.stall_Z = False
                 self.stall_Y = False
 
+            # If "Ld:x,x,x,x" is in the status, the spindle is communicating
+            # If spindle is not sending data, reset the "inrush" counter, which discards any weird loads from the spindle starting
+            if not re.search(self.digital_load_pattern, message):
+                self.inrush_counter = 0
+
+            elif self.inrush_counter <= 5:
+                self.inrush_counter += 1
+
             # Get machine's status
             self.m_state = status_parts[0]
 
@@ -899,6 +916,10 @@ class SerialConnection(object):
                     except:
                         log("ERROR status parse: Position invalid: " + message)
                         return
+
+                    self.x_change = self.m_x != pos[0]
+                    self.y_change = self.m_y != pos[1]
+                    self.z_change = self.m_z != pos[2]
 
                     self.m_x = pos[0]
                     self.m_y = pos[1]

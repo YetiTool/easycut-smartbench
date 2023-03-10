@@ -128,8 +128,8 @@ class PopupYetiPilotSettings(Widget):
         sum_of_middle_heights = subtitle_height  + radio_BL_height + body_BL_height
         close_button_BL_height = vertical_BL_height - sum_of_middle_heights
 
-        dropdowns_container_width = 350
-        dropdowns_width = 270
+        dropdowns_container_width = 330
+        dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
 
@@ -151,7 +151,7 @@ class PopupYetiPilotSettings(Widget):
         right_BL = BoxLayout(orientation= "vertical", size_hint_x=None, width=advice_container_width)
 
         # Close button
-        close_string = self.l.get_bold('Close')
+        close_string = self.l.get_bold('Ok')
         close_button = CloseButton(text=close_string, markup = True, color=subtle_white, font_size='15sp')
         # close_button.background_normal = ''
         # close_button.background_color = blue
@@ -325,8 +325,8 @@ class PopupYetiPilotSettings(Widget):
             popup.dismiss()
             PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
-        radio_button_width = 40
-        pad_width = 40      
+        radio_button_width = 30
+        pad_width = 30      
         text_width = (pop_width - pad_width)/2 -radio_button_width
 
         radio_BL = BoxLayout( orientation='horizontal',
@@ -362,7 +362,7 @@ class PopupYetiPilotSettings(Widget):
         # Little warning icon
         if version: 
             floating_warning = FloatLayout()
-            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(274, -15)))
+            floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(dropdowns_container_width-76, -15)))
             AL.add_widget(floating_warning)
 
         # Create popup & format
