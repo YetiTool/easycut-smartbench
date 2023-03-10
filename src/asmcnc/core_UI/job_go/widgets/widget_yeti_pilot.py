@@ -162,6 +162,7 @@ class YetiPilotWidget(Widget):
         PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
+        print(self.yp.using_basic_profile, self.yp.active_profile)
         if self.yp.using_basic_profile:
             if self.yp.active_profile is None:
                 self.disable_yeti_pilot()
