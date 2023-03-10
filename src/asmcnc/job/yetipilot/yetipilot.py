@@ -5,7 +5,7 @@ YetiPilot Functionality
 
 import json
 import time
-from math import sqrt, floor
+from math import sqrt
 
 from kivy.clock import Clock
 
@@ -16,15 +16,10 @@ def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
 
 
-def get_adjustment(feed_multiplier):
-    feed_multiplier = floor(feed_multiplier)
-    negative = feed_multiplier < 0
-    feed_multiplier = abs(feed_multiplier) if negative else feed_multiplier
-
-    tens = int(feed_multiplier // 10)
-    ones = int(feed_multiplier % 10)
-
-    return [-10 if negative else 10 for _ in range(tens)] + [-1 if negative else 1 for _ in range(ones)]
+def get_adjustment_list(feed_adjustment_percentage):
+    tens = [10 if feed_adjustment_percentage > 0 else -10 for _ in range(abs(feed_adjustment_percentage) // 10)]
+    ones = [1 if feed_adjustment_percentage > 0 else -1 for _ in range(abs(feed_adjustment_percentage) % 10)]
+    return tens + ones
 
 
 class YetiPilot(object):
@@ -105,152 +100,150 @@ class YetiPilot(object):
     def ldA_to_watts(self, load):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
 
-    def get_multiplier(self, digital_spindle_ld_w):
+    def get_multiplier(self, load):
         multiplier = (float(
-            self.bias_for_feed_decrease) if digital_spindle_ld_w > self.spindle_target_load_watts else
+            self.bias_for_feed_decrease) if load > self.spindle_target_load_watts else
                       float(self.bias_for_feed_increase)) * (
-                             float(self.spindle_target_load_watts) - float(digital_spindle_ld_w)) \
+                             float(self.spindle_target_load_watts) - float(load)) \
                      / float(self.spindle_target_load_watts) * float(self.m_coefficient) * float(self.c_coefficient)
 
         return multiplier
 
-    def calculate_adjustment(self, average_digital_spindle_load, constant_feed):
-        multiplier = self.get_multiplier(average_digital_spindle_load)
-        capped_multiplier = self.cap_multiplier(multiplier)
+    status_per_adjustment_counter = 0
 
-        adjustments = get_adjustment(capped_multiplier)
+    def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving):
+        feed_multiplier = self.get_multiplier(load=average_spindle_load)
+        allowed_to_feed_up = constant_feed and gcode_mode != 0 and not is_z_moving
 
-        if not constant_feed and multiplier > 0:
-            return [], multiplier, capped_multiplier
+        # If not allowed to feed up
+        if not allowed_to_feed_up:
+            return 0 if feed_multiplier > 0 else feed_multiplier
 
-        return adjustments, multiplier, capped_multiplier
+        # If outside the limits of adjustment
+        if not (self.cap_for_feed_decrease < feed_multiplier < self.cap_for_feed_increase):
+            return self.cap_for_feed_decrease if feed_multiplier < 0 else self.cap_for_feed_increase
 
-    def cap_multiplier(self, multiplier):
-        if self.m.s.z_change and multiplier > 0:
-            return self.cap_for_feed_increase_during_z_movement
+        # Only positive numbers within limits of adjustment should get this far
+        return feed_multiplier
 
-        if multiplier < self.cap_for_feed_decrease:
-            return self.cap_for_feed_decrease
+    def get_speed_adjustment_percentage(self):
+        last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
+        live_rpm = int(self.m.s.spindle_speed)
 
-        if multiplier > self.cap_for_feed_increase:
-            return self.cap_for_feed_increase
+        if abs(live_rpm - last_gcode_rpm) >= 500:
+            return ((self.target_spindle_speed / last_gcode_rpm) * 100) - self.m.s.speed_override_percentage
+        return 0
 
-        return multiplier
+    def is_feed_too_low_callback(self):
+        self.waiting_for_feed_too_low_decision = False
 
-    def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number,
-                     digital_spindle_mains_voltage):
-        if not self.active_profile and not self.using_advanced_profile:
-            return
+        self.stop_and_show_error()
+
+    def start_feed_too_low_check(self):
+        self.waiting_for_feed_too_low_decision = True
+        Clock.schedule_once(lambda dt: self.is_feed_too_low_callback(), 4)
+
+    def do_override_adjustment(self, adjustment_percentage, command_dictionary, feed):
+        # Skip if 0
+        if adjustment_percentage == 0:
+            return []
+
+        adjustment_list = get_adjustment_list(adjustment_percentage)
+
+        # If doing feed adjustments, limit the list
+        if feed:
+            adjustment_list = adjustment_list[:self.override_commands_per_adjustment]
+
+        for i, adjustment in enumerate(adjustment_list):
+            command_delay = self.override_command_delay * i
+
+            if feed:
+                percentage_after_adjustments = adjustment + self.m.s.feed_override_percentage
+
+                # If doing feed adjustments and the feed drops below 10% (theoretical), then start the low feed check
+                if percentage_after_adjustments < 10:
+                    if not self.waiting_for_feed_too_low_decision:
+                        self.start_feed_too_low_check()
+
+                # If the adjustment will exceed the limit of 200%, reduce to 1 to build up to max
+                elif percentage_after_adjustments > 200:
+                    adjustment = 1
+
+            # Schedule the feed override command
+            Clock.schedule_once(command_dictionary[adjustment], command_delay)
+
+        return adjustment_list
+
+    def get_command_dictionary(self, feed):
+        if feed:
+            return {
+                10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10()),
+                1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1()),
+                -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1()),
+                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10())
+            }
+
+        return {
+            10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10()),
+            1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1()),
+            -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1()),
+            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10())
+        }
+
+    def add_status_to_yetipilot(self, digital_spindle_ld_qdA, digital_spindle_mains_voltage,
+                                feed_override_percentage, feed_rate):
 
         self.digital_spindle_mains_voltage = digital_spindle_mains_voltage
-
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
 
+        # Keep stack to its max size
         if len(self.digital_spindle_load_stack) == self.spindle_load_stack_size:
             self.digital_spindle_load_stack.pop(0)
-
         self.digital_spindle_load_stack.append(digital_spindle_ld_w)
-        self.counter += 1
 
-        if len(self.digital_spindle_load_stack) >= 1 and self.counter >= self.statuses_per_adjustment:
-            self.counter = 0
+        self.status_per_adjustment_counter += 1
+        if self.status_per_adjustment_counter >= self.statuses_per_adjustment:
+            self.status_per_adjustment_counter = 0
 
-            average_digital_spindle_load = sum(
-                self.digital_spindle_load_stack[-self.spindle_load_stack_size:]) / self.spindle_load_stack_size
+            # Gather required stats
 
-            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(
-                self.jd.grbl_mode_tracker[0][1], feed_override_percentage, feed_rate,
-                self.tolerance_for_acceleration_detection)
+            average_spindle_load = sum(self.digital_spindle_load_stack) / self.spindle_load_stack_size
 
-            adjustment, raw_multiplier, capped_multiplier = self.calculate_adjustment(average_digital_spindle_load,
-                                                                                      constant_feed)
+            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(self.jd.grbl_mode_tracker[0][1],
+                                                                         feed_override_percentage, feed_rate,
+                                                                         self.tolerance_for_acceleration_detection)
 
-            g0_move = self.m.get_grbl_motion_mode() == 0
-            allow_feedup = not g0_move and constant_feed
+            gcode_mode = self.m.get_grbl_motion_mode()
 
-            if allow_feedup or raw_multiplier < 0:
-                self.do_adjustment(adjustment)
+            is_z_moving = self.m.s.z_change
 
-            if not self.using_advanced_profile:
-                if abs(int(self.m.s.spindle_speed) - self.jd.grbl_mode_tracker[0][2]) > 500:
-                    self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
+            feed_adjustment_percentage = self.get_feed_adjustment_percentage(average_spindle_load, constant_feed,
+                                                                             gcode_mode, is_z_moving)
 
-    # SPINDLE SPEED ADJUSTMENTS
-    def adjust_spindle_speed(self, current_rpm):
-        total_override_required = (self.target_spindle_speed / current_rpm) * 100
-        current_override = self.m.s.speed_override_percentage
-        difference = total_override_required - current_override
-        adjustments = get_adjustment(difference)
-        self.do_spindle_adjustment(adjustments)
+            speed_adjustment_percentage = self.get_speed_adjustment_percentage()
 
-    def do_spindle_adjustment(self, adjustments):
-        for i, adjustment in enumerate(adjustments):
-            if self.m.s.speed_override_percentage == 200 and adjustment > 0:
-                break
+            # Adjust feeds & speeds
 
-            if self.m.s.speed_override_percentage + adjustment > 200:
-                adjustment = 1
+            feed_adjustments = self.do_override_adjustment(feed_adjustment_percentage,
+                                                           self.get_command_dictionary(feed=True),
+                                                           feed=True)
 
-            if adjustment == 10:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10),
-                                    i * self.override_command_delay)
-            elif adjustment == 1:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1),
-                                    i * self.override_command_delay)
-            elif adjustment == -10:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10),
-                                    i * self.override_command_delay)
-            elif adjustment == -1:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
-                                    i * self.override_command_delay)
+            speed_adjustments = self.do_override_adjustment(speed_adjustment_percentage,
+                                                            self.get_command_dictionary(feed=False),
+                                                            feed=False)
+
+            # Logs
+            print("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
+            print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
 
     def stop_and_show_error(self):
         self.disable()
         self.m.stop_for_a_stream_pause('yetipilot_low_feed')
 
-    def check_if_feed_too_low(self):
-        if not(self.use_yp and self.m.s.is_job_streaming and
-               not self.m.is_machine_paused and "Alarm" not in self.m.state()):
-            self.waiting_for_feed_too_low_decision = False
-            return
-
-        if self.m.s.feed_override_percentage == 10:
-            self.stop_and_show_error()
-        self.waiting_for_feed_too_low_decision = False
-
     def feed_override_wrapper(self, feed_override_func):
         if self.use_yp and self.m.s.is_job_streaming and \
                 not self.m.is_machine_paused and "Alarm" not in self.m.state():
             feed_override_func()
-
-    def do_adjustment(self, adjustments):
-        for i, adjustment in enumerate(adjustments):
-            if i == self.override_commands_per_adjustment:
-                break
-
-            if self.m.s.feed_override_percentage == 200 and adjustment > 0:
-                break
-
-            if self.m.s.feed_override_percentage + adjustment > 200 and adjustment == 10:
-                adjustment = 1
-
-            if self.m.s.feed_override_percentage + adjustment < 10:
-                if not self.waiting_for_feed_too_low_decision:
-                    Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
-                    self.waiting_for_feed_too_low_decision = True
-
-            if adjustment == 10:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
-                                    i * self.override_command_delay)
-            elif adjustment == 1:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1),
-                                    i * self.override_command_delay)
-            elif adjustment == -10:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10),
-                                    i * self.override_command_delay)
-            elif adjustment == -1:
-                Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1),
-                                    i * self.override_command_delay)
 
     def load_parameters(self):
         with open(self.parameters_path) as f:
