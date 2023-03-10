@@ -212,6 +212,24 @@ def test_smartbench_is_not_busy(m):
     make_smartbench_not_busy(m)
     assert not m.smartbench_is_busy()
 
+# WHAT IS GRBL MOTION MODE
+
+def test_get_grbl_motion_mode_when_G0(m):
+    m.jd.grbl_mode_tracker = [(0,4,5)]
+    assert m.get_grbl_motion_mode() == 0
+
+def test_get_grbl_motion_mode_when_empty_list(m):
+    m.jd.grbl_mode_tracker = []
+    assert m.get_grbl_motion_mode() is None
+
+def test_get_grbl_motion_mode_when_empty_string(m):
+    m.jd.grbl_mode_tracker = [('',4,5), (0,0,0), (1,6,7)]
+    assert m.get_grbl_motion_mode() == ''
+
+def test_get_grbl_motion_mode_when_G2(m):
+    m.jd.grbl_mode_tracker = [(2,4,5), (0,0,0), (1,6,7)]
+    assert m.get_grbl_motion_mode() == 2
+
 # SETTINGS UNIT TESTS
 
 def test_get_setting_53_when_does_not_exist(m):

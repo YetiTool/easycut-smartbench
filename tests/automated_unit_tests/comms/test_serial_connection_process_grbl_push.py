@@ -23,6 +23,7 @@ from asmcnc.comms import localization
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push.py
+To run individual tests add < -k 'test_name_here' >, where test_name_here can be a partial string (that will then match as many tests as it's in)
 ######################################
 '''
 
@@ -177,6 +178,64 @@ def test_temp_sg_array_append_4_drivers(m):
     m.s.record_sg_values_flag = True
     m.s.process_grbl_push(status)
     assert m.temp_sg_array[0] == four_driver_list
+
+
+## TEST MACHINE COORD VALUE CHANGE
+## --------------------------------
+
+def default_pos_values(serial_comms):
+    serial_comms.x_change = False
+    serial_comms.y_change = False
+    serial_comms.z_change = False
+    serial_comms.m_x = '0.000'
+    serial_comms.m_y = '0.000'
+    serial_comms.m_z = '0.000'
+
+def test_value_change_x(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:4.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert not sc.y_change
+    assert not sc.z_change
+
+def test_value_change_y(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert sc.y_change
+    assert not sc.z_change
+
+def test_value_change_z(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert not sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_x(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:0.000,7.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.x_change
+    assert sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_y(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:5.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert not sc.y_change
+    assert sc.z_change
+
+def test_value_no_change_z(sc):
+    default_pos_values(sc)
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.x_change
+    assert sc.y_change
+    assert not sc.z_change
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert sc.z_change
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
+    assert not sc.z_change
 
 ## TEST PIN VALUES READ IN PROPERLY 
 ## --------------------------------
@@ -447,3 +506,39 @@ def test_line_number_read_in_when_no_number(sc):
     assert sc.grbl_ln == None
     assert_status_end_processed(sc)
 
+# TEST INRUSH COUNTER
+
+def construct_status_with_load_string(load_string = ""):
+    # Use this to construct the test status passed out by mock serial object
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0" + load_string
+    status += "|TC:1,2>"
+    return status
+
+def test_inrush_counter_0_when_no_load(sc):
+    status = construct_status_with_load_string()
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 0
+
+def test_inrush_counter_1_when_1_load(sc):
+    sc.inrush_counter == 0
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 1
+
+def test_inrush_counter_increases_to_6_and_stops(sc):
+    sc.inrush_counter == 0
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 6
+
+def test_inrush_counter_resets_after_no_comms(sc):
+    sc.inrush_counter == 3
+    status = construct_status_with_load_string()
+    sc.process_grbl_push(status)
+    assert sc.inrush_counter == 0
