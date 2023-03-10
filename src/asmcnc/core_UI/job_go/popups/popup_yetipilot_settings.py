@@ -43,11 +43,10 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#f9f9f9ff')
-        RoundedRectangle:
+            rgba: hex('#e5e5e5ff')
+        Rectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(10), dp(10)]
 
 
 <Choices@Spinner>
@@ -58,7 +57,7 @@ Builder.load_string("""
     background_color: 0,0,0,0
     canvas.before:
         Color:
-            rgba: hex('#e5e5e5ff')
+            rgba: hex('ccccccff')
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -98,7 +97,6 @@ class PopupYetiPilotSettings(Widget):
 
         clock_speed_1 = None
         clock_speed_2 = None
-        clock_step_down = None
 
         diameter_values = self.yp.get_available_cutter_diameters()
         tool_values = self.yp.get_available_cutter_types()
@@ -180,67 +178,68 @@ class PopupYetiPilotSettings(Widget):
                     pass
 
             def select_diameter(spinner, val):
-                get_profile()
+              get_profile()
 
             def select_tool(spinner, val):
-                get_profile()
+              get_profile()
 
             def select_material(spinner, val):
-                get_profile()
+              get_profile()
 
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
             material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
+            get_profile()
+
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
             material_choice.bind(text=select_material)
-
+    
             diameter_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
             tool_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
             material_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
-
+    
             diameter_label = Label(text = self.l.get_str('Tool diameter'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
             tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
             material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
-
+    
             diameter_BL.add_widget(diameter_label)
             diameter_BL.add_widget(diameter_choice)
             tool_BL.add_widget(tool_label)
             tool_BL.add_widget(tool_choice)
             material_BL.add_widget(material_label)
             material_BL.add_widget(material_choice)
-
+    
             left_BL_grid.add_widget(optn_img_1)
             left_BL_grid.add_widget(diameter_BL)
             left_BL_grid.add_widget(optn_img_2)
             left_BL_grid.add_widget(tool_BL)
             left_BL_grid.add_widget(optn_img_3)
             left_BL_grid.add_widget(material_BL)
-
+    
             left_BL.add_widget(left_BL_grid)
-
+    
             # Step down advice labels
             step_downs_msg_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.6),
                                     markup=True,
                                     font= 'Roboto',
                                     font_size='14sp',
-                                    halign='left',
+                                    halign='left', 
                                     valign='top',
                                     color=dark_grey,
                                     padding=[10,10],
                                     size_hint_y=0.6
                                     )
-
             def update_step_down(step_down_range):
-                step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                                            "\n[b]" + \
-                                            str(step_down_range) \
-                                            + "[/b]"
+              step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
+                                      "\n" + \
+                                      "[size=16sp][b]" + str(step_down_range) + "[/size]"\
+                                      + "[/b]"
 
             update_step_down(self.yp.get_active_step_down())
-
+    
             unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
             unexpected_results_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.4),
@@ -254,11 +253,11 @@ class PopupYetiPilotSettings(Widget):
                                     padding=[10,0],
                                     size_hint_y=0.4
                                     )
-
+    
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
-
-
+    
+    
         # END OF BODY PRE-CUT PROFILES --------------------------------
 
 
@@ -271,36 +270,35 @@ class PopupYetiPilotSettings(Widget):
                                     markup=True,
                                     font= 'Roboto',
                                     font_size='17sp',
-                                    halign='center',
-                                    valign='middle',
+                                    halign='center', 
+                                    valign='middle', 
                                     text=target_ml_string,
                                     color=dark_grey,
                                     padding=[0,0]
                                     )
-
-
+    
+    
             load_slider_container = BoxLayout(size_hint_y=0.9)
             load_slider = LoadSliderWidget(screen_manager=self.sm, yetipilot=self.yp)
             load_slider_container.add_widget(load_slider)
-
+    
             left_BL.add_widget(target_ml_label)
             left_BL.add_widget(load_slider_container)
-
+    
             speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
             right_BL.add_widget(speedOverride)
-
+    
             clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
             clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1)
 
         def unschedule_clocks(*args):
             if clock_speed_1: Clock.unschedule(clock_speed_1)
             if clock_speed_2: Clock.unschedule(clock_speed_2)
-            if clock_step_down: Clock.unschedule(clock_step_down)
 
         if version:
             build_pre_cut_profiles()
             subtitle_string = self.l.get_str('Auto adjust feed rate to optimise Spindle motor load')
-        else:
+        else: 
             build_advanced_settings()
             subtitle_string = self.l.get_str('Create your own custom Spindle motor load profile')
 
@@ -314,17 +312,17 @@ class PopupYetiPilotSettings(Widget):
                               markup=True,
                               font= 'Roboto',
                               font_size='15sp',
-                              halign='center',
-                              valign='middle',
+                              halign='center', 
+                              valign='middle', 
                               text=subtitle_string,
-                              color=dark_grey,
+                              color=dark_grey, 
                               padding=[10,0]
                               )
 
         # Profile radio buttons
 
         def switch_version(state, instance=None):
-            if state:
+            if state: 
                 instance.active=True
                 return
 
@@ -334,7 +332,7 @@ class PopupYetiPilotSettings(Widget):
             PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
         radio_button_width = 30
-        pad_width = 30
+        pad_width = 30      
         text_width = (pop_width - pad_width)/2 -radio_button_width
 
         radio_BL = BoxLayout( orientation='horizontal',
@@ -366,9 +364,9 @@ class PopupYetiPilotSettings(Widget):
 
         AL = AnchorLayout()
         AL.add_widget(vertical_BL)
-
+        
         # Little warning icon
-        if version:
+        if version: 
             floating_warning = FloatLayout()
             floating_warning.add_widget(Image(source="./asmcnc/core_UI/job_go/img/micro_warning.png", pos=(dropdowns_container_width-76, -15)))
             AL.add_widget(floating_warning)
