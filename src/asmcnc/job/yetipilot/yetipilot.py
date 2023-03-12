@@ -284,6 +284,7 @@ class YetiPilot(object):
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+            self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
 
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
