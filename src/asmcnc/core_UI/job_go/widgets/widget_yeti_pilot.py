@@ -159,10 +159,15 @@ class YetiPilotWidget(Widget):
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles, closing_func=self.update_profile_selection)
+        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
-        if self.yp.standard_profiles:
-            self.profile_selection.text = self.yp.material + "; " + self.yp.diameter + " " + self.yp.tool
-        else:
-            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(self.yp.target_ld) + " W"
+        if self.yp.using_basic_profile:
+            if self.yp.active_profile is None:
+                self.disable_yeti_pilot()
+                self.profile_selection.text = ""
+                return
+
+            self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
+        elif self.yp.using_advanced_profile:
+            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_target_power())) + " W"

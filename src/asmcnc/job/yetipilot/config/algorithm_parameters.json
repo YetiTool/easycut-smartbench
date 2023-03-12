@@ -1,0 +1,64 @@
+{
+  "Parameters": [
+    {
+      "Name": "spindle_load_stack_size",
+      "Value": 1,
+      "Description": "Maximum number of values in stack (avg applied to this many values)"
+    },
+    {
+      "Name": "statuses_per_adjustment",
+      "Value": 2,
+      "Description": "Number of statuses per adjustment"
+    },
+    {
+      "Name": "tolerance_for_acceleration_detection",
+      "Value": 5,
+      "Description": "Allowable delta between actual feed and target feed to determine if GRBL is accelerating or at constant speed"
+    },
+    {
+      "Name": "override_commands_per_adjustment",
+      "Value": 2,
+      "Description": "Number of override commands to be issued after an adjustment has been calculated"
+    },
+    {
+      "Name": "override_command_delay",
+      "Value": 0.06,
+      "Description": "Time between adjustment commands getting issued"
+    },
+    {
+      "Name": "bias_for_feed_increase",
+      "Value": 1.0,
+      "Description": "Adjustment algorithm parameter"
+    },
+    {
+      "Name": "bias_for_feed_decrease",
+      "Value": 2.0,
+      "Description": "Adjustment algorithm parameter"
+    },
+    {
+      "Name": "m_coefficient",
+      "Value": 1.0,
+      "Description": "Adjustment algorithm parameter"
+    },
+    {
+      "Name": "c_coefficient",
+      "Value": 35.0,
+      "Description": "Adjustment algorithm parameter"
+    },
+    {
+      "Name": "cap_for_feed_increase",
+      "Value": 20,
+      "Description": "Maximum allowed adjustment for FeedUps"
+    },
+    {
+      "Name": "cap_for_feed_decrease",
+      "Value": -40,
+      "Description": "Maximum allowed adjustment for FeedDowns"
+    },
+    {
+      "Name": "cap_for_feed_increase_during_z_movement",
+      "Value": 0,
+      "Description": "Maximum allowed adjustment for FeedUps if its moving at all in Z axis"
+    }
+  ]
+}
