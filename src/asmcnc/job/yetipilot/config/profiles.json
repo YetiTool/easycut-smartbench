@@ -3,7 +3,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3mm",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "6mm",
       "Parameters": [
         {
@@ -19,7 +19,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6mm",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "6mm",
       "Parameters": [
         {
@@ -35,7 +35,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "8mm",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "8mm",
       "Parameters": [
         {

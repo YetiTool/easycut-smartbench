@@ -106,7 +106,7 @@ class ScreenTest(App):
         m.is_using_sc2 = Mock(return_value=True)
 
         # Initialise YP
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)

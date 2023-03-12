@@ -74,6 +74,7 @@ class YetiPilot(object):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+        self.l = kwargs['localization']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
@@ -274,8 +275,8 @@ class YetiPilot(object):
             self.available_profiles.append(
                 YetiPilotProfile(
                     cutter_diameter=profile_json["Cutter Diameter"],
-                    cutter_type=profile_json["Cutter Type"],
-                    material_type=profile_json["Material Type"],
+                    cutter_type=self.l.get_str(profile_json["Cutter Type"]),
+                    material_type=self.l.get_str(profile_json["Material Type"]),
                     step_down=profile_json["Step Down"],
                     parameters=profile_json["Parameters"]
                 )
@@ -283,8 +284,8 @@ class YetiPilot(object):
 
         # Get available options for dropdowns
         self.available_cutter_diameters = sorted({str(profile.cutter_diameter) for profile in self.available_profiles})
-        self.available_material_types = sorted({str(profile.material_type) for profile in self.available_profiles})
-        self.available_cutter_types = sorted({str(profile.cutter_type) for profile in self.available_profiles})
+        self.available_material_types = sorted({self.l.get_str(str(profile.material_type)) for profile in self.available_profiles})
+        self.available_cutter_types = sorted({self.l.get_str(str(profile.cutter_type)) for profile in self.available_profiles})
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True

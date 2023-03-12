@@ -39,7 +39,7 @@ Builder.load_string("""
     color: hex('#333333ff')
     halign: 'left'
     markup: 'True'
-    font_size: 15
+    font_size: 14
     background_color: 0,0,0,0
     canvas.before:
         Color:
@@ -55,6 +55,7 @@ Builder.load_string("""
     size: self.size
     color: hex('#333333ff')
     background_color: 0,0,0,0
+    font_size: 14
     canvas.before:
         Color:
             rgba: hex('ccccccff')

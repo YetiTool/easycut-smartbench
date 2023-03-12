@@ -419,6 +419,8 @@ def test_is_spindle_speed_in_line(sc):
 
 def test_is_spindle_speed_in_line_float(sc):
     assert sc.get_grbl_float("GX1Y4S80000.9876F90", sc.speed_pattern) == 80000.9876
+    assert sc.get_grbl_float("M3S16000", sc.speed_pattern) == 16000
+    assert sc.get_grbl_float("S18000M3", sc.speed_pattern) == 18000
 
 def test_is_feed_rate_in_line(sc):
     assert sc.get_grbl_float("G0X1Y4F600Y9S0", sc.feed_pattern) == 600
