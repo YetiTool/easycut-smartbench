@@ -329,7 +329,7 @@ class YetiPilot(object):
 
     def get_active_cutter_type(self):
         if self.active_profile:
-            return self.l.get_str(self.active_profile.cutter_type)
+            return self.active_profile.cutter_type
         return ""
 
     def get_active_cutter_diameter(self):
@@ -339,7 +339,7 @@ class YetiPilot(object):
 
     def get_active_material_type(self):
         if self.active_profile:
-            return self.l.get_str(self.active_profile.material_type)
+            return self.active_profile.material_type
         return ""
 
     def get_active_step_down(self):
