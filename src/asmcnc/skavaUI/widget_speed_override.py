@@ -174,12 +174,15 @@ class SpeedOverride(Widget):
         self.down_5.disabled = False
         self.up_5.disabled = False
 
-        if self.m.s.yp.use_yp:
-            self.sm.get_screen('go').feedOverride.down_5.disabled = True
-            self.sm.get_screen('go').feedOverride.up_5.disabled = True
-        else:
-            self.sm.get_screen('go').feedOverride.down_5.disabled = False
-            self.sm.get_screen('go').feedOverride.up_5.disabled = False
+        try:
+            if self.m.s.yp.use_yp:
+                self.sm.get_screen('go').feedOverride.down_5.disabled = True
+                self.sm.get_screen('go').feedOverride.up_5.disabled = True
+            else:
+                self.sm.get_screen('go').feedOverride.down_5.disabled = False
+                self.sm.get_screen('go').feedOverride.up_5.disabled = False
+        except:
+            pass
 
         self.push = 0
 
