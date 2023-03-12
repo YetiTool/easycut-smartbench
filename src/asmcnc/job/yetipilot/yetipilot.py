@@ -133,7 +133,8 @@ class YetiPilot(object):
         return 0
 
     def is_feed_too_low_callback(self):
-        self.waiting_for_feed_too_low_decision = False
+        # this needs to go after the resume from stop_and_show_error
+        # self.waiting_for_feed_too_low_decision = False
 
         self.stop_and_show_error()
 
