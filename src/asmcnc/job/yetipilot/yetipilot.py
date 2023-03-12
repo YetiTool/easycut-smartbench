@@ -268,8 +268,8 @@ class YetiPilot(object):
             self.available_profiles.append(
                 YetiPilotProfile(
                     cutter_diameter=profile_json["Cutter Diameter"],
-                    cutter_type=profile_json["Cutter Type"],
-                    material_type=profile_json["Material Type"],
+                    cutter_type=self.l.get_str(profile_json["Cutter Type"]),
+                    material_type=self.l.get_str(profile_json["Material Type"]),
                     step_down=profile_json["Step Down"],
                     parameters=profile_json["Parameters"]
                 )
@@ -289,8 +289,8 @@ class YetiPilot(object):
 
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
-                    self.l.get_str(str(profile.cutter_type)) == cutter_type and \
-                    self.l.get_str(str(profile.material_type)) == material_type:
+                    str(profile.cutter_type) == cutter_type and \
+                    str(profile.material_type) == material_type:
                 return profile
 
     def get_spindle_speed_correction(self, target_rpm):
