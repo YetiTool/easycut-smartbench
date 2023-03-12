@@ -171,7 +171,7 @@ class YetiPilot(object):
                 self.do_adjustment(adjustment)
 
             if not self.using_advanced_profile:
-                if abs(int(self.m.s.spindle_speed) - self.jd.grbl_mode_tracker[0][2]) > 500:
+                if abs(self.target_spindle_speed - self.jd.grbl_mode_tracker[0][2]) > 500:
                     self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
 
     # SPINDLE SPEED ADJUSTMENTS
