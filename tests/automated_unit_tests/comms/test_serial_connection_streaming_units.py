@@ -281,7 +281,7 @@ def test_after_grbl_settings_insert_dwell(sc):
 
 def test_buffer_stuffer_with_line_number_tracking(sc_write_spy):
     test_gcode = ["G90", "G0X4Y5F100", "AE", "G1", "G91"]
-    expected_line_count = ["N1G90", "N2G0X4Y5F100", "AE", "N4G1", "N5G91"]
+    expected_line_count = ["N0G90", "N1G0X4Y5F100", "AE", "N3G1", "N4G91"]
     global written_gcodes_list
     written_gcodes_list = []
 
@@ -311,7 +311,7 @@ def test_gcode_line_is_not_excluded(sc):
     assert not sc.gcode_line_is_excluded("GX1Y4F600")
 
 def test_add_line_number_to_gcode_line(sc):
-    assert sc.add_line_number_to_gcode_line("G1", 4) == "N5G1"
+    assert sc.add_line_number_to_gcode_line("G1", 4) == "N4G1"
     assert sc.add_line_number_to_gcode_line("AE", 2) == "AE"
 
 

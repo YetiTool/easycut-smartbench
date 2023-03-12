@@ -562,7 +562,7 @@ class SerialConnection(object):
 
     # line counting for buffer stuffing
     def add_line_number_to_gcode_line(self, line, i):
-        return line if self.gcode_line_is_excluded(line) else 'N' + str(i+1) + line
+        return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
 
     def gcode_line_is_excluded(self, line):
         return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
