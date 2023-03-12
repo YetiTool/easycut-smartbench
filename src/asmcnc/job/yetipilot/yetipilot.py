@@ -72,6 +72,7 @@ class YetiPilot(object):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+        self.l = kwargs['localization']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
@@ -276,8 +277,8 @@ class YetiPilot(object):
 
         # Get available options for dropdowns
         self.available_cutter_diameters = sorted({str(profile.cutter_diameter) for profile in self.available_profiles})
-        self.available_material_types = sorted({str(profile.material_type) for profile in self.available_profiles})
-        self.available_cutter_types = sorted({str(profile.cutter_type) for profile in self.available_profiles})
+        self.available_material_types = sorted({self.l.get_str(str(profile.material_type)) for profile in self.available_profiles})
+        self.available_cutter_types = sorted({self.l.get_str(str(profile.cutter_type)) for profile in self.available_profiles})
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True
@@ -288,8 +289,8 @@ class YetiPilot(object):
 
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
-                    str(profile.cutter_type) == cutter_type and \
-                    str(profile.material_type) == material_type:
+                    self.l.get_str(str(profile.cutter_type)) == cutter_type and \
+                    self.l.get_str(str(profile.material_type)) == material_type:
                 return profile
 
     def get_spindle_speed_correction(self, target_rpm):
@@ -321,7 +322,7 @@ class YetiPilot(object):
 
     def get_active_cutter_type(self):
         if self.active_profile:
-            return self.active_profile.cutter_type
+            return self.l.get_str(self.active_profile.cutter_type)
         return ""
 
     def get_active_cutter_diameter(self):
@@ -331,7 +332,7 @@ class YetiPilot(object):
 
     def get_active_material_type(self):
         if self.active_profile:
-            return self.active_profile.material_type
+            return self.l.get_str(self.active_profile.material_type)
         return ""
 
     def get_active_step_down(self):

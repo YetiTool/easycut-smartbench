@@ -94,7 +94,7 @@ class ScreenTest(App):
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
         # Initialise yetipilot
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
