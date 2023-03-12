@@ -173,8 +173,7 @@ class YetiPilot(object):
                 self.do_adjustment(adjustment)
 
             if not self.using_advanced_profile and not self.adjusting_spindle_speed:
-                if abs(self.target_spindle_speed - self.jd.grbl_mode_tracker[0][2]) > 500:
-                    self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
+                self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
 
     # SPINDLE SPEED ADJUSTMENTS
     def adjust_spindle_speed(self, current_rpm):
@@ -182,7 +181,6 @@ class YetiPilot(object):
         current_override = self.m.s.speed_override_percentage
         difference = total_override_required - current_override
         adjustments = get_adjustment(difference)
-
         self.adjusting_spindle_speed = True
         self.do_spindle_adjustment(adjustments)
 
