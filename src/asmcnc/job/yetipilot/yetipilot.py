@@ -137,8 +137,7 @@ class YetiPilot(object):
 
         return multiplier
 
-    def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, current_line_number,
-                     digital_spindle_mains_voltage):
+    def add_to_stack(self, digital_spindle_ld_qdA, feed_override_percentage, feed_rate, digital_spindle_mains_voltage):
         if not self.active_profile and not self.using_advanced_profile:
             return
 
