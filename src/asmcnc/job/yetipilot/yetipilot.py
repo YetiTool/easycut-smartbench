@@ -209,8 +209,8 @@ class YetiPilot(object):
             elif adjustment == -1:
                 Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
                                     i * self.override_command_delay)
-        Clock.schedule_once(self.set_adjusting_spindle_speed(False), len(adjustments) * self.override_command_delay +
-                            0.2)
+        Clock.schedule_once(lambda dt: self.set_adjusting_spindle_speed(False), len(adjustments) *
+                            self.override_command_delay + 0.2)
 
     def stop_and_show_error(self):
         self.disable()
