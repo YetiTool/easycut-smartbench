@@ -36,7 +36,7 @@ class YetiPilot(object):
     cap_for_feed_decrease = -40
     cap_for_feed_increase_during_z_movement = 0
 
-    counter = 0
+    status_per_adjustment_counter = 0
     statuses_per_adjustment = 2
     spindle_load_stack_size = 1
     digital_spindle_load_stack = []
@@ -102,15 +102,12 @@ class YetiPilot(object):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
 
     def get_multiplier(self, load):
-        multiplier = (float(
-            self.bias_for_feed_decrease) if load > self.spindle_target_load_watts else
-                      float(self.bias_for_feed_increase)) * (
-                             float(self.spindle_target_load_watts) - float(load)) \
-                     / float(self.spindle_target_load_watts) * float(self.m_coefficient) * float(self.c_coefficient)
+        if load > self.spindle_target_load_watts:
+            return self.bias_for_feed_decrease * (self.spindle_target_load_watts - load) / \
+                   self.spindle_target_load_watts * self.m_coefficient * self.c_coefficient
 
-        return multiplier
-
-    status_per_adjustment_counter = 0
+        return self.bias_for_feed_increase * (self.spindle_target_load_watts - load) / \
+               self.spindle_target_load_watts * self.m_coefficient * self.c_coefficient
 
     def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving):
         feed_multiplier = self.get_multiplier(load=average_spindle_load)
