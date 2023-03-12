@@ -122,7 +122,7 @@ class ScreenTest(App):
 
         sm.current = 'stop_or_resume_job_decision'
         
-        Clock.schedule_once(m.s.start_services, 0.1)
+        # Clock.schedule_once(m.s.start_services, 0.1)
 
         return sm
 
