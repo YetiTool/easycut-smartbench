@@ -667,6 +667,7 @@ class GoScreen(Screen):
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             self._start_running_job()
+            self.jd.job_start_time = time.time()
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 

@@ -101,7 +101,7 @@ class LoadSliderWidget(Widget):
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
 
-        self.power_slider.value = self.yp.target_ld
+        self.power_slider.value = self.yp.get_target_power()
         self.on_slider_value_change()
 
         self.make_buttons(self.button_container, self.power_slider, -100)
@@ -119,4 +119,4 @@ class LoadSliderWidget(Widget):
 
     def on_slider_value_change(self):
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
-        self.yp.target_ld = int(self.power_slider.value)
+        self.yp.set_target_power(int(self.power_slider.value))

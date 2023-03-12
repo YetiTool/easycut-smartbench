@@ -39,7 +39,7 @@ Builder.load_string("""
     color: hex('#333333ff')
     halign: 'left'
     markup: 'True'
-    font_size: 15
+    font_size: 14
     background_color: 0,0,0,0
     canvas.before:
         Color:
@@ -55,6 +55,7 @@ Builder.load_string("""
     size: self.size
     color: hex('#333333ff')
     background_color: 0,0,0,0
+    font_size: 14
     canvas.before:
         Color:
             rgba: hex('ccccccff')
@@ -158,41 +159,40 @@ class PopupYetiPilotSettings(Widget):
 
         def build_pre_cut_profiles():
 
-            def get_profile():
-                # profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
-                # if profile is None:
-                #     return
-
-                # self.yp.use_profile(profile)
-
-                # try:
-                #     update_step_down(self.yp.get_active_step_down())
-                # except:
-                #     pass
-                pass
-
             # Drop down menus (i.e. actual profile selection)
             left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
-    
+
             optn_img_1 = Image(source=img_1_src)
             optn_img_2 = Image(source=img_2_src)
             optn_img_3 = Image(source=img_3_src)
-    
+
+            def get_profile():
+                profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
+                if profile is None:
+                    return
+
+                self.yp.use_profile(profile)
+
+                try:
+                    update_step_down(self.yp.get_active_step_down())
+                except:
+                    pass
+
             def select_diameter(spinner, val):
               get_profile()
-    
+
             def select_tool(spinner, val):
               get_profile()
-    
+
             def select_material(spinner, val):
               get_profile()
-    
+
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
             material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
             get_profile()
-    
+
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
             material_choice.bind(text=select_material)
@@ -247,8 +247,8 @@ class PopupYetiPilotSettings(Widget):
                                     markup=True,
                                     font= 'Roboto',
                                     font_size='14sp',
-                                    halign='left', 
-                                    valign='top', 
+                                    halign='left',
+                                    valign='top',
                                     text=unexpected_results_string,
                                     color=dark_grey,
                                     padding=[10,0],

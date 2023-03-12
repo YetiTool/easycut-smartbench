@@ -14,7 +14,7 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 
-
+from asmcnc.comms import localization
 from asmcnc.job.yetipilot import yetipilot
 
 '''
@@ -31,7 +31,8 @@ def yp():
     m = Mock()
     sm = Mock()
     jd = Mock()
-    yp = yetipilot.YetiPilot(machine=m, screen_manager=sm, job_data=jd)
+    l = localization.Localization()
+    yp = yetipilot.YetiPilot(machine=m, screen_manager=sm, job_data=jd, localization=l, test=True)
     return yp
 
 def test_yp_init(yp):
@@ -49,10 +50,10 @@ def test_stop(yp):
     assert not yp.use_yp
 
 def test_load_parameters_from_json(yp):
-    yp.load_parameters_from_json()
+    yp.load_parameters()
 
 def test_add_to_stack(yp):
-    yp.add_to_stack()
+    yp.add_to_stack(0, 0, 0, 0)
 
 def test_feed_override_wrapper(yp):
     test_func = Mock()
@@ -62,6 +63,3 @@ def test_feed_override_wrapper(yp):
     yp.m.is_machine_paused = False
     yp.feed_override_wrapper(test_func)
     test_func.assert_called()
-
-def test_dummy_override(yp):
-    yp.dummy_override()
