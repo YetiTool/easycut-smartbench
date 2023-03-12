@@ -48,7 +48,7 @@ class YetiPilot(object):
     override_command_delay = 0.06
     tolerance_for_acceleration_detection = 5
 
-    spindle_target_load_watts = 880
+    spindle_target_load_watts = 700
     target_spindle_speed = 25000
 
     available_profiles = []
