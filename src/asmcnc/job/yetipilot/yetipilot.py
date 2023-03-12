@@ -68,6 +68,8 @@ class YetiPilot(object):
     profiles_path = 'asmcnc/job/yetipilot/config/profiles.json'
     parameters_path = 'asmcnc/job/yetipilot/config/algorithm_parameters.json'
 
+    adjusting_spindle_speed = False
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -170,7 +172,7 @@ class YetiPilot(object):
             if allow_feedup or raw_multiplier < 0:
                 self.do_adjustment(adjustment)
 
-            if not self.using_advanced_profile:
+            if not self.using_advanced_profile and not self.adjusting_spindle_speed:
                 if abs(self.target_spindle_speed - self.jd.grbl_mode_tracker[0][2]) > 500:
                     self.adjust_spindle_speed(self.jd.grbl_mode_tracker[0][2])
 
@@ -180,7 +182,12 @@ class YetiPilot(object):
         current_override = self.m.s.speed_override_percentage
         difference = total_override_required - current_override
         adjustments = get_adjustment(difference)
+
+        self.adjusting_spindle_speed = True
         self.do_spindle_adjustment(adjustments)
+
+    def set_adjusting_spindle_speed(self, value):
+        self.adjusting_spindle_speed = value
 
     def do_spindle_adjustment(self, adjustments):
         for i, adjustment in enumerate(adjustments):
@@ -202,6 +209,8 @@ class YetiPilot(object):
             elif adjustment == -1:
                 Clock.schedule_once(lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
                                     i * self.override_command_delay)
+        Clock.schedule_once(self.set_adjusting_spindle_speed(False), len(adjustments) * self.override_command_delay +
+                            0.2)
 
     def stop_and_show_error(self):
         self.disable()
