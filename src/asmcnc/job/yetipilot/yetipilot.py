@@ -345,6 +345,7 @@ class YetiPilot(object):
         if using_advanced_profile:
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
+                self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
 
             self.using_basic_profile = False
 
