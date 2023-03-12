@@ -125,11 +125,50 @@ def test_scrape_last_feed_command_feed_mid_line(jd):
     assert jd.scrape_last_feed_command(job_gcode_object, index) == 1000
 
 def test_remove_line_numbers(jd):
-    assert jd.remove_line_number("N4G1X90") == "G1X90"
+    assert jd.remove_line_number("N14G1X90") == "G1X90"
 
 def test_remove_line_numbers_mid(jd):
     assert jd.remove_line_number("G1N4X90") == "G1X90"
 
+def test_remove_line_numbers_on_evil_file(jd):
+    file = [
+            "N999 (VECTRIC POST REVISION)",
+            "N0 (FC16A22438222CB0A5088D1738135480)",
+            "N1 T1",
+            "N2 G17",
+            "N3 G21",
+            "N4 G90",
+            "G0Z20.320",
+            "N6 G0X0.000Y0.000",
+            "N7 S16000M3",
+            "N8 G0X-0.218Y0.000Z5.080",
+            "N9 G0Z2.500",
+            "N9999999 G1Z-8.000F381.0",
+            "N99999999 G1X1099.782F4000.0",
+            "N12 G1Y20.000",
+            "N13 G1X-0.218",
+    ]
+
+    file_numberless = [
+            " (VECTRIC POST REVISION)",
+            " (FC16A22438222CB0A5088D1738135480)",
+            " T1",
+            " G17",
+            " G21",
+            " G90",
+            "G0Z20.320",
+            " G0X0.000Y0.000",
+            " S16000M3",
+            " G0X-0.218Y0.000Z5.080",
+            " G0Z2.500",
+            " G1Z-8.000F381.0",
+            " G1X1099.782F4000.0",
+            " G1Y20.000",
+            " G1X-0.218",
+    ]
+
+    for idx, fileline in enumerate(file): 
+        assert jd.remove_line_number(fileline) == file_numberless[idx]
 
 
 
