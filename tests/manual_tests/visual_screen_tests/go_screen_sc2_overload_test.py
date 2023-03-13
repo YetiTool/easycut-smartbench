@@ -44,7 +44,7 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 6
+    lang_idx = 0
 
     # 0 - English (y)
     # 1 - Italian (y)
