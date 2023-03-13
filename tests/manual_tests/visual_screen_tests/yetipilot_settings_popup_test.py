@@ -56,7 +56,7 @@ class BasicScreen(Screen):
 
 
     def on_enter(self):
-        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles)
+        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = "COM3"
 
@@ -93,7 +93,7 @@ class TestApp(App):
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
         # Initialise YP
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
