@@ -85,7 +85,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.3.0'
+initial_version = 'v2.3.1-beta'
 
 config_flag = False
         
