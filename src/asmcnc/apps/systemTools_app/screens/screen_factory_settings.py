@@ -955,7 +955,6 @@ class FactorySettingsScreen(Screen):
     def toggle_sc2_compatability(self):
         if self.sc2_compatability_toggle.state == 'normal':
             self.sc2_compatability_toggle.text = 'Enable SC2 compatability'
-            self.m.write_dollar_51_setting(0)
             try:
                 self.m.disable_theateam()
             except:
@@ -963,7 +962,6 @@ class FactorySettingsScreen(Screen):
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
         else:
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
-            self.m.write_dollar_51_setting(1)
             try:
                 self.m.enable_theateam()
             except:

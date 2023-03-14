@@ -952,9 +952,11 @@ class RouterMachine(object):
         return self.look_at(self.theateam_path)
 
     def enable_theateam(self):
+        self.write_dollar_51_setting(1)
         open(self.theateam_path, 'a').close()
 
     def disable_theateam(self):
+        self.write_dollar_51_setting(0)
         os.remove(self.theateam_path)
 
 # HW/FW ADJUSTMENTS
