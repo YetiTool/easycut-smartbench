@@ -17,6 +17,8 @@ Builder.load_string("""
 
     qr_image:qr_image
 
+    exit_button:exit_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -174,7 +176,7 @@ class UpgradeScreen(Screen):
 
     def code_entered(self):
         self.hide_error_message()
-        self.show_verifying_text()
+        self.show_verifying()
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(self.get_restore_info, 0.1)
 
@@ -193,7 +195,7 @@ class UpgradeScreen(Screen):
 
     def read_restore_info(self):
         self.m.s.write_command('M5')
-        self.hide_verifying_text()
+        self.hide_verifying()
         # Value of -999 for ld_qdA represents disconnected spindle
         if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
             # Get info was successful, show serial and check code
@@ -234,17 +236,21 @@ class UpgradeScreen(Screen):
         self.error_label.size_hint_y = 0
         self.support_label.parent.padding = [0,0,0,0]
 
-    def show_verifying_text(self):
+    def show_verifying(self):
         self.support_label.text = self.l.get_str('Verifying upgrade code...')
         self.support_label.font_size = 32
         self.spindle_label.text = ""
         self.qr_image.opacity = 0
+        self.upgrade_code_input.disabled = True
+        self.exit_button.disabled = True
 
-    def hide_verifying_text(self):
+    def hide_verifying(self):
         # Spindle label text is updated separately
         self.support_label.text = self.l.get_str("For more information about upgrades, please contact your place of purchase or visit www.yetitool.com")
         self.support_label.font_size = 24
         self.qr_image.opacity = 1
+        self.upgrade_code_input.disabled = False
+        self.exit_button.disabled = False
 
     def update_strings(self):
         self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
