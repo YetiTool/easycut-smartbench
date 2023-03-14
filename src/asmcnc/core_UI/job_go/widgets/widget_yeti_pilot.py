@@ -20,7 +20,7 @@ Builder.load_string("""
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding: [10,8]
+        padding: [10,8,10,8]
 
         
         BoxLayout:
@@ -30,7 +30,7 @@ Builder.load_string("""
 
             Label:
                 id: yetipilot_two_tone
-                size_hint_y: 0.6
+                size_hint_y: 0.5
                 markup: True
                 halign: 'center'
                 text_size: self.size
@@ -40,7 +40,7 @@ Builder.load_string("""
 
             BoxLayout: 
                 id: bl
-                size_hint_y: 0.4
+                size_hint_y: 0.5
                 padding: [14.09649122,0]
 
                 ToggleButton:
@@ -63,7 +63,7 @@ Builder.load_string("""
 
         BoxLayout:
             padding: [0,0]
-            size_hint_x: 0.05
+            size_hint_x: 0.025
             
             BoxLayout:
                 size_hint_x: None
@@ -78,11 +78,11 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding: [0,0]
-            spacing: 10
+            padding: [2,0,5,0]
+            spacing: 0
             Label: 
                 id: profile_label
-                size_hint_y: 0.6
+                size_hint_y: 0.4
                 color: hex('#333333ff')
                 markup: True
                 halign: 'left'
@@ -93,12 +93,12 @@ Builder.load_string("""
 
             Label:
                 id: profile_selection
-                size_hint_y: 0.4
+                size_hint_y: 0.6
                 color: hex('#333333ff')
                 markup: True
                 halign: 'left'
                 text_size: self.size
-                font_size: '15sp'
+                font_size: '14sp'
                 valign: "middle"
 
         BoxLayout: 
@@ -159,10 +159,15 @@ class YetiPilotWidget(Widget):
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=self.yp.standard_profiles, closing_func=self.update_profile_selection)
+        PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
-        if self.yp.standard_profiles:
-            self.profile_selection.text = self.yp.material + "; " + self.yp.diameter + " " + self.yp.tool
-        else:
-            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(self.yp.target_ld) + " W"
+        if self.yp.using_basic_profile:
+            if self.yp.active_profile is None:
+                self.disable_yeti_pilot()
+                self.profile_selection.text = ""
+                return
+
+            self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
+        elif self.yp.using_advanced_profile:
+            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_target_power())) + " W"

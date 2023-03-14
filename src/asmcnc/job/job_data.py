@@ -29,6 +29,9 @@ class JobData(object):
     job_gcode_raw = []
     job_gcode_modified = []
     job_gcode_running = []
+
+    # GRBL state tracking
+    grbl_mode_tracker = []
     
     ## METADATA
     # job info scraped from file
@@ -65,6 +68,7 @@ class JobData(object):
     actual_runtime = ''
     pause_duration = ''
     total_time = ''
+    job_start_time = None
     
     # Production notes
     post_production_notes = ''
@@ -168,12 +172,12 @@ class JobData(object):
 
     # JOB DATA
     def remove_line_number(self, line):
-        return re.sub('N\d+?', '', line)
+        return re.sub('N\d+', '', line)
 
     def scrape_last_feed_command(self, job_gcode_object, index): 
 
         try:
-            feedrate_line = next((s for s in reversed(job_gcode_object[:index]) if 'F' in s), None)
+            feedrate_line = next((s for s in reversed(job_gcode_object[:index+1]) if 'F' in s), None)
             if feedrate_line:
                 feedrate = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
 

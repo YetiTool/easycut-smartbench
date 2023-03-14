@@ -1258,6 +1258,9 @@ class RouterMachine(object):
 
     def get_grbl_settings(self):
         self.s.write_command('$$')
+
+    def get_grbl_motion_mode(self): 
+        return self.jd.grbl_mode_tracker[0][0] if self.jd.grbl_mode_tracker else None
         
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
@@ -1442,9 +1445,9 @@ class RouterMachine(object):
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
 
-    def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate):
+    def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate, tolerance_for_acceleration_detection):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
-        return abs(constant_feed_target - current_feed_rate) < 50, last_modal_feed_rate
+        return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
 
     def spindle_speed(self): 
         if self.spindle_voltage == 110:
@@ -1690,6 +1693,12 @@ class RouterMachine(object):
 
     def speed_override_down_1(self, final_percentage=''):
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+
+    def speed_override_up_10(self, final_percentage=''):
+        self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
+
+    def speed_override_down_10(self, final_percentage=''):
+        self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
         
 # HOMING
