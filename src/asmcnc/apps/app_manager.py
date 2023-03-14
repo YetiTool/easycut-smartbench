@@ -14,7 +14,7 @@ from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
-from asmcnc.apps.upgrade_app import screen_upgrade
+from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful
 
 # import shape cutter managing object
 
@@ -93,6 +93,10 @@ class AppManagerClass(object):
         if not self.sm.has_screen('upgrade'):
             upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.sm, machine=self.m, localization=self.l)
             self.sm.add_widget(upgrade_screen)
+
+        if not self.sm.has_screen('upgrade_successful'):
+            upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(name='upgrade_successful', screen_manager=self.sm, machine=self.m, localization=self.l)
+            self.sm.add_widget(upgrade_successful_screen)
 
         self.current_app = 'upgrade'
         self.sm.current = 'upgrade'

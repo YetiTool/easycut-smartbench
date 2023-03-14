@@ -208,13 +208,17 @@ class UpgradeScreen(Screen):
         entered_unlock_code = self.upgrade_code_input.text.lower().replace('o', '0')
 
         if correct_unlock_code == entered_unlock_code:
-            try:
-                self.m.enable_theateam()
-            except:
-                warning_message = 'Problem creating SC2 compatability file!!'
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.upgrade_and_proceed()
         else:
             self.show_error_message(self.l.get_str("Upgrade code incorrect, please check it and try again."))
+
+    def upgrade_and_proceed(self):
+        try:
+            self.m.enable_theateam()
+            self.sm.current = "upgrade_successful"
+        except:
+            warning_message = 'Problem creating SC2 compatability file!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message

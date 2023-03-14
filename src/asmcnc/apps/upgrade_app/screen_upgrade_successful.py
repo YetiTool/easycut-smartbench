@@ -1,0 +1,84 @@
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+Builder.load_string("""
+<UpgradeSuccessfulScreen>:
+
+    success_label:success_label
+
+    continue_button:continue_button
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: hex('#1976d2')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                text: 'Upgrade SB V1.3 to PrecisionPro +'
+                halign: 'center'
+                valign: 'middle'
+                font_size: dp(30)
+                text_size: self.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 7
+
+            canvas: 
+                Color:
+                    rgba: hex('e5e5e5ff')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                id: success_label
+                font_size: dp(32)
+                color: 0,0,0,1
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+
+            BoxLayout:
+                size_hint_y: 0.25
+                padding: [dp(250),dp(0), dp(250), dp(110)]
+
+                Button:
+                    id: continue_button
+                    on_press: root.quit_to_lobby()
+                    font_size: dp(30)
+                    background_normal: "./asmcnc/skavaUI/img/next.png"
+                    background_down: "./asmcnc/skavaUI/img/next.png"
+                    border: [dp(14.5)]*4
+                    size_hint: (None,None)
+                    width: dp(291)
+                    height: dp(79)
+                    color: hex('#f9f9f9ff')
+                    center: self.parent.center
+                    pos: self.parent.pos
+
+""")
+
+class UpgradeSuccessfulScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(UpgradeSuccessfulScreen, self).__init__(**kwargs)
+
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
+        self.l = kwargs['localization']
+
+        self.update_strings()
+
+    def quit_to_lobby(self):
+        self.sm.current = 'lobby'
+
+    def update_strings(self):
+        self.success_label.text = self.l.get_str("Upgrade successful!")
+        self.continue_button.text = self.l.get_str("Continue")
