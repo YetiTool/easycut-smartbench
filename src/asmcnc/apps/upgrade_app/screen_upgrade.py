@@ -243,6 +243,7 @@ class UpgradeScreen(Screen):
         self.qr_image.opacity = 0
         self.upgrade_code_input.disabled = True
         self.exit_button.disabled = True
+        self.exit_button.opacity = 0
 
     def hide_verifying(self):
         # Spindle label text is updated separately
@@ -251,6 +252,7 @@ class UpgradeScreen(Screen):
         self.qr_image.opacity = 1
         self.upgrade_code_input.disabled = False
         self.exit_button.disabled = False
+        self.exit_button.opacity = 1
 
     def update_strings(self):
         self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
