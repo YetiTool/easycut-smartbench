@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 Builder.load_string("""
 <UpgradeSuccessfulScreen>:
 
+    title_label:title_label
     success_label:success_label
 
     continue_button:continue_button
@@ -20,6 +21,7 @@ Builder.load_string("""
                     pos: self.pos
 
             Label:
+                id: title_label
                 text: 'Upgrade SB V1.3 to PrecisionPro +'
                 halign: 'center'
                 valign: 'middle'
@@ -47,7 +49,7 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_y: 0.25
-                padding: [dp(250),dp(0), dp(250), dp(110)]
+                padding: [dp(175),dp(0),dp(175),dp(110)]
 
                 Button:
                     id: continue_button
@@ -57,11 +59,14 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/next.png"
                     border: [dp(14.5)]*4
                     size_hint: (None,None)
-                    width: dp(291)
-                    height: dp(79)
+                    width: dp(450)
+                    height: dp(60)
                     color: hex('#f9f9f9ff')
                     center: self.parent.center
                     pos: self.parent.pos
+                    text_size: self.size
+                    halign: "center"
+                    valign: "middle"
 
 """)
 
@@ -80,5 +85,6 @@ class UpgradeSuccessfulScreen(Screen):
         self.sm.current = 'lobby'
 
     def update_strings(self):
+        self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
         self.success_label.text = self.l.get_str("Upgrade successful!")
         self.continue_button.text = self.l.get_str("Continue")

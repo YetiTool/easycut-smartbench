@@ -7,6 +7,7 @@ from asmcnc.skavaUI import popup_info
 Builder.load_string("""
 <UpgradeScreen>:
 
+    title_label:title_label
     instruction_label:instruction_label
     support_label:support_label
     spindle_label:spindle_label
@@ -33,6 +34,7 @@ Builder.load_string("""
                 padding: [dp(60),0,0,0]
 
                 Label:
+                    id: title_label
                     text: 'Upgrade SB V1.3 to PrecisionPro +'
                     halign: 'center'
                     valign: 'middle'
@@ -65,7 +67,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding: [0,0,0,dp(10)]
+            padding: dp(10)
 
             canvas: 
                 Color:
@@ -108,7 +110,7 @@ Builder.load_string("""
                         id: error_label
                         size_hint_y: 0
                         height: 0
-                        font_size: dp(24)
+                        font_size: dp(23)
                         color: 1,0,0,1
                         halign: 'center'
                         valign: 'middle'
@@ -133,7 +135,7 @@ Builder.load_string("""
 
                         Label:
                             id: spindle_label
-                            font_size: dp(24)
+                            font_size: dp(20)
                             color: 0,0,0,1
                             halign: 'center'
                             valign: 'middle'
@@ -243,6 +245,8 @@ class UpgradeScreen(Screen):
         self.qr_image.opacity = 1
 
     def update_strings(self):
+        self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
+
         self.instruction_label.text = (
             '1. ' + self.l.get_str('Plug in your SC2 Spindle motor (both power and data cable)') + '\n' + \
             '2. ' + self.l.get_str('Type in your upgrade code below') + '\n' + \

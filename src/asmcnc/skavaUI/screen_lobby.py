@@ -529,6 +529,7 @@ class LobbyScreen(Screen):
         self.update_app_label.text = self.l.get_str('Update')
         self.maintenance_app_label.text = self.l.get_str('Maintenance')
         self.system_tools_app_label.text = self.l.get_str('System Tools')
+        self.upgrade_app_label.text = self.l.get_str('Upgrade')
 
         self.welcome_popup_description = (
             self.format_command(
