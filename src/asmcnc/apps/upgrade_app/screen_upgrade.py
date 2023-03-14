@@ -1,5 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <UpgradeScreen>:
@@ -7,6 +10,9 @@ Builder.load_string("""
     instruction_label:instruction_label
     support_label:support_label
     spindle_label:spindle_label
+    error_label:error_label
+
+    upgrade_code_input:upgrade_code_input
 
     BoxLayout:
         orientation: 'vertical'
@@ -57,7 +63,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding: [0,0,0,dp(20)]
+            padding: [0,0,0,dp(10)]
 
             canvas: 
                 Color:
@@ -82,34 +88,57 @@ Builder.load_string("""
                     padding: [dp(200),0,dp(200),dp(20)]
 
                     TextInput:
+                        id: upgrade_code_input
                         font_size: dp(30)
                         multiline: False
                         valign: 'middle'
                         halign: 'center'
+                        on_text_validate: root.code_entered()
 
             BoxLayout:
                 orientation: 'vertical'
+                size_hint_y: 1.15
 
-                Label:
-                    id: support_label
-                    size_hint_y: 1.5
-                    font_size: dp(24)
-                    color: 0,0,0,1
-                    halign: 'center'
-                    valign: 'middle'
-                    text_size: self.size
+                BoxLayout:
+                    orientation:'vertical'
 
-                Image:
-                    size_hint_y: 2
-                    source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
+                    Label:
+                        id: error_label
+                        size_hint_y: 0
+                        height: 0
+                        font_size: dp(24)
+                        color: 1,0,0,1
+                        halign: 'center'
+                        valign: 'middle'
+                        text_size: self.size
 
-                Label:
-                    id: spindle_label
-                    font_size: dp(24)
-                    color: 0,0,0,1
-                    halign: 'center'
-                    valign: 'middle'
-                    text_size: self.size
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        Label:
+                            id: support_label
+                            size_hint_y: 1.5
+                            font_size: dp(24)
+                            color: 0,0,0,1
+                            halign: 'center'
+                            valign: 'middle'
+                            text_size: self.size
+
+                        Image:
+                            size_hint_y: 2
+                            source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
+
+                        Label:
+                            id: spindle_label
+                            font_size: dp(24)
+                            color: 0,0,0,1
+                            halign: 'center'
+                            valign: 'middle'
+                            text_size: self.size
+
+                BoxLayout:
+                    size_hint_y: 0
+                    height: 0
 
 """)
 
@@ -122,10 +151,77 @@ class UpgradeScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
+    def on_pre_enter(self):
+        # Reset app
         self.update_strings()
+        self.hide_error_message()
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
+
+    def get_correct_unlock_code(self, serial):
+        try:
+            return str(hex((serial + 42) * 10000))[2:]
+        except TypeError:
+            return 1
+
+    def code_entered(self):
+        self.hide_error_message()
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(self.get_restore_info, 0.1)
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+
+    def get_restore_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        self.check_info_count = 0
+        Clock.schedule_once(self.check_restore_info, 0.3)
+
+    def check_restore_info(self, dt):
+        self.check_info_count += 1
+        # Value of -999 represents disconnected spindle - if detected then stop waiting
+        if (self.m.s.digital_spindle_ld_qdA != -999) or (self.check_info_count > 10):
+            self.read_restore_info()
+        else: # Keep trying for a few seconds
+            Clock.schedule_once(self.check_restore_info, 0.3)
+
+    def read_restore_info(self):
+        self.m.s.write_command('M5')
+        self.wait_popup.popup.dismiss()
+        # Value of -999 for ld_qdA represents disconnected spindle
+        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999]:
+            # Get info was successful, show serial and check code
+            self.spindle_label.text = (
+                self.l.get_str("Need support?") + " " + \
+                self.l.get_str("Quote Spindle motor number: NN").replace("NN", str(self.m.s.spindle_serial_number))
+            )
+            self.check_unlock_code()
+        else:
+            # Otherwise, spindle is probably disconnected
+            self.show_error_message(self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections."))
+            self.spindle_label.text = self.l.get_str("Need support?") + " " + self.l.get_str('Quote "No SC2"')
+
+    def check_unlock_code(self):
+        correct_unlock_code = self.get_correct_unlock_code(self.m.s.spindle_serial_number)
+        entered_unlock_code = self.upgrade_code_input.text.lower().replace('o', '0')
+
+        if correct_unlock_code == entered_unlock_code:
+            try:
+                self.m.enable_theateam()
+            except:
+                warning_message = 'Problem creating SC2 compatability file!!'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+        else:
+            self.show_error_message(self.l.get_str("Upgrade code incorrect, please check it and try again."))
+
+    def show_error_message(self, error_message):
+        self.error_label.text = error_message
+        self.error_label.size_hint_y = 0.15
+        self.support_label.parent.padding = [0,5,0,0]
+
+    def hide_error_message(self):
+        self.error_label.text = ""
+        self.error_label.size_hint_y = 0
+        self.support_label.parent.padding = [0,0,0,0]
 
     def update_strings(self):
         self.instruction_label.text = (

@@ -951,6 +951,12 @@ class RouterMachine(object):
     def theateam(self):
         return self.look_at(self.theateam_path)
 
+    def enable_theateam(self):
+        open(self.theateam_path, 'a').close()
+
+    def disable_theateam(self):
+        os.remove(self.theateam_path)
+
 # HW/FW ADJUSTMENTS
 
     # Functions to convert spindle RPMs if using a 110V spindle
