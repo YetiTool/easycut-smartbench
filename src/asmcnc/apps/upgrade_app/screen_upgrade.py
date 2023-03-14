@@ -14,6 +14,8 @@ Builder.load_string("""
 
     upgrade_code_input:upgrade_code_input
 
+    qr_image:qr_image
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -125,6 +127,7 @@ Builder.load_string("""
                             text_size: self.size
 
                         Image:
+                            id: qr_image
                             size_hint_y: 2
                             source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
 
@@ -167,9 +170,9 @@ class UpgradeScreen(Screen):
 
     def code_entered(self):
         self.hide_error_message()
+        self.show_verifying_text()
         self.m.s.write_command('M3 S0')
         Clock.schedule_once(self.get_restore_info, 0.1)
-        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
@@ -186,7 +189,7 @@ class UpgradeScreen(Screen):
 
     def read_restore_info(self):
         self.m.s.write_command('M5')
-        self.wait_popup.popup.dismiss()
+        self.hide_verifying_text()
         # Value of -999 for ld_qdA represents disconnected spindle
         if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999]:
             # Get info was successful, show serial and check code
@@ -222,6 +225,18 @@ class UpgradeScreen(Screen):
         self.error_label.text = ""
         self.error_label.size_hint_y = 0
         self.support_label.parent.padding = [0,0,0,0]
+
+    def show_verifying_text(self):
+        self.support_label.text = self.l.get_str('Verifying upgrade code...')
+        self.support_label.font_size = 32
+        self.spindle_label.text = ""
+        self.qr_image.opacity = 0
+
+    def hide_verifying_text(self):
+        # Spindle label text is updated separately
+        self.support_label.text = self.l.get_str("For more information about upgrades, please contact your place of purchase or visit www.yetitool.com")
+        self.support_label.font_size = 24
+        self.qr_image.opacity = 1
 
     def update_strings(self):
         self.instruction_label.text = (
