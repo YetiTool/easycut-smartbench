@@ -514,7 +514,11 @@ class LobbyScreen(Screen):
         self.am.start_maintenance_app('laser_tab') 
 
     def upgrade_app(self):
-        self.am.start_upgrade_app()
+        # Need to set $51 on entry, requires idle
+        if self.m.state().startswith('Idle'):
+            self.am.start_upgrade_app()
+        else:
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
