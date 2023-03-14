@@ -186,7 +186,7 @@ class UpgradeScreen(Screen):
     def check_restore_info(self, dt):
         self.check_info_count += 1
         # Value of -999 represents disconnected spindle - if detected then stop waiting
-        if (self.m.s.digital_spindle_ld_qdA != -999) or (self.check_info_count > 10):
+        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
             self.read_restore_info()
         else: # Keep trying for a few seconds
             Clock.schedule_once(self.check_restore_info, 0.3)
@@ -195,7 +195,7 @@ class UpgradeScreen(Screen):
         self.m.s.write_command('M5')
         self.hide_verifying_text()
         # Value of -999 for ld_qdA represents disconnected spindle
-        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999]:
+        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
             # Get info was successful, show serial and check code
             self.spindle_label.text = (
                 self.l.get_str("Need support?") + " " + \
