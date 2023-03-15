@@ -223,8 +223,7 @@ class UpgradeScreen(Screen):
             self.m.enable_theateam()
             self.sm.current = "upgrade_successful"
         except:
-            warning_message = 'Problem creating SC2 compatability file!!'
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message
