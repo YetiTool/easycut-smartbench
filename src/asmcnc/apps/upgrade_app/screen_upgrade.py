@@ -1,3 +1,5 @@
+import datetime
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -149,6 +151,10 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
 class UpgradeScreen(Screen):
 
     def __init__(self, **kwargs):
@@ -224,6 +230,7 @@ class UpgradeScreen(Screen):
             self.sm.current = "upgrade_successful"
         except:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
+            log("Failed to create SC2 compatibility file!")
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message
