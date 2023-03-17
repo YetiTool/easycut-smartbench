@@ -141,7 +141,7 @@ class StopOrResumeDecisionScreen(Screen):
             self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
         )
 
-        if 'yetipilot' not in self.reason_for_pause:
+        if self.reason_for_pause == 'job_pause':
             popup_info.PopupInfo(self.sm, self.l, 500, info)
         else:
             info += (
@@ -151,7 +151,12 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
             )
 
-            popup_info.PopupQRInfo(self.sm, self.l, 500, info, "./asmcnc/skavaUI/img/qr_yetipilot_info.png")
+            if 'yetipilot' in self.reason_for_pause:
+                qr_source = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
+            else:
+                qr_source = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
+
+            popup_info.PopupQRInfo(self.sm, self.l, 500, info, qr_source)
  
     
     def on_enter(self):
