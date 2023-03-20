@@ -471,8 +471,8 @@ class LobbyScreen(Screen):
 
     def on_pre_enter(self):
         # Hide upgrade app if older than V1.3 or if already upgraded, and only if it has not been hidden already
-        # if (not ("V1.3" in self.m.smartbench_model()) or self.m.theateam()) and not self.upgrade_app_hidden:
-        if not self.upgrade_app_hidden:
+        if (not ("V1.3" in self.m.smartbench_model()) or self.m.theateam()) and not self.upgrade_app_hidden:
+        # if not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
             self.upgrade_app_hidden = True
 

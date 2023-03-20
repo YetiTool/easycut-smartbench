@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -226,11 +226,37 @@ class UpgradeScreen(Screen):
 
     def upgrade_and_proceed(self):
         try:
+            self.update_spindle_cooldown_settings()
             self.m.enable_theateam()
             self.sm.current = "upgrade_successful"
         except:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
             log("Failed to create SC2 compatibility file!")
+
+    def update_spindle_cooldown_settings(self):
+        # Work out spindle voltage
+        voltage = str(min([110, 230], key=lambda x:abs(x - self.m.s.digital_spindle_mains_voltage)))
+
+        # Write default SC2 settings
+        if self.m.write_spindle_cooldown_rpm_override_settings(False) and \
+            self.m.write_spindle_cooldown_settings(brand='YETI SC2', voltage=voltage, digital=True, time_seconds=10, rpm=self.m.yeti_cooldown_rpm_default):
+
+            if voltage == '110':
+                spindle_voltage_info = (
+                        self.l.get_str("When using a 110V spindle as part of your SmartBench, please be aware of the following:") + \
+                        "\n\n" + \
+                        self.l.get_str("110V spindles have a minimum speed of ~10,000 RPM.") + \
+                        "\n\n" + \
+                        self.l.get_str("SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure the machine code we send is adjusted to control a 110V spindle.") + \
+                        "\n\n" + \
+                        self.l.get_str("The 5% spindle speed adjustments in the Job Screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%.") + \
+                        " " + \
+                        self.l.get_str("You will still be able to use the real time spindle speed feedback feature to assist your adjustment.")
+                    )
+                
+                popup_info.PopupInfo(self.sm, self.l, 780, spindle_voltage_info)
+        else:
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("There was a problem saving your settings."))
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message
