@@ -789,6 +789,11 @@ class GoScreen(Screen):
 
     ### SCREEN UPDATES
 
+    def get_hms(self, seconds):
+        m, s = divmod(seconds, 60)
+        h, m = divmod(m, 60)
+        return h, m, s
+
     def poll_for_job_progress(self, dt):
 
         # % progress    
@@ -798,33 +803,57 @@ class GoScreen(Screen):
             if self.jd.percent_thru_job > 100: self.jd.percent_thru_job = 100
             self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
-        # Runtime
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
+            if self.m.s.m_state != 'Run':
+                return
 
-            stream_end_time = time.time()
-            self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
-            hours = int(self.time_taken_seconds / (60 * 60))
-            seconds_remainder = self.time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
+            self.jd.total_runtime_seconds += 1
+            hours, minutes, seconds = self.get_hms(self.jd.total_runtime_seconds)
 
             if hours > 0:
                 self.run_time_label.text = (
-                        str(hours) + " " + self.l.get_str("hours") + " " + \
-                        str(minutes) + " " + self.l.get_str("minutes") + " " + \
+                        str(hours) + " " + self.l.get_str("hours") + " " +
+                        str(minutes) + " " + self.l.get_str("minutes") + " " +
                         str(seconds) + " " + self.l.get_str("seconds")
                 )
 
             elif minutes > 0:
                 self.run_time_label.text = (
-                        str(minutes) + " " + self.l.get_str("minutes") + " " + \
+                        str(minutes) + " " + self.l.get_str("minutes") + " " +
                         str(seconds) + " " + self.l.get_str("seconds")
                 )
             else:
                 self.run_time_label.text = str(seconds) + " " + self.l.get_str("seconds")
-
         else:
             self.run_time_label.text = self.l.get_str("Waiting for job to be started")
+
+        # # Runtime
+        # if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
+        #
+        #     stream_end_time = time.time()
+        #     self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
+        #     hours = int(self.time_taken_seconds / (60 * 60))
+        #     seconds_remainder = self.time_taken_seconds % (60 * 60)
+        #     minutes = int(seconds_remainder / 60)
+        #     seconds = int(seconds_remainder % 60)
+        #
+        #     if hours > 0:
+        #         self.run_time_label.text = (
+        #                 str(hours) + " " + self.l.get_str("hours") + " " + \
+        #                 str(minutes) + " " + self.l.get_str("minutes") + " " + \
+        #                 str(seconds) + " " + self.l.get_str("seconds")
+        #         )
+        #
+        #     elif minutes > 0:
+        #         self.run_time_label.text = (
+        #                 str(minutes) + " " + self.l.get_str("minutes") + " " + \
+        #                 str(seconds) + " " + self.l.get_str("seconds")
+        #         )
+        #     else:
+        #         self.run_time_label.text = str(seconds) + " " + self.l.get_str("seconds")
+        #
+        # else:
+        #     self.run_time_label.text = self.l.get_str("Waiting for job to be started")
 
     def poll_for_feeds_and_speeds(self, dt):
 
