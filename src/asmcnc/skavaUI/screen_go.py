@@ -827,34 +827,6 @@ class GoScreen(Screen):
         else:
             self.run_time_label.text = self.l.get_str("Waiting for job to be started")
 
-        # # Runtime
-        # if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
-        #
-        #     stream_end_time = time.time()
-        #     self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
-        #     hours = int(self.time_taken_seconds / (60 * 60))
-        #     seconds_remainder = self.time_taken_seconds % (60 * 60)
-        #     minutes = int(seconds_remainder / 60)
-        #     seconds = int(seconds_remainder % 60)
-        #
-        #     if hours > 0:
-        #         self.run_time_label.text = (
-        #                 str(hours) + " " + self.l.get_str("hours") + " " + \
-        #                 str(minutes) + " " + self.l.get_str("minutes") + " " + \
-        #                 str(seconds) + " " + self.l.get_str("seconds")
-        #         )
-        #
-        #     elif minutes > 0:
-        #         self.run_time_label.text = (
-        #                 str(minutes) + " " + self.l.get_str("minutes") + " " + \
-        #                 str(seconds) + " " + self.l.get_str("seconds")
-        #         )
-        #     else:
-        #         self.run_time_label.text = str(seconds) + " " + self.l.get_str("seconds")
-        #
-        # else:
-        #     self.run_time_label.text = self.l.get_str("Waiting for job to be started")
-
     def poll_for_feeds_and_speeds(self, dt):
 
         # Spindle speed and feed rate
