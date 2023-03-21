@@ -137,9 +137,8 @@ class FeedOverride(Widget):
         Clock.schedule_once(self.enable_buttons, self.enable_button_time)
                 
     def feed_norm(self):
-        self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
+        self.update_feed_percentage_override_label()
         Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
 
     def feed_down(self):
