@@ -130,8 +130,6 @@ class SpeedOverride(Widget):
         if self.speed_override_percentage >= 200 or self.push >= 2:
             return
 
-        self.push += 1
-
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_up_1(), 0.06 * i)
 
@@ -146,8 +144,6 @@ class SpeedOverride(Widget):
     def speed_down(self):
         if self.speed_override_percentage <= 10 or self.push >= 2:
             return
-
-        self.push += 1
 
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), 0.06 * i)

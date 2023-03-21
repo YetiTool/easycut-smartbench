@@ -129,8 +129,6 @@ class FeedOverride(Widget):
         if self.feed_override_percentage >= 200 or self.push >= 2:
             return
 
-        self.push += 1
-
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), 0.06 * i)
 
@@ -146,8 +144,6 @@ class FeedOverride(Widget):
     def feed_down(self):
         if self.feed_override_percentage <= 10 or self.push >= 2:
             return
-
-        self.push += 1
 
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), 0.06 * i)
