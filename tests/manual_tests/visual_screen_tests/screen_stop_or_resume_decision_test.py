@@ -13,7 +13,7 @@ Config.write()
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.visual_screen_tests.screen_stop_or_resume_decision_test.py.py
+python -m tests.manual_tests.visual_screen_tests.screen_stop_or_resume_decision_test.py
 '''
 
 import sys, os
