@@ -167,7 +167,7 @@ class PopupYetiPilotSettings(Widget):
             optn_img_3 = Image(source=img_3_src)
 
             def get_profile_and_update_spinners(spinner=None, val=None):
-                profile = self.yp.get_profile_and_update_spinners(diameter_choice.text, tool_choice.text, material_choice.text)
+                profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
                 if profile is None:
                     return
 
@@ -178,11 +178,21 @@ class PopupYetiPilotSettings(Widget):
                 except:
                     pass
 
-            def update_spinner_options():
-                diameter_choice.values = self.yp.get_available_cutter_diameters()
+            # User chooses cutter diameter first
+
+            # If next material/cutter type is not available, these selections then clear
+
+            def select_diameter(spinner, val):
+                get_profile()
                 tool_choice.values = self.yp.get_available_cutter_types()
                 material_choice.values = self.yp.get_available_material_types()
 
+            def select_tool(spinner, val):
+                get_profile()
+                material_choice.values = self.yp.get_available_material_types()
+
+            def select_material(spinner, val):
+              get_profile()
 
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
@@ -190,9 +200,9 @@ class PopupYetiPilotSettings(Widget):
 
             get_profile_and_update_spinners()
 
-            diameter_choice.bind(text=get_profile_and_update_spinners)
-            tool_choice.bind(text=get_profile_and_update_spinners)
-            material_choice.bind(text=get_profile_and_update_spinners)
+            diameter_choice.bind(text=select_diameter)
+            tool_choice.bind(text=select_tool)
+            material_choice.bind(text=select_material)
     
             diameter_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
             tool_BL = BoxLayout(orientation='vertical', padding=[5,2.5])
