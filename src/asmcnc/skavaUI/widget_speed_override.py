@@ -110,7 +110,7 @@ class SpeedOverride(Widget):
     speed_override_percentage = NumericProperty()
     speed_rate_label = ObjectProperty()
 
-    enable_button_time = 0.3
+    enable_button_time = 0.36
 
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
