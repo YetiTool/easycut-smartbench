@@ -111,7 +111,6 @@ class FeedOverride(Widget):
     feed_rate_label = ObjectProperty()
 
     enable_button_time = 0.3
-    push = 0
 
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
@@ -129,6 +128,8 @@ class FeedOverride(Widget):
         if self.feed_override_percentage >= 200:
             return
 
+        self.disable_buttons()
+
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), 0.06 * i)
 
@@ -144,6 +145,8 @@ class FeedOverride(Widget):
     def feed_down(self):
         if self.feed_override_percentage <= 10:
             return
+
+        self.disable_buttons()
 
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), 0.06 * i)
@@ -163,7 +166,6 @@ class FeedOverride(Widget):
         self.up_5.disabled = False
         self.sm.get_screen('go').speedOverride.down_5.disabled = False
         self.sm.get_screen('go').speedOverride.up_5.disabled = False
-        self.push = 0
 
     def set_widget_visibility(self, visible):
         self.up_5.disabled = not visible

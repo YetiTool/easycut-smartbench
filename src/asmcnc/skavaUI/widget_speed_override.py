@@ -111,7 +111,6 @@ class SpeedOverride(Widget):
     speed_rate_label = ObjectProperty()
 
     enable_button_time = 0.3
-    push = 0
 
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
@@ -130,6 +129,8 @@ class SpeedOverride(Widget):
         if self.speed_override_percentage >= 200:
             return
 
+        self.disable_buttons()
+
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_up_1(), 0.06 * i)
 
@@ -144,6 +145,8 @@ class SpeedOverride(Widget):
     def speed_down(self):
         if self.speed_override_percentage <= 10:
             return
+
+        self.disable_buttons()
 
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), 0.06 * i)
@@ -175,8 +178,6 @@ class SpeedOverride(Widget):
                 self.sm.get_screen('go').feedOverride.up_5.disabled = False
         except:
             pass
-
-        self.push = 0
 
     def set_widget_visibility(self, visible):
         self.up_5.disabled = not visible
