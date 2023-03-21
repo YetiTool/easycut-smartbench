@@ -459,7 +459,7 @@ class JobRecoveryScreen(Screen):
                self.l.get_str('Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.') + ' ' + \
                self.l.get_str('SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes.')
 
-        popup_info.PopupBigInfo(self.sm, self.l, 780, info)
+        popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
         # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
