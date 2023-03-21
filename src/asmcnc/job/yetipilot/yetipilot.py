@@ -80,7 +80,7 @@ class YetiPilot(object):
             self.profiles_path = 'src/' + self.profiles_path
             self.parameters_path = 'src/' + self.parameters_path
 
-        self.get_available_profiles()
+        self.get_all_profiles()
         self.load_parameters()
 
     # System
@@ -267,7 +267,7 @@ class YetiPilot(object):
                 setattr(self, parameter["Name"], parameter["Value"])
 
     # USE THESE FUNCTIONS FOR BASIC PROFILES
-    def get_available_profiles(self):
+    def get_all_profiles(self):
         with open(self.profiles_path) as f:
             profiles_json = json.load(f)
 
@@ -282,10 +282,39 @@ class YetiPilot(object):
                 )
             )
 
+        self.get_dropdown_options(self.available_profiles)
+
+
+    def get_dropdown_options(self, profiles):
+
         # Get available options for dropdowns
-        self.available_cutter_diameters = sorted({str(profile.cutter_diameter) for profile in self.available_profiles})
-        self.available_material_types = sorted({self.l.get_str(str(profile.material_type)) for profile in self.available_profiles})
-        self.available_cutter_types = sorted({self.l.get_str(str(profile.cutter_type)) for profile in self.available_profiles})
+        self.available_cutter_diameters = sorted({str(profile.cutter_diameter) for profile in profiles})
+        self.available_material_types = sorted({self.l.get_str(str(profile.material_type)) for profile in profiles})
+        self.available_cutter_types = sorted({self.l.get_str(str(profile.cutter_type)) for profile in profiles})
+
+
+    def filter_available_profiles(self, cutter_diameter=None, cutter_type=None, material_type=None):
+        filters = [cutter_diameter, cutter_type, material_type]
+
+        if not any(filters):
+            return self.available_profiles
+
+        filtered_profiles = []
+
+        for profile in self.available_profiles:
+            if cutter_diameter and str(profile.cutter_diameter) != cutter_diameter:
+                continue
+
+            if cutter_type and str(profile.cutter_type) != cutter_type:
+                continue
+
+            if material_type and str(profile.material_type) != material_type:
+                continue
+
+            filtered_profiles.append(profile)
+
+        return filtered_profiles
+
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True
