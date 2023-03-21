@@ -126,7 +126,7 @@ class FeedOverride(Widget):
         self.feed_rate_label.text = str(self.m.s.feed_override_percentage) + '%'
 
     def feed_up(self):
-        if self.feed_override_percentage >= 200 or self.push >= 2:
+        if self.feed_override_percentage >= 200:
             return
 
         for i in range(5):
@@ -142,7 +142,7 @@ class FeedOverride(Widget):
         Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
 
     def feed_down(self):
-        if self.feed_override_percentage <= 10 or self.push >= 2:
+        if self.feed_override_percentage <= 10:
             return
 
         for i in range(5):
