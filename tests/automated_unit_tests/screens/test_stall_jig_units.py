@@ -29,7 +29,7 @@ from kivy.clock import Clock
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.automated_unit_tests.screens.test_stall_jig_units
+python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/screens/test_stall_jig_units.py
 '''
 @pytest.fixture(scope="module")
 def sm():

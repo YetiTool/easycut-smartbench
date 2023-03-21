@@ -21,6 +21,7 @@ Builder.load_string("""
     feed_absolute:feed_absolute
     up_5: up_5
     down_5: down_5
+    norm_button:norm_button
 
     BoxLayout:
         size: self.parent.size
@@ -50,6 +51,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
+                id: norm_button
                 on_press: root.feed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
@@ -120,6 +122,9 @@ class FeedOverride(Widget):
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
 
+    def update_feed_percentage_override_label(self):
+        self.feed_rate_label.text = str(self.m.s.feed_override_percentage) + '%'
+
     def feed_up(self):
         self.push =+ 1
         if self.feed_override_percentage < 200 and self.push < 2:
@@ -167,3 +172,17 @@ class FeedOverride(Widget):
         self.sm.get_screen('go').speedOverride.down_5.disabled = False
         self.sm.get_screen('go').speedOverride.up_5.disabled = False
         self.push = 0
+
+    def set_widget_visibility(self, visible):
+        self.up_5.disabled = not visible
+        self.down_5.disabled = not visible
+        self.norm_button.disabled = not visible
+
+        if visible:
+            self.up_5.opacity = 1
+            self.down_5.opacity = 1
+            self.norm_button.opacity = 1
+        else:
+            self.up_5.opacity = 0.5
+            self.down_5.opacity = 0.5
+            self.norm_button.opacity = 0.5

@@ -50,6 +50,7 @@ from asmcnc.comms import localization
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
@@ -88,7 +89,7 @@ from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.2.0'
+initial_version = 'v2.3.0'
 
 config_flag = False
         
@@ -157,6 +158,9 @@ class SkavaUI(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
+        # Initialise yetipilot
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
+
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
@@ -166,6 +170,9 @@ class SkavaUI(App):
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
 
+        # Serial comms needs to access YP
+        m.s.yp = yp
+
         # Server connection object
         sc = server_connection.ServerConnection(sett)
         
@@ -174,7 +181,7 @@ class SkavaUI(App):
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd, localization = l)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd, localization = l)
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l, yetipilot=yp)
         jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd, localization = l)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd, localization = l)

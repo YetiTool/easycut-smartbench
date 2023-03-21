@@ -5,6 +5,8 @@ Tabbed maintenance screen, for setting the laser datum; monitoring brush life.
 @author: Letty
 '''
 
+import os
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -575,6 +577,16 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
+
+        # Only show SC2 options if machine supports it
+        self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc1
+        try:
+            # Check if $51 exists
+            self.m.s.setting_51
+            if self.m.theateam():
+                self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc2
+        except:
+            pass
 
         # Z MISC
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)

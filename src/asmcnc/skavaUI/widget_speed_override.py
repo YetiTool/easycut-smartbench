@@ -22,6 +22,7 @@ Builder.load_string("""
     spindle_rpm:spindle_rpm
     up_5: up_5
     down_5: down_5
+    norm_button:norm_button
 
     BoxLayout:
         size: self.parent.size
@@ -51,6 +52,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
+                id: norm_button
                 on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
@@ -120,6 +122,10 @@ class SpeedOverride(Widget):
     def update_spindle_speed_label(self):
         self.spindle_rpm.text = str(self.m.spindle_speed())
 
+    def update_speed_percentage_override_label(self):
+        self.speed_override_percentage = self.m.s.speed_override_percentage
+        self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + '%'
+
     def speed_up(self):
         self.push =+ 1 
         if self.speed_override_percentage < 200 and self.push < 2:
@@ -135,9 +141,8 @@ class SpeedOverride(Widget):
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
     def speed_norm(self):
-        self.speed_override_percentage = 100
-        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
+        self.update_speed_percentage_override_label()
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
                 
     def speed_down(self):
@@ -157,13 +162,40 @@ class SpeedOverride(Widget):
     def disable_buttons(self):
         self.down_5.disabled = True
         self.up_5.disabled = True
-        self.sm.get_screen('go').feedOverride.down_5.disabled = True
-        self.sm.get_screen('go').feedOverride.up_5.disabled = True
+
+        try:
+            self.sm.get_screen('go').feedOverride.down_5.disabled = True
+            self.sm.get_screen('go').feedOverride.up_5.disabled = True
+        except:
+            pass
         return True
 
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
-        self.sm.get_screen('go').feedOverride.down_5.disabled = False
-        self.sm.get_screen('go').feedOverride.up_5.disabled = False      
+
+        try:
+            if self.m.s.yp.use_yp:
+                self.sm.get_screen('go').feedOverride.down_5.disabled = True
+                self.sm.get_screen('go').feedOverride.up_5.disabled = True
+            else:
+                self.sm.get_screen('go').feedOverride.down_5.disabled = False
+                self.sm.get_screen('go').feedOverride.up_5.disabled = False
+        except:
+            pass
+
         self.push = 0
+
+    def set_widget_visibility(self, visible):
+        self.up_5.disabled = not visible
+        self.down_5.disabled = not visible
+        self.norm_button.disabled = not visible
+
+        if visible:
+            self.up_5.opacity = 1
+            self.down_5.opacity = 1
+            self.norm_button.opacity = 1
+        else:
+            self.up_5.opacity = 0.5
+            self.down_5.opacity = 0.5
+            self.norm_button.opacity = 0.5
