@@ -398,6 +398,8 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
 
+    total_runtime_seconds = 0
+
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
@@ -804,11 +806,11 @@ class GoScreen(Screen):
             self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
-            if self.m.s.m_state != 'Run':
+            if self.m.is_machine_paused:
                 return
 
-            self.jd.total_runtime_seconds += 1
-            hours, minutes, seconds = self.get_hms(self.jd.total_runtime_seconds)
+            self.total_runtime_seconds += 1
+            hours, minutes, seconds = self.get_hms(self.total_runtime_seconds)
 
             if hours > 0:
                 self.run_time_label.text = (

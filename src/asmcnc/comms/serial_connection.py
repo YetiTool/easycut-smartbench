@@ -522,7 +522,9 @@ class SerialConnection(object):
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
-        self.jd.total_runtime_seconds = 0
+
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').total_runtime_seconds = 0
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
