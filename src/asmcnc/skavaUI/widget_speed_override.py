@@ -126,7 +126,7 @@ class SpeedOverride(Widget):
         self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + '%'
 
     def speed_up(self):
-        if self.speed_override_percentage >= 200:
+        if self.m.s.speed_override_percentage >= 200:
             return
 
         self.disable_buttons()
@@ -143,7 +143,7 @@ class SpeedOverride(Widget):
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
                 
     def speed_down(self):
-        if self.speed_override_percentage <= 10:
+        if self.m.s.speed_override_percentage <= 10:
             return
 
         self.disable_buttons()
