@@ -166,7 +166,7 @@ class PopupYetiPilotSettings(Widget):
             optn_img_2 = Image(source=img_2_src)
             optn_img_3 = Image(source=img_3_src)
 
-            def get_profile_and_update_spinners(spinner=None, val=None):
+            def get_profile(spinner=None, val=None):
                 profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
                 if profile is None:
                     return
@@ -179,26 +179,27 @@ class PopupYetiPilotSettings(Widget):
                     pass
 
             # User chooses cutter diameter first
-
             # If next material/cutter type is not available, these selections then clear
-
             def select_diameter(spinner, val):
+                tool_choice.values = self.yp.get_sorted_cutter_types(self.yp.filter_available_profiles())
+                material_choice.values = self.yp.get_sorted_material_types(self.yp.filter_available_profiles())
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
+                if material_choice.text not in material_choice.values: material_choice.text = ''
                 get_profile()
-                tool_choice.values = self.yp.get_available_cutter_types()
-                material_choice.values = self.yp.get_available_material_types()
 
             def select_tool(spinner, val):
+                material_choice.values = self.yp.get_sorted_material_types(self.yp.filter_available_profiles())
+                if material_choice.text not in material_choice.values: material_choice.text = ''
                 get_profile()
-                material_choice.values = self.yp.get_available_material_types()
 
             def select_material(spinner, val):
-              get_profile()
+                get_profile()
 
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
             material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
-            get_profile_and_update_spinners()
+            get_profile()
 
             diameter_choice.bind(text=select_diameter)
             tool_choice.bind(text=select_tool)
