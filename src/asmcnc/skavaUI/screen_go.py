@@ -669,6 +669,7 @@ class GoScreen(Screen):
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             self.m.run_spindle_health_check()
+            self.show_pause_button()
             Clock.schedule_once(lambda dt: self._start_running_job(), 8)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
@@ -708,6 +709,12 @@ class GoScreen(Screen):
 
     # Running
 
+    def show_pause_button(self):
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        # Hide back button
+        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
+        self.btn_back.disabled = True
+
     def _start_running_job(self):
         self.database.send_job_start()
         self.jd.job_start_time = time.time()
@@ -715,10 +722,6 @@ class GoScreen(Screen):
         self.m.set_pause(False)
         self.is_job_started_already = True
         log('Starting job...')
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        # Hide back button
-        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
-        self.btn_back.disabled = True
 
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
