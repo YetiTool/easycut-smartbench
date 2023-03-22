@@ -47,6 +47,70 @@
           "Value": 23800
         }
       ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6mm",
+      "Cutter Type": "2 flute spiral downcut",
+      "Step Down": "6mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 860
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3mm",
+      "Cutter Type": "2 flute spiral downcut",
+      "Step Down": "6mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 570
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 18100
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6mm",
+      "Cutter Type": "2 flute spiral compression",
+      "Step Down": "8mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 870
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 20100
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3.175mm",
+      "Cutter Type": "2 flute spiral compression",
+      "Step Down": "6mm",
+      "Parameters": [
+        {
+          "Name": "spindle_target_load_watts",
+          "Value": 500
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 18100
+        }
+      ]
     }
   ]
 }
