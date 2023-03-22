@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -226,11 +226,19 @@ class UpgradeScreen(Screen):
 
     def upgrade_and_proceed(self):
         try:
+            self.update_spindle_cooldown_settings()
             self.m.enable_theateam()
             self.sm.current = "upgrade_successful"
         except:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
             log("Failed to create SC2 compatibility file!")
+
+    def update_spindle_cooldown_settings(self):
+        # Write default SC2 settings, and set voltage to whatever is already selected
+        if not (self.m.write_spindle_cooldown_rpm_override_settings(False) and \
+            self.m.write_spindle_cooldown_settings(brand='YETI SC2', voltage=self.m.spindle_voltage, digital=True, time_seconds=10, rpm=self.m.yeti_cooldown_rpm_default)):
+
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("There was a problem saving your settings."))
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message
