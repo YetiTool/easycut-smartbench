@@ -3539,3 +3539,24 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
+
+    def run_spindle_health_check(self):
+        self.s.spindle_health_check = True
+        self.s.spindle_health_check_data[:] = []
+
+        def check_average():
+            average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
+
+            print("Average load: " + average_load)
+
+        def stop_spindle_health_check():
+            self.s.write_command('M5')
+            self.s.spindle_health_check = False
+
+        def start_spindle_health_check():
+            self.s.write_command('M3 S24000')
+            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 5)
+            Clock.schedule_once(lambda dt: check_average(), 5)
+
+        start_spindle_health_check()
+
