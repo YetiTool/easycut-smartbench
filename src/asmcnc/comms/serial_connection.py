@@ -1120,6 +1120,7 @@ class SerialConnection(object):
 
                         if self.spindle_data_failure_count >= self.spindle_data_failure_max:
                             self.m.stop_for_a_stream_pause("yetipilot_spindle_data_loss")
+                            self.reset_spindle_data_failure_count()
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
