@@ -26,6 +26,8 @@ from __builtin__ import True
 
 from asmcnc.skavaUI import popup_info
 
+from math import sqrt
+
 
 def log(message):
     timestamp = datetime.now()
@@ -3546,6 +3548,7 @@ class RouterMachine(object):
 
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
+            average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
             print("Average load: " + str(average_load))
             print("Raw load: " + str(self.s.spindle_health_check_data))
