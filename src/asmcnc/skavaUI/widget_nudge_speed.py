@@ -49,6 +49,23 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
+        Button:
+            background_color: hex('#F4433600')
+            on_release: 
+                self.background_color = hex('#F4433600')
+            on_press: 
+                root.set_datum()
+                self.background_color = hex('#F44336FF')
+            BoxLayout:
+                size: self.parent.size
+                pos: self.parent.pos      
+                Image:
+                    source: "./asmcnc/skavaUI/img/set_jobstart.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
 """)
     
 
@@ -98,3 +115,6 @@ class NudgeSpeed(Widget):
         if self.jog_mode_button_press_counter % 5 == 4:
             self.jogMode = 'plus_0-01'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
+
+    def set_datum(self):
+        self.sm.get_screen('nudge').set_datum_popup()

@@ -1,3 +1,5 @@
+import math
+
 from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
@@ -6,6 +8,7 @@ from asmcnc.skavaUI import widget_z_move_nudge
 from asmcnc.skavaUI import widget_xy_move_recovery
 from asmcnc.skavaUI import widget_nudge_speed
 from asmcnc.skavaUI import popup_info
+from asmcnc.skavaUI import popup_nudge
 
 Builder.load_string("""
 <NudgeScreen>:
@@ -237,15 +240,6 @@ class NudgeScreen(Screen):
     def next_screen(self):
         wait_popup = popup_info.PopupWait(self.sm, self.l)
 
-        diff_x = (self.m.mpos_x() - self.initial_x)
-        diff_y = (self.m.mpos_y() - self.initial_y)
-
-        # If user nudged, update datum
-        if diff_x or diff_y:
-            new_x = float(self.m.s.g54_x) + diff_x
-            new_y = float(self.m.s.g54_y) + diff_y
-            self.m.s.write_command('G10 L2 X%s Y%s' % (new_x, new_y))
-
         def generate_gcode():
             success, message = self.jd.generate_recovery_gcode()
             wait_popup.popup.dismiss()
@@ -257,6 +251,23 @@ class NudgeScreen(Screen):
 
         # Give time for wait popup to appear
         Clock.schedule_once(lambda dt: generate_gcode(), 0.5)
+
+    def set_datum_popup(self):
+        self.diff_x = (self.m.mpos_x() - self.initial_x)
+        self.diff_y = (self.m.mpos_y() - self.initial_y)
+
+        if abs(self.diff_x) > 3 or abs(self.diff_y) > 3:
+            # Display overall distance nudged to user, to 2dp
+            nudge_distance = "{:.2f}".format(math.hypot(self.diff_x, self.diff_y))
+            popup_nudge.PopupNudgeWarning(self.sm, self.m, self.l, nudge_distance)
+        else:
+            popup_nudge.PopupNudgeDatum(self.sm, self.m, self.l)
+
+    def set_datum(self):
+        # G54 and initial pos values do not get updated while on this screen, so nudges are always calculated from the same point
+        new_x = float(self.m.s.g54_x) + self.diff_x
+        new_y = float(self.m.s.g54_y) + self.diff_y
+        self.m.s.write_command('G10 L2 X%s Y%s' % (new_x, new_y))
 
     def update_strings(self):
         self.nudge_header.text = self.l.get_str('Optional Nudge:')
