@@ -1324,6 +1324,9 @@ class RouterMachine(object):
         settings = ['$20=1']
         self.s.start_sequential_stream(settings)
 
+    def is_spindle_overloaded(self):
+        return (self.is_machine_paused and self.reason_for_machine_pause == "spindle_overload")
+
     # settings for v1.3 and above
 
     def disable_x_motors(self):

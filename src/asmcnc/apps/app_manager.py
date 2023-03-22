@@ -15,8 +15,6 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 
-# import shape cutter managing object
-
 class AppManagerClass(object):
     
     current_app = ''
@@ -87,4 +85,38 @@ class AppManagerClass(object):
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
+
+
+    # CORE UI
+    ## alternative set up for handling core UI functionality/stuff that previously would have been called from serial comms
+
+    def start_core_ui_clocks(self):
+        # clock calls for below functions
+
+        pass
+
+
+    def open_spindle_overload_screen(self):
+        if not self.sm.has_screen('spindle_shutdown'):
+            spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+            self.sm.add_widget(spindle_shutdown_screen)
+        self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+        self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
+        self.sm.current = 'spindle_shutdown'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
