@@ -3550,8 +3550,8 @@ class RouterMachine(object):
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
-            print("Average load: " + str(average_load))
-            print("Raw load: " + str(self.s.spindle_health_check_data))
+            print("Average load (W): " + str(average_load_w))
+            print("Raw load (qdA): " + str(self.s.spindle_health_check_data))
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
