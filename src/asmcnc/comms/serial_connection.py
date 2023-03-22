@@ -70,9 +70,15 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
+        self.spindle_data_failure_poll = Clock.schedule_interval(lambda dt: self.reset_spindle_data_failure_count(),
+                                                                 600)
+
     def __del__(self):
         if self.s: self.s.close()
         log('Serial connection destructor')
+
+    def reset_spindle_data_failure_count(self):
+        self.spindle_data_failure_count = 0
 
     def get_serial_screen(self, serial_error):
 
@@ -863,6 +869,11 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
+    # SPINDLE DATA VALIDATION
+    spindle_data_failure_poll = None
+    spindle_data_failure_count = 0
+    spindle_data_failure_max = 20
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -1103,6 +1114,12 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.digital_spindle_ld_qdA == -999 and self.sm.current != 'spindle_cooldown':
+                            self.spindle_data_failure_count += 1
+
+                        if self.spindle_data_failure_count >= self.spindle_data_failure_max:
+                            log("Spindle data failure count exceeded")
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
