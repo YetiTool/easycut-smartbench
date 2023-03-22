@@ -438,8 +438,6 @@ class GoScreen(Screen):
 
     def on_pre_enter(self, *args):
 
-        self.m.run_spindle_health_check()
-
         self.return_to_screen = self.jd.screen_to_return_to_after_job
         self.cancel_to_screen = self.jd.screen_to_return_to_after_cancel
 
@@ -670,8 +668,8 @@ class GoScreen(Screen):
 
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
-            self._start_running_job()
-            self.jd.job_start_time = time.time()
+            self.m.run_spindle_health_check()
+            Clock.schedule_once(lambda dt: self._start_running_job(), 8)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
@@ -712,6 +710,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
         self.database.send_job_start()
+        self.jd.job_start_time = time.time()
 
         self.m.set_pause(False)
         self.is_job_started_already = True
