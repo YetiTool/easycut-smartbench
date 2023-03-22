@@ -86,7 +86,7 @@ class PopupNudgeWarning(Widget):
             PopupNudgeDatum(screen_manager=self.sm, machine=self.m, localization=self.l)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+        label = Label(size_hint_y=2, text_size=(400, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
 
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
@@ -99,7 +99,7 @@ class PopupNudgeWarning(Widget):
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,20,20,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,20,20,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
@@ -110,7 +110,7 @@ class PopupNudgeWarning(Widget):
                         title_size = '20sp',
                         content=layout_plan,
                         size_hint=(None, None),
-                        size=(300, 350),
+                        size=(400, 350),
                         auto_dismiss= False
                         )
         
