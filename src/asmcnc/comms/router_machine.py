@@ -3547,7 +3547,8 @@ class RouterMachine(object):
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
 
-            print("Average load: " + average_load)
+            print("Average load: " + str(average_load))
+            print(str(average_load))
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
@@ -3555,8 +3556,8 @@ class RouterMachine(object):
 
         def start_spindle_health_check():
             self.s.write_command('M3 S24000')
-            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 5)
-            Clock.schedule_once(lambda dt: check_average(), 5)
+            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
+            Clock.schedule_once(lambda dt: check_average(), 7)
 
         start_spindle_health_check()
 
