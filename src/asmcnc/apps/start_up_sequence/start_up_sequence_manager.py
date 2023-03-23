@@ -3,11 +3,13 @@ import os
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
 screen_release_notes, \
+screen_pro_plus_safety, \
 screen_starting_smartbench, \
 screen_safety_warning
 
 from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
+from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 
 
@@ -20,6 +22,7 @@ class StartUpSequence(object):
 	welcome_sm = None
 	release_notes_screen = None
 	data_consent_sm = None
+	pro_plus_safety_screen = None
 	starting_smartbench_screen = None
 	warranty_sm = None
 	reboot_to_apply_settings_screen = None
@@ -54,6 +57,9 @@ class StartUpSequence(object):
 
 			if self.show_user_data_consent():
 				self.prep_data_consent_app()
+
+			if self.show_user_pro_plus_safety():
+				self.prep_user_pro_plus_safety()
 
 			if self.show_warranty_app():
 				self.prep_warranty_app()
@@ -111,6 +117,10 @@ class StartUpSequence(object):
 		if os.path.isfile("/home/pi/smartbench_activation_code.txt"): return True
 		else: return False
 
+	def show_user_pro_plus_safety(self):
+		pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" config.txt').read())
+		if ('False' in pro_plus_safety) or (not pro_plus_safety and os.path.exists(self.m.theateam_path)): return True
+		else: return False
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
 
@@ -129,6 +139,14 @@ class StartUpSequence(object):
 	def prep_data_consent_app(self):
 		if not self.data_consent_sm: 
 			self.data_consent_sm = screen_manager_data_consent.ScreenManagerDataConsent(self, self.sm, self.l)
+
+	def prep_user_pro_plus_safety(self):
+		if not self.pro_plus_safety_screen:
+			self.pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = self, screen_manager = self.sm, localization = self.l)
+			self.sm.add_widget(self.pro_plus_safety_screen)
+
+		if 'pro_plus_safety' not in self.screen_sequence:
+			self.screen_sequence.append('pro_plus_safety')
 
 	def prep_warranty_app(self):
 		if not self.warranty_sm:

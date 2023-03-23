@@ -1,5 +1,6 @@
 check_config=True
-config_skipped_by_git=False
+config_skipped_by_git=True
 version=0
-power_cycle_alert=True
+power_cycle_alert=False
 calibration_alert=False
+show_user_welcome_app=True
