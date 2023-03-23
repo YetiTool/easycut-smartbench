@@ -3550,8 +3550,8 @@ class RouterMachine(object):
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
-            print("Average load (W): " + str(average_load_w))
-            print("Raw load (qdA): " + str(self.s.spindle_health_check_data))
+            if average_load_w > 400:
+                log("Load too high for spindle health check: " + str(average_load_w) + "W")
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
