@@ -217,6 +217,9 @@ class NudgeScreen(Screen):
         self.initial_x = self.m.mpos_x()
         self.initial_y = self.m.mpos_y()
 
+        self.initial_g54_x = self.m.s.g54_x
+        self.initial_g54_y = self.m.s.g54_y
+
     def get_info(self):
 
         info = self.l.get_str('Nudging is an optional manual adjustment in the XY plane.') + ' ' + \
@@ -264,10 +267,11 @@ class NudgeScreen(Screen):
             popup_nudge.PopupNudgeDatum(self.sm, self.m, self.l)
 
     def set_datum(self):
-        # G54 and initial pos values do not get updated while on this screen, so nudges are always calculated from the same point
-        new_x = float(self.m.s.g54_x) + self.diff_x
-        new_y = float(self.m.s.g54_y) + self.diff_y
-        self.m.s.write_command('G10 L2 X%s Y%s' % (new_x, new_y))
+        # Initial G54 and pos values do not get updated while on this screen, so nudges are always calculated from the same point
+        new_x = float(self.initial_g54_x) + self.diff_x
+        new_y = float(self.initial_g54_y) + self.diff_y
+
+        self.m.set_datum(x=new_x, y=new_y)
 
     def update_strings(self):
         self.nudge_header.text = self.l.get_str('Optional Nudge:')
