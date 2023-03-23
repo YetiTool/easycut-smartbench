@@ -271,7 +271,7 @@ class NudgeScreen(Screen):
         new_x = float(self.initial_g54_x) + self.diff_x
         new_y = float(self.initial_g54_y) + self.diff_y
 
-        self.m.set_datum(x=new_x, y=new_y)
+        self.m.set_datum(x=new_x, y=new_y, relative=True)
 
     def update_strings(self):
         self.nudge_header.text = self.l.get_str('Optional Nudge:')

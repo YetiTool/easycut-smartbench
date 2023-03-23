@@ -1545,8 +1545,11 @@ class RouterMachine(object):
         self.s.write_command('G28.1')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
-    def set_datum(self, x=None, y=None, z=None):
-        datum_command = 'G10 L20 P1'
+    def set_datum(self, x=None, y=None, z=None, relative=False):
+        if relative:
+            datum_command = 'G10 L2'
+        else:
+            datum_command = 'G10 L20 P1'
 
         if x is not None:
             datum_command += " X" + str(x)
