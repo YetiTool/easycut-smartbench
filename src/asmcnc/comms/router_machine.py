@@ -3564,6 +3564,10 @@ class RouterMachine(object):
 
             self.s.yp.set_spindle_free_load(average_load_w)
 
+            log("Free load: " + str(average_load_w) + "W")
+            log("Tool load: " + str(self.s.yp.spindle_tool_load_watts) + "W")
+            log("Target load: " + str(self.s.yp.get_target_spindle_load()) + "W")
+
         def stop_spindle_health_check():
             self.s.write_command('M5')
             self.s.spindle_health_check = False
