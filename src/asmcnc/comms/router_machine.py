@@ -3560,6 +3560,9 @@ class RouterMachine(object):
 
             if average_load_w > 400:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
+                return
+
+            self.s.yp.set_spindle_free_load(average_load_w)
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
