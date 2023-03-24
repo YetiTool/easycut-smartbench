@@ -3542,6 +3542,8 @@ class RouterMachine(object):
         self.s.measure_running_data = False
         self.s.running_data = []
 
+    use_spindle_health_check = True
+
     def run_spindle_health_check(self):
         self.s.spindle_health_check_data[:] = []
 
@@ -3551,6 +3553,10 @@ class RouterMachine(object):
 
             if average_load_w > 400:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
+                return
+
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go')._start_running_job()
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
