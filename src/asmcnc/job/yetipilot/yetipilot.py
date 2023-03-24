@@ -296,7 +296,7 @@ class YetiPilot(object):
                     allow_feedup=allow_feedup,
                     target_spindle_speed=self.target_spindle_speed,
                     spindle_override_percentage=self.m.s.speed_override_percentage,
-                    spindle_rpm=self.m.s.spindle_rpm,
+                    spindle_rpm=0,
                     gcode=current_gcode
                 )
 
