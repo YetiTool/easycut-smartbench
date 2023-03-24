@@ -59,6 +59,7 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -865,6 +866,10 @@ class SerialConnection(object):
     running_data = []
     measurement_stage = 0
 
+    # Spindle health check
+    spindle_health_check = False
+    spindle_health_check_data = []
+
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
@@ -912,7 +917,7 @@ class SerialConnection(object):
             if not re.search(self.digital_load_pattern, message):
                 self.inrush_counter = 0
 
-            elif self.inrush_counter <= 11:
+            elif self.inrush_counter <= 13:
                 self.inrush_counter += 1
 
             # Get machine's status
@@ -1105,6 +1110,9 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.spindle_health_check and self.inrush_counter > 13:
+                            self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:

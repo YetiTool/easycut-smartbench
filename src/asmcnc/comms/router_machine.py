@@ -26,6 +26,8 @@ from __builtin__ import True
 
 from asmcnc.skavaUI import popup_info
 
+from math import sqrt
+
 
 def log(message):
     timestamp = datetime.now()
@@ -3547,3 +3549,26 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
+
+    def run_spindle_health_check(self):
+        self.s.spindle_health_check = True
+        self.s.spindle_health_check_data[:] = []
+
+        def check_average():
+            average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
+            average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
+
+            if average_load_w > 400:
+                log("Load too high for spindle health check: " + str(average_load_w) + "W")
+
+        def stop_spindle_health_check():
+            self.s.write_command('M5')
+            self.s.spindle_health_check = False
+
+        def start_spindle_health_check():
+            self.s.write_command('M3 S24000')
+            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
+            Clock.schedule_once(lambda dt: check_average(), 7)
+
+        start_spindle_health_check()
+
