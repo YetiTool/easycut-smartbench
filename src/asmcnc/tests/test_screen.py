@@ -3,12 +3,7 @@ from kivy.lang import Builder
 
 Builder.load_string("""
 <TestScreen>:
-    main_label: main_label
     close_button: close_button
-
-    Label:
-        id: main_label
-        text: 'Test Screen'
         
     Button:
         id: close_button
@@ -26,7 +21,7 @@ class TestScreen(Screen):
         self.sm = kwargs['sm']
 
     def set_text(self, text):
-        self.main_label.text = text
+        self.close_button.text = text
 
     def set_return(self, return_screen):
         self.return_screen = return_screen
