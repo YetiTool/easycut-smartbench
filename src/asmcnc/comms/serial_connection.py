@@ -523,6 +523,7 @@ class SerialConnection(object):
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
+        self.m.passed_spindle_health_check = False
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').total_runtime_seconds = 0
