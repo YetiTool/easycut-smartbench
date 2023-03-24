@@ -383,7 +383,7 @@ class SerialConnection(object):
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
-                                and self.inrush_counter == 12:
+                                and self.inrush_counter > 13:
 
                             self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA,
                                                             self.digital_spindle_mains_voltage,
