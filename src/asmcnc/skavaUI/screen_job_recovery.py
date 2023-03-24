@@ -483,10 +483,13 @@ class JobRecoveryScreen(Screen):
 
     def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):
-            self.m.s.write_command('$#') # In preparation for nudge screen
+            self.m.get_grbl_status() # In preparation for nudge screen
             Clock.schedule_once(self.proceed_to_next_screen, 0.4) # Give command above time
-        else:
+        elif self.m.state().startswith("Run"):
             Clock.schedule_once(self.wait_for_idle, 0.4)
+        else:
+            # If alarm or door state is entered, hide wait popup and don't proceed
+            self.wait_popup.popup.dismiss()
 
     def proceed_to_next_screen(self, dt):
         self.wait_popup.popup.dismiss()
