@@ -25,6 +25,8 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
+from asmcnc.job.yetipilot.logging.yetipilot_logger_popups import PopupSendData
+
 
 Builder.load_string("""
 
@@ -299,6 +301,10 @@ class HomeScreen(Screen):
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
     def on_enter(self):
+        if self.m.s.yp:
+            if self.m.s.yp.logger:
+                PopupSendData(machine=self.m)
+
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):

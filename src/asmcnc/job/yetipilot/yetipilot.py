@@ -10,6 +10,7 @@ from math import sqrt
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
+from asmcnc.job.yetipilot.logging.yetipilot_logger import AutoPilotLogger
 
 
 def format_time(seconds):
@@ -77,6 +78,15 @@ class YetiPilot(object):
 
         self.get_available_profiles()
         self.load_parameters()
+
+        self.logger = AutoPilotLogger(
+            self.digital_spindle_mains_voltage, self.spindle_free_load_watts + self.spindle_tool_load_watts,
+            self.bias_for_feed_increase, self.bias_for_feed_decrease,
+            self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, "job_name",
+            self.m.get_smartbench_name(), self.spindle_load_stack_size, 0,
+            self.cap_for_feed_increase_during_z_movement,
+            self, None
+        )
 
     # System
     def enable(self):
@@ -244,6 +254,51 @@ class YetiPilot(object):
 
                 if speed_adjustments:
                     print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
+
+                # Log data
+                time_stamp = None
+
+                if self.jd.job_start_time is not None:
+                    now_time = time.time()
+                    time_stamp = format_time(now_time - self.jd.job_start_time)
+
+                allow_feedup = gcode_mode != 0 and not is_z_moving and constant_feed
+
+                current_gcode = self.jd.job_gcode_running[current_line_number] if len(
+                    self.jd.job_gcode_running) - 1 >= current_line_number else ''
+
+                self.logger.add_log(
+                    current_load=average_spindle_load,
+                    feed_multiplier=feed_adjustment_percentage,
+                    time=time_stamp,
+                    raw_loads=self.digital_spindle_load_stack,
+                    average_loads=self.digital_spindle_load_stack,
+                    raw_multiplier=feed_adjustment_percentage,
+                    adjustment_list=feed_adjustments,
+                    feed_override_percentage=feed_override_percentage,
+                    moving_in_z=is_z_moving,
+                    sg_x_motor_axis=0,
+                    sg_y_axis=0,
+                    sg_z_motor_axis=0,
+                    sg_x1_motor=0,
+                    sg_x2_motor=0,
+                    sg_y1_motor=0,
+                    sg_y2_motor=0,
+                    target_load=self.get_target_spindle_load(),
+                    raw_spindle_load=digital_spindle_ld_qdA,
+                    spindle_voltage=digital_spindle_mains_voltage,
+                    feed_rate=feed_rate,
+                    constant_speed=constant_feed,
+                    line_number=self.m.s.grbl_ln,
+                    gcode_feed=self.jd.grbl_mode_tracker[0][1],
+                    target_feed=self.jd.grbl_mode_tracker[0][1] * feed_override_percentage / 100,
+                    g0_move=gcode_mode == 0,
+                    allow_feedup=allow_feedup,
+                    target_spindle_speed=self.target_spindle_speed,
+                    spindle_override_percentage=self.m.s.spindle_override_percentage,
+                    spindle_rpm=self.m.s.spindle_rpm,
+                    gcode=current_gcode
+                )
 
     def stop_and_show_error(self):
         self.disable()
