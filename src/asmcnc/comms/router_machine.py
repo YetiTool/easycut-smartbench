@@ -3556,7 +3556,7 @@ class RouterMachine(object):
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
-            if average_load_w > 200:
+            if average_load_w > 400:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
                 shc_failed_screen = TestScreen(name='shc_failed', sm=self.sm)
                 self.sm.add_widget(shc_failed_screen)
