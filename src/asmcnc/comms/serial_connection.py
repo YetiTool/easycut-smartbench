@@ -377,7 +377,7 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp:
+                    if self.yp.use_yp: 
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
@@ -525,6 +525,9 @@ class SerialConnection(object):
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').total_runtime_seconds = 0
+
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
         self.is_stream_lines_remaining = True
@@ -587,7 +590,7 @@ class SerialConnection(object):
                                         speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff:
+        if line_diff: 
             del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
