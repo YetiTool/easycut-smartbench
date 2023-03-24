@@ -3559,8 +3559,8 @@ class RouterMachine(object):
         def start_spindle_health_check():
             self.s.spindle_health_check = True
             self.s.write_command('M3 S24000')
-            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 10)
-            Clock.schedule_once(lambda dt: check_average(), 10)
+            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
+            Clock.schedule_once(lambda dt: check_average(), 7)
 
         self.zUp()
         Clock.schedule_once(lambda dt: start_spindle_health_check(), 3)

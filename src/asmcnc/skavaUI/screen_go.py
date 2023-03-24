@@ -670,7 +670,7 @@ class GoScreen(Screen):
         else:
             self.m.run_spindle_health_check()
             self.show_pause_button()
-            Clock.schedule_once(lambda dt: self._start_running_job(), 8)
+            Clock.schedule_once(lambda dt: self._start_running_job(), 10)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
