@@ -382,7 +382,7 @@ class SerialConnection(object):
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
-                                and self.inrush_counter == 12:
+                                and self.inrush_counter == 20:
 
                             self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
                                                  int(self.feed_rate), self.digital_spindle_mains_voltage)
@@ -910,7 +910,7 @@ class SerialConnection(object):
             if not re.search(self.digital_load_pattern, message):
                 self.inrush_counter = 0
 
-            elif self.inrush_counter <= 11:
+            elif self.inrush_counter < 20:
                 self.inrush_counter += 1
 
             # Get machine's status
