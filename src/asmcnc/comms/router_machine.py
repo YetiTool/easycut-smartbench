@@ -3543,7 +3543,6 @@ class RouterMachine(object):
         self.s.running_data = []
 
     def run_spindle_health_check(self):
-        self.s.spindle_health_check = True
         self.s.spindle_health_check_data[:] = []
 
         def check_average():
@@ -3553,18 +3552,16 @@ class RouterMachine(object):
             if average_load_w > 400:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
 
-        def go_to_z_top():
-            self.s.write_command('G0 Z-10')
-
         def stop_spindle_health_check():
             self.s.write_command('M5')
             self.s.spindle_health_check = False
 
         def start_spindle_health_check():
-            go_to_z_top()
-            Clock.schedule_once(lambda dt: self.s.write_command('M3 S24000'), 3)
+            self.s.spindle_health_check = True
+            self.s.write_command('M3 S24000')
             Clock.schedule_once(lambda dt: stop_spindle_health_check(), 10)
             Clock.schedule_once(lambda dt: check_average(), 10)
 
-        start_spindle_health_check()
+        self.zUp()
+        Clock.schedule_once(lambda dt: start_spindle_health_check(), 3)
 
