@@ -27,7 +27,6 @@ from __builtin__ import True
 from asmcnc.skavaUI import popup_info
 
 from math import sqrt
-from asmcnc.tests.test_screen import TestScreen
 
 def log(message):
     timestamp = datetime.now()
