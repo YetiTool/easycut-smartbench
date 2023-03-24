@@ -312,7 +312,7 @@ Builder.load_string("""
             Label:
                 id: arc_movement_error_label
                 color: 1,0,0,1
-                font_size: dp(15)
+                font_size: dp(14)
                 halign: "left"
                 valign: "top"
                 text_size: self.size
