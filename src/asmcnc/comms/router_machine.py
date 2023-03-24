@@ -27,7 +27,7 @@ from __builtin__ import True
 from asmcnc.skavaUI import popup_info
 
 from math import sqrt
-
+from asmcnc.tests.test_screen import TestScreen
 
 def log(message):
     timestamp = datetime.now()
@@ -3547,12 +3547,19 @@ class RouterMachine(object):
     def run_spindle_health_check(self):
         self.s.spindle_health_check_data[:] = []
 
+        shc_screen = TestScreen(name='shc', sm=self.sm)
+        shc_screen.set_return(self.sm.current)
+        shc_screen.set_text("Spindle Health Check In Progress")
+
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
             if average_load_w > 400:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
+                shc_failed_screen = TestScreen(name='shc_failed', sm=self.sm)
+                shc_failed_screen.set_return(self.sm.current)
+                shc_failed_screen.set_text("Spindle Health Check Failed: " + str(average_load_w) + "W")
                 return
 
             if self.sm.has_screen('go'):
@@ -3561,6 +3568,7 @@ class RouterMachine(object):
         def stop_spindle_health_check():
             self.s.write_command('M5')
             self.s.spindle_health_check = False
+            self.sm.current = self.sm.get_screen('shc').return_screen
 
         def start_spindle_health_check():
             self.s.spindle_health_check = True
@@ -3568,6 +3576,7 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
             Clock.schedule_once(lambda dt: check_average(), 7)
 
+        self.sm.current = 'shc'
         self.zUp()
         Clock.schedule_once(lambda dt: start_spindle_health_check(), 3)
 
