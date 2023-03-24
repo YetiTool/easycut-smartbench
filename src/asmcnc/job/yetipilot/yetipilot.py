@@ -83,7 +83,7 @@ class YetiPilot(object):
             self.digital_spindle_mains_voltage, self.spindle_free_load_watts + self.spindle_tool_load_watts,
             self.bias_for_feed_increase, self.bias_for_feed_decrease,
             self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, "job_name",
-            self.m.get_smartbench_name(), self.spindle_load_stack_size, 0,
+            self.m.device_label, self.spindle_load_stack_size, 0,
             self.cap_for_feed_increase_during_z_movement,
             self, None
         )
