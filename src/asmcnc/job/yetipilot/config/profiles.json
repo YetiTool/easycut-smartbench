@@ -7,8 +7,8 @@
       "Step Down": "6mm",
       "Parameters": [
         {
-          "Name": "spindle_target_load_watts",
-          "Value": 550
+          "Name": "spindle_tool_load_watts",
+          "Value": 350
         },
         {
           "Name": "target_spindle_speed",
