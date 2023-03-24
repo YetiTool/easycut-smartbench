@@ -44,7 +44,9 @@ class YetiPilot(object):
     override_command_delay = 0.06
     tolerance_for_acceleration_detection = 5
 
-    spindle_target_load_watts = 880
+    spindle_free_load_watts = 0
+    spindle_tool_load_watts = 0
+
     target_spindle_speed = 25000
 
     available_profiles = []
@@ -101,13 +103,16 @@ class YetiPilot(object):
     def ldA_to_watts(self, load):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
 
-    def get_multiplier(self, load):
-        if load > self.spindle_target_load_watts:
-            return self.bias_for_feed_decrease * (self.spindle_target_load_watts - load) / \
-                   self.spindle_target_load_watts * self.m_coefficient * self.c_coefficient
+    def get_target_spindle_load(self):
+        return self.spindle_free_load_watts + self.spindle_tool_load_watts
 
-        return self.bias_for_feed_increase * (self.spindle_target_load_watts - load) / \
-               self.spindle_target_load_watts * self.m_coefficient * self.c_coefficient
+    def get_multiplier(self, load):
+        if load > self.get_target_spindle_load():
+            return self.bias_for_feed_decrease * (self.get_target_spindle_load() - load) / \
+                   self.get_target_spindle_load() * self.m_coefficient * self.c_coefficient
+
+        return self.bias_for_feed_increase * (self.get_target_spindle_load() - load) / \
+               self.get_target_spindle_load() * self.m_coefficient * self.c_coefficient
 
     def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving):
         feed_multiplier = self.get_multiplier(load=average_spindle_load)
@@ -344,8 +349,11 @@ class YetiPilot(object):
             self.using_basic_profile = False
 
     def set_target_power(self, target_power):
-        self.spindle_target_load_watts = target_power
+        self.spindle_tool_load_watts = target_power
         self.set_using_advanced_profile(True)
 
     def get_target_power(self):
-        return self.spindle_target_load_watts
+        return self.spindle_tool_load_watts
+
+    def set_spindle_free_load(self, spindle_free_load):
+        self.spindle_free_load_watts = spindle_free_load
