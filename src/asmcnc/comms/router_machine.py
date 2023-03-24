@@ -3562,6 +3562,10 @@ class RouterMachine(object):
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
                 return
 
+            log("Free load: " + str(average_load_w) + "W")
+            log("Tool load: " + str(self.s.yp.spindle_tool_load_watts) + "W")
+            log("Target load: " + str(self.s.yp.get_target_spindle_load()) + "W")
+
             self.s.yp.set_spindle_free_load(average_load_w)
 
             log("Free load: " + str(average_load_w) + "W")
