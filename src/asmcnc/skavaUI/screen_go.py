@@ -670,7 +670,6 @@ class GoScreen(Screen):
         else:
             if self.m.use_spindle_health_check:
                 self.m.run_spindle_health_check()
-                self.show_pause_button()
             else:
                 self._start_running_job()
 
@@ -710,12 +709,6 @@ class GoScreen(Screen):
             self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
 
     # Running
-
-    def show_pause_button(self):
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        # Hide back button
-        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
-        self.btn_back.disabled = True
 
     def _start_running_job(self):
         self.database.send_job_start()
