@@ -46,7 +46,7 @@ Builder.load_string("""
                 size_hint_y: 0.41
                 font_size: dp(18)
                 color: 0,0,0,1
-                halign: 'left'
+                halign: 'center'
                 valign: 'middle'
                 text_size: self.size
                 markup: True

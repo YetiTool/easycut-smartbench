@@ -85,7 +85,7 @@ class TestApp(App):
         consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
         sm.add_widget(consent_1_screen)
 
-        sm.add_widget(ProPlusSafetyScreen(name='basic', screen_manager =sm, localization =l))
+        sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
         sm.current = 'basic'
         return sm
 
