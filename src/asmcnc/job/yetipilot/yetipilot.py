@@ -264,8 +264,8 @@ class YetiPilot(object):
 
                 allow_feedup = gcode_mode != 0 and not is_z_moving and constant_feed
 
-                current_gcode = self.jd.job_gcode_running[current_line_number] if len(
-                    self.jd.job_gcode_running) - 1 >= current_line_number else ''
+                current_gcode = self.jd.job_gcode_running[self.m.s.grbl_ln] if len(
+                    self.jd.job_gcode_running) - 1 >= self.m.s.grbl_ln else ''
 
                 self.logger.add_log(
                     current_load=average_spindle_load,
