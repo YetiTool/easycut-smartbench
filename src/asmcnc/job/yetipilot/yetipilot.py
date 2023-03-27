@@ -96,6 +96,7 @@ class YetiPilot(object):
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').yp_widget.switch_reflects_yp()
+            if not self.active_profile: self.sm.get_screen('go').yp_widget.profile_selection.text = ""
             self.sm.get_screen('go').feedOverride.set_widget_visibility(True)
             self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
 
@@ -344,6 +345,10 @@ class YetiPilot(object):
         self.active_profile = profile
         self.using_advanced_profile = False
         self.using_basic_profile = True
+
+        if not self.active_profile: 
+            self.disable()
+            return
 
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
