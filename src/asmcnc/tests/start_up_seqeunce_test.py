@@ -48,9 +48,9 @@ def set_pro_safety_no_file():
 	os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=False/user_has_seen_pro_plus_safety=True/" /home/pi/easycut-smartbench/src/config.txt')
 
 function_list = [
-set_user_to_view_privacy_notice,
+# set_user_to_view_privacy_notice,
 activation_code_proxy,
-welcome_user_to_smartbench,
+# welcome_user_to_smartbench,
 set_release_notes,
 set_pro_safety_with_file,
 set_pro_safety_no_file,
@@ -59,7 +59,7 @@ set_pro_safety_no_file,
 
 # Functions alone: 
 
-for r in range(1, 5):
+for r in range(1, 7):
 
 	for sublist in list(combinations(function_list, r)):
 
