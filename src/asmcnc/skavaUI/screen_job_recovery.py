@@ -354,6 +354,7 @@ class JobRecoveryScreen(Screen):
     def do_scroll_up(self):
         if self.selected_line_index > 0:
             self.selected_line_index -= 1
+            self.line_input.text = str(self.selected_line_index)
             self.update_display()
 
     def scroll_up(self, dt=0):
@@ -380,6 +381,7 @@ class JobRecoveryScreen(Screen):
     def do_scroll_down(self):
         if self.selected_line_index < self.initial_line_index:
             self.selected_line_index += 1
+            self.line_input.text = str(self.selected_line_index)
             self.update_display()
 
     def scroll_down(self, dt=0):
