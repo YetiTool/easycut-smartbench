@@ -100,8 +100,6 @@ class PopupYetiPilotSettings(Widget):
         clock_speed_1 = None
         clock_speed_2 = None
 
-        chosen_profile = None
-
         img_path = './asmcnc/core_UI/job_go/img/'
         sep_top_img_src = img_path + 'yp_settings_sep_top.png'
         img_1_src = img_path + 'yp_setting_1.png'
@@ -156,9 +154,6 @@ class PopupYetiPilotSettings(Widget):
 
         # BODY PRE CUT PROFILES ---------------------------
 
-        def set_active_profile(*args):
-            self.yp.use_profile(self.chosen_profile)
-
         def build_pre_cut_profiles():
 
             # Drop down menus (i.e. actual profile selection)
@@ -170,21 +165,17 @@ class PopupYetiPilotSettings(Widget):
 
             def update_step_down(step_down_range):
                 try: 
-                    step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                                      "\n" + \
-                                      "[size=16sp][b]" + str(step_down_range) + "[/size]"\
-                                      + "[/b]"
+                    step_downs_msg_label.text = \
+                                    self.l.get_str("Recommended step downs based on these profile settings:") + \
+                                    "\n[size=16sp][b]" + str(step_down_range) + "[/size][/b]"
+
                 except: # label doesn't exist yet
-                    print("can't update label")
-                    print(traceback.format_exc())
                     pass
 
             def get_profile():
-                self.chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
-                set_active_profile()
+                chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
+                self.yp.use_profile(chosen_profile)
                 update_step_down(self.yp.get_active_step_down())
-                # else: 
-                #     update_step_down("N/A")
 
             # User chooses cutter diameter first
             # If next material/cutter type is not available, these selections then clear
@@ -256,21 +247,6 @@ class PopupYetiPilotSettings(Widget):
     
             left_BL.add_widget(left_BL_grid)
     
-    
-            unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
-            unexpected_results_label = Label(
-                                    text_size=(advice_container_width, body_BL_height*0.4),
-                                    markup=True,
-                                    font= 'Roboto',
-                                    font_size='14sp',
-                                    halign='left',
-                                    valign='top',
-                                    text=unexpected_results_string,
-                                    color=dark_grey,
-                                    padding=[10,0],
-                                    size_hint_y=0.4
-                                    )
-
             # Step down advice labels
             step_downs_msg_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.6),
@@ -285,6 +261,20 @@ class PopupYetiPilotSettings(Widget):
                                     )
 
             update_step_down(self.yp.get_active_step_down())
+    
+            unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
+            unexpected_results_label = Label(
+                                    text_size=(advice_container_width, body_BL_height*0.4),
+                                    markup=True,
+                                    font= 'Roboto',
+                                    font_size='14sp',
+                                    halign='left',
+                                    valign='top',
+                                    text=unexpected_results_string,
+                                    color=dark_grey,
+                                    padding=[10,0],
+                                    size_hint_y=0.4
+                                    )
     
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
@@ -421,7 +411,6 @@ class PopupYetiPilotSettings(Widget):
         popup.separator_color = transparent
         popup.separator_height = '0dp'
 
-        if version: close_button.bind(on_press=set_active_profile)
         if closing_func: close_button.bind(on_press=closing_func)
         close_button.bind(on_press=unschedule_clocks)
         close_button.bind(on_press=popup.dismiss)
