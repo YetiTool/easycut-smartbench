@@ -1468,15 +1468,15 @@ class RouterMachine(object):
 # POSITIONAL SETTERS
 
     def set_workzone_to_pos_xy(self):
-        self.s.write_command('G10 L20 P1 X0 Y0')
+        self.set_datum(x=0, y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
-        self.s.write_command('G10 L20 P1 X0')
+        self.set_datum(x=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
-        self.s.write_command('G10 L20 P1 Y0')
+        self.set_datum(y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
@@ -1538,15 +1538,30 @@ class RouterMachine(object):
 
 
     def set_jobstart_z(self):
-        self.s.write_command('G10 L20 P1 Z0')
+        self.set_datum(z=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
-        self.get_grbl_status()
 
     def set_standby_to_pos(self):
         self.s.write_command('G28.1')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
-    
+    def set_datum(self, x=None, y=None, z=None, relative=False):
+        if relative:
+            datum_command = 'G10 L2'
+        else:
+            datum_command = 'G10 L20 P1'
+
+        if x is not None:
+            datum_command += " X" + str(x)
+        if y is not None:
+            datum_command += " Y" + str(y)
+        if z is not None:
+            datum_command += " Z" + str(z)
+
+        self.s.write_command(datum_command)
+        self.get_grbl_status()
+
+
 
 # MOVEMENT/ACTION
 

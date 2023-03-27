@@ -16,6 +16,8 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.rst import RstDocument
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
@@ -1096,7 +1098,7 @@ class PopupShutdown(Widget):
 
         popup.open()
 
-class PopupBigInfo(Widget):
+class PopupScrollableInfo(Widget):
 
     def __init__(self, screen_manager, localization, popup_width, description):
         
@@ -1108,7 +1110,9 @@ class PopupBigInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=5, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        scrollview = ScrollView(size_hint_y=4, padding=[10,10])
+        label = RstDocument(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        scrollview.add_widget(label)
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -1119,7 +1123,7 @@ class PopupBigInfo(Widget):
         
         layout_plan = BoxLayout(orientation='vertical')
         layout_plan.add_widget(img)
-        layout_plan.add_widget(label)
+        layout_plan.add_widget(scrollview)
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title=title_string,
@@ -1128,7 +1132,7 @@ class PopupBigInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 460),
+                      size=(popup_width, 440),
                       auto_dismiss= False
                       )
 
