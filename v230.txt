@@ -1,0 +1,15 @@
+.. _top:
+
+Technical release
+===================
+
+This release contains the technical foundations to keep making SmartBench smarter, including: 
+
+* improved feedback handling
+* tracking of the machine code
+* more sophisticated handling of everyday procedures
+* modules that will become the backbone of future features
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
