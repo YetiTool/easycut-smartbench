@@ -7,7 +7,6 @@ Builder.load_string("""
 
     speed_toggle:speed_toggle
     speed_image:speed_image
-    jogModeButtonImage:jogModeButtonImage
 
     BoxLayout:
         size: self.parent.size
@@ -33,17 +32,17 @@ Builder.load_string("""
 
         Button:
             background_color: hex('#F4433600')
-            on_release:
+            on_release: 
                 self.background_color = hex('#F4433600')
-            on_press:
-                root.jogModeCycled()
+            on_press: 
+                root.set_datum()
                 self.background_color = hex('#F44336FF')
             BoxLayout:
+                padding: 5
                 size: self.parent.size
-                pos: self.parent.pos
+                pos: self.parent.pos      
                 Image:
-                    id: jogModeButtonImage
-                    source: "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+                    source: "./asmcnc/skavaUI/img/set_jobstart.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -64,9 +63,6 @@ class NudgeSpeed(Widget):
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
-            
-    jogMode = 'free'
-    jog_mode_button_press_counter = 0
 
     def set_jog_speeds(self):
         if self.speed_toggle.state == 'normal': 
@@ -80,21 +76,5 @@ class NudgeSpeed(Widget):
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
 
-    def jogModeCycled(self):
-
-        self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 5 == 0:
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 5 == 1:
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 5 == 2:
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 5 == 3:
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
+    def set_datum(self):
+        self.sm.get_screen('nudge').set_datum_popup()

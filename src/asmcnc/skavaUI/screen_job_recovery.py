@@ -380,6 +380,7 @@ class JobRecoveryScreen(Screen):
     def do_scroll_up(self):
         if self.selected_line_index > 0:
             self.selected_line_index -= 1
+            self.line_input.text = str(self.selected_line_index)
             self.update_display()
 
     def scroll_up(self, dt=0):
@@ -406,6 +407,7 @@ class JobRecoveryScreen(Screen):
     def do_scroll_down(self):
         if self.selected_line_index < self.initial_line_index:
             self.selected_line_index += 1
+            self.line_input.text = str(self.selected_line_index)
             self.update_display()
 
     def scroll_down(self, dt=0):
@@ -485,7 +487,7 @@ class JobRecoveryScreen(Screen):
                self.l.get_str('Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.') + ' ' + \
                self.l.get_str('SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes.')
 
-        popup_info.PopupBigInfo(self.sm, self.l, 780, info)
+        popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
         # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
@@ -494,7 +496,8 @@ class JobRecoveryScreen(Screen):
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
-        self.jd.reset_values()
+        self.jd.reset_recovery()
+        self.jd.job_recovery_from_beginning = True
         self.sm.current = 'home'
 
     def next_screen(self):
@@ -502,18 +505,24 @@ class JobRecoveryScreen(Screen):
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             self.jd.job_recovery_selected_line = self.selected_line_index + 1
             self.go_xy()
-            Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+            Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
             error_message = self.l.get_str('Please ensure machine is idle before continuing.')
             popup_info.PopupError(self.sm, self.l, error_message)
 
-    def proceed_to_next_screen(self, dt):
+    def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):
-            self.m.s.write_command('$#') # In preparation for nudge screen
-            self.wait_popup.popup.dismiss()
-            self.sm.current = 'nudge'
+            self.m.get_grbl_status() # In preparation for nudge screen
+            Clock.schedule_once(self.proceed_to_next_screen, 0.4) # Give command above time
+        elif self.m.state().startswith("Run"):
+            Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
-            Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+            # If alarm or door state is entered, hide wait popup and don't proceed
+            self.wait_popup.popup.dismiss()
+
+    def proceed_to_next_screen(self, dt):
+        self.wait_popup.popup.dismiss()
+        self.sm.current = 'nudge'
 
     def update_strings(self):
         self.line_input_header.text = self.l.get_str('Go to line:')
