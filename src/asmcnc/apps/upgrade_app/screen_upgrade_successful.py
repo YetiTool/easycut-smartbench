@@ -1,6 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+
 Builder.load_string("""
 <UpgradeSuccessfulScreen>:
 
