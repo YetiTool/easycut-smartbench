@@ -181,7 +181,7 @@ class PopupYetiPilotSettings(Widget):
 
             def get_profile():
                 self.chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
-                if self.chosen_profile: set_active_profile()
+                set_active_profile()
                 update_step_down(self.yp.get_active_step_down())
                 # else: 
                 #     update_step_down("N/A")
