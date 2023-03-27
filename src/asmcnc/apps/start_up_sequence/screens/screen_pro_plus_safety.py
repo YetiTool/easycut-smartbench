@@ -130,11 +130,20 @@ class ProPlusSafetyScreen(Screen):
         self.update_strings()
 
     def next_screen(self):
-        os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=True/user_has_seen_pro_plus_safety=False/" /home/pi/easycut-smartbench/src/config.txt')
+        self.update_seen()
         try: 
             self.start_seq.next_in_sequence()
         except: 
             self.sm.current = 'lobby'
+
+    def update_seen(self):
+        user_has_seen_pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if not user_has_seen_pro_plus_safety:
+            os.system("sudo sed -i -e '$auser_has_seen_pro_plus_safety=True' /home/pi/easycut-smartbench/src/config.txt")
+
+        elif 'False' in user_has_seen_pro_plus_safety:
+            os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=False/user_has_seen_pro_plus_safety=True/" /home/pi/easycut-smartbench/src/config.txt')
 
     def update_strings(self):
         self.title_label.text = self.l.get_str('Safety Information: PrecisionPro +')

@@ -58,11 +58,11 @@ class StartUpSequence(object):
 			if self.show_user_data_consent():
 				self.prep_data_consent_app()
 
-			if self.show_user_pro_plus_safety():
-				self.prep_user_pro_plus_safety()
-
 			if self.show_warranty_app():
 				self.prep_warranty_app()
+
+			if self.show_user_pro_plus_safety():
+				self.prep_user_pro_plus_safety()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()
@@ -140,6 +140,10 @@ class StartUpSequence(object):
 		if not self.data_consent_sm: 
 			self.data_consent_sm = screen_manager_data_consent.ScreenManagerDataConsent(self, self.sm, self.l)
 
+	def prep_warranty_app(self):
+		if not self.warranty_sm:
+			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
+
 	def prep_user_pro_plus_safety(self):
 		if not self.pro_plus_safety_screen:
 			self.pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = self, screen_manager = self.sm, localization = self.l)
@@ -147,10 +151,6 @@ class StartUpSequence(object):
 
 		if 'pro_plus_safety' not in self.screen_sequence:
 			self.screen_sequence.append('pro_plus_safety')
-
-	def prep_warranty_app(self):
-		if not self.warranty_sm:
-			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
 	def prep_reboot_to_apply_settings_screen(self):
 		if not self.reboot_to_apply_settings_screen:    		
