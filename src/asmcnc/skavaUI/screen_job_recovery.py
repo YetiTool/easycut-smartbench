@@ -10,11 +10,13 @@ Builder.load_string("""
 <JobRecoveryScreen>:
     status_container:status_container
     z_move_container:z_move_container
+    gcode_container:gcode_container
 
     gcode_label:gcode_label
     pos_label:pos_label
     speed_label:speed_label
     stopped_on_label:stopped_on_label
+    arc_movement_error_label:arc_movement_error_label
 
     line_input_header:line_input_header
     pos_label_header:pos_label_header
@@ -142,6 +144,7 @@ Builder.load_string("""
                     spacing: dp(15)
 
                     BoxLayout:
+                        id: gcode_container
                         orientation: 'vertical'
                         size_hint_y: 3.5
                         padding: [dp(12), dp(12), dp(12), dp(0)]
@@ -299,6 +302,23 @@ Builder.load_string("""
             size_hint_y: 0.08
             id: status_container
 
+    FloatLayout:
+        BoxLayout:
+            pos: gcode_container.pos
+            size: gcode_container.size
+            padding: gcode_container.padding
+            size_hint: None, None
+
+            Label:
+                id: arc_movement_error_label
+                color: 1,0,0,1
+                font_size: dp(14)
+                halign: "left"
+                valign: "top"
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+
 """)
 
 class JobRecoveryScreen(Screen):
@@ -341,6 +361,12 @@ class JobRecoveryScreen(Screen):
             self.stopped_on_label.text = self.l.get_str("Job failed during line N").replace('N', str(self.initial_line_index))
             self.display_list[self.selected_line_index + 6] = "[color=FF0000]" + self.display_list[self.selected_line_index + 6] + "[/color]"
             self.update_display()
+
+        # If recovery is showing line 0, show the error message explaining why this may have happened
+        if self.initial_line_index == 0:
+            self.arc_movement_error_label.opacity = 1
+        else:
+            self.arc_movement_error_label.opacity = 0
 
     def start_scrolling_up(self):
         self.scrolling_up = True
@@ -503,6 +529,11 @@ class JobRecoveryScreen(Screen):
         self.line_input.hint_text = self.l.get_str('Enter #')
         self.go_xy_button.text = self.l.get_str('GO XY')
         self.pos_label_header.text = self.l.get_str('Job resumes at:')
+
+        self.arc_movement_error_label.text = (
+            self.l.get_str("It was not possible to recover the file any later than the beginning of the job.") + "\n\n" + \
+            self.l.get_str("Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.")
+        )
 
         self.update_font_size(self.go_xy_button)
 
