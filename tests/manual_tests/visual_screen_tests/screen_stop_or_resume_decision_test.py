@@ -13,7 +13,7 @@ Config.write()
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.visual_screen_tests.screen_stop_or_resume_decision_test.py.py
+python -m tests.manual_tests.visual_screen_tests.screen_stop_or_resume_decision_test.py
 '''
 
 import sys, os
@@ -94,7 +94,7 @@ class ScreenTest(App):
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
         # Initialise yetipilot
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd)
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
@@ -122,7 +122,7 @@ class ScreenTest(App):
 
         sm.current = 'stop_or_resume_job_decision'
         
-        Clock.schedule_once(m.s.start_services, 0.1)
+        # Clock.schedule_once(m.s.start_services, 0.1)
 
         return sm
 

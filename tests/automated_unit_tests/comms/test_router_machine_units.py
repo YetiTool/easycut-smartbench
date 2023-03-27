@@ -212,6 +212,24 @@ def test_smartbench_is_not_busy(m):
     make_smartbench_not_busy(m)
     assert not m.smartbench_is_busy()
 
+# WHAT IS GRBL MOTION MODE
+
+def test_get_grbl_motion_mode_when_G0(m):
+    m.jd.grbl_mode_tracker = [(0,4,5)]
+    assert m.get_grbl_motion_mode() == 0
+
+def test_get_grbl_motion_mode_when_empty_list(m):
+    m.jd.grbl_mode_tracker = []
+    assert m.get_grbl_motion_mode() is None
+
+def test_get_grbl_motion_mode_when_empty_string(m):
+    m.jd.grbl_mode_tracker = [('',4,5), (0,0,0), (1,6,7)]
+    assert m.get_grbl_motion_mode() == ''
+
+def test_get_grbl_motion_mode_when_G2(m):
+    m.jd.grbl_mode_tracker = [(2,4,5), (0,0,0), (1,6,7)]
+    assert m.get_grbl_motion_mode() == 2
+
 # SETTINGS UNIT TESTS
 
 def test_get_setting_53_when_does_not_exist(m):
@@ -382,7 +400,8 @@ def test_get_is_constant_feed_rate_accel(m):
     feed_override_percentage = 100
     feed_rate = 6000
     last_feed_rate = 8000
-    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    tolerance = 50
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
     assert last == last_feed_rate
     assert not val
 
@@ -390,7 +409,8 @@ def test_get_is_constant_feed_rate_decel(m):
     feed_override_percentage = 100
     feed_rate = 6000
     last_feed_rate = 4000
-    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    tolerance = 50
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
     assert last == last_feed_rate
     assert not val
 
@@ -398,6 +418,27 @@ def test_get_is_constant_feed_rate_true_within_range(m):
     feed_override_percentage = 100
     feed_rate = 6000
     last_feed_rate = 6010
-    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate)
+    tolerance = 50
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
     assert last == last_feed_rate
     assert val
+
+def test_get_is_constant_feed_rate_false_when_tolerance_small(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    last_feed_rate = 6010
+    tolerance = 9
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
+    assert last == last_feed_rate
+    assert not val
+
+def test_get_is_constant_feed_rate_true_when_diff_equal_to_tolerance(m):
+    feed_override_percentage = 100
+    feed_rate = 6000
+    tolerance = 10
+    last_feed_rate = feed_rate + tolerance
+    val, last = m.get_is_constant_feed_rate(last_feed_rate, feed_override_percentage, feed_rate, tolerance)
+    assert last == last_feed_rate
+    assert val
+
+    
