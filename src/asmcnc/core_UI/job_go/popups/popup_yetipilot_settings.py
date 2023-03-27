@@ -157,25 +157,18 @@ class PopupYetiPilotSettings(Widget):
         # BODY PRE CUT PROFILES ---------------------------
 
         def set_active_profile(*args):
-            self.yp.use_profile(chosen_profile)
+            print("make active profile " + str(self.chosen_profile))
+
+            self.yp.use_profile(self.chosen_profile)
 
         def build_pre_cut_profiles():
 
             # Drop down menus (i.e. actual profile selection)
             left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
 
-            # Step down advice labels
-            step_downs_msg_label = Label(
-                                    text_size=(advice_container_width, body_BL_height*0.6),
-                                    markup=True,
-                                    font= 'Roboto',
-                                    font_size='14sp',
-                                    halign='left', 
-                                    valign='top',
-                                    color=dark_grey,
-                                    padding=[10,10],
-                                    size_hint_y=0.6
-                                    )
+            optn_img_1 = Image(source=img_1_src)
+            optn_img_2 = Image(source=img_2_src)
+            optn_img_3 = Image(source=img_3_src)
 
             def update_step_down(step_down_range):
                 try: 
@@ -188,17 +181,10 @@ class PopupYetiPilotSettings(Widget):
                     print(traceback.format_exc())
                     pass
 
-            update_step_down(self.yp.get_active_step_down())
-
-            optn_img_1 = Image(source=img_1_src)
-            optn_img_2 = Image(source=img_2_src)
-            optn_img_3 = Image(source=img_3_src)
-
             def get_profile():
-                chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
+                self.chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
+                set_active_profile()
                 update_step_down(self.yp.get_active_step_down())
-                if chosen_profile: 
-                    set_active_profile()
                 # else: 
                 #     update_step_down("N/A")
 
@@ -286,6 +272,21 @@ class PopupYetiPilotSettings(Widget):
                                     padding=[10,0],
                                     size_hint_y=0.4
                                     )
+
+            # Step down advice labels
+            step_downs_msg_label = Label(
+                                    text_size=(advice_container_width, body_BL_height*0.6),
+                                    markup=True,
+                                    font= 'Roboto',
+                                    font_size='14sp',
+                                    halign='left', 
+                                    valign='top',
+                                    color=dark_grey,
+                                    padding=[10,10],
+                                    size_hint_y=0.6
+                                    )
+
+            update_step_down(self.yp.get_active_step_down())
     
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
