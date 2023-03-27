@@ -157,8 +157,6 @@ class PopupYetiPilotSettings(Widget):
         # BODY PRE CUT PROFILES ---------------------------
 
         def set_active_profile(*args):
-            print("make active profile " + str(self.chosen_profile))
-
             self.yp.use_profile(self.chosen_profile)
 
         def build_pre_cut_profiles():
@@ -183,7 +181,7 @@ class PopupYetiPilotSettings(Widget):
 
             def get_profile():
                 self.chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
-                set_active_profile()
+                if self.chosen_profile: set_active_profile()
                 update_step_down(self.yp.get_active_step_down())
                 # else: 
                 #     update_step_down("N/A")
