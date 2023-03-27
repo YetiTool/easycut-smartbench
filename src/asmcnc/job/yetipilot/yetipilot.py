@@ -346,8 +346,7 @@ class YetiPilot(object):
         self.using_advanced_profile = False
         self.using_basic_profile = True
 
-        if not self.active_profile: 
-            self.disable()
+        if not self.active_profile:
             return
 
         for parameter in profile.parameters:
