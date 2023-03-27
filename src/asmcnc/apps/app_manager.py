@@ -14,6 +14,7 @@ from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
+from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
 
 # import shape cutter managing object
 
@@ -88,3 +89,22 @@ class AppManagerClass(object):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
 
+    def start_upgrade_app(self):
+        self.current_app = 'upgrade'
+
+        if not self.m.theateam():
+            if not self.sm.has_screen('upgrade'):
+                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.sm, machine=self.m, localization=self.l)
+                self.sm.add_widget(upgrade_screen)
+
+            if not self.sm.has_screen('upgrade_successful'):
+                upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(name='upgrade_successful', screen_manager=self.sm, machine=self.m, localization=self.l)
+                self.sm.add_widget(upgrade_successful_screen)
+
+            self.sm.current = 'upgrade'
+        else:
+            if not self.sm.has_screen('already_upgraded'):
+                already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded', screen_manager=self.sm, machine=self.m, localization=self.l)
+                self.sm.add_widget(already_upgraded_screen)
+
+            self.sm.current = 'already_upgraded'
