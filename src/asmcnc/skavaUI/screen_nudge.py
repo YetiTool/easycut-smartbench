@@ -234,7 +234,8 @@ class NudgeScreen(Screen):
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def back_to_home(self):
-        self.jd.reset_values()
+        self.jd.reset_recovery()
+        self.jd.job_recovery_from_beginning = True
         self.sm.current = 'home'
 
     def on_pre_leave(self):
@@ -254,8 +255,10 @@ class NudgeScreen(Screen):
             wait_popup.popup.dismiss()
             if not success:
                 popup_info.PopupError(self.sm, self.l, message)
-                self.jd.reset_values()
-            self.jd.job_recovery_from_beginning = False
+                self.jd.reset_recovery()
+                self.jd.job_recovery_from_beginning = True
+            else:
+                self.jd.job_recovery_from_beginning = False
             self.sm.current = 'home'
 
         # Give time for wait popup to appear
