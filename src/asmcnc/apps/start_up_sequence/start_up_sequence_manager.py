@@ -119,7 +119,7 @@ class StartUpSequence(object):
 
 	def show_user_pro_plus_safety(self):
 		pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" config.txt').read())
-		if ('False' in pro_plus_safety) or (not pro_plus_safety and os.path.exists(self.m.theateam_path)): return True
+		if ('False' in pro_plus_safety or not pro_plus_safety) and os.path.exists(self.m.theateam_path): return True
 		else: return False
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
