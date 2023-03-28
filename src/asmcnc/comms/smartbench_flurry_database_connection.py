@@ -530,6 +530,8 @@ class DatabaseEventManager():
 				}
 			}
 
+			log(data)
+
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
 
 
