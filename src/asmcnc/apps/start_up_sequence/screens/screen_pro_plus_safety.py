@@ -99,22 +99,80 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_y: 0.29
-                padding: [dp(175),dp(0),dp(175),dp(42)]
+                padding: [10,0,10,10]
+                size_hint: (None, None)
+                height: dp(122)
+                width: dp(800)
+                orientation: 'horizontal'
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [0, 0, 184.5, 0]
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(52)
+                        width: dp(60)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.prev_screen()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(291)
+                    padding: [0,0,0,32]
+                    Button:
+                        id: continue_button
+                        background_normal: "./asmcnc/skavaUI/img/next.png"
+                        background_down: "./asmcnc/skavaUI/img/next.png"
+                        border: [dp(14.5)]*4
+                        size_hint: (None,None)
+                        width: dp(291)
+                        height: dp(79)
+                        on_press: root.next_screen()
+                        text: 'Next...'
+                        font_size: '30sp'
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        center: self.parent.center
+                        pos: self.parent.pos
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [193.5, 0, 0, 0]
 
-                Button:
-                    id: continue_button
-                    on_press: root.next_screen()
-                    font_size: dp(30)
-                    background_normal: "./asmcnc/skavaUI/img/next.png"
-                    background_down: "./asmcnc/skavaUI/img/next.png"
-                    border: [dp(14.5)]*4
-                    size_hint: (None,None)
-                    width: dp(450)
-                    height: dp(79)
-                    color: hex('#f9f9f9ff')
-                    text_size: self.size
-                    halign: "center"
-                    valign: "middle"
+
+
+                # padding: [dp(175),dp(0),dp(175),dp(42)]
+
+                # Button:
+                #     id: continue_button
+                #     on_press: root.next_screen()
+                #     font_size: dp(30)
+                #     background_normal: "./asmcnc/skavaUI/img/next.png"
+                #     background_down: "./asmcnc/skavaUI/img/next.png"
+                #     border: [dp(14.5)]*4
+                #     size_hint: (None,None)
+                #     width: dp(450)
+                #     height: dp(79)
+                #     color: hex('#f9f9f9ff')
+                #     text_size: self.size
+                #     halign: "center"
+                #     valign: "middle"
+
+
 
 """)
 
