@@ -160,7 +160,8 @@ class DatabaseEventManager():
 							self.send_alive()
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
-
+							self.send_feed_rate_info()
+							self.send_spindle_speed_info()
 					except Exception as e:
 						log("Could not send routine update:")
 						log(str(e))
