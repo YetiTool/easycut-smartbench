@@ -53,7 +53,7 @@ def set_pro_safety_with_file():
 	do_pro_config()
 
 def set_pro_safety_no_file():
-	os.system('rm /home/pi/easycut-smartbench/plus.txt')
+	os.system('sudo rm /home/pi/easycut-smartbench/plus.txt')
 	do_pro_config()
 
 
