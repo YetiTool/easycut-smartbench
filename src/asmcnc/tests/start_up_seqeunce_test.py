@@ -62,8 +62,8 @@ function_list = [
 # activation_code_proxy,
 # welcome_user_to_smartbench,
 # set_release_notes,
-# set_pro_safety_with_file,
-set_pro_safety_no_file,
+set_pro_safety_with_file,
+# set_pro_safety_no_file,
 ]
 
 
