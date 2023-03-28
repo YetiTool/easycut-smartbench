@@ -56,7 +56,6 @@ def set_pro_safety_no_file():
 
 function_list = [
 set_pro_safety_with_file,
-
 set_user_to_view_privacy_notice,
 activation_code_proxy,
 welcome_user_to_smartbench,
@@ -67,8 +66,8 @@ set_release_notes,
 
 # Functions alone: 
 
-min_r = 2 # 1
-max_r = 3 # 7
+min_r = 5 # 1
+max_r = 7 # 6
 
 for r in range(min_r, max_r):
 
