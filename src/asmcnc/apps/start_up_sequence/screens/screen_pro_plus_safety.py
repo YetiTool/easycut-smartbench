@@ -194,6 +194,13 @@ class ProPlusSafetyScreen(Screen):
         except: 
             self.sm.current = 'lobby'
 
+    def prev_screen(self):
+        try:
+            self.start_seq.prev_in_sequence()
+        except:
+            if self.sm.has_screen('upgrade_successful'): self.sm.current='upgrade_successful'
+            elif self.sm.has_screen('already_upgraded'): self.sm.current='already_upgraded'
+
     def update_seen(self):
         user_has_seen_pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt').read())
         
