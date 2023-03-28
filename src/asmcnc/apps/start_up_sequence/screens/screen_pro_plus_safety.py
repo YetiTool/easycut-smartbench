@@ -99,7 +99,7 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_y: 0.29
-                padding: [10,0,10,10]
+                padding: [-10,0,-10,10]
                 size_hint: (None, None)
                 height: dp(122)
                 width: dp(800)
@@ -152,27 +152,6 @@ Builder.load_string("""
                     height: dp(122)
                     width: dp(244.5)
                     padding: [193.5, 0, 0, 0]
-
-
-
-                # padding: [dp(175),dp(0),dp(175),dp(42)]
-
-                # Button:
-                #     id: continue_button
-                #     on_press: root.next_screen()
-                #     font_size: dp(30)
-                #     background_normal: "./asmcnc/skavaUI/img/next.png"
-                #     background_down: "./asmcnc/skavaUI/img/next.png"
-                #     border: [dp(14.5)]*4
-                #     size_hint: (None,None)
-                #     width: dp(450)
-                #     height: dp(79)
-                #     color: hex('#f9f9f9ff')
-                #     text_size: self.size
-                #     halign: "center"
-                #     valign: "middle"
-
-
 
 """)
 
