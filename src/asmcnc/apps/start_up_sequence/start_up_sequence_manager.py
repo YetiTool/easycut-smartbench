@@ -182,7 +182,7 @@ class StartUpSequence(object):
 	def exit_sequence(self, user_has_confirmed):
 
 		# FOR TEST TEMP: 
-		sys.exit()
+		# sys.exit()
 
 		if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
 			if user_has_confirmed:
