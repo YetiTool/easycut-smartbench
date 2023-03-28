@@ -49,11 +49,11 @@ def do_pro_config():
 		os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=True/user_has_seen_pro_plus_safety=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 def set_pro_safety_with_file():
-	os.system('touch /home/pi/easycut-smartbench/plus.txt')
+	os.system('touch /home/pi/plus.txt')
 	do_pro_config()
 
 def set_pro_safety_no_file():
-	os.system('sudo rm /home/pi/easycut-smartbench/plus.txt')
+	os.system('rm /home/pi/plus.txt')
 	do_pro_config()
 
 
