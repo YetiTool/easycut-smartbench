@@ -66,8 +66,8 @@ set_pro_safety_no_file,
 
 # Functions alone: 
 
-min_r = 5 # 1
-max_r = 7 # 6
+min_r = 1 # 1
+max_r = 6 # 6
 
 for r in range(min_r, max_r):
 
@@ -81,4 +81,4 @@ for r in range(min_r, max_r):
 
 		set_check_config_flag()
 		cmd = ['python', 'main.py']
-		subprocess.Popen(cmd).wait()
+		subprocess.Popen(cmd).wait() # Put sys.exit() (and import sys) into start_seq.exit_sequence() function for easy quit

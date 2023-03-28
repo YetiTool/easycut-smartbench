@@ -1,4 +1,4 @@
-import os, sys
+import os
 
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
