@@ -41,11 +41,8 @@ def set_release_notes():
 
 def do_pro_config():
 	user_has_seen_pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt').read())
-	
-	if not user_has_seen_pro_plus_safety:
-		os.system("sudo sed -i -e '$auser_has_seen_pro_plus_safety=False' /home/pi/easycut-smartbench/src/config.txt")
 
-	elif 'True' in user_has_seen_pro_plus_safety:
+	if 'True' in user_has_seen_pro_plus_safety:
 		os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=True/user_has_seen_pro_plus_safety=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 def set_pro_safety_with_file():
