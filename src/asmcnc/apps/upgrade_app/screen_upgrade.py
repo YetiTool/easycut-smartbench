@@ -184,7 +184,7 @@ class UpgradeScreen(Screen):
         self.hide_error_message()
         self.show_verifying()
         self.m.s.write_command('M3 S0')
-        Clock.schedule_once(self.get_restore_info, 0.1)
+        Clock.schedule_once(self.get_restore_info, 0.3)
 
     def get_restore_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
