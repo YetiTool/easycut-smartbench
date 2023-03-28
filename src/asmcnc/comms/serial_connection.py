@@ -909,7 +909,7 @@ class SerialConnection(object):
 
             # If "Ld:x,x,x,x" is in the status, the spindle is communicating
             # If spindle is not sending data, reset the "inrush" counter, which discards any weird loads from the spindle starting
-            if not re.search(self.digital_load_pattern, message):
+            if not re.search(self.digital_load_pattern, message) or self.digital_spindle_ld_qdA == 0:
                 self.inrush_counter = 0
                 self.in_inrush = True
 
