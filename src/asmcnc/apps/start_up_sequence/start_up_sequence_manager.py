@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
@@ -180,6 +180,9 @@ class StartUpSequence(object):
 	## END OF SEQUENCE FUNCTIONS
 
 	def exit_sequence(self, user_has_confirmed):
+
+		# FOR TEST TEMP: 
+		sys.exit()
 
 		if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
 			if user_has_confirmed:
