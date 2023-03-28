@@ -55,18 +55,22 @@ def set_pro_safety_no_file():
 
 
 function_list = [
-# set_user_to_view_privacy_notice,
-# activation_code_proxy,
-# welcome_user_to_smartbench,
-# set_release_notes,
-# set_pro_safety_with_file,
-set_pro_safety_no_file,
+set_pro_safety_with_file,
+
+set_user_to_view_privacy_notice,
+activation_code_proxy,
+welcome_user_to_smartbench,
+set_release_notes,
+# set_pro_safety_no_file,
 ]
 
 
 # Functions alone: 
 
-for r in range(1, 7):
+min_r = 2 # 1
+max_r = 3 # 7
+
+for r in range(min_r, max_r):
 
 	for sublist in list(combinations(function_list, r)):
 
