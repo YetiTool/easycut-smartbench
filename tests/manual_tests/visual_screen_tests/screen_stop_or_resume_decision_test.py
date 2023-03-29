@@ -112,8 +112,9 @@ class ScreenTest(App):
 
         # stop_or_resume_decision_screen.reason_for_pause = 'spindle_overload'
         # stop_or_resume_decision_screen.reason_for_pause = 'job_pause'
-        stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_low_feed'
+        # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_low_feed'
         # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_spindle_data_loss'
+        stop_or_resume_decision_screen.reason_for_pause = 'spindle_health_check_failed'
 
         # Set yetipilot initially enabled, to test disable on unpause
         go_screen.is_job_started_already = True
