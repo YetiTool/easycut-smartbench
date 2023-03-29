@@ -554,24 +554,20 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
-        # OPTIONAL + TAB
+        # OPTIONAL + TAB AND WIDGETS
 
         ## Enable tab
 
-        if not self.m.theateam() or True:
-            self.update_strings()
-            return
+        if self.m.theateam(): # or True:
+            
+            ## + TAB WIDGETS
 
-        ## + TAB WIDGETS
+            self.plus_tab.disabled = False
+            self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+            self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
 
-        self.plus_tab.disabled = False
-        self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
-        self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
-
-        self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
-        self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
-
-
+            self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
+            self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
 
         self.update_strings()
 
@@ -639,7 +635,7 @@ class MaintenanceScreenClass(Screen):
             self.tab_panel.switch_to(self.laser_tab)
         elif self.landing_tab == 'spindle_tab':
             self.tab_panel.switch_to(self.spindle_tab)
-        elif self.landing_tab and self.m.theateam() == 'spindle_health_check_tab':
+        elif self.m.theateam() and self.landing_tab == 'spindle_health_check_tab':
             self.tab_panel.switch_to(self.plus_tab)
         else: 
             try: 
