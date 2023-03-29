@@ -149,7 +149,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, self.seconds)
+        # Clock.schedule_once(self.exit_screen, self.seconds)
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):

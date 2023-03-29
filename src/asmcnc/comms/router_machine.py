@@ -3571,8 +3571,10 @@ class RouterMachine(object):
                 return
 
             self.passed_spindle_health_check = True
+
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go')._start_running_job()
+                self.sm.current = 'go'
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
