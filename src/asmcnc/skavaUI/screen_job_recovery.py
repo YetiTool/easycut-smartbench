@@ -476,15 +476,15 @@ class JobRecoveryScreen(Screen):
     def get_info(self):
 
         info = self.l.get_str('This screen allows you to recover an incomplete job.') + '\n\n' + \
-               self.l.get_bold("Ensure that you recover the job from a point where it was running normally, and SmartBench's position was accurate.") + ' ' + \
+               self.l.get_bold("Ensure that you recover the job from a point where it was running normally, and SmartBench's position was accurate.") + '\n\n' + \
                self.l.get_bold('Choose a visually obvious restart point, such as a corner.') + '\n\n' + \
                self.l.get_str('The red text indicates where the job failed.') + ' ' + \
-               self.l.get_str('Use the arrows to navigate through the lines of the job file, and select a point to recover the job from.') + ' ' + \
+               self.l.get_str('Use the arrows to navigate through the lines of the job file, and select a point to recover the job from.') + '\n\n' + \
                self.l.get_str('To confirm this start point, use the "GO XY" button.') + ' ' + \
                self.l.get_str('This will move the Z Head over the selected start point.') + ' ' + \
                self.l.get_str('You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane.') + ' ' + \
                self.l.get_str('This XY position can be fine adjusted in the next screen.') + '\n\n' + \
-               self.l.get_str('Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.') + ' ' + \
+               self.l.get_str('Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.') + '\n\n' + \
                self.l.get_str('SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes.')
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
