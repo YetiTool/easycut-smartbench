@@ -558,7 +558,7 @@ class MaintenanceScreenClass(Screen):
 
         ## Enable tab
 
-        if not self.m.theateam():
+        if not self.m.theateam() or True:
             self.update_strings()
             return
 
