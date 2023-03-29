@@ -57,6 +57,9 @@ Builder.load_string("""
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
 
+    # + tab widgets
+    plus_tab : plus_tab
+
     TabbedPanel:
         id: tab_panel
         size_hint: (None,None)
@@ -426,28 +429,43 @@ Builder.load_string("""
                             size: self.size
                             pos: self.pos
 
-
+        # + Tab
 
         TabbedPanelItem:
+            id: plus_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'     
             disabled: 'True'
 
-    BoxLayout: 
-        size_hint: (None,None)
-        pos: (dp(568), dp(390))
-        height: dp(90)
-        width: dp(142)        
-        Image:
-            size_hint: (None,None)
-            height: dp(90)
-            width: dp(142)
-            # background_color: hex('#2196f3fb')
-            center: self.parent.center
-            pos: self.parent.pos
-            source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
-            allow_stretch: True
-            opacity: 1
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(804)
+                height: dp(390)
+                orientation: "vertical" 
+                padding: (22, 20, 22, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+    # BoxLayout: 
+    #     size_hint: (None,None)
+    #     pos: (dp(568), dp(390))
+    #     height: dp(90)
+    #     width: dp(142)        
+    #     Image:
+    #         size_hint: (None,None)
+    #         height: dp(90)
+    #         width: dp(142)
+    #         # background_color: hex('#2196f3fb')
+    #         center: self.parent.center
+    #         pos: self.parent.pos
+    #         source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
+    #         allow_stretch: True
+    #         opacity: 1
 
     BoxLayout: 
         size_hint: (None,None)
@@ -537,6 +555,17 @@ class MaintenanceScreenClass(Screen):
 
         self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
+
+        # OPTIONAL + TAB
+
+        # ## Enable tab
+
+        if self.m.theateam():
+            self.plus_tab.disabled = False
+            self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+            self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+
+
 
         self.update_strings()
 
