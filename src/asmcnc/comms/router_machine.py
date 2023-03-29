@@ -3558,7 +3558,8 @@ class RouterMachine(object):
         def show_spindle_health_check_screen():
             if not self.sm.has_screen('spindle_health_check'):
                 self.sm.add_widget(SpindleHealthCheckActiveScreen(
-                    name='test', screen_manager=self.sm, localization=self.l, machine=self))
+                    name='spindle_health_check', screen_manager=self.sm, localization=self.l, machine=self))
+            self.sm.current = 'spindle_health_check'
 
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
@@ -3583,6 +3584,7 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
             Clock.schedule_once(lambda dt: check_average(), 7)
 
+        show_spindle_health_check_screen()
         self.zUp()
         Clock.schedule_once(lambda dt: start_spindle_health_check(), 3)
 

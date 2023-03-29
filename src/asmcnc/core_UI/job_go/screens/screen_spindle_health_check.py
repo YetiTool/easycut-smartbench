@@ -129,8 +129,8 @@ Builder.load_string("""
 class SpindleHealthCheckActiveScreen(Screen):
 
     return_screen = 'go'
-    max_seconds = 5
-    seconds = 5
+    max_seconds = 10
+    seconds = 10
     update_timer_event = None
 
     def __init__(self, **kwargs):
