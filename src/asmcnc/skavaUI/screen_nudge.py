@@ -205,7 +205,8 @@ class NudgeScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_nudge.ZMoveNudge(machine=self.m, screen_manager=self.sm, job=self.jd))
 
         # XY move widget
-        self.xy_move_container.add_widget(widget_xy_move_recovery.XYMoveRecovery(machine=self.m, screen_manager=self.sm))
+        self.xy_move_widget = widget_xy_move_recovery.XYMoveRecovery(machine=self.m, screen_manager=self.sm)
+        self.xy_move_container.add_widget(self.xy_move_widget)
 
         # Nudge speed widget
         self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=self.m, screen_manager=self.sm)

@@ -100,7 +100,7 @@ class ZMoveNudge(Widget):
         self.m.set_led_colour('WHITE')
 
         feed_speed = self.sm.get_screen('nudge').nudge_speed_widget.feedSpeedJogZ
-        self.jogMode = self.sm.get_screen('nudge').nudge_speed_widget.jogMode
+        self.jogMode = self.sm.get_screen('nudge').xy_move_widget.jogMode
         
         if self.jogMode == 'free':
             if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
