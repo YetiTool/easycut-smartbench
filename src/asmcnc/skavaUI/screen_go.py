@@ -430,6 +430,7 @@ class GoScreen(Screen):
 
         # Optional containers
         self.yp_widget = YetiPilotWidget(screen_manager=self.sm, localization=self.l, machine=self.m, database=self.database, yetipilot=self.yp)
+        self.yetipilot_container.add_widget(self.yp_widget)
 
         self.update_strings()
 
@@ -498,7 +499,6 @@ class GoScreen(Screen):
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
     def show_hide_yp_container(self, use_sc2):
-        use_sc2 = True
         if use_sc2:
             # Show yetipilot container
             self.job_progress_container.padding = [20,10]
