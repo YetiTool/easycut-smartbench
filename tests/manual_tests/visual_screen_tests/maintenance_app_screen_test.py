@@ -114,7 +114,7 @@ class ScreenTest(App):
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine = m, localization = l, job = jd)
         sm.add_widget(maintenance_screen)
 
-        landing_tab = 'spindle_tab'
+        landing_tab = 'spindle_health_check_tab'
         sm.get_screen('maintenance').landing_tab = landing_tab
         sm.current = 'maintenance'
 

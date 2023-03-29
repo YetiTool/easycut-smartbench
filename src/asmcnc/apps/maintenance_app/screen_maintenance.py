@@ -16,7 +16,7 @@ from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
 widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
-widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
 
 Builder.load_string("""
 
@@ -59,6 +59,7 @@ Builder.load_string("""
 
     # + tab widgets
     plus_tab : plus_tab
+    spindle_health_check_container : spindle_health_check_container
 
     TabbedPanel:
         id: tab_panel
@@ -434,7 +435,9 @@ Builder.load_string("""
         TabbedPanelItem:
             id: plus_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'     
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_disabled_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_disabled_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
 
             BoxLayout:
@@ -451,21 +454,16 @@ Builder.load_string("""
                         size: self.size
                         pos: self.pos
 
-    # BoxLayout: 
-    #     size_hint: (None,None)
-    #     pos: (dp(568), dp(390))
-    #     height: dp(90)
-    #     width: dp(142)        
-    #     Image:
-    #         size_hint: (None,None)
-    #         height: dp(90)
-    #         width: dp(142)
-    #         # background_color: hex('#2196f3fb')
-    #         center: self.parent.center
-    #         pos: self.parent.pos
-    #         source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
-    #         allow_stretch: True
-    #         opacity: 1
+                BoxLayout: 
+                    id: spindle_health_check_container
+                    height: dp(350)
+                    width: dp(760)
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
 
     BoxLayout: 
         size_hint: (None,None)
@@ -558,16 +556,26 @@ class MaintenanceScreenClass(Screen):
 
         # OPTIONAL + TAB
 
-        # ## Enable tab
+        ## Enable tab
 
-        if self.m.theateam():
-            self.plus_tab.disabled = False
-            self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
-            self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+        if not self.m.theateam():
+            self.update_strings()
+            return
+
+        ## + TAB WIDGETS
+
+        self.plus_tab.disabled = False
+        self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+        self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+
+        self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
 
 
 
         self.update_strings()
+
+
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -631,8 +639,13 @@ class MaintenanceScreenClass(Screen):
             self.tab_panel.switch_to(self.laser_tab)
         elif self.landing_tab == 'spindle_tab':
             self.tab_panel.switch_to(self.spindle_tab)
+        elif self.landing_tab and self.m.theateam() == 'spindle_health_check_tab':
+            self.tab_panel.switch_to(self.plus_tab)
         else: 
-            self.landing_tab = self.tab_panel.current
+            try: 
+                self.landing_tab = self.tab_panel.current
+            except: 
+                self.tab_panel.switch_to(self.laser_tab)
 
 
     def on_pre_leave(self):
