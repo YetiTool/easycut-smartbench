@@ -205,7 +205,8 @@ class NudgeScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_nudge.ZMoveNudge(machine=self.m, screen_manager=self.sm, job=self.jd))
 
         # XY move widget
-        self.xy_move_container.add_widget(widget_xy_move_recovery.XYMoveRecovery(machine=self.m, screen_manager=self.sm))
+        self.xy_move_widget = widget_xy_move_recovery.XYMoveRecovery(machine=self.m, screen_manager=self.sm)
+        self.xy_move_container.add_widget(self.xy_move_widget)
 
         # Nudge speed widget
         self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=self.m, screen_manager=self.sm)
@@ -242,7 +243,10 @@ class NudgeScreen(Screen):
         # Raise Z to safe range in case user tries to move the tool after nudging into the groove
         # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
         z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').job_box.range_z[1], -self.m.limit_switch_safety_distance)
-        self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
+
+        # If Z is below safe height, then raise it up
+        if self.m.mpos_z() < z_safe_height:
+            self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
 
     def previous_screen(self):
         self.sm.current = 'job_recovery'
