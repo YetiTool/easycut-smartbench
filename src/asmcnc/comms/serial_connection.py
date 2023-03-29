@@ -1121,6 +1121,8 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        log("Spindle data failure count: " + str(self.spindle_data_failure_count))
+
                         if self.digital_spindle_ld_qdA == -999 and self.sm.current != 'spindle_cooldown'\
                                 and not self.in_inrush and not self.m.is_machine_paused:
                             self.spindle_data_failure_count += 1
