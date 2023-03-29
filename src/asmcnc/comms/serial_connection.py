@@ -59,7 +59,6 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
-
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -383,7 +382,7 @@ class SerialConnection(object):
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
-                                and self.inrush_counter == 12:
+                                and not self.in_inrush:
 
                             self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
                                                  int(self.feed_rate), self.digital_spindle_mains_voltage)
@@ -785,6 +784,8 @@ class SerialConnection(object):
     # Spindle data "inrush" counter
     digital_load_pattern = re.compile(r"Ld:\d+,\d+,\d+,\d+")
     inrush_counter = 0
+    inrush_max = 20
+    in_inrush = True
 
     # IO Pins for switches etc
     limit_x = False  # convention: min is lower_case
@@ -913,11 +914,15 @@ class SerialConnection(object):
 
             # If "Ld:x,x,x,x" is in the status, the spindle is communicating
             # If spindle is not sending data, reset the "inrush" counter, which discards any weird loads from the spindle starting
-            if not re.search(self.digital_load_pattern, message):
+            if not re.search(self.digital_load_pattern, message) or self.digital_spindle_ld_qdA == 0:
                 self.inrush_counter = 0
+                self.in_inrush = True
 
-            elif self.inrush_counter <= 13:
+            elif self.inrush_counter < self.inrush_max:
                 self.inrush_counter += 1
+
+            elif self.inrush_counter == self.inrush_max and self.in_inrush:
+                self.in_inrush = False
 
             # Get machine's status
             self.m_state = status_parts[0]

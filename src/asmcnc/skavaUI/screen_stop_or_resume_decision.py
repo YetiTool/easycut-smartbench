@@ -119,7 +119,13 @@ class StopOrResumeDecisionScreen(Screen):
     
     reason_for_pause = None
     return_screen = 'lobby'
-    
+
+    qr_source = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
+
+    qr_yetipilot = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
+    qr_spindle_overload = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
+    qr_health_check = "./asmcnc/skavaUI/img/qr_spindle_clamping_info.png"
+
     def __init__(self, **kwargs):
         
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
@@ -143,6 +149,7 @@ class StopOrResumeDecisionScreen(Screen):
 
         if self.reason_for_pause == 'job_pause':
             popup_info.PopupInfo(self.sm, self.l, 500, info)
+
         else:
             info += (
                 "\n\n" + \
@@ -151,23 +158,22 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
             )
 
-            if 'yetipilot' in self.reason_for_pause:
-                qr_source = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
-            else:
-                qr_source = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
-
-            popup_info.PopupQRInfo(self.sm, self.l, 500, info, qr_source)
+            popup_info.PopupQRInfo(self.sm, self.l, 500, info, self.qr_source)
  
     
-    def on_enter(self):
+    def on_pre_enter(self):
 
         # Update go screen button in case this screen was called from outside go screen (e.g. spindle overload)
         try: self.sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
         except: pass
 
-        if self.reason_for_pause == 'spindle_overload':
-            self.pause_reason_label.text = self.l.get_str("Spindle motor was overloaded!").replace(self.l.get_str('overloaded'), self.l.get_bold('overloaded'))
+        if self.reason_for_pause == 'job_pause':
+            self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
+            self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
 
+        if self.reason_for_pause == 'spindle_overload':
+
+            self.pause_reason_label.text = self.l.get_str("Spindle motor was overloaded!").replace(self.l.get_str('overloaded'), self.l.get_bold('overloaded'))
             self.pause_description_label.text = (
 
                 self.l.get_str('SmartBench has automatically stopped the job because it detected the spindle was starting to overload.') + \
@@ -179,14 +185,13 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
                 self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
                 )
+
+            self.qr_source = self.qr_spindle_overload
         
-        if self.reason_for_pause == 'job_pause':
-            self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
-            self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
 
         if self.reason_for_pause == 'yetipilot_low_feed':
-            self.pause_reason_label.text = self.l.get_str("Feed rate too slow!")
 
+            self.pause_reason_label.text = self.l.get_str("Feed rate too slow!")
             self.pause_description_label.text = (
 
                 self.l.get_str('YetiPilot has tried to reduce the feed rate to less than 10% of the feed rate in the job file.') + \
@@ -199,9 +204,11 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('If you choose to resume, SmartBench may struggle.')
                 )
 
-        if self.reason_for_pause == 'yetipilot_spindle_data_loss':
-            self.pause_reason_label.text = self.l.get_str("Can't read spindle data!")
+            self.qr_source = self.qr_yetipilot
 
+        if self.reason_for_pause == 'yetipilot_spindle_data_loss':
+
+            self.pause_reason_label.text = self.l.get_str("Can't read spindle data!")
             self.pause_description_label.text = (
 
                 self.l.get_str('Cannot read the data from the SC2 Spindle motor, which is needed to measure the load.') + \
@@ -211,6 +218,21 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('Press "?" for more information.') + "\n\n" + \
                 self.l.get_str('You may resume the job with YetiPilot disabled, or cancel the job altogether.').replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume'))
                 )
+
+            self.qr_source = self.qr_yetipilot
+
+        if self.reason_for_pause == 'spindle_health_check_failed':
+
+            self.pause_reason_label.text = self.l.get_str("Spindle motor health check failed!")
+            self.pause_description_label.text = (
+
+                self.l.get_str('Spindle motor load is too high.') + "\n\n" + \
+                self.l.get_str("Please check that your SC2 Spindle motor is clamped correctly.") + "\n\n" + \
+                self.l.get_str('If you continue without resolving the issue, it will result in accelerated wear of the Spindle motor.') + "\n\n" + \
+                self.l.get_str('You may resume the job with YetiPilot disabled, or cancel the job altogether.').replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume'))
+                )
+
+            self.qr_source = self.qr_health_check
 
         self.update_font_size(self.pause_description_label)
 
