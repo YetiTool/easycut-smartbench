@@ -25,7 +25,7 @@ from os import path
 from __builtin__ import True
 
 from asmcnc.skavaUI import popup_info
-
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 from math import sqrt
 
 def log(message):
@@ -3555,6 +3555,11 @@ class RouterMachine(object):
     def run_spindle_health_check(self):
         self.s.spindle_health_check_data[:] = []
 
+        def show_spindle_health_check_screen():
+            if not self.sm.has_screen('spindle_health_check'):
+                self.sm.add_widget(SpindleHealthCheckActiveScreen(
+                    name='test', screen_manager=self.sm, localization=self.l, machine=self))
+
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
@@ -3578,7 +3583,6 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
             Clock.schedule_once(lambda dt: check_average(), 7)
 
-        self.sm.current = 'shc'
         self.zUp()
         Clock.schedule_once(lambda dt: start_spindle_health_check(), 3)
 

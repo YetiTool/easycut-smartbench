@@ -671,7 +671,7 @@ class GoScreen(Screen):
 
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
-            if self.m.use_spindle_health_check:
+            if self.m.use_spindle_health_check and not self.m.passed_spindle_health_check:
                 self.m.run_spindle_health_check()
             else:
                 self._start_running_job()
