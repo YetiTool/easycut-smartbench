@@ -3576,7 +3576,6 @@ class RouterMachine(object):
         def stop_spindle_health_check():
             self.s.write_command('M5')
             self.s.spindle_health_check = False
-            self.sm.current = self.sm.get_screen('shc').return_screen
 
         def start_spindle_health_check():
             self.s.spindle_health_check = True
