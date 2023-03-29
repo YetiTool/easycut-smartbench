@@ -559,19 +559,9 @@ class MaintenanceScreenClass(Screen):
         ## Enable tab
 
         if self.m.theateam(): # or True:
-            
-            ## + TAB WIDGETS
-
-            self.plus_tab.disabled = False
-            self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
-            self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
-
-            self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
-            self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
+            self.add_plus_tab()
 
         self.update_strings()
-
-
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -625,6 +615,10 @@ class MaintenanceScreenClass(Screen):
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
 
+        # IN CASE OF UPGRADES
+        if self.m.theateam() and self.plus_tab.disabled:
+            self.add_plus_tab()
+            self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
 
@@ -658,6 +652,16 @@ class MaintenanceScreenClass(Screen):
 
         self.m.laser_off()
 
+    def add_plus_tab(self):
+
+        ## + TAB WIDGETS
+
+        self.plus_tab.disabled = False
+        self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+        self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+
+        self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
 
     def update_strings(self):
 
@@ -669,6 +673,10 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.update_strings()
         self.z_lubrication_reminder_widget.update_strings()
         self.touchplate_offset_widget.update_strings()
+        try: 
+            self.spindle_health_check_widget.update_strings()
+        except: 
+            pass
 
         self.update_font_size(self.brush_monitor_label)
 
