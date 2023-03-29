@@ -787,7 +787,7 @@ class SerialConnection(object):
     digital_spindle_mains_voltage = None
 
     # Spindle data "inrush" counter
-    digital_load_pattern = re.compile(r"Ld:\d+,\d+,\d+,\d+")
+    digital_load_pattern = re.compile(r"Ld:[-]?\d+,[-]?\d+,[-]?\d+,[-]?\d+")
     inrush_counter = 0
     inrush_max = 20
     in_inrush = True

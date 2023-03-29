@@ -549,3 +549,15 @@ def test_inrush_counter_resets_after_no_comms(sc):
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 0
 
+def test_bad_spindle_data(sc):
+    sc.spindle_data_failure_count = 0
+    sc.inrush_counter = 20
+    sc.in_inrush = False
+    sc.m.is_machine_paused = False
+
+    sc.digital_spindle_ld_qdA = 1
+    status = construct_status_with_load_string("|Ld:-999,11,1,3")
+    sc.process_grbl_push(status)
+
+    assert sc.spindle_data_failure_count == 1
+
