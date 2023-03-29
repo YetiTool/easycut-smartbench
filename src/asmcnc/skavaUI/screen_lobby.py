@@ -35,7 +35,9 @@ Builder.load_string("""
     update_app_label: update_app_label
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
+    upgrade_app_label:upgrade_app_label
 
+    upgrade_app_container:upgrade_app_container
 
     canvas.before:
         Color: 
@@ -277,6 +279,39 @@ Builder.load_string("""
                 spacing: 20
 
                 BoxLayout:
+                    id: upgrade_app_container
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+
+                    Button:
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.upgrade_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/apps/upgrade_app/img/lobby_upgrade.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        id: upgrade_app_label
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Upgrade'
+                        markup: True
+
+                BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing: 20
@@ -423,6 +458,7 @@ class LobbyScreen(Screen):
     trigger_update_popup = False
     welcome_popup_description = ''
     update_message = ''
+    upgrade_app_hidden = False
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -432,6 +468,13 @@ class LobbyScreen(Screen):
         self.l=kwargs['localization']
 
         self.update_strings()
+
+    def on_pre_enter(self):
+        # Hide upgrade app if older than V1.3, and only if it has not been hidden already
+        # if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
+        if not self.upgrade_app_hidden:
+            self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
+            self.upgrade_app_hidden = True
 
     def on_enter(self):
         if not sys.platform == "win32":
@@ -471,6 +514,13 @@ class LobbyScreen(Screen):
     def maintenance_app(self):
         self.am.start_maintenance_app('laser_tab') 
 
+    def upgrade_app(self):
+        # Need to set $51 on entry, requires idle
+        if self.m.state().startswith('Idle'):
+            self.am.start_upgrade_app()
+        else:
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
             os.system('sudo shutdown -h')
@@ -484,6 +534,7 @@ class LobbyScreen(Screen):
         self.update_app_label.text = self.l.get_str('Update')
         self.maintenance_app_label.text = self.l.get_str('Maintenance')
         self.system_tools_app_label.text = self.l.get_str('System Tools')
+        self.upgrade_app_label.text = self.l.get_str('Upgrade')
 
         self.welcome_popup_description = (
             self.format_command(
