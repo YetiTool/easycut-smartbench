@@ -3565,8 +3565,9 @@ class RouterMachine(object):
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
             average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
 
-            if average_load_w > 400:
+            if average_load_w > 200:
                 log("Load too high for spindle health check: " + str(average_load_w) + "W")
+                self.stop_for_a_stream_pause('spindle_health_check_failed')
                 return
 
             self.passed_spindle_health_check = True
