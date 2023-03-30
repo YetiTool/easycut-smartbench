@@ -131,10 +131,10 @@ class ScreenTest(App):
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
         
-        m.is_using_sc2 = Mock(return_value=True)
-        m.is_spindle_health_check_active = Mock(return_value=True)
-        m.has_spindle_health_check_failed = Mock(return_value=True)
-        sm.get_screen('go').is_job_started_already = True
+        # m.is_using_sc2 = Mock(return_value=True)
+        # m.is_spindle_health_check_active = Mock(return_value=False)
+        # m.has_spindle_health_check_failed = Mock(return_value=True)
+        # sm.get_screen('go').is_job_started_already = True
 
         sm.current = 'go'
         

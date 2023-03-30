@@ -98,7 +98,7 @@ class DisabledYetiPilotWidget(Widget):
 
         self.update_strings(case=case)
 
-        if case:
+        if case != DisabledYPCase.DISABLED:
             self.text_container.size_hint_x = 0.85
             self.button_container.opacity = 1
             self.button_container.size_hint_x = 0.15
@@ -120,7 +120,7 @@ class DisabledYetiPilotWidget(Widget):
 
         self.title_label.text = self.l.get_str("YetiPilot is disabled")
 
-        if not case:
+        if case == DisabledYPCase.DISABLED:
             self.body_label.text =  self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.")
 
         else:
