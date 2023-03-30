@@ -929,7 +929,7 @@ class RouterMachine(object):
             and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
 
     def is_spindle_health_check_active(self):
-        is_return_as_default self.spindle_health_check_enabled
+        return self.is_spindle_health_check_enabled_as_default
 
     def has_spindle_health_check_failed(self):
         return False

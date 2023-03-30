@@ -132,7 +132,7 @@ class ScreenTest(App):
         sm.add_widget(go_screen)
         
         m.is_using_sc2 = Mock(return_value=True)
-        m.is_spindle_health_check_active = Mock(return_value=False)
+        # m.is_spindle_health_check_active = Mock(return_value=False)
         # m.has_spindle_health_check_failed = Mock(return_value=True)
         # sm.get_screen('go').is_job_started_already = True
 
