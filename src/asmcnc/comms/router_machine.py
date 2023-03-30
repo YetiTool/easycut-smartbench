@@ -78,6 +78,7 @@ class RouterMachine(object):
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
     spindle_cooldown_rpm_override_file_path = smartbench_values_dir + 'spindle_cooldown_rpm_override.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
+    spindle_health_check_file_path = smartbench_values_dir + 'spindle_health_check.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
@@ -122,6 +123,9 @@ class RouterMachine(object):
     amb_cooldown_rpm_default = 10000
     yeti_cooldown_rpm_default = 12000
     spindle_cooldown_rpm_override = False
+
+    # SPINDLE HEALTH CHECK SETTINGS
+    is_spindle_health_check_enabled_as_default = False
 
     ## DEVICE LABEL
     device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
@@ -244,6 +248,12 @@ class RouterMachine(object):
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
+        if not path.exists(self.spindle_health_check_file_path):
+            log("Creating stylus settings file...")
+            file = open(self.spindle_health_check_file_path, "w+")
+            file.write(str(self.is_spindle_health_check_enabled_as_default))
+            file.close()
+
         if not path.exists(self.device_label_file_path):
             log('Creating device label settings file...')
             file = open(self.device_label_file_path, 'w+')
@@ -271,6 +281,7 @@ class RouterMachine(object):
         self.read_spindle_cooldown_rpm_override_settings()
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
+        self.read_spindle_health_check_settings()
         self.read_device_label()
         self.read_device_location()
 
@@ -625,6 +636,44 @@ class RouterMachine(object):
             log("Unable to write stylus settings")
             return False
 
+    ## SPINDLE HEALTH CHECK OPTIONS
+    def read_spindle_health_check_settings(self):
+
+        try:
+            file = open(self.spindle_health_check_file_path, 'r')
+            read_health_check = file.read()
+            file.close()
+
+            if read_health_check == 'True':
+                self.is_spindle_health_check_enabled_as_default = True
+            else:
+                self.is_spindle_health_check_enabled_as_default = False
+
+            log("Read in spindle health check settings")
+            return True
+
+        except: 
+            log("Unable to read spindle health check settings")
+            return False
+
+    def write_spindle_health_check_settings(self, health_check):
+        try:
+            file = open(self.spindle_health_check_file_path, "w")
+            file.write(str(health_check))
+            file.close()
+
+            if health_check == 'True' or health_check == True:
+                self.is_spindle_health_check_enabled_as_default = True
+            else:
+                self.is_spindle_health_check_enabled_as_default = False
+
+            log("Spindle health check settings written to file")
+            return True
+
+        except: 
+            log("Unable to write spindle health check settings")
+            return False
+
     ## DEVICE LABEL
     def read_device_label(self):
 
@@ -880,7 +929,7 @@ class RouterMachine(object):
             and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
 
     def is_spindle_health_check_active(self):
-        return True
+        return self.is_spindle_health_check_enabled_as_default
 
     def has_spindle_health_check_failed(self):
         return False
