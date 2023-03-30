@@ -199,8 +199,8 @@ class PopupYetiPilotSettings(Widget):
             material_values = self.yp.get_available_material_types()
 
             if  self.yp.get_active_material_type() and \
-                self.yp.get_active_cutter_type() and \
-                self.yp.get_active_cutter_diameter(): 
+                self.yp.get_active_cutter_diameter() and \
+                self.yp.get_active_cutter_type(): 
 
                 profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type())
                 profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type(), cutter_diameter=self.yp.get_active_cutter_diameter())
