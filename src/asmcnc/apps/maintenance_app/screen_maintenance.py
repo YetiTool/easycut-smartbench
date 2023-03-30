@@ -558,7 +558,7 @@ class MaintenanceScreenClass(Screen):
 
         ## Enable tab
 
-        if self.m.theateam() and False:
+        if self.m.theateam():# and False:
             self.add_plus_tab()
 
         self.update_strings()

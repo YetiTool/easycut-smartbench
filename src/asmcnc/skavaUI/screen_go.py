@@ -28,7 +28,7 @@ from asmcnc.geometry import job_envelope  # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
 
 from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
-from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget
+from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase
 
 Builder.load_string("""
 
@@ -521,13 +521,13 @@ class GoScreen(Screen):
                 if self.yp_widget.parent: self.yetipilot_container.remove_widget(self.yp_widget)
 
                 if not self.m.has_spindle_health_check_failed():
-                    self.disabled_yp_widget.set_version("disabled")
+                    self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED)
 
                 elif self.is_job_started_already:
-                        self.disabled_yp_widget.set_version("failed")
+                        self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
 
                 else:
-                    self.disabled_yp_widget.set_version("failed and can run again")
+                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN)
 
         else:
             # Hide yetipilot container

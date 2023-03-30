@@ -249,7 +249,7 @@ class RouterMachine(object):
             file.close()
 
         if not path.exists(self.spindle_health_check_file_path):
-            log("Creating stylus settings file...")
+            log("Creating spindle health check settings file...")
             file = open(self.spindle_health_check_file_path, "w+")
             file.write(str(self.is_spindle_health_check_enabled_as_default))
             file.close()
@@ -662,7 +662,7 @@ class RouterMachine(object):
             file.write(str(health_check))
             file.close()
 
-            if health_check == 'True' or health_check == True:
+            if health_check == 'True' or health_check:
                 self.is_spindle_health_check_enabled_as_default = True
             else:
                 self.is_spindle_health_check_enabled_as_default = False

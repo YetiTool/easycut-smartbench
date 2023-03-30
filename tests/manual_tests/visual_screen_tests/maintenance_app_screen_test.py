@@ -115,7 +115,7 @@ class ScreenTest(App):
         sm.add_widget(maintenance_screen)
 
         landing_tab = 'spindle_health_check_tab'
-        # sm.get_screen('maintenance').landing_tab = landing_tab
+        sm.get_screen('maintenance').landing_tab = landing_tab
         sm.current = 'maintenance'
 
         return sm

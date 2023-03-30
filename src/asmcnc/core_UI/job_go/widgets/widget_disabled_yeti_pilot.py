@@ -73,6 +73,22 @@ Builder.load_string("""
                 
 """)
 
+class DisabledYPCase:
+    DISABLED = 0
+    FAILED_AND_CAN_RUN_AGAIN = 1
+    FAILED = 2
+
+
+# case = WidgetCase.DISABLED
+
+# if case == WidgetCase.DISABLED:
+#     print('DISABLED')
+# elif case == WidgetCase.FAILED_AND_CAN_RUN_AGAIN:
+#     print('FAILED_AND_CAN_RUN_AGAIN')
+# elif case == WidgetCase.FAILED:
+#     print('FAILED')
+
+
 class DisabledYetiPilotWidget(Widget):
 
     case = "disabled"
@@ -95,9 +111,12 @@ class DisabledYetiPilotWidget(Widget):
         self.update_strings()
 
     def set_version(self, case):
-        self.case = case
+
+        print(case)
+
         self.update_strings(case=case)
-        if "failed" in case:
+
+        if case:
             self.text_container.size_hint_x = 0.85
             self.button_container.opacity = 1
             self.button_container.size_hint_x = 0.15
@@ -107,13 +126,10 @@ class DisabledYetiPilotWidget(Widget):
             self.button_container.opacity = 0
             self.button_container.size_hint_x = 0
 
-        "./asmcnc/core_UI/job_go/img/spindle_check_disabled.png"
-
-        if "run again" in case:
-            print("thinks it can run again")
-
+        if case == DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN:
             self.health_check_button.disabled = False
             self.health_check_button_img.source = self.health_check_enabled_img
+
         else:
             self.health_check_button.disabled = True
             self.health_check_button_img.source = self.health_check_disabled_img
@@ -122,13 +138,13 @@ class DisabledYetiPilotWidget(Widget):
 
         self.title_label.text = self.l.get_str("YetiPilot is disabled")
 
-        if case == "disabled":
+        if not case:
             self.body_label.text =  self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.")
 
-        elif "failed" in case:
+        else:
             self.body_label.text =  self.l.get_str("Spindle motor health check failed.")
         
-            if "run again" in case:
+            if case == DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN:
                 self.body_label.text += "\n"
                 self.body_label.text += self.l.get_str("Re-run before job start to enable YetiPilot.")
 

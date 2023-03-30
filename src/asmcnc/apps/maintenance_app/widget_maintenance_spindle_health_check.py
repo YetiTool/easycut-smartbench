@@ -89,12 +89,7 @@ class WidgetSpindleHealthCheck(BoxLayout):
 
     def toggle_yeti_pilot_availability(self, switch):
         self.toggle_button_img(switch.state)
-
-        if switch.state == "down": 
-            health_check = True
-        else:
-            health_check = False
-
+        health_check = switch.state == "down"
         self.m.write_spindle_health_check_settings(health_check)
 
     def update_strings(self):
