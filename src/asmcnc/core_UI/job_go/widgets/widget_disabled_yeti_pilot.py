@@ -78,23 +78,7 @@ class DisabledYPCase:
     FAILED_AND_CAN_RUN_AGAIN = 1
     FAILED = 2
 
-
-# case = WidgetCase.DISABLED
-
-# if case == WidgetCase.DISABLED:
-#     print('DISABLED')
-# elif case == WidgetCase.FAILED_AND_CAN_RUN_AGAIN:
-#     print('FAILED_AND_CAN_RUN_AGAIN')
-# elif case == WidgetCase.FAILED:
-#     print('FAILED')
-
-
 class DisabledYetiPilotWidget(Widget):
-
-    case = "disabled"
-    # case = "disabled"
-    # case = "failed and can run again"
-    # case = "failed"
 
     health_check_enabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_silver.png"
     health_check_disabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_disabled.png"
@@ -111,8 +95,6 @@ class DisabledYetiPilotWidget(Widget):
         self.update_strings()
 
     def set_version(self, case):
-
-        print(case)
 
         self.update_strings(case=case)
 
