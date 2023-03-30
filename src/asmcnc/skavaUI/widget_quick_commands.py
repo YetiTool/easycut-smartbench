@@ -168,7 +168,7 @@ class QuickCommands(Widget):
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
-        elif self.is_job_within_bounds() == False and sys.platform != "win32":                   
+        elif self.is_job_within_bounds() == False and sys.platform != "win32" and sys.platform != "darwin":
             self.sm.current = 'boundary'
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":

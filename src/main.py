@@ -81,6 +81,8 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
+from mock import Mock
+
 # developer testing
 Cmport = 'COM3'
 
@@ -153,6 +155,7 @@ class SkavaUI(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m.s.m_state = "Idle"
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)

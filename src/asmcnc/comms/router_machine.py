@@ -879,6 +879,12 @@ class RouterMachine(object):
         return self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'SC2 capable') \
             and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
 
+    def is_spindle_health_check_active(self):
+        return True
+
+    def has_spindle_health_check_failed(self):
+        return False
+
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
     #     log('FW version able to operate laser commands AX and AZ: ' + str(output))
