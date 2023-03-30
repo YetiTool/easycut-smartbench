@@ -83,7 +83,7 @@ class ScreenTest(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
         m.is_using_sc2 = Mock(return_value=True)
-        m.theateam = Mock(return_value=True)
+        m.theateam = Mock(return_value=False)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
@@ -115,7 +115,7 @@ class ScreenTest(App):
         sm.add_widget(maintenance_screen)
 
         landing_tab = 'spindle_health_check_tab'
-        sm.get_screen('maintenance').landing_tab = landing_tab
+        # sm.get_screen('maintenance').landing_tab = landing_tab
         sm.current = 'maintenance'
 
         return sm

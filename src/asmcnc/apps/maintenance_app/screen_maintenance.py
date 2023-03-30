@@ -558,7 +558,7 @@ class MaintenanceScreenClass(Screen):
 
         ## Enable tab
 
-        if self.m.theateam(): # or True:
+        if self.m.theateam() and False:
             self.add_plus_tab()
 
         self.update_strings()
@@ -616,7 +616,7 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_widget.update_time_left()
 
         # IN CASE OF UPGRADES
-        if self.m.theateam() and self.plus_tab.disabled:
+        if self.m.theateam() and self.plus_tab.disabled and False:
             self.add_plus_tab()
             self.spindle_health_check_widget.update_strings()
 
