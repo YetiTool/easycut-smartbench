@@ -16,7 +16,7 @@ from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
 widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
-widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
 
 Builder.load_string("""
 
@@ -56,6 +56,10 @@ Builder.load_string("""
     z_misc_save_container: z_misc_save_container
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
+
+    # + tab widgets
+    plus_tab : plus_tab
+    spindle_health_check_container : spindle_health_check_container
 
     TabbedPanel:
         id: tab_panel
@@ -426,28 +430,40 @@ Builder.load_string("""
                             size: self.size
                             pos: self.pos
 
-
+        # + Tab
 
         TabbedPanelItem:
+            id: plus_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'     
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_disabled_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_disabled_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
 
-    BoxLayout: 
-        size_hint: (None,None)
-        pos: (dp(568), dp(390))
-        height: dp(90)
-        width: dp(142)        
-        Image:
-            size_hint: (None,None)
-            height: dp(90)
-            width: dp(142)
-            # background_color: hex('#2196f3fb')
-            center: self.parent.center
-            pos: self.parent.pos
-            source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
-            allow_stretch: True
-            opacity: 1
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(804)
+                height: dp(390)
+                orientation: "vertical" 
+                padding: (22, 20, 22, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout: 
+                    id: spindle_health_check_container
+                    height: dp(350)
+                    width: dp(760)
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
 
     BoxLayout: 
         size_hint: (None,None)
@@ -538,6 +554,13 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
+        # OPTIONAL + TAB AND WIDGETS
+
+        ## Enable tab
+
+        if self.m.theateam() and False:
+            self.add_plus_tab()
+
         self.update_strings()
 
     def quit_to_lobby(self):
@@ -592,6 +615,10 @@ class MaintenanceScreenClass(Screen):
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
 
+        # IN CASE OF UPGRADES
+        if self.m.theateam() and self.plus_tab.disabled and False:
+            self.add_plus_tab()
+            self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
 
@@ -602,8 +629,13 @@ class MaintenanceScreenClass(Screen):
             self.tab_panel.switch_to(self.laser_tab)
         elif self.landing_tab == 'spindle_tab':
             self.tab_panel.switch_to(self.spindle_tab)
+        elif self.m.theateam() and self.landing_tab == 'spindle_health_check_tab':
+            self.tab_panel.switch_to(self.plus_tab)
         else: 
-            self.landing_tab = self.tab_panel.current
+            try: 
+                self.landing_tab = self.tab_panel.current
+            except: 
+                self.tab_panel.switch_to(self.laser_tab)
 
 
     def on_pre_leave(self):
@@ -620,6 +652,16 @@ class MaintenanceScreenClass(Screen):
 
         self.m.laser_off()
 
+    def add_plus_tab(self):
+
+        ## + TAB WIDGETS
+
+        self.plus_tab.disabled = False
+        self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+        self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+
+        self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
 
     def update_strings(self):
 
@@ -631,6 +673,10 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.update_strings()
         self.z_lubrication_reminder_widget.update_strings()
         self.touchplate_offset_widget.update_strings()
+        try: 
+            self.spindle_health_check_widget.update_strings()
+        except: 
+            pass
 
         self.update_font_size(self.brush_monitor_label)
 
