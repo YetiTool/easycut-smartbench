@@ -77,16 +77,20 @@ class WidgetSpindleHealthCheck(BoxLayout):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
-        self.switch.state = "normal"
+        self.set_switch_state_to_health_check()
         self.toggle_yeti_pilot_availability(self.switch)
-
         self.update_strings()
+
+    def set_switch_state_to_health_check(self):
+        self.switch.state = "down" if self.m.is_spindle_health_check_active() else "normal"
 
     def toggle_button_img(self, state):
         self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (('on' if state=="down" else 'off'))
 
     def toggle_yeti_pilot_availability(self, switch):
         self.toggle_button_img(switch.state)
+        health_check = switch.state == "down"
+        self.m.write_spindle_health_check_settings(health_check)
 
     def update_strings(self):
 
