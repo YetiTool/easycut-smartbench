@@ -692,7 +692,7 @@ class GoScreen(Screen):
             self.m._grbl_soft_reset()
 
             if self.m.is_spindle_health_check_active() and not has_health_check_run:
-                self.run_spindle_health_check()
+                self.run_spindle_health_check(start_after_pass=True)
             else:
                 self._start_running_job()
 
@@ -703,11 +703,13 @@ class GoScreen(Screen):
 
     # Pausing
 
-    def run_spindle_health_check(self):
+    def run_spindle_health_check(self, start_after_pass=False):
         if not self.sm.has_screen('spindle_health_check_active'):
             shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
                                                         screen_manager=self.sm, machine=self.m, localization=self.l)
             self.sm.add_widget(shc_screen)
+
+        self.sm.get_screen('spindle_health_check_active').start_after_pass = start_after_pass
         self.sm.current = 'spindle_health_check_active'
 
     def _pause_job(self):
