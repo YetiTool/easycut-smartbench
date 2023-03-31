@@ -177,7 +177,6 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.m.s.spindle_health_check_data[:] = []
 
         def pass_test(average_load_w):
-            print("Spindle health check passed")
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
             self.exit_screen()
@@ -194,7 +193,6 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
 
         def fail_test():
-            print("Spindle health check failed")
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
             show_fail_screen()
