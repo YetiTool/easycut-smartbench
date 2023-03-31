@@ -1,5 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
 Builder.load_string("""
 
@@ -131,7 +132,11 @@ class DisabledYetiPilotWidget(Widget):
                 self.body_label.text += self.l.get_str("Re-run before job start to enable YetiPilot.")
 
     def run_spindle_health_check(self):
-        print("press")
+        if not self.sm.has_screen('spindle_health_check_active'):
+            shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
+                                                        screen_manager=self.sm, machine=self.m, localization=self.l)
+            self.sm.add_widget(shc_screen)
+        self.sm.current = 'spindle_health_check_active'
 
 
 
