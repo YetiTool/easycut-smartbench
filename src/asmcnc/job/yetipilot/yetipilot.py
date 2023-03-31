@@ -151,13 +151,9 @@ class YetiPilot(object):
             return ((self.target_spindle_speed / last_gcode_rpm) * 100) - self.m.s.speed_override_percentage
         return 0
 
-    def is_feed_too_low_callback(self):
-        self.stop_and_show_error()
-        self.waiting_for_feed_too_low_decision = False
-
     def start_feed_too_low_check(self):
         self.waiting_for_feed_too_low_decision = True
-        Clock.schedule_once(lambda dt: self.is_feed_too_low_callback(), 4)
+        Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
 
     def do_override_adjustment(self, adjustment_percentage, command_dictionary, feed):
         # Skip if 0
@@ -380,7 +376,6 @@ class YetiPilot(object):
             filtered_profiles.append(profile)
 
         return filtered_profiles
-
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True
