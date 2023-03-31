@@ -14,6 +14,8 @@ import sys, os
 from kivy.clock import Clock
 from datetime import datetime
 
+from math import sqrt
+
 
 Builder.load_string("""
 
@@ -129,8 +131,8 @@ Builder.load_string("""
 class SpindleHealthCheckActiveScreen(Screen):
 
     return_screen = 'go'
-    max_seconds = 5
-    seconds = 5
+    max_seconds = 10
+    seconds = 10
     update_timer_event = None
 
     def __init__(self, **kwargs):
@@ -149,10 +151,10 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, self.seconds)
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
+        self.run_spindle_health_check()
     
-    def exit_screen(self, dt):
+    def exit_screen(self, dt=0):
         self.sm.current = self.return_screen
 
     def update_timer(self, dt):
@@ -166,3 +168,54 @@ class SpindleHealthCheckActiveScreen(Screen):
         if self.update_timer_event != None: Clock.unschedule(self.update_timer_event)
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
+
+    passed_spindle_health_check = False
+    spindle_health_check_max_w = 550 # 550
+
+    def run_spindle_health_check(self):
+        self.m.s.spindle_health_check_data[:] = []
+
+        def pass_test():
+            self.m.spindle_health_check_failed = False
+            self.m.spindle_health_check_passed = True
+
+            self.exit_screen()
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go')._start_running_job()
+                self.sm.current = 'go'
+
+        def show_fail_screen():
+            self.m.stop_for_a_stream_pause('spindle_health_check_failed')
+
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
+
+        def fail_test():
+            print("Spindle health check failed")
+            self.m.spindle_health_check_failed = True
+            self.m.spindle_health_check_passed = False
+            show_fail_screen()
+
+        def check_average():
+            average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
+            average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
+
+            if average_load_w > self.spindle_health_check_max_w or average_load_w == 0:
+                fail_test()
+                return
+
+            pass_test()
+
+        def stop_test():
+            self.m.s.write_command('M5')
+            self.m.s.spindle_health_check = False
+
+        def start_test():
+            self.m.s.spindle_health_check = True
+            self.m.s.write_command('M3 S24000')
+            Clock.schedule_once(lambda dt: stop_test(), 7)
+            Clock.schedule_once(lambda dt: check_average(), 7)
+
+        self.m._grbl_soft_reset()
+        self.m.zUp()
+        Clock.schedule_once(lambda dt: start_test(), 3)

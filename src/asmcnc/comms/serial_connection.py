@@ -377,7 +377,7 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: 
+                    if self.yp.use_yp and self.m.has_spindle_health_check_passed():
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
@@ -524,6 +524,8 @@ class SerialConnection(object):
         self.stream_pause_start_time = 0
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
+        self.m.spindle_health_check_failed = False
+        self.m.spindle_health_check_passed = False
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').total_runtime_seconds = 0

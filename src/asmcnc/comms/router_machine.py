@@ -26,9 +26,6 @@ from __builtin__ import True
 
 from asmcnc.skavaUI import popup_info
 
-from math import sqrt
-
-
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
@@ -933,8 +930,14 @@ class RouterMachine(object):
     def is_spindle_health_check_active(self):
         return self.is_spindle_health_check_enabled_as_default
 
+    spindle_health_check_failed = False
+    spindle_health_check_passed = False
+
     def has_spindle_health_check_failed(self):
-        return False
+        return self.spindle_health_check_failed
+
+    def has_spindle_health_check_passed(self):
+        return self.spindle_health_check_passed
 
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
@@ -3604,33 +3607,3 @@ class RouterMachine(object):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
-
-    def run_spindle_health_check(self):
-        self.s.spindle_health_check = True
-        self.s.spindle_health_check_data[:] = []
-
-        def check_average():
-            average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
-            average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
-
-            if average_load_w > 400:
-                log("Load too high for spindle health check: " + str(average_load_w) + "W")
-                return
-
-            self.s.yp.set_spindle_free_load(average_load_w)
-
-            log("Free load: " + str(average_load_w) + "W")
-            log("Tool load: " + str(self.s.yp.spindle_tool_load_watts) + "W")
-            log("Target load: " + str(self.s.yp.get_target_spindle_load()) + "W")
-
-        def stop_spindle_health_check():
-            self.s.write_command('M5')
-            self.s.spindle_health_check = False
-
-        def start_spindle_health_check():
-            self.s.write_command('M3 S24000')
-            Clock.schedule_once(lambda dt: stop_spindle_health_check(), 7)
-            Clock.schedule_once(lambda dt: check_average(), 7)
-
-        start_spindle_health_check()
-
