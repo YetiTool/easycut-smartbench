@@ -170,13 +170,14 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     passed_spindle_health_check = False
-    spindle_health_check_max_w = 200 # 550
+    spindle_health_check_max_w = 550 # 550
 
     def run_spindle_health_check(self):
         self.m.s.spindle_health_check_data[:] = []
 
         def pass_test():
             self.m.spindle_health_check_failed = False
+            self.m.spindle_health_check_passed = True
 
             self.exit_screen()
             if self.sm.has_screen('go'):
@@ -192,6 +193,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         def fail_test():
             print("Spindle health check failed")
             self.m.spindle_health_check_failed = True
+            self.m.spindle_health_check_passed = False
             show_fail_screen()
 
         def check_average():
