@@ -708,21 +708,17 @@ class GoScreen(Screen):
 
     POLL_FOR_PAUSE_SCREENS = 0.5
 
-    def raise_pause_screens_if_paused(self, dt=0):
+    def raise_pause_screens_if_paused(self, dt=0, override=False):
         # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
 
-        print((self.m.s.is_job_streaming or self.m.s.spindle_health_check), self.m.is_machine_paused,
-              self.m.reason_for_machine_pause, not str(self.m.state()).startswith('Door:3'),
-              (self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png" or self.m.s.spindle_health_check))
-
-        if (self.m.s.is_job_streaming or self.m.s.spindle_health_check) and \
-                self.m.is_machine_paused and \
-                self.m.reason_for_machine_pause and \
-                self.m.reason_for_machine_pause != "Resuming" and \
-                not str(self.m.state()).startswith('Door:3') and \
-                (self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png" or self.m.s.spindle_health_check):
+        if (self.m.s.is_job_streaming and
+                self.m.is_machine_paused and
+                self.m.reason_for_machine_pause and
+                self.m.reason_for_machine_pause != "Resuming" and
+                not str(self.m.state()).startswith('Door:3') and
+                self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png") or override:
 
             if self.listen_for_pauses:
                 self.listen_for_pauses.cancel()

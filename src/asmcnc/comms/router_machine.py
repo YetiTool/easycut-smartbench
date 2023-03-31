@@ -3619,19 +3619,20 @@ class RouterMachine(object):
 
         def pass_test():
             self.passed_spindle_health_check = True
-            self.s.spindle_health_check = False
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
 
-        def fail_test(average_load_w):
-            log("Load too high for spindle health check: " + str(average_load_w) + "W")
+        def show_fail_screen():
             self.stop_for_a_stream_pause('spindle_health_check_failed')
 
             if self.sm.has_screen('go'):
-                self.sm.get_screen('go').raise_pause_screens_if_paused()
+                self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
 
-            self.s.spindle_health_check = False
+        def fail_test(average_load_w):
+            self.passed_spindle_health_check = False
+            log("Load too high for spindle health check: " + str(average_load_w) + "W")
+            show_fail_screen()
 
         def check_average():
             average_load = sum(self.s.spindle_health_check_data) / len(self.s.spindle_health_check_data)
@@ -3645,6 +3646,7 @@ class RouterMachine(object):
 
         def stop_spindle_health_check():
             self.s.write_command('M5')
+            self.s.spindle_health_check = False
 
         def start_spindle_health_check():
             self.s.spindle_health_check = True
