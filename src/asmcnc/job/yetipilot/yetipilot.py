@@ -468,3 +468,7 @@ class YetiPilot(object):
 
     def set_spindle_free_load(self, spindle_free_load):
         self.spindle_free_load_watts = spindle_free_load
+
+    def reset(self):
+        if self.logger:
+            self.logger.reset()
