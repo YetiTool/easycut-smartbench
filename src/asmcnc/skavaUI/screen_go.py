@@ -29,6 +29,7 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @
 
 from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
 from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
 Builder.load_string("""
 
@@ -691,13 +692,20 @@ class GoScreen(Screen):
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             if self.m.use_spindle_health_check and not self.m.passed_spindle_health_check:
-                self.m.run_spindle_health_check()
+                self.run_spindle_health_check()
             else:
                 self._start_running_job()
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
     # Pausing
+
+    def run_spindle_health_check(self):
+        if not self.sm.has_screen('spindle_health_check_active'):
+            shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
+                                                        screen_manager=self.sm, machine=self.m, localization=self.l)
+            self.sm.add_widget(shc_screen)
+        self.sm.current = 'spindle_health_check_active'
 
     def _pause_job(self):
 
