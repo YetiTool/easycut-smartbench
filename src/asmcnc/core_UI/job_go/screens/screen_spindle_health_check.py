@@ -176,6 +176,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.m.s.spindle_health_check_data[:] = []
 
         def pass_test():
+            print("Spindle health check passed")
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
 
