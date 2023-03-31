@@ -817,6 +817,7 @@ class GoScreen(Screen):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
             self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
         self.sm.current = self.cancel_to_screen
+        self.m._grbl_soft_reset()
 
     ### GLOBAL ENTER/LEAVE ACTIONS
 
@@ -827,9 +828,6 @@ class GoScreen(Screen):
         if self.listen_for_pauses != None:
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
-
-        # reset on leave go screen
-        self.m._grbl_soft_reset()
 
     ### SCREEN UPDATES
 
