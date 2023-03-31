@@ -377,7 +377,7 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: 
+                    if self.yp.use_yp and self.m.passed_spindle_health_check:
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
