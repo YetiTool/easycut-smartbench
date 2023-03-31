@@ -157,6 +157,9 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
+        self.m.spindle_health_check_failed = False
+        self.m.spindle_health_check_passed = False
+
         if self.jd.job_gcode == []:
             info = (
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
