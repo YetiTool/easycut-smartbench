@@ -675,7 +675,7 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
+
         log('start/pause button pressed')
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
@@ -695,6 +695,8 @@ class GoScreen(Screen):
             else:
                 self._start_running_job()
 
+        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
+
     # Pausing
 
     def _pause_job(self):
@@ -711,9 +713,7 @@ class GoScreen(Screen):
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
 
-        print((self.m.s.is_job_streaming or self.m.s.spindle_health_check), self.m.is_machine_paused,
-              self.m.reason_for_machine_pause, not str(self.m.state()).startswith('Door:3'),
-              (self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png" or self.m.s.spindle_health_check))
+        log("here")
 
         if (self.m.s.is_job_streaming or self.m.s.spindle_health_check) and \
                 self.m.is_machine_paused and \
