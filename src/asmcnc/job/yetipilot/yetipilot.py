@@ -155,6 +155,9 @@ class YetiPilot(object):
         self.waiting_for_feed_too_low_decision = True
         Clock.schedule_once(lambda dt: self.check_if_feed_too_low(), 4)
 
+    def set_adjusting_spindle_speed(self, adjusting):
+        self.adjusting_spindle_speed = adjusting
+
     def do_override_adjustment(self, adjustment_percentage, command_dictionary, feed):
         # Skip if 0
         if adjustment_percentage == 0:
@@ -165,6 +168,11 @@ class YetiPilot(object):
         # If doing feed adjustments, limit the list
         if feed:
             adjustment_list = adjustment_list[:self.override_commands_per_adjustment]
+
+        if not feed:
+            self.set_adjusting_spindle_speed(True)
+            Clock.schedule_once(lambda dt: self.set_adjusting_spindle_speed(False),
+                                self.override_command_delay * len(adjustment_list) + 0.2)
 
         for i, adjustment in enumerate(adjustment_list):
             command_delay = self.override_command_delay * i
@@ -244,7 +252,7 @@ class YetiPilot(object):
             if feed_adjustments:
                 print("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
 
-            if not self.using_advanced_profile:
+            if not self.using_advanced_profile and not self.adjusting_spindle_speed:
                 speed_adjustment_percentage = self.get_speed_adjustment_percentage()
                 speed_adjustments = self.do_override_adjustment(speed_adjustment_percentage,
                                                                 self.get_command_dictionary(feed=False),
