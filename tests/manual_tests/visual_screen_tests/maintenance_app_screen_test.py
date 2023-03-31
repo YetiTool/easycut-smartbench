@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -13,7 +13,7 @@ Config.write()
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.visual_screen_tests.go_screen_sc2_overload_test.py
+python -m tests.manual_tests.visual_screen_tests.maintenance_app_screen_test.py
 '''
 
 import sys, os
@@ -25,10 +25,12 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition
 from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, \
+screen_spindle_shutdown, screen_stop_or_resume_decision
+from asmcnc.apps.maintenance_app import screen_maintenance
 
 try: 
     from mock import Mock
@@ -38,7 +40,6 @@ except:
     pass
 
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Cmport = 'COM3'
 
@@ -54,29 +55,7 @@ class ScreenTest(App):
     # 5 - Polish (y)
     # 6 - Danish (y)
 
-    
-    fw_version = "2.4.2"
 
-    alarm_message = "\n"
-
-    killtime = 9
-    killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
-
-    def give_status(self):
-
-        return self.killtime_status
-
-    def give_me_a_PCB(outerSelf):
-
-        class YETIPCB(MockSerial):
-            simple_queries = {
-                "?": outerSelf.give_status(),
-                "\x18": "",
-                "*LFFFF00": "ok",
-                "$$": outerSelf.alarm_message
-            }
-
-        return YETIPCB
 
     def build(self):
 
@@ -103,7 +82,8 @@ class ScreenTest(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        
+        m.is_using_sc2 = Mock(return_value=True)
+        m.theateam = Mock(return_value=True)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
@@ -116,29 +96,27 @@ class ScreenTest(App):
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
-        m.s.s = DummySerial(self.give_me_a_PCB())
-        m.s.s.fd = 1 # this is needed to force it to run
-        m.s.fw_version = self.fw_version
-        m.s.setting_50 = 0.03
-        m.s.yp = yp
-
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
 
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
         sm.add_widget(job_feedback_screen)
 
+        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(spindle_shutdown_screen)
+
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(stop_or_resume_decision_screen)
+
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
-        
-        # m.is_using_sc2 = Mock(return_value=True)
-        # m.is_spindle_health_check_active = Mock(return_value=False)
-        # m.has_spindle_health_check_failed = Mock(return_value=True)
-        # sm.get_screen('go').is_job_started_already = True
 
-        sm.current = 'go'
-        
-        Clock.schedule_once(m.s.start_services, 0.1)
+        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine = m, localization = l, job = jd)
+        sm.add_widget(maintenance_screen)
+
+        landing_tab = 'spindle_health_check_tab'
+        # sm.get_screen('maintenance').landing_tab = landing_tab
+        sm.current = 'maintenance'
 
         return sm
 

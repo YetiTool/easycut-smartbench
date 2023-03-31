@@ -67,16 +67,19 @@ class YetiPilot(object):
     profiles_path = 'asmcnc/job/yetipilot/config/profiles.json'
     parameters_path = 'asmcnc/job/yetipilot/config/algorithm_parameters.json'
 
+    adjusting_spindle_speed = False
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
+        self.l = kwargs['localization']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
             self.parameters_path = 'src/' + self.parameters_path
 
-        self.get_available_profiles()
+        self.get_all_profiles()
         self.load_parameters()
 
         self.logger = AutoPilotLogger(
@@ -101,6 +104,7 @@ class YetiPilot(object):
 
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').yp_widget.switch_reflects_yp()
+            if not self.active_profile: self.sm.get_screen('go').yp_widget.profile_selection.text = ""
             self.sm.get_screen('go').feedOverride.set_widget_visibility(True)
             self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
 
@@ -302,6 +306,16 @@ class YetiPilot(object):
         self.disable()
         self.m.stop_for_a_stream_pause('yetipilot_low_feed')
 
+    def check_if_feed_too_low(self):
+        if not(self.use_yp and self.m.s.is_job_streaming and
+               not self.m.is_machine_paused and "Alarm" not in self.m.state()):
+            self.waiting_for_feed_too_low_decision = False
+            return
+
+        if self.m.s.feed_override_percentage == 10:
+            self.stop_and_show_error()
+        self.waiting_for_feed_too_low_decision = False
+
     def feed_override_wrapper(self, feed_override_func):
         if self.use_yp and self.m.s.is_job_streaming and \
                 not self.m.is_machine_paused and "Alarm" not in self.m.state():
@@ -315,7 +329,7 @@ class YetiPilot(object):
                 setattr(self, parameter["Name"], parameter["Value"])
 
     # USE THESE FUNCTIONS FOR BASIC PROFILES
-    def get_available_profiles(self):
+    def get_all_profiles(self):
         with open(self.profiles_path) as f:
             profiles_json = json.load(f)
 
@@ -323,23 +337,57 @@ class YetiPilot(object):
             self.available_profiles.append(
                 YetiPilotProfile(
                     cutter_diameter=profile_json["Cutter Diameter"],
-                    cutter_type=profile_json["Cutter Type"],
-                    material_type=profile_json["Material Type"],
+                    cutter_type=self.l.get_str(profile_json["Cutter Type"]),
+                    material_type=self.l.get_str(profile_json["Material Type"]),
                     step_down=profile_json["Step Down"],
                     parameters=profile_json["Parameters"]
                 )
             )
 
         # Get available options for dropdowns
-        self.available_cutter_diameters = sorted({str(profile.cutter_diameter) for profile in self.available_profiles})
-        self.available_material_types = sorted({str(profile.material_type) for profile in self.available_profiles})
-        self.available_cutter_types = sorted({str(profile.cutter_type) for profile in self.available_profiles})
+        self.available_material_types = self.get_sorted_material_types(self.available_profiles)
+        self.available_cutter_diameters = self.get_sorted_cutter_diameters(self.available_profiles)
+        self.available_cutter_types = self.get_sorted_cutter_types(self.available_profiles)
+
+    def get_sorted_cutter_diameters(self, profiles):
+        return sorted({str(profile.cutter_diameter) for profile in profiles})
+
+    def get_sorted_material_types(self, profiles):
+        return sorted({self.l.get_str(str(profile.material_type)) for profile in profiles})
+
+    def get_sorted_cutter_types(self, profiles):
+        return sorted({self.l.get_str(str(profile.cutter_type)) for profile in profiles})
+
+    def filter_available_profiles(self, material_type=None, cutter_diameter=None, cutter_type=None):
+        filters = [cutter_diameter, cutter_type, material_type]
+
+        if not any(filters):
+            return self.available_profiles
+
+        filtered_profiles = []
+
+        for profile in self.available_profiles:
+
+            if material_type and str(profile.material_type) != material_type:
+                continue
+
+            if cutter_diameter and str(profile.cutter_diameter) != cutter_diameter:
+                continue
+
+            if cutter_type and str(profile.cutter_type) != cutter_type:
+                continue
+
+            filtered_profiles.append(profile)
+
+        return filtered_profiles
+
 
     def get_profile(self, cutter_diameter, cutter_type, material_type):
         self.using_basic_profile = True
 
-        if self.sm.has_screen('go'):
+        if self.sm.has_screen('go') and self.use_yp:
             self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+            self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
 
         for profile in self.available_profiles:
             if str(profile.cutter_diameter) == cutter_diameter and \
@@ -359,6 +407,10 @@ class YetiPilot(object):
         self.active_profile = profile
         self.using_advanced_profile = False
         self.using_basic_profile = True
+
+        if not self.active_profile:
+            return
+
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
@@ -397,9 +449,10 @@ class YetiPilot(object):
     def set_using_advanced_profile(self, using_advanced_profile):
         self.using_advanced_profile = using_advanced_profile
 
-        if using_advanced_profile:
+        if using_advanced_profile and self.use_yp:
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
+                self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
 
             self.using_basic_profile = False
 
