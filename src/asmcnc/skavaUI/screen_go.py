@@ -488,9 +488,7 @@ class GoScreen(Screen):
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
         self.yp_widget.switch_reflects_yp()
 
-        if self.is_job_started_already:
-            pass
-        else:
+        if not self.is_job_started_already:
             self.reset_go_screen_prior_to_job_start()
 
         if self.show_maintenance_prompts():
