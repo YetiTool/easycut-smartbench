@@ -703,7 +703,7 @@ class GoScreen(Screen):
 
     # Pausing
 
-    def run_spindle_health_check(self, start_after_pass):
+    def run_spindle_health_check(self, start_after_pass=False):
         if not self.sm.has_screen('spindle_health_check_active'):
             shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
                                                         screen_manager=self.sm, machine=self.m, localization=self.l)

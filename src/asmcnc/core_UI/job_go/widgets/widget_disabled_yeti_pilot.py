@@ -130,6 +130,7 @@ class DisabledYetiPilotWidget(Widget):
             shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
                                                         screen_manager=self.sm, machine=self.m, localization=self.l)
             self.sm.add_widget(shc_screen)
+        self.sm.get_screen('spindle_health_check_active').start_after_pass = False
         self.sm.current = 'spindle_health_check_active'
 
 
