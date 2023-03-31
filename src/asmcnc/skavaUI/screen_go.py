@@ -522,10 +522,8 @@ class GoScreen(Screen):
 
                 if not self.m.has_spindle_health_check_failed():
                     self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED)
-
                 elif self.is_job_started_already:
-                        self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
-
+                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
                 else:
                     self.disabled_yp_widget.set_version(DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN)
 
@@ -702,6 +700,9 @@ class GoScreen(Screen):
                 self.run_spindle_health_check()
             else:
                 self._start_running_job()
+
+                if not self.m.has_spindle_health_check_passed():
+                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
