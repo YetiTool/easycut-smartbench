@@ -196,7 +196,7 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         def check_average():
             average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
-            average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load)
+            average_load_w = self.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
 
             if average_load_w > self.spindle_health_check_max_w or average_load_w == 0:
                 fail_test()
