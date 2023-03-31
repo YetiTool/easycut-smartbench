@@ -216,6 +216,5 @@ class SpindleHealthCheckActiveScreen(Screen):
             Clock.schedule_once(lambda dt: stop_test(), 7)
             Clock.schedule_once(lambda dt: check_average(), 7)
 
-        self.m._grbl_soft_reset()
         self.m.zUp()
         Clock.schedule_once(lambda dt: start_test(), 3)

@@ -696,6 +696,8 @@ class GoScreen(Screen):
             print(has_health_check_run, self.m.has_spindle_health_check_passed(),
                   self.m.has_spindle_health_check_failed())
 
+            self.m._grbl_soft_reset()
+
             if self.m.is_spindle_health_check_active() and not has_health_check_run:
                 self.run_spindle_health_check()
             else:
