@@ -151,11 +151,10 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, self.seconds)
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
         self.run_spindle_health_check()
     
-    def exit_screen(self, dt):
+    def exit_screen(self, dt=0):
         self.sm.current = self.return_screen
 
     def update_timer(self, dt):
@@ -179,6 +178,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         def pass_test():
             self.m.spindle_health_check_failed = False
 
+            self.exit_screen()
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
