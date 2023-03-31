@@ -3627,6 +3627,10 @@ class RouterMachine(object):
         def fail_test(average_load_w):
             log("Load too high for spindle health check: " + str(average_load_w) + "W")
             self.stop_for_a_stream_pause('spindle_health_check_failed')
+
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').raise_pause_screens_if_paused()
+
             self.s.spindle_health_check = False
 
         def check_average():
