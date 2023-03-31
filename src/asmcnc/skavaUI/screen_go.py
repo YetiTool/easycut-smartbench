@@ -828,6 +828,9 @@ class GoScreen(Screen):
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
 
+        # reset on leave go screen
+        self.m._grbl_soft_reset()
+
     ### SCREEN UPDATES
 
     def get_hms(self, seconds):
