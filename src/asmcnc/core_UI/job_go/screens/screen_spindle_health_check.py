@@ -170,7 +170,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     passed_spindle_health_check = False
-    spindle_health_check_max_w = 200 # 550
+    spindle_health_check_max_w = 550 # 550
 
     def run_spindle_health_check(self):
         self.m.s.spindle_health_check_data[:] = []
