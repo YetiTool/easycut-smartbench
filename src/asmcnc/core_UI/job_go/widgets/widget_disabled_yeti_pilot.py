@@ -7,7 +7,6 @@ Builder.load_string("""
 <DisabledYetiPilotWidget>:
     
     text_container:text_container
-    title_label:title_label
     body_label:body_label
 
     button_container:button_container
@@ -26,20 +25,10 @@ Builder.load_string("""
             orientation: 'vertical'
             padding: [2,0,5,0]
             spacing: 0
-            Label: 
-                id: title_label
-                size_hint_y: 0.3
-                color: hex('#333333ff')
-                markup: True
-                halign: 'left'
-                text_size: self.size
-                bold: True
-                font_size: '17sp'
-                valign: "bottom"
 
             Label:
                 id: body_label
-                size_hint_y: 0.7
+                # size_hint_y: 0.7
                 color: hex('#333333ff')
                 markup: True
                 halign: 'left'
@@ -84,6 +73,10 @@ class DisabledYetiPilotWidget(Widget):
     health_check_enabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_silver.png"
     health_check_disabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_disabled.png"
 
+    font_str = "[size=%dsp]" 
+    bigger_font_str = font_str % 17
+    smaller_font_str = font_str % 15
+
     def __init__(self, **kwargs):
         super(DisabledYetiPilotWidget, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -119,17 +112,18 @@ class DisabledYetiPilotWidget(Widget):
 
     def update_strings(self, case = "disabled"):
 
-        self.title_label.text = self.l.get_str("YetiPilot is disabled")
+        self.body_label.text = self.bigger_font_str + self.l.get_bold("YetiPilot is disabled") + "[/size]"
+        self.body_label.text += "\n"
 
         if case == DisabledYPCase.DISABLED:
-            self.body_label.text =  self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.")
+            self.body_label.text +=  self.smaller_font_str + self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.") + "[/size]"
 
         else:
-            self.body_label.text =  self.l.get_str("Spindle motor health check failed.")
+            self.body_label.text +=  self.smaller_font_str + self.l.get_str("Spindle motor health check failed.") + "[/size]"
         
             if case == DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN:
                 self.body_label.text += "\n"
-                self.body_label.text += self.l.get_str("Re-run before job start to enable YetiPilot.")
+                self.body_label.text += self.smaller_font_str + self.l.get_str("Re-run before job start to enable YetiPilot.") + "[/size]"
 
     def run_spindle_health_check(self):
         if not self.sm.has_screen('spindle_health_check_active'):
