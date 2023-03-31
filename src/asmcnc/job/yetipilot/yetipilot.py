@@ -284,8 +284,8 @@ class YetiPilot(object):
             )
 
         # Get available options for dropdowns
-        self.available_cutter_diameters = self.get_sorted_cutter_diameters(self.available_profiles)
         self.available_material_types = self.get_sorted_material_types(self.available_profiles)
+        self.available_cutter_diameters = self.get_sorted_cutter_diameters(self.available_profiles)
         self.available_cutter_types = self.get_sorted_cutter_types(self.available_profiles)
 
     def get_sorted_cutter_diameters(self, profiles):
@@ -297,7 +297,7 @@ class YetiPilot(object):
     def get_sorted_cutter_types(self, profiles):
         return sorted({self.l.get_str(str(profile.cutter_type)) for profile in profiles})
 
-    def filter_available_profiles(self, cutter_diameter=None, cutter_type=None, material_type=None):
+    def filter_available_profiles(self, material_type=None, cutter_diameter=None, cutter_type=None):
         filters = [cutter_diameter, cutter_type, material_type]
 
         if not any(filters):
@@ -306,13 +306,14 @@ class YetiPilot(object):
         filtered_profiles = []
 
         for profile in self.available_profiles:
+
+            if material_type and str(profile.material_type) != material_type:
+                continue
+
             if cutter_diameter and str(profile.cutter_diameter) != cutter_diameter:
                 continue
 
             if cutter_type and str(profile.cutter_type) != cutter_type:
-                continue
-
-            if material_type and str(profile.material_type) != material_type:
                 continue
 
             filtered_profiles.append(profile)

@@ -177,45 +177,43 @@ class PopupYetiPilotSettings(Widget):
                 self.yp.use_profile(chosen_profile)
                 update_step_down(self.yp.get_active_step_down())
 
-            # User chooses cutter diameter first
-            # If next material/cutter type is not available, these selections then clear
-            def select_diameter(spinner, val):
-
-                profiles_filtered_by_cutter_diameter = self.yp.filter_available_profiles(cutter_diameter=diameter_choice.text)
-                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_cutter_diameter)
-                material_choice.values = self.yp.get_sorted_material_types(profiles_filtered_by_cutter_diameter)
+            # User chooses material first
+            # If next cutter diameter/type is not available, these selections then clear
+            def select_material(spinner, val):
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=material_choice.text)
+                diameter_choice.values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material)
+                if diameter_choice.text not in diameter_choice.values: diameter_choice.text = ''
                 if tool_choice.text not in tool_choice.values: tool_choice.text = ''
-                if material_choice.text not in material_choice.values: material_choice.text = ''
+                get_profile()
+
+            def select_diameter(spinner, val):
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=material_choice.text, cutter_diameter=diameter_choice.text)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
                 get_profile()
 
             def select_tool(spinner, val):
-
-                profiles_filtered_by_cutter_diameter_and_type = self.yp.filter_available_profiles(cutter_diameter=diameter_choice.text, cutter_type=tool_choice.text)
-                material_choice.values = self.yp.get_sorted_material_types(profiles_filtered_by_cutter_diameter_and_type)
-                if material_choice.text not in material_choice.values: material_choice.text = ''
                 get_profile()
 
-            def select_material(spinner, val):
-                get_profile()
+            material_values = self.yp.get_available_material_types()
 
-            diameter_values = self.yp.get_available_cutter_diameters()
+            if  self.yp.get_active_material_type() and \
+                self.yp.get_active_cutter_diameter() and \
+                self.yp.get_active_cutter_type(): 
 
-            if  self.yp.get_active_cutter_diameter() and \
-                self.yp.get_active_cutter_type() and \
-                self.yp.get_active_material_type(): 
-
-                profiles_filtered_by_cutter_diameter = self.yp.filter_available_profiles(cutter_diameter=self.yp.get_active_cutter_diameter())
-                profiles_filtered_by_cutter_diameter_and_type = self.yp.filter_available_profiles(cutter_diameter=self.yp.get_active_cutter_diameter(), cutter_type=self.yp.get_active_cutter_type())
-                tool_values = self.yp.get_sorted_cutter_types(profiles_filtered_by_cutter_diameter)
-                material_values = self.yp.get_sorted_material_types(profiles_filtered_by_cutter_diameter_and_type)
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type())
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type(), cutter_diameter=self.yp.get_active_cutter_diameter())
+                diameter_values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
 
             else:
+                diameter_values = self.yp.get_available_cutter_diameters()
                 tool_values = self.yp.get_available_cutter_types()
-                material_values = self.yp.get_available_material_types()
 
+            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
-            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
             get_profile()
 
@@ -231,19 +229,19 @@ class PopupYetiPilotSettings(Widget):
             tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
             material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
     
+            material_BL.add_widget(material_label)
+            material_BL.add_widget(material_choice)
             diameter_BL.add_widget(diameter_label)
             diameter_BL.add_widget(diameter_choice)
             tool_BL.add_widget(tool_label)
             tool_BL.add_widget(tool_choice)
-            material_BL.add_widget(material_label)
-            material_BL.add_widget(material_choice)
     
+            left_BL_grid.add_widget(optn_img_3)
+            left_BL_grid.add_widget(material_BL)
             left_BL_grid.add_widget(optn_img_1)
             left_BL_grid.add_widget(diameter_BL)
             left_BL_grid.add_widget(optn_img_2)
             left_BL_grid.add_widget(tool_BL)
-            left_BL_grid.add_widget(optn_img_3)
-            left_BL_grid.add_widget(material_BL)
     
             left_BL.add_widget(left_BL_grid)
     
