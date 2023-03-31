@@ -718,7 +718,7 @@ class GoScreen(Screen):
                 self.m.reason_for_machine_pause and \
                 self.m.reason_for_machine_pause != "Resuming" and \
                 not str(self.m.state()).startswith('Door:3') and \
-                self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png":
+                (self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png" or self.m.s.spindle_health_check):
 
             if self.listen_for_pauses:
                 self.listen_for_pauses.cancel()

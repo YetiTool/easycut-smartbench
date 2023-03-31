@@ -3606,7 +3606,7 @@ class RouterMachine(object):
 
     use_spindle_health_check = True
     passed_spindle_health_check = False
-    spindle_health_check_max_w = 200
+    spindle_health_check_max_w = 600
 
     def run_spindle_health_check(self):
         self.s.spindle_health_check_data[:] = []
