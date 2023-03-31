@@ -675,7 +675,7 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-
+        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
         log('start/pause button pressed')
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
@@ -694,8 +694,6 @@ class GoScreen(Screen):
                 self.m.run_spindle_health_check()
             else:
                 self._start_running_job()
-
-        self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
     # Pausing
 
