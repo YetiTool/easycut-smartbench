@@ -99,22 +99,7 @@ Builder.load_string("""
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True   
- 
-                        
-    FloatLayout:
-        
-        Label:
-            x: 662
-            y: 420
-            size_hint: None, None            
-            height: 30
-            width: 30
-            text: 'Z'
-            markup: True
-            bold: True
-            color: 0,0,0,0.2
-            font_size: 20     
+                        allow_stretch: True 
         
 """)
     
