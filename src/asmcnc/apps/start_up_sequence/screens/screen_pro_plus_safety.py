@@ -9,6 +9,8 @@ Builder.load_string("""
     title_label:title_label
     context:context
     instructions_grid:instructions_grid
+    clamp_warning_label:clamp_warning_label
+    rpm_warning_label:rpm_warning_label
 
     continue_button:continue_button
 
@@ -70,6 +72,7 @@ Builder.load_string("""
                         allow_stretch: True
 
                 Label:
+                    id: clamp_warning_label
                     font_size: dp(18)
                     color: 0,0,0,1
                     halign: 'left'
@@ -88,13 +91,14 @@ Builder.load_string("""
                         allow_stretch: True
 
                 Label:
+                    id: rpm_warning_label
                     font_size: dp(18)
                     color: 0,0,0,1
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size
                     markup: True
-                    text: "If you start any job with the Spindle motor health check enabled, your tool MUST be rated upto 24,000 RPM."
+                    text: "If you start any job with the Spindle motor health check enabled, your tool MUST be rated up to 24,000 RPM."
 
 
             BoxLayout:
@@ -198,3 +202,6 @@ class ProPlusSafetyScreen(Screen):
                 "SmartBench must be able to turn the Spindle motor on safely", self.l.get_bold("SmartBench must be able to turn the Spindle motor on safely")
                 )
         self.continue_button.text = self.l.get_str("I understand")
+
+        self.clamp_warning_label.text = self.l.get_str("The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables.")
+        self.rpm_warning_label.text = self.l.get_str("If you start any job with the Spindle motor health check enabled, your tool MUST be rated up to 24,000 RPM.")
