@@ -199,7 +199,7 @@ class ProPlusSafetyScreen(Screen):
             self.l.get_str("PrecisionPro + reads data from the smart SC2 Spindle motor.") + "\n\n" + \
             self.l.get_str("You can disable and enable PrecisionPro + features at any time in the maintenance app.") + "\n\n" + \
             self.l.get_str("In order to read and analyse the data, SmartBench must be able to turn the Spindle motor on safely.").replace(
-                "SmartBench must be able to turn the Spindle motor on safely", self.l.get_bold("SmartBench must be able to turn the Spindle motor on safely")
+                self.l.get_str("SmartBench must be able to turn the Spindle motor on safely"), self.l.get_bold("SmartBench must be able to turn the Spindle motor on safely")
                 )
         self.continue_button.text = self.l.get_str("I understand")
 
