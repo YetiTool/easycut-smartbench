@@ -39,18 +39,37 @@ def welcome_user_to_smartbench():
 def set_release_notes():
 	os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
+def do_pro_config():
+	user_has_seen_pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt').read())
+
+	if 'True' in user_has_seen_pro_plus_safety:
+		os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=True/user_has_seen_pro_plus_safety=False/" /home/pi/easycut-smartbench/src/config.txt') 
+
+def set_pro_safety_with_file():
+	os.system('touch /home/pi/plus.txt')
+	do_pro_config()
+
+def set_pro_safety_no_file():
+	os.system('rm /home/pi/plus.txt')
+	do_pro_config()
+
+
 function_list = [
+# set_pro_safety_with_file,
 set_user_to_view_privacy_notice,
 activation_code_proxy,
 welcome_user_to_smartbench,
 set_release_notes,
+set_pro_safety_no_file,
 ]
-
 
 
 # Functions alone: 
 
-for r in range(1, 5):
+min_r = 1 # 1
+max_r = 6 # 6
+
+for r in range(min_r, max_r):
 
 	for sublist in list(combinations(function_list, r)):
 
@@ -62,4 +81,4 @@ for r in range(1, 5):
 
 		set_check_config_flag()
 		cmd = ['python', 'main.py']
-		subprocess.Popen(cmd).wait()
+		subprocess.Popen(cmd).wait() # Put sys.exit() (and import sys) into start_seq.exit_sequence() function for easy quit
