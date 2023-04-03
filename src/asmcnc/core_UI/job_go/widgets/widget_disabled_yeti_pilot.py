@@ -27,9 +27,6 @@ Builder.load_string("""
             padding: [2,0,5,0]
             spacing: 0
 
-            # ScrollDisabledLabel:
-            #     id: body_label
-
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
