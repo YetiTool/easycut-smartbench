@@ -692,7 +692,8 @@ class GoScreen(Screen):
 
             self.m._grbl_soft_reset()
 
-            if self.m.is_spindle_health_check_active() and not has_health_check_run:
+            if self.m.is_spindle_health_check_active() \
+                    and not has_health_check_run and self.m.stylus_router_choice == 'router':
                 self.run_spindle_health_check(start_after_pass=True)
             else:
                 self._start_running_job()
