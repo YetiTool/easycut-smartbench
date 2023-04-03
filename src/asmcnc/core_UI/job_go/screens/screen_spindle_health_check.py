@@ -210,7 +210,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 fail_test('yetipilot_spindle_data_loss')
                 return
 
-            pass_test(average_load_w)
+            pass_test(round(average_load_w))
 
         def stop_test():
             self.m.s.write_command('M5')
