@@ -128,13 +128,24 @@ class YetiPilot(object):
         return self.bias_for_feed_increase * (self.get_target_spindle_load() - load) / \
             self.get_target_spindle_load() * self.m_coefficient * self.c_coefficient
 
-    def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving):
-        feed_multiplier = self.get_multiplier(load=average_spindle_load)
+    def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving,
+                                       feed_multiplier=None):
+        """
+        Calculates the correct feed adjustment percentage
+        :param average_spindle_load: the average spindle load
+        :param constant_feed: whether the feed rate is constant
+        :param gcode_mode: which gcode mode is being used
+        :param is_z_moving: whether the z axis is moving
+        :param feed_multiplier: overrides the calculated feed multiplier (used for unit tests only)
+        :return:
+        """
+
+        feed_multiplier = self.get_multiplier(load=average_spindle_load) if not feed_multiplier else feed_multiplier
         allowed_to_feed_up = constant_feed and gcode_mode != 0 and not is_z_moving
 
         # If not allowed to feed up
-        if not allowed_to_feed_up:
-            return 0 if feed_multiplier > 0 else feed_multiplier
+        if not allowed_to_feed_up and feed_multiplier > 0:
+            return 0
 
         # If outside the limits of adjustment
         if not (self.cap_for_feed_decrease < feed_multiplier < self.cap_for_feed_increase):
@@ -230,7 +241,7 @@ class YetiPilot(object):
 
             # Gather required stats
 
-            average_spindle_load = sum(self.digital_spindle_load_stack) / self.spindle_load_stack_size
+            average_spindle_load = sum(self.digital_spindle_load_stack) / len(self.digital_spindle_load_stack)
 
             constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(self.jd.grbl_mode_tracker[0][1],
                                                                          feed_override_percentage, feed_rate,
@@ -459,11 +470,11 @@ class YetiPilot(object):
 
             self.using_basic_profile = False
 
-    def set_target_power(self, target_power):
+    def set_target_power(self, target_power): ## todo
         self.spindle_tool_load_watts = target_power
         self.set_using_advanced_profile(True)
 
-    def get_target_power(self):
+    def get_target_power(self): ## todo
         return self.spindle_tool_load_watts
 
     def set_spindle_free_load(self, spindle_free_load):
