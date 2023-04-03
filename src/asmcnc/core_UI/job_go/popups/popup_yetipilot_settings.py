@@ -451,7 +451,7 @@ class PopupYetiPilotSettings(Widget):
         close_button.bind(on_press=popup.dismiss)
 
         # if spindle_health_check_button: 
-        spindle_health_check_button.bind(on_press=start_spindle_health_check)
+        spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
         spindle_health_check_button.bind(on_press=popup.dismiss)
 
         popup.open()
