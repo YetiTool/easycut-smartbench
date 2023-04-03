@@ -100,7 +100,7 @@ class LoadSliderWidget(Widget):
 
         try: self.power_slider.min = self.yp.get_spindle_freeload()
         except: self.power_slider.min = 390
-        self.power_slider.value = self.yp.get_target_power()
+        self.power_slider.value = self.yp.get_total_target_power()
         self.on_slider_value_change()
 
         self.min_label.text = str(int(self.power_slider.min)) + " W"
@@ -121,4 +121,4 @@ class LoadSliderWidget(Widget):
 
     def on_slider_value_change(self):
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
-        self.yp.set_target_power(int(self.power_slider.value))
+        self.yp.set_tool_load(int(self.power_slider.value) - self.yp.get_free_load())

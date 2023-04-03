@@ -83,7 +83,7 @@ class YetiPilot(object):
         self.load_parameters()
 
         self.logger = AutoPilotLogger(
-            self.digital_spindle_mains_voltage, self.spindle_free_load_watts + self.spindle_tool_load_watts,
+            self.digital_spindle_mains_voltage, self.get_total_target_power(),
             self.bias_for_feed_increase, self.bias_for_feed_decrease,
             self.m_coefficient, self.c_coefficient, self.cap_for_feed_increase, self.cap_for_feed_decrease, "job_name",
             self.m.device_label, self.spindle_load_stack_size, 0,
@@ -470,15 +470,22 @@ class YetiPilot(object):
 
             self.using_basic_profile = False
 
-    def set_target_power(self, target_power): ## todo
-        self.spindle_tool_load_watts = target_power
-        self.set_using_advanced_profile(True)
+    # GETTERS AND SETTERS FOR TARGET POWERS
 
-    def get_target_power(self): ## todo
+    def get_total_target_power(self):
+        return self.get_free_load() + self.get_tool_load()
+
+    def get_free_load(self):
+        return self.spindle_free_load_watts
+
+    def get_tool_load(self):
         return self.spindle_tool_load_watts
 
-    def set_spindle_free_load(self, spindle_free_load):
-        self.spindle_free_load_watts = spindle_free_load
+    def set_free_load(self, free_load):
+        self.spindle_free_load_watts = free_load
+
+    def set_tool_load(self, tool_load):
+        self.spindle_tool_load_watts = tool_load
 
     def reset(self):
         if self.logger:
