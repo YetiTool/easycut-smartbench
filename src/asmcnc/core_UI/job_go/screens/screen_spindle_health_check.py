@@ -201,14 +201,14 @@ class SpindleHealthCheckActiveScreen(Screen):
             average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
             average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
 
-            if average_load_w < self.spindle_health_check_max_w:
-                pass_test()
-                return
-
             if average_load_w > self.spindle_health_check_max_w:
                 fail_test('spindle_health_check_failed')
+                return
             elif average_load_w == 0:
                 fail_test('yetipilot_spindle_data_loss')
+                return
+
+            pass_test()
 
         def stop_test():
             self.m.s.write_command('M5')
