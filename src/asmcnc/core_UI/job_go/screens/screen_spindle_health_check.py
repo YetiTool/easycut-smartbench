@@ -141,7 +141,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.l=kwargs['localization']
         self.seconds = self.max_seconds
 
-        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…')
+        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…')
 
     def on_pre_enter(self):
         # health check if not called from elsewhere
