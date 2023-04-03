@@ -789,6 +789,9 @@ class SerialConnection(object):
     inrush_max = 20
     in_inrush = True
 
+    # Spindle freeload measurement
+    spindle_freeload = None
+
     # IO Pins for switches etc
     limit_x = False  # convention: min is lower_case
     limit_X = False  # convention: MAX is UPPER_CASE

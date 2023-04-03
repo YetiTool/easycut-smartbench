@@ -667,7 +667,8 @@ class GoScreen(Screen):
         self.sm.get_screen('home').z_datum_reminder_flag = False
 
         # Reset YP toggle
-        self.yp_widget.disable_yeti_pilot()
+        if not self.m.has_spindle_health_check_passed():
+            self.yp_widget.disable_yeti_pilot()
 
     ### GENERAL ACTIONS
 

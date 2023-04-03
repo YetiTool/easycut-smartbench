@@ -176,36 +176,41 @@ class SpindleHealthCheckActiveScreen(Screen):
     def run_spindle_health_check(self):
         self.m.s.spindle_health_check_data[:] = []
 
-        def pass_test(average_load_w):
+        def pass_test(free_load):
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
             self.exit_screen()
-            self.m.s.yp.set_spindle_free_load(average_load_w)
 
             if self.sm.has_screen('go') and self.start_after_pass:
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
 
-        def show_fail_screen():
-            self.m.stop_for_a_stream_pause('spindle_health_check_failed')
+            self.m.s.yp.set_free_load(free_load)
+
+        def show_fail_screen(reason):
+            self.m.stop_for_a_stream_pause(reason)
 
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
 
-        def fail_test():
+        def fail_test(reason):
+            print("Spindle health check failed - " + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
-            show_fail_screen()
+            show_fail_screen(reason)
 
         def check_average():
             average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
             average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
 
-            if average_load_w > self.spindle_health_check_max_w or average_load_w == 0:
-                fail_test()
+            if average_load_w > self.spindle_health_check_max_w:
+                fail_test('spindle_health_check_failed')
+                return
+            elif average_load_w == 0:
+                fail_test('yetipilot_spindle_data_loss')
                 return
 
-            pass_test(average_load_w)
+            pass_test(round(average_load_w))
 
         def stop_test():
             self.m.s.write_command('M5')
