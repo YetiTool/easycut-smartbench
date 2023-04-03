@@ -487,6 +487,8 @@ class YetiPilot(object):
     def set_tool_load(self, tool_load):
         self.spindle_tool_load_watts = tool_load
 
+    # RESET FOR LOGGER
+
     def reset(self):
         if self.logger:
             self.logger.reset()

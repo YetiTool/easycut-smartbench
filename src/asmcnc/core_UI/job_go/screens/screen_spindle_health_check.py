@@ -186,6 +186,9 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.current = 'go'
 
             self.m.s.yp.set_free_load(free_load)
+            print("Free load: " + str(free_load))
+            print("Tool load: " + str(self.m.s.yp.get_tool_load()))
+            print("Total load: " + str(self.m.s.yp.get_total_target_power()))
 
         def show_fail_screen(reason):
             self.m.stop_for_a_stream_pause(reason)
