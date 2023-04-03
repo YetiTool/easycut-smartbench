@@ -22,6 +22,7 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 
 from functools import partial
+import traceback
 
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
@@ -99,10 +100,6 @@ class PopupYetiPilotSettings(Widget):
         clock_speed_1 = None
         clock_speed_2 = None
 
-        diameter_values = self.yp.get_available_cutter_diameters()
-        tool_values = self.yp.get_available_cutter_types()
-        material_values = self.yp.get_available_material_types()
-
         img_path = './asmcnc/core_UI/job_go/img/'
         sep_top_img_src = img_path + 'yp_settings_sep_top.png'
         img_1_src = img_path + 'yp_setting_1.png'
@@ -166,30 +163,57 @@ class PopupYetiPilotSettings(Widget):
             optn_img_2 = Image(source=img_2_src)
             optn_img_3 = Image(source=img_3_src)
 
-            def get_profile():
-                profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
-                if profile is None:
-                    return
+            def update_step_down(step_down_range):
+                try: 
+                    step_downs_msg_label.text = \
+                                    self.l.get_str("Recommended step downs based on these profile settings:") + \
+                                    "\n[size=16sp][b]" + str(step_down_range) + "[/size][/b]"
 
-                self.yp.use_profile(profile)
-
-                try:
-                    update_step_down(self.yp.get_active_step_down())
-                except:
+                except: # label doesn't exist yet
                     pass
 
+            def get_profile():
+                chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
+                self.yp.use_profile(chosen_profile)
+                update_step_down(self.yp.get_active_step_down())
+
+            # User chooses material first
+            # If next cutter diameter/type is not available, these selections then clear
+            def select_material(spinner, val):
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=material_choice.text)
+                diameter_choice.values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material)
+                if diameter_choice.text not in diameter_choice.values: diameter_choice.text = ''
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
+                get_profile()
+
             def select_diameter(spinner, val):
-              get_profile()
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=material_choice.text, cutter_diameter=diameter_choice.text)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
+                get_profile()
 
             def select_tool(spinner, val):
-              get_profile()
+                get_profile()
 
-            def select_material(spinner, val):
-              get_profile()
+            material_values = self.yp.get_available_material_types()
 
+            if  self.yp.get_active_material_type() and \
+                self.yp.get_active_cutter_diameter() and \
+                self.yp.get_active_cutter_type(): 
+
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type())
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type(), cutter_diameter=self.yp.get_active_cutter_diameter())
+                diameter_values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
+
+            else:
+                diameter_values = self.yp.get_available_cutter_diameters()
+                tool_values = self.yp.get_available_cutter_types()
+
+            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
-            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
             get_profile()
 
@@ -205,19 +229,19 @@ class PopupYetiPilotSettings(Widget):
             tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
             material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
     
+            material_BL.add_widget(material_label)
+            material_BL.add_widget(material_choice)
             diameter_BL.add_widget(diameter_label)
             diameter_BL.add_widget(diameter_choice)
             tool_BL.add_widget(tool_label)
             tool_BL.add_widget(tool_choice)
-            material_BL.add_widget(material_label)
-            material_BL.add_widget(material_choice)
     
+            left_BL_grid.add_widget(optn_img_3)
+            left_BL_grid.add_widget(material_BL)
             left_BL_grid.add_widget(optn_img_1)
             left_BL_grid.add_widget(diameter_BL)
             left_BL_grid.add_widget(optn_img_2)
             left_BL_grid.add_widget(tool_BL)
-            left_BL_grid.add_widget(optn_img_3)
-            left_BL_grid.add_widget(material_BL)
     
             left_BL.add_widget(left_BL_grid)
     
@@ -233,11 +257,6 @@ class PopupYetiPilotSettings(Widget):
                                     padding=[10,10],
                                     size_hint_y=0.6
                                     )
-            def update_step_down(step_down_range):
-              step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                                      "\n" + \
-                                      "[size=16sp][b]" + str(step_down_range) + "[/size]"\
-                                      + "[/b]"
 
             update_step_down(self.yp.get_active_step_down())
     
