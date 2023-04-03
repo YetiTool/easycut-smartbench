@@ -330,8 +330,6 @@ class PopupYetiPilotSettings(Widget):
             speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
             right_BL.add_widget(speedOverride)
 
-            print("Spindle health check passed: " + str(self.m.has_spindle_health_check_passed()))
-
             if self.m.has_spindle_health_check_passed():
 
                 left_BL.add_widget(target_ml_label)

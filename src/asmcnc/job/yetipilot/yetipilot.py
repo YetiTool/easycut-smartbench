@@ -401,3 +401,11 @@ class YetiPilot(object):
 
     def get_target_power(self):
         return self.spindle_target_load_watts
+
+    spindle_free_load_watts = 0
+
+    def set_free_load(self, free_load):
+        self.spindle_free_load_watts = free_load
+
+    def get_spindle_freeload(self):
+        return self.spindle_free_load_watts
