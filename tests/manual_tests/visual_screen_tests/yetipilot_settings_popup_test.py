@@ -91,6 +91,7 @@ class TestApp(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m.has_spindle_health_check_run= Mock(return_value=False)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)

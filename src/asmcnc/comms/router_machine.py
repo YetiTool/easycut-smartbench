@@ -939,6 +939,12 @@ class RouterMachine(object):
     def has_spindle_health_check_passed(self):
         return self.spindle_health_check_passed
 
+    def has_spindle_health_check_run(self):
+        return False
+
+    def get_spindle_freeload(self):
+        return self.s.spindle_freeload
+
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
     #     log('FW version able to operate laser commands AX and AZ: ' + str(output))
