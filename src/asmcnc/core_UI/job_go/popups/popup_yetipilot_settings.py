@@ -303,8 +303,9 @@ class PopupYetiPilotSettings(Widget):
 
 
         # BODY CUSTOM PROFILES
-        def start_spindle_health_check(self):
-            pass
+        def start_spindle_health_check():
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').run_spindle_health_check()
 
         def build_advanced_settings():
 
