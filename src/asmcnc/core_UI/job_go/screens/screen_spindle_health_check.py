@@ -185,27 +185,30 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
 
-        def show_fail_screen():
-            self.m.stop_for_a_stream_pause('spindle_health_check_failed')
+        def show_fail_screen(reason):
+            self.m.stop_for_a_stream_pause(reason)
 
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
 
-        def fail_test():
-            print("Spindle health check failed")
+        def fail_test(reason):
+            print("Spindle health check failed - " + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
-            show_fail_screen()
+            show_fail_screen(reason)
 
         def check_average():
             average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
             average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
 
-            if average_load_w > self.spindle_health_check_max_w or average_load_w == 0:
-                fail_test()
+            if average_load_w < self.spindle_health_check_max_w:
+                pass_test()
                 return
 
-            pass_test()
+            if average_load_w > self.spindle_health_check_max_w:
+                fail_test('spindle_health_check_failed')
+            elif average_load_w == 0:
+                fail_test('yetipilot_spindle_data_loss')
 
         def stop_test():
             self.m.s.write_command('M5')
