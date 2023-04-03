@@ -98,10 +98,10 @@ class LoadSliderWidget(Widget):
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
 
-        try: self.power_slider.min = self.yp.get_spindle_freeload()
-        except Exception as e:
+        try:
+            self.power_slider.min = self.yp.get_free_load()
+        except:
             self.power_slider.min = 390
-            print(e)
         self.power_slider.value = self.yp.get_total_target_power()
         self.on_slider_value_change()
 
