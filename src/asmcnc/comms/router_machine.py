@@ -940,7 +940,7 @@ class RouterMachine(object):
         return self.spindle_health_check_passed
 
     def has_spindle_health_check_run(self):
-        return False
+        return self.has_spindle_health_check_passed() or self.has_spindle_health_check_failed()
 
     def get_spindle_freeload(self):
         return self.s.spindle_freeload
