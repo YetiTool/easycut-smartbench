@@ -308,6 +308,7 @@ class PopupYetiPilotSettings(Widget):
                 self.sm.get_screen('go').run_spindle_health_check()
 
         def build_advanced_settings():
+            self.yp.set_using_advanced_profile(True)
 
             target_ml_string = self.l.get_str("Target Spindle motor load")
             target_ml_label = Label( size_hint_y=0.1,
