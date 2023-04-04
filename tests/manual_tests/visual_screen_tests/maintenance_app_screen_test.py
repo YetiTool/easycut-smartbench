@@ -45,7 +45,7 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
+    lang_idx = 6
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -115,7 +115,7 @@ class ScreenTest(App):
         sm.add_widget(maintenance_screen)
 
         landing_tab = 'spindle_health_check_tab'
-        # sm.get_screen('maintenance').landing_tab = landing_tab
+        sm.get_screen('maintenance').landing_tab = landing_tab
         sm.current = 'maintenance'
 
         return sm
