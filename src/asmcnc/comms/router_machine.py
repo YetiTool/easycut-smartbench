@@ -661,7 +661,7 @@ class RouterMachine(object):
             file.write(str(health_check))
             file.close()
 
-            if health_check == 'True' or health_check:
+            if health_check == 'True' or health_check == True:
                 self.is_spindle_health_check_enabled_as_default = True
             else:
                 self.is_spindle_health_check_enabled_as_default = False
