@@ -1285,36 +1285,46 @@ class RouterMachine(object):
             self.s.m_state = temp_state
 
     # Query if smartbench_is_busy: don't send commands yet :) 
-    def smartbench_is_busy(self): 
+    def smartbench_is_busy(self):
 
         if not self.state().startswith("Idle"):
+            print "smartbench_is_busy: state is not Idle"
             return True
 
         if self.s.is_sequential_streaming:
+            print "smartbench_is_busy: sequential stream is running"
             return True
 
         if self.s.is_job_streaming:
+            print "smartbench_is_busy: job stream is running"
             return True
 
-        if self.s.write_command_buffer: 
+        if self.s.write_command_buffer:
+            print "smartbench_is_busy: write_command_buffer is not empty"
             return True
 
-        if self.s.write_realtime_buffer: 
+        if self.s.write_realtime_buffer:
+            print "smartbench_is_busy: write_realtime_buffer is not empty"
             return True
 
-        if self.s.write_protocol_buffer: 
+        if self.s.write_protocol_buffer:
+            print "smartbench_is_busy: write_protocol_buffer is not empty"
             return True
 
         if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
+            print "smartbench_is_busy: serial_blocks_available is not full"
             return True
 
         if int(self.s.serial_chars_available) != self.s.RX_BUFFER_SIZE:
+            print "smartbench_is_busy: serial_chars_available is not full"
             return True
 
         if self.s.grbl_waiting_for_reset:
+            print "smartbench_is_busy: grbl_waiting_for_reset is True"
             return True
 
         if self.is_machine_paused:
+            print "smartbench_is_busy: machine is paused"
             return True
 
         return False
