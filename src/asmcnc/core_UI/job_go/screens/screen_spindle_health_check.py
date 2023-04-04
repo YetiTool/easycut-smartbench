@@ -141,7 +141,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.l = kwargs['localization']
         self.seconds = self.max_seconds
 
-        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…') + "\n" + \
+        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…') + "\n" + \
                                     self.l.get_str('SmartBench is raising the Z axis.')
 
     def on_pre_enter(self):
@@ -151,7 +151,7 @@ class SpindleHealthCheckActiveScreen(Screen):
 
     def on_enter(self):
         self.run_spindle_health_check()
-        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…') + "\n" + \
+        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…') + "\n" + \
                                     self.l.get_str('SmartBench is raising the Z axis.')
 
     def start_timer(self):
