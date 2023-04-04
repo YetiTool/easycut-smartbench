@@ -122,14 +122,14 @@ class StopOrResumeDecisionScreen(Screen):
     # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/routing-tools-sc0-sc1-troubleshooting-overload-during-operation
     qr_spindle_overload = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
 
-    # TO CREATE: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screens
-    qr_yetipilot_low_feed = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screens
+    qr_yetipilot_low_feed = "./asmcnc/skavaUI/img/qr_low_feed_rate.png"
 
-    # TO CREATE: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-data-error
-    qr_yetipilot_no_data = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-data-error
+    qr_yetipilot_no_data = "./asmcnc/skavaUI/img/qr_no_spindle_data.png"
 
-    # TO CREATE: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-motor-health-check
-    qr_health_check = "./asmcnc/skavaUI/img/qr_spindle_clamping_info.png"
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-motor-health-check
+    qr_health_check = "./asmcnc/skavaUI/img/qr_health_check_failed.png"
 
     # default
     qr_source = qr_spindle_overload
