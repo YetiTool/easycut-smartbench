@@ -189,8 +189,8 @@ class SpindleHealthCheckActiveScreen(Screen):
 
             if self.return_to_advanced_tab and self.sm.has_screen('go'):
                 self.sm.get_screen('go').yp_widget.open_yp_settings()
-            else:
-                self.exit_screen()
+
+            self.exit_screen()
 
             if self.sm.has_screen('go') and self.start_after_pass and not self.return_to_advanced_tab:
                 self.sm.get_screen('go')._start_running_job()
