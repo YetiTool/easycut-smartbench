@@ -828,6 +828,9 @@ class GoScreen(Screen):
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
 
+        self.m.spindle_health_check_failed = False
+        self.m.spindle_health_check_passed = False
+
     ### SCREEN UPDATES
 
     def get_hms(self, seconds):
