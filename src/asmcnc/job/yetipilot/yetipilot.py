@@ -106,16 +106,13 @@ class YetiPilot(object):
     def ldA_to_watts(self, load):
         return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
 
-    def get_target_spindle_load(self):
-        return self.spindle_free_load_watts + self.spindle_tool_load_watts
-
     def get_multiplier(self, load):
-        if load > self.get_target_spindle_load():
-            return self.bias_for_feed_decrease * (self.get_target_spindle_load() - load) / \
-                   self.get_target_spindle_load() * self.m_coefficient * self.c_coefficient
+        if load > self.get_total_target_power():
+            return self.bias_for_feed_decrease * (self.get_total_target_power() - load) / \
+                   self.get_total_target_power() * self.m_coefficient * self.c_coefficient
 
-        return self.bias_for_feed_increase * (self.get_target_spindle_load() - load) / \
-            self.get_target_spindle_load() * self.m_coefficient * self.c_coefficient
+        return self.bias_for_feed_increase * (self.get_total_target_power() - load) / \
+               self.get_total_target_power() * self.m_coefficient * self.c_coefficient
 
     def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving,
                                        feed_multiplier=None):

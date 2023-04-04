@@ -80,4 +80,4 @@ def test_get_multiplier(yp):
 
     yp.set_free_load(400)
 
-    assert yp.get_multiplier(yp.get_target_spindle_load()) == 0
+    assert yp.get_multiplier(yp.get_total_target_power()) == 0
