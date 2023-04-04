@@ -221,7 +221,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.s.spindle_health_check = False
 
         def start_test():
-            if not self.m.smartbench_is_busy():
+            if self.m.smartbench_is_busy():
                 Clock.schedule_once(lambda dt: start_test(), 0.5)
                 return
 
