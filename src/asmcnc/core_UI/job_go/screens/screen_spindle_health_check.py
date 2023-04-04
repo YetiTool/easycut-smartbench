@@ -156,7 +156,7 @@ class SpindleHealthCheckActiveScreen(Screen):
 
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
-        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…')
+        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…')
 
     def exit_screen(self, dt=0):
         self.sm.current = self.return_screen
