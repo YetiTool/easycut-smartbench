@@ -16,7 +16,6 @@ from datetime import datetime
 
 from math import sqrt
 
-
 Builder.load_string("""
 
 <SpindleHealthCheckActiveScreen>:
@@ -129,21 +128,21 @@ Builder.load_string("""
 
 
 class SpindleHealthCheckActiveScreen(Screen):
-
     return_screen = 'go'
-    max_seconds = 10
-    seconds = 10
+    max_seconds = 6
+    seconds = 6
     update_timer_event = None
 
     def __init__(self, **kwargs):
-        
+
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
+        self.l = kwargs['localization']
         self.seconds = self.max_seconds
 
-        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…')
+        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…') + "\n" + \
+                                    "SmartBench is raising the Z axis"
 
     def on_pre_enter(self):
         # health check if not called from elsewhere
@@ -151,9 +150,12 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
-        self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
         self.run_spindle_health_check()
-    
+
+    def start_timer(self):
+        self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
+        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…')
+
     def exit_screen(self, dt=0):
         self.sm.current = self.return_screen
 
@@ -170,7 +172,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.countdown.text = str(self.seconds)
 
     passed_spindle_health_check = False
-    spindle_health_check_max_w = 550 # 550
+    spindle_health_check_max_w = 550  # 550
     start_after_pass = False
 
     def run_spindle_health_check(self):
@@ -219,6 +221,11 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.s.spindle_health_check = False
 
         def start_test():
+            if not self.m.smartbench_is_busy():
+                Clock.schedule_once(lambda dt: start_test(), 0.5)
+                return
+
+            self.start_timer()
             self.m.s.spindle_health_check = True
             self.m.s.write_command('M3 S24000')
             Clock.schedule_once(lambda dt: stop_test(), 6)
@@ -227,4 +234,4 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.m._grbl_soft_reset()
 
         Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-        Clock.schedule_once(lambda dt: start_test(), 4)
+        Clock.schedule_once(lambda dt: start_test(), 1)
