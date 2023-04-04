@@ -38,10 +38,11 @@ Builder.load_string("""
     background_normal: ''
     size: self.size
     color: hex('#333333ff')
-    halign: 'left'
+    halign: 'center'
     markup: 'True'
     font_size: 14
     background_color: 0,0,0,0
+    text_size : self.width, None
     canvas.before:
         Color:
             rgba: hex('#e5e5e5ff')
@@ -57,6 +58,8 @@ Builder.load_string("""
     color: hex('#333333ff')
     background_color: 0,0,0,0
     font_size: 14
+    text_size : self.width, None
+    halign: 'center'
     canvas.before:
         Color:
             rgba: hex('ccccccff')
@@ -304,8 +307,9 @@ class PopupYetiPilotSettings(Widget):
 
         # BODY CUSTOM PROFILES
         def start_spindle_health_check():
+            self.yp.set_using_advanced_profile(True)
             if self.sm.has_screen('go'):
-                self.sm.get_screen('go').run_spindle_health_check()
+                self.sm.get_screen('go').run_spindle_health_check(return_to_advanced_tab=True)
 
         def build_advanced_settings():
             self.yp.set_using_advanced_profile(True)

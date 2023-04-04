@@ -705,13 +705,14 @@ class GoScreen(Screen):
 
     # Pausing
 
-    def run_spindle_health_check(self, start_after_pass=False):
+    def run_spindle_health_check(self, start_after_pass=False, return_to_advanced_tab=False):
         if not self.sm.has_screen('spindle_health_check_active'):
             shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
                                                         screen_manager=self.sm, machine=self.m, localization=self.l)
             self.sm.add_widget(shc_screen)
 
         self.sm.get_screen('spindle_health_check_active').start_after_pass = start_after_pass
+        self.sm.get_screen('spindle_health_check_active').return_to_advanced_tab = return_to_advanced_tab
         self.sm.current = 'spindle_health_check_active'
 
     def _pause_job(self):

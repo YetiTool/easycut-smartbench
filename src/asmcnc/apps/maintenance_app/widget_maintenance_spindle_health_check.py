@@ -112,7 +112,7 @@ class WidgetSpindleHealthCheck(BoxLayout):
             "[color=e64a19ff]" + \
             self.l.get_str("Disable this if your tool is not rated to at least 24,000 rpm.") + "\n\n" + \
             "[/color]" + \
-            self.l.get_str("The health check will run the spindle at 24,000 rpm for 5 seconds before every job.") + "\n\n" + \
+            self.l.get_str("The health check will run the spindle at 24,000 rpm for 6 seconds before every job.") + "\n\n" + \
             self.l.get_str("This checks that your Spindle motor is working correctly, and calibrates it for YetiPilot.") + "\n\n" + \
             self.l.get_str("If you disable this, there will not be an option to use YetiPilot during a job.") + "\n\n"
 

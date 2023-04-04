@@ -3,7 +3,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "6",
       "Parameters": [
         {
@@ -19,7 +19,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "4",
       "Parameters": [
         {
@@ -35,7 +35,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "8",
-      "Cutter Type": "2 flute spiral upcut",
+      "Cutter Type": "2 flute upcut spiral",
       "Step Down": "4",
       "Parameters": [
         {
@@ -51,7 +51,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "6",
       "Parameters": [
         {
@@ -67,7 +67,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "6",
       "Parameters": [
         {
@@ -83,7 +83,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "8",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "6",
       "Parameters": [
         {
@@ -99,7 +99,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3",
-      "Cutter Type": "2 flute spiral compression",
+      "Cutter Type": "2 flute compression spiral",
       "Step Down": "3.5",
       "Parameters": [
         {
@@ -115,7 +115,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6",
-      "Cutter Type": "2 flute spiral compression",
+      "Cutter Type": "2 flute compression spiral",
       "Step Down": "6.5",
       "Parameters": [
         {
@@ -129,9 +129,9 @@
       ]
     },
     {
-      "Material Type": "Birch Ply",
+      "Material Type": "Birch Plywood",
       "Cutter Diameter": "3",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "3",
       "Parameters": [
         {
@@ -145,9 +145,9 @@
       ]
     },
     {
-      "Material Type": "Birch Ply",
+      "Material Type": "Birch Plywood",
       "Cutter Diameter": "6",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "3",
       "Parameters": [
         {
@@ -161,9 +161,9 @@
       ]
     },
     {
-      "Material Type": "Birch Ply",
+      "Material Type": "Birch Plywood",
       "Cutter Diameter": "8",
-      "Cutter Type": "2 flute spiral downcut",
+      "Cutter Type": "2 flute downcut spiral",
       "Step Down": "4",
       "Parameters": [
         {
@@ -177,9 +177,9 @@
       ]
     },
     {
-      "Material Type": "Birch Ply",
+      "Material Type": "Birch Plywood",
       "Cutter Diameter": "6",
-      "Cutter Type": "2 flute spiral compression",
+      "Cutter Type": "2 flute compression spiral",
       "Step Down": "6.5",
       "Parameters": [
         {
@@ -193,9 +193,9 @@
       ]
     },
     {
-      "Material Type": "Birch Ply",
+      "Material Type": "Birch Plywood",
       "Cutter Diameter": "3",
-      "Cutter Type": "2 flute spiral compression",
+      "Cutter Type": "2 flute compression spiral",
       "Step Down": "3.5",
       "Parameters": [
         {
