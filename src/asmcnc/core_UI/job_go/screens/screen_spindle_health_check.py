@@ -187,6 +187,8 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
 
+            self.m.s.yp.set_free_load(free_load)
+
             if self.return_to_advanced_tab and self.sm.has_screen('go'):
                 self.sm.get_screen('go').yp_widget.open_yp_settings()
 
@@ -195,8 +197,6 @@ class SpindleHealthCheckActiveScreen(Screen):
             if self.sm.has_screen('go') and self.start_after_pass and not self.return_to_advanced_tab:
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
-
-            self.m.s.yp.set_free_load(free_load)
 
         def show_fail_screen(reason):
             self.m.stop_for_a_stream_pause(reason)
