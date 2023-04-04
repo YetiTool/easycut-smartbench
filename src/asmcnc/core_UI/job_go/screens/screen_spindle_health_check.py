@@ -217,6 +217,10 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.s.spindle_health_check = False
 
         def start_test():
+            if self.m.smartbench_is_busy():
+                Clock.schedule_once(lambda dt: start_test(), 0.5)
+                return
+
             self.m.s.spindle_health_check = True
             self.m.s.write_command('M3 S24000')
             Clock.schedule_once(lambda dt: stop_test(), 7)
@@ -224,4 +228,4 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         self.m._grbl_soft_reset()
         self.m.zUp()
-        Clock.schedule_once(lambda dt: start_test(), 3)
+        start_test()
