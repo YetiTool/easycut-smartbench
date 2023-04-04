@@ -151,6 +151,8 @@ class SpindleHealthCheckActiveScreen(Screen):
 
     def on_enter(self):
         self.run_spindle_health_check()
+        self.cool_down_label.text = self.l.get_str('Running spindle motor health check…') + "\n" + \
+                                    "SmartBench is raising the Z axis"
 
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
