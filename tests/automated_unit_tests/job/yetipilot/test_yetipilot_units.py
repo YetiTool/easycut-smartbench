@@ -41,28 +41,25 @@ def test_yp_init(yp):
     assert yp.jd
 
 
-# def test_start(yp):
-#     yp.enable()
-#     assert yp.use_yp
-#
-# def test_stop(yp):
-#     yp.disable()
-#     assert not yp.use_yp
-#
-# def test_load_parameters_from_json(yp):
-#     yp.load_parameters()
-#
-# def test_add_to_stack(yp):
-#     yp.add_to_stack(0, 0, 0, 0)
-#
-# def test_feed_override_wrapper(yp):
-#     test_func = Mock()
-#     yp.use_yp = True
-#     yp.m.state = Mock(return_value="Idle")
-#     yp.m.s.is_job_streaming = True
-#     yp.m.is_machine_paused = False
-#     yp.feed_override_wrapper(test_func)
-#     test_func.assert_called()
+def test_start(yp):
+    yp.enable()
+    assert yp.use_yp
+
+def test_stop(yp):
+    yp.disable()
+    assert not yp.use_yp
+
+def test_load_parameters_from_json(yp):
+    yp.load_parameters()
+
+def test_feed_override_wrapper(yp):
+    test_func = Mock()
+    yp.use_yp = True
+    yp.m.state = Mock(return_value="Idle")
+    yp.m.s.is_job_streaming = True
+    yp.m.is_machine_paused = False
+    yp.feed_override_wrapper(test_func)
+    test_func.assert_called()
 
 def test_get_feed_adjustment_percentage(yp):
     yp.get_all_profiles()
@@ -81,6 +78,6 @@ def test_get_multiplier(yp):
     yp.get_all_profiles()
     yp.use_profile(yp.available_profiles[0])
 
-    yp.set_spindle_free_load(400)
+    yp.set_free_load(400)
 
     assert yp.get_multiplier(yp.get_target_spindle_load()) == 0

@@ -9,6 +9,7 @@ from math import sqrt
 
 from kivy.clock import Clock
 
+from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 
 def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
