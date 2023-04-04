@@ -176,6 +176,7 @@ class SpindleHealthCheckActiveScreen(Screen):
     passed_spindle_health_check = False
     spindle_health_check_max_w = 550  # 550
     start_after_pass = False
+    return_to_advanced_tab = False
 
     def run_spindle_health_check(self):
         self.m.s.spindle_health_check_data[:] = []
@@ -185,9 +186,13 @@ class SpindleHealthCheckActiveScreen(Screen):
 
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
-            self.exit_screen()
 
-            if self.sm.has_screen('go') and self.start_after_pass:
+            if self.return_to_advanced_tab and self.sm.has_screen('go'):
+                self.sm.get_screen('go').yp_widget.open_yp_settings()
+            else:
+                self.exit_screen()
+
+            if self.sm.has_screen('go') and self.start_after_pass and not self.return_to_advanced_tab:
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
 
