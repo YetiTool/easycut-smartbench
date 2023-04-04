@@ -736,7 +736,7 @@ class GoScreen(Screen):
                 not str(self.m.state()).startswith('Door:3') and
                 self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png") or override:
 
-            if self.listen_for_pauses:
+            if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
 
