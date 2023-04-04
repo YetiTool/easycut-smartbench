@@ -25,7 +25,6 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
-from asmcnc.job.yetipilot.logging.yetipilot_logger_popups import PopupSendData
 
 
 Builder.load_string("""
