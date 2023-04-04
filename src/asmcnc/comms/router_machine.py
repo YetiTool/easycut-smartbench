@@ -1285,7 +1285,7 @@ class RouterMachine(object):
             self.s.m_state = temp_state
 
     # Query if smartbench_is_busy: don't send commands yet :) 
-    def smartbench_is_busy(self): 
+    def smartbench_is_busy(self):
 
         if not self.state().startswith("Idle"):
             return True
@@ -1296,13 +1296,13 @@ class RouterMachine(object):
         if self.s.is_job_streaming:
             return True
 
-        if self.s.write_command_buffer: 
+        if self.s.write_command_buffer:
             return True
 
-        if self.s.write_realtime_buffer: 
+        if self.s.write_realtime_buffer:
             return True
 
-        if self.s.write_protocol_buffer: 
+        if self.s.write_protocol_buffer:
             return True
 
         if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
