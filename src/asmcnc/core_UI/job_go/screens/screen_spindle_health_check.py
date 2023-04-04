@@ -188,9 +188,6 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.spindle_health_check_passed = True
 
             self.m.s.yp.set_free_load(free_load)
-            print("Free load: " + str(free_load))
-            print("Tool load: " + str(self.m.s.yp.get_tool_load()))
-            print("Total load: " + str(self.m.s.yp.get_total_target_power()))
 
             if self.return_to_advanced_tab and self.sm.has_screen('go'):
                 self.sm.get_screen('go').yp_widget.open_yp_settings()
