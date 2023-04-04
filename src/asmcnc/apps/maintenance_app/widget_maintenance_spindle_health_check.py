@@ -19,7 +19,7 @@ Builder.load_string("""
 
         BoxLayout: 
             orientation: "vertical"
-            size_hint_x: 0.9
+            size_hint_x: 0.88
             spacing: 2
 
             Label: 
@@ -45,26 +45,38 @@ Builder.load_string("""
                 text_size: self.size
 
         BoxLayout: 
-            size_hint_x: 0.1
+            size_hint_x: 0.12
             padding: [0,0,0,50]
+            spacing: 0
+            orientation: 'vertical'
 
-            ToggleButton:
-                id: switch
-                size_hint: (None, None)
-                size: ('64dp', '29dp')
-                background_normal: ''
-                background_down: ''
-                on_press: root.toggle_yeti_pilot_availability(self)
+            BoxLayout: 
+                size_hint_y: 0.9
+                Image:
+                    source: "./asmcnc/apps/maintenance_app/img/health_check_with_shadow.png"
+                    allow_stretch: False
 
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: yp_toggle_img
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: False
+            BoxLayout: 
+                size_hint_y: 0.1
+                padding: [10,0,0,0]
+
+                ToggleButton:
+                    id: switch
+                    size_hint: (None, None)
+                    size: ('64dp', '29dp')
+                    background_normal: ''
+                    background_down: ''
+                    on_press: root.toggle_yeti_pilot_availability(self)
+
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: yp_toggle_img
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: False
 
 """)
 
@@ -100,7 +112,7 @@ class WidgetSpindleHealthCheck(BoxLayout):
             "[color=e64a19ff]" + \
             self.l.get_str("Disable this if your tool is not rated to at least 24,000 rpm.") + "\n\n" + \
             "[/color]" + \
-            self.l.get_str("The health check will run the spindle at 24,000 rpm for 5 seconds before every job.") + "\n\n" + \
+            self.l.get_str("The health check will run the spindle at 24,000 rpm for 10 seconds before every job.") + "\n\n" + \
             self.l.get_str("This checks that your Spindle motor is working correctly, and calibrates it for YetiPilot.") + "\n\n" + \
             self.l.get_str("If you disable this, there will not be an option to use YetiPilot during a job.") + "\n\n"
 
