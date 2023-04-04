@@ -158,7 +158,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.sm.current = self.return_screen
 
     def update_timer(self, dt):
-        if self.seconds >= 0:
+        if self.seconds > 0:
             self.seconds = self.seconds - 1
             self.countdown.text = str(self.seconds)
 
@@ -223,8 +223,8 @@ class SpindleHealthCheckActiveScreen(Screen):
 
             self.m.s.spindle_health_check = True
             self.m.s.write_command('M3 S24000')
-            Clock.schedule_once(lambda dt: stop_test(), 7)
-            Clock.schedule_once(lambda dt: check_average(), 7)
+            Clock.schedule_once(lambda dt: stop_test(), 6)
+            Clock.schedule_once(lambda dt: check_average(), 6)
 
         self.m._grbl_soft_reset()
 
