@@ -122,7 +122,7 @@ class LoadSliderWidget(Widget):
     def button_adjust_slider(self, val, instance=None):
         if self.power_slider.min <= self.power_slider.value + val <= self.power_slider.max: self.power_slider.value+=val
 
-    def on_slider_value_change(self):
+    def on_slider_value_change(self, instance=None, value=None):
         self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
 
         tool_load = int(self.power_slider.value) - self.yp.get_free_load()
