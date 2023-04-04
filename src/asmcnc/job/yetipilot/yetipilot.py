@@ -143,6 +143,11 @@ class YetiPilot(object):
         return feed_multiplier
 
     def get_speed_adjustment_percentage(self):
+        """
+        Calculates the correct speed adjustment percentage
+        :return: the speed adjustment percentage
+        """
+
         last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
         live_rpm = int(self.m.s.spindle_speed)
 
@@ -158,6 +163,14 @@ class YetiPilot(object):
         self.adjusting_spindle_speed = adjusting
 
     def do_override_adjustment(self, adjustment_percentage, command_dictionary, feed):
+        """
+        Schedules the override adjustments
+        :param adjustment_percentage: the percentage to adjust by
+        :param command_dictionary: the respective command dictionary
+        :param feed: whether the adjustment is for feed (False for speed)
+        :return: the list of adjustments made
+        """
+
         # Skip if 0
         if adjustment_percentage == 0:
             return []
@@ -197,6 +210,12 @@ class YetiPilot(object):
         return adjustment_list
 
     def get_command_dictionary(self, feed):
+        """
+        Get command dictionary for feed or speed adjustments
+        :param feed: whether the adjustment is for feed (False for speed)
+        :return: the command dictionary
+        """
+
         if feed:
             return {
                 10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
@@ -214,6 +233,13 @@ class YetiPilot(object):
 
     def add_status_to_yetipilot(self, digital_spindle_ld_qdA, digital_spindle_mains_voltage,
                                 feed_override_percentage, feed_rate):
+        """
+        Adds a status to the yetipilot algorithm
+        :param digital_spindle_ld_qdA: the digital spindle load in qdA
+        :param digital_spindle_mains_voltage: the digital spindle mains voltage
+        :param feed_override_percentage: the current feed override percentage
+        :param feed_rate: the current feed rate
+        """
 
         self.digital_spindle_mains_voltage = digital_spindle_mains_voltage
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
