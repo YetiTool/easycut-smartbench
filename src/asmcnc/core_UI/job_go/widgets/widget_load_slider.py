@@ -122,5 +122,12 @@ class LoadSliderWidget(Widget):
         if self.power_slider.min <= self.power_slider.value + val <= self.power_slider.max: self.power_slider.value+=val
 
     def on_slider_value_change(self):
-        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
-        self.yp.set_tool_load(int(self.power_slider.value) - self.yp.get_free_load())
+        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
+
+        tool_load = int(self.power_slider.value) - self.yp.get_free_load()
+
+        self.yp.set_tool_load(tool_load)
+
+        print "tool load is", tool_load
+        print "free load is", self.yp.get_free_load()
+        print "total target power is", self.yp.get_total_target_power()
