@@ -57,7 +57,6 @@ Builder.load_string("""
                 # min: 400
                 max: 1000
                 step: 10
-                on_value: root.on_slider_value_change()
                 size_hint_x: 0.8
 
             Label: 
@@ -103,7 +102,9 @@ class LoadSliderWidget(Widget):
         except:
             self.power_slider.min = 390
         self.power_slider.value = self.yp.get_total_target_power()
+
         self.on_slider_value_change()
+        self.power_slider.bind(on_value=self.on_slider_value_change)
 
         self.min_label.text = str(int(self.power_slider.min)) + " W"
         self.max_label.text = str(int(self.power_slider.max)) + " W"
@@ -126,8 +127,8 @@ class LoadSliderWidget(Widget):
 
         tool_load = int(self.power_slider.value) - self.yp.get_free_load()
 
-        self.yp.set_tool_load(tool_load)
-
         print "tool load is", tool_load
         print "free load is", self.yp.get_free_load()
         print "total target power is", self.yp.get_total_target_power()
+        self.yp.set_tool_load(tool_load)
+
