@@ -218,6 +218,10 @@ class JobstartWarningScreen(Screen):
     def continue_to_go_screen(self):
         self.sm.current = 'go'
 
+        # RESET SPINDLE HEALTH CHECK FLAGS
+        self.m.spindle_health_check_failed = False
+        self.m.spindle_health_check_passed = False
+
     def update_strings(self):
 
         self.header_label.text = self.l.get_str("Safety Warning")
