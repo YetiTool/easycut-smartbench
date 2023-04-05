@@ -141,16 +141,10 @@ class YetiPilot(object):
         return feed_multiplier
 
     def get_speed_adjustment_percentage(self):
-        """
-        Calculates the correct speed adjustment percentage
-        :return: the speed adjustment percentage
-        """
-
         last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
-        live_rpm = int(self.m.s.spindle_speed)
 
-        if abs(live_rpm - last_gcode_rpm) >= 500:
-            return ((self.target_spindle_speed / last_gcode_rpm) * 100) - self.m.s.speed_override_percentage
+        if abs(last_gcode_rpm - self.target_spindle_speed) > 500:
+            return ((self.target_spindle_speed - last_gcode_rpm) / last_gcode_rpm) * 100
         return 0
 
     def start_feed_too_low_check(self):
