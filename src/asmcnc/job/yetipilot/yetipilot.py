@@ -175,8 +175,8 @@ class YetiPilot(object):
 
         if not feed:
             self.set_adjusting_spindle_speed(True)
-            Clock.schedule_once(lambda dt: self.set_adjusting_spindle_speed(False),
-                                self.override_command_delay * len(adjustment_list) + 0.2)
+            # Clock.schedule_once(lambda dt: self.set_adjusting_spindle_speed(False),
+            #                     self.override_command_delay * len(adjustment_list) + 0.2)
 
         for i, adjustment in enumerate(adjustment_list):
             command_delay = self.override_command_delay * i
