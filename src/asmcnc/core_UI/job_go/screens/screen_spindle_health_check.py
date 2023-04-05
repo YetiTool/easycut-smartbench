@@ -14,7 +14,7 @@ import sys, os
 from kivy.clock import Clock
 from datetime import datetime
 
-from math import sqrt
+from math import sqrt, ceil
 
 Builder.load_string("""
 
@@ -181,6 +181,9 @@ class SpindleHealthCheckActiveScreen(Screen):
     def run_spindle_health_check(self):
         self.m.s.spindle_health_check_data[:] = []
 
+        def round_up_to_ten(n):
+            return int(ceil(n / 10.0)) * 10
+
         def pass_test(free_load):
             print("Spindle health check passed - free load: " + str(free_load))
 
@@ -221,7 +224,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 fail_test('yetipilot_spindle_data_loss')
                 return
 
-            pass_test(round(average_load_w))
+            pass_test(round_up_to_ten(average_load_w))
 
         def stop_test():
             self.m.s.write_command('M5')
