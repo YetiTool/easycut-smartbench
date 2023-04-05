@@ -41,6 +41,7 @@ class YetiPilot(object):
     digital_spindle_load_stack = []
     override_commands_per_adjustment = 2
     override_command_delay = 0.06
+    spindle_override_command_delay = 0.1
     tolerance_for_acceleration_detection = 5
 
     spindle_free_load_watts = 0
@@ -179,7 +180,7 @@ class YetiPilot(object):
             #                     self.override_command_delay * len(adjustment_list) + 0.2)
 
         for i, adjustment in enumerate(adjustment_list):
-            command_delay = self.override_command_delay * i
+            command_delay = (self.override_command_delay if feed else self.spindle_override_command_delay) * i
 
             if feed:
                 if self.m.s.feed_override_percentage == 200:
