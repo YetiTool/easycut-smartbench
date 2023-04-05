@@ -216,6 +216,11 @@ class JobstartWarningScreen(Screen):
 
 
     def continue_to_go_screen(self):
+        # RESET SPINDLE HEALTH CHECK FLAGS
+        self.m.spindle_health_check_failed = False
+        self.m.spindle_health_check_passed = False
+        self.m.s.yp.set_adjusting_spindle_speed(False)
+
         self.sm.current = 'go'
 
     def update_strings(self):

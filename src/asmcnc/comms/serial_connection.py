@@ -377,15 +377,18 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: 
+
+                    if self.yp.use_yp and self.m.has_spindle_health_check_passed():
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
                                 and not self.in_inrush:
 
-                            self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
-                                                 int(self.feed_rate), self.digital_spindle_mains_voltage)
+                            self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA,
+                                                            self.digital_spindle_mains_voltage,
+                                                            self.feed_override_percentage,
+                                                            int(self.feed_rate))
 
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
@@ -786,6 +789,9 @@ class SerialConnection(object):
     inrush_max = 20
     in_inrush = True
 
+    # Spindle freeload measurement
+    spindle_freeload = None
+
     # IO Pins for switches etc
     limit_x = False  # convention: min is lower_case
     limit_X = False  # convention: MAX is UPPER_CASE
@@ -864,6 +870,10 @@ class SerialConnection(object):
     measure_running_data = False
     running_data = []
     measurement_stage = 0
+
+    # Spindle health check
+    spindle_health_check = False
+    spindle_health_check_data = []
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1109,6 +1119,9 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.spindle_health_check and not self.in_inrush:
+                            self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:

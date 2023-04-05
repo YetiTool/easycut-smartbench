@@ -79,6 +79,21 @@ Builder.load_string("""
             size: self.size
             radius: [dp(10), dp(10)]
 
+<BigSpindleHealthCheckButton@Button>:
+    size_hint: (None, None)
+    size: [150,150]
+    background_color: 0,0,0,0
+    background_normal: ''
+    BoxLayout:
+        padding: 0
+        size: self.parent.size
+        pos: self.parent.pos
+        Image:
+            source: "./asmcnc/core_UI/job_go/img/health_check_button_big.png"
+            center_x: self.parent.center_x
+            y: self.parent.y
+            size: self.parent.width, self.parent.height
+            allow_stretch: False
 
 
 
@@ -88,6 +103,9 @@ class Choices(Spinner):
     pass
 
 class CloseButton(Button):
+    pass
+
+class BigSpindleHealthCheckButton(Button):
     pass
 
 class PopupYetiPilotSettings(Widget):
@@ -126,6 +144,9 @@ class PopupYetiPilotSettings(Widget):
         dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
+
+        spindle_health_check_button_size = 150
+        spindle_health_check_button = BigSpindleHealthCheckButton()
 
         transparent = [0,0,0,0]
         subtle_white = [249 / 255., 249 / 255., 249 / 255., 1.]
@@ -285,7 +306,14 @@ class PopupYetiPilotSettings(Widget):
 
 
         # BODY CUSTOM PROFILES
+        def start_spindle_health_check():
+            self.yp.set_using_advanced_profile(True)
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').run_spindle_health_check(return_to_advanced_tab=True)
+
+
         def build_advanced_settings():
+            self.yp.set_using_advanced_profile(True)
 
             target_ml_string = self.l.get_str("Target Spindle motor load")
             target_ml_label = Label( size_hint_y=0.1,
@@ -305,11 +333,23 @@ class PopupYetiPilotSettings(Widget):
             load_slider = LoadSliderWidget(screen_manager=self.sm, yetipilot=self.yp)
             load_slider_container.add_widget(load_slider)
     
-            left_BL.add_widget(target_ml_label)
-            left_BL.add_widget(load_slider_container)
-    
             speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
             right_BL.add_widget(speedOverride)
+
+            if self.m.has_spindle_health_check_passed():
+
+                left_BL.add_widget(target_ml_label)
+                left_BL.add_widget(load_slider_container)
+
+            else:
+
+                speedOverride.opacity = 0.6
+                left_BL.padding = [
+                                    (dropdowns_container_width - spindle_health_check_button_size)/2,
+                                    (body_BL_height - spindle_health_check_button_size)/2
+                                    ]
+                
+                left_BL.add_widget(spindle_health_check_button)
     
             clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
             clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1)
@@ -415,6 +455,9 @@ class PopupYetiPilotSettings(Widget):
         if closing_func: close_button.bind(on_press=closing_func)
         close_button.bind(on_press=unschedule_clocks)
         close_button.bind(on_press=popup.dismiss)
+
+        spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
+        spindle_health_check_button.bind(on_press=popup.dismiss)
 
         popup.open()
 

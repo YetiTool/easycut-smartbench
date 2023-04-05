@@ -170,4 +170,8 @@ class YetiPilotWidget(Widget):
             self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
             
         elif self.yp.using_advanced_profile:
-            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_target_power())) + " W"
+            if not self.m.has_spindle_health_check_passed():
+                self.disable_yeti_pilot()
+                return
+
+            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_total_target_power())) + " W"
