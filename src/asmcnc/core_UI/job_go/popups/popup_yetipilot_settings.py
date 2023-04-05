@@ -311,6 +311,7 @@ class PopupYetiPilotSettings(Widget):
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').run_spindle_health_check(return_to_advanced_tab=True)
 
+
         def build_advanced_settings():
             self.yp.set_using_advanced_profile(True)
 
@@ -455,7 +456,6 @@ class PopupYetiPilotSettings(Widget):
         close_button.bind(on_press=unschedule_clocks)
         close_button.bind(on_press=popup.dismiss)
 
-        # if spindle_health_check_button: 
         spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
         spindle_health_check_button.bind(on_press=popup.dismiss)
 
