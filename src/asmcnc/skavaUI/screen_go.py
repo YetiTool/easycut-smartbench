@@ -688,6 +688,8 @@ class GoScreen(Screen):
 
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
+            self.m._grbl_soft_reset()
+
             if self.m.is_spindle_health_check_active() \
                     and not self.m.has_spindle_health_check_run() and self.m.stylus_router_choice == 'router':
                 self.run_spindle_health_check(start_after_pass=True)
