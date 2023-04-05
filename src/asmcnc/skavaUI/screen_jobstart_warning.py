@@ -221,6 +221,7 @@ class JobstartWarningScreen(Screen):
         # RESET SPINDLE HEALTH CHECK FLAGS
         self.m.spindle_health_check_failed = False
         self.m.spindle_health_check_passed = False
+        self.m.s.yp.set_adjusting_spindle_speed(False)
 
     def update_strings(self):
 

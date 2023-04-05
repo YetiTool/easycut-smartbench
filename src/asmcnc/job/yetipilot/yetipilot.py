@@ -380,6 +380,10 @@ class YetiPilot(object):
         return (target_rpm - 12916) / 0.514
 
     def use_profile(self, profile):
+        if self.active_profile != profile:
+            self.m.speed_override_reset()
+            self.set_adjusting_spindle_speed(False)
+
         self.active_profile = profile
         self.using_advanced_profile = False
         self.using_basic_profile = True
