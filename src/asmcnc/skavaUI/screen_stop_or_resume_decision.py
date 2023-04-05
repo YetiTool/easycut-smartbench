@@ -249,7 +249,10 @@ class StopOrResumeDecisionScreen(Screen):
 
     def resume_job(self):
 
-        if self.reason_for_pause == 'yetipilot_low_feed':
+        if  self.reason_for_pause == 'yetipilot_low_feed' or \
+            self.reason_for_pause == 'yetipilot_spindle_data_loss' or \
+            self.reason_for_pause == 'spindle_health_check_failed':
+
             self.sm.get_screen('go').yp_widget.disable_yeti_pilot()
 
         self.sm.current = self.return_screen
