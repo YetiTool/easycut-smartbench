@@ -116,15 +116,23 @@ def log(message):
 
 class StopOrResumeDecisionScreen(Screen):
     
-    
     reason_for_pause = None
     return_screen = 'lobby'
-
-    qr_source = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
-
-    qr_yetipilot = "./asmcnc/skavaUI/img/qr_yetipilot_info.png"
+    
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/routing-tools-sc0-sc1-troubleshooting-overload-during-operation
     qr_spindle_overload = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
-    qr_health_check = "./asmcnc/skavaUI/img/qr_spindle_clamping_info.png"
+
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screens
+    qr_yetipilot_low_feed = "./asmcnc/skavaUI/img/qr_low_feed_rate.png"
+
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-data-error
+    qr_yetipilot_no_data = "./asmcnc/skavaUI/img/qr_no_spindle_data.png"
+
+    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-motor-health-check
+    qr_health_check = "./asmcnc/skavaUI/img/qr_health_check_failed.png"
+
+    # default
+    qr_source = qr_spindle_overload
 
     def __init__(self, **kwargs):
         
@@ -204,7 +212,7 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('If you choose to resume, SmartBench may struggle.')
                 )
 
-            self.qr_source = self.qr_yetipilot
+            self.qr_source = self.qr_yetipilot_low_feed
 
         if self.reason_for_pause == 'yetipilot_spindle_data_loss':
 
@@ -219,7 +227,7 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('You may resume the job with YetiPilot disabled, or cancel the job altogether.').replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume'))
                 )
 
-            self.qr_source = self.qr_yetipilot
+            self.qr_source = self.qr_yetipilot_no_data
 
         if self.reason_for_pause == 'spindle_health_check_failed':
 
