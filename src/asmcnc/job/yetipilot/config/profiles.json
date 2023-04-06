@@ -2,9 +2,9 @@
   "Profiles": [
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "3",
+      "Cutter Diameter": "3 mm",
       "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "6",
+      "Step Down": "6 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -18,9 +18,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "6",
+      "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "4",
+      "Step Down": "4 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -34,9 +34,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "8",
+      "Cutter Diameter": "8 mm",
       "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "4",
+      "Step Down": "4 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -50,9 +50,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "3",
+      "Cutter Diameter": "3 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "6",
+      "Step Down": "6 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -66,9 +66,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "6",
+      "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "6",
+      "Step Down": "6 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -82,9 +82,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "8",
+      "Cutter Diameter": "8 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "6",
+      "Step Down": "6 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -98,9 +98,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "3",
+      "Cutter Diameter": "3 mm",
       "Cutter Type": "2 flute compression spiral",
-      "Step Down": "3.5",
+      "Step Down": "3.5 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -114,9 +114,9 @@
     },
     {
       "Material Type": "MDF",
-      "Cutter Diameter": "6",
+      "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute compression spiral",
-      "Step Down": "6.5",
+      "Step Down": "6.5 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -130,9 +130,9 @@
     },
     {
       "Material Type": "Birch Plywood",
-      "Cutter Diameter": "3",
+      "Cutter Diameter": "3 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "3",
+      "Step Down": "3 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -146,9 +146,9 @@
     },
     {
       "Material Type": "Birch Plywood",
-      "Cutter Diameter": "6",
+      "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "3",
+      "Step Down": "3 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -162,9 +162,9 @@
     },
     {
       "Material Type": "Birch Plywood",
-      "Cutter Diameter": "8",
+      "Cutter Diameter": "8 mm",
       "Cutter Type": "2 flute downcut spiral",
-      "Step Down": "4",
+      "Step Down": "4 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -178,9 +178,9 @@
     },
     {
       "Material Type": "Birch Plywood",
-      "Cutter Diameter": "6",
+      "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute compression spiral",
-      "Step Down": "6.5",
+      "Step Down": "6.5 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
@@ -194,9 +194,9 @@
     },
     {
       "Material Type": "Birch Plywood",
-      "Cutter Diameter": "3",
+      "Cutter Diameter": "3 mm",
       "Cutter Type": "2 flute compression spiral",
-      "Step Down": "3.5",
+      "Step Down": "3.5 mm",
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
