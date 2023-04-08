@@ -603,8 +603,7 @@ class JobData(object):
             # Recover most recent feedrate
             feedrate_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'F' in s), None)
             if feedrate_line:
-                feedrate = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
-
+                feedrate = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
 
             # Recover most recent position
             x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
