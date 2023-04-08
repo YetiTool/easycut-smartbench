@@ -52,9 +52,6 @@ def test_stop(yp):
 def test_load_parameters_from_json(yp):
     yp.load_parameters()
 
-def test_add_to_stack(yp):
-    yp.add_to_stack(0, 0, 0, 0)
-
 def test_feed_override_wrapper(yp):
     test_func = Mock()
     yp.use_yp = True
@@ -63,3 +60,24 @@ def test_feed_override_wrapper(yp):
     yp.m.is_machine_paused = False
     yp.feed_override_wrapper(test_func)
     test_func.assert_called()
+
+def test_get_feed_adjustment_percentage(yp):
+    yp.get_all_profiles()
+    yp.use_profile(yp.available_profiles[0])
+
+    feed_up_args = (True, 1, False)
+    no_feed_up_args = (False, 0, True)
+
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=-45) == -40
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=45) == 0
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=17) == 0
+    assert yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=45) == 20
+    assert yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=17) == 17
+
+def test_get_multiplier(yp):
+    yp.get_all_profiles()
+    yp.use_profile(yp.available_profiles[0])
+
+    yp.set_free_load(400)
+
+    assert yp.get_multiplier(yp.get_total_target_power()) == 0
