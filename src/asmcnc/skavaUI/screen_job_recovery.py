@@ -441,16 +441,22 @@ class JobRecoveryScreen(Screen):
 
         # Recover most recent spindle speed
         spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'S' in s), None)
-        if spindle_speed_line:
-            self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
-        else:
+        try:
+            if spindle_speed_line:
+                self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+            else:
+                self.speed = "Undefined"
+        except:
             self.speed = "Undefined"
 
         # Recover most recent feedrate
         feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'F' in s), None)
-        if feedrate_line:
-            self.feed = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
-        else:
+        try:
+            if feedrate_line:
+                self.feed = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
+            else:
+                self.feed = "Undefined"
+        except:
             self.feed = "Undefined"
 
         # Recover most recent position
