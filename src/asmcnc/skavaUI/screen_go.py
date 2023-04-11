@@ -29,6 +29,7 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @
 
 from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
 from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
 Builder.load_string("""
 
@@ -487,9 +488,7 @@ class GoScreen(Screen):
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
         self.yp_widget.switch_reflects_yp()
 
-        if self.is_job_started_already:
-            pass
-        else:
+        if not self.is_job_started_already:
             self.reset_go_screen_prior_to_job_start()
 
         if self.show_maintenance_prompts():
@@ -500,7 +499,6 @@ class GoScreen(Screen):
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
     def show_hide_yp_container(self, use_sc2):
-
         if use_sc2:
             # Show yetipilot container
             self.job_progress_container.padding = [20,10]
@@ -522,10 +520,8 @@ class GoScreen(Screen):
 
                 if not self.m.has_spindle_health_check_failed():
                     self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED)
-
                 elif self.is_job_started_already:
-                        self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
-
+                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
                 else:
                     self.disabled_yp_widget.set_version(DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN)
 
@@ -671,7 +667,8 @@ class GoScreen(Screen):
         self.sm.get_screen('home').z_datum_reminder_flag = False
 
         # Reset YP toggle
-        self.yp_widget.disable_yeti_pilot()
+        if not self.m.has_spindle_health_check_passed():
+            self.yp_widget.disable_yeti_pilot()
 
     ### GENERAL ACTIONS
 
@@ -691,12 +688,31 @@ class GoScreen(Screen):
 
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
-            self._start_running_job()
-            self.jd.job_start_time = time.time()
+            self.m._grbl_soft_reset()
+
+            if self.m.is_spindle_health_check_active() \
+                    and not self.m.has_spindle_health_check_run() \
+                    and self.m.is_using_sc2():
+                self.run_spindle_health_check(start_after_pass=True)
+            else:
+                self._start_running_job()
+
+                if not self.m.has_spindle_health_check_passed():
+                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
     # Pausing
+
+    def run_spindle_health_check(self, start_after_pass=False, return_to_advanced_tab=False):
+        if not self.sm.has_screen('spindle_health_check_active'):
+            shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
+                                                        screen_manager=self.sm, machine=self.m, localization=self.l)
+            self.sm.add_widget(shc_screen)
+
+        self.sm.get_screen('spindle_health_check_active').start_after_pass = start_after_pass
+        self.sm.get_screen('spindle_health_check_active').return_to_advanced_tab = return_to_advanced_tab
+        self.sm.current = 'spindle_health_check_active'
 
     def _pause_job(self):
 
@@ -707,19 +723,19 @@ class GoScreen(Screen):
 
     POLL_FOR_PAUSE_SCREENS = 0.5
 
-    def raise_pause_screens_if_paused(self, dt=0):
+    def raise_pause_screens_if_paused(self, dt=0, override=False):
         # Ok so 'spindle_shutdown' & the above func needs renaming & refactoring,
         # and the shutdown UI commands need pulling out of serial comms altogether, but that's for another day. 
         # For now, this is enough:
 
-        if  self.m.s.is_job_streaming and \
-            self.m.is_machine_paused and \
-            self.m.reason_for_machine_pause and \
-            self.m.reason_for_machine_pause != "Resuming" and \
-            not str(self.m.state()).startswith('Door:3') and \
-            self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png":
+        if (self.m.s.is_job_streaming and
+                self.m.is_machine_paused and
+                self.m.reason_for_machine_pause and
+                self.m.reason_for_machine_pause != "Resuming" and
+                not str(self.m.state()).startswith('Door:3') and
+                self.start_or_pause_button_image.source == "./asmcnc/skavaUI/img/pause.png") or override:
 
-            if self.listen_for_pauses != None: 
+            if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
 
@@ -733,14 +749,16 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
         self.database.send_job_start()
+        self.jd.job_start_time = time.time()
 
-        self.m.set_pause(False)
-        self.is_job_started_already = True
-        log('Starting job...')
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         # Hide back button
         self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
         self.btn_back.disabled = True
+
+        self.m.set_pause(False)
+        self.is_job_started_already = True
+        log('Starting job...')
 
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
@@ -801,6 +819,7 @@ class GoScreen(Screen):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
             self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
         self.sm.current = self.cancel_to_screen
+        self.m._grbl_soft_reset()
 
     ### GLOBAL ENTER/LEAVE ACTIONS
 
@@ -808,7 +827,7 @@ class GoScreen(Screen):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
-        if self.listen_for_pauses != None: 
+        if self.listen_for_pauses != None:
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
 

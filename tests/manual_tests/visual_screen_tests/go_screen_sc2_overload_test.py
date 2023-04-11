@@ -44,15 +44,15 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
+    lang_idx = 2
 
-    # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
-    # 5 - Polish (y)
-    # 6 - Danish (y)
+    # 0 - English
+    # 1 - Italian
+    # 2 - Finnish
+    # 3 - German
+    # 4 - French
+    # 5 - Polish
+    # 6 - Danish
 
     
     fw_version = "2.4.2"
@@ -134,7 +134,7 @@ class ScreenTest(App):
         m.is_using_sc2 = Mock(return_value=True)
         m.is_spindle_health_check_active = Mock(return_value=False)
         # m.has_spindle_health_check_failed = Mock(return_value=True)
-        # sm.get_screen('go').is_job_started_already = True
+        sm.get_screen('go').is_job_started_already = False
 
         sm.current = 'go'
         

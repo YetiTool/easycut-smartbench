@@ -1,5 +1,8 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+from kivy.uix.scrollview import ScrollView
+from kivy.properties import StringProperty
 
 Builder.load_string("""
 
@@ -25,15 +28,24 @@ Builder.load_string("""
             padding: [2,0,5,0]
             spacing: 0
 
-            Label:
-                id: body_label
-                # size_hint_y: 0.7
-                color: hex('#333333ff')
-                markup: True
-                halign: 'left'
-                text_size: self.size
-                font_size: '15sp'
-                valign: "middle"
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                scroll_y: 1
+                bar_width: 4
+                bar_inactive_color: [.7, .7, .7, .7]
+
+                Label:
+                    id: body_label
+                    size_hint_y: None
+                    color: hex('#333333ff')
+                    markup: True
+                    halign: 'left'
+                    height: self.texture_size[1]
+                    text_size: self.width - 3, None
+                    font_size: '15sp'
+                    valign: "middle"
+                    max_lines: 60
 
         BoxLayout: 
             id: button_container
@@ -109,23 +121,39 @@ class DisabledYetiPilotWidget(Widget):
             self.health_check_button.disabled = True
             self.health_check_button_img.source = self.health_check_disabled_img
 
+    def get_translated_text_based_on_case(self, case):
+
+        translated_text = ""
+
+        if case == DisabledYPCase.DISABLED:
+            translated_text +=  self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.")
+
+        else:
+            translated_text +=  self.l.get_str("Spindle motor health check failed.")
+        
+            if case == DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN:
+                translated_text += "\n"
+                translated_text += self.l.get_str("Re-run before job start to enable YetiPilot.")
+
+        return translated_text
+
     def update_strings(self, case = "disabled"):
+
+        translated_text = self.get_translated_text_based_on_case(case)
 
         self.body_label.text = self.bigger_font_str + self.l.get_bold("YetiPilot is disabled") + "[/size]"
         self.body_label.text += "\n"
-
-        if case == DisabledYPCase.DISABLED:
-            self.body_label.text +=  self.smaller_font_str + self.l.get_str("Enable Spindle motor health check in the Maintenance app to change this.") + "[/size]"
-
-        else:
-            self.body_label.text +=  self.smaller_font_str + self.l.get_str("Spindle motor health check failed.") + "[/size]"
-        
-            if case == DisabledYPCase.FAILED_AND_CAN_RUN_AGAIN:
-                self.body_label.text += "\n"
-                self.body_label.text += self.smaller_font_str + self.l.get_str("Re-run before job start to enable YetiPilot.") + "[/size]"
+        self.body_label.text += self.smaller_font_str
+        self.body_label.text += translated_text
+        self.body_label.text += "[/size]"
 
     def run_spindle_health_check(self):
-        print("press")
+        if not self.sm.has_screen('spindle_health_check_active'):
+            shc_screen = SpindleHealthCheckActiveScreen(name='spindle_health_check_active',
+                                                        screen_manager=self.sm, machine=self.m, localization=self.l)
+            self.sm.add_widget(shc_screen)
+        self.sm.get_screen('spindle_health_check_active').start_after_pass = False
+        self.sm.current = 'spindle_health_check_active'
 
 
 

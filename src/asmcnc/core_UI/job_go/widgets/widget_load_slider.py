@@ -31,7 +31,6 @@ Builder.load_string("""
         padding: 0
         Label:
             id: load_label
-            text: "900 W" 
             markup: True
             halign: "center" 
             valign: "middle"
@@ -46,7 +45,6 @@ Builder.load_string("""
 
             Label: 
                 id: min_label
-                text: "400 W"
                 color: 0, 0, 0, 1
                 markup: True
                 halign: "center" 
@@ -56,15 +54,13 @@ Builder.load_string("""
 
             Slider:
                 id: power_slider
-                min: 400
+                # min: 400
                 max: 1000
                 step: 10
-                on_value: root.on_slider_value_change()
                 size_hint_x: 0.8
 
             Label: 
                 id: max_label
-                text: "1000 W"
                 color: 0, 0, 0, 1
                 markup: True
                 halign: "center" 
@@ -101,8 +97,17 @@ class LoadSliderWidget(Widget):
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
 
-        self.power_slider.value = self.yp.get_target_power()
+        try:
+            self.power_slider.min = self.yp.get_free_load()
+        except:
+            self.power_slider.min = 390
+        self.power_slider.value = self.yp.get_total_target_power()
+
         self.on_slider_value_change()
+        self.power_slider.bind(value=self.on_slider_value_change)
+
+        self.min_label.text = str(int(self.power_slider.min)) + " W"
+        self.max_label.text = str(int(self.power_slider.max)) + " W"
 
         self.make_buttons(self.button_container, self.power_slider, -100)
         self.make_buttons(self.button_container, self.power_slider, -10)
@@ -115,8 +120,12 @@ class LoadSliderWidget(Widget):
         container.add_widget(PowerAdjustButtons(text=btn_str, on_press=button_adjust_func, color=dark_grey))
 
     def button_adjust_slider(self, val, instance=None):
-        if 400 <= self.power_slider.value + val <= 1000: self.power_slider.value+=val
+        if self.power_slider.min <= self.power_slider.value + val <= self.power_slider.max: self.power_slider.value+=val
 
-    def on_slider_value_change(self):
-        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]" 
-        self.yp.set_target_power(int(self.power_slider.value))
+    def on_slider_value_change(self, instance=None, value=None):
+        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
+
+        tool_load = int(self.power_slider.value) - self.yp.get_free_load()
+
+        self.yp.set_tool_load(tool_load)
+

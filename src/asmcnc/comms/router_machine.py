@@ -26,7 +26,6 @@ from __builtin__ import True
 
 from asmcnc.skavaUI import popup_info
 
-
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
@@ -931,8 +930,20 @@ class RouterMachine(object):
     def is_spindle_health_check_active(self):
         return self.is_spindle_health_check_enabled_as_default
 
+    spindle_health_check_failed = False
+    spindle_health_check_passed = False
+
     def has_spindle_health_check_failed(self):
-        return False
+        return self.spindle_health_check_failed
+
+    def has_spindle_health_check_passed(self):
+        return self.spindle_health_check_passed
+
+    def has_spindle_health_check_run(self):
+        return self.has_spindle_health_check_passed() or self.has_spindle_health_check_failed()
+
+    def get_spindle_freeload(self):
+        return self.s.spindle_freeload
 
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
@@ -1274,7 +1285,7 @@ class RouterMachine(object):
             self.s.m_state = temp_state
 
     # Query if smartbench_is_busy: don't send commands yet :) 
-    def smartbench_is_busy(self): 
+    def smartbench_is_busy(self):
 
         if not self.state().startswith("Idle"):
             return True
@@ -1285,13 +1296,13 @@ class RouterMachine(object):
         if self.s.is_job_streaming:
             return True
 
-        if self.s.write_command_buffer: 
+        if self.s.write_command_buffer:
             return True
 
-        if self.s.write_realtime_buffer: 
+        if self.s.write_realtime_buffer:
             return True
 
-        if self.s.write_protocol_buffer: 
+        if self.s.write_protocol_buffer:
             return True
 
         if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
