@@ -852,3 +852,5 @@ If you disable this, there will not be an option to use YetiPilot during a job.	
 2 flute downcut spiral	2-schneidige Linksdrall-Spirale	Fraise hélicoïdale négative 2 dents	Spirale a 2 eliche con tagliente negativo	2-leikkuinen alaspäin leikkaava spiraali	2 spiraalvormige downcut spiraal	Frez spiralny 2-piórowy typu negatyw 	2 skær negativ spiral sletfræser
 2 flute compression spiral	2-schneidige Kompressionsspirale	Fraise hélicoïdale 2 dents à compression	Spirale a 2 eliche a compressione	2-leikkuinen kompressio spiraali	2 spiraalvormige compressie spiraal	Frez spiralny 2-piórowy typu pozytyw-negatyw	2 skær kompressionsspiral sletfræser
 Birch Plywood	Birkensperrholz	Contreplaqué de bouleau	Compensato di betulla	Koivuvaneri	Berkentriplex	Sklejka brzozowa	Birkekrydsfiner
+F	V	F	A	F	F	F	F
+S	D	S	G	S	S	S	H
