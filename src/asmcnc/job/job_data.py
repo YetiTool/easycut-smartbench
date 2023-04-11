@@ -626,6 +626,8 @@ class JobData(object):
                     recovery_gcode.append("G0 Z" + z)
                     if feedrate_line:
                         recovery_gcode.append("G1 F" + feedrate)
+                    else:
+                        recovery_gcode.append("G1")
                 else:
                     if feedrate_line:
                         recovery_gcode.append("G1 F" + feedrate)
