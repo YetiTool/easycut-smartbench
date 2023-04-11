@@ -561,15 +561,6 @@ class JobData(object):
                 else:
                     recovery_gcode.append(re.search("M0?[0-2](\D|$)|M30", program_line).group(0)[:2])
 
-            # Spindle state
-            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3-5](\D|$)", s)), None)
-            if spindle_state_line:
-                # String needs to be sliced to different length depending on whether there is an extra 0
-                if re.search("M0[3-5](\D|$)", spindle_state_line):
-                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:3])
-                else:
-                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:2])
-
             # Coolant state
             gcode_to_search = reversed(self.job_gcode[:self.job_recovery_selected_line])
             coolant_line = next((s for s in gcode_to_search if re.search("M0?[7-9](\D|$)", s)), None)
@@ -645,6 +636,15 @@ class JobData(object):
                 recovery_gcode.append("G0 Z" + z)
                 if feedrate_line:
                     recovery_gcode.append("G1 F" + feedrate)
+
+            # Spindle state
+            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3-5](\D|$)", s)), None)
+            if spindle_state_line:
+                # String needs to be sliced to different length depending on whether there is an extra 0
+                if re.search("M0[3-5](\D|$)", spindle_state_line):
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:3])
+                else:
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:2])
 
 
             # Recovery gcode now contains scraped modal gcode, not in the original file
