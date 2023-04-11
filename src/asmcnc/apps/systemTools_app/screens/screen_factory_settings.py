@@ -517,7 +517,6 @@ class FactorySettingsScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
-    theateam_path =  '../../plus.txt'
 
     dev_mode = False
 
@@ -956,17 +955,15 @@ class FactorySettingsScreen(Screen):
     def toggle_sc2_compatability(self):
         if self.sc2_compatability_toggle.state == 'normal':
             self.sc2_compatability_toggle.text = 'Enable SC2 compatability'
-            self.m.write_dollar_51_setting(0)
             try:
-                os.remove(self.theateam_path)
+                self.m.disable_theateam()
             except:
                 warning_message = 'Problem removing SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
         else:
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
-            self.m.write_dollar_51_setting(1)
             try:
-                open(self.theateam_path, 'a').close()
+                self.m.enable_theateam()
             except:
                 warning_message = 'Problem creating SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)

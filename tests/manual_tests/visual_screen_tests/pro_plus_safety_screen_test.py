@@ -13,7 +13,7 @@ Config.write()
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.visual_screen_tests.yetipilot_settings_popup_test
+python -m tests.manual_tests.visual_screen_tests.pro_plus_safety_screen_test
 
 '''
 try: from mock import Mock
@@ -35,28 +35,9 @@ from settings import settings_manager
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
-from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
+from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
+from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 
-
-
-Builder.load_string("""
-<BasicScreen>:
-
-""")
-
-class BasicScreen(Screen):
-
-    def __init__(self, **kwargs):
-        super(BasicScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
-        self.m = kwargs['m']
-        self.db = kwargs['db']
-        self.yp = kwargs['yp']
-
-
-    def on_enter(self):
-        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = "COM3"
 
@@ -91,7 +72,6 @@ class TestApp(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        m.has_spindle_health_check_run= Mock(return_value=False)
 
         # Initialise YP
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
@@ -99,7 +79,13 @@ class TestApp(App):
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
-        sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
+        start_seq = Mock()
+
+
+        consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
+        sm.add_widget(consent_1_screen)
+
+        sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
         sm.current = 'basic'
         return sm
 

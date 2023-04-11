@@ -22,6 +22,7 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 
 from functools import partial
+import traceback
 
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
@@ -37,10 +38,11 @@ Builder.load_string("""
     background_normal: ''
     size: self.size
     color: hex('#333333ff')
-    halign: 'left'
+    halign: 'center'
     markup: 'True'
     font_size: 14
     background_color: 0,0,0,0
+    text_size : self.width, None
     canvas.before:
         Color:
             rgba: hex('#e5e5e5ff')
@@ -56,6 +58,8 @@ Builder.load_string("""
     color: hex('#333333ff')
     background_color: 0,0,0,0
     font_size: 14
+    text_size : self.width, None
+    halign: 'center'
     canvas.before:
         Color:
             rgba: hex('ccccccff')
@@ -75,6 +79,21 @@ Builder.load_string("""
             size: self.size
             radius: [dp(10), dp(10)]
 
+<BigSpindleHealthCheckButton@Button>:
+    size_hint: (None, None)
+    size: [150,150]
+    background_color: 0,0,0,0
+    background_normal: ''
+    BoxLayout:
+        padding: 0
+        size: self.parent.size
+        pos: self.parent.pos
+        Image:
+            source: "./asmcnc/core_UI/job_go/img/health_check_button_big.png"
+            center_x: self.parent.center_x
+            y: self.parent.y
+            size: self.parent.width, self.parent.height
+            allow_stretch: False
 
 
 
@@ -84,6 +103,9 @@ class Choices(Spinner):
     pass
 
 class CloseButton(Button):
+    pass
+
+class BigSpindleHealthCheckButton(Button):
     pass
 
 class PopupYetiPilotSettings(Widget):
@@ -98,10 +120,6 @@ class PopupYetiPilotSettings(Widget):
 
         clock_speed_1 = None
         clock_speed_2 = None
-
-        diameter_values = self.yp.get_available_cutter_diameters()
-        tool_values = self.yp.get_available_cutter_types()
-        material_values = self.yp.get_available_material_types()
 
         img_path = './asmcnc/core_UI/job_go/img/'
         sep_top_img_src = img_path + 'yp_settings_sep_top.png'
@@ -126,6 +144,9 @@ class PopupYetiPilotSettings(Widget):
         dropdowns_width = dropdowns_container_width - 80
         dropdowns_cols_dict = {0: dp(70), 1: dp(dropdowns_width)}
         advice_container_width = pop_width - dropdowns_container_width - 30
+
+        spindle_health_check_button_size = 150
+        spindle_health_check_button = BigSpindleHealthCheckButton()
 
         transparent = [0,0,0,0]
         subtle_white = [249 / 255., 249 / 255., 249 / 255., 1.]
@@ -166,30 +187,57 @@ class PopupYetiPilotSettings(Widget):
             optn_img_2 = Image(source=img_2_src)
             optn_img_3 = Image(source=img_3_src)
 
-            def get_profile():
-                profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)
-                if profile is None:
-                    return
+            def update_step_down(step_down_range):
+                try: 
+                    step_downs_msg_label.text = \
+                                    self.l.get_str("Recommended step downs based on these profile settings:") + \
+                                    "\n[size=16sp][b]" + str(step_down_range) + "[/size][/b]"
 
-                self.yp.use_profile(profile)
-
-                try:
-                    update_step_down(self.yp.get_active_step_down())
-                except:
+                except: # label doesn't exist yet
                     pass
 
+            def get_profile():
+                chosen_profile = self.yp.get_profile(diameter_choice.text, tool_choice.text, material_choice.text)                
+                self.yp.use_profile(chosen_profile)
+                update_step_down(self.yp.get_active_step_down())
+
+            # User chooses material first
+            # If next cutter diameter/type is not available, these selections then clear
+            def select_material(spinner, val):
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=material_choice.text)
+                diameter_choice.values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material)
+                if diameter_choice.text not in diameter_choice.values: diameter_choice.text = ''
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
+                get_profile()
+
             def select_diameter(spinner, val):
-              get_profile()
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=material_choice.text, cutter_diameter=diameter_choice.text)
+                tool_choice.values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
+                if tool_choice.text not in tool_choice.values: tool_choice.text = ''
+                get_profile()
 
             def select_tool(spinner, val):
-              get_profile()
+                get_profile()
 
-            def select_material(spinner, val):
-              get_profile()
+            material_values = self.yp.get_available_material_types()
 
+            if  self.yp.get_active_material_type() and \
+                self.yp.get_active_cutter_diameter() and \
+                self.yp.get_active_cutter_type(): 
+
+                profiles_filtered_by_material = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type())
+                profiles_filtered_by_material_and_cutter_diameter = self.yp.filter_available_profiles(material_type=self.yp.get_active_material_type(), cutter_diameter=self.yp.get_active_cutter_diameter())
+                diameter_values = self.yp.get_sorted_cutter_diameters(profiles_filtered_by_material)
+                tool_values = self.yp.get_sorted_cutter_types(profiles_filtered_by_material_and_cutter_diameter)
+
+            else:
+                diameter_values = self.yp.get_available_cutter_diameters()
+                tool_values = self.yp.get_available_cutter_types()
+
+            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
             diameter_choice = Choices(values=diameter_values, text=self.yp.get_active_cutter_diameter())
             tool_choice = Choices(values=tool_values, text=self.yp.get_active_cutter_type())
-            material_choice = Choices(values=material_values, text=self.yp.get_active_material_type())
 
             get_profile()
 
@@ -205,19 +253,19 @@ class PopupYetiPilotSettings(Widget):
             tool_label = Label(text = self.l.get_str('Tool type'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
             material_label = Label(text = self.l.get_str('Material'), color=dark_grey, markup=True, halign='left', text_size=(dropdowns_width-10, None), size_hint_y=0.4)
     
+            material_BL.add_widget(material_label)
+            material_BL.add_widget(material_choice)
             diameter_BL.add_widget(diameter_label)
             diameter_BL.add_widget(diameter_choice)
             tool_BL.add_widget(tool_label)
             tool_BL.add_widget(tool_choice)
-            material_BL.add_widget(material_label)
-            material_BL.add_widget(material_choice)
     
+            left_BL_grid.add_widget(optn_img_3)
+            left_BL_grid.add_widget(material_BL)
             left_BL_grid.add_widget(optn_img_1)
             left_BL_grid.add_widget(diameter_BL)
             left_BL_grid.add_widget(optn_img_2)
             left_BL_grid.add_widget(tool_BL)
-            left_BL_grid.add_widget(optn_img_3)
-            left_BL_grid.add_widget(material_BL)
     
             left_BL.add_widget(left_BL_grid)
     
@@ -233,11 +281,6 @@ class PopupYetiPilotSettings(Widget):
                                     padding=[10,10],
                                     size_hint_y=0.6
                                     )
-            def update_step_down(step_down_range):
-              step_downs_msg_label.text = self.l.get_str("Recommended step downs based on these profile settings:") + \
-                                      "\n" + \
-                                      "[size=16sp][b]" + str(step_down_range) + "[/size]"\
-                                      + "[/b]"
 
             update_step_down(self.yp.get_active_step_down())
     
@@ -263,7 +306,14 @@ class PopupYetiPilotSettings(Widget):
 
 
         # BODY CUSTOM PROFILES
+        def start_spindle_health_check():
+            self.yp.set_using_advanced_profile(True)
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').run_spindle_health_check(return_to_advanced_tab=True)
+
+
         def build_advanced_settings():
+            self.yp.set_using_advanced_profile(True)
 
             target_ml_string = self.l.get_str("Target Spindle motor load")
             target_ml_label = Label( size_hint_y=0.1,
@@ -283,11 +333,23 @@ class PopupYetiPilotSettings(Widget):
             load_slider = LoadSliderWidget(screen_manager=self.sm, yetipilot=self.yp)
             load_slider_container.add_widget(load_slider)
     
-            left_BL.add_widget(target_ml_label)
-            left_BL.add_widget(load_slider_container)
-    
             speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.db)
             right_BL.add_widget(speedOverride)
+
+            if self.m.has_spindle_health_check_passed():
+
+                left_BL.add_widget(target_ml_label)
+                left_BL.add_widget(load_slider_container)
+
+            else:
+
+                speedOverride.opacity = 0.6
+                left_BL.padding = [
+                                    (dropdowns_container_width - spindle_health_check_button_size)/2,
+                                    (body_BL_height - spindle_health_check_button_size)/2
+                                    ]
+                
+                left_BL.add_widget(spindle_health_check_button)
     
             clock_speed_1 = Clock.schedule_interval(lambda dt: speedOverride.update_spindle_speed_label(), 0.1)
             clock_speed_2 = Clock.schedule_interval(lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1)
@@ -393,6 +455,9 @@ class PopupYetiPilotSettings(Widget):
         if closing_func: close_button.bind(on_press=closing_func)
         close_button.bind(on_press=unschedule_clocks)
         close_button.bind(on_press=popup.dismiss)
+
+        spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
+        spindle_health_check_button.bind(on_press=popup.dismiss)
 
         popup.open()
 
