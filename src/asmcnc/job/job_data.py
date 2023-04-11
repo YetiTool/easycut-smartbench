@@ -592,7 +592,7 @@ class JobData(object):
             # Recover most recent spindle speed
             spindle_speed_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'S' in s), None)
             if spindle_speed_line:
-                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0].strip()
                 recovery_gcode.append("S" + spindle_speed)
 
             # Recover most recent feedrate
