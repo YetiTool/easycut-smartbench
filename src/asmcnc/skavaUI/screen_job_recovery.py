@@ -188,7 +188,7 @@ Builder.load_string("""
                     BoxLayout:
                         orientation: 'vertical'
                         padding: dp(12)
-                        spacing: dp(9)
+                        spacing: dp(7)
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -441,17 +441,23 @@ class JobRecoveryScreen(Screen):
 
         # Recover most recent spindle speed
         spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'S' in s), None)
-        if spindle_speed_line:
-            self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
-        else:
-            self.speed = "Undefined"
+        try:
+            if spindle_speed_line:
+                self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+            else:
+                self.speed = self.l.get_str("Undefined")
+        except:
+            self.speed = self.l.get_str("Undefined")
 
         # Recover most recent feedrate
         feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'F' in s), None)
-        if feedrate_line:
-            self.feed = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
-        else:
-            self.feed = "Undefined"
+        try:
+            if feedrate_line:
+                self.feed = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
+            else:
+                self.feed = self.l.get_str("Undefined")
+        except:
+            self.feed = self.l.get_str("Undefined")
 
         # Recover most recent position
         x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'X' in s), None)
@@ -471,7 +477,7 @@ class JobRecoveryScreen(Screen):
             self.pos_z = 0.0
 
         self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (str(self.pos_x), str(self.pos_y), str(self.pos_z))
-        self.speed_label.text = "F: %s | S: %s" % (str(self.feed), str(self.speed))
+        self.speed_label.text = "%s: %s | %s: %s" % (self.l.get_str("F"), str(self.feed), self.l.get_str("S"), str(self.speed))
 
     def get_info(self):
 

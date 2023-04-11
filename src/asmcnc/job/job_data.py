@@ -561,15 +561,6 @@ class JobData(object):
                 else:
                     recovery_gcode.append(re.search("M0?[0-2](\D|$)|M30", program_line).group(0)[:2])
 
-            # Spindle state
-            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3-5](\D|$)", s)), None)
-            if spindle_state_line:
-                # String needs to be sliced to different length depending on whether there is an extra 0
-                if re.search("M0[3-5](\D|$)", spindle_state_line):
-                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:3])
-                else:
-                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:2])
-
             # Coolant state
             gcode_to_search = reversed(self.job_gcode[:self.job_recovery_selected_line])
             coolant_line = next((s for s in gcode_to_search if re.search("M0?[7-9](\D|$)", s)), None)
@@ -585,6 +576,8 @@ class JobData(object):
                                 recovery_gcode += ['M8', 'M7']
                             else:
                                 recovery_gcode.append('M7')
+                        else:
+                            recovery_gcode.append('M7')
                     elif 'M8' in coolant_line or 'M08' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
                         if previous_coolant_line:
@@ -592,34 +585,35 @@ class JobData(object):
                                 recovery_gcode += ['M7', 'M8']
                             else:
                                 recovery_gcode.append('M8')
+                        else:
+                            recovery_gcode.append('M8')
 
 
             # Recover most recent spindle speed
             spindle_speed_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'S' in s), None)
             if spindle_speed_line:
-                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
+                spindle_speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0].strip()
                 recovery_gcode.append("S" + spindle_speed)
 
             # Recover most recent feedrate
             feedrate_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'F' in s), None)
             if feedrate_line:
-                feedrate = re.match('\d+',feedrate_line[feedrate_line.find("F")+1:]).group()
-
+                feedrate = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
 
             # Recover most recent position
             x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
             if x_line:
-                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1]
+                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1].strip()
             else:
                 x = "0.000"
             y_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
             if y_line:
-                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1]
+                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1].strip()
             else:
                 y = "0.000"
             z_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
             if z_line:
-                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1]
+                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1].strip()
             else:
                 z = "0.000"
 
@@ -632,6 +626,8 @@ class JobData(object):
                     recovery_gcode.append("G0 Z" + z)
                     if feedrate_line:
                         recovery_gcode.append("G1 F" + feedrate)
+                    else:
+                        recovery_gcode.append("G1")
                 else:
                     if feedrate_line:
                         recovery_gcode.append("G1 F" + feedrate)
@@ -642,6 +638,15 @@ class JobData(object):
                 recovery_gcode.append("G0 Z" + z)
                 if feedrate_line:
                     recovery_gcode.append("G1 F" + feedrate)
+
+            # Spindle state
+            spindle_state_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if re.search("M0?[3-5](\D|$)", s)), None)
+            if spindle_state_line:
+                # String needs to be sliced to different length depending on whether there is an extra 0
+                if re.search("M0[3-5](\D|$)", spindle_state_line):
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:3])
+                else:
+                    recovery_gcode.append(re.search("M0?[3-5](\D|$)", spindle_state_line).group(0)[:2])
 
 
             # Recovery gcode now contains scraped modal gcode, not in the original file
