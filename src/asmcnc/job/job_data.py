@@ -585,6 +585,8 @@ class JobData(object):
                                 recovery_gcode += ['M8', 'M7']
                             else:
                                 recovery_gcode.append('M7')
+                        else:
+                            recovery_gcode.append('M7')
                     elif 'M8' in coolant_line or 'M08' in coolant_line:
                         previous_coolant_line = next((s for s in gcode_to_search if re.search("M0?[7,9](\D|$)", s)), None)
                         if previous_coolant_line:
@@ -592,6 +594,8 @@ class JobData(object):
                                 recovery_gcode += ['M7', 'M8']
                             else:
                                 recovery_gcode.append('M8')
+                        else:
+                            recovery_gcode.append('M8')
 
 
             # Recover most recent spindle speed
