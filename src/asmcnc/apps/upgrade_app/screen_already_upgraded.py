@@ -1,6 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+
 Builder.load_string("""
 <AlreadyUpgradedScreen>:
 
@@ -53,7 +55,7 @@ Builder.load_string("""
 
                 Button:
                     id: continue_button
-                    on_press: root.quit_to_lobby()
+                    on_press: root.next_screen()
                     font_size: dp(30)
                     background_normal: "./asmcnc/skavaUI/img/next.png"
                     background_down: "./asmcnc/skavaUI/img/next.png"
@@ -81,8 +83,13 @@ class AlreadyUpgradedScreen(Screen):
 
         self.update_strings()
 
-    def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+    def next_screen(self):
+
+        if not self.sm.has_screen('pro_plus_safety'):
+            pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = None, screen_manager = self.sm, localization = self.l)
+            self.sm.add_widget(pro_plus_safety_screen)
+        
+        self.sm.current = 'pro_plus_safety'
 
     def update_strings(self):
         self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
