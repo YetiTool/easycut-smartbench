@@ -26,6 +26,7 @@ from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
 
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -299,6 +300,7 @@ class HomeScreen(Screen):
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
     def on_enter(self):
+
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):

@@ -13,8 +13,7 @@ Config.write()
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.visual_screen_tests.yetipilot_settings_popup_test
-
+python -m tests.manual_tests.visual_screen_tests.screen_spindle_health_check_test
 '''
 try: from mock import Mock
 except: pass
@@ -35,28 +34,8 @@ from settings import settings_manager
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
-from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
-
-
-Builder.load_string("""
-<BasicScreen>:
-
-""")
-
-class BasicScreen(Screen):
-
-    def __init__(self, **kwargs):
-        super(BasicScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
-        self.m = kwargs['m']
-        self.db = kwargs['db']
-        self.yp = kwargs['yp']
-
-
-    def on_enter(self):
-        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = "COM3"
 
@@ -91,16 +70,9 @@ class TestApp(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        m.has_spindle_health_check_run= Mock(return_value=False)
 
-        # Initialise YP
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
-
-        # Create database object to talk to
-        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
-
-        sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
-        sm.current = 'basic'
+        sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
+        sm.current = 'test'
         return sm
 
 if __name__ == '__main__':
