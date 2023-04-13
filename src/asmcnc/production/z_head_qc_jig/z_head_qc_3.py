@@ -48,7 +48,7 @@ Builder.load_string("""
 class ZHeadQC3(Screen):
 
     timer_started = False
-    one_minute = 1 # 60 seconds
+    one_minute = 3 # 60 seconds
     seconds = one_minute*30
 
     def __init__(self, **kwargs):
