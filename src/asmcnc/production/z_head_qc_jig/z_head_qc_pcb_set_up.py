@@ -431,9 +431,10 @@ class ZHeadPCBSetUp(Screen):
     single_stack_single_driver_x_current = 26
     double_stack_single_driver_x_current = 26
     single_stack_dual_driver_x_current = 13
-    double_stack_dual_driver_x_current = 20
+    double_stack_dual_driver_x_current = 27
 
-    default_z_current = 25
+    default_z_current = 31
+    default_y_current = 28
 
     default_x_thermal_coefficient = 5000
     default_y_thermal_coefficient = 5000
