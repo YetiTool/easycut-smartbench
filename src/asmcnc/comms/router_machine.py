@@ -2410,7 +2410,7 @@ class RouterMachine(object):
         elif Y: SG_to_check = self.s.sg_y1_motor
 
 
-        if 200 < SG_to_check < 950:
+        if 50 < SG_to_check < 950:
 
             self.quit_jog()
 
