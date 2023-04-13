@@ -675,6 +675,9 @@ class SerialConnection(object):
         self.jd.job_gcode_running = []
         self.yp.use_yp = False
         self.jd.grbl_mode_tracker = []
+
+        # Save cancellation line for job recovery
+        cancel_line = self.grbl_ln
         self.grbl_ln = None
 
         if self.m_state != "Check":
@@ -685,9 +688,6 @@ class SerialConnection(object):
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
-
-            # Store cancel line, as g_count is reset in update_machine_runtime
-            cancel_line = self.g_count - 35
 
             # Update time for maintenance reminders
             time.sleep(0.4)
