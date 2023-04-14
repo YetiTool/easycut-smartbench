@@ -304,7 +304,6 @@ Builder.load_string("""
                             Label:
                                 id: recommended_z_current_label
                                 size_hint_x: 0.8
-                                text: "25"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -330,7 +329,6 @@ Builder.load_string("""
                             TextInput:
                                 id: other_z_current_textinput
                                 size_hint_x: 0.4
-                                text: "25"
                                 input_filter: "int"
                                 multiline: False
                                 font_size: "22sp"
@@ -444,6 +442,7 @@ class ZHeadPCBSetUp(Screen):
     number_of_drivers = 4
 
     x_current = str(single_stack_dual_driver_x_current)
+    y_current = str(default_y_current)
     z_current = str(default_z_current)
 
     x_thermal_coefficient = str(default_x_thermal_coefficient)
@@ -528,6 +527,7 @@ class ZHeadPCBSetUp(Screen):
         self.recommended_z_current_checkbox.state = "normal"
         self.other_z_current_checkbox.state = "normal"
 
+        self.recommended_z_current_label.text = str(self.default_z_current)
         self.other_z_current_textinput.text = str(self.z_current)
         self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
 
