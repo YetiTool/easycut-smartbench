@@ -668,6 +668,7 @@ class ZHeadPCBSetUp(Screen):
         print("FW version " + str(self.firmware_version))
 
         print("X current: " + str(self.x_current))
+        print("Y current: " + str(self.y_current))
         print("Z current: " + str(self.z_current))
 
         print("X thermal coefficient: " + str(self.x_thermal_coefficient))
@@ -782,6 +783,7 @@ class ZHeadPCBSetUp(Screen):
 
             else:
                 self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+                self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
                 self.progress_to_next_screen()
@@ -800,10 +802,11 @@ class ZHeadPCBSetUp(Screen):
                 self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
                 self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
                 self.m.set_motor_current("Z", int(self.z_current)) and \
+                self.m.set_motor_current("Y", int(self.y_current)) and \
                 self.m.set_motor_current("X", int(self.x_current)):
 
                 # STORE PARAMETERS
-                Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
+                Clock.schedule_once(lambda dt: store_params_and_progress(), 1.2)
 
             else:
                 log("Z Head not Idle yet, waiting...")
@@ -831,6 +834,11 @@ class ZHeadPCBSetUp(Screen):
             if int(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
             if int(self.m.TMC_motor[TMC_X1].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
             if int(self.m.TMC_motor[TMC_X2].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+
+            if int(self.m.TMC_motor[TMC_Y1].ActiveCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
+            if int(self.m.TMC_motor[TMC_Y2].ActiveCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
+            if int(self.m.TMC_motor[TMC_Y1].standStillCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
+            if int(self.m.TMC_motor[TMC_Y2].standStillCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
 
             if int(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
             if int(self.m.TMC_motor[TMC_Z].standStillCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False

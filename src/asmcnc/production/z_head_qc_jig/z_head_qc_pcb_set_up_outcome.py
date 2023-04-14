@@ -16,6 +16,8 @@ Builder.load_string("""
     z_current_label : z_current_label
     x_current_image : x_current_image
     x_current_label : x_current_label
+    y_current_image : y_current_image
+    y_current_label : y_current_label
     thermal_coefficients_image : thermal_coefficients_image
     thermal_coefficients_label : thermal_coefficients_label
 
@@ -60,7 +62,6 @@ Builder.load_string("""
 
                 Label:
                     id: fw_update_label
-                    text: "FW update successful"
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
@@ -76,7 +77,6 @@ Builder.load_string("""
 
                 Label:
                     id: z_current_label
-                    text: "FW update successful"
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
@@ -92,7 +92,21 @@ Builder.load_string("""
 
                 Label:
                     id: x_current_label
-                    text: "FW update successful"
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+
+                Image:
+                    id: y_current_image
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+                Label:
+                    id: y_current_label
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
@@ -108,7 +122,6 @@ Builder.load_string("""
 
                 Label:
                     id: thermal_coefficients_label
-                    text: "FW update successful"
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
@@ -140,6 +153,7 @@ class ZHeadPCBSetUpOutcome(Screen):
     fw_update_success = True
     z_current_correct = True
     x_current_correct = True
+    y_current_correct = True
     thermal_coefficients_correct = True
 
     def __init__(self, **kwargs):
@@ -172,6 +186,12 @@ class ZHeadPCBSetUpOutcome(Screen):
                                         "X2 active " + str(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) + "; " + \
                                         "X2 idle " + str(self.m.TMC_motor[TMC_X2].standStillCurrentScale) + "; "
 
+        self.y_current_label.text =     "Y Current: " + \
+                                        "Y1 active " + str(self.m.TMC_motor[TMC_Y1].ActiveCurrentScale) + "; " + \
+                                        "Y1 idle " + str(self.m.TMC_motor[TMC_Y1].standStillCurrentScale) + "; " + \
+                                        "Y2 active " + str(self.m.TMC_motor[TMC_Y2].ActiveCurrentScale) + "; " + \
+                                        "Y2 idle " + str(self.m.TMC_motor[TMC_Y2].standStillCurrentScale) + "; "
+
         self.thermal_coefficients_label.text = "Thermal coefficients: " + \
                                                 "X1: " + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) + "; " + \
                                                 "X2: " + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient) + "; " + \
@@ -190,6 +210,10 @@ class ZHeadPCBSetUpOutcome(Screen):
         elif str(self.m.s.fw_version).startswith("1"): self.x_current_image.source = self.undetermined_image
         else: self.x_current_image.source = self.fail_image
 
+        if self.y_current_correct: self.y_current_image.source = self.success_image
+        elif str(self.m.s.fw_version).startswith("1"): self.y_current_image.source = self.undetermined_image
+        else: self.y_current_image.source = self.fail_image
+
         if self.thermal_coefficients_correct: self.thermal_coefficients_image.source = self.success_image
         elif str(self.m.s.fw_version).startswith("1"): self.thermal_coefficients_image.source = self.undetermined_image
         else: self.thermal_coefficients_image.source = self.fail_image
@@ -199,11 +223,13 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.fw_update_success = True
         self.z_current_correct = True
         self.x_current_correct = True
+        self.y_current_correct = True
         self.thermal_coefficients_correct = True
 
         self.fw_update_image.source = self.undetermined_image
         self.z_current_image.source = self.undetermined_image
         self.x_current_image.source = self.undetermined_image
+        self.y_current_image.source = self.undetermined_image
         self.thermal_coefficients_image.source = self.undetermined_image
 
     # fw_update_image
