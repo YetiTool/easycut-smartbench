@@ -830,24 +830,29 @@ class ZHeadPCBSetUp(Screen):
             self.ok_button.text = "Checking registers..."
 
             # CHECK REGISTERS
-            if int(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X1].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X2].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+            outcome_screen = self.sm.get_screen("qcpcbsetupoutcome")
 
-            if int(self.m.TMC_motor[TMC_Y1].ActiveCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
-            if int(self.m.TMC_motor[TMC_Y2].ActiveCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
-            if int(self.m.TMC_motor[TMC_Y1].standStillCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
-            if int(self.m.TMC_motor[TMC_Y2].standStillCurrentScale) != int(self.y_current): self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
+            def check_current(motor, expected_current, outcome_current_correct):
+                if int(self.m.TMC_motor[motor].ActiveCurrentScale) != int(expected_current):
+                    outcome_current_correct = False
+                if int(self.m.TMC_motor[motor].standStillCurrentScale) != int(expected_current):
+                    outcome_current_correct = False
 
-            if int(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
-            if int(self.m.TMC_motor[TMC_Z].standStillCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
+            def check_temp_coeff(motor, expected_coeff)
+                if int(self.m.TMC_motor[motor].temperatureCoefficient) != int(expected_coeff):
+                    outcome_screen.thermal_coefficients_correct = False
 
-            if int(self.m.TMC_motor[TMC_X1].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_X2].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Z].temperatureCoefficient) != int(self.z_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            check_current(TMC_X1, self.x_current, outcome_screen.x_current_correct)
+            check_current(TMC_X2, self.x_current, outcome_screen.x_current_correct)
+            check_current(TMC_Y1, self.y_current, outcome_screen.y_current_correct)
+            check_current(TMC_Y2, self.y_current, outcome_screen.y_current_correct)
+            check_current(TMC_Z, self.z_current, outcome_screen.z_current_correct)
+
+            check_temp_coeff(TMC_X1, self.x_thermal_coefficient)
+            check_temp_coeff(TMC_X2, self.x_thermal_coefficient)
+            check_temp_coeff(TMC_Y1, self.y_thermal_coefficient)
+            check_temp_coeff(TMC_Y2, self.y_thermal_coefficient)
+            check_temp_coeff(TMC_Z, self.z_thermal_coefficient)
 
             self.progress_to_next_screen()
 

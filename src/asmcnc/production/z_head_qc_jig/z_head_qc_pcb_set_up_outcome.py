@@ -199,24 +199,25 @@ class ZHeadPCBSetUpOutcome(Screen):
                                                 "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + "; " + \
                                                 "Z: " + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ";"
 
-        if self.fw_update_success: self.fw_update_image.source = self.success_image
-        else: self.fw_update_image.source = self.fail_image
 
-        if self.z_current_correct: self.z_current_image.source = self.success_image
-        elif str(self.m.s.fw_version).startswith("1"): self.z_current_image.source = self.undetermined_image
-        else: self.z_current_image.source = self.fail_image
 
-        if self.x_current_correct: self.x_current_image.source = self.success_image
-        elif str(self.m.s.fw_version).startswith("1"): self.x_current_image.source = self.undetermined_image
-        else: self.x_current_image.source = self.fail_image
+        if self.fw_update_success:
+            self.fw_update_image.source = self.success_image
+        else:
+            self.fw_update_image.source = self.fail_image
 
-        if self.y_current_correct: self.y_current_image.source = self.success_image
-        elif str(self.m.s.fw_version).startswith("1"): self.y_current_image.source = self.undetermined_image
-        else: self.y_current_image.source = self.fail_image
+        self.update_images(self.z_current_correct, self.z_current_image)
+        self.update_images(self.x_current_correct, self.x_current_image)
+        self.update_images(self.y_current_correct, self.y_current_image)
+        self.update_images(self.thermal_coefficients_correct, self.thermal_coefficients_image)
 
-        if self.thermal_coefficients_correct: self.thermal_coefficients_image.source = self.success_image
-        elif str(self.m.s.fw_version).startswith("1"): self.thermal_coefficients_image.source = self.undetermined_image
-        else: self.thermal_coefficients_image.source = self.fail_image
+    def update_images(self, correct, image):
+        if self.correct:
+            self.image.source = self.success_image
+        elif str(self.m.s.fw_version).startswith("1"):
+            self.image.source = self.undetermined_image
+        else:
+            self.image.source = self.fail_image
 
     def on_leave(self):
 
