@@ -429,7 +429,7 @@ class ZHeadPCBSetUp(Screen):
     usb_path = "/media/usb/"
 
     single_stack_single_driver_x_current = 26
-    double_stack_single_driver_x_current = 26
+    double_stack_single_driver_x_current = 31
     single_stack_dual_driver_x_current = 13
     double_stack_dual_driver_x_current = 27
 
