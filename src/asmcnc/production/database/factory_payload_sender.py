@@ -26,12 +26,19 @@ def get_csv(json, machine_serial, table, stage=None, csv_path=CSV_PATH):
     return file_path
 
 
-def send_csv_to_ftp(file_path, ftp_server, ftp_username, ftp_password):
+def send_csv_to_ftp(file_path, ftp_server=None, ftp_username=None, ftp_password=None):
+    if ftp_server is None or ftp_username is None or ftp_password is None:
+        try:
+            from asmcnc.production.database.credentials import ftp_server, ftp_username, ftp_password
+        except ImportError:
+            print('credentials.py not found')
+            return False
+
     try:
         import paramiko
     except ImportError:
         print('paramiko not installed')
-        return
+        return False
 
     try:
         ssh = paramiko.SSHClient()
@@ -43,5 +50,8 @@ def send_csv_to_ftp(file_path, ftp_server, ftp_username, ftp_password):
         sftp.put(file_path, WORKING_DIR + file_name)
         sftp.close()
         ssh.close()
+        return True
     except Exception as e:
         print(e)
+
+    return False

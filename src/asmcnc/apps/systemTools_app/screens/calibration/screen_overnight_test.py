@@ -9,7 +9,6 @@ from time import sleep
 import threading
 from datetime import datetime
 import json
-from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 import os
 import glob
@@ -1563,13 +1562,24 @@ class OvernightTesting(Screen):
             #     stage_id
             # )
 
-            publisher = DataPublisher(self.sn_for_db)
+            # publisher = DataPublisher(self.sn_for_db)
+
+            from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            done_send = publisher.run_data_send(statuses, table, stage)
+            csv_path = get_csv(
+                json=statuses,
+                machine_serial=self.sn_for_db,
+                table=table,
+                stage=stage
+            )
+
+            done_send = send_csv_to_ftp(csv_path)
+
+            # done_send = publisher.run_data_send(statuses, table, stage)
             log("Data send status: " + str(done_send))
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])

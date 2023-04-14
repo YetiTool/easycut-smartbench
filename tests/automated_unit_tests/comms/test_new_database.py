@@ -24,11 +24,9 @@ def test_get_csv():
 
 
 def test_send_csv_to_ftp():
-    from asmcnc.production.database.credentials import ftp_server, ftp_username, ftp_password
-
     file_path = test_get_csv()
 
-    send_csv_to_ftp(file_path, ftp_server, ftp_username, ftp_password)
+    send_csv_to_ftp(file_path)
 
 
 
