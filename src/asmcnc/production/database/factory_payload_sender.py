@@ -27,11 +27,18 @@ def get_csv(json, machine_serial, table, stage=None, csv_path=CSV_PATH):
 
 
 def send_csv_to_ftp(file_path, ftp_server=None, ftp_username=None, ftp_password=None):
+    try:
+        if "credentials.py" in os.listdir("/media/usb/"):
+            os.system("cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py")
+    except OSError:
+        print('credentials.py not found on USB')
+        return False
+
     if ftp_server is None or ftp_username is None or ftp_password is None:
         try:
             from asmcnc.production.database.credentials import ftp_server, ftp_username, ftp_password
         except ImportError:
-            print('credentials.py not found')
+            print('credentials.py not found locally')
             return False
 
     try:
