@@ -212,12 +212,12 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.update_images(self.thermal_coefficients_correct, self.thermal_coefficients_image)
 
     def update_images(self, correct, image):
-        if self.correct:
-            self.image.source = self.success_image
+        if correct:
+            image.source = self.success_image
         elif str(self.m.s.fw_version).startswith("1"):
-            self.image.source = self.undetermined_image
+            image.source = self.undetermined_image
         else:
-            self.image.source = self.fail_image
+            image.source = self.fail_image
 
     def on_leave(self):
 
