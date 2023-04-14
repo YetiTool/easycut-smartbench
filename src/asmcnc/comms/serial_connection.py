@@ -74,6 +74,10 @@ class SerialConnection(object):
         if self.s: self.s.close()
         log('Serial connection destructor')
 
+    def is_use_yp(self):
+        if self.yp:
+            return self.yp.use_yp
+
     def get_serial_screen(self, serial_error):
 
         try:
