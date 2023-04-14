@@ -838,7 +838,7 @@ class ZHeadPCBSetUp(Screen):
                 if int(self.m.TMC_motor[motor].standStillCurrentScale) != int(expected_current):
                     outcome_current_correct = False
 
-            def check_temp_coeff(motor, expected_coeff)
+            def check_temp_coeff(motor, expected_coeff):
                 if int(self.m.TMC_motor[motor].temperatureCoefficient) != int(expected_coeff):
                     outcome_screen.thermal_coefficients_correct = False
 
