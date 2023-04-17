@@ -232,14 +232,3 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.x_current_image.source = self.undetermined_image
         self.y_current_image.source = self.undetermined_image
         self.thermal_coefficients_image.source = self.undetermined_image
-
-    # fw_update_image
-    # fw_update_label
-    # fw_version_image
-    # fw_version_label
-    # z_current_image
-    # z_current_label
-    # x_current_image
-    # x_current_label
-    # thermal_coefficients_image
-    # thermal_coefficients_label
