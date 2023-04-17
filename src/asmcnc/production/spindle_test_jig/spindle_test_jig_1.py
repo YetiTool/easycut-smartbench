@@ -375,7 +375,13 @@ class SpindleTestJig1(Screen):
                                                                self.m.s.spindle_production_year)
             self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
             self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
+
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
+            if self.brush_time_value.text == '0d, 0h, 0m, 0s':
+                self.brush_time_value.color = [0, 1, 0, 1]
+            else:
+                self.brush_time_value.color = [0, 0, 0, 1]
+
             self.update_unlock_code()
 
             if self.m.s.spindle_mains_frequency_hertz == 60:
