@@ -81,7 +81,7 @@ class SpindleTest:
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(25000), 12))
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(0), 15))
             self.clocks.append(Clock.schedule_once(lambda dt: show_result(), 15))
-            self.clocks.append(Clock.schedule_once(lambda dt: self.screen.toggle_run_button(), 15))
+            self.clocks.append(Clock.schedule_once(lambda dt: self.screen.enable_run_button(), 15))
 
         def wait_for_wear_in(rpm):
             measured_rpm = int(self.m.s.spindle_speed) if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
@@ -100,7 +100,7 @@ class SpindleTest:
                 set_rpm(0)
                 fail_test(rpm, "Wear-in failed. After 90s load is %s and rpm is %s." % (str(measured_load), str(measured_rpm)))
                 show_result()
-                self.screen.toggle_run_button()
+                self.screen.enable_run_button()
             else:
                 self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
 

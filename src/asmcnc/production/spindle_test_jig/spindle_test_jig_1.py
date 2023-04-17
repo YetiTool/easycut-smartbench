@@ -336,15 +336,10 @@ class SpindleTestJig1(Screen):
     def shutdown(self):
         ConfirmShutdownPopup()
 
-    def toggle_run_button(self):
-        if self.run_test_button.disabled:
-            self.run_test_button.disabled = False
-            self.run_test_button.text = "Begin Test"
-            self.run_test_button.background_color = [0, 1, 0, 1]
-        else:
-            self.run_test_button.disabled = True
-            self.run_test_button.text = "Running Test..."
-            self.run_test_button.background_color = [1, 1, 0, 1]
+    def enable_run_button(self):
+        self.run_test_button.disabled = False
+        self.run_test_button.text = "Begin Test"
+        self.run_test_button.background_color = [0, 1, 0, 1]
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
