@@ -832,17 +832,17 @@ class ZHeadPCBSetUp(Screen):
             # CHECK REGISTERS
             outcome_screen = self.sm.get_screen("qcpcbsetupoutcome")
 
-            outcome_screen.x_current_correct = self.check_current(TMC_X1, self.x_current)
-            outcome_screen.x_current_correct = self.check_current(TMC_X2, self.x_current)
-            outcome_screen.y_current_correct = self.check_current(TMC_Y1, self.y_current)
-            outcome_screen.y_current_correct = self.check_current(TMC_Y2, self.y_current)
-            outcome_screen.z_current_correct = self.check_current(TMC_Z, self.z_current)
+            outcome_screen.x_current_correct*=self.check_current(TMC_X1, self.x_current)
+            outcome_screen.x_current_correct*=self.check_current(TMC_X2, self.x_current)
+            outcome_screen.y_current_correct*=self.check_current(TMC_Y1, self.y_current)
+            outcome_screen.y_current_correct*=self.check_current(TMC_Y2, self.y_current)
+            outcome_screen.z_current_correct*=self.check_current(TMC_Z, self.z_current)
 
-            outcome_screen.thermal_coefficients_correct = self.check_temp_coeff(TMC_X1, self.x_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct = self.check_temp_coeff(TMC_X2, self.x_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct = self.check_temp_coeff(TMC_Y1, self.y_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct = self.check_temp_coeff(TMC_Y2, self.y_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct = self.check_temp_coeff(TMC_Z, self.z_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X1, self.x_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X2, self.x_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y1, self.y_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y2, self.y_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Z, self.z_thermal_coefficient)
 
             self.progress_to_next_screen()
 

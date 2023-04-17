@@ -81,13 +81,20 @@ class ScreenTest(App):
         sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
         sm.current = 'test'
 
+        prep = sm.get_screen('prep')
         outcome_screen = sm.get_screen("test")
 
-        outcome_screen.x_current_correct = sm.get_screen('prep').check_current(TMC_X1, 0)
-        outcome_screen.x_current_correct = sm.get_screen('prep').check_current(TMC_X2, 0)
-        outcome_screen.y_current_correct = sm.get_screen('prep').check_current(TMC_Y1, 0)
-        outcome_screen.y_current_correct = sm.get_screen('prep').check_current(TMC_Y2, 0)
-        outcome_screen.z_current_correct = sm.get_screen('prep').check_current(TMC_Z, 0)
+        outcome_screen.x_current_correct*=prep.check_current(TMC_X1, 0)
+        outcome_screen.x_current_correct*=prep.check_current(TMC_X2, 10)
+        outcome_screen.y_current_correct*=prep.check_current(TMC_Y1, 12)
+        outcome_screen.y_current_correct*=prep.check_current(TMC_Y2, 11)
+        outcome_screen.z_current_correct*=prep.check_current(TMC_Z, 2)
+
+        outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X1, 0)
+        outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X2, 11)
+        outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y1, 0)
+        outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y2, 0)
+        outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Z, 0)
 
         return sm
 
