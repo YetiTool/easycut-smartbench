@@ -94,7 +94,7 @@ class SpindleTest:
                 initial_rpm = 10000
                 self.m.s.write_command('M3 S' + str(initial_rpm))
                 self.screen.target_rpm_value.text = str(initial_rpm)
-                self.clocks.append(Clock.schedule_once(lambda dt: start_test(), 3))
+                self.clocks.append(Clock.schedule_once(lambda dt: start_test(), 4))
             # Autofail after 90s
             elif (time_since_start >= 90):
                 set_rpm(0)
