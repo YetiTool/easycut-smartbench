@@ -415,7 +415,7 @@ class XYJig(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
-                Clock.schedule_once(self.finish_test, 0.4)
+                Clock.schedule_once(self.finish_test, 1)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
 
