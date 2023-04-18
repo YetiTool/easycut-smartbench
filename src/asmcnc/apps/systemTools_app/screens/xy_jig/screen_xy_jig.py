@@ -435,34 +435,34 @@ class XYJig(Screen):
         self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
         self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
-        plt.rcParams["figure.figsize"] = (7.9,1.75)
-        plt.plot(self.pos_values_away, self.sg_values_away, '--', color='cyan', label='Avg')
-        plt.plot(self.pos_values_away_motor_1, self.sg_values_away_motor_1, 'green', label='Motor 1')
-        plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
-        plt.ylabel(self.axis + ' Load (Away)')
-        ax = plt.gca()
-        ax.set_ylim([-20, 20])
-        combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
-        ax.set_xlim([min(combined_list), max(combined_list)])
-        loc = plticker.MultipleLocator(base=10)
-        ax.yaxis.set_major_locator(loc)
-        plt.tight_layout(pad=0.3)
-        plt.grid()
-        plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
-        plt.close()
+        self.create_graph("Away")
         self.load_graph_away.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
         self.load_graph_away.reload()
         self.load_graph_away.opacity = 1
 
-        plt.rcParams["figure.figsize"] = (7.9,1.8)
-        plt.plot(self.pos_values_home, self.sg_values_home, '--', color='cyan', label='Avg')
-        plt.plot(self.pos_values_home_motor_1, self.sg_values_home_motor_1, 'green', label='Motor 1')
-        plt.plot(self.pos_values_home_motor_2, self.sg_values_home_motor_2, 'orange', label='Motor 2')
-        plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
-        plt.ylabel(self.axis + ' Load (Home)')
+        self.create_graph("Home")
+        self.load_graph_home.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
+        self.load_graph_home.reload()
+        self.load_graph_home.opacity = 1
+
+    def create_graph(self, direction):
+        if direction == "Away":
+            plt.rcParams["figure.figsize"] = (7.9,1.75)
+            plt.plot(self.pos_values_away, self.sg_values_away, '--', color='cyan', label='Avg')
+            plt.plot(self.pos_values_away_motor_1, self.sg_values_away_motor_1, 'green', label='Motor 1')
+            plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
+            combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
+        else:
+            plt.rcParams["figure.figsize"] = (7.9,1.8)
+            plt.plot(self.pos_values_home, self.sg_values_home, '--', color='cyan', label='Avg')
+            plt.plot(self.pos_values_home_motor_1, self.sg_values_home_motor_1, 'green', label='Motor 1')
+            plt.plot(self.pos_values_home_motor_2, self.sg_values_home_motor_2, 'orange', label='Motor 2')
+            plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
+            combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
+
+        plt.ylabel(self.axis + ' Load (%s)' % direction)
         ax = plt.gca()
         ax.set_ylim([-20, 20])
-        combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
         ax.set_xlim([min(combined_list), max(combined_list)])
         loc = plticker.MultipleLocator(base=10)
         ax.yaxis.set_major_locator(loc)
@@ -470,9 +470,6 @@ class XYJig(Screen):
         plt.grid()
         plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
         plt.close()
-        self.load_graph_home.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
-        self.load_graph_home.reload()
-        self.load_graph_home.opacity = 1
 
 
     def stop(self):
