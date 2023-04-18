@@ -18,7 +18,7 @@ class PopupCalibrate(Widget):
         cancel_string = "Cancel"
 
         def do_calibrate(*args):
-            self.sm.get_screen('xy_jig').calibrate_motor()
+            self.sm.get_screen('xy_jig').home_then_calibrate_motor()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)

@@ -252,6 +252,7 @@ class XYJig(Screen):
 
     test_running = False
     test_waiting_to_start = False
+    calibration_waiting_to_start = False
 
     phase_one_current = 0
     phase_two_current = 0
@@ -325,6 +326,10 @@ class XYJig(Screen):
             else:
                 popup_info.PopupError(self.systemtools_sm.sm, self.l, "Machine is not idle! Cannot start test")
                 self.reset_after_stop()
+
+        if self.calibration_waiting_to_start:
+            self.calibration_waiting_to_start = False
+            self.calibrate_motor()
 
     def begin_test(self, dt):
         if self.test_running:
@@ -503,6 +508,12 @@ class XYJig(Screen):
     def show_calibration_popup(self):
         PopupCalibrate(self.systemtools_sm.sm, self.l)
 
+    def home_then_calibrate_motor(self):
+        self.calibration_waiting_to_start = True
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('xy_jig','xy_jig')
+
     def calibrate_motor(self):
         self.load_graph_away.opacity = 0
         self.load_graph_home.opacity = 0
@@ -514,9 +525,9 @@ class XYJig(Screen):
 
         self.enable_motor_drivers()
         if self.axis == 'Y':
-            self.m.calibrate_Y()
+            self.m.calibrate_Y(zero_position=False, mod_soft_limits=False, fast=True)
         else:
-            self.m.calibrate_X()
+            self.m.calibrate_X(zero_position=False, mod_soft_limits=False, fast=True)
 
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
