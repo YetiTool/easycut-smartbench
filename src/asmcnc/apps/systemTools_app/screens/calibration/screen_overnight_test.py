@@ -1552,7 +1552,7 @@ class OvernightTesting(Screen):
         if not sent_data:
             self.show_failed_send_popup(self.get_most_recent_csv())
 
-    def send_data(self, stage):
+    def send_data(self, stage, csv_path=None):
         try:
             log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
@@ -1574,7 +1574,8 @@ class OvernightTesting(Screen):
                 json=statuses,
                 machine_serial=self.sn_for_db,
                 table=table,
-                stage=stage
+                stage=stage,
+                csv_path=csv_path
             )
 
             done_send = send_csv_to_ftp(csv_path)
@@ -1589,7 +1590,6 @@ class OvernightTesting(Screen):
             log("Finished statistics data send")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
-
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())

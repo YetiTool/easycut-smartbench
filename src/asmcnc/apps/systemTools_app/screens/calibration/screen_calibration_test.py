@@ -8,6 +8,7 @@ import traceback
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
 from asmcnc.comms.logging import log_exporter
+from asmcnc.production.database.factory_payload_sender import get_csv, send_csv_to_ftp
 
 Builder.load_string("""
 <CalibrationTesting>:
@@ -1671,22 +1672,24 @@ class CalibrationTesting(Screen):
         log_exporter.create_and_send_logs(self.sn_for_db)
 
 
-    def send_data_for_each_stage(self, stage):
-
+    def send_data_for_each_stage(self, stage, csv_path=None):
         try:
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.insert_stage_into_database(stage_id)
-            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
+
+            final_test_statuses = self.status_data_dict[stage]
+            final_test_statuses_csv = get_csv(final_test_statuses, self.sn_for_db, 'finalteststatuses', stage, csv_path=csv_path)
+            final_test_statuses_sent = send_csv_to_ftp(final_test_statuses_csv)
+
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
-            return True
 
+            return final_test_statuses_sent
         except:
             print(traceback.format_exc())
-            return False
-        finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
+            return False
 
 
 

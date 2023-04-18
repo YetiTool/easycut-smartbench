@@ -11,6 +11,9 @@ def get_unique_file_name(machine_serial, table, stage):
 
 
 def get_csv(json, machine_serial, table, stage=None, csv_path=CSV_PATH):
+    if csv_path is None:
+        csv_path = CSV_PATH
+
     if not os.path.exists(csv_path):
         os.mkdir(csv_path)
 
@@ -33,7 +36,6 @@ def send_csv_to_ftp(file_path, ftp_server=None, ftp_username=None, ftp_password=
                 os.system("cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py")
         except OSError:
             print('credentials.py not found on USB')
-            return False
 
         try:
             from asmcnc.production.database.credentials import ftp_server, ftp_username, ftp_password
