@@ -6,10 +6,19 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens.xy_jig.popup_xy_jig import *
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.ticker as plticker
+from datetime import datetime
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as plticker
+except Exception as e:
+    print(str(e))
 
 Builder.load_string("""
 <XYJig>:
