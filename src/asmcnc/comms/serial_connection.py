@@ -513,6 +513,7 @@ class SerialConnection(object):
         self.grbl_ln = None
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = gcode_obj
+        self.m.set_pause(False)
 
         log('Skeleton buffer stuffing starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
