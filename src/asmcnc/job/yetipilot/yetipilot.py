@@ -10,6 +10,7 @@ from math import sqrt
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
+from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
 
 def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
@@ -68,11 +69,14 @@ class YetiPilot(object):
 
     adjusting_spindle_speed = False
 
+    yp_popup = None
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
         self.l = kwargs['localization']
+        self.db = kwargs['database']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
@@ -80,6 +84,9 @@ class YetiPilot(object):
 
         self.get_all_profiles()
         self.load_parameters()
+
+        self.yp_popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self,
+                                               version=not self.using_advanced_profile)
 
     # System
     def enable(self):

@@ -193,7 +193,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.s.yp.set_free_load(free_load)
 
             if self.return_to_advanced_tab and self.sm.has_screen('go'):
-                self.sm.get_screen('go').yp_widget.open_yp_settings()
+                self.sm.get_screen('go').yp_popup.open_yp_settings()
 
             self.exit_screen()
 

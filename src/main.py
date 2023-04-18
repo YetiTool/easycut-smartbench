@@ -154,11 +154,11 @@ class SkavaUI(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
-        # Initialise yetipilot
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
-
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        # Initialise yetipilot
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l, database=db)
 
         # App manager object
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
@@ -274,6 +274,8 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+
+        sm.current = 'go'
         return sm
 
 if __name__ == '__main__':
