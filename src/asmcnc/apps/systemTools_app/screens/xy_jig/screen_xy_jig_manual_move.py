@@ -187,13 +187,12 @@ class XYJigManualMove(Screen):
         self.m = kwargs['m']
 
         axis = kwargs['axis']
+        self.axis = axis[0] # axis is passed as 'Y', 'X_single', or 'X_double'
+
         if axis == 'Y':
-            self.axis = 'Y'
             self.phase_one_current = 23
             self.phase_two_current = 14
         else:
-            self.axis = 'X'
-
             if 'single' in axis:
                 self.phase_one_current = 13
             elif 'double' in axis:
