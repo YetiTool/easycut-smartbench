@@ -570,11 +570,11 @@ class XYJig(Screen):
 
         # Reset currents
         if self.axis == 'Y':
-            self.m.set_motor_current('Y1', self.m.TMC_motor[TMC_Y1].ActiveCurrentScale)
-            self.m.set_motor_current('Y2', self.m.TMC_motor[TMC_Y2].ActiveCurrentScale)
+            current = self.m.TMC_motor[TMC_Y1].ActiveCurrentScale
         else:
-            self.m.set_motor_current('X1', self.m.TMC_motor[TMC_X1].ActiveCurrentScale)
-            self.m.set_motor_current('X2', self.m.TMC_motor[TMC_X2].ActiveCurrentScale)
+            current = self.m.TMC_motor[TMC_X1].ActiveCurrentScale
+
+        self.m.set_motor_current(self.axis, current)
 
         self.enable_motor_drivers()
 
