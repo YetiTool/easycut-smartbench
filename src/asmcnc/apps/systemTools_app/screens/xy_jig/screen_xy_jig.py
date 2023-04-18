@@ -319,7 +319,12 @@ class XYJig(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            Clock.schedule_once(self.begin_test, 1)
+
+            if self.m.state().startswith("Idle"):
+                Clock.schedule_once(self.begin_test, 1)
+            else:
+                popup_info.PopupError(self.systemtools_sm.sm, self.l, "Machine is not idle! Cannot start test")
+                self.reset_after_stop()
 
     def begin_test(self, dt):
         if self.test_running:
