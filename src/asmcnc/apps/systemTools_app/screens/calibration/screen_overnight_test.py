@@ -31,6 +31,7 @@ Builder.load_string("""
     back_button : back_button
     home_button : home_button
     overnight_test_button : overnight_test_button
+    cal_and_post_button : cal_and_post_button
     stop_button : stop_button
 
     six_hour_wear_in_button : six_hour_wear_in_button
@@ -115,6 +116,12 @@ Builder.load_string("""
                         text: 'START'
                         on_press: root.start_full_overnight_test()
                         background_color: [0,1,0,1]
+
+                    Button:
+                        id: cal_and_post_button
+                        text: 'CAL+POST'
+                        background_color: [0,1,1,1]
+                        on_press: root.start_cal_and_post_cal()
 
                     Button:
                         id: stop_button
@@ -1163,6 +1170,7 @@ class OvernightTesting(Screen):
         self.back_button.disabled = status
         self.home_button.disabled = status
         self.overnight_test_button.disabled = status
+        self.cal_and_post_button.disabled = status
         self.six_hour_wear_in_button.disabled = status
         self.recalibration_button.disabled = status
         self.fully_calibrated_run_button.disabled = status
@@ -1184,6 +1192,19 @@ class OvernightTesting(Screen):
             self.ready_for_fully_calibrated_final_run, 10)
         self.poll_for_completion_of_overnight_test = Clock.schedule_interval(self.overnight_test_completed, 120)
         self.start_six_hour_wear_in()
+
+    def start_cal_and_post_cal(self):
+
+        self.buttons_disabled(True)
+        self.setup_arrays()
+
+        log("Start cal and post cal")
+
+        # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
+        self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(
+            self.ready_for_fully_calibrated_final_run, 10)
+        self.start_recalibration()
+
 
     ## RUNNING FUNCTIONS - THESE ARE ALL PARTS OF "OVERNIGHT TEST" -------------------------------------------------------------------
 

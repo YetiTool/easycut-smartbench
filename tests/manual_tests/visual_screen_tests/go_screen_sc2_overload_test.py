@@ -28,6 +28,7 @@ from settings import settings_manager
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 try: 
     from mock import Mock
@@ -43,15 +44,15 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
+    lang_idx = 2
 
-    # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
-    # 5 - Polish (y)
-    # 6 - Danish (y)
+    # 0 - English
+    # 1 - Italian
+    # 2 - Finnish
+    # 3 - German
+    # 4 - French
+    # 5 - Polish
+    # 6 - Danish
 
     
     fw_version = "2.4.2"
@@ -102,6 +103,10 @@ class ScreenTest(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        
+
+        # Initialise YP
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
@@ -115,6 +120,7 @@ class ScreenTest(App):
         m.s.s.fd = 1 # this is needed to force it to run
         m.s.fw_version = self.fw_version
         m.s.setting_50 = 0.03
+        m.s.yp = yp
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
@@ -122,8 +128,14 @@ class ScreenTest(App):
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
         sm.add_widget(job_feedback_screen)
 
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
+        
+        m.is_using_sc2 = Mock(return_value=True)
+        m.is_spindle_health_check_active = Mock(return_value=False)
+        # m.has_spindle_health_check_failed = Mock(return_value=True)
+        sm.get_screen('go').is_job_started_already = False
+
         sm.current = 'go'
         
         Clock.schedule_once(m.s.start_services, 0.1)
