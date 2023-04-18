@@ -163,7 +163,7 @@ Builder.load_string("""
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
-                    background_color: hex('#888888FF')
+                    background_color: hex('#0000FFFF')
                     background_normal: ''
                     on_press: root.go_to_monitor()
 
