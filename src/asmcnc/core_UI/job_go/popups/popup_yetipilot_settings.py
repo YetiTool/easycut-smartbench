@@ -459,6 +459,15 @@ class PopupYetiPilotSettings(Widget):
         spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
         spindle_health_check_button.bind(on_press=self.popup.dismiss)
 
+        self.show_basic = build_pre_cut_profiles
+        self.show_advanced = build_advanced_settings
+
         # popup.open()
+
+    def open(self):
+        self.popup.open()
+
+        if self.yp.using_advanced_profile:
+            self.show_advanced()
 
 
