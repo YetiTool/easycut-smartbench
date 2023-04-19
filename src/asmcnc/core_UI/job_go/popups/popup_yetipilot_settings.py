@@ -391,8 +391,8 @@ class PopupYetiPilotSettings(Widget):
 
             self.yp.standard_profiles = not version
             unschedule_clocks()
-            popup.dismiss()
-            PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
+            self.popup.dismiss()
+            self.yp.popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
         radio_button_width = 30
         pad_width = 30      
@@ -436,7 +436,7 @@ class PopupYetiPilotSettings(Widget):
 
         # Create popup & format
 
-        popup = Popup(title=title_string,
+        self.popup = Popup(title=title_string,
                     title_color= subtle_white,
                     title_font= 'Roboto-Bold',
                     title_size = '20sp',
@@ -448,17 +448,19 @@ class PopupYetiPilotSettings(Widget):
                     padding=[0,0]
                     )
 
-        popup.background = './asmcnc/core_UI/job_go/img/yp_settings_bg.png'
-        popup.separator_color = transparent
-        popup.separator_height = '0dp'
+        self.popup.background = './asmcnc/core_UI/job_go/img/yp_settings_bg.png'
+        self.popup.separator_color = transparent
+        self.popup.separator_height = '0dp'
 
         if closing_func: close_button.bind(on_press=closing_func)
         close_button.bind(on_press=unschedule_clocks)
-        close_button.bind(on_press=popup.dismiss)
+        close_button.bind(on_press=self.popup.dismiss)
 
         spindle_health_check_button.bind(on_press=lambda instance: start_spindle_health_check())
-        spindle_health_check_button.bind(on_press=popup.dismiss)
+        spindle_health_check_button.bind(on_press=self.popup.dismiss)
 
-        popup.open()
+        self.popup.open()
 
+    def dismiss(self):
+        self.popup.dismiss()
 
