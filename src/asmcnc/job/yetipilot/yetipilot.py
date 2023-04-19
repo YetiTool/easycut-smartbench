@@ -183,7 +183,7 @@ class YetiPilot(object):
             command_delay = (self.override_command_delay if feed else self.spindle_override_command_delay) * i
 
             if feed:
-                if self.m.s.feed_override_percentage == 200:
+                if self.m.s.feed_override_percentage == 200 and adjustment > 0:
                     return adjustment_list[:i]
 
                 percentage_after_adjustments = adjustment + self.m.s.feed_override_percentage
