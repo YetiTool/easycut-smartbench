@@ -380,7 +380,7 @@ class SpindleTestJig1(Screen):
             if self.brush_time_value.text == '0d, 0h, 0m, 0s':
                 self.brush_time_value.color = [0, 1, 0, 1]
             else:
-                self.brush_time_value.color = [0, 0, 0, 1]
+                self.brush_time_value.color = [1, 1, 1, 1]
 
             self.update_unlock_code()
 
