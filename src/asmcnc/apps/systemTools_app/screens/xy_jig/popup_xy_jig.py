@@ -12,7 +12,7 @@ class PopupCalibrate(Widget):
         self.sm = screen_manager
         self.l = localization
 
-        description = "Remove the belt, then press 'Calibrate' to continue"
+        description = "Press 'Calibrate' to continue"
         title_string = "Calibration"
         calibrate_string = "Calibrate"
         cancel_string = "Cancel"
