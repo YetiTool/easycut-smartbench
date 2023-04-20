@@ -1,9 +1,9 @@
 .. _top:
 
 Precision Pro + upgrade capability, and YetiPilot improvements - with patch
-=============================================================================
+============================================================================
 
-This is a patch for the YetiPilot release, v2.4.0: we’ve added units (mm) back into cutter diameter and step down fields for all profiles.
+This is a patch for the YetiPilot release, v2.4.0: we’ve fixed an issue where the YetiPilot feed override settings would sometimes stick. 
 
 v2.4.0 gives existing owners of SmartBench V1.3 the ability to upgrade their machines to Precision Pro + with an upgrade kit.
 
