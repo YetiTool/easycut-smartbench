@@ -234,16 +234,12 @@ class XYJigManualMove(Screen):
         self.m.set_motor_current(self.axis, self.phase_two_current)
 
     def energise_motors(self):
-        if self.axis == 'Y':
-            self.m.enable_y_motors()
-        else:
-            self.m.enable_x_motors()
+        self.m.enable_y_motors()
+        self.m.enable_x_motors()
 
     def de_energise_motors(self):
-        if self.axis == 'Y':
-            self.m.disable_y_motors()
-        else:
-            self.m.disable_x_motors()
+        self.m.disable_y_motors()
+        self.m.disable_x_motors()
 
 
     def home(self):
