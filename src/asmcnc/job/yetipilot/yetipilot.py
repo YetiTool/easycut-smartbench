@@ -10,6 +10,8 @@ from math import sqrt
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
+from asmcnc.job.yetipilot.yetipilot_logger import YetiPilotLogger
+
 
 def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
@@ -68,6 +70,8 @@ class YetiPilot(object):
 
     adjusting_spindle_speed = False
 
+    logger = None
+
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
@@ -88,6 +92,8 @@ class YetiPilot(object):
         if self.sm.has_screen('go'):
             self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
             self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+
+        self.logger = YetiPilotLogger()
 
     def disable(self):
         self.use_yp = False
@@ -278,6 +284,12 @@ class YetiPilot(object):
 
                 if speed_adjustments:
                     print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
+
+            if self.logger:
+                self.logger.add_log(
+                    average_spindle_load,
+
+                )
 
     def stop_and_show_error(self):
         self.disable()
