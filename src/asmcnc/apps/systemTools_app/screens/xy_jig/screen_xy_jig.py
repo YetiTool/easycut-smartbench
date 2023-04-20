@@ -509,6 +509,7 @@ class XYJig(Screen):
         PopupCalibrate(self.systemtools_sm.sm, self.l)
 
     def home_then_calibrate_motor(self):
+        self.enable_motor_drivers()
         self.calibration_waiting_to_start = True
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
@@ -523,7 +524,6 @@ class XYJig(Screen):
         self.stop_button.disabled = True
         self.test_progress_label.text = 'Calibrating...'
 
-        self.enable_motor_drivers()
         if self.axis == 'Y':
             self.m.calibrate_Y(zero_position=False, mod_soft_limits=False, fast=True)
         else:

@@ -180,6 +180,8 @@ class XYJigManualMove(Screen):
     phase_one_current = 0
     phase_two_current = 0
 
+    de_energise_on_entry = False
+
     def __init__(self, **kwargs):
         super(XYJigManualMove, self).__init__(**kwargs)
 
@@ -211,6 +213,12 @@ class XYJigManualMove(Screen):
         self.update_realtime_load_event = Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
 
+    def on_enter(self):
+        if self.de_energise_on_entry:
+            self.de_energise_on_entry = False
+            self.de_energise_motors()
+
+
     def set_phase_one_current(self):
         if self.phase_one_input.text:
             self.systemtools_sm.sm.get_screen('xy_jig').phase_one_current = int(self.phase_one_input.text)
@@ -239,6 +247,8 @@ class XYJigManualMove(Screen):
 
 
     def home(self):
+        self.energise_motors()
+        self.de_energise_on_entry = True
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('xy_jig_manual_move','xy_jig_manual_move')
