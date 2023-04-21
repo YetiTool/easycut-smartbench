@@ -525,9 +525,9 @@ class XYJig(Screen):
 
         self.enable_motor_drivers()
         if self.axis == 'Y':
-            self.m.calibrate_Y(zero_position=False, mod_soft_limits=False, fast=True)
+            self.m.calibrate_Y(zero_position=True, mod_soft_limits=False, fast=True)
         else:
-            self.m.calibrate_X(zero_position=False, mod_soft_limits=False, fast=True)
+            self.m.calibrate_X(zero_position=True, mod_soft_limits=False, fast=True)
 
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
