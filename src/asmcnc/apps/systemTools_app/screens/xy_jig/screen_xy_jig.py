@@ -18,7 +18,7 @@ try:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as plticker
 except Exception as e:
-    print(str(e))
+    log(str(e))
 
 Builder.load_string("""
 <XYJig>:
