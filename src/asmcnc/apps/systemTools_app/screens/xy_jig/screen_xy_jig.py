@@ -491,6 +491,10 @@ class XYJig(Screen):
 
 
     def stop(self):
+        # If stopped during phase 2, show graphs anyway
+        if self.test_running and self.sg_values_home and self.sg_values_away:
+            self.display_results()
+
         self.m.soft_stop()
         self.reset_after_stop()
         self.m.stop_from_soft_stop_cancel()
