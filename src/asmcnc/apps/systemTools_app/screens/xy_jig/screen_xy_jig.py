@@ -534,7 +534,6 @@ class XYJig(Screen):
         self.begin_test_button.disabled = True
         self.calibrate_button.disabled = True
         self.exit_button.disabled = True
-        self.stop_button.disabled = True
         self.test_progress_label.text = 'Calibrating...'
 
         if self.axis == 'Y':
@@ -546,17 +545,17 @@ class XYJig(Screen):
 
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
-            self.disable_motor_drivers()
-
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, 'Calibration complete!')
-
-            self.begin_test_button.disabled = False
-            self.calibrate_button.disabled = False
-            self.exit_button.disabled = False
-            self.stop_button.disabled = False
-            self.test_progress_label.text = 'Waiting...'
+            self.reset_after_calibration()
         else:
             Clock.schedule_once(self.wait_for_calibration_end, 1)
+
+    def reset_after_calibration(self):
+        self.disable_motor_drivers()
+        self.begin_test_button.disabled = False
+        self.calibrate_button.disabled = False
+        self.exit_button.disabled = False
+        self.test_progress_label.text = 'Waiting...'
 
     def update_realtime_load(self, dt):
         if self.axis == 'Y':
