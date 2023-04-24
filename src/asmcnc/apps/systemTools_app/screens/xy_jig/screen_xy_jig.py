@@ -18,7 +18,7 @@ try:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as plticker
 except Exception as e:
-    print(str(e))
+    log(str(e))
 
 Builder.load_string("""
 <XYJig>:
@@ -440,30 +440,39 @@ class XYJig(Screen):
         self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
         self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
-        self.create_graph("Away")
-        self.load_graph_away.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
-        self.load_graph_away.reload()
-        self.load_graph_away.opacity = 1
+        self.create_graph(
+            fig_height = 1.75,
+            pos_avg    = self.pos_values_away,
+            pos_1      = self.pos_values_away_motor_1,
+            pos_2      = self.pos_values_away_motor_2,
+            sg_avg     = self.sg_values_away,
+            sg_1       = self.sg_values_away_motor_1,
+            sg_2       = self.sg_values_away_motor_2,
+            direction  = "Away",
+            image      = self.load_graph_away
+        )
 
-        self.create_graph("Home")
-        self.load_graph_home.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
-        self.load_graph_home.reload()
-        self.load_graph_home.opacity = 1
+        self.create_graph(
+            fig_height = 1.80,
+            pos_avg    = self.pos_values_home,
+            pos_1      = self.pos_values_home_motor_1,
+            pos_2      = self.pos_values_home_motor_2,
+            sg_avg     = self.sg_values_home,
+            sg_1       = self.sg_values_home_motor_1,
+            sg_2       = self.sg_values_home_motor_2,
+            direction  = "Home",
+            image      = self.load_graph_home
+        )
 
-    def create_graph(self, direction):
-        if direction == "Away":
-            plt.rcParams["figure.figsize"] = (7.9,1.75)
-            plt.plot(self.pos_values_away, self.sg_values_away, '--', color='cyan', label='Avg')
-            plt.plot(self.pos_values_away_motor_1, self.sg_values_away_motor_1, 'green', label='Motor 1')
-            plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
-            combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
-        else:
-            plt.rcParams["figure.figsize"] = (7.9,1.8)
-            plt.plot(self.pos_values_home, self.sg_values_home, '--', color='cyan', label='Avg')
-            plt.plot(self.pos_values_home_motor_1, self.sg_values_home_motor_1, 'green', label='Motor 1')
-            plt.plot(self.pos_values_home_motor_2, self.sg_values_home_motor_2, 'orange', label='Motor 2')
+    def create_graph(self, fig_height, pos_avg, pos_1, pos_2, sg_avg, sg_1, sg_2, direction, image):
+        plt.rcParams["figure.figsize"] = (7.9,fig_height)
+        plt.plot(pos_avg, sg_avg, '--', color='cyan', label='Avg')
+        plt.plot(pos_1, sg_1, 'green', label='Motor 1')
+        plt.plot(pos_2, sg_2, 'orange', label='Motor 2')
+        combined_list = pos_avg + pos_1 + pos_2
+
+        if direction == "Home":
             plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
-            combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
 
         plt.ylabel(self.axis + ' Load (%s)' % direction)
         ax = plt.gca()
@@ -475,6 +484,10 @@ class XYJig(Screen):
         plt.grid()
         plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
         plt.close()
+
+        image.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
+        image.reload()
+        image.opacity = 1
 
 
     def stop(self):
@@ -525,9 +538,9 @@ class XYJig(Screen):
         self.test_progress_label.text = 'Calibrating...'
 
         if self.axis == 'Y':
-            self.m.calibrate_Y(zero_position=False, mod_soft_limits=False, fast=True)
+            self.m.calibrate_Y(zero_position=True, mod_soft_limits=False, fast=True)
         else:
-            self.m.calibrate_X(zero_position=False, mod_soft_limits=False, fast=True)
+            self.m.calibrate_X(zero_position=True, mod_soft_limits=False, fast=True)
 
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
