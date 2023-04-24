@@ -321,10 +321,14 @@ class XYJig(Screen):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
 
-            if self.m.state().startswith("Idle"):
-                Clock.schedule_once(self.begin_test, 1)
+            # If homing was cancelled then don't start test
+            if self.m.is_machine_homed:
+                if self.m.state().startswith("Idle"):
+                    Clock.schedule_once(self.begin_test, 1)
+                else:
+                    popup_info.PopupError(self.systemtools_sm.sm, self.l, "Machine is not idle! Cannot start test")
+                    self.reset_after_stop()
             else:
-                popup_info.PopupError(self.systemtools_sm.sm, self.l, "Machine is not idle! Cannot start test")
                 self.reset_after_stop()
 
         if self.calibration_waiting_to_start:
