@@ -80,6 +80,7 @@ class XYJigDecision(Screen):
             if axis == 'Y':
                 self.systemtools_sm.sm.get_screen('xy_jig').max_travel = -self.m.s.setting_131
                 self.systemtools_sm.sm.get_screen('xy_jig').max_speed = self.m.s.setting_111
+                self.systemtools_sm.sm.get_screen('xy_jig').max_x_speed = self.m.s.setting_110
                 self.m.disable_y_motors()
             else:
                 self.systemtools_sm.sm.get_screen('xy_jig').max_travel = -self.m.s.setting_130

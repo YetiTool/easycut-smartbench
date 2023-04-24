@@ -8,6 +8,8 @@ from asmcnc.apps.systemTools_app.screens.xy_jig.popup_xy_jig import *
 
 from datetime import datetime
 
+import sys
+
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
@@ -322,7 +324,7 @@ class XYJig(Screen):
             self.test_waiting_to_start = False
 
             # If homing was cancelled then don't start test
-            if self.m.is_machine_homed:
+            if self.m.is_machine_homed or sys.platform == "win32":
                 if self.m.state().startswith("Idle"):
                     Clock.schedule_once(self.begin_test, 1)
                 else:
@@ -338,6 +340,10 @@ class XYJig(Screen):
     def begin_test(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
+                # Need to move X to around middle before Y test
+                if self.axis == 'Y':
+                    self.m.jog_absolute_single_axis('X', -600, self.max_x_speed)
+
                 self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
                 Clock.schedule_once(self.start_moving_away, 1)
             else:
