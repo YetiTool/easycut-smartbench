@@ -440,6 +440,15 @@ class XYJig(Screen):
         self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
         self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
+        # Calculate graph scales to give them the same size and include all points
+        combined_pos_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2 + \
+                            self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
+        x_lims = [min(combined_pos_list), max(combined_pos_list)]
+
+        combined_sg_list = self.sg_values_away + self.sg_values_away_motor_1 + self.sg_values_away_motor_2 + \
+                           self.sg_values_home + self.sg_values_home_motor_1 + self.sg_values_home_motor_2
+        y_lims = [min(combined_sg_list) - 3, max(combined_sg_list) + 3]
+
         self.create_graph(
             fig_height = 1.75,
             pos_avg    = self.pos_values_away,
@@ -449,7 +458,9 @@ class XYJig(Screen):
             sg_1       = self.sg_values_away_motor_1,
             sg_2       = self.sg_values_away_motor_2,
             direction  = "Away",
-            image      = self.load_graph_away
+            image      = self.load_graph_away,
+            x_lims     = x_lims,
+            y_lims     = y_lims
         )
 
         self.create_graph(
@@ -461,23 +472,24 @@ class XYJig(Screen):
             sg_1       = self.sg_values_home_motor_1,
             sg_2       = self.sg_values_home_motor_2,
             direction  = "Home",
-            image      = self.load_graph_home
+            image      = self.load_graph_home,
+            x_lims     = x_lims,
+            y_lims     = y_lims
         )
 
-    def create_graph(self, fig_height, pos_avg, pos_1, pos_2, sg_avg, sg_1, sg_2, direction, image):
+    def create_graph(self, fig_height, pos_avg, pos_1, pos_2, sg_avg, sg_1, sg_2, direction, image, x_lims, y_lims):
         plt.rcParams["figure.figsize"] = (7.9,fig_height)
         plt.plot(pos_avg, sg_avg, '--', color='cyan', label='Avg')
         plt.plot(pos_1, sg_1, 'green', label='Motor 1')
         plt.plot(pos_2, sg_2, 'orange', label='Motor 2')
-        combined_list = pos_avg + pos_1 + pos_2
 
         if direction == "Home":
             plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
 
         plt.ylabel(self.axis + ' Load (%s)' % direction)
         ax = plt.gca()
-        ax.set_ylim([-20, 20])
-        ax.set_xlim([min(combined_list), max(combined_list)])
+        ax.set_xlim(x_lims)
+        ax.set_ylim(y_lims)
         loc = plticker.MultipleLocator(base=10)
         ax.yaxis.set_major_locator(loc)
         plt.tight_layout(pad=0.3)
