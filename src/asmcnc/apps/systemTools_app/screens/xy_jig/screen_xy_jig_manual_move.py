@@ -150,10 +150,12 @@ Builder.load_string("""
                     on_press: root.home()
 
             BoxLayout:
-                padding: [dp(0), dp(50)]
+                orientation: 'vertical'
+                spacing: dp(10)
 
                 BoxLayout:
                     id: xy_move_container
+                    size_hint_y: 4
 
                     canvas:
                         Color:
@@ -161,6 +163,12 @@ Builder.load_string("""
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
+
+                Button:
+                    text: 'GRBL Reset'
+                    font_size: dp(25)
+                    bold: True
+                    on_press: root.grbl_reset()
 
 """)
 
@@ -179,13 +187,12 @@ class XYJigManualMove(Screen):
         self.m = kwargs['m']
 
         axis = kwargs['axis']
+        self.axis = axis[0] # axis is passed as 'Y', 'X_single', or 'X_double'
+
         if axis == 'Y':
-            self.axis = 'Y'
             self.phase_one_current = 23
             self.phase_two_current = 14
         else:
-            self.axis = 'X'
-
             if 'single' in axis:
                 self.phase_one_current = 13
             elif 'double' in axis:
@@ -248,6 +255,10 @@ class XYJigManualMove(Screen):
             self.load_label.text = '-'
         else:
             self.load_label.text = str(sg_value)
+
+
+    def grbl_reset(self):
+        self.m.resume_from_alarm()
 
 
     def back(self):

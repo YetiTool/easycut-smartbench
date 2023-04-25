@@ -6,10 +6,19 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens.xy_jig.popup_xy_jig import *
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.ticker as plticker
+from datetime import datetime
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as plticker
+except Exception as e:
+    log(str(e))
 
 Builder.load_string("""
 <XYJig>:
@@ -154,7 +163,7 @@ Builder.load_string("""
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
-                    background_color: hex('#888888FF')
+                    background_color: hex('#0000FFFF')
                     background_normal: ''
                     on_press: root.go_to_monitor()
 
@@ -243,6 +252,7 @@ class XYJig(Screen):
 
     test_running = False
     test_waiting_to_start = False
+    calibration_waiting_to_start = False
 
     phase_one_current = 0
     phase_two_current = 0
@@ -257,13 +267,12 @@ class XYJig(Screen):
         self.l = kwargs['l']
 
         axis = kwargs['axis']
+        self.axis = axis[0] # axis is passed as 'Y', 'X_single', or 'X_double'
+
         if axis == 'Y':
-            self.axis = 'Y'
             self.phase_one_current = 23
             self.phase_two_current = 14
         else:
-            self.axis = 'X'
-
             if 'single' in axis:
                 self.phase_one_current = 13
             elif 'double' in axis:
@@ -311,7 +320,16 @@ class XYJig(Screen):
     def on_enter(self):
         if self.test_waiting_to_start:
             self.test_waiting_to_start = False
-            Clock.schedule_once(self.begin_test, 1)
+
+            if self.m.state().startswith("Idle"):
+                Clock.schedule_once(self.begin_test, 1)
+            else:
+                popup_info.PopupError(self.systemtools_sm.sm, self.l, "Machine is not idle! Cannot start test")
+                self.reset_after_stop()
+
+        if self.calibration_waiting_to_start:
+            self.calibration_waiting_to_start = False
+            self.calibrate_motor()
 
     def begin_test(self, dt):
         if self.test_running:
@@ -402,7 +420,7 @@ class XYJig(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
-                Clock.schedule_once(self.finish_test, 0.4)
+                Clock.schedule_once(self.finish_test, 1)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
 
@@ -422,34 +440,43 @@ class XYJig(Screen):
         self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
         self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
-        plt.rcParams["figure.figsize"] = (7.9,1.75)
-        plt.plot(self.pos_values_away, self.sg_values_away, '--', color='cyan', label='Avg')
-        plt.plot(self.pos_values_away_motor_1, self.sg_values_away_motor_1, 'green', label='Motor 1')
-        plt.plot(self.pos_values_away_motor_2, self.sg_values_away_motor_2, 'orange', label='Motor 2')
-        plt.ylabel(self.axis + ' Load (Away)')
-        ax = plt.gca()
-        ax.set_ylim([-20, 20])
-        combined_list = self.pos_values_away + self.pos_values_away_motor_1 + self.pos_values_away_motor_2
-        ax.set_xlim([min(combined_list), max(combined_list)])
-        loc = plticker.MultipleLocator(base=10)
-        ax.yaxis.set_major_locator(loc)
-        plt.tight_layout(pad=0.3)
-        plt.grid()
-        plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
-        plt.close()
-        self.load_graph_away.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
-        self.load_graph_away.reload()
-        self.load_graph_away.opacity = 1
+        self.create_graph(
+            fig_height = 1.75,
+            pos_avg    = self.pos_values_away,
+            pos_1      = self.pos_values_away_motor_1,
+            pos_2      = self.pos_values_away_motor_2,
+            sg_avg     = self.sg_values_away,
+            sg_1       = self.sg_values_away_motor_1,
+            sg_2       = self.sg_values_away_motor_2,
+            direction  = "Away",
+            image      = self.load_graph_away
+        )
 
-        plt.rcParams["figure.figsize"] = (7.9,1.8)
-        plt.plot(self.pos_values_home, self.sg_values_home, '--', color='cyan', label='Avg')
-        plt.plot(self.pos_values_home_motor_1, self.sg_values_home_motor_1, 'green', label='Motor 1')
-        plt.plot(self.pos_values_home_motor_2, self.sg_values_home_motor_2, 'orange', label='Motor 2')
-        plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
-        plt.ylabel(self.axis + ' Load (Home)')
+        self.create_graph(
+            fig_height = 1.80,
+            pos_avg    = self.pos_values_home,
+            pos_1      = self.pos_values_home_motor_1,
+            pos_2      = self.pos_values_home_motor_2,
+            sg_avg     = self.sg_values_home,
+            sg_1       = self.sg_values_home_motor_1,
+            sg_2       = self.sg_values_home_motor_2,
+            direction  = "Home",
+            image      = self.load_graph_home
+        )
+
+    def create_graph(self, fig_height, pos_avg, pos_1, pos_2, sg_avg, sg_1, sg_2, direction, image):
+        plt.rcParams["figure.figsize"] = (7.9,fig_height)
+        plt.plot(pos_avg, sg_avg, '--', color='cyan', label='Avg')
+        plt.plot(pos_1, sg_1, 'green', label='Motor 1')
+        plt.plot(pos_2, sg_2, 'orange', label='Motor 2')
+        combined_list = pos_avg + pos_1 + pos_2
+
+        if direction == "Home":
+            plt.legend(bbox_to_anchor=(1, -0.25), loc='lower right')
+
+        plt.ylabel(self.axis + ' Load (%s)' % direction)
         ax = plt.gca()
         ax.set_ylim([-20, 20])
-        combined_list = self.pos_values_home + self.pos_values_home_motor_1 + self.pos_values_home_motor_2
         ax.set_xlim([min(combined_list), max(combined_list)])
         loc = plticker.MultipleLocator(base=10)
         ax.yaxis.set_major_locator(loc)
@@ -457,9 +484,10 @@ class XYJig(Screen):
         plt.grid()
         plt.savefig('./asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png')
         plt.close()
-        self.load_graph_home.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
-        self.load_graph_home.reload()
-        self.load_graph_home.opacity = 1
+
+        image.source = './asmcnc/apps/systemTools_app/screens/xy_jig/xy_jig_graph.png'
+        image.reload()
+        image.opacity = 1
 
 
     def stop(self):
@@ -493,6 +521,12 @@ class XYJig(Screen):
     def show_calibration_popup(self):
         PopupCalibrate(self.systemtools_sm.sm, self.l)
 
+    def home_then_calibrate_motor(self):
+        self.calibration_waiting_to_start = True
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
+        self.m.request_homing_procedure('xy_jig','xy_jig')
+
     def calibrate_motor(self):
         self.load_graph_away.opacity = 0
         self.load_graph_home.opacity = 0
@@ -504,9 +538,9 @@ class XYJig(Screen):
 
         self.enable_motor_drivers()
         if self.axis == 'Y':
-            self.m.calibrate_Y()
+            self.m.calibrate_Y(zero_position=False, mod_soft_limits=False, fast=True)
         else:
-            self.m.calibrate_X()
+            self.m.calibrate_X(zero_position=False, mod_soft_limits=False, fast=True)
 
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
@@ -549,11 +583,11 @@ class XYJig(Screen):
 
         # Reset currents
         if self.axis == 'Y':
-            self.m.set_motor_current('Y1', self.m.TMC_motor[TMC_Y1].ActiveCurrentScale)
-            self.m.set_motor_current('Y2', self.m.TMC_motor[TMC_Y2].ActiveCurrentScale)
+            current = self.m.TMC_motor[TMC_Y1].ActiveCurrentScale
         else:
-            self.m.set_motor_current('X1', self.m.TMC_motor[TMC_X1].ActiveCurrentScale)
-            self.m.set_motor_current('X2', self.m.TMC_motor[TMC_X2].ActiveCurrentScale)
+            current = self.m.TMC_motor[TMC_X1].ActiveCurrentScale
+
+        self.m.set_motor_current(self.axis, current)
 
         self.enable_motor_drivers()
 
