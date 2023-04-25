@@ -68,8 +68,6 @@ class YetiPilot(object):
 
     adjusting_spindle_speed = False
 
-    popup = None
-
     def __init__(self, **kwargs):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']

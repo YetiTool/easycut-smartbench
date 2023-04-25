@@ -392,7 +392,9 @@ class PopupYetiPilotSettings(Widget):
             self.yp.standard_profiles = not version
             unschedule_clocks()
             self.popup.dismiss()
-            self.yp.popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
+
+            if self.sm.has_screen('go'):
+                self.sm.get_screen('go').yp_widget.popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version= not version, closing_func=closing_func)
 
         radio_button_width = 30
         pad_width = 30      
