@@ -33,7 +33,8 @@ class LBCalibration1(Screen):
 
     timer_started = False
     one_minute = 60 # 60 seconds
-    seconds = one_minute*1.5
+    max_minutes = 1.5
+    seconds = one_minute*max_minutes
 
     def __init__(self, **kwargs):
         super(LBCalibration1, self).__init__(**kwargs)
@@ -55,7 +56,7 @@ class LBCalibration1(Screen):
             self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000)
             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
             self.m.jog_relative('X', 30, 6000)
-            self.update_time(30 * self.one_minute) # 30 minutes
+            self.update_time(self.one_minute * self.max_minutes)
             self.timer_started = True
 
         else: 
