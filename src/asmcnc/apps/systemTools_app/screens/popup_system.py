@@ -1144,11 +1144,10 @@ class PopupConfirmSpindleTest(Widget):
         self.confirm_func = confirm_func
 
     def build(self):
-        stop_description = self.l.get_str(
-            "Pressing the confirm button will start the spindle test. Ensure it is safe to do so.")
-        resume_string = self.l.get_bold("Confirm")
-        cancel_string = self.l.get_bold("Cancel")
-        title_string = self.l.get_str("Warning!")
+        stop_description = "Pressing the confirm button will start the spindle test. Ensure it is safe to do so."
+        resume_string = "Confirm"
+        cancel_string = "Cancel"
+        title_string = "Warning!"
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description,
