@@ -304,7 +304,6 @@ Builder.load_string("""
                             Label:
                                 id: recommended_z_current_label
                                 size_hint_x: 0.8
-                                text: "25"
                                 text_size: self.size
                                 markup: 'True'
                                 halign: 'left'
@@ -330,7 +329,6 @@ Builder.load_string("""
                             TextInput:
                                 id: other_z_current_textinput
                                 size_hint_x: 0.4
-                                text: "25"
                                 input_filter: "int"
                                 multiline: False
                                 font_size: "22sp"
@@ -429,11 +427,12 @@ class ZHeadPCBSetUp(Screen):
     usb_path = "/media/usb/"
 
     single_stack_single_driver_x_current = 26
-    double_stack_single_driver_x_current = 26
+    double_stack_single_driver_x_current = 31
     single_stack_dual_driver_x_current = 13
-    double_stack_dual_driver_x_current = 20
+    double_stack_dual_driver_x_current = 27
 
-    default_z_current = 25
+    default_z_current = 31
+    default_y_current = 28
 
     default_x_thermal_coefficient = 5000
     default_y_thermal_coefficient = 5000
@@ -443,6 +442,7 @@ class ZHeadPCBSetUp(Screen):
     number_of_drivers = 4
 
     x_current = str(single_stack_dual_driver_x_current)
+    y_current = str(default_y_current)
     z_current = str(default_z_current)
 
     x_thermal_coefficient = str(default_x_thermal_coefficient)
@@ -527,6 +527,7 @@ class ZHeadPCBSetUp(Screen):
         self.recommended_z_current_checkbox.state = "normal"
         self.other_z_current_checkbox.state = "normal"
 
+        self.recommended_z_current_label.text = str(self.default_z_current)
         self.other_z_current_textinput.text = str(self.z_current)
         self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
 
@@ -667,6 +668,7 @@ class ZHeadPCBSetUp(Screen):
         print("FW version " + str(self.firmware_version))
 
         print("X current: " + str(self.x_current))
+        print("Y current: " + str(self.y_current))
         print("Z current: " + str(self.z_current))
 
         print("X thermal coefficient: " + str(self.x_thermal_coefficient))
@@ -781,6 +783,7 @@ class ZHeadPCBSetUp(Screen):
 
             else:
                 self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+                self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
                 self.progress_to_next_screen()
@@ -799,10 +802,11 @@ class ZHeadPCBSetUp(Screen):
                 self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
                 self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
                 self.m.set_motor_current("Z", int(self.z_current)) and \
+                self.m.set_motor_current("Y", int(self.y_current)) and \
                 self.m.set_motor_current("X", int(self.x_current)):
 
                 # STORE PARAMETERS
-                Clock.schedule_once(lambda dt: store_params_and_progress(), 1)
+                Clock.schedule_once(lambda dt: store_params_and_progress(), 1.2)
 
             else:
                 log("Z Head not Idle yet, waiting...")
@@ -826,23 +830,37 @@ class ZHeadPCBSetUp(Screen):
             self.ok_button.text = "Checking registers..."
 
             # CHECK REGISTERS
-            if int(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X1].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
-            if int(self.m.TMC_motor[TMC_X2].standStillCurrentScale) != int(self.x_current): self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
+            outcome_screen = self.sm.get_screen("qcpcbsetupoutcome")
 
-            if int(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
-            if int(self.m.TMC_motor[TMC_Z].standStillCurrentScale) != int(self.z_current): self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
+            outcome_screen.x_current_correct*=self.check_current(TMC_X1, self.x_current)
+            outcome_screen.x_current_correct*=self.check_current(TMC_X2, self.x_current)
+            outcome_screen.y_current_correct*=self.check_current(TMC_Y1, self.y_current)
+            outcome_screen.y_current_correct*=self.check_current(TMC_Y2, self.y_current)
+            outcome_screen.z_current_correct*=self.check_current(TMC_Z, self.z_current)
 
-            if int(self.m.TMC_motor[TMC_X1].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_X2].temperatureCoefficient) != int(self.x_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) != int(self.y_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
-            if int(self.m.TMC_motor[TMC_Z].temperatureCoefficient) != int(self.z_thermal_coefficient): self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X1, self.x_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X2, self.x_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y1, self.y_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y2, self.y_thermal_coefficient)
+            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Z, self.z_thermal_coefficient)
 
             self.progress_to_next_screen()
 
         disconnect_and_update()
+
+    def check_current(self, motor, expected_current):
+        if int(self.m.TMC_motor[motor].ActiveCurrentScale) != int(expected_current):
+            return False
+        if int(self.m.TMC_motor[motor].standStillCurrentScale) != int(expected_current):
+            return False
+
+        return True
+
+    def check_temp_coeff(self, motor, expected_coeff):
+        if int(self.m.TMC_motor[motor].temperatureCoefficient) != int(expected_coeff):
+            return False
+
+        return True
 
     def get_fw_path_from_string(self, fw_string):
         return self.usb_path + "GRBL" + "_".join(fw_string.split(".")) + ".hex"

@@ -526,22 +526,12 @@ def test_inrush_counter_1_when_1_load(sc):
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 1
 
-def test_inrush_counter_increases_to_6_and_stops(sc):
+def test_inrush_counter_increases_to_max_and_stops(sc):
     sc.inrush_counter = 0
     status = construct_status_with_load_string("|Ld:12,11,1,3")
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    sc.process_grbl_push(status)
-    assert sc.inrush_counter == 12
+    for _ in range(sc.inrush_max):
+        sc.process_grbl_push(status)
+    assert sc.inrush_counter == sc.inrush_max
 
 def test_inrush_counter_resets_after_no_comms(sc):
     sc.inrush_counter = 3

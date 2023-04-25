@@ -80,6 +80,16 @@ class SerialConnection(object):
     def reset_spindle_data_failure_count(self):
         self.spindle_data_failure_count = 0
 
+    def is_use_yp(self):
+        if self.yp:
+            return self.yp.use_yp
+        else:
+            return False
+
+    def set_use_yp(self, val):
+        if self.yp:
+            self.yp.use_yp = val
+
     def get_serial_screen(self, serial_error):
 
         try:
@@ -383,15 +393,18 @@ class SerialConnection(object):
 
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
-                    if self.yp.use_yp: 
+
+                    if self.is_use_yp() and self.m.has_spindle_health_check_passed() and self.m.is_using_sc2():
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
                                 and not self.in_inrush:
 
-                            self.yp.add_to_stack(self.digital_spindle_ld_qdA, self.feed_override_percentage,
-                                                 int(self.feed_rate), self.digital_spindle_mains_voltage)
+                            self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA,
+                                                            self.digital_spindle_mains_voltage,
+                                                            self.feed_override_percentage,
+                                                            int(self.feed_rate))
 
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
@@ -441,7 +454,7 @@ class SerialConnection(object):
         log('Checking job...')
 
         self.m.enable_check_mode()
-        self.yp.use_yp = False
+        self.set_use_yp(False)
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
@@ -506,6 +519,7 @@ class SerialConnection(object):
         self.grbl_ln = None
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = gcode_obj
+        self.m.set_pause(False)
 
         log('Skeleton buffer stuffing starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -635,7 +649,7 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
-        self.yp.use_yp = False
+        self.set_use_yp(False)
 
         if self.NOT_SKELETON_STUFF:
 
@@ -673,7 +687,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
         self.jd.job_gcode_running = []
-        self.yp.use_yp = False
+        self.set_use_yp(False)
         self.jd.grbl_mode_tracker = []
         self.grbl_ln = None
 
@@ -792,6 +806,9 @@ class SerialConnection(object):
     inrush_max = 20
     in_inrush = True
 
+    # Spindle freeload measurement
+    spindle_freeload = None
+
     # IO Pins for switches etc
     limit_x = False  # convention: min is lower_case
     limit_X = False  # convention: MAX is UPPER_CASE
@@ -875,6 +892,10 @@ class SerialConnection(object):
     spindle_data_failure_poll = None
     spindle_data_failure_count = 0
     spindle_data_failure_max = 20
+
+    # Spindle health check
+    spindle_health_check = False
+    spindle_health_check_data = []
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1120,6 +1141,9 @@ class SerialConnection(object):
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                        if self.spindle_health_check and not self.in_inrush:
+                            self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
                         if self.digital_spindle_ld_qdA == -999 and self.sm.current != 'spindle_cooldown'\
                                 and not self.in_inrush and not self.m.is_machine_paused:

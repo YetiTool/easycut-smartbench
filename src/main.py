@@ -85,7 +85,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.3.0'
+initial_version = 'v2.4.2'
 
 config_flag = False
         
@@ -274,7 +274,6 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
-
         return sm
 
 if __name__ == '__main__':
