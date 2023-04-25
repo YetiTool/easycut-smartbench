@@ -294,7 +294,7 @@ class ZHeadQC2(Screen):
             if self.m.spindle_voltage == 110:
                 spindle_rpm = self.m.convert_from_110_to_230(spindle_rpm)
 
-            if not(8000 <= spindle_rpm <= 12000):
+            if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append("Spindle RPM was " + str(self.m.spindle_speed()) + ". Should be 8000-12000")
 
             self.m.s.write_command('M5')
