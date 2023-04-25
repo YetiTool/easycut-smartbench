@@ -49,7 +49,7 @@ class ZHeadQC3(Screen):
 
     timer_started = False
     one_minute = 60 # 60 seconds
-    seconds = one_minute*30
+    seconds = one_minute*1.5
 
     def __init__(self, **kwargs):
         super(ZHeadQC3, self).__init__(**kwargs)
