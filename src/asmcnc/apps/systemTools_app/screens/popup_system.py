@@ -1175,7 +1175,7 @@ class PopupConfirmSpindleTest(Widget):
                            title_size='20sp',
                            content=layout_plan,
                            size_hint=(None, None),
-                           size=(400, 500),
+                           size=(400, 300),
                            auto_dismiss=False)
 
         self.popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
