@@ -40,7 +40,7 @@ Builder.load_string("""
             
             Label:
                 id: calibrate_time
-                text: '0:30:00'
+                text: root.formatted_max
                 font_size: dp(50)
 
 """)
@@ -51,6 +51,7 @@ class ZHeadQC3(Screen):
     one_minute = 60 # 60 seconds
     max_minutes = 1.5
     seconds = one_minute*max_minutes
+    formatted_max = str(datetime.timedelta(seconds=seconds))
 
     def __init__(self, **kwargs):
         super(ZHeadQC3, self).__init__(**kwargs)

@@ -24,7 +24,7 @@ Builder.load_string("""
             
             Label:
                 id: calibrate_time
-                text: ''
+                text: root.formatted_max
                 font_size: dp(50)
 
 """)
@@ -35,6 +35,7 @@ class LBCalibration1(Screen):
     one_minute = 60 # 60 seconds
     max_minutes = 1.5
     seconds = one_minute*max_minutes
+    formatted_max = str(datetime.timedelta(seconds=seconds))
 
     def __init__(self, **kwargs):
         super(LBCalibration1, self).__init__(**kwargs)
