@@ -74,6 +74,16 @@ class SerialConnection(object):
         if self.s: self.s.close()
         log('Serial connection destructor')
 
+    def is_use_yp(self):
+        if self.yp:
+            return self.yp.use_yp
+        else: 
+            return False
+
+    def set_use_yp(self, val):
+        if self.yp:
+            self.yp.use_yp = val
+
     def get_serial_screen(self, serial_error):
 
         try:
@@ -378,7 +388,7 @@ class SerialConnection(object):
                 # Job streaming: stuff buffer
                 if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
 
-                    if self.yp.use_yp and self.m.has_spindle_health_check_passed() and self.m.is_using_sc2():
+                    if self.is_use_yp() and self.m.has_spindle_health_check_passed() and self.m.is_using_sc2():
 
                         if self.digital_spindle_ld_qdA >= 0 \
                                 and self.grbl_ln is not None \
@@ -438,7 +448,7 @@ class SerialConnection(object):
         log('Checking job...')
 
         self.m.enable_check_mode()
-        self.yp.use_yp = False
+        self.set_use_yp(False)
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
@@ -503,6 +513,7 @@ class SerialConnection(object):
         self.grbl_ln = None
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = gcode_obj
+        self.m.set_pause(False)
 
         log('Skeleton buffer stuffing starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
@@ -632,7 +643,7 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
-        self.yp.use_yp = False
+        self.set_use_yp(False)
 
         if self.NOT_SKELETON_STUFF:
 
@@ -670,7 +681,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
         self.jd.job_gcode_running = []
-        self.yp.use_yp = False
+        self.set_use_yp(False)
         self.jd.grbl_mode_tracker = []
         self.grbl_ln = None
 

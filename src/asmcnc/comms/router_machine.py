@@ -2349,7 +2349,7 @@ class RouterMachine(object):
     reference_temp = 45.0
     temp_tolerance = 20.0
     upper_temp_limit = reference_temp + temp_tolerance
-    lower_temp_limit = reference_temp - (temp_tolerance + 5) # it gets cold in the factory
+    lower_temp_limit = reference_temp - (temp_tolerance + 15) # it gets cold in the factory
 
 
     def reset_tuning_flags(self):
@@ -2561,7 +2561,7 @@ class RouterMachine(object):
         tune_thread.start()
 
         # start poll - this will check when toff and sgt parameters have been found, and then apply settings
-        self.tuning_poll = Clock.schedule_interval(lambda dt: self.apply_tuned_settings(X=X, Y=Y, Z=Z), 10)
+        self.tuning_poll = Clock.schedule_once(lambda dt: self.apply_tuned_settings(X=X, Y=Y, Z=Z), 10)
 
 
     def do_tuning(self, X, Y, Z):
@@ -2787,32 +2787,33 @@ class RouterMachine(object):
 
         # NB: ALL THE SETTINGS HERE WILL TAKE A FEW SECONDS TO COMPLETE
 
-        if self.toff_and_sgt_found:
+        if not self.toff_and_sgt_found:
 
-            log("TOFF and SGT found - applying settings")
+            self.tuning_poll = Clock.schedule_once(lambda dt: self.apply_tuned_settings(X=X, Y=Y, Z=Z), 10)
+            return
 
-            if not self.tuning_poll: Clock.unschedule(self.tuning_poll)
+        log("TOFF and SGT found - applying settings")
 
-            # Stop slow jog
-            self.quit_jog()
+        # Stop slow jog
+        self.quit_jog()
 
-            # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
+        # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
 
-            if X: 
-                self.send_command_to_motor("SET TOFF X1 " + str(self.x1_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x1_toff_tuned)
-                self.send_command_to_motor("SET TOFF X2 " + str(self.x2_toff_tuned), motor = TMC_X2, command = SET_TOFF, value = self.x2_toff_tuned)
-                self.send_command_to_motor("SET SGT X1 " + str(self.x1_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x1_sgt_tuned)
-                self.send_command_to_motor("SET SGT X2 " + str(self.x2_sgt_tuned), motor = TMC_X2, command = SET_SGT, value = self.x2_sgt_tuned)
-            if Y: 
-                self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
-                self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
-                self.send_command_to_motor("SET SGT Y1 " + str(self.y1_sgt_tuned), motor = TMC_Y1, command = SET_SGT, value = self.y1_sgt_tuned)
-                self.send_command_to_motor("SET SGT Y2 " + str(self.y2_sgt_tuned), motor = TMC_Y2, command = SET_SGT, value = self.y2_sgt_tuned)
-            if Z: 
-                self.send_command_to_motor("SET TOFF Z " + str(self.z_toff_tuned), motor = TMC_Z, command = SET_TOFF, value = self.z_toff_tuned)
-                self.send_command_to_motor("SET SGT Z " + str(self.z_sgt_tuned), motor = TMC_Z, command = SET_SGT, value = self.z_sgt_tuned)
+        if X: 
+            self.send_command_to_motor("SET TOFF X1 " + str(self.x1_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x1_toff_tuned)
+            self.send_command_to_motor("SET TOFF X2 " + str(self.x2_toff_tuned), motor = TMC_X2, command = SET_TOFF, value = self.x2_toff_tuned)
+            self.send_command_to_motor("SET SGT X1 " + str(self.x1_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x1_sgt_tuned)
+            self.send_command_to_motor("SET SGT X2 " + str(self.x2_sgt_tuned), motor = TMC_X2, command = SET_SGT, value = self.x2_sgt_tuned)
+        if Y: 
+            self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
+            self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
+            self.send_command_to_motor("SET SGT Y1 " + str(self.y1_sgt_tuned), motor = TMC_Y1, command = SET_SGT, value = self.y1_sgt_tuned)
+            self.send_command_to_motor("SET SGT Y2 " + str(self.y2_sgt_tuned), motor = TMC_Y2, command = SET_SGT, value = self.y2_sgt_tuned)
+        if Z: 
+            self.send_command_to_motor("SET TOFF Z " + str(self.z_toff_tuned), motor = TMC_Z, command = SET_TOFF, value = self.z_toff_tuned)
+            self.send_command_to_motor("SET SGT Z " + str(self.z_sgt_tuned), motor = TMC_Z, command = SET_SGT, value = self.z_sgt_tuned)
 
-            Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
+        Clock.schedule_once(self.store_tuned_settings_and_unset_raw_SG_reporting, 5) # Give settings plenty of time to be sent and parsed
 
 
     def store_tuned_settings_and_unset_raw_SG_reporting(self, dt):

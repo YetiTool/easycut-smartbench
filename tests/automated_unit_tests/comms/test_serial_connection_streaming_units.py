@@ -541,3 +541,75 @@ def test_remove_from_g_mode_tracker_at_job_start(sc):
                                 (0,7,9),
                                 (1,7,9),
     ]
+
+
+# Test YP impartiality
+## If serial comms is run from any production jigs, they don't use or need yp
+## it's important that serial comms can still run even if yp == None. 
+
+def test_yp_is_use_yp_when_yp_none(sc):
+    sc.yp = None
+    assert not sc.is_use_yp()
+
+def test_yp_is_use_yp_when_yp_not_none(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = True
+    assert sc.is_use_yp()
+
+def test_yp_set_use_yp_false(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = True
+    sc.set_use_yp(False)
+    assert not sc.yp.use_yp
+
+def test_yp_set_use_yp_true(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = False
+    sc.set_use_yp(True)
+    assert sc.yp.use_yp
+
+def test_yp_grbl_scanner_when_yp_none(sc):
+    # pass this: if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
+    sc.is_job_streaming = True
+    sc.m.is_machine_paused = False
+    sc.m.state = Mock(return_value="Idle")
+
+    sc.g_count = 0 # prevent end_stream from running
+    sc.l_count = 1 # prevent end_stream from running
+
+    sc.yp = None
+    sc.grbl_scanner(run_grbl_scanner_once=True)
+
+def test_yp_check_job_yp_is_none(sc):
+    sc.yp = None
+    sc.check_job([])
+
+def test_yp_check_job_yp_exists(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = True
+    sc.check_job([])
+    assert not sc.yp.use_yp
+
+def test_yp_end_stream_is_none(sc):
+    sc.yp = None
+    sc.update_machine_runtime = Mock()
+    sc.end_stream()
+
+def test_yp_cancel_stream_is_none(sc):
+    sc.yp = None
+    sc.update_machine_runtime = Mock()
+    sc.cancel_stream()
+
+def test_yp_end_stream_exists(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = True
+    sc.update_machine_runtime = Mock()
+    sc.end_stream()
+    assert not sc.yp.use_yp
+
+def test_yp_cancel_stream_exists(sc):
+    sc.yp = Mock()
+    sc.yp.use_yp = True
+    sc.update_machine_runtime = Mock()
+    sc.cancel_stream()
+    assert not sc.yp.use_yp
