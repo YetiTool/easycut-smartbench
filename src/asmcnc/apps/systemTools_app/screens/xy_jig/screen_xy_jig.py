@@ -521,6 +521,7 @@ class XYJig(Screen):
         # If stop is pressed during calibration, just cancel it instead
         if self.m.run_calibration:
             self.m.cancel_triple_axes_calibration()
+            self.reset_after_calibration()
             if self.calibration_poll:
                 Clock.unschedule(self.calibration_poll)
         else:
@@ -574,14 +575,13 @@ class XYJig(Screen):
         else:
             self.m.calibrate_X(zero_position=False, mod_soft_limits=False, fast=True)
 
-        Clock.schedule_once(self.wait_for_calibration_end, 1)
+        self.calibration_poll = Clock.schedule_interval(self.wait_for_calibration_end, 1)
 
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, 'Calibration complete!')
             self.reset_after_calibration()
-        else:
-            self.calibration_poll = Clock.schedule_once(self.wait_for_calibration_end, 1)
+            Clock.unschedule(self.calibration_poll)    
 
     def reset_after_calibration(self):
         self.disable_motor_drivers()
