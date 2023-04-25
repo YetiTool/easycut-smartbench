@@ -1183,7 +1183,7 @@ class PopupConfirmSpindleTest(Widget):
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
         cancel_button.bind(on_press=self.popup.dismiss)
-        resume_button.bind(on_press=self.confirm_func)
+        resume_button.bind(on_press=lambda x: self.confirm_func)
         resume_button.bind(on_press=self.popup.dismiss)
 
     def open(self):
