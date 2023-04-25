@@ -289,7 +289,12 @@ class ZHeadQC2(Screen):
 
     def test_rpm(self, fail_report):
         def read_rpm(dt):
-            if self.m.spindle_speed() < 8000 or self.m.spindle_speed() > 12000:
+            spindle_rpm = self.m.s.spindle_speed
+
+            if self.m.spindle_voltage == 110:
+                spindle_rpm = self.m.convert_from_110_to_230(spindle_rpm)
+
+            if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append("Spindle RPM was " + str(self.m.spindle_speed()) + ". Should be 8000-12000")
 
             self.m.s.write_command('M5')
