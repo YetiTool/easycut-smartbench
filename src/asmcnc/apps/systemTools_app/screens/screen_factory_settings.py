@@ -418,6 +418,13 @@ Builder.load_string("""
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
+                        
+                    Button:
+                        text: 'D. Spindle Test'
+                        on_press: root.digital_spindle_test_pressed()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
                             
 
             BoxLayout:
@@ -1104,13 +1111,24 @@ class FactorySettingsScreen(Screen):
         
         self.systemtools_sm.sm.current = 'set_thresholds'
 
-
     def enter_general_measurement(self):
         if not self.systemtools_sm.sm.has_screen('general_measurement'):
             general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         self.systemtools_sm.sm.current = 'general_measurement'
+
+    def digital_spindle_test_pressed(self):
+        from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
+
+        zhqc2 = ZHeadQC2(m=self.m, l=self.l, sm=self.systemtools_sm.sm)
+
+        confirm_func = zhqc2.run_digital_spindle_test
+
+        confirm_popup = popup_system.PopupConfirmSpindleTest(confirm_func=confirm_func)
+
+        confirm_popup.open()
+
 
 
 
