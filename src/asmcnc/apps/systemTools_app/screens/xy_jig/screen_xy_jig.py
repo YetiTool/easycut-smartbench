@@ -526,13 +526,12 @@ class XYJig(Screen):
         # If stop is pressed during calibration, just cancel it instead
         if self.m.run_calibration:
             self.m.cancel_triple_axes_calibration()
-            self.reset_after_calibration()
             if self.calibration_poll:
                 Clock.unschedule(self.calibration_poll)
-        else:
-            self.m.soft_stop()
-            self.reset_after_stop()
-            self.m.stop_from_soft_stop_cancel()
+
+        self.m.soft_stop()
+        self.reset_after_stop()
+        self.m.stop_from_soft_stop_cancel()
 
     def reset_after_stop(self):
         self.test_running = False
