@@ -1140,8 +1140,8 @@ class PopupConfirmSpindleTest(Widget):
 
     def __init__(self, confirm_func, **kwargs):
         super(PopupConfirmSpindleTest, self).__init__(**kwargs)
-        self.build()
         self.confirm_func = confirm_func
+        self.build()
 
     def build(self):
         stop_description = "Pressing the confirm button will start the spindle test. Ensure it is safe to do so."
