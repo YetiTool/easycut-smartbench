@@ -295,7 +295,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
@@ -1121,15 +1121,13 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
-                        log("Spindle data failure count: " + str(self.spindle_data_failure_count))
-
                         if self.digital_spindle_ld_qdA == -999 and self.sm.current != 'spindle_cooldown'\
                                 and not self.in_inrush and not self.m.is_machine_paused:
                             self.spindle_data_failure_count += 1
+                            log("Spindle data failure count: " + str(self.spindle_data_failure_count))
 
                         if self.spindle_data_failure_count >= self.spindle_data_failure_max:
                             self.m.stop_for_a_stream_pause("yetipilot_spindle_data_loss")
-                            # self.m.stop_from_quick_command_reset() # need to do grbl soft reset but this will kill the job
                             self.reset_spindle_data_failure_count()
 
                         # Check overload state
