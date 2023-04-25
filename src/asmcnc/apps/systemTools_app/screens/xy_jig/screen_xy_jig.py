@@ -260,6 +260,7 @@ class XYJig(Screen):
     phase_two_current = 0
 
     update_realtime_load_event = None
+    calibration_poll = None
 
     def __init__(self, **kwargs):
         super(XYJig, self).__init__(**kwargs)
@@ -517,9 +518,15 @@ class XYJig(Screen):
         if self.test_running and self.sg_values_home and self.sg_values_away:
             self.display_results()
 
-        self.m.soft_stop()
-        self.reset_after_stop()
-        self.m.stop_from_soft_stop_cancel()
+        # If stop is pressed during calibration, just cancel it instead
+        if self.m.run_calibration:
+            self.m.cancel_triple_axes_calibration()
+            if self.calibration_poll:
+                Clock.unschedule(self.calibration_poll)
+        else:
+            self.m.soft_stop()
+            self.reset_after_stop()
+            self.m.stop_from_soft_stop_cancel()
 
     def reset_after_stop(self):
         self.test_running = False
@@ -574,7 +581,7 @@ class XYJig(Screen):
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, 'Calibration complete!')
             self.reset_after_calibration()
         else:
-            Clock.schedule_once(self.wait_for_calibration_end, 1)
+            self.calibration_poll = Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def reset_after_calibration(self):
         self.disable_motor_drivers()
