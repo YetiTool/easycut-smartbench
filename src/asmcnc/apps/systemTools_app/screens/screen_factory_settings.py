@@ -420,7 +420,7 @@ Builder.load_string("""
                         valign: "middle"
                         
                     Button:
-                        text: 'Digital Spindle Test'
+                        text: 'SC2 spindle test'
                         on_press: root.digital_spindle_test_pressed()
                         text_size: self.size
                         halign: "center"
