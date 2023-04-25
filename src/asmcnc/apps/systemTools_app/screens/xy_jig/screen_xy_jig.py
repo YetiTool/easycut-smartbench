@@ -336,7 +336,12 @@ class XYJig(Screen):
 
         if self.calibration_waiting_to_start:
             self.calibration_waiting_to_start = False
-            self.calibrate_motor()
+
+            # If homing was cancelled then don't start calibration
+            if self.m.is_machine_homed or sys.platform == "win32":
+                self.calibrate_motor()
+            else:
+                self.reset_after_calibration()
 
     def begin_test(self, dt):
         if self.test_running:
