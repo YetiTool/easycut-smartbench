@@ -830,8 +830,8 @@ class GoScreen(Screen):
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
 
-        if self.yp_widget.popup:
-            self.yp_widget.popup.dismiss()
+        if self.yp_widget.yp_settings_popup:
+            self.yp_widget.yp_settings_popup.dismiss()
 
     ### SCREEN UPDATES
 
