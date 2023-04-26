@@ -291,7 +291,7 @@ class ZHeadQC2(Screen):
         def read_rpm(dt):
             spindle_rpm = self.m.spindle_speed()
 
-            if self.m.spindle_voltage == 110:
+            if self.m.spindle_voltage != 230:
                 spindle_rpm = self.m.convert_from_110_to_230(spindle_rpm)
                 log('Converted spindle RPM from 110 to 230: %s' % spindle_rpm)
 
