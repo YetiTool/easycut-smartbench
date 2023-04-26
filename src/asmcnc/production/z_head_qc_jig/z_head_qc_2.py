@@ -292,7 +292,7 @@ class ZHeadQC2(Screen):
             spindle_rpm = int(self.m.s.spindle_speed)
 
             if self.m.spindle_voltage != 230:
-                spindle_rpm = self.m.convert_from_230_to_110(spindle_rpm)
+                spindle_rpm = self.m.convert_from_110_to_230(spindle_rpm)
                 log('Converted spindle RPM from 110 to 230: %s' % spindle_rpm)
 
             log('Spindle RPM: %s' % spindle_rpm)
@@ -303,7 +303,9 @@ class ZHeadQC2(Screen):
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
 
-        self.m.s.write_command('M3 S10000')
+        rpm_to_run = 10000 if self.m.spindle_voltage == 230 else self.m.convert_from_110_to_230(10000)
+
+        self.m.s.write_command('M3 S' + str(rpm_to_run))
 
         Clock.schedule_once(read_rpm, 3)
 
