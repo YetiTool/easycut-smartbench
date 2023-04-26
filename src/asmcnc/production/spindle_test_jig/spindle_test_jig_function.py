@@ -69,7 +69,8 @@ class SpindleTest:
                 fail_test(rpm, "Load out of range: " + str(measured_load))
 
         def set_rpm(rpm):
-            self.m.s.write_command('M3 S' + str(rpm))
+            rpm_to_send = 10000 if self.target_voltage == 230 else self.m.convert_from_110_to_230(10000)
+            self.m.s.write_command('M3 S' + str(rpm_to_send))
             self.screen.target_rpm_value.text = str(rpm)
             self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
 
