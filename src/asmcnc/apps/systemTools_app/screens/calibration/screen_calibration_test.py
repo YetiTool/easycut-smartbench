@@ -1105,20 +1105,34 @@ class CalibrationTesting(Screen):
 
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
-        if len(self.status_data_dict[self.stage]) > 0:
+        if len(self.status_data_dict[self.stage]["Statuses"]) > 0:
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_x(): x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_x(): x_dir = 1
-            else: x_dir = 0
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "XCoordinate"] < self.m.mpos_x():
+                x_dir = -1
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "XCoordinate"] > self.m.mpos_x():
+                x_dir = 1
+            else:
+                x_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_y(): y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_y(): y_dir = 1
-            else: y_dir = 0
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "YCoordinate"] < self.m.mpos_y():
+                y_dir = -1
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "YCoordinate"] > self.m.mpos_y():
+                y_dir = 1
+            else:
+                y_dir = 0
 
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] < self.m.mpos_z(): z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] > self.m.mpos_z(): z_dir = -1
-            else: z_dir = 0
-
+            if self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "ZCoordinate"] < self.m.mpos_z():
+                z_dir = 1
+            elif self.status_data_dict[self.stage]["Statuses"][len(self.status_data_dict[self.stage]["Statuses"]) - 1][
+                "ZCoordinate"] > self.m.mpos_z():
+                z_dir = -1
+            else:
+                z_dir = 0
         else:
             x_dir = 0
             y_dir = 0
