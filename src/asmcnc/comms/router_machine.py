@@ -1030,6 +1030,11 @@ class RouterMachine(object):
     # Functions to convert spindle RPMs if using a 110V spindle
     # 'red' refers to 230V line (which is what electronics thinks spindle will be regardless of actual HW)
     # 'green' refers to 110V line
+    """
+    Use these functions when setting the spindle RPM, for example:
+    To run a 110V spindle at 10000 RPM, you would set the spindle RPM to convert_from_110_to_230(10000)
+    You then don't need to convert the value read back in.
+    """
 
     def convert_from_110_to_230(self, rpm_green):
         if float(rpm_green) != 0:

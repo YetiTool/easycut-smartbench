@@ -56,7 +56,8 @@ class BasicScreen(Screen):
 
 
     def on_enter(self):
-        popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').yp_widget.yp_settings_popup = popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = "COM3"
 

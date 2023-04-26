@@ -824,12 +824,14 @@ class GoScreen(Screen):
     ### GLOBAL ENTER/LEAVE ACTIONS
 
     def on_leave(self, *args):
-
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
         if self.listen_for_pauses != None:
             self.listen_for_pauses.cancel()
             self.listen_for_pauses = None
+
+        if self.yp_widget.yp_settings_popup:
+            self.yp_widget.yp_settings_popup.dismiss()
 
     ### SCREEN UPDATES
 
