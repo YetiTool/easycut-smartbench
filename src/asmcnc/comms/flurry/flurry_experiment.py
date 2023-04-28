@@ -13,7 +13,6 @@ class MachineStatus:
 
 
 WEB_API_URL = 'https://localhost:7109/api/'
-WEB_API_URL = 'https://beta.sm.yetitool.com/api/'
 
 # IMPORTANT
 VERIFY_SSL = True

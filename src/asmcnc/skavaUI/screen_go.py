@@ -584,6 +584,7 @@ class GoScreen(Screen):
         self.sm.current = 'spindle_shutdown'
 
     def _start_running_job(self):
+
         self.database.send_job_start()
 
         self.m.set_pause(False)

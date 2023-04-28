@@ -5,6 +5,8 @@ import threading, Queue
 from time import sleep
 import traceback
 
+from asmcnc.comms.flurry.flurry import Flurry
+
 def log(message):
 	timestamp = datetime.datetime.now()
 	print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
@@ -35,6 +37,8 @@ class DatabaseEventManager():
 
 	event_send_timeout = 5*60
 
+	flurry = None
+
 	def __init__(self, screen_manager, machine, settings_manager):
 
 		self.queue = 'machine_data'
@@ -42,6 +46,8 @@ class DatabaseEventManager():
 		self.sm = screen_manager
 		self.jd = self.m.jd
 		self.set = settings_manager
+
+		self.flurry = Flurry()
 
 		self.event_queue = Queue.Queue()
 
@@ -157,9 +163,9 @@ class DatabaseEventManager():
 
 					try:
 						if self.m.s.m_state == "Idle":
-							self.send_alive()
+							self.flurry.send_alive()
 						else:
-							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
+							self.flurry.send_statistic_stack()
 
 					except Exception as e:
 						log("Could not send routine update:")
@@ -455,32 +461,36 @@ class DatabaseEventManager():
 
 	def send_job_start(self):
 
-		if pika:
+		self.flurry.send_job_start(
+			self.jd.job_name or ''
+		)
 
-			data = {
-					"payload_type": "job_start",
-					"machine_info": {
-						"name": self.m.device_label,
-						"location": self.m.device_location,
-						"hostname": self.set.console_hostname,
-						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.set.public_ip_address
-					},
-					"job_data": {
-						"job_name": self.jd.job_name or '',
-						"job_start": self.get_local_time()
-					},
-					"metadata": {
-
-					},
-					"time": self.get_local_time()
-			}
-
-			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
-
-			data["metadata"] = metadata_in_json_format
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
+		# if pika:
+		#
+		# 	data = {
+		# 			"payload_type": "job_start",
+		# 			"machine_info": {
+		# 				"name": self.m.device_label,
+		# 				"location": self.m.device_location,
+		# 				"hostname": self.set.console_hostname,
+		# 				"ec_version": self.m.sett.sw_version,
+		# 				"public_ip_address": self.set.public_ip_address
+		# 			},
+		# 			"job_data": {
+		# 				"job_name": self.jd.job_name or '',
+		# 				"job_start": self.get_local_time()
+		# 			},
+		# 			"metadata": {
+		#
+		# 			},
+		# 			"time": self.get_local_time()
+		# 	}
+		#
+		# 	metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
+		#
+		# 	data["metadata"] = metadata_in_json_format
+		#
+		# 	self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
 
 
 	### FEEDS AND SPEEDS

@@ -18,9 +18,10 @@ from serial.serialutil import SerialException
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
-
-from asmcnc.comms.flurry.flurry_experiment import Flurry, MachineStatus
-
+#
+# from asmcnc.comms.flurry.flurry_experiment import Flurry, MachineStatus
+from asmcnc.comms.flurry.flurry import Flurry
+from asmcnc.comms.flurry.models.statistic import Statistic
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -792,6 +793,13 @@ class SerialConnection(object):
     measure_running_data = False
     running_data = []
     measurement_stage = 0
+
+    flurry_data_stack = [
+        {
+            "time": None,
+            "digital_spindle_ld_qdA": None,
+        }
+    ]
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
@@ -1669,8 +1677,8 @@ class SerialConnection(object):
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
 
-    def send_machine_status(self):
-        if self.digital_spindle_ld_qdA is None:
-            return
-        status = MachineStatus(0, 0, 0, self.digital_spindle_ld_qdA, datetime.now().strftime("%H:%M:%S.%f"))
-        self.flurry.update_machine_status(status)
+    def add_flurry_statistic(self):
+        statistic = Statistic(
+            time=self.jd.,
+
+        )
