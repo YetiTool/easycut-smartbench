@@ -374,7 +374,7 @@ class SerialConnection(object):
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
-                        self.send_machine_status()
+                        self.add_flurry_statistic()
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
@@ -1679,6 +1679,10 @@ class SerialConnection(object):
 
     def add_flurry_statistic(self):
         statistic = Statistic(
-            time=self.jd.,
-
+            time=datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            digital_spindle_load=self.digital_spindle_ld_qdA,
+            machine_hostname=self.sett.console_hostname
         )
+
+        self.flurry_data_stack.append(statistic)
+
