@@ -276,7 +276,10 @@ class LoadingScreen(Screen):
 
         try:
             if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
-                raise Exception("File exceeds 10 million lines!")
+                log("File exceeds 10 million lines!")
+                self.update_screen('Could not load - Exceeds 10 million lines')
+                self.jd.reset_values()
+                return
 
             # clear out undesirable lines
 
@@ -434,14 +437,19 @@ class LoadingScreen(Screen):
             self.check_button.opacity = 1
             self.home_button.opacity = 1
 
-        if stage == 'Could not load':
+        if 'Could not load' in stage:
             self.progress_value = self.l.get_str('Could not load job')
-            self.warning_body_label.text = (
-                self.l.get_bold('ERROR') + '[b]:[/b]\n' + \
-                self.l.get_str('It was not possible to load your job.') + \
-                "\n" + \
-                self.l.get_str('Please double check the file for errors before attempting to re-load it.')
+            self.warning_body_label.text = self.l.get_bold('ERROR') + '[b]:[/b]\n'
+            
+            if 'Exceeds 10 million lines' in stage:
+                self.warning_body_label.text += self.l.get_str('This file exceeds 10 million lines.')
+            else:
+                self.warning_body_label.text += (
+                    self.l.get_str('It was not possible to load your job.') + \
+                    "\n" + \
+                    self.l.get_str('Please double check the file for errors before attempting to re-load it.')
                 )
+
             self.job_gcode = []
             self.loading_file_name = ''
             self.check_button.text = self.l.get_str('Check job')
