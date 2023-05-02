@@ -298,7 +298,8 @@ def test_gcode_line_is_excluded(sc):
         ')',
         '$',
         'AE',
-        'AF'
+        'AF',
+        '*L'
     ]
     number_gcodes = 1
     for line in uncountable_gcodes:
@@ -313,6 +314,7 @@ def test_gcode_line_is_not_excluded(sc):
 def test_add_line_number_to_gcode_line(sc):
     assert sc.add_line_number_to_gcode_line("G1", 4) == "N4G1"
     assert sc.add_line_number_to_gcode_line("AE", 2) == "AE"
+    assert sc.add_line_number_to_gcode_line("*LFFFFFF", 3) == "*LFFFFFF"
 
 
 # GRBL mode tracking
