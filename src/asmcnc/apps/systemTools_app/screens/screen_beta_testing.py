@@ -336,6 +336,8 @@ class BetaTestingScreen(Screen):
                 checkout_exit_code = os.system(
                     "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
                 pull_exit_code = os.system("git pull")
+
+                # exit code 0 means success, anything else is error
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()

@@ -264,7 +264,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             width: dp(150)
                             height: dp(110)
-                            on_press: root.prep_for_sw_update_over_wifi()
+                            on_press: root.prep_for_sw_update("WiFi")
                             # text: 'Update'
                             # font_size: '28sp'
                             color: hex('#f9f9f9ff')
@@ -346,7 +346,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             width: dp(150)
                             height: dp(110)
-                            on_press: root.prep_for_sw_update_over_usb()
+                            on_press: root.prep_for_sw_update("USB")
                             # text: 'Update'
                             # font_size: '28sp'
                             color: hex('#f9f9f9ff')
@@ -357,9 +357,9 @@ Builder.load_string("""
 """)
 
 class SWUpdateScreen(Screen):
-    
+
     WIFI_CHECK_INTERVAL = 2
-    
+
     wifi_on = "./asmcnc/apps/SWupdater_app/img/wifi_on.png"
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
     wifi_warning = "./asmcnc/apps/SWupdater_app/img/wifi_warning.png"
@@ -370,17 +370,17 @@ class SWUpdateScreen(Screen):
 
     poll_USB = None
     poll_wifi = None
-    
+
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.set=kwargs['settings']
         self.l=kwargs['localization']
-        
+
         self.update_strings()
 
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
-        
+
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
         self.update_screen_with_latest_version()
 
@@ -423,7 +423,7 @@ class SWUpdateScreen(Screen):
             try:
                 if self.usb_stick.is_available():
                     dir_path_name = self.set.find_usb_directory()
-            
+
                     if dir_path_name != 2 and dir_path_name != 0 and dir_path_name != '':
                         if self.set.set_up_remote_repo(dir_path_name):
                             self.set.refresh_latest_sw_version()
@@ -480,11 +480,19 @@ class SWUpdateScreen(Screen):
                     self.l.get_bold('New version available') + \
                     '[b]: ' + self.set.latest_sw_version + '[/b]'
                     )
-            else: 
+            else:
                 self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
         else:
             self.latest_software_version_label.text = self.l.get_bold('No WiFi or USB!')
 
+    # Creates a popup message warning the user that the update may take a while and sets the update method as "WiFi"
+    # or "USB" depending on which button was pressed. This function is called from the Builder.load_string when the
+    # buttons are defined
+    def prep_for_sw_update(self, update_method):
+        self.set.usb_or_wifi = update_method
+
+        message = self.l.get_str("This update may take anywhere between 2 minutes and 2 hours")
+        popup_info.PopupSoftwareUpdateWarning(self.sm, self.l, self, message)
 
     def prep_for_sw_update_over_wifi(self):
 
@@ -528,8 +536,8 @@ class SWUpdateScreen(Screen):
             self.get_sw_update_over_usb()
 
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
-        
-        
+
+
 
     def get_sw_update_over_wifi(self):
 
@@ -538,8 +546,8 @@ class SWUpdateScreen(Screen):
         def do_sw_update():
 
             outcome = self.set.get_sw_update_via_wifi()
-            
-            if outcome == False: 
+
+            if outcome == False:
                 description = self.l.get_str("There was a problem updating your software.") + \
                 " \n\n" + \
                 self.l.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
@@ -555,7 +563,7 @@ class SWUpdateScreen(Screen):
                 description = self.l.get_str("Could not connect to github. Please check that your connection is stable, or try again later.")
                 popup_info.PopupError(self.sm, self.l, description)
 
-            else: 
+            else:
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
                 self.set.ansible_service_run()
                 message = (
@@ -571,16 +579,16 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
     def repair_sw_over_wifi(self):
-            
+
         description = self.l.get_str("DO NOT restart your machine until you see instructions to do so on the screen.")
         popup_info.PopupWarning(self.sm, self.l, description)
-               
+
         def delay_clone_to_update_screen():
 
             if self.wifi_image.source == self.wifi_on:
 
                 outcome = self.set.reclone_EC()
-                
+
                 if outcome == False:
 
                     description = (
@@ -589,7 +597,7 @@ class SWUpdateScreen(Screen):
                         self.l.get_str("If this issue persists, please contact Yeti Tool Ltd for support.")
                         )
 
-                    popup_info.PopupError(self.sm, self.l, description)           
+                    popup_info.PopupError(self.sm, self.l, description)
             else:
 
                 description = (
@@ -610,7 +618,7 @@ class SWUpdateScreen(Screen):
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
-            
+
             if outcome == 2:
                 description = (
                     self.l.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
@@ -636,7 +644,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == "update failed":
-                
+
                 description = (
                     self.l.get_str("It was not possible to update your software from the USB drive.") + \
                     "\n\n" + \
@@ -647,8 +655,8 @@ class SWUpdateScreen(Screen):
                     self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.")
                     )
 
-                popup_info.PopupError(self.sm, self.l, description)              
-            
+                popup_info.PopupError(self.sm, self.l, description)
+
             else:
                 self.usb_stick.disable()
                 update_success = outcome
@@ -663,14 +671,14 @@ class SWUpdateScreen(Screen):
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
-                
+
     def check_wifi_connection(self, dt):
 
         if self.set.wifi_available: self.wifi_image.source = self.wifi_on
         elif not self.set.ip_address: self.wifi_image.source = self.wifi_off
         else: self.wifi_image.source = self.wifi_warning
 
-    def check_USB_status(self, dt): 
+    def check_USB_status(self, dt):
         if self.usb_stick.is_available():
             self.usb_image.source = self.usb_on
         else:
@@ -687,7 +695,7 @@ class SWUpdateScreen(Screen):
         self.update_using_usb_label.text = self.l.get_bold("Update using USB")
         self.update_using_usb_instructions_label.text = (
             self.l.get_str("Insert a USB stick containing the latest software.") + \
-            "\n" + 
+            "\n" +
             self.l.get_str("Go to www.yetitool.com/support for help on how to do this.")
             )
         self.usb_update_button.text = self.l.get_str("Update")
@@ -698,12 +706,12 @@ class SWUpdateScreen(Screen):
     def update_font_size(self, value):
         if len(value.text) < 9:
             value.font_size = self.default_font_size
-        elif len(value.text) > 8: 
+        elif len(value.text) > 8:
             value.font_size = self.default_font_size - 2
-        if len(value.text) > 9: 
+        if len(value.text) > 9:
             value.font_size = self.default_font_size - 4
-        if len(value.text) > 11: 
+        if len(value.text) > 11:
             value.font_size = self.default_font_size - 6
-        if len(value.text) > 12: 
+        if len(value.text) > 12:
             value.font_size = self.default_font_size - 8
 
