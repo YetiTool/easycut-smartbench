@@ -333,11 +333,21 @@ class BetaTestingScreen(Screen):
                 # Strip whitespace
                 branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
 
-                os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
-                os.system("git pull")
-                self.set.ansible_service_run_without_reboot()
-                wait_popup.popup.dismiss()
-                self.systemtools_sm.sm.current = 'rebooting'
+                checkout_exit_code = os.system(
+                    "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
+                pull_exit_code = os.system("git pull")
+
+                # exit code 0 means success, anything else is error
+                if checkout_exit_code == 0 and pull_exit_code == 0:
+                    self.set.ansible_service_run_without_reboot()
+                    wait_popup.popup.dismiss()
+                    self.systemtools_sm.sm.current = 'rebooting'
+                else:
+                    wait_popup.popup.dismiss()
+                    message = (self.l.get_str("Failed to checkout and pull branch") + \
+                        '\n' + \
+                        self.l.get_str("Please check the spelling of the branch and your internet connection"))
+                    error_popup = popup_info.PopupError(self.systemtools_sm.sm, self.l, message)
 
             Clock.schedule_once(nested_branch_update, 0.5)
 
