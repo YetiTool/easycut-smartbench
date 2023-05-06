@@ -68,7 +68,7 @@ Builder.load_string("""
 
                     TextInput:
                         id: y_over_count
-                        text: "Y"
+                        hint_text: "Y"
                         valign: 'middle'
                         halign: 'center'
                         font_size: '24sp'
@@ -130,7 +130,7 @@ Builder.load_string("""
 
                         TextInput:
                             id: x_over_count
-                            text: "X"
+                            hint_text: "X"
                             valign: 'middle'
                             halign: 'center'
                             font_size: '24sp'
