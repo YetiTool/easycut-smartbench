@@ -614,12 +614,13 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_usb(self):
 
-        popup_info.PopupWait(self.sm,  self.l)
+        wait_popup = popup_info.PopupWait(self.sm,  self.l)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
 
             if outcome == 2:
+                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
                         self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
@@ -632,6 +633,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == 0:
+                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("There was no folder or zipped folder called easycut-smartbench found on the USB drive.").replace(
                         self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
@@ -644,7 +646,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == "update failed":
-
+                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("It was not possible to update your software from the USB drive.") + \
                     "\n\n" + \
@@ -658,6 +660,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
 
             else:
+                wait_popup.dismiss()
                 self.usb_stick.disable()
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
