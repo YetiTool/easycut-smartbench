@@ -82,6 +82,12 @@ class SpindleSaveWidget(Widget):
     def get_info(self):
 
         spindle_settings_info = (
+                self.l.get_bold("Spindle brand") + \
+                "[b]: [/b]" + \
+                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
+                " " + \
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
+                "\n\n" + \
                 self.l.get_bold("Spindle cooldown") + \
                 "[b]: [/b]" + \
                 self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
@@ -93,12 +99,6 @@ class SpindleSaveWidget(Widget):
                 "\n" + \
                 "       " + \
                 self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
-                "\n\n" + \
-                self.l.get_bold("Spindle brand") + \
-                "[b]: [/b]" + \
-                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
-                " " + \
-                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
                 "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
