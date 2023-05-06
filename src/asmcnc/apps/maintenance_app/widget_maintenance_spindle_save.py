@@ -18,22 +18,22 @@ Builder.load_string("""
 
     BoxLayout:
         size_hint: (None, None)
-        height: dp(280)
+        height: dp(350)
         width: dp(160)
         pos: self.parent.pos
         orientation: 'vertical'
 
         BoxLayout: 
 	        size_hint: (None, None)
-	        height: dp(140)
+	        height: dp(175)
 	        width: dp(160)
-            padding: [22,20,18,0]
+            padding: [15,21.5,13,21.5]
             ToggleButton:
                 id: save_button
                 on_press: root.save()
                 size_hint: (None,None)
-                height: dp(120)
-                width: dp(120)
+                height: dp(132)
+                width: dp(132)
                 background_color: [0,0,0,0]
                 center: self.parent.center
                 pos: self.parent.pos
@@ -50,9 +50,9 @@ Builder.load_string("""
 
         BoxLayout: 
 	        size_hint: (None, None)
-	        height: dp(140)
+	        height: dp(175)
 	        width: dp(160)
-            padding: [50,0,50,40]
+            padding: [50,0,50,57.5]
 	        Button:
 	            background_color: hex('#F4433600')
 	            on_press: root.get_info()

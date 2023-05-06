@@ -49,9 +49,6 @@ Builder.load_string("""
     spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
 
-    # Spindle tab labels
-    spindle_cooldown_settings : spindle_cooldown_settings
-
     # Z touchplate and lead screw widgets
     z_misc_save_container: z_misc_save_container
     touchplate_offset_container: touchplate_offset_container
@@ -306,57 +303,21 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(50)
                     width: dp(760)
-                    id: monitor_strip
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(50)
-                        width: dp(760)
-                        padding: [dp(10),dp(5),dp(5),dp(5)]
-                        orientation: 'horizontal'
-
-                        Label:
-                            id: spindle_cooldown_settings
-                            color: 0,0,0,1
-                            font_size: dp(22)
-                            markup: True
-                            halign: "left"
-                            valign: "middle"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(760)
-                    height: dp(280)
+                    height: dp(350)
                     orientation: "horizontal" 
                     padding: dp(0)
                     spacing: dp(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(280)
+                        height: dp(350)
                         width: dp(580)
                         id: spindle_settings_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(280)
+                        height: dp(350)
                         width: dp(160)
                         id: spindle_save_container
                         canvas:
@@ -667,7 +628,6 @@ class MaintenanceScreenClass(Screen):
 
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
-        self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
         self.brush_use_widget.update_strings()
         self.brush_life_widget.update_strings()
         self.spindle_settings_widget.update_strings()

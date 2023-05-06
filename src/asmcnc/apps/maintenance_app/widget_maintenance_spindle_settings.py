@@ -29,184 +29,206 @@ Builder.load_string("""
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
     rpm_label: rpm_label
-    seconds_label : seconds_label
+    seconds_label: seconds_label
+    stylus_label: stylus_label
     stylus_switch: stylus_switch
 
     
-    GridLayout:
-        cols: 2
-        rows: 4
-        size_hint: (None, None)
-        height: dp(280)
-        width: dp(580)
-        cols_minimum: {0: dp(150), 1: dp(410)}
-        rows_minimum: {0: dp(40), 1: dp(40), 2: dp(40), 3: dp(40)}
-        spacing: [dp(0), dp(5)]
-
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.parent.pos
+        size: self.parent.size
+        spacing: dp(15)
 
         # ROW 1
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(60)
-            width: dp(150)
-            padding: [dp(55), dp(3), dp(41), dp(3)]
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(5)
 
-            Image:
-                id: spindle_image
-                source: "./asmcnc/apps/maintenance_app/img/speed_dial.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
+            canvas:
+                Color:
+                    rgba: 1,1,1,1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(50)
-            width: dp(410)
-            padding: [dp(0), dp(5), dp(10), dp(5)]
-            spacing: dp(10)
-	        TextInput:
-	            id: spindle_cooldown_speed
-	            size_hint: (None, None)
-	            height: dp(50)
-	            width: dp(250)
-                font_size: dp(30)
-                valign: "bottom"
-                markup: True
-                halign: "left"
-                input_filter: 'int'
-                multiline: False
+            BoxLayout:
+                size_hint_x: 0.2
 
-            Label:
-                id: rpm_label
-                color: 0,0,0,1
-                font_size: dp(30)
-                markup: True
-                halign: "left"
-                valign: "middle"
-                text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
-                text: "RPM"
+                Image:
+                    id: spindle_image
+                    source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+            BoxLayout:
+                padding: dp(5)
+
+                Spinner:
+                    id: spindle_brand
+                    halign: 'left'
+                    valign: 'middle'
+                    markup: True
+                    text: 'spinner'
+                    font_size: '30sp'
+                    text_size: self.size
+                    multiline: False
+                    color: 0,0,0,1
+                    values: root.brand_list_sc1
+                    option_cls: Factory.get("SpindleSpinner")
+                    background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
+                    on_text: root.autofill_rpm_time()
+                    # background_color: [1,1,1,0]
 
         # ROW 2
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(60)
-            width: dp(150)
-            padding: [dp(55), dp(3), dp(41), dp(3)]
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(5)
 
-            Image:
-                id: countdown_image
-                source: "./asmcnc/apps/maintenance_app/img/countdown_small.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
+            canvas:
+                Color:
+                    rgba: 1,1,1,1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(50)
-            width: dp(410)
-            padding: [dp(0), dp(5), dp(10), dp(5)]
-            spacing: dp(10)
-            TextInput:
-                id: spindle_cooldown_time
-                size_hint: (None, None)
-                height: dp(50)
-                width: dp(250)
-                font_size: dp(30)
-                valign: "bottom"
-                markup: True
-                halign: "left"
-                input_filter: 'int'
+            BoxLayout:
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    padding: dp(10)
+
+                    Image:
+                        id: spindle_image
+                        source: "./asmcnc/apps/maintenance_app/img/speed_dial.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                BoxLayout:
+                    size_hint_x: 1.5
+                    padding: dp(5)
+
+                    TextInput:
+                        id: spindle_cooldown_speed
+                        font_size: dp(30)
+                        valign: "bottom"
+                        markup: True
+                        halign: "left"
+                        input_filter: 'int'
+                        multiline: False
+
+                Label:
+                    id: rpm_label
+                    color: 0,0,0,1
+                    font_size: dp(30)
+                    markup: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    text: "RPM"
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    padding: dp(5)
+
+                    Image:
+                        id: countdown_image
+                        source: "./asmcnc/apps/maintenance_app/img/countdown_small.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                BoxLayout:
+                    padding: dp(5)
+
+                    TextInput:
+                        id: spindle_cooldown_time
+                        font_size: dp(30)
+                        valign: "bottom"
+                        markup: True
+                        halign: "left"
+                        input_filter: 'int'
+                        multiline: False
+
+                Label:
+                    id: seconds_label
+                    size_hint_x: 1.5
+                    color: 0,0,0,1
+                    font_size: dp(30)
+                    markup: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                    size: self.parent.size
+                    pos: self.parent.pos
+
+        # ROW 3
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: dp(5)
+
+            canvas:
+                Color:
+                    rgba: 1,1,1,1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+
+            BoxLayout:
+                size_hint_x: 0.3
+
+                Image:
+                    id: stylus_image
+                    source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             Label:
-                id: seconds_label
+                id: stylus_label
                 color: 0,0,0,1
                 font_size: dp(30)
                 markup: True
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
 
-        # ROW 3
+            BoxLayout:
+                size_hint_x: 0.5
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(60)
-            width: dp(150)
-            padding: [dp(46), dp(5), dp(40), dp(5)] # 15 padding
-
-            Image:
-                id: spindle_image
-                source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
-
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(50)
-            width: dp(410)
-            padding: [dp(0), dp(5), dp(10), dp(5)]
-            Spinner:
-                id: spindle_brand
-                halign: 'left'
-                valign: 'middle'
-                markup: True
-                size_hint: (None, None)
-                size: 380, 50
-                text: 'spinner'
-                font_size: '30sp'
-                text_size: self.size
-                multiline: False
-                color: 0,0,0,1
-                values: root.brand_list_sc1
-                option_cls: Factory.get("SpindleSpinner")
-                background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
-                on_text: root.autofill_rpm_time()
-                # background_color: [1,1,1,0]
+                Switch:
+                    id: stylus_switch
+                    background_color: [0,0,0,0]
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    pos: self.parent.pos
 
         # ROW 4
 
-        BoxLayout: 
-            size_hint: (None, None)
-            # pos: self.parent.pos
-            height: dp(60)
-            width: dp(150)
-            padding: [dp(46), dp(3), dp(40), dp(3)]
-
-            Image:
-                id: stylus_image
-                source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
-
         BoxLayout:
-            size_hint: (None, None)
-            pos: self.parent.pos
-            height: dp(60)
-            width: dp(90)
-            Switch:
-                id: stylus_switch
-                background_color: [0,0,0,0]
-                center_x: self.parent.center_x
-                y: self.parent.y
-                pos: self.parent.pos
+            orientation: 'horizontal'
+            padding: dp(5)
+
+            canvas:
+                Color:
+                    rgba: 1,1,1,1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+        
 
 
 
@@ -254,4 +276,5 @@ class SpindleSettingsWidget(Widget):
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
+        self.stylus_label.text = self.l.get_str("CNC Stylus")
 
