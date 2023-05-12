@@ -6,10 +6,9 @@ widget to spindle settings
 
 import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
-from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -31,6 +30,7 @@ Builder.load_string("""
     rpm_label: rpm_label
     seconds_label: seconds_label
     stylus_label: stylus_label
+    uptime_label: uptime_label
     stylus_switch: stylus_switch
 
     
@@ -53,16 +53,14 @@ Builder.load_string("""
                     size: self.size
                     pos: self.pos
 
-            BoxLayout:
+            Image:
                 size_hint_x: 0.2
-
-                Image:
-                    id: spindle_image
-                    source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                id: spindle_image
+                source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
 
             BoxLayout:
                 padding: dp(5)
@@ -186,16 +184,14 @@ Builder.load_string("""
                     size: self.size
                     pos: self.pos
 
-            BoxLayout:
+            Image:
                 size_hint_x: 0.3
-
-                Image:
-                    id: stylus_image
-                    source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                id: stylus_image
+                source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
 
             Label:
                 id: stylus_label
@@ -228,7 +224,29 @@ Builder.load_string("""
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
-        
+
+            BoxLayout:
+                size_hint_x: 0.3
+
+                # Image:
+                #     source: ''
+                #     center_x: self.parent.center_x
+                #     y: self.parent.y
+                #     size: self.parent.width, self.parent.height
+                #     allow_stretch: True
+
+            Label:
+                id: uptime_label
+                color: 0,0,0,1
+                font_size: dp(30)
+                markup: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Button:
+                size_hint_x: 0.5
+                on_press: root.get_uptime()
 
 
 
@@ -273,8 +291,39 @@ class SpindleSettingsWidget(Widget):
 
         self.rpm_override = False  
 
+    def get_uptime(self):
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.m.s.write_command('M3 S0')
+        Clock.schedule_once(self.get_spindle_info, 0.3)
+
+    def get_spindle_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        self.check_info_count = 0
+        Clock.schedule_once(self.check_spindle_info, 0.3)
+
+    def check_spindle_info(self, dt):
+        self.check_info_count += 1
+        # Value of -999 represents disconnected spindle
+        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
+            self.read_restore_info()
+        else: # Keep trying for a few seconds
+            Clock.schedule_once(self.check_spindle_info, 0.3)
+
+    def read_restore_info(self):
+        self.m.s.write_command('M5')
+        self.wait_popup.popup.dismiss()
+        # Value of -999 for ld_qdA represents disconnected spindle
+        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
+            # Get info was successful, show info
+            self.uptime_label.text = "Uptime: " + str(int(self.m.s.spindle_brush_run_time_seconds/3600)) + " hours"
+        else:
+            # Otherwise, spindle is probably disconnected
+            error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
+            popup_info.PopupError(self.sm, self.l, error_message)
+
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
         self.stylus_label.text = self.l.get_str("CNC Stylus")
+        self.uptime_label.text = self.l.get_str("Turn on spindle to read")
 
