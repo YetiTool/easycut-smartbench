@@ -1098,7 +1098,7 @@ class SerialConnection(object):
                         self.power_loss_detected = True
                         Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
-                elif part.startswith("Door") and self.m.is_machine_paused == False:
+                elif part.startswith("Door"):
                     if part.startswith("Door:3"):
                         pass
                     else:
