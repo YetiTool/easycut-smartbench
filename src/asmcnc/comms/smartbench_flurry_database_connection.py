@@ -330,7 +330,7 @@ class DatabaseEventManager():
 					"calibration_hrs_before_next": calibration_hrs_left,
 
 					"file_name": self.jd.job_name or '',
-					"job_time": self.sm.get_screen('go').time_taken_seconds or '',
+					"job_time": self.sm.get_screen('go').total_runtime_seconds or 0,
 					"gcode_line": self.m.s.g_count or 0,
 					"job_percent": self.jd.percent_thru_job or 0.0,
 					"overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
