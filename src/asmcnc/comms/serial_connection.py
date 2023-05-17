@@ -581,7 +581,7 @@ class SerialConnection(object):
         return line if self.gcode_line_is_excluded(line) else 'N' + str(i) + line
 
     def gcode_line_is_excluded(self, line):
-        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line
+        return '(' in line or ')' in line or '$' in line or 'AE' in line or 'AF' in line or '*L' in line
 
     def get_grbl_float(self, line, pattern, last_thing=None):
         match_obj = re.search(pattern, line)
