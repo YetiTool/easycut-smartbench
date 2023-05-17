@@ -177,7 +177,11 @@ class LoadingScreen(Screen):
     usb_status = None
 
     default_font_size = '30sp'
-    
+
+    skip_check_decision = False
+
+    continuing_to_recovery = False
+
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -186,7 +190,7 @@ class LoadingScreen(Screen):
         self.l=kwargs['localization']
 
 
-    def on_enter(self):    
+    def on_pre_enter(self):    
 
         # display file selected in the filename display label
         self.filename_label.text = self.jd.job_name
@@ -421,6 +425,18 @@ class LoadingScreen(Screen):
             self.progress_value = self.l.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
 
         if stage == 'Loaded':
+            if self.continuing_to_recovery:
+                self.continuing_to_recovery = False
+                self.jd.checked = False
+                self.sm.get_screen('home').z_datum_reminder_flag = True
+                self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
+                self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
+                self.sm.current = 'homing_decision'
+
+            if self.skip_check_decision:
+                self.skip_check_decision = False
+                self.quit_to_home()
+
             self.progress_value = self.l.get_bold('Job loaded')
             self.warning_body_label.text = (
                 self.l.get_bold('WARNING') + '[b]:[/b]\n' + \

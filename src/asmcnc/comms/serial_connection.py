@@ -660,6 +660,9 @@ class SerialConnection(object):
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
 
+                if not self.jd.job_recovery_skip_recovery:
+                    self.jd.write_to_recovery_file_after_completion()
+
             else:
                 self.check_streaming_started = False
                 self.m.disable_check_mode()
@@ -683,6 +686,9 @@ class SerialConnection(object):
         self.jd.job_gcode_running = []
         self.set_use_yp(False)
         self.jd.grbl_mode_tracker = []
+
+        # Save cancellation line for job recovery
+        cancel_line = self.grbl_ln
         self.grbl_ln = None
 
         if self.m_state != "Check":
@@ -696,8 +702,14 @@ class SerialConnection(object):
 
             # Update time for maintenance reminders
             time.sleep(0.4)
-            self.update_machine_runtime()
+            time_taken_seconds = self.update_machine_runtime()
 
+            # Write recovery info
+            # g_count represents the number of OKs issued by grbl which are sent when a line enters the line buffer
+            # The line buffer has a capacity of 35 lines
+            # So the currently executing command is the one 35 lines before the last one received by the buffer
+            if not self.jd.job_recovery_skip_recovery:
+                self.jd.write_to_recovery_file_after_cancel(cancel_line, time_taken_seconds)
 
         else:
             self.check_streaming_started = False
@@ -743,7 +755,13 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
+        # This accounts for the current pause and doesn't include cooldown time
+        time_without_current_pause = self.stream_pause_start_time - self.stream_start_time - self.stream_paused_accumulated_time
+
         self._reset_counters()
+
+        return time_without_current_pause
+
 
     # PUSH MESSAGE HANDLING
 
