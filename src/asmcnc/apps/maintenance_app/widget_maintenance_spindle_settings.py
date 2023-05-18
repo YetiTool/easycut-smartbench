@@ -226,14 +226,15 @@ Builder.load_string("""
                     pos: self.pos
 
             BoxLayout:
+                padding: dp(3)
                 size_hint_x: 0.3
 
-                # Image:
-                #     source: ''
-                #     center_x: self.parent.center_x
-                #     y: self.parent.y
-                #     size: self.parent.width, self.parent.height
-                #     allow_stretch: True
+                Image:
+                    source: "./asmcnc/apps/maintenance_app/img/uptime_hourglass.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             Label:
                 id: uptime_label
@@ -244,9 +245,21 @@ Builder.load_string("""
                 valign: "middle"
                 text_size: self.size
 
-            Button:
+            BoxLayout:
                 size_hint_x: 0.5
-                on_press: root.get_uptime()
+                padding: [dp(40), dp(0)]
+
+                Button:
+                    on_press: root.get_uptime()
+                    background_normal: ''
+                    background_down: ''
+
+                    Image:
+                        source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: False
 
 
 
