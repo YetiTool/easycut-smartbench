@@ -562,6 +562,11 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
 
+        if self.m.theateam() and self.m.get_dollar_setting(51):
+            self.spindle_settings_widget.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        else:
+            self.spindle_settings_widget.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
+
         # Only show SC2 options if machine supports it
         self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc1
         try:

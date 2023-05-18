@@ -305,9 +305,12 @@ class SpindleSettingsWidget(Widget):
         self.rpm_override = False  
 
     def get_uptime(self):
-        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-        self.m.s.write_command('M3 S0')
-        Clock.schedule_once(self.get_spindle_info, 0.3)
+        if self.m.theateam() and self.m.get_dollar_setting(51):
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.m.s.write_command('M3 S0')
+            Clock.schedule_once(self.get_spindle_info, 0.3)
+        else:
+            self.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
