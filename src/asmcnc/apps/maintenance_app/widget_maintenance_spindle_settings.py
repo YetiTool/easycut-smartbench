@@ -306,9 +306,12 @@ class SpindleSettingsWidget(Widget):
 
     def get_uptime(self):
         if self.m.theateam() and self.m.get_dollar_setting(51):
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-            self.m.s.write_command('M3 S0')
-            Clock.schedule_once(self.get_spindle_info, 0.3)
+            if self.m.state().startswith('Idle'):
+                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+                self.m.s.write_command('M3 S0')
+                Clock.schedule_once(self.get_spindle_info, 0.3)
+            else:
+                popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
         else:
             self.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
 
