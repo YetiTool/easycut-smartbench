@@ -93,19 +93,23 @@ class SpindleSaveWidget(Widget):
                 self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
                 " " + \
                 self.l.get_str("We recommend the following cooldown settings:") + \
-                "\n" + \
+                "\n\n" + \
                 "       " + \
                 self.l.get_str("Yeti: 20,000 RPM; 10 seconds") + \
-                "\n" + \
+                "\n\n" + \
                 "       " + \
                 self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
                 "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
-                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.") + \
+                "\n\n" + \
+                self.l.get_bold("Spindle uptime") + \
+                "[b]: [/b]" + \
+                self.l.get_str("Press the button to display the spindle's uptime.")
             )
 
-        popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
+        popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
 
     def save(self):
 
