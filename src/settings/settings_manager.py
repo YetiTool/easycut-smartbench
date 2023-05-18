@@ -176,7 +176,13 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
         if self.sw_version == "" or self.sw_version == None:
-            self.sw_version = "Unknown"        
+            self.sw_version = "Unknown"
+
+    def get_software_tag_version_list(self):
+        return (str(os.popen("git tag --sort=-refname |grep -v 'beta' |head -n 10").read()).split('\n'))
+
+    def get_software_tag_beta_list(self):
+        return (str(os.popen("git tag --sort=-refname |grep 'beta' |head -n 10").read()).split('\n'))
 
     def refresh_latest_sw_version(self):
 
