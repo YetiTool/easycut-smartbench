@@ -327,7 +327,7 @@ class SpindleTestJig1(Screen):
         setting_51 = self.m.get_dollar_setting(51)
         value_to_set = 0 if setting_51 else 1
 
-        self.m.s.write_command('$51 = ' + value_to_set)
+        self.m.s.write_command('$51 = ' + str(value_to_set))
 
         self.spindle_type_button.text = "Spindle type: " + self.spindle_type
 
