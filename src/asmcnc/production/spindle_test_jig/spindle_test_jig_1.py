@@ -336,7 +336,10 @@ class SpindleTestJig1(Screen):
 
         value_to_set = int(not setting_51)
 
-        self.m.s.write_command('$51 = ' + str(value_to_set))
+        if value_to_set:
+            self.m.s.write_command('$51 = 1')
+        else:
+            self.m.s.write_command('$51 = 0')
 
         setting_51_now = int(self.m.get_dollar_setting(51))
 
