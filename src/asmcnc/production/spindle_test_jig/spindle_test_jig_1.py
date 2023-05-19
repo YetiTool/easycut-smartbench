@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+# from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
 from asmcnc.skavaUI import widget_status_bar
 
@@ -342,9 +342,9 @@ class SpindleTestJig1(Screen):
         # value_to_set = int(not setting_51)
 
         if value_to_set == 1:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.5)
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 1)
         else:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.5)
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
 
         setting_51_now = int(self.m.get_dollar_setting(51))
 
@@ -356,7 +356,8 @@ class SpindleTestJig1(Screen):
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
 
     def print_receipt(self):
-        print_unlock_receipt(self.unlock_code)
+        pass
+        # print_unlock_receipt(self.unlock_code)
 
     def stop(self):
         self.m.s.write_command('M3 S0')
