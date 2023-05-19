@@ -311,8 +311,8 @@ class SpindleTestJig1(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-        # self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        # self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
@@ -334,9 +334,14 @@ class SpindleTestJig1(Screen):
     def switch_spindle_type(self):
         setting_51 = int(self.m.get_dollar_setting(51))
 
-        value_to_set = int(not setting_51)
+        if setting_51 == 1:
+            value_to_set = 0
+        else:
+            value_to_set = 1
 
-        if value_to_set:
+        # value_to_set = int(not setting_51)
+
+        if value_to_set == 1:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.5)
         else:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.5)
