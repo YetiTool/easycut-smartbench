@@ -334,7 +334,7 @@ class SpindleTestJig1(Screen):
     def switch_spindle_type(self):
         setting_51 = self.m.get_dollar_setting(51)
 
-        value_to_set = 0 if setting_51 else 1
+        value_to_set = 0 if int(setting_51) else 1
 
         self.m.s.write_command('$51 = ' + str(value_to_set))
 
