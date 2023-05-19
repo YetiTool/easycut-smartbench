@@ -786,7 +786,7 @@ class RouterMachine(object):
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
 
             version_one_three_grbl_settings = [
-                    '$51=0',          #Enable digital feedback spindle, boolean
+                    '$51=1',          #Enable digital feedback spindle, boolean
                     '$53=0'           #Enable stall guard alarm operation, boolean
                     ]
 
