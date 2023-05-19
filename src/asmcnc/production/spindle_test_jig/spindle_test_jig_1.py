@@ -337,9 +337,9 @@ class SpindleTestJig1(Screen):
         value_to_set = int(not setting_51)
 
         if value_to_set:
-            self.m.s.write_command('$51 = 1')
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.5)
         else:
-            self.m.s.write_command('$51 = 0')
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.5)
 
         setting_51_now = int(self.m.get_dollar_setting(51))
 
