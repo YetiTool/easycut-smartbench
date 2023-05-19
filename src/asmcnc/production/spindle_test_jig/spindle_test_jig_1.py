@@ -321,7 +321,7 @@ class SpindleTestJig1(Screen):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
 
     def get_spindle_type(self):
-        setting_51 = self.m.get_dollar_setting(51)
+        setting_51 = int(self.m.get_dollar_setting(51))
 
         if setting_51: 
             return "SC2"
@@ -347,9 +347,7 @@ class SpindleTestJig1(Screen):
         else:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
 
-        setting_51_now = int(self.m.get_dollar_setting(51))
-
-        print(setting_51, value_to_set, setting_51_now)
+        print(setting_51, value_to_set)
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 1)
 
