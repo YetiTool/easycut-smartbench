@@ -332,13 +332,15 @@ class SpindleTestJig1(Screen):
         self.test.run()
 
     def switch_spindle_type(self):
-        setting_51 = self.m.get_dollar_setting(51)
+        setting_51 = int(self.m.get_dollar_setting(51))
 
-        value_to_set = int(not int(setting_51))
+        value_to_set = int(not setting_51)
 
         self.m.s.write_command('$51 = ' + str(value_to_set))
 
-        print(setting_51, value_to_set, self.get_spindle_type())
+        setting_51_now = int(self.m.get_dollar_setting(51))
+
+        print(setting_51, value_to_set, setting_51_now)
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 1)
 
