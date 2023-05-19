@@ -26,6 +26,7 @@ from kivy.graphics import Color, Rectangle
 import sys, os, time
 from datetime import datetime
 import re
+import traceback
 
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
@@ -176,7 +177,11 @@ class LoadingScreen(Screen):
     usb_status = None
 
     default_font_size = '30sp'
-    
+
+    skip_check_decision = False
+
+    continuing_to_recovery = False
+
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -185,7 +190,7 @@ class LoadingScreen(Screen):
         self.l=kwargs['localization']
 
 
-    def on_enter(self):    
+    def on_pre_enter(self):    
 
         # display file selected in the filename display label
         self.filename_label.text = self.jd.job_name
@@ -269,10 +274,17 @@ class LoadingScreen(Screen):
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
+    max_lines = 9999990
 
     def _scrub_file_loop(self, dt):
 
         try:
+            if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
+                log("File exceeds 10 million lines!")
+                self.update_screen('Could not load - Exceeds 10 million lines')
+                self.jd.reset_values()
+                return
+
             # clear out undesirable lines
 
             # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
@@ -309,7 +321,6 @@ class LoadingScreen(Screen):
                                 # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                                 # in order for the electronics to send the right voltage for the desired RPM
                                 if self.m.spindle_voltage == 110:
-                                    # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
                                     rpm = self.m.convert_from_110_to_230(rpm)
                                     l_block = "M3S" + str(rpm)
 
@@ -354,6 +365,9 @@ class LoadingScreen(Screen):
 
                             except: print 'Failed to extract feed rate. Probable G-code error!'
 
+                        # strip line numbers
+                        if "N" in l_block:
+                            l_block = self.jd.remove_line_number(l_block)
 
                         self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
@@ -374,6 +388,7 @@ class LoadingScreen(Screen):
                 self._get_gcode_preview_and_ranges()
 
         except:
+            log(traceback.format_exc())
             self.update_screen('Could not load')
             self.jd.reset_values()
 
@@ -410,6 +425,18 @@ class LoadingScreen(Screen):
             self.progress_value = self.l.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
 
         if stage == 'Loaded':
+            if self.continuing_to_recovery:
+                self.continuing_to_recovery = False
+                self.jd.checked = False
+                self.sm.get_screen('home').z_datum_reminder_flag = True
+                self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
+                self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
+                self.sm.current = 'homing_decision'
+
+            if self.skip_check_decision:
+                self.skip_check_decision = False
+                self.quit_to_home()
+
             self.progress_value = self.l.get_bold('Job loaded')
             self.warning_body_label.text = (
                 self.l.get_bold('WARNING') + '[b]:[/b]\n' + \
@@ -426,14 +453,19 @@ class LoadingScreen(Screen):
             self.check_button.opacity = 1
             self.home_button.opacity = 1
 
-        if stage == 'Could not load':
+        if 'Could not load' in stage:
             self.progress_value = self.l.get_str('Could not load job')
-            self.warning_body_label.text = (
-                self.l.get_bold('ERROR') + '[b]:[/b]\n' + \
-                self.l.get_str('It was not possible to load your job.') + \
-                "\n" + \
-                self.l.get_str('Please double check the file for errors before attempting to re-load it.')
+            self.warning_body_label.text = self.l.get_bold('ERROR') + '[b]:[/b]\n'
+            
+            if 'Exceeds 10 million lines' in stage:
+                self.warning_body_label.text += self.l.get_str('This file exceeds 10 million lines.')
+            else:
+                self.warning_body_label.text += (
+                    self.l.get_str('It was not possible to load your job.') + \
+                    "\n" + \
+                    self.l.get_str('Please double check the file for errors before attempting to re-load it.')
                 )
+
             self.job_gcode = []
             self.loading_file_name = ''
             self.check_button.text = self.l.get_str('Check job')

@@ -986,21 +986,10 @@ class CalibrationTesting(Screen):
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
     def set_stage(self, stage):
-
         self.stage = stage
         self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
-        try: 
-            self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
-
-        except: 
-            log("Could not insert final test stage into DB!!")
-            print(traceback.format_exc())
-            message = "Issue contacting database - if you continue data send may fail!"
-            popup_info.PopupError(self.sm, self.l, message)
-
         self.status_data_dict[self.stage] = []
         log("Overnight test, stage: " + str(self.stage))
-
 
     def stop(self):
         self.x_running = False
@@ -1686,6 +1675,7 @@ class CalibrationTesting(Screen):
 
         try:
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
+            self.insert_stage_into_database(stage_id)
             self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
@@ -1698,3 +1688,16 @@ class CalibrationTesting(Screen):
         finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
 
+
+
+    def insert_stage_into_database(self, stage_id):
+
+        try: 
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
+
+        except: 
+            log("Could not insert final test stage into DB!!")
+            print(traceback.format_exc())
+            message = "Issue contacting database - if you continue data send may fail!"
+            popup_info.PopupError(self.sm, self.l, message)
+            

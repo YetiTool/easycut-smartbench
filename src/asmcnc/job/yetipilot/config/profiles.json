@@ -1,0 +1,212 @@
+{
+  "Profiles": [
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute upcut spiral",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 400.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 20100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute upcut spiral",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 520.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute upcut spiral",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 550.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 23800.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 230.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19600.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 380.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 590.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 21700.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute compression spiral",
+      "Step Down": "3.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 140.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 18100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MDF",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute compression spiral",
+      "Step Down": "6.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 310.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 20100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Birch Plywood",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 100.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Birch Plywood",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 200.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 20100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Birch Plywood",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute downcut spiral",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 480.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Birch Plywood",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute compression spiral",
+      "Step Down": "6.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 430.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22700.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Birch Plywood",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute compression spiral",
+      "Step Down": "3.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 190.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 21700.0
+        }
+      ]
+    }
+  ]
+}

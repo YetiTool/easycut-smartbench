@@ -54,6 +54,7 @@ TMC_CALIBRATION_REPORT    = 4 # 3: print calibration coefficients
 TMC_CALIBRATION_INIT_X    = 32  # initialise calibration for X axis only */
 TMC_CALIBRATION_INIT_Y    = 64  # initialise calibration for Y axis only */
 TMC_CALIBRATION_INIT_Z    = 128 #  initialise calibration for Z axis only */
+TMC_CALIBRATION_INIT_ALL  = 16
 
 
 #default values:

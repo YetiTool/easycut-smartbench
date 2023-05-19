@@ -14,6 +14,7 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import popup_factory_settings
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
@@ -46,6 +47,7 @@ Builder.load_string("""
     setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
     console_update_button: console_update_button
+    sc2_compatability_toggle:sc2_compatability_toggle
 
     BoxLayout:
         height: dp(800)
@@ -308,7 +310,7 @@ Builder.load_string("""
 
                 GridLayout:
                     cols: 2
-                    rows: 7
+                    rows: 8
                     spacing: 2
                     ToggleButton:
                         id: maintenance_reminder_toggle
@@ -367,11 +369,10 @@ Builder.load_string("""
                         halign: "center"
                         valign: "middle"
 
-                    Button:
-                        text: 'FT B4'
-                        background_normal: ''
-                        background_color: [0.8,0.2,0.2,1]
-                        on_press: root.final_test("red")
+                    ToggleButton:
+                        id: sc2_compatability_toggle
+                        text: 'Enable SC2 compatability'
+                        on_press: root.show_sc2_decision_popup()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -414,6 +415,13 @@ Builder.load_string("""
                     Button:
                         text: 'Measure'
                         on_press: root.enter_general_measurement()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+                        
+                    Button:
+                        text: 'SC2 spindle test'
+                        on_press: root.digital_spindle_test_pressed()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -560,6 +568,12 @@ class FactorySettingsScreen(Screen):
         self.usb_stick.usb_notifications = False
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(self.connect_to_db_when_creds_loaded, 1)
+
+        # Set initial state of SC2 compatability toggle button
+        if self.m.theateam():
+            self.sc2_compatability_toggle.state = 'down'
+            self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
+
 
     def connect_to_db_when_creds_loaded(self, dt):
 
@@ -929,6 +943,44 @@ class FactorySettingsScreen(Screen):
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
 
+    def show_sc2_decision_popup(self):
+        if self.m.state().startswith('Idle'):
+            if self.sc2_compatability_toggle.state == 'normal':
+                message = "This will disable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
+            else:
+                message = "This will enable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
+
+            try:
+                message += str(int(self.m.s.setting_51))
+            except:
+                message += "N/A"
+            popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm, self.l, message)
+        else:
+            popup_info.PopupError(self.systemtools_sm, self.l, "Please ensure machine is idle before continuing")
+            self.undo_toggle()
+
+    def toggle_sc2_compatability(self):
+        if self.sc2_compatability_toggle.state == 'normal':
+            self.sc2_compatability_toggle.text = 'Enable SC2 compatability'
+            try:
+                self.m.disable_theateam()
+            except:
+                warning_message = 'Problem removing SC2 compatability file!!'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+        else:
+            self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
+            try:
+                self.m.enable_theateam()
+            except:
+                warning_message = 'Problem creating SC2 compatability file!!'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+    def undo_toggle(self):
+        if self.sc2_compatability_toggle.state == 'normal':
+            self.sc2_compatability_toggle.state = 'down'
+        else:
+            self.sc2_compatability_toggle.state = 'normal'
+
 
     def write_serial_number_to_file(self):
         try:
@@ -1059,13 +1111,24 @@ class FactorySettingsScreen(Screen):
         
         self.systemtools_sm.sm.current = 'set_thresholds'
 
-
     def enter_general_measurement(self):
         if not self.systemtools_sm.sm.has_screen('general_measurement'):
             general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         self.systemtools_sm.sm.current = 'general_measurement'
+
+    def digital_spindle_test_pressed(self):
+        from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
+
+        zhqc2 = ZHeadQC2(m=self.m, l=self.l, sm=self.systemtools_sm.sm)
+
+        confirm_func = zhqc2.run_digital_spindle_test
+
+        confirm_popup = popup_system.PopupConfirmSpindleTest(confirm_func=confirm_func)
+
+        confirm_popup.open()
+
 
 
 

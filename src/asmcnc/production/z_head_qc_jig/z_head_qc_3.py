@@ -40,7 +40,7 @@ Builder.load_string("""
             
             Label:
                 id: calibrate_time
-                text: '0:30:00'
+                text: root.formatted_max
                 font_size: dp(50)
 
 """)
@@ -49,7 +49,9 @@ class ZHeadQC3(Screen):
 
     timer_started = False
     one_minute = 60 # 60 seconds
-    seconds = one_minute*30
+    max_minutes = 1.5
+    seconds = one_minute*max_minutes
+    formatted_max = str(datetime.timedelta(seconds=seconds))
 
     def __init__(self, **kwargs):
         super(ZHeadQC3, self).__init__(**kwargs)
@@ -71,7 +73,7 @@ class ZHeadQC3(Screen):
             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
             self.m.jog_relative('X', 30, 6000)
             self.m.jog_relative('X', -30, 6000)
-            self.update_time(30 * self.one_minute) # 30 minutes
+            self.update_time(self.max_minutes * self.one_minute)
             self.timer_started = True
 
         else: 
@@ -104,7 +106,7 @@ class ZHeadQC3(Screen):
         self.sm.current = 'qc2'
 
     def reset_timer(self):
-        self.seconds = self.one_minute * 30
+        self.seconds = self.one_minute * self.max_minutes
         self.timer_started = False
         self.user_text.text = "Getting ready..."
         self.calibrate_time.text = '0:30:00'

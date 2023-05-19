@@ -25,6 +25,7 @@ from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
 
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -46,6 +47,9 @@ Builder.load_string("""
     pos_tab:pos_tab
     gcode_preview_container:gcode_preview_container
     move_tab:move_tab
+
+    job_recovery_button:job_recovery_button
+    job_recovery_button_image:job_recovery_button_image
 
     BoxLayout:
         padding: 0
@@ -206,9 +210,27 @@ Builder.load_string("""
                                             size: self.parent.width, self.parent.height
                                             allow_stretch: True
 
+                                Button:
+                                    id: job_recovery_button
+                                    size_hint_x: 1
+                                    background_color: hex('#F4433600')
+                                    on_press:
+                                        root.manager.current = 'recovery_decision'
+                                    BoxLayout:
+                                        padding: 0
+                                        size: self.parent.size
+                                        pos: self.parent.pos
+                                        Image:
+                                            id: job_recovery_button_image
+                                            source: "./asmcnc/skavaUI/img/recover_job_disabled.png"
+                                            center_x: self.parent.center_x
+                                            y: self.parent.y
+                                            size: self.parent.width, self.parent.height
+                                            allow_stretch: True
+
                                 Label:
                                     id: file_data_label
-                                    size_hint_x: 4
+                                    size_hint_x: 5
                                     text_size: self.size
                                     font_size: '20sp'
                                     markup: True
@@ -305,11 +327,9 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
-    
-        # File label at the top
+
         if self.jd.job_gcode != []:
 
-            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
             self.gcode_summary_widget.display_summary()
 
             # Preview file as drawing
@@ -322,11 +342,12 @@ class HomeScreen(Screen):
 
         if self.jd.job_gcode == []:
 
+            # File label at the top
             self.file_data_label.text = ('[color=333333]' + \
                 self.l.get_str('Load a file') + '...' + '[/color]'
                 )
             self.job_filename = ''
-  
+
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
             self.job_box.range_y[0] = 0
@@ -343,6 +364,28 @@ class HomeScreen(Screen):
 
             self.gcode_summary_widget.hide_summary()
 
+        else:
+            # File label at the top
+            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"
+
+        # Check if job recovery (or job redo) is available
+        if self.jd.job_recovery_cancel_line != None:
+
+            # Cancel on line -1 represents last job completing successfully
+            if self.jd.job_recovery_cancel_line == -1:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
+
+            else:
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
+
+            # Line -1 being selected represents no selected line
+            if self.jd.job_recovery_selected_line == -1:
+                if self.jd.job_recovery_from_beginning:
+                    self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("Restart from beginning") + "[/color]"
+            else:
+                self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("From line N").replace("N", str(self.jd.job_recovery_selected_line)) + "[/color]"
+        else:
+            self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def preview_job_file(self, dt):
 
@@ -352,7 +395,7 @@ class HomeScreen(Screen):
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
-            print ('Unable to draw gcode')
+            print('Unable to draw gcode')
 
         log('DONE')
 

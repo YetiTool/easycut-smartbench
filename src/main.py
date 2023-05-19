@@ -50,6 +50,7 @@ from asmcnc.comms import localization
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
@@ -79,12 +80,16 @@ from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
+from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
+from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 
 # developer testing
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.2.0'
+initial_version = 'v2.4.2'
 
 config_flag = False
         
@@ -153,6 +158,9 @@ class SkavaUI(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
+        # Initialise yetipilot
+        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
+
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
@@ -162,6 +170,9 @@ class SkavaUI(App):
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
 
+        # Serial comms needs to access YP
+        m.s.yp = yp
+
         # Server connection object
         sc = server_connection.ServerConnection(sett)
         
@@ -170,7 +181,7 @@ class SkavaUI(App):
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd, localization = l)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd, localization = l)
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l, yetipilot=yp)
         jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd, localization = l)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd, localization = l)
@@ -191,6 +202,10 @@ class SkavaUI(App):
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
+        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, job = jd, localization = l)
+        nudge_screen = screen_nudge.NudgeScreen(name = 'nudge', screen_manager = sm, machine = m, job = jd, localization = l)
+        recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name = 'recovery_decision', screen_manager = sm, machine = m, job = jd, localization = l)
+        homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name = 'homing_decision', screen_manager = sm, machine = m, localization = l)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -218,6 +233,10 @@ class SkavaUI(App):
         sm.add_widget(stop_or_resume_decision_screen)
         sm.add_widget(lift_z_on_pause_decision_screen)
         sm.add_widget(tool_selection_screen)
+        sm.add_widget(job_recovery_screen)
+        sm.add_widget(nudge_screen)
+        sm.add_widget(recovery_decision_screen)
+        sm.add_widget(homing_decision_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
@@ -267,7 +286,6 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
-
         return sm
 
 if __name__ == '__main__':

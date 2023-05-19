@@ -173,7 +173,7 @@ Builder.load_string("""
                 text_size: self.size
                 multiline: False
                 color: 0,0,0,1
-                values: root.brand_list
+                values: root.brand_list_sc1
                 option_cls: Factory.get("SpindleSpinner")
                 background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
                 on_text: root.autofill_rpm_time()
@@ -214,7 +214,8 @@ Builder.load_string("""
 
 class SpindleSettingsWidget(Widget):
 
-    brand_list = [' YETI SC1 digital 230V', ' YETI SC1 digital 110V', ' YETI SC2 digital 230V', ' YETI SC2 digital 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
+    brand_list_sc1 = [' YETI SC1 digital 230V', ' YETI SC1 digital 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
+    brand_list_sc2 = [' YETI SC2 digital 230V', ' YETI SC2 digital 110V'] + brand_list_sc1
 
     def __init__(self, **kwargs):
     

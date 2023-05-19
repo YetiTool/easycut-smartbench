@@ -16,6 +16,8 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.rst import RstDocument
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
@@ -1096,3 +1098,92 @@ class PopupShutdown(Widget):
 
         popup.open()
 
+class PopupScrollableInfo(Widget):
+
+    def __init__(self, screen_manager, localization, popup_width, description):
+        
+        self.sm = screen_manager
+        self.l = localization
+        label_width = popup_width - 20
+        
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        scrollview = ScrollView(size_hint_y=4, padding=[10,10])
+        label = RstDocument(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        scrollview.add_widget(label)
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0])
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical')
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(scrollview)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+class PopupQRInfo(Widget):
+
+    def __init__(self, screen_manager, localization, popup_width, description, qr_source):
+        
+        self.sm = screen_manager
+        self.l = localization
+        label_width = popup_width - 40
+        
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+
+        img = Image(source=qr_source, allow_stretch=False, size_hint_y=1.5)
+        label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()
