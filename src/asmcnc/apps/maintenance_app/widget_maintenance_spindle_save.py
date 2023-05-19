@@ -106,7 +106,9 @@ class SpindleSaveWidget(Widget):
                 "\n\n" + \
                 self.l.get_bold("Spindle uptime") + \
                 "[b]: [/b]" + \
-                self.l.get_str("Press the button to display the spindle's uptime.")
+                self.l.get_str("This is the amount of time that the spindle has been on for.") + \
+                " " + \
+                self.l.get_str("If using an SC2 spindle, ensure it is connected before using the button to get uptime info.")
             )
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
