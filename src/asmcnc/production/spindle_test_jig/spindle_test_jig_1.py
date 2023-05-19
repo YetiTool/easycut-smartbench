@@ -413,6 +413,9 @@ class SpindleTestJig1(Screen):
     def update_unlock_code(self):
         serial = self.m.s.spindle_serial_number
 
+        if serial is None:
+            return
+
         # Check if spindle is connected
         if self.m.s.digital_spindle_ld_qdA != -999:
             serial = str(hex((serial + 42) * 10000))[2:]
