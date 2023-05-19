@@ -29,6 +29,7 @@ Builder.load_string("""
     run_test_button:run_test_button
     unlock_code_label:unlock_code_label
     print_receipt_button:print_receipt_button
+    spindle_type_button:spindle_type_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -43,7 +44,7 @@ Builder.load_string("""
                 
                 GridLayout:
                     cols: 1
-                    rows: 3
+                    rows: 4
                     size_hint_x: 0.4
                     
                     Button:
@@ -53,11 +54,19 @@ Builder.load_string("""
                         background_color: [0, 1, 0, 1]
                         on_press: root.run()
                         background_normal: ''
+
+                    Button:
+                        id: spindle_type_button
+                        text: 'Spindle type: SC2'
+                        bold: True
+                        background_color: [0, 0, 1, 1]
+                        on_press: root.switch_spindle_type()
+                        background_normal: ''
                         
                     Button:
                         text: 'Open Terminal'
                         bold: True
-                        background_color: [0.62, 0.12, 0.94, 1]
+                        background_color: [0.72, 0.12, 0.94, 1]
                         on_press: root.open_console()
                         background_normal: ''
                         
@@ -292,6 +301,7 @@ def unschedule(clock):
 class SpindleTestJig1(Screen):
     unlock_code = None
     poll_for_spindle_info = None
+    spindle_type = "SC2"
 
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
@@ -312,6 +322,16 @@ class SpindleTestJig1(Screen):
     def run(self):
         self.reset()
         self.test.run()
+
+    def switch_spindle_type(self):
+        if self.spindle_type == "SC1":
+            self.m.s.write_command('$51 = 1')
+            self.spindle_type = "SC2"
+        else:
+            self.m.s.write_command('$51 = 0')
+            self.spindle_type = "SC1"
+
+        self.spindle_type_button.text = "Spindle type: " + self.spindle_type
 
     def print_receipt(self):
         print_unlock_receipt(self.unlock_code)
