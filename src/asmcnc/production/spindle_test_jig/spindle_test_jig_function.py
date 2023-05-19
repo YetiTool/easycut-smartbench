@@ -47,7 +47,7 @@ class SpindleTest:
             self.fail_reasons.append([rpm, reason])
 
         def check(rpm):
-            measured_rpm = int(self.m.s.spindle_speed) if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
+            measured_rpm = int(self.m.s.spindle_speed) #if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
             measured_voltage = self.m.s.digital_spindle_mains_voltage
             measured_temp = self.m.s.digital_spindle_temperature
             measured_kill_time = self.m.s.digital_spindle_kill_time
@@ -69,7 +69,8 @@ class SpindleTest:
                 fail_test(rpm, "Load out of range: " + str(measured_load))
 
         def set_rpm(rpm):
-            self.m.s.write_command('M3 S' + str(rpm))
+            rpm_to_send = rpm if self.target_voltage == 230 else self.m.convert_from_110_to_230(rpm)
+            self.m.s.write_command('M3 S' + str(rpm_to_send))
             self.screen.target_rpm_value.text = str(rpm)
             self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
 
@@ -84,7 +85,7 @@ class SpindleTest:
             self.clocks.append(Clock.schedule_once(lambda dt: self.screen.enable_run_button(), 15))
 
         def wait_for_wear_in(rpm):
-            measured_rpm = int(self.m.s.spindle_speed) if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
+            measured_rpm = int(self.m.s.spindle_speed) #if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
             measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
             time_since_start = time.time() - self.start_time
 
