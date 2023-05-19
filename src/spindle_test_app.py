@@ -9,6 +9,7 @@ from asmcnc.comms.localization import Localization
 from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.skavaUI.screen_home import HomeScreen
+from asmcnc.skavaUI import screen_door # @UnresolvedImport
 
 from asmcnc.production.spindle_test_jig.spindle_test_jig_1 import SpindleTestJig1
 from asmcnc.production.spindle_test_jig.spindle_test_jig_console import SpindleTestJigConsole
@@ -39,6 +40,9 @@ class SpindleTest(App):
 
         screen_console = SpindleTestJigConsole(name='spindle_test_console', screen_manager=sm, machine=m, localization=l)
         sm.add_widget(screen_console)
+
+        door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(door_screen)
 
         sm.current = 'spindle_test_1'
         return sm
