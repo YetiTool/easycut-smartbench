@@ -338,11 +338,11 @@ class SpindleTestJig1(Screen):
 
         self.setting_51 = self.get_spindle_type()
         if self.setting_51 == "SC1":
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.5)
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 1)
         else:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.5)               
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)               
 
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 1)
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2)
 
     def update_spindle_type_text(self):        
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
