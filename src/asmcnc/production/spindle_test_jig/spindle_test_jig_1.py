@@ -323,11 +323,13 @@ class SpindleTestJig1(Screen):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
 
     def get_spindle_type(self):
+        self.m.s.write_command("$$")
         setting_51 = int(self.m.get_dollar_setting(51))
 
         if setting_51: 
             return [1, "SC2"]
         return [0, "SC1"]
+        
 
     def run(self):
         self.reset()
