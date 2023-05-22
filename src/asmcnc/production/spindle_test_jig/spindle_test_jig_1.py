@@ -330,8 +330,8 @@ class SpindleTestJig1(Screen):
         self.setting_51 = int(self.m.get_dollar_setting(51))
 
         if self.setting_51: 
-            return "SC1"
-        return "SC2"
+            return "SC2"
+        return "SC1"
 
     def switch_spindle_type(self):
         self.spindle_type_button.text = "Configuring GRBL... "
