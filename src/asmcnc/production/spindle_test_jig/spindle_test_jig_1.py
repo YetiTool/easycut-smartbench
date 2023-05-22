@@ -313,7 +313,7 @@ class SpindleTestJig1(Screen):
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
         self.m.s.write_command('$51 = 1')
-        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
+        #self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
         self.spindle_type = self.get_spindle_type()
@@ -323,11 +323,13 @@ class SpindleTestJig1(Screen):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
 
     def get_spindle_type(self):
+        self.m.s.write_command("$$")
         setting_51 = int(self.m.get_dollar_setting(51))
 
         if setting_51: 
             return [1, "SC2"]
         return [0, "SC1"]
+        
 
     def run(self):
         self.reset()
@@ -344,11 +346,9 @@ class SpindleTestJig1(Screen):
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(self.value_to_set)), 1)
         print("$et")
 
-        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
+        #Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
 
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2.5)
-        self.spindle_type = self.get_spindle_type()
-        print("Read spindle as: ", self.spindle_type[1], " ($51 = ", self.spindle_type[0], ")")
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 4)
 
     def update_spindle_type_text(self):
         self.spindle_type = self.get_spindle_type()
