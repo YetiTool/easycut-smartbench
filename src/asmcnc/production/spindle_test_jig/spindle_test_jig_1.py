@@ -323,11 +323,9 @@ class SpindleTestJig1(Screen):
 
     def run(self):
         self.reset()
-        self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
         self.test.run()
 
     def get_spindle_type(self):
-        self.m.s.write_command('$$')
         self.setting_51 = int(self.m.get_dollar_setting(51))
 
         if self.setting_51: 
@@ -341,11 +339,14 @@ class SpindleTestJig1(Screen):
         if self.setting_51 == "SC1":
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 1)
         else:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)               
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
+
+        Clock.schedule_once(lambda dt: self.m.s.write_command('$$'), 1.2)        
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2)
 
-    def update_spindle_type_text(self):        
+    def update_spindle_type_text(self):
+        
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
 
     def print_receipt(self):
@@ -361,7 +362,6 @@ class SpindleTestJig1(Screen):
         self.run_test_button.background_color = [0, 1, 0, 1]
 
     def on_enter(self):
-        self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
 
     def update_status_text(self, dt):
