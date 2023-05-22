@@ -326,6 +326,7 @@ class SpindleTestJig1(Screen):
         self.test.run()
 
     def get_spindle_type(self):
+        self.m.s.write_command('$$')  
         self.setting_51 = int(self.m.get_dollar_setting(51))
 
         if self.setting_51: 
@@ -343,8 +344,7 @@ class SpindleTestJig1(Screen):
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.5)
 
-    def update_spindle_type_text(self): 
-        self.m.s.write_command('$$')       
+    def update_spindle_type_text(self):              
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
 
     def print_receipt(self):
