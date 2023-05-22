@@ -333,19 +333,17 @@ class SpindleTestJig1(Screen):
         self.test.run()
 
     def switch_spindle_type(self):
-        self.m.s.write_command('$$')
-        setting_51 = int(self.m.get_dollar_setting(51))       
-        
-        self.spindle_type_button.text = "Configuring GRBL... "        
+        self.spindle_type_button.text = "Configuring GRBL... "
 
+        setting_51 = int(self.m.get_dollar_setting(51))  
+              
         value_to_set = int(not setting_51)
-
-        Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(value_to_set)), 0.5)
-        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 0.6)
-
         print(setting_51, value_to_set)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(value_to_set)), 1)
 
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.7)
+        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
+
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2.5)
 
     def update_spindle_type_text(self):
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
