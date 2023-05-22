@@ -317,7 +317,7 @@ class SpindleTestJig1(Screen):
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
 
         self.spindle_type = self.get_spindle_type()
-        self.spindle_type_button.text = "Spindle type: " + self.spindle_type(1)
+        self.spindle_type_button.text = "Spindle type: " + self.spindle_type[1]
 
     def reset(self):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
@@ -337,8 +337,8 @@ class SpindleTestJig1(Screen):
         self.spindle_type_button.text = "Configuring GRBL... "
 
         self.spindle_type = self.get_spindle_type()
-        self.value_to_set = int(not(self.spindle_type(0)))               
-        print("Read spindle as: ", self.spindle_type(1))
+        self.value_to_set = int(not(self.spindle_type[0]))               
+        print("Read spindle as: ", self.spindle_type[1])
         
         print("Setting $51 to: ", self.value_to_set)
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(self.value_to_set)), 1)
@@ -349,7 +349,7 @@ class SpindleTestJig1(Screen):
 
     def update_spindle_type_text(self):
         self.spindle_type = self.get_spindle_type()
-        self.spindle_type_button.text = "Spindle type: " + self.spindle_type(1)
+        self.spindle_type_button.text = "Spindle type: " + self.spindle_type[1]
 
     def print_receipt(self):
         pass
