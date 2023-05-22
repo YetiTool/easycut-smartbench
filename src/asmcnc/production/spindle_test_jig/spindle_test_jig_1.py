@@ -333,6 +333,7 @@ class SpindleTestJig1(Screen):
         self.test.run()
 
     def switch_spindle_type(self):
+        self.stop()
         self.spindle_type_button.text = "Configuring GRBL... "
         setting_51 = int(self.m.get_dollar_setting(51))
 
