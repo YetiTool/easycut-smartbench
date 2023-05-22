@@ -335,17 +335,14 @@ class SpindleTestJig1(Screen):
         self.spindle_type_button.text = "Configuring GRBL... "
         setting_51 = int(self.m.get_dollar_setting(51))
 
-        if setting_51 == 1:
-            value_to_set = 0
-        else:
-            value_to_set = 1
+        value_to_set = int(not setting_51)
 
-        # value_to_set = int(not setting_51)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(value_to_set)), 1)
 
-        if value_to_set == 1:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 1)
-        else:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
+        #if value_to_set == 1:
+        #    Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 1)
+        #else:
+        #    Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
 
         print(setting_51, value_to_set)
 
