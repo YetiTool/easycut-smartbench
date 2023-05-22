@@ -311,12 +311,12 @@ class SpindleTestJig1(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        #self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
-        #self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
-        self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)
+        self.m.s.write_command('$51 = 1')
+        self.update_spindle_type_text()
 
-        self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
+        self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)    
 
     def reset(self):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
@@ -345,8 +345,7 @@ class SpindleTestJig1(Screen):
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.7)
 
-    def update_spindle_type_text(self):
-        
+    def update_spindle_type_text(self):        
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
 
     def print_receipt(self):
