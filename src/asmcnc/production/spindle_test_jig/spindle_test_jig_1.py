@@ -328,7 +328,7 @@ class SpindleTestJig1(Screen):
     def get_spindle_type(self):
         self.setting_51 = int(self.m.get_dollar_setting(51))
 
-        if setting_51: 
+        if self.setting_51: 
             return "SC2"
         return "SC1"
 
