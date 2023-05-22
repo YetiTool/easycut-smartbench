@@ -327,14 +327,14 @@ class SpindleTestJig1(Screen):
         self.setting_51 = int(self.m.get_dollar_setting(51))
 
         if self.setting_51: 
-            return "SC2"
-        return "SC1"
+            return "SC1"
+        return "SC2"
 
     def switch_spindle_type(self):
         self.spindle_type_button.text = "Configuring GRBL... "
 
         self.setting_51 = self.get_spindle_type()
-        if self.setting_51 == "SC1":
+        if self.setting_51 == "SC2":
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.2)               
