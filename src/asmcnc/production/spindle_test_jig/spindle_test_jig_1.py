@@ -341,7 +341,7 @@ class SpindleTestJig1(Screen):
         else:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 1)
 
-        Clock.schedule_once(lambda dt: self.m.s.write_command('$$'), 1.5)        
+        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 1.5)        
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 3)
 
