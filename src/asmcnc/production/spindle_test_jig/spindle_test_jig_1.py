@@ -342,10 +342,13 @@ class SpindleTestJig1(Screen):
         
         print("Setting $51 to: ", self.value_to_set)
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(self.value_to_set)), 1)
+        print("$et")
 
         Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2.5)
+        self.spindle_type = self.get_spindle_type()
+        print("Read spindle as: ", self.spindle_type[1], " ($51 = ", self.spindle_type[0], ")")
 
     def update_spindle_type_text(self):
         self.spindle_type = self.get_spindle_type()
