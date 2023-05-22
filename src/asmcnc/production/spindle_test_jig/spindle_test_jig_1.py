@@ -321,7 +321,7 @@ class SpindleTestJig1(Screen):
     def reset(self):
         self.pass_fail_img.source = 'asmcnc/skavaUI/img/checkbox_inactive.png'
 
-        def run(self):
+    def run(self):
         self.reset()
         self.test.run()
 
