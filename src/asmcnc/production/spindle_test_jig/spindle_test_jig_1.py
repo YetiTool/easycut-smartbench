@@ -360,6 +360,7 @@ class SpindleTestJig1(Screen):
         self.run_test_button.background_color = [0, 1, 0, 1]
 
     def on_enter(self):
+        self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
 
     def update_status_text(self, dt):
