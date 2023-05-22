@@ -328,9 +328,8 @@ class SpindleTestJig1(Screen):
 
         if setting_51: 
             return [1, "SC2"]
-        elif setting_51 == 0:
-            return [0, "SC1"]
-        return "Unknown"
+        return [0, "SC1"]
+        
 
     def run(self):
         self.reset()
