@@ -325,8 +325,8 @@ class SpindleTestJig1(Screen):
         setting_51 = int(self.m.get_dollar_setting(51))
 
         if setting_51: 
-            return "SC1"
-        return "SC2"
+            return [1, "SC2"]
+        return [0, "SC1"]
 
     def run(self):
         self.reset()
@@ -335,10 +335,11 @@ class SpindleTestJig1(Screen):
     def switch_spindle_type(self):
         self.spindle_type_button.text = "Configuring GRBL... "
 
-        setting_51 = int(self.m.get_dollar_setting(51))  
-              
-        value_to_set = int(not setting_51)
-        print(setting_51, value_to_set)
+        spindle_type = self.get_spindle_type()
+        value_to_set = int(not(spindle_type(0)))               
+        print("Read spindle as: ", spindle_type(1))
+        
+        print("Setting $51 to: ", value_to_set)
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(value_to_set)), 1)
 
         Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
@@ -346,7 +347,7 @@ class SpindleTestJig1(Screen):
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2.5)
 
     def update_spindle_type_text(self):
-        self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
+        self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()(1)
 
     def print_receipt(self):
         pass
