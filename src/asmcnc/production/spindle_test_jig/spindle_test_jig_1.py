@@ -338,7 +338,7 @@ class SpindleTestJig1(Screen):
 
         self.spindle_type = self.get_spindle_type()
         self.value_to_set = int(not(self.spindle_type[0]))               
-        print("Read spindle as: ", self.spindle_type[1])
+        print("Read spindle as: ", self.spindle_type[1], " ($51 = ", self.spindle_type[0], ")")
         
         print("Setting $51 to: ", self.value_to_set)
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(self.value_to_set)), 1)
