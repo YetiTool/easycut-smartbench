@@ -323,6 +323,7 @@ class SpindleTestJig1(Screen):
 
     def run(self):
         self.reset()
+        self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
         self.test.run()
 
     def get_spindle_type(self):
