@@ -312,7 +312,8 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
         self.m.s.write_command('$51 = 1')
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.5)
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2)
+        
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
         self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
