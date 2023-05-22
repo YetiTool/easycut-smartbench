@@ -338,7 +338,7 @@ class SpindleTestJig1(Screen):
         value_to_set = int(not setting_51)
 
         Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = ' + str(value_to_set)), 1)
-        Clock.schedule_once(lambda dt: self.m.s._grbl_soft_reset(), 1)
+        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 1)
 
         print(setting_51, value_to_set)
 
