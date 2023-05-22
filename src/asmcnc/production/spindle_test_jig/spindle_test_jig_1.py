@@ -346,7 +346,7 @@ class SpindleTestJig1(Screen):
 
         Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'), 2)        
 
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 2.5)
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 4)
         self.spindle_type = self.get_spindle_type()
         print("Read spindle as: ", self.spindle_type[1], " ($51 = ", self.spindle_type[0], ")")
 
