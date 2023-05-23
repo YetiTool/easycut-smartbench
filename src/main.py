@@ -80,6 +80,10 @@ from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
+from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
+from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 
 # developer testing
 Cmport = 'COM3'
@@ -198,6 +202,10 @@ class SkavaUI(App):
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
+        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, job = jd, localization = l)
+        nudge_screen = screen_nudge.NudgeScreen(name = 'nudge', screen_manager = sm, machine = m, job = jd, localization = l)
+        recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name = 'recovery_decision', screen_manager = sm, machine = m, job = jd, localization = l)
+        homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name = 'homing_decision', screen_manager = sm, machine = m, localization = l)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -225,6 +233,10 @@ class SkavaUI(App):
         sm.add_widget(stop_or_resume_decision_screen)
         sm.add_widget(lift_z_on_pause_decision_screen)
         sm.add_widget(tool_selection_screen)
+        sm.add_widget(job_recovery_screen)
+        sm.add_widget(nudge_screen)
+        sm.add_widget(recovery_decision_screen)
+        sm.add_widget(homing_decision_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
