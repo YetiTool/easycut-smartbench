@@ -108,11 +108,11 @@ class SpindleTest:
                 self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
 
         self.clocks[:] = []
-        rpm = 22000
-        self.m.s.write_command('M3 S' + str(rpm))
-        self.screen.target_rpm_value.text = str(rpm)
         if self.screen.SC2:
+            rpm = 22000
+            self.m.s.write_command('M3 S' + str(rpm))
+            self.screen.target_rpm_value.text = str(rpm)
             self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
-        self.start_time = time.time()
+            self.start_time = time.time()
 
 
