@@ -82,7 +82,8 @@ class SpindleTest:
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(22000), 9))
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(25000), 12))
             self.clocks.append(Clock.schedule_once(lambda dt: set_rpm(0), 15))
-            self.clocks.append(Clock.schedule_once(lambda dt: show_result(), 15))
+            if self.screen.SC2:
+                self.clocks.append(Clock.schedule_once(lambda dt: show_result(), 15))
             self.clocks.append(Clock.schedule_once(lambda dt: self.screen.enable_run_button(), 15))
 
         def wait_for_wear_in(rpm):
@@ -110,7 +111,8 @@ class SpindleTest:
         rpm = 22000
         self.m.s.write_command('M3 S' + str(rpm))
         self.screen.target_rpm_value.text = str(rpm)
-        self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
+        if self.screen.SC2:
+            self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
         self.start_time = time.time()
 
 
