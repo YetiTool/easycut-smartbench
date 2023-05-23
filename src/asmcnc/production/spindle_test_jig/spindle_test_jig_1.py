@@ -366,7 +366,7 @@ class SpindleTestJig1(Screen):
         self.run_test_button.background_color = [0, 1, 0, 1]
 
     def soft_reset(self):
-        self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
+        self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
