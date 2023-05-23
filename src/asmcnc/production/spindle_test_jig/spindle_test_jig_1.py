@@ -336,8 +336,10 @@ class SpindleTestJig1(Screen):
         self.setting_51 = self.get_spindle_type()
         if self.setting_51 == "SC2":
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.2)
+            SC2 = True
         else:
-            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.2)               
+            Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.2) 
+            SC2 = False              
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.5)
 

@@ -72,7 +72,8 @@ class SpindleTest:
             rpm_to_send = rpm if self.target_voltage == 230 else self.m.convert_from_110_to_230(rpm)
             self.m.s.write_command('M3 S' + str(rpm_to_send))
             self.screen.target_rpm_value.text = str(rpm)
-            self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
+            if self.screen.SC2:
+                self.clocks.append(Clock.schedule_once(lambda dt: check(rpm), 1.5))
 
         def start_test():
             set_rpm(10000)
