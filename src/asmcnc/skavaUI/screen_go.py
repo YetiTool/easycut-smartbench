@@ -701,7 +701,10 @@ class GoScreen(Screen):
                 self._start_running_job()
 
                 if not self.m.has_spindle_health_check_passed():
-                    self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
+                    if not self.m.is_spindle_health_check_active():
+                        self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED)
+                    else:
+                        self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
