@@ -237,7 +237,7 @@ Builder.load_string("""
                             
                 GridLayout:
                     cols: 1
-                    rows: 4
+                    rows: 5
                     size_hint_x: 0.4
                     
                     Button:
@@ -245,6 +245,13 @@ Builder.load_string("""
                         on_press: root.stop()
                         background_color: [1, 0, 0, 1]
                         background_normal: ''
+
+                    Button:
+                        text: 'GRBL Reset'
+                        on_press: root.soft_reset()
+                        background_color: [1, 0.5, 0, 1]
+                        background_normal: ''
+
                         
                     GridLayout:
                         cols: 2
@@ -357,6 +364,9 @@ class SpindleTestJig1(Screen):
         self.reset()
         self.run_test_button.text = "Begin Test"
         self.run_test_button.background_color = [0, 1, 0, 1]
+
+    def soft_reset(self):
+        self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
