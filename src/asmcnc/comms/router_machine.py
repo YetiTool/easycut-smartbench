@@ -737,26 +737,12 @@ class RouterMachine(object):
     theateam_path =  '../../plus.txt'
 
 # GRBL SETTINGS
-    def write_dollar_50_setting(self, serial_number):
-        dollar_50_setting = [
-                            '$50=' + str(serial_number),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_51_setting(self, value):
-        dollar_51_setting = [
-                            '$51=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_51_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_54_setting(self, value):
-        dollar_54_setting = [
-                            '$54=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_54_setting, reset_grbl_after_stream=True)
+    def write_dollar_setting(self, setting_no, value):
+        list_to_stream = [
+            '$%s=%s' % (str(setting_no), str(value)),
+            '$$'
+        ]
+        self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream=True)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
@@ -1018,11 +1004,11 @@ class RouterMachine(object):
         return self.look_at(self.theateam_path)
 
     def enable_theateam(self):
-        self.write_dollar_51_setting(1)
+        self.write_dollar_setting(51, 1)
         open(self.theateam_path, 'a').close()
 
     def disable_theateam(self):
-        self.write_dollar_51_setting(0)
+        self.write_dollar_setting(51, 0)
         os.remove(self.theateam_path)
 
 # HW/FW ADJUSTMENTS
@@ -1030,6 +1016,11 @@ class RouterMachine(object):
     # Functions to convert spindle RPMs if using a 110V spindle
     # 'red' refers to 230V line (which is what electronics thinks spindle will be regardless of actual HW)
     # 'green' refers to 110V line
+    """
+    Use these functions when setting the spindle RPM, for example:
+    To run a 110V spindle at 10000 RPM, you would set the spindle RPM to convert_from_110_to_230(10000)
+    You then don't need to convert the value read back in.
+    """
 
     def convert_from_110_to_230(self, rpm_green):
         if float(rpm_green) != 0:
@@ -1542,15 +1533,15 @@ class RouterMachine(object):
 # POSITIONAL SETTERS
 
     def set_workzone_to_pos_xy(self):
-        self.s.write_command('G10 L20 P1 X0 Y0')
+        self.set_datum(x=0, y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
-        self.s.write_command('G10 L20 P1 X0')
+        self.set_datum(x=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
-        self.s.write_command('G10 L20 P1 Y0')
+        self.set_datum(y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
@@ -1612,15 +1603,30 @@ class RouterMachine(object):
 
 
     def set_jobstart_z(self):
-        self.s.write_command('G10 L20 P1 Z0')
+        self.set_datum(z=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
-        self.get_grbl_status()
 
     def set_standby_to_pos(self):
         self.s.write_command('G28.1')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
-    
+    def set_datum(self, x=None, y=None, z=None, relative=False):
+        if relative:
+            datum_command = 'G10 L2'
+        else:
+            datum_command = 'G10 L20 P1'
+
+        if x is not None:
+            datum_command += " X" + str(x)
+        if y is not None:
+            datum_command += " Y" + str(y)
+        if z is not None:
+            datum_command += " Z" + str(z)
+
+        self.s.write_command(datum_command)
+        self.get_grbl_status()
+
+
 
 # MOVEMENT/ACTION
 

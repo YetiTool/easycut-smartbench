@@ -310,7 +310,7 @@ Builder.load_string("""
 
                 GridLayout:
                     cols: 2
-                    rows: 7
+                    rows: 8
                     spacing: 2
                     ToggleButton:
                         id: maintenance_reminder_toggle
@@ -415,6 +415,13 @@ Builder.load_string("""
                     Button:
                         text: 'Measure'
                         on_press: root.enter_general_measurement()
+                        text_size: self.size
+                        halign: "center"
+                        valign: "middle"
+                        
+                    Button:
+                        text: 'SC2 spindle test'
+                        on_press: root.digital_spindle_test_pressed()
                         text_size: self.size
                         halign: "center"
                         valign: "middle"
@@ -704,7 +711,7 @@ class FactorySettingsScreen(Screen):
 
         if self.validate_serial_number():
             full_serial_number = str(self.serial_number_input.text) + "." + str(self.product_number_input.text)
-            self.m.write_dollar_50_setting(full_serial_number)
+            self.m.write_dollar_setting(50, full_serial_number)
             self.machine_serial.text = 'updating...'
 
             def update_text_with_serial():
@@ -876,11 +883,11 @@ class FactorySettingsScreen(Screen):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
             if self.setting_54_toggle.state == 'normal':
                 self.setting_54_label.text = '$54 = 0'
-                self.m.write_dollar_54_setting(0)
+                self.m.write_dollar_setting(54, 0)
                 self.setting_54_toggle.text = 'Set $54=1'
             else:
                 self.setting_54_label.text = '$54 = 1'
-                self.m.write_dollar_54_setting(1)
+                self.m.write_dollar_setting(54, 1)
                 self.setting_54_toggle.text = 'Set $54=0'
         else:
             self.setting_54_label.text = '$54 = N/A'
@@ -1104,13 +1111,24 @@ class FactorySettingsScreen(Screen):
         
         self.systemtools_sm.sm.current = 'set_thresholds'
 
-
     def enter_general_measurement(self):
         if not self.systemtools_sm.sm.has_screen('general_measurement'):
             general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = self.systemtools_sm, machine = self.m)
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         
         self.systemtools_sm.sm.current = 'general_measurement'
+
+    def digital_spindle_test_pressed(self):
+        from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
+
+        zhqc2 = ZHeadQC2(m=self.m, l=self.l, sm=self.systemtools_sm.sm)
+
+        confirm_func = zhqc2.run_digital_spindle_test
+
+        confirm_popup = popup_system.PopupConfirmSpindleTest(confirm_func=confirm_func)
+
+        confirm_popup.open()
+
 
 
 
