@@ -367,6 +367,7 @@ class SpindleTestJig1(Screen):
 
     def soft_reset(self):
         self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 0.5)
 
     def on_enter(self):
         Clock.schedule_once(lambda dt: self.m.s.write_command('M3 S0'), 1)
