@@ -168,11 +168,11 @@ class UpgradeScreen(Screen):
         # Reset app
         self.update_strings()
         self.hide_error_message()
-        self.m.write_dollar_51_setting(1)
+        self.m.write_dollar_setting(51, 1)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
-        self.m.write_dollar_51_setting(0)
+        self.m.write_dollar_setting(51, 0)
 
     def get_correct_unlock_code(self, serial):
         try:

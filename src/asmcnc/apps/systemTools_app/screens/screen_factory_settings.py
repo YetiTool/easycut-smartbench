@@ -711,7 +711,7 @@ class FactorySettingsScreen(Screen):
 
         if self.validate_serial_number():
             full_serial_number = str(self.serial_number_input.text) + "." + str(self.product_number_input.text)
-            self.m.write_dollar_50_setting(full_serial_number)
+            self.m.write_dollar_setting(50, full_serial_number)
             self.machine_serial.text = 'updating...'
 
             def update_text_with_serial():
@@ -883,11 +883,11 @@ class FactorySettingsScreen(Screen):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.5.0', 'Toggle $54'):
             if self.setting_54_toggle.state == 'normal':
                 self.setting_54_label.text = '$54 = 0'
-                self.m.write_dollar_54_setting(0)
+                self.m.write_dollar_setting(54, 0)
                 self.setting_54_toggle.text = 'Set $54=1'
             else:
                 self.setting_54_label.text = '$54 = 1'
-                self.m.write_dollar_54_setting(1)
+                self.m.write_dollar_setting(54, 1)
                 self.setting_54_toggle.text = 'Set $54=0'
         else:
             self.setting_54_label.text = '$54 = N/A'

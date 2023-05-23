@@ -655,7 +655,10 @@ class GoScreen(Screen):
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
 
-        self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
+        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+            self.progress_percentage_label.text = "- %"
+        else:
+            self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
         self.spindle_speed_max_percentage = 100
         self.spindle_speed_max_absolute = 0
@@ -763,26 +766,38 @@ class GoScreen(Screen):
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
 
-        modified_job_gcode = []
+        def prep_gcode(job_to_modify):
+            modified_gcode = []
 
-        # Spindle command?? 
-        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            modified_job_gcode.append("M56")  # append cleaned up gcode to object
+            # Spindle command?? 
+            if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+                modified_gcode.append("M56")  # append cleaned up gcode to object
+                self.jd.job_recovery_offset += 1 # number of lines added to start of job
 
-        # Turn vac on if spindle gets turned on during job
-        if ((str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) or (
-                str(self.jd.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
-            modified_job_gcode.append("AE")  # turns vacuum on
-            modified_job_gcode.append("G4 P2")  # sends pause command
-            modified_job_gcode.extend(self.jd.job_gcode)
-            modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
-            modified_job_gcode.append("AF")  # turns vac off
+            # Turn vac on if spindle gets turned on during job
+            if ((str(job_to_modify).count("M3") > str(job_to_modify).count("M30")) or (
+                    str(job_to_modify).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
+                modified_gcode.append("AE")  # turns vacuum on
+                modified_gcode.append("G4 P2")  # sends pause command
+                modified_gcode.extend(job_to_modify)
+                modified_gcode.append("G4 P2")  # sends pause command, 2 seconds
+                modified_gcode.append("AF")  # turns vac off
+                self.jd.job_recovery_offset += 2 # number of lines added to start of job
+            else:
+                modified_gcode.extend(job_to_modify)
+
+            # Spindle command??
+            if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+                modified_gcode.append("M56 P0")  # append cleaned up gcode to object
+
+            return modified_gcode
+
+        # Check if job recovery is being performed
+        if self.jd.job_recovery_filepath == self.jd.filename and self.jd.job_recovery_selected_line != -1:
+            modified_job_gcode = prep_gcode(self.jd.job_recovery_gcode)
         else:
-            modified_job_gcode.extend(self.jd.job_gcode)
-
-        # Spindle command??
-        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            modified_job_gcode.append("M56 P0")  # append cleaned up gcode to object
+            self.jd.job_recovery_offset = 0
+            modified_job_gcode = prep_gcode(self.jd.job_gcode)
 
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
@@ -845,7 +860,7 @@ class GoScreen(Screen):
         # % progress    
         if len(self.jd.job_gcode_running) != 0:
             self.jd.percent_thru_job = int(
-                round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0) * 100.0))
+                round(((self.m.s.g_count - min(0, self.jd.job_recovery_offset)) * 1.0 / (len(self.jd.job_gcode_running) - min(0, self.jd.job_recovery_offset) + 4) * 1.0) * 100.0))
             if self.jd.percent_thru_job > 100: self.jd.percent_thru_job = 100
             self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
