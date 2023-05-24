@@ -243,6 +243,8 @@ Builder.load_string("""
                                     text: 'Brush Time'
                                     bold: True
                                     on_press: root.open_spindle_brush_popup()
+                                    background_color: [0, 0, 0, 1]
+                                    background_normal: ''
                                     
                                 Label:
                                     id: brush_time_value
