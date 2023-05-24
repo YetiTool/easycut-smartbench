@@ -241,6 +241,7 @@ Builder.load_string("""
                                 Label:
                                     text: 'Brush Time'
                                     bold: True
+                                    on_press: root.open_spindle_brush_popup()
                                     
                                 Label:
                                     id: brush_time_value
@@ -497,3 +498,6 @@ class SpindleTestJig1(Screen):
 
     def open_console(self):
         self.sm.current = 'spindle_test_console'
+
+    def open_spindle_brush_popup(self, *args):
+        ResetSpindleBrushPopup(self.m, self.sm)
