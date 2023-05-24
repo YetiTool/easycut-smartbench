@@ -354,8 +354,9 @@ class SpindleTestJig1(Screen):
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.2) 
             self.SC2 = False          
 
-        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'),0.4)
-        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.8)
+        Clock.schedule_once(lambda dt: self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset'),1)
+
+        Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 1.2)
 
     def update_spindle_type_text(self):              
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
