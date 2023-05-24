@@ -409,7 +409,7 @@ class SpindleTestJig1(Screen):
             self.kill_time_value.text = no_data_text
             self.measured_rpm_value.text = no_data_text
 
-    def get_spindle_info_wrapper(self):
+    def get_spindle_info_wrapper(self, dt=None):
         if self.m.state().startswith("Idle"):
             self.get_spindle_info()
 
