@@ -313,6 +313,8 @@ class SpindleTestJig1(Screen):
     unlock_code = None
     poll_for_spindle_info = None    
 
+    SC2 = True
+
     def __init__(self, **kwargs):
         super(SpindleTestJig1, self).__init__(**kwargs)
 
