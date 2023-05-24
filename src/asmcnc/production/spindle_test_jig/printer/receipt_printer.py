@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# from escpos.printer import Usb
+from escpos.printer import Usb
 import sys
 
 
