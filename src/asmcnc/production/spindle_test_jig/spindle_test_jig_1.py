@@ -393,13 +393,22 @@ class SpindleTestJig1(Screen):
         self.run_test_button.background_color = [0, 1, 0, 1]
 
     def update_spindle_feedback(self):
-        self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
-        self.load_value.text = str(
-            ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
-        self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
-        self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
-        self.measured_rpm_value.text = str(self.m.s.spindle_speed) if self.test.target_voltage == 230 else str(
-            self.m.convert_from_110_to_230(self.m.s.spindle_speed))
+        if SC2:
+            self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
+            self.load_value.text = str(
+                ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
+            self.temp_value.text = str(self.m.s.digital_spindle_temperature) + 'C'
+            self.kill_time_value.text = str(self.m.s.digital_spindle_kill_time) + 'S'
+            self.measured_rpm_value.text = str(self.m.s.spindle_speed) if self.test.target_voltage == 230 else str(
+                self.m.convert_from_110_to_230(self.m.s.spindle_speed))
+        else:
+            no_data_text = "N/A"
+            self.voltage_value.text = no_data_text
+            self.load_value.text = no_data_text
+            self.temp_value.text =no_data_text
+            self.kill_time_value.text = no_data_text
+            self.measured_rpm_value.text = no_data_text
+
 
     def get_spindle_info(self, dt=None):
         def show_spindle_info():
@@ -441,7 +450,7 @@ class SpindleTestJig1(Screen):
                 self.test.target_voltage = 230
 
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        if self.SC2:
+        if SC2:
             Clock.schedule_once(lambda dt: show_spindle_info(), 1)
         else:
             no_data_text = "N/A"
@@ -451,6 +460,8 @@ class SpindleTestJig1(Screen):
             self.up_time_value.text = no_data_text
             self.firmware_version_value.text = no_data_text
             self.brush_time_value.text = no_data_text
+            self.unlock_code.text = no_data_text
+            self.print_receipt_button.disabled = True
 
 
     def update_unlock_code(self):
