@@ -347,6 +347,8 @@ class SpindleTestJig1(Screen):
         self.spindle_type_button.text = "Configuring GRBL... "
 
         self.reset()
+        
+        serial = 'N/A'
 
         self.setting_51 = self.get_spindle_type()
         if self.setting_51 == "SC2":
