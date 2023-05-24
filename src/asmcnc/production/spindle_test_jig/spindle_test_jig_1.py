@@ -393,7 +393,7 @@ class SpindleTestJig1(Screen):
         self.run_test_button.background_color = [0, 1, 0, 1]
 
     def update_spindle_feedback(self):
-        if SC2:
+        if self.SC2:
             self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
             self.load_value.text = str(
                 ceil(ld_qda_to_w(self.m.s.digital_spindle_mains_voltage, self.m.s.digital_spindle_ld_qdA))) + 'W'
