@@ -473,6 +473,7 @@ class SpindleTestJig1(Screen):
             self.up_time_value.text = no_data_text
             self.firmware_version_value.text = no_data_text
             self.brush_time_value.text = no_data_text
+            self.brush_time_value.color = [1, 1, 1, 1]
             self.unlock_code_label.text = "Unlock code: " + no_data_text
             self.print_receipt_button.disabled = True
 
