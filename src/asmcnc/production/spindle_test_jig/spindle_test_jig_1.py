@@ -238,7 +238,7 @@ Builder.load_string("""
                                 cols: 1
                                 rows: 2
                                 
-                                Label:
+                                Button:
                                     text: 'Brush Time'
                                     bold: True
                                     on_press: root.open_spindle_brush_popup()
