@@ -5,6 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
+from asmcnc.production.spindle_test_jig.popups.reset_spindle_brush_popup import ResetSpindleBrushPopup
 # from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
 from asmcnc.skavaUI import widget_status_bar
