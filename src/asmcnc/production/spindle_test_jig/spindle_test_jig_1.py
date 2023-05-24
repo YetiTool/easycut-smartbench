@@ -62,13 +62,23 @@ Builder.load_string("""
                         background_color: [0, 0, 1, 1]
                         on_press: root.switch_spindle_type()
                         background_normal: ''
+
+                    GridLayout:
+                        cols: 2
+                        rows: 1
                         
-                    Button:
-                        text: 'Open Terminal'
-                        bold: True
-                        background_color: [0.72, 0.12, 0.94, 1]
-                        on_press: root.open_console()
-                        background_normal: ''
+                        Button:
+                            text: 'Open Terminal'
+                            bold: True
+                            background_color: [0.72, 0.12, 0.94, 1]
+                            on_press: root.open_console()
+                            background_normal: ''
+
+                        Button:
+                            text: 'GRBL Reset'
+                            on_press: root.soft_reset()
+                            background_color: [1, 0.5, 0, 1]
+                            background_normal: ''
                         
                     Button:
                         text: 'Shutdown'
@@ -237,19 +247,13 @@ Builder.load_string("""
                             
                 GridLayout:
                     cols: 1
-                    rows: 5
+                    rows: 4
                     size_hint_x: 0.4
                     
                     Button:
                         text: 'STOP'
                         on_press: root.stop()
                         background_color: [1, 0, 0, 1]
-                        background_normal: ''
-
-                    Button:
-                        text: 'GRBL Reset'
-                        on_press: root.soft_reset()
-                        background_color: [1, 0.5, 0, 1]
                         background_normal: ''
 
                         
