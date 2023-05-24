@@ -439,7 +439,17 @@ class SpindleTestJig1(Screen):
                 self.test.target_voltage = 230
 
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        Clock.schedule_once(lambda dt: show_spindle_info(), 1)
+        if self.SC2:
+            Clock.schedule_once(lambda dt: show_spindle_info(), 1)
+        else:
+            no_data_text = "N/A"
+            self.serial_number_value.text = no_data_text
+            self.mains_value.text = no_data_text
+            self.production_date_value.text = no_data_text
+            self.up_time_value.text = no_data_text
+            self.firmware_version_value.text = no_data_text
+            self.brush_time_value.text = no_data_text
+
 
     def update_unlock_code(self):
         serial = self.m.s.spindle_serial_number
