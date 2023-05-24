@@ -325,7 +325,7 @@ class SpindleTestJig1(Screen):
         self.status_container.add_widget(self.status_bar_widget)              
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
-        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info, 1)
+        self.poll_for_spindle_info = Clock.schedule_interval(self.get_spindle_info_wrapper, 1)
         self.test = SpindleTest(screen_manager=self.sm, machine=self.m, screen=self)    
 
     def reset(self):
@@ -409,6 +409,9 @@ class SpindleTestJig1(Screen):
             self.kill_time_value.text = no_data_text
             self.measured_rpm_value.text = no_data_text
 
+    def get_spindle_info_wrapper(self):
+        if self.m.state().startswith("Idle"):
+            self.get_spindle_info()
 
     def get_spindle_info(self, dt=None):
         def show_spindle_info():
