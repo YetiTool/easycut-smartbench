@@ -371,6 +371,7 @@ class SpindleTestJig1(Screen):
         self.m.s.write_command('M3 S0')
         [unschedule(clock) for clock in self.test.clocks]
         self.run_test_button.disabled = False
+        self.spindle_type_button.disabled = False
         self.reset()
         self.run_test_button.text = "Begin Test"
         self.run_test_button.background_color = [0, 1, 0, 1]
@@ -393,6 +394,7 @@ class SpindleTestJig1(Screen):
 
     def enable_run_button(self):
         self.run_test_button.disabled = False
+        self.spindle_type_button.disabled = False
         self.run_test_button.text = "Begin Test"
         self.run_test_button.background_color = [0, 1, 0, 1]
 
