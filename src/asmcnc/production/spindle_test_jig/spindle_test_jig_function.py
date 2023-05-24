@@ -87,25 +87,26 @@ class SpindleTest:
             self.clocks.append(Clock.schedule_once(lambda dt: self.screen.enable_run_button(), 15))
 
         def wait_for_wear_in(rpm):
-            measured_rpm = int(self.m.s.spindle_speed) #if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
-            measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
-            time_since_start = time.time() - self.start_time
+            if self.screen.SC2:
+                measured_rpm = int(self.m.s.spindle_speed) #if self.target_voltage == 230 else self.m.convert_from_110_to_230(int(self.m.s.spindle_speed))
+                measured_load = sum(self.spindle_load_samples) / len(self.spindle_load_samples)
+                time_since_start = time.time() - self.start_time
 
-            # Check for successful wear in
-            if (measured_load <= 500) and (abs(rpm - measured_rpm) <= 2000):
-                # Before starting test, set rpm to 10000 and wait 3 seconds to allow it to stabilise
-                initial_rpm = 10000
-                self.m.s.write_command('M3 S' + str(initial_rpm))
-                self.screen.target_rpm_value.text = str(initial_rpm)
-                self.clocks.append(Clock.schedule_once(lambda dt: start_test(), 4))
-            # Autofail after 90s
-            elif (time_since_start >= 90):
-                set_rpm(0)
-                fail_test(rpm, "Wear-in failed. After 90s load is %s and rpm is %s." % (str(measured_load), str(measured_rpm)))
-                show_result()
-                self.screen.enable_run_button()
-            else:
-                self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
+                # Check for successful wear in
+                if (measured_load <= 500) and (abs(rpm - measured_rpm) <= 2000):
+                    # Before starting test, set rpm to 10000 and wait 3 seconds to allow it to stabilise
+                    initial_rpm = 10000
+                    self.m.s.write_command('M3 S' + str(initial_rpm))
+                    self.screen.target_rpm_value.text = str(initial_rpm)
+                    self.clocks.append(Clock.schedule_once(lambda dt: start_test(), 4))
+                # Autofail after 90s
+                elif (time_since_start >= 90):
+                    set_rpm(0)
+                    fail_test(rpm, "Wear-in failed. After 90s load is %s and rpm is %s." % (str(measured_load), str(measured_rpm)))
+                    show_result()
+                    self.screen.enable_run_button()
+                else:
+                    self.clocks.append(Clock.schedule_once(lambda dt: wait_for_wear_in(rpm), 1.5))
 
         self.clocks[:] = []
         if self.screen.SC2:
