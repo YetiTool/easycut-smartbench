@@ -484,7 +484,7 @@ class SpindleTestJig1(Screen):
             return
 
         # Check if spindle is connected
-        if self.m.s.digital_spindle_ld_qdA != -999:
+        if serial != -999:
             serial = str(hex((serial + 42) * 10000))[2:]
             self.print_receipt_button.disabled = False
         else:
