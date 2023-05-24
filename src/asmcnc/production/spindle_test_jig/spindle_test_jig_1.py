@@ -412,6 +412,8 @@ class SpindleTestJig1(Screen):
     def get_spindle_info_wrapper(self, dt=None):
         if self.m.state().startswith("Idle"):
             self.get_spindle_info()
+        else:
+            self.m.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def get_spindle_info(self, dt=None):
         def show_spindle_info():
