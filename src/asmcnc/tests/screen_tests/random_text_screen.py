@@ -24,7 +24,7 @@ Builder.load_string("""
 class RandomTextScreen(Screen):
     def __init__(self, **kwargs):
         super(RandomTextScreen, self).__init__(**kwargs)
-        Clock.schedule_interval(lambda dt: self.randomise_text(), 0.2)
+        Clock.schedule_interval(lambda dt: self.randomise_text(), 1)
 
     def randomise_text(self):
         text = 'Mx: ' + str(uniform(0, 100))
