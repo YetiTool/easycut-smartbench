@@ -347,10 +347,11 @@ class SpindleTestJig1(Screen):
         self.setting_51 = self.get_spindle_type()
         if self.setting_51 == "SC2":
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 1'), 0.2)
-            self.SC2 = True
+            self.SC2 = True            
         else:
             Clock.schedule_once(lambda dt: self.m.s.write_command('$51 = 0'), 0.2) 
-            self.SC2 = False              
+            self.SC2 = False    
+        SC2 = self.SC2          
 
         Clock.schedule_once(lambda dt: self.update_spindle_type_text(), 0.5)
 
@@ -439,7 +440,7 @@ class SpindleTestJig1(Screen):
                 self.test.target_voltage = 230
 
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        if self.screen.SC2:
+        if SC2:
             Clock.schedule_once(lambda dt: show_spindle_info(), 1)
         else:
             no_data_text = "N/A"
