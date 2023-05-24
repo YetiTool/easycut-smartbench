@@ -68,7 +68,7 @@ Builder.load_string("""
                         rows: 1
                         
                         Button:
-                            text: 'Open Terminal'
+                            text: 'Open \nTerminal'
                             bold: True
                             background_color: [0.72, 0.12, 0.94, 1]
                             on_press: root.open_console()
