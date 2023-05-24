@@ -453,7 +453,7 @@ class SpindleTestJig1(Screen):
                 self.test.target_voltage = 230
 
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        if SC2:
+        if self.SC2:
             Clock.schedule_once(lambda dt: show_spindle_info(), 1)
         else:
             no_data_text = "N/A"
