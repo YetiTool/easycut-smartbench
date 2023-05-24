@@ -437,7 +437,7 @@ class SpindleTestJig1(Screen):
                     seconds %= 60
                     return str(days) + 'd, ' + str(hours) + 'h, ' + str(minutes) + 'm, ' + str(seconds) + 's'
                 except:
-                    self.get_spindle_info()
+                    print("Couldn't parse uptime")
                     return 'err'
 
             self.serial_number_value.text = str(self.m.s.spindle_serial_number)
