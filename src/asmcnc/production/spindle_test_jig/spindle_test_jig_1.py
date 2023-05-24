@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.production.spindle_test_jig.popups.popup_confirm_shutdown import ConfirmShutdownPopup
-# from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
+from asmcnc.production.spindle_test_jig.printer.receipt_printer import print_unlock_receipt
 from asmcnc.production.spindle_test_jig.spindle_test_jig_function import SpindleTest
 from asmcnc.skavaUI import widget_status_bar
 
@@ -365,9 +365,8 @@ class SpindleTestJig1(Screen):
     def update_spindle_type_text(self):              
         self.spindle_type_button.text = "Spindle type: " + self.get_spindle_type()
 
-    def print_receipt(self):
-        pass
-        # print_unlock_receipt(self.unlock_code)
+    def print_receipt(self):       
+        print_unlock_receipt(self.unlock_code)
 
     def stop(self):
         self.m.s.write_command('M3 S0')
