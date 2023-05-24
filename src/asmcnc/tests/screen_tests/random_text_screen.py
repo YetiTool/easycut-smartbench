@@ -15,6 +15,7 @@ Builder.load_string("""
     BoxLayout:
         Label:
             id: random_text_label
+            color: [1, 0, 0, 1]
             text: ''
             
 """)
