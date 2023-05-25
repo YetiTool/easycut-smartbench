@@ -15,7 +15,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
 widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
 
 Builder.load_string("""
@@ -46,7 +46,6 @@ Builder.load_string("""
 
     # Spindle settings widgets
     spindle_tab: spindle_tab
-    spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
 
     # Z touchplate and lead screw widgets
@@ -312,20 +311,8 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(350)
-                        width: dp(580)
+                        width: dp(760)
                         id: spindle_settings_container
-
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(350)
-                        width: dp(160)
-                        id: spindle_save_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
 
         # Z Misc settings (probe plate and time since lead screw lubrication)
 
@@ -495,10 +482,7 @@ class MaintenanceScreenClass(Screen):
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
 
 
-        # SPINDLE SETTINGS WIDGET
-
-        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
-        self.spindle_save_container.add_widget(self.spindle_save_widget)       
+        # SPINDLE SETTINGS WIDGET   
 
         self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_settings_container.add_widget(self.spindle_settings_widget)
