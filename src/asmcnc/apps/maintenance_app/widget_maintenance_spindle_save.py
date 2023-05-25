@@ -95,7 +95,7 @@ class SpindleSaveWidget(Widget):
                 self.l.get_str("We recommend the following cooldown settings:") + \
                 "\n\n" + \
                 "       " + \
-                self.l.get_str("Yeti: 20,000 RPM; 10 seconds") + \
+                self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds") + \
                 "\n\n" + \
                 "       " + \
                 self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
