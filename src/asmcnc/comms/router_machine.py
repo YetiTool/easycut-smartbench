@@ -737,12 +737,12 @@ class RouterMachine(object):
     theateam_path =  '../../plus.txt'
 
 # GRBL SETTINGS
-    def write_dollar_setting(self, setting_no, value):
+    def write_dollar_setting(self, setting_no, value, reset_grbl_after_stream=True):
         list_to_stream = [
             '$%s=%s' % (str(setting_no), str(value)),
             '$$'
         ]
-        self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream=True)
+        self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
