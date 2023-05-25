@@ -224,6 +224,7 @@ class ZHeadQC2(Screen):
         self.sm.current = 'qc1'
 
     def enter_next_screen(self):
+        self.m.resume_from_alarm()
         self.sm.current = 'qc3'
 
     def update_status_text(self, dt):
