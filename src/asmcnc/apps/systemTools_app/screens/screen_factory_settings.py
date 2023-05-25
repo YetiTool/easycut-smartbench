@@ -124,7 +124,7 @@ Builder.load_string("""
                                         values: root.latest_machine_model_values
                                         on_text: root.set_smartbench_model()
                                     
-                                    Button:
+                                    ToggleButton:
                                         id: smartbench_model_button
                                         text: 'Show all models'
                                         on_press: root.show_all_smartbench_models()
@@ -541,8 +541,6 @@ class FactorySettingsScreen(Screen):
     dev_mode = False
 
     poll_for_creds_file = None
-
-    show_all_models = False
 
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
@@ -1145,12 +1143,10 @@ class FactorySettingsScreen(Screen):
         confirm_popup.open()
 
     def show_all_smartbench_models(self):
-        if self.show_all_models:
+        if self.ids.smartbench_model_button.state == 'normal':
             self.ids.smartbench_model.values = self.latest_machine_model_values
             self.ids.smartbench_model_button.text = "Show all models"
-            self.show_all_models = False
         else:
-            self.show_all_models = True
             self.ids.smartbench_model.values = self.all_machine_model_values
             self.ids.smartbench_model_button.text = "Hide all models"
 
