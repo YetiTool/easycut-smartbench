@@ -30,8 +30,8 @@ Builder.load_string("""
     spindle_cooldown_time: spindle_cooldown_time
     rpm_label: rpm_label
     seconds_label: seconds_label
-    stylus_label: stylus_label
-    uptime_label: uptime_label
+    cooldown_settings_label:cooldown_settings_label
+    # uptime_label: uptime_label
     stylus_switch: stylus_switch
     spindle_save_container:spindle_save_container
 
@@ -92,14 +92,9 @@ Builder.load_string("""
                 orientation: 'vertical'
                 spacing: dp(15)
 
-                # ROW 1
-
-
-
-                # ROW 2
-
                 BoxLayout:
-                    orientation: 'horizontal'
+                    size_hint_y: 2
+                    orientation: 'vertical'
                     padding: dp(5)
 
                     canvas:
@@ -108,6 +103,16 @@ Builder.load_string("""
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
+
+                    Label:
+                        id: cooldown_settings_label
+                        size_hint_y: 0.5
+                        color: 0,0,0,1
+                        font_size: dp(24)
+                        halign: "left"
+                        valign: "middle"
+                        bold: True
+                        text_size: self.size
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -186,95 +191,96 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
 
-                # ROW 3
-
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding: dp(5)
-
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-
-                    Image:
-                        size_hint_x: 0.3
-                        id: stylus_image
-                        source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-                    Label:
-                        id: stylus_label
-                        color: 0,0,0,1
-                        font_size: dp(30)
-                        markup: True
-                        halign: "left"
-                        valign: "middle"
-                        text_size: self.size
 
                     BoxLayout:
-                        size_hint_x: 0.5
+                        orientation: 'horizontal'
+                        padding: dp(5)
 
-                        Switch:
-                            id: stylus_switch
-                            background_color: [0,0,0,0]
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            pos: self.parent.pos
-
-                # ROW 4
-
-                BoxLayout:
-                    orientation: 'horizontal'
-                    padding: dp(5)
-
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-
-                    BoxLayout:
-                        padding: dp(3)
-                        size_hint_x: 0.3
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
 
                         Image:
-                            source: "./asmcnc/apps/maintenance_app/img/uptime_hourglass.png"
+                            size_hint_x: 0.3
+                            source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
 
-                    Label:
-                        id: uptime_label
-                        color: 0,0,0,1
-                        font_size: dp(30)
-                        markup: True
-                        halign: "left"
-                        valign: "middle"
-                        text_size: self.size
-
-                    BoxLayout:
-                        size_hint_x: 0.5
-                        padding: [dp(40), dp(0)]
-
-                        Button:
-                            on_press: root.get_uptime()
-                            background_normal: ''
-                            background_down: ''
+                        BoxLayout:
+                            padding: [dp(0), dp(18), dp(0), dp(12)]
 
                             Image:
-                                source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
+                                source: "./asmcnc/apps/maintenance_app/img/stylus_text_logo.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
-                                allow_stretch: False
+                                allow_stretch: True
+
+                            Label
+
+                        BoxLayout:
+                            size_hint_x: 0.5
+
+                            Switch:
+                                id: stylus_switch
+                                background_color: [0,0,0,0]
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                pos: self.parent.pos
+
+                    # BoxLayout:
+                    #     orientation: 'horizontal'
+                    #     padding: dp(5)
+
+                    #     canvas:
+                    #         Color:
+                    #             rgba: 1,1,1,1
+                    #         RoundedRectangle:
+                    #             size: self.size
+                    #             pos: self.pos
+
+                    #     BoxLayout:
+                    #         padding: dp(3)
+                    #         size_hint_x: 0.3
+
+                    #         Image:
+                    #             source: "./asmcnc/apps/maintenance_app/img/uptime_hourglass.png"
+                    #             center_x: self.parent.center_x
+                    #             y: self.parent.y
+                    #             size: self.parent.width, self.parent.height
+                    #             allow_stretch: True
+
+                    #     Label:
+                    #         id: uptime_label
+                    #         color: 0,0,0,1
+                    #         font_size: dp(30)
+                    #         markup: True
+                    #         halign: "left"
+                    #         valign: "middle"
+                    #         text_size: self.size
+
+                    #     BoxLayout:
+                    #         size_hint_x: 0.5
+                    #         padding: [dp(40), dp(0)]
+
+                    #         Button:
+                    #             on_press: root.get_uptime()
+                    #             background_normal: ''
+                    #             background_down: ''
+
+                    #             Image:
+                    #                 source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
+                    #                 center_x: self.parent.center_x
+                    #                 y: self.parent.y
+                    #                 size: self.parent.width, self.parent.height
+                    #                 allow_stretch: False
 
             BoxLayout:
                 id: spindle_save_container
@@ -332,45 +338,45 @@ class SpindleSettingsWidget(Widget):
 
         self.rpm_override = False  
 
-    def get_uptime(self):
-        if self.m.theateam() and self.m.get_dollar_setting(51):
-            if self.m.state().startswith('Idle'):
-                self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-                self.m.s.write_command('M3 S0')
-                Clock.schedule_once(self.get_spindle_info, 0.3)
-            else:
-                popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
-        else:
-            self.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
+    # def get_uptime(self):
+    #     if self.m.theateam() and self.m.get_dollar_setting(51):
+    #         if self.m.state().startswith('Idle'):
+    #             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+    #             self.m.s.write_command('M3 S0')
+    #             Clock.schedule_once(self.get_spindle_info, 0.3)
+    #         else:
+    #             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+    #     else:
+    #         self.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
 
-    def get_spindle_info(self, dt):
-        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-        self.check_info_count = 0
-        Clock.schedule_once(self.check_spindle_info, 0.3)
+    # def get_spindle_info(self, dt):
+    #     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+    #     self.check_info_count = 0
+    #     Clock.schedule_once(self.check_spindle_info, 0.3)
 
-    def check_spindle_info(self, dt):
-        self.check_info_count += 1
-        # Value of -999 represents disconnected spindle
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
-            self.read_restore_info()
-        else: # Keep trying for a few seconds
-            Clock.schedule_once(self.check_spindle_info, 0.3)
+    # def check_spindle_info(self, dt):
+    #     self.check_info_count += 1
+    #     # Value of -999 represents disconnected spindle
+    #     if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
+    #         self.read_restore_info()
+    #     else: # Keep trying for a few seconds
+    #         Clock.schedule_once(self.check_spindle_info, 0.3)
 
-    def read_restore_info(self):
-        self.m.s.write_command('M5')
-        self.wait_popup.popup.dismiss()
-        # Value of -999 for ld_qdA represents disconnected spindle
-        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
-            # Get info was successful, show info
-            self.uptime_label.text = "Uptime: " + str(int(self.m.s.spindle_brush_run_time_seconds/3600)) + " hours"
-        else:
-            # Otherwise, spindle is probably disconnected
-            error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
-            popup_info.PopupError(self.sm, self.l, error_message)
+    # def read_restore_info(self):
+    #     self.m.s.write_command('M5')
+    #     self.wait_popup.popup.dismiss()
+    #     # Value of -999 for ld_qdA represents disconnected spindle
+    #     if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
+    #         # Get info was successful, show info
+    #         self.uptime_label.text = "Uptime: " + str(int(self.m.s.spindle_brush_run_time_seconds/3600)) + " hours"
+    #     else:
+    #         # Otherwise, spindle is probably disconnected
+    #         error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
+    #         popup_info.PopupError(self.sm, self.l, error_message)
 
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
-        self.stylus_label.text = self.l.get_str("CNC Stylus")
-        self.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
+        # self.uptime_label.text = self.l.get_str("Turn on spindle to read")
 
