@@ -612,7 +612,6 @@ class SWUpdateScreen(Screen):
             outcome = self.set.get_sw_update_via_usb()
             
             if outcome == 2:
-                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
                         self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
@@ -623,9 +622,9 @@ class SWUpdateScreen(Screen):
                         )
                     )
                 popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
 
             elif outcome == 0:
-                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("There was no folder or zipped folder called easycut-smartbench found on the USB drive.").replace(
                         self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
@@ -636,9 +635,9 @@ class SWUpdateScreen(Screen):
                         )
                     )
                 popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
 
             elif outcome == "update failed":
-                wait_popup.popup.dismiss()
                 description = (
                     self.l.get_str("It was not possible to update your software from the USB drive.") + \
                     "\n\n" + \
@@ -649,10 +648,10 @@ class SWUpdateScreen(Screen):
                     self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.")
                     )
 
-                popup_info.PopupError(self.sm, self.l, description)              
+                popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
             
             else:
-                wait_popup.dismiss()
                 self.usb_stick.disable()
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
@@ -664,6 +663,7 @@ class SWUpdateScreen(Screen):
                     )
 
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
+                wait_popup.dismiss()
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
                 
