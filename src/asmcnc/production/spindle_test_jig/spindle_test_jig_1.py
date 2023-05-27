@@ -28,6 +28,7 @@ Builder.load_string("""
     brush_time_value:brush_time_value
     run_test_button:run_test_button
     unlock_code_label:unlock_code_label
+    print_receipt_button:print_receipt_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -259,6 +260,7 @@ Builder.load_string("""
                             background_normal: ''
                         
                     Button:
+                        id: print_receipt_button
                         text: 'Print'    
                         bold: True
                         background_color: [1, 0.64, 0, 1]
@@ -334,15 +336,10 @@ class SpindleTestJig1(Screen):
     def shutdown(self):
         ConfirmShutdownPopup()
 
-    def toggle_run_button(self):
-        if self.run_test_button.disabled:
-            self.run_test_button.disabled = False
-            self.run_test_button.text = "Begin Test"
-            self.run_test_button.background_color = [0, 1, 0, 1]
-        else:
-            self.run_test_button.disabled = True
-            self.run_test_button.text = "Running Test..."
-            self.run_test_button.background_color = [1, 1, 0, 1]
+    def enable_run_button(self):
+        self.run_test_button.disabled = False
+        self.run_test_button.text = "Begin Test"
+        self.run_test_button.background_color = [0, 1, 0, 1]
 
     def update_spindle_feedback(self):
         self.voltage_value.text = str(self.m.s.digital_spindle_mains_voltage) + 'V'
@@ -378,7 +375,13 @@ class SpindleTestJig1(Screen):
                                                                self.m.s.spindle_production_year)
             self.up_time_value.text = format_seconds(self.m.s.spindle_total_run_time_seconds)
             self.firmware_version_value.text = str(self.m.s.spindle_firmware_version)
+
             self.brush_time_value.text = format_seconds(self.m.s.spindle_brush_run_time_seconds)
+            if self.brush_time_value.text == '0d, 0h, 0m, 0s':
+                self.brush_time_value.color = [0, 1, 0, 1]
+            else:
+                self.brush_time_value.color = [1, 1, 1, 1]
+
             self.update_unlock_code()
 
             if self.m.s.spindle_mains_frequency_hertz == 60:
@@ -392,7 +395,14 @@ class SpindleTestJig1(Screen):
     def update_unlock_code(self):
         serial = self.m.s.spindle_serial_number
 
-        serial = str(hex((serial + 42) * 10000))[2:]
+        # Check if spindle is connected
+        if self.m.s.digital_spindle_ld_qdA != -999:
+            serial = str(hex((serial + 42) * 10000))[2:]
+            self.print_receipt_button.disabled = False
+        else:
+            # If not, hide unlock code
+            serial = 'N/A'
+            self.print_receipt_button.disabled = True
 
         self.unlock_code_label.text = "Unlock code: " + str(serial)
         self.unlock_code = serial
