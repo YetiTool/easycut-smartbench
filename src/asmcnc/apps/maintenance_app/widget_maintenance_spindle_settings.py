@@ -33,6 +33,10 @@ Builder.load_string("""
     cooldown_settings_label: cooldown_settings_label
     # uptime_label: uptime_label
     stylus_switch: stylus_switch
+    min_speed_label: min_speed_label
+    max_speed_label: max_speed_label
+    min_time_label: min_time_label
+    max_time_label: max_time_label
     spindle_save_container:spindle_save_container
 
 
@@ -282,6 +286,47 @@ Builder.load_string("""
                         size: self.size
                         pos: self.pos
 
+    FloatLayout:
+        Label:
+            id: min_speed_label
+            x: cooldown_speed_slider.pos[0]
+            y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
+            size_hint: None, None
+            height: dp(30)
+            width: dp(30)
+            color: hex('#888888ff')
+            font_size: dp(13)
+
+        Label:
+            id: max_speed_label
+            x: cooldown_speed_slider.pos[0] + cooldown_speed_slider.size[0] * 0.9
+            y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
+            size_hint: None, None
+            height: dp(30)
+            width: dp(30)
+            color: hex('#888888ff')
+            font_size: dp(13)
+
+        Label:
+            id: min_time_label
+            x: cooldown_time_slider.pos[0]
+            y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
+            size_hint: None, None
+            height: dp(30)
+            width: dp(30)
+            color: hex('#888888ff')
+            font_size: dp(13)
+
+        Label:
+            id: max_time_label
+            x: cooldown_time_slider.pos[0] + cooldown_time_slider.size[0] * 0.9
+            y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
+            size_hint: None, None
+            height: dp(30)
+            width: dp(30)
+            color: hex('#888888ff')
+            font_size: dp(13)
+
 
 
 """)
@@ -375,4 +420,8 @@ class SpindleSettingsWidget(Widget):
         self.seconds_label.text = self.l.get_str("seconds")
         self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
         # self.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        self.min_speed_label.text = "10k " + self.l.get_str("RPM")
+        self.max_speed_label.text = "20k " + self.l.get_str("RPM")
+        self.min_time_label.text = "1 " + self.l.get_str("seconds")
+        self.max_time_label.text = "60 " + self.l.get_str("seconds")
 
