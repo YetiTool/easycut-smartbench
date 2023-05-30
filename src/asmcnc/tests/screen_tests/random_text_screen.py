@@ -55,7 +55,7 @@ class RandomTextScreen(Screen):
         Clock.schedule_once(self.set_text_from_options, 1)
 
     def set_text_by_length(self, dt=None):
-        text = ''.join(random.choice(ascii_lowercase + ascii_uppercase + digits) for _ in range(self.length_i))
+        text = ''.join(random.choice(ascii_lowercase + ascii_uppercase + digits + ' ') for _ in range(self.length_i))
 
         self.ids.random_text_label.text = text
 
