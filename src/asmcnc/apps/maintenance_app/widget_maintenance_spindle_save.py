@@ -133,7 +133,7 @@ class SpindleSaveWidget(Widget):
 
         try: 
 
-            time = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
+            time = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_time_slider.value)
 
             if (time >= 1 and time <= 60):
                 pass
@@ -163,7 +163,7 @@ class SpindleSaveWidget(Widget):
 
         try: 
 
-            speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_speed.text)
+            speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_speed_slider.value)
 
             if (speed >= 10000 and speed <= 20000):
                 pass

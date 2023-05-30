@@ -26,11 +26,11 @@ Builder.load_string("""
 <SpindleSettingsWidget>
 
     spindle_brand: spindle_brand
-    spindle_cooldown_speed: spindle_cooldown_speed
-    spindle_cooldown_time: spindle_cooldown_time
+    cooldown_speed_slider: cooldown_speed_slider
+    cooldown_time_slider: cooldown_time_slider
     rpm_label: rpm_label
     seconds_label: seconds_label
-    cooldown_settings_label:cooldown_settings_label
+    cooldown_settings_label: cooldown_settings_label
     # uptime_label: uptime_label
     stylus_switch: stylus_switch
     spindle_save_container:spindle_save_container
@@ -128,25 +128,20 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
 
-                        BoxLayout:
-                            size_hint_x: 1.5
-                            padding: dp(5)
-
-                            TextInput:
-                                id: spindle_cooldown_speed
-                                font_size: dp(30)
-                                valign: "bottom"
-                                markup: True
-                                halign: "left"
-                                input_filter: 'int'
-                                multiline: False
+                        Slider:
+                            id: cooldown_speed_slider
+                            size_hint_x: 3
+                            min: 10000
+                            max: 20000
+                            step: 500
 
                         Label:
                             id: rpm_label
+                            size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(30)
+                            font_size: dp(25)
                             markup: True
-                            halign: "left"
+                            halign: "center"
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
@@ -167,25 +162,20 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
 
-                        BoxLayout:
-                            padding: dp(5)
-
-                            TextInput:
-                                id: spindle_cooldown_time
-                                font_size: dp(30)
-                                valign: "bottom"
-                                markup: True
-                                halign: "left"
-                                input_filter: 'int'
-                                multiline: False
+                        Slider:
+                            id: cooldown_time_slider
+                            size_hint_x: 3
+                            min: 1
+                            max: 60
+                            step: 1
 
                         Label:
                             id: seconds_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(30)
+                            font_size: dp(25)
                             markup: True
-                            halign: "left"
+                            halign: "center"
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
@@ -309,32 +299,38 @@ class SpindleSettingsWidget(Widget):
         self.l=kwargs['localization']
 
         self.rpm_override = self.m.spindle_cooldown_rpm_override
-        self.spindle_cooldown_speed.bind(focus=self.on_focus)
+        self.cooldown_speed_slider.bind(value=self.cooldown_speed_updated)
+        self.cooldown_time_slider.bind(value=self.cooldown_time_updated)
 
         self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_save_container.add_widget(self.spindle_save_widget)
 
         self.update_strings()
 
-    def on_focus(self, instance, value):
-        if not value:
-            self.rpm_override = True
+    def cooldown_speed_updated(self, instance, value):
+        # Convert to int and display
+        self.rpm_label.text = "%i " % value + self.l.get_str("RPM")
+        self.rpm_override = True
+
+    def cooldown_time_updated(self, instance, value):
+        # Convert to int and display
+        self.seconds_label.text = "%i " % value + self.l.get_str("seconds")
 
     def autofill_rpm_time(self):
 
         if 'AMB' in self.spindle_brand.text:
-            self.spindle_cooldown_time.text = str(30)
-            self.spindle_cooldown_speed.text = str(self.m.amb_cooldown_rpm_default)
+            self.cooldown_time_slider.value = 30
+            self.cooldown_speed_slider.value = self.m.amb_cooldown_rpm_default
 
         if 'YETI' in self.spindle_brand.text:
-            self.spindle_cooldown_time.text = str(10)
-            self.spindle_cooldown_speed.text = str(self.m.yeti_cooldown_rpm_default)
+            self.cooldown_time_slider.value = 10
+            self.cooldown_speed_slider.value = self.m.yeti_cooldown_rpm_default
 
         if 'manual' in self.spindle_brand.text:
-            self.spindle_cooldown_speed.disabled = True
+            self.cooldown_speed_slider.disabled = True
 
         if 'digital' in self.spindle_brand.text:
-            self.spindle_cooldown_speed.disabled = False
+            self.cooldown_speed_slider.disabled = False
 
         self.rpm_override = False  
 

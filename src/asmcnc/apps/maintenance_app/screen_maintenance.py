@@ -531,10 +531,10 @@ class MaintenanceScreenClass(Screen):
         # SPINDLE
         if self.m.spindle_digital: 
             string_digital = 'digital'
-            self.spindle_settings_widget.spindle_cooldown_speed.disabled = False
+            self.spindle_settings_widget.cooldown_speed_slider.disabled = False
         else: 
             string_digital = 'manual'
-            self.spindle_settings_widget.spindle_cooldown_speed.disabled = True
+            self.spindle_settings_widget.cooldown_speed_slider.disabled = True
 
         if self.m.is_stylus_enabled:
             self.spindle_settings_widget.stylus_switch.active = True
@@ -542,8 +542,8 @@ class MaintenanceScreenClass(Screen):
             self.spindle_settings_widget.stylus_switch.active = False
 
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
-        self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
-        self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
+        self.spindle_settings_widget.cooldown_time_slider.value = self.m.spindle_cooldown_time_seconds
+        self.spindle_settings_widget.cooldown_speed_slider.value = self.m.spindle_cooldown_rpm
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
 
         # if self.m.theateam() and self.m.get_dollar_setting(51):
