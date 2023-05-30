@@ -122,7 +122,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
 
                         BoxLayout:
-                            padding: dp(10)
+                            padding: dp(13)
 
                             Image:
                                 id: spindle_image
