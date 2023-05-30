@@ -7,8 +7,12 @@ from kivy.uix.screenmanager import ScreenManager
 
 from asmcnc.tests.screen_tests.random_text_screen import RandomTextScreen
 
+import cProfile
+
 
 class ScreenTests(App):
+    profile = None
+
     def build(self):
         sm = ScreenManager()
 
@@ -16,6 +20,21 @@ class ScreenTests(App):
 
         return sm
 
+    def on_start(self):
+        self.profile = cProfile.Profile()
+        self.profile.enable()
+        print("Starting profile")
+
+
+app = None
 
 if __name__ == '__main__':
-    ScreenTests().run()
+    try:
+        app = ScreenTests()
+        app.run()
+    except KeyboardInterrupt:
+        app.profile.disable()
+        app.profile.print_stats(sort='cumtime')
+        app.profile.dump_stats('profile.stats')
+        print("Stopping profile")
+        raise
