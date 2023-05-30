@@ -37,7 +37,7 @@ class RandomTextScreen(Screen):
         # Clock.schedule_interval(self.randomise_text, 0.1)
         # # self.set_text_from_options()
 
-        Clock.schedule_interval(self.set_text_by_length, 0.1)
+        Clock.schedule_interval(self.set_text_by_length, 1)
 
     def randomise_text(self, dt=None):
         text = 'Mx: ' + str(dt)
