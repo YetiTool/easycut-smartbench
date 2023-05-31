@@ -209,7 +209,7 @@ class GRBLSettingsScreen(Screen):
 
     def bake_default_settings(self):
         if not self.m.bake_default_grbl_settings():
-            popup_info.PopupError(self.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
+            popup_info.PopupError(self.systemtools_sm.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
 
     def send_rst_dollar(self):
         self.m.send_any_gcode_command("$RST=$")
