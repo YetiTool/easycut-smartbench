@@ -209,12 +209,12 @@ Builder.load_string("""
                             orientation: 'horizontal'
                             size_hint_y: 0.2
                             CheckBox:
-                                id: single_stack_x_current_checkbox
+                                id: double_stack_x_current_checkbox
                                 size_hint_x: 0.2
-                                group: "x_current" 
-                                on_press: root.x_current = root.set_value_to_update_to(single_stack_x_current_label, self)
+                                group: "x_current"
+                                on_press: root.x_current = root.set_value_to_update_to(double_stack_x_current_label, self)
                             Label:
-                                id: single_stack_x_current_label
+                                id: double_stack_x_current_label
                                 size_hint_x: 0.8
                                 text_size: self.size
                                 markup: 'True'
@@ -225,12 +225,12 @@ Builder.load_string("""
                             orientation: 'horizontal'
                             size_hint_y: 0.2
                             CheckBox:
-                                id: double_stack_x_current_checkbox
+                                id: single_stack_x_current_checkbox
                                 size_hint_x: 0.2
-                                group: "x_current"
-                                on_press: root.x_current = root.set_value_to_update_to(double_stack_x_current_label, self)
+                                group: "x_current" 
+                                on_press: root.x_current = root.set_value_to_update_to(single_stack_x_current_label, self)
                             Label:
-                                id: double_stack_x_current_label
+                                id: single_stack_x_current_label
                                 size_hint_x: 0.8
                                 text_size: self.size
                                 markup: 'True'
