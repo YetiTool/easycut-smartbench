@@ -184,6 +184,7 @@ class GRBLSettingsScreen(Screen):
         super(GRBLSettingsScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
+        self.l = kwargs['localization']
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -207,7 +208,8 @@ class GRBLSettingsScreen(Screen):
         self.systemtools_sm.restore_grbl_settings_from_file()    
 
     def bake_default_settings(self):
-        self.m.bake_default_grbl_settings()
+        if not self.m.bake_default_grbl_settings():
+            popup_info.PopupError(self.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
 
     def send_rst_dollar(self):
         self.m.send_any_gcode_command("$RST=$")
