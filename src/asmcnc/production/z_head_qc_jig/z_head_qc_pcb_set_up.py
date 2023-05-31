@@ -533,13 +533,13 @@ class ZHeadPCBSetUp(Screen):
 
     def set_default_x_current(self, number_of_drivers):
 
-        self.single_stack_x_current_checkbox.state = "normal"
         self.double_stack_x_current_checkbox.state = "normal"
+        self.single_stack_x_current_checkbox.state = "normal"
         self.other_x_current_checkbox.state = "normal"
         
         self.generate_recommended_x_currents(number_of_drivers)
         self.other_x_current_textinput.text = str(self.x_current)
-        self.x_current = self.set_value_to_update_to(self.single_stack_x_current_label, self.single_stack_x_current_checkbox)
+        self.x_current = self.set_value_to_update_to(self.double_stack_x_current_label, self.double_stack_x_current_checkbox)
 
     def set_default_firmware_version(self):
 
