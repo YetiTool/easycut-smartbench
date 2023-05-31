@@ -746,41 +746,48 @@ class RouterMachine(object):
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
+        z_max_travel_value = self.get_z_max_travel_to_bake(
+            self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'set Z travel'),
+            self.TMC_motor[TMC_X1].ActiveCurrentScale
+            )
+
+        if not z_max_travel_value: return False
+
         grbl_settings = [
-                    '$0=10',          #Step pulse, microseconds
-                    '$1=255',         #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',      #Homing feed, mm/min
-                    '$25=3000.0',     #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',     #Homing pull-off, mm
-                    '$30=25000.0',    #Max spindle speed, RPM
-                    '$31=0.0',        #Min spindle speed, RPM
-                    '$32=0',          #Laser mode, boolean
-#                     '$100=56.649',    #X steps/mm
-#                     '$101=56.665',    #Y steps/mm
-#                     '$102=1066.667',  #Z steps/mm
-                    '$110=8000.0',    #X Max rate, mm/min
-                    '$111=6000.0',    #Y Max rate, mm/min
-                    '$112=750.0',     #Z Max rate, mm/min
-                    '$120=130.0',     #X Acceleration, mm/sec^2
-                    '$121=130.0',     #Y Acceleration, mm/sec^2
-                    '$122=200.0',     #Z Acceleration, mm/sec^2
-                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2503.0',    #Y Max travel, mm
-                    '$132=150.0'     #Z Max travel, mm       
+                    '$0=10',                                        #Step pulse, microseconds
+                    '$1=255',                                       #Step idle delay, milliseconds
+                    '$2=4',                                         #Step port invert, mask
+                    '$3=1',                                         #Direction port invert, mask
+                    '$4=0',                                         #Step enable invert, boolean
+                    '$5=1',                                         #Limit pins invert, boolean
+                    '$6=0',                                         #Probe pin invert, boolean
+                    '$10=3',                                        #Status report, mask <----------------------
+                    '$11=0.010',                                    #Junction deviation, mm
+                    '$12=0.002',                                    #Arc tolerance, mm
+                    '$13=0',                                        #Report inches, boolean
+                    '$22=1',                                        #Homing cycle, boolean <------------------------
+                    '$20=1',                                        #Soft limits, boolean <-------------------
+                    '$21=1',                                        #Hard limits, boolean <------------------
+                    '$23=3',                                        #Homing dir invert, mask
+                    '$24=600.0',                                    #Homing feed, mm/min
+                    '$25=3000.0',                                   #Homing seek, mm/min
+                    '$26=250',                                      #Homing debounce, milliseconds
+                    '$27=15.000',                                   #Homing pull-off, mm
+                    '$30=25000.0',                                  #Max spindle speed, RPM
+                    '$31=0.0',                                      #Min spindle speed, RPM
+                    '$32=0',                                        #Laser mode, boolean
+#                     '$100=56.649',                                #X steps/mm
+#                     '$101=56.665',                                #Y steps/mm
+#                     '$102=1066.667',                              #Z steps/mm
+                    '$110=8000.0',                                  #X Max rate, mm/min
+                    '$111=6000.0',                                  #Y Max rate, mm/min
+                    '$112=750.0',                                   #Z Max rate, mm/min
+                    '$120=130.0',                                   #X Acceleration, mm/sec^2
+                    '$121=130.0',                                   #Y Acceleration, mm/sec^2
+                    '$122=200.0',                                   #Z Acceleration, mm/sec^2
+                    '$130=1300.0',                                  #X Max travel, mm TODO: Link to a settings object
+                    '$131=2503.0',                                  #Y Max travel, mm
+                    '$132=' + str(z_max_travel_value)  #Z Max travel, mm       
             ]
 
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
@@ -803,6 +810,26 @@ class RouterMachine(object):
         grbl_settings.append('$#')     # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+        return True
+
+    def get_z_max_travel_to_bake(self, fw_at_least_2_6, x_current):
+        """
+        If FW version >= 2.6 and the x_current is >= 27, it is likely that the ZH has:
+          - double stack motors
+          - shorter cage
+        and therefore the max travel that can be baked should be 130.0.
+        Prior to this change, the value should be 150.0.
+        """
+
+        if fw_at_least_2_6:
+            if x_current >= 27:
+                return 130.0
+            elif x_current == 0:
+                return False
+
+        return 150.0
+
 
     def save_grbl_settings(self):
 

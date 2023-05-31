@@ -94,7 +94,7 @@ class ScreenManagerSystemTools(object):
     # GRBL Settings and popups
     def open_grbl_settings_screen(self):
       if not self.sm.has_screen('grbl_settings'):
-          grbl_settings_screen = screen_grbl_settings.GRBLSettingsScreen(name = 'grbl_settings', machine = self.m, system_tools = self)
+          grbl_settings_screen = screen_grbl_settings.GRBLSettingsScreen(name = 'grbl_settings', machine = self.m, system_tools = self, localization = self.l)
           self.sm.add_widget(grbl_settings_screen)
       self.sm.current = 'grbl_settings'
 
