@@ -3,7 +3,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute upcut spiral",
+      "Cutter Type": "1 flute spiral upcut",
       "Step Down": "6 mm",
       "Parameters": [
         {
@@ -19,7 +19,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute upcut spiral",
+      "Cutter Type": "2 flute spiral upcut",
       "Step Down": "4 mm",
       "Parameters": [
         {
@@ -35,7 +35,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "8 mm",
-      "Cutter Type": "2 flute upcut spiral",
+      "Cutter Type": "2 flute spiral upcut",
       "Step Down": "4 mm",
       "Parameters": [
         {
@@ -51,7 +51,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "6 mm",
       "Parameters": [
         {
@@ -67,7 +67,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "6 mm",
       "Parameters": [
         {
@@ -83,7 +83,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "8 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "6 mm",
       "Parameters": [
         {
@@ -99,7 +99,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute compression spiral",
+      "Cutter Type": "2 flute spiral compression",
       "Step Down": "3.5 mm",
       "Parameters": [
         {
@@ -115,7 +115,7 @@
     {
       "Material Type": "MDF",
       "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute compression spiral",
+      "Cutter Type": "2 flute spiral compression",
       "Step Down": "6.5 mm",
       "Parameters": [
         {
@@ -129,9 +129,9 @@
       ]
     },
     {
-      "Material Type": "Birch Plywood",
+      "Material Type": "Birch Ply",
       "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "3 mm",
       "Parameters": [
         {
@@ -145,9 +145,9 @@
       ]
     },
     {
-      "Material Type": "Birch Plywood",
+      "Material Type": "Birch Ply",
       "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "3 mm",
       "Parameters": [
         {
@@ -161,9 +161,9 @@
       ]
     },
     {
-      "Material Type": "Birch Plywood",
+      "Material Type": "Birch Ply",
       "Cutter Diameter": "8 mm",
-      "Cutter Type": "2 flute downcut spiral",
+      "Cutter Type": "2 flute spiral downcut",
       "Step Down": "4 mm",
       "Parameters": [
         {
@@ -177,9 +177,9 @@
       ]
     },
     {
-      "Material Type": "Birch Plywood",
+      "Material Type": "Birch Ply",
       "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute compression spiral",
+      "Cutter Type": "2 flute spiral compression",
       "Step Down": "6.5 mm",
       "Parameters": [
         {
@@ -193,9 +193,9 @@
       ]
     },
     {
-      "Material Type": "Birch Plywood",
+      "Material Type": "Birch Ply",
       "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute compression spiral",
+      "Cutter Type": "2 flute spiral compression",
       "Step Down": "3.5 mm",
       "Parameters": [
         {
@@ -205,6 +205,214 @@
         {
           "Name": "target_spindle_speed",
           "Value": 21700.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute spiral upcut",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 130.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute spiral upcut",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 140.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "1 flute spiral upcut",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 200.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute spiral downcut",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 140.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute spiral downcut",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 330.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "1 flute spiral downcut",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 170.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 20400.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute spiral compression",
+      "Step Down": "6 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 210.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute spiral downcut",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 300.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute spiral compression",
+      "Step Down": "5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 270.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 18100.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute spiral compression",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 200.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 16500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 140.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 260.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Oak",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 400.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200.0
         }
       ]
     }
