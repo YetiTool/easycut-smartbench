@@ -116,11 +116,11 @@ class ZHeadQC7(Screen):
         self.m.resume_from_alarm()
 
     def do_cycle(self):
-        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-' + str(self.m.grbl_z_max_travel))
         self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-' + str(self.m.grbl_z_max_travel))
         self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-' + str(self.m.grbl_z_max_travel))
         self.m.s.write_command('G53 G0 Z-1')
 
     def enter_prev_screen(self):

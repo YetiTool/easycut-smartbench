@@ -441,4 +441,30 @@ def test_get_is_constant_feed_rate_true_when_diff_equal_to_tolerance(m):
     assert last == last_feed_rate
     assert val
 
+# get_z_max_travel_to_bake TESTS
+
+def test_get_z_max_travel_to_bake_when_fw_is_2_5(m):
+    assert m.get_z_max_travel_to_bake(False, 27) == 150.0
+
+def test_get_z_max_travel_to_bake_when_fw_is_2_6_but_current_is_low(m):
+    assert m.get_z_max_travel_to_bake(True, 26) == 150.0
+
+def test_get_z_max_travel_to_bake_when_fw_is_2_6_and_current_is_27(m):
+    assert m.get_z_max_travel_to_bake(True, 27) == 130.0
+
+def test_get_z_max_travel_to_bake_when_fw_is_2_6_and_current_is_0(m):
+    assert not m.get_z_max_travel_to_bake(True, 0)
+
+def test_get_z_max_travel_to_bake_when_fw_is_1_and_current_is_0(m):
+    assert m.get_z_max_travel_to_bake(False, 0) == 150.0
+
+def test_bake_default_grbl_settings_when_z_max_travel_value_is_false(m):
+    m.get_z_max_travel_to_bake = Mock(return_value=False)
+    assert not m.bake_default_grbl_settings()
+
+def test_bake_default_grbl_settings_when_z_max_travel_value_is_true(m):
+    m.get_z_max_travel_to_bake = Mock(return_value=True)
+    assert m.bake_default_grbl_settings()
+
+
     
