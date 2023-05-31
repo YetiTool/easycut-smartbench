@@ -36,15 +36,11 @@ class RandomTextScreen(Screen):
 
     def __init__(self, **kwargs):
         super(RandomTextScreen, self).__init__(**kwargs)
-        # Clock.schedule_interval(self.randomise_text, 0.1)
-        # # self.set_text_from_options()
-
-        # threading.Thread(target=self.clock_thread).start()
-        Clock.schedule_interval(self.set_text_by_length, 0.1)
+        Clock.schedule_interval(self.randomise_text, 0.1)
 
     def clock_thread(self):
         while True:
-            Clock.schedule_once(self.set_text_by_length, 0.1)
+            Clock.schedule_interval(self.randomise_text, 0.1)
             time.sleep(0.1)
 
     def randomise_text(self, dt=None):
