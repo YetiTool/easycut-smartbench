@@ -29,12 +29,5 @@ class ScreenTests(App):
 app = None
 
 if __name__ == '__main__':
-    try:
-        app = ScreenTests()
-        app.run()
-    except KeyboardInterrupt:
-        app.profile.disable()
-        app.profile.print_stats(sort='cumtime')
-        app.profile.dump_stats('profile.stats')
-        print("Stopping profile")
-        raise
+    app = ScreenTests()
+    app.run()
