@@ -542,6 +542,10 @@ class MaintenanceScreenClass(Screen):
             self.spindle_settings_widget.stylus_switch.active = False
 
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
+        if "SC2" in self.m.spindle_brand:
+            self.spindle_settings_widget.show_spindle_data_container()
+        else:
+            self.spindle_settings_widget.hide_spindle_data_container()
         self.spindle_settings_widget.cooldown_time_slider.value = self.m.spindle_cooldown_time_seconds
         self.spindle_settings_widget.cooldown_speed_slider.value = self.m.spindle_cooldown_rpm
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override

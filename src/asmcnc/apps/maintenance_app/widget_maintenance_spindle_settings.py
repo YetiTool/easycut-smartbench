@@ -25,19 +25,21 @@ Builder.load_string("""
 
 <SpindleSettingsWidget>
 
-    spindle_brand: spindle_brand
-    cooldown_speed_slider: cooldown_speed_slider
-    cooldown_time_slider: cooldown_time_slider
-    rpm_label: rpm_label
-    seconds_label: seconds_label
-    cooldown_settings_label: cooldown_settings_label
-    # uptime_label: uptime_label
-    stylus_switch: stylus_switch
-    min_speed_label: min_speed_label
-    max_speed_label: max_speed_label
-    min_time_label: min_time_label
-    max_time_label: max_time_label
+    spindle_brand:spindle_brand
+    cooldown_speed_slider:cooldown_speed_slider
+    cooldown_time_slider:cooldown_time_slider
+    rpm_label:rpm_label
+    seconds_label:seconds_label
+    cooldown_settings_label:cooldown_settings_label
+    get_data_label:get_data_label
+    stylus_switch:stylus_switch
+    min_speed_label:min_speed_label
+    max_speed_label:max_speed_label
+    min_time_label:min_time_label
+    max_time_label:max_time_label
     spindle_save_container:spindle_save_container
+    spindle_data_container:spindle_data_container
+    get_data_button:get_data_button
 
 
     BoxLayout:
@@ -187,6 +189,7 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
+                    spacing: dp(15)
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -208,16 +211,19 @@ Builder.load_string("""
                             allow_stretch: True
 
                         BoxLayout:
-                            padding: [dp(0), dp(18), dp(0), dp(12)]
+                            padding: [dp(10), dp(10), dp(0), dp(13)]
 
-                            Image:
-                                source: "./asmcnc/apps/maintenance_app/img/stylus_text_logo.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
+                            BoxLayout:
+                                size_hint: (None,None)
+                                height: dp(36)
+                                width: dp(150)
 
-                            Label
+                                Image:
+                                    source: "./asmcnc/apps/maintenance_app/img/stylus_text_logo.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
 
                         BoxLayout:
                             size_hint_x: 0.5
@@ -229,52 +235,42 @@ Builder.load_string("""
                                 y: self.parent.y
                                 pos: self.parent.pos
 
-                    # BoxLayout:
-                    #     orientation: 'horizontal'
-                    #     padding: dp(5)
+                    BoxLayout:
+                        id: spindle_data_container
+                        size_hint_x: 0.75
+                        orientation: 'horizontal'
+                        padding: dp(5)
 
-                    #     canvas:
-                    #         Color:
-                    #             rgba: 1,1,1,1
-                    #         RoundedRectangle:
-                    #             size: self.size
-                    #             pos: self.pos
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
 
-                    #     BoxLayout:
-                    #         padding: dp(3)
-                    #         size_hint_x: 0.3
+                        Label:
+                            id: get_data_label
+                            color: 0,0,0,1
+                            font_size: dp(30)
+                            halign: "center"
+                            valign: "middle"
+                            text_size: self.size
 
-                    #         Image:
-                    #             source: "./asmcnc/apps/maintenance_app/img/uptime_hourglass.png"
-                    #             center_x: self.parent.center_x
-                    #             y: self.parent.y
-                    #             size: self.parent.width, self.parent.height
-                    #             allow_stretch: True
+                        BoxLayout:
+                            size_hint_x: 0.5
 
-                    #     Label:
-                    #         id: uptime_label
-                    #         color: 0,0,0,1
-                    #         font_size: dp(30)
-                    #         markup: True
-                    #         halign: "left"
-                    #         valign: "middle"
-                    #         text_size: self.size
+                            Button:
+                                id: get_data_button
+                                on_press: root.get_spindle_data()
+                                # background_normal: ''
+                                # background_down: ''
 
-                    #     BoxLayout:
-                    #         size_hint_x: 0.5
-                    #         padding: [dp(40), dp(0)]
-
-                    #         Button:
-                    #             on_press: root.get_uptime()
-                    #             background_normal: ''
-                    #             background_down: ''
-
-                    #             Image:
-                    #                 source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
-                    #                 center_x: self.parent.center_x
-                    #                 y: self.parent.y
-                    #                 size: self.parent.width, self.parent.height
-                    #                 allow_stretch: False
+                                # Image:
+                                #     source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
+                                #     center_x: self.parent.center_x
+                                #     y: self.parent.y
+                                #     size: self.parent.width, self.parent.height
+                                #     allow_stretch: False
 
             BoxLayout:
                 id: spindle_save_container
@@ -377,9 +373,23 @@ class SpindleSettingsWidget(Widget):
         if 'digital' in self.spindle_brand.text:
             self.cooldown_speed_slider.disabled = False
 
-        self.rpm_override = False  
+        self.rpm_override = False
 
-    # def get_uptime(self):
+    def hide_spindle_data_container(self):
+        self.spindle_data_container.size_hint_x = 0
+        self.spindle_data_container.opacity = 0
+        self.spindle_data_container.parent.spacing = 0
+        self.get_data_button.disabled = True
+
+    def show_spindle_data_container(self):
+        self.spindle_data_container.size_hint_x = 0.75
+        self.spindle_data_container.opacity = 1
+        self.spindle_data_container.parent.spacing = 15
+        self.get_data_button.disabled = False
+
+    def get_spindle_data(self):
+        pass
+
     #     if self.m.theateam() and self.m.get_dollar_setting(51):
     #         if self.m.state().startswith('Idle'):
     #             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
@@ -419,7 +429,7 @@ class SpindleSettingsWidget(Widget):
         self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
         self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
-        # self.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        self.get_data_label.text = self.l.get_str("Get data")
         self.min_speed_label.text = "10k " + self.l.get_str("RPM")
         self.max_speed_label.text = "20k " + self.l.get_str("RPM")
         self.min_time_label.text = "1 " + self.l.get_str("seconds")
