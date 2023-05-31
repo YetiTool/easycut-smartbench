@@ -9,6 +9,8 @@ from kivy.clock import Clock
 
 from string import ascii_lowercase, ascii_uppercase, digits
 import random
+import threading
+import time
 
 Builder.load_string("""
 <RandomTextScreen>:
@@ -37,7 +39,12 @@ class RandomTextScreen(Screen):
         # Clock.schedule_interval(self.randomise_text, 0.1)
         # # self.set_text_from_options()
 
-        Clock.schedule_interval(self.set_text_by_length, 1)
+        threading.Thread(target=self.clock_thread).start()
+
+    def clock_thread(self):
+        while True:
+            Clock.schedule_once(self.set_text_by_length, 0.1)
+            time.sleep(0.1)
 
     def randomise_text(self, dt=None):
         text = 'Mx: ' + str(dt)
