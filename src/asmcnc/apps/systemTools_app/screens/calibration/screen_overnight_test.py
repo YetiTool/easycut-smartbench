@@ -1243,7 +1243,7 @@ class OvernightTesting(Screen):
             return
 
         self.set_stage("OvernightWearIn")
-        self._stream_overnight_file('three_hour_rectangle')
+        self._stream_overnight_file('two_hour_rectangle')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
         log("Running six hour wear-in...")
