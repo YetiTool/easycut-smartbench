@@ -13,6 +13,7 @@ from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 import os
 import glob
+import re
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
@@ -1484,7 +1485,10 @@ class OvernightTesting(Screen):
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
 
-        gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
+        if ("rectangle" in filename_end) and (int(self.get_dollar_setting(132)) == 130): 
+            gcode = [self.m.quick_scrub(line).replace('14', '12') for line in gcode_prescrubbed]
+        else:
+            gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
 
         self.m.s.run_skeleton_buffer_stuffer(gcode)
 
