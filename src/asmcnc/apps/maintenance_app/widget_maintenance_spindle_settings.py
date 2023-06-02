@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.maintenance_app import widget_maintenance_spindle_save
+from asmcnc.apps.maintenance_app import widget_maintenance_spindle_save, popup_maintenance
 
 Builder.load_string("""
 
@@ -261,7 +261,7 @@ Builder.load_string("""
 
                             Button:
                                 id: get_data_button
-                                on_press: root.get_spindle_data()
+                                on_press: root.show_spindle_data_popup()
                                 # background_normal: ''
                                 # background_down: ''
 
@@ -386,6 +386,9 @@ class SpindleSettingsWidget(Widget):
         self.spindle_data_container.opacity = 1
         self.spindle_data_container.parent.spacing = 15
         self.get_data_button.disabled = False
+
+    def show_spindle_data_popup(self):
+        popup_maintenance.PopupGetData(self.sm, self.l)
 
     def get_spindle_data(self):
         pass
