@@ -26,7 +26,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        spacing: 0
+        spacing: 10
         padding: [0, 0, 0, 0]
         
         BoxLayout:
@@ -56,9 +56,16 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 0
-                orientation: 'horizontal'
-
+                padding: 10
+                size: self.parent.size
+                pos: self.parent.pos 
+            
+            BoxLayout:
+                padding: 10
+                size: self.parent.size
+                pos: self.parent.pos
+                
+            
         GridLayout:
             cols: 3
             orientation: 'horizontal'
@@ -210,6 +217,11 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+            
+            BoxLayout:
+                padding: 10
+                size: self.parent.size
+                pos: self.parent.pos
 
             BoxLayout:
                 padding: 0
