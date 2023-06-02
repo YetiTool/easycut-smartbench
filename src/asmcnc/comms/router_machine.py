@@ -772,7 +772,7 @@ class RouterMachine(object):
                     '$24=600.0',                                    #Homing feed, mm/min
                     '$25=3000.0',                                   #Homing seek, mm/min
                     '$26=250',                                      #Homing debounce, milliseconds
-                    '$27=15.000',                                   #Homing pull-off, mm
+                    '$27=7.000',                                    #Homing pull-off, mm
                     '$30=25000.0',                                  #Max spindle speed, RPM
                     '$31=0.0',                                      #Min spindle speed, RPM
                     '$32=0',                                        #Laser mode, boolean
