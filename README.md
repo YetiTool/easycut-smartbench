@@ -25,129 +25,67 @@ Setup of tools that allow you to play with & test out the UI with ease.
   * Make sure you are consistent in whether you choose to install x86 or x64 software, otherwise the different programs will fail to find each other (e.g. Eclipse and Java). 
   * I have used x64 throughout this example. 
 * I personally installed everything in one "Yeti" folder, and all of the software was able to find all the other software with no issues. But you do you. 
-*If you do these steps out of order, you may get frustrated. Eclipse needs Java for its install, and PyDev and Kivy need Python. Save yourself the stress. 
+* If you do these steps out of order, you may get frustrated. Eclipse needs Java for its install, and PyDev and Kivy need Python. Save yourself the stress.
 
-### 1. Install Java Runtime Environment
+### 1. Install Python
 
-Get JRE from [here]( 
-https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html).
+I used Windows x86-64 MSI installer from [here](https://www.python.org/downloads/release/python-2718/).
 
-I downloaded and ran jre-8u202-windows-x64.exe. 
+Download it and run it.
 
-The wizard takes you through the entire installation.
+After choosing the install path, make sure to select "Add python.exe to Path". After this change, all optional features should be selected.
 
-You'll want to make sure you have Java 8 or higher for Eclipse. 
-
-
-### 2. Install Python
-
-I used Windows x86-64 MSI installer from [here] (https://www.python.org/downloads/release/python-2715/).
-
-Download it and run it, as you did with the Java installer.
-
-Make sure you use a version of Python 2. I downloaded Python 2.7.15 because it comes with pip, which we'll need later. 
+Make sure you use a version of Python 2. I downloaded Python 2.7.18 because it comes with pip, which we'll need later. 
 
 Once again, the wizard is great and takes you through the entire installation. 
 
-Make a note of where you installed Python, as you will need to know later on. 
+Make a note of where you installed Python, as you will need to know later on - by default it's `C:/Python27`
+
+To validate the installation, open the Command Prompt and type `python --version` and you should get back `Python 2.7.18`
 
 
-### 3. Install Eclipse
+### 2. Install an IDE
 
-Head to: https://www.eclipse.org/downloads/
+You will need to install an IDE. This can be anything you like but we'll use PyCharm in this guide.
 
-I am using Eclipse IDE 2018-12 
+Head to: https://www.jetbrains.com/pycharm/download/#section=windows
 
-Hit "Download", and then hit "Download" again. 
-
-It will tell you where it's downloading from - don't worry about this, you'll get the same stuff wherever it's from.
-
-When you run the installer, it will ask you to select and IDE. Select the **Eclipse IDE for Java Developers** 
-
-After that, the wizard will guide you. 
+Download the "Community version" as it is the free version and follow the installer steps.
 
 
-### 4. Install PyDev in Eclipse. 
+### 3. Get easycut-smartbench from GitHub into your IDE 
 
-Open Eclipse, and then go to the toolbar, and select Help > Eclipse MarketPlace. 
-  
-Under the "Search" tab, type "PyDev" in front of "Find:", and press enter. 
+This step will vary depending on your IDE so if you use something other than PyCharm, consult your IDE's website.
 
-Install the PyDev - Python IDE for Eclipse that comes up. 
+Open PyCharm, go to `File > Settings > Version Control > GitHub` and connect your account. For more details click [here](https://www.jetbrains.com/help/pycharm/github.html)
 
-As before, work through the wizard. 
+Then, go to `Git > Clone` and copy and paste the link to the GitHub repository in the URL section and select where you'd like the repository to get stored **locally**. Make sure you remember this location. For more details click [here](https://www.jetbrains.com/help/pycharm/manage-projects-hosted-on-github.html)
 
+If the code shows a lot of errors, don't worry, it's expected at this stage.
 
-### 5. Install Kivy
+### 4. Select your interpreter in your IDE
 
-Go to [Kivy's website](https://kivy.org/doc/stable/installation/installation-windows.html) for the installation instructions, which are fairly good. 
+Once again, this step will vary depending on your IDE, so please consult your IDE's website if you use something other than PyCharm.
 
-In order to work through them, you'll need to open your Command Line. 
+In PyCharm, when you cloned the repository, you should have gotten a notification asking you to select the interpreter. If you did, click on it and select `Python 2.7` from the dropdown list.
 
-Open Command Line by using the shortcut windows+R, and then typing cmd in the box that comes up. Press ok. 
+If you didn't get the notification, navigate to `File > Settings > Project: <project name> > Python Interpreter` and select `Python 2.7` as your interpreter.
 
-You'll need to navigate via the command line to the folder you installed python in. 
+If `Python 2.7` does not show up in the list, go to `Add Interpreter > Add Local Interpreter` and navigate to the location where you installed python and select the `python.exe` file. If you installed in the default location, this should be `C:/Python27/python.exe`.
 
-If you need to change which drive you're in, you can do this by typing the driver letter and a colon, e.g. "d:".
+For additional information, click [here](https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html#add-existing-interpreter)
 
-Then, use "cd" (which stands for "change directory") to jump to the relevant folder. 
+### 5. Install dependencies
 
-For example, if you've installed Python in Yeti\Python27, you will want to enter:
+Now we can put aside the IDE open Command Prompt to install the dependencies.
 
-cd Yeti\Python27
+Navigate to the folder where you saved the repository. You can do this using `cd <path to repository>`. NOTE: if the path is on a separate partition, for example `D:`, you will need to enter `D:` in the command prompt before you can use `cd <path to repository>`.
 
-Once you're in the same folder as your Python installation, you can follow the instructions on [Kivy's website](https://kivy.org/doc/stable/installation/installation-windows.html). 
+You should now be in the same repository as the `requirements.txt` file. In this case, you can simply enter `pip install -r requirements.txt` and wait for pip to install all the dependencies. You may need to occasionally type `Y` or `yes` to agree to installing the dependencies.
 
-Keep command line open for the next step. 
+Wait for pip to finish installing everything and you're done! You can use `pip list` to show all the dependencies installed and their versions.
 
-### 6. Install the Serial module
-
-You'll need to install this module with python in order for the UI to run. 
-
-Stay in your command line as before (or open and navigate to your Python installation as in Step 5), and enter the following line: 
-
-python -m pip install pyserial
-
-Watch some text scroll before your eyes. Bam. You're sorted. 
-
-### 7. Tell Eclipse where to find your Python interpreter
-
-Open Eclipse (if you closed it). Go to the toolbar, and select Window > Preferences. Then, on the side-menu in Preferences, go to PyDev > Interpreters > Python. 
-
-Click on “Browse for python/pypy exe”, and find your python.exe file, in the folder you installed it.
-
-All of Kivy's libraries should automatically be loaded into Eclipse as well. 
-
-Click "Apply and Close". 
-
-Awesome. Almost done. 
-
-### 8. Get easycut-smartbench from GitHub into Eclipse 
-
-In Eclipse, go to the toolbar and select Window > Show View > Other. 
-
-In the pop-up, expand the "Git" folder, and click on "Git Repositories". Click OK. 
-
-Then, in the Eclipse toolbar go to File > Import. 
-
-In the pop-up, select Projects from Git, and then Next. 
-
-Click Clone from URI. 
-
-Paste the following into the URI box: 
-
-https://github.com/YetiTool/easycut-smartbench.git
-
-The other information should auto-fill, so click Next. Click Next again. Choose a directory to install it in, and click Next again. 
-
-Select "Import existing projects", click Next, and then click Finish. 
-
-That should be you done! easycut-smartbench will show up under Git Repositorie.
-
-Make sure you can also see Package Explorer in Eclipse - if you can't just go to Window > Show View > Package Explorer. 
-
-If you want to try running the UI, Open "main.py" and click Run (the green play button). And off you go ;).
-
+At this stage, you're done and you can run the UI! Open the `main.py` file and click run (the green play button). And off you go ;).
 
 ### Basic hardware test (optional)
 
