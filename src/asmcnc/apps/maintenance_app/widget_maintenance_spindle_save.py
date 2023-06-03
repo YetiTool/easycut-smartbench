@@ -87,13 +87,7 @@ class SpindleSaveWidget(Widget):
                 "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
-                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.") + \
-                "\n\n" + \
-                self.l.get_bold("Spindle uptime") + \
-                "[b]: [/b]" + \
-                self.l.get_str("This is the amount of time that the spindle has been on for.") + \
-                " " + \
-                self.l.get_str("If using an SC2 spindle, ensure it is connected before using the button to get uptime info.")
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
             )
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
