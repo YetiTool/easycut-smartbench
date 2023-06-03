@@ -420,8 +420,8 @@ class SpindleSettingsWidget(Widget):
         self.seconds_label.text = self.l.get_str("seconds")
         self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
         # self.uptime_label.text = self.l.get_str("Turn on spindle to read")
-        self.min_speed_label.text = "10k " + self.l.get_str("RPM")
-        self.max_speed_label.text = "20k " + self.l.get_str("RPM")
+        self.min_speed_label.text = "10000 " + self.l.get_str("RPM")
+        self.max_speed_label.text = "20000 " + self.l.get_str("RPM")
         self.min_time_label.text = "1 " + self.l.get_str("seconds")
         self.max_time_label.text = "60 " + self.l.get_str("seconds")
 
