@@ -391,43 +391,48 @@ class SpindleSettingsWidget(Widget):
     def show_spindle_data_popup(self):
         popup_maintenance.PopupGetData(self.sm, self.l)
 
-    def get_spindle_data(self):
-        pass
+    def raise_z_then_get_data(self):
+        if self.m.state().startswith('Idle'):
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('SmartBench is raising the Z axis.'))
+            self.m.zUp()
+            Clock.schedule_once(self.get_spindle_data, 0.4)
+        else:
+            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
-    #     if self.m.theateam() and self.m.get_dollar_setting(51):
-    #         if self.m.state().startswith('Idle'):
-    #             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-    #             self.m.s.write_command('M3 S0')
-    #             Clock.schedule_once(self.get_spindle_info, 0.3)
-    #         else:
-    #             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
-    #     else:
-    #         self.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
+    def get_spindle_data(self, dt):
+        # Wait until Z axis is raised
+        if self.m.state().startswith('Idle'):
+            self.wait_popup.popup.dismiss()
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.m.s.write_command('M3 S0')
+            Clock.schedule_once(self.get_spindle_info, 0.3)
+        else:
+            Clock.schedule_once(self.get_spindle_data, 0.4)
 
-    # def get_spindle_info(self, dt):
-    #     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-    #     self.check_info_count = 0
-    #     Clock.schedule_once(self.check_spindle_info, 0.3)
+    def get_spindle_info(self, dt):
+        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        self.check_info_count = 0
+        Clock.schedule_once(self.check_spindle_info, 0.3)
 
-    # def check_spindle_info(self, dt):
-    #     self.check_info_count += 1
-    #     # Value of -999 represents disconnected spindle
-    #     if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
-    #         self.read_restore_info()
-    #     else: # Keep trying for a few seconds
-    #         Clock.schedule_once(self.check_spindle_info, 0.3)
+    def check_spindle_info(self, dt):
+        self.check_info_count += 1
+        # Value of -999 represents disconnected spindle
+        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
+            self.read_restore_info()
+        else: # Keep trying for a few seconds
+            Clock.schedule_once(self.check_spindle_info, 0.3)
 
-    # def read_restore_info(self):
-    #     self.m.s.write_command('M5')
-    #     self.wait_popup.popup.dismiss()
-    #     # Value of -999 for ld_qdA represents disconnected spindle
-    #     if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
-    #         # Get info was successful, show info
-    #         self.uptime_label.text = "Uptime: " + str(int(self.m.s.spindle_brush_run_time_seconds/3600)) + " hours"
-    #     else:
-    #         # Otherwise, spindle is probably disconnected
-    #         error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
-    #         popup_info.PopupError(self.sm, self.l, error_message)
+    def read_restore_info(self):
+        self.m.s.write_command('M5')
+        self.wait_popup.popup.dismiss()
+        # Value of -999 for ld_qdA represents disconnected spindle
+        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
+            # Get info was successful, show info
+            popup_info.PopupInfo(self.sm, self.l, 700, 'test')
+        else:
+            # Otherwise, spindle is probably disconnected
+            error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")

@@ -274,7 +274,7 @@ class PopupGetData(Widget):
         no_string = self.l.get_bold("No")
 
         def get_data(*args):
-            self.sm.get_screen('maintenance').spindle_settings_widget.get_spindle_data()
+            self.sm.get_screen('maintenance').spindle_settings_widget.raise_z_then_get_data()
         
         img = Image(size_hint_y=0.7, source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
