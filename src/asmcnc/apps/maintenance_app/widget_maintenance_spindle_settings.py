@@ -255,6 +255,7 @@ Builder.load_string("""
                             halign: "center"
                             valign: "middle"
                             text_size: self.size
+                            bold: True
 
                         BoxLayout:
                             size_hint_x: 0.5
@@ -262,15 +263,15 @@ Builder.load_string("""
                             Button:
                                 id: get_data_button
                                 on_press: root.show_spindle_data_popup()
-                                # background_normal: ''
-                                # background_down: ''
+                                background_normal: ''
+                                background_down: ''
 
-                                # Image:
-                                #     source: "./asmcnc/apps/maintenance_app/img/uptime_button.png"
-                                #     center_x: self.parent.center_x
-                                #     y: self.parent.y
-                                #     size: self.parent.width, self.parent.height
-                                #     allow_stretch: False
+                                Image:
+                                    source: "./asmcnc/apps/maintenance_app/img/spindle_info_button.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: False
 
             BoxLayout:
                 id: spindle_save_container
