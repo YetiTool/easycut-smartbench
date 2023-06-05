@@ -389,7 +389,7 @@ class SpindleSettingsWidget(Widget):
         self.get_data_button.disabled = False
 
     def show_spindle_data_popup(self):
-        popup_maintenance.PopupGetData(self.sm, self.l)
+        popup_maintenance.PopupGetSpindleData(self.sm, self.l)
 
     def raise_z_then_get_data(self):
         if self.m.state().startswith('Idle'):
@@ -428,7 +428,7 @@ class SpindleSettingsWidget(Widget):
         # Value of -999 for ld_qdA represents disconnected spindle
         if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
             # Get info was successful, show info
-            popup_info.PopupInfo(self.sm, self.l, 700, 'test')
+            popup_maintenance.PopupDisplaySpindleData(self.sm, self.l, self.m.s)
         else:
             # Otherwise, spindle is probably disconnected
             error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")

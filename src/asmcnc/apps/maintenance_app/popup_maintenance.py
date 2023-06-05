@@ -250,7 +250,7 @@ class PopupBrushInfo(Widget):
         popup.open()
 
 
-class PopupGetData(Widget):
+class PopupGetSpindleData(Widget):
 
     def __init__(self, screen_manager, localization):
         
@@ -313,5 +313,88 @@ class PopupGetData(Widget):
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=get_data)
         back_button.bind(on_press=popup.dismiss)       
+
+        popup.open()
+
+
+class PopupDisplaySpindleData(Widget):
+
+    def __init__(self, screen_manager, localization, serial):
+        
+        self.sm = screen_manager
+        self.l = localization
+        self.s = serial
+
+        category_string = (
+            self.l.get_str("Spindle serial number") + \
+            "\n\n" + \
+            self.l.get_str("Production year") + \
+            "\n\n" + \
+            self.l.get_str("Production week") + \
+            "\n\n" + \
+            self.l.get_str("Firmware version") + \
+            "\n\n" + \
+            self.l.get_str("Total runtime") + \
+            "\n\n" + \
+            self.l.get_str("Brush runtime since last reset") + \
+            "\n\n" + \
+            self.l.get_str("Mains frequency")
+        )
+
+        value_string = (
+            str(self.s.spindle_serial_number) + \
+            "\n\n" + \
+            str(self.s.spindle_production_year) + \
+            "\n\n" + \
+            str(self.s.spindle_production_week) + \
+            "\n\n" + \
+            str(self.s.spindle_firmware_version) + \
+            "\n\n" + \
+            str(self.s.spindle_total_run_time_seconds / 3600) + " " + self.l.get_str("hours") + \
+            "\n\n" + \
+            str(self.s.spindle_brush_run_time_seconds / 3600) + " " + self.l.get_str("hours") + \
+            "\n\n" + \
+            str(self.s.spindle_mains_frequency_hertz)
+        )
+
+        title_string = self.l.get_str('SC2 Spindle data')
+        ok_string = self.l.get_bold('Ok')
+        
+        img = Image(size_hint_y=0.5, source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+
+        category_label = Label(text_size=(250, None), halign='left', valign='middle', text=category_string, color=[0,0,0,1], padding=[0,0], markup=True, bold=True)
+        value_label = Label(text_size=(250, None), halign='right', valign='middle', text=value_string, color=[0,0,0,1], padding=[0,0], markup=True)
+
+        label_layout = BoxLayout(orientation='horizontal', size_hint_y=2, padding=[75,0])
+        label_layout.add_widget(category_label)
+        label_layout.add_widget(value_label)
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=100, padding=[200,10,200,0], size_hint_y=0.6)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,20,10,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label_layout)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(700, 460),
+                      auto_dismiss= False
+                      )
+        
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        
+        ok_button.bind(on_press=popup.dismiss)
 
         popup.open()
