@@ -737,64 +737,57 @@ class RouterMachine(object):
     theateam_path =  '../../plus.txt'
 
 # GRBL SETTINGS
-    def write_dollar_50_setting(self, serial_number):
-        dollar_50_setting = [
-                            '$50=' + str(serial_number),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_51_setting(self, value):
-        dollar_51_setting = [
-                            '$51=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_51_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_54_setting(self, value):
-        dollar_54_setting = [
-                            '$54=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_54_setting, reset_grbl_after_stream=True)
+    def write_dollar_setting(self, setting_no, value, reset_grbl_after_stream=True):
+        list_to_stream = [
+            '$%s=%s' % (str(setting_no), str(value)),
+            '$$'
+        ]
+        self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
+        z_max_travel_value = self.get_z_max_travel_to_bake(
+            self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'set Z travel'),
+            self.TMC_motor[TMC_X1].ActiveCurrentScale
+            )
+
+        if not z_max_travel_value: return False
+
         grbl_settings = [
-                    '$0=10',          #Step pulse, microseconds
-                    '$1=255',         #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',      #Homing feed, mm/min
-                    '$25=3000.0',     #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',     #Homing pull-off, mm
-                    '$30=25000.0',    #Max spindle speed, RPM
-                    '$31=0.0',        #Min spindle speed, RPM
-                    '$32=0',          #Laser mode, boolean
-#                     '$100=56.649',    #X steps/mm
-#                     '$101=56.665',    #Y steps/mm
-#                     '$102=1066.667',  #Z steps/mm
-                    '$110=8000.0',    #X Max rate, mm/min
-                    '$111=6000.0',    #Y Max rate, mm/min
-                    '$112=750.0',     #Z Max rate, mm/min
-                    '$120=130.0',     #X Acceleration, mm/sec^2
-                    '$121=130.0',     #Y Acceleration, mm/sec^2
-                    '$122=200.0',     #Z Acceleration, mm/sec^2
-                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2503.0',    #Y Max travel, mm
-                    '$132=150.0'     #Z Max travel, mm       
+                    '$0=10',                                        #Step pulse, microseconds
+                    '$1=255',                                       #Step idle delay, milliseconds
+                    '$2=4',                                         #Step port invert, mask
+                    '$3=1',                                         #Direction port invert, mask
+                    '$4=0',                                         #Step enable invert, boolean
+                    '$5=1',                                         #Limit pins invert, boolean
+                    '$6=0',                                         #Probe pin invert, boolean
+                    '$10=3',                                        #Status report, mask <----------------------
+                    '$11=0.010',                                    #Junction deviation, mm
+                    '$12=0.002',                                    #Arc tolerance, mm
+                    '$13=0',                                        #Report inches, boolean
+                    '$22=1',                                        #Homing cycle, boolean <------------------------
+                    '$20=1',                                        #Soft limits, boolean <-------------------
+                    '$21=1',                                        #Hard limits, boolean <------------------
+                    '$23=3',                                        #Homing dir invert, mask
+                    '$24=600.0',                                    #Homing feed, mm/min
+                    '$25=3000.0',                                   #Homing seek, mm/min
+                    '$26=250',                                      #Homing debounce, milliseconds
+                    '$27=15.000',                                   #Homing pull-off, mm
+                    '$30=25000.0',                                  #Max spindle speed, RPM
+                    '$31=0.0',                                      #Min spindle speed, RPM
+                    '$32=0',                                        #Laser mode, boolean
+#                     '$100=56.649',                                #X steps/mm
+#                     '$101=56.665',                                #Y steps/mm
+#                     '$102=1066.667',                              #Z steps/mm
+                    '$110=8000.0',                                  #X Max rate, mm/min
+                    '$111=6000.0',                                  #Y Max rate, mm/min
+                    '$112=750.0',                                   #Z Max rate, mm/min
+                    '$120=130.0',                                   #X Acceleration, mm/sec^2
+                    '$121=130.0',                                   #Y Acceleration, mm/sec^2
+                    '$122=200.0',                                   #Z Acceleration, mm/sec^2
+                    '$130=1300.0',                                  #X Max travel, mm TODO: Link to a settings object
+                    '$131=2503.0',                                  #Y Max travel, mm
+                    '$132=' + str(z_max_travel_value)  #Z Max travel, mm       
             ]
 
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
@@ -817,6 +810,26 @@ class RouterMachine(object):
         grbl_settings.append('$#')     # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+        return True
+
+    def get_z_max_travel_to_bake(self, fw_at_least_2_6, x_current):
+        """
+        If FW version >= 2.6 and the x_current is >= 27, it is likely that the ZH has:
+          - double stack motors
+          - shorter cage
+        and therefore the max travel that can be baked should be 130.0.
+        Prior to this change, the value should be 150.0.
+        """
+
+        if fw_at_least_2_6:
+            if x_current >= 27:
+                return 130.0
+            elif x_current == 0:
+                return False
+
+        return 150.0
+
 
     def save_grbl_settings(self):
 
@@ -1018,11 +1031,11 @@ class RouterMachine(object):
         return self.look_at(self.theateam_path)
 
     def enable_theateam(self):
-        self.write_dollar_51_setting(1)
+        self.write_dollar_setting(51, 1)
         open(self.theateam_path, 'a').close()
 
     def disable_theateam(self):
-        self.write_dollar_51_setting(0)
+        self.write_dollar_setting(51, 0)
         os.remove(self.theateam_path)
 
 # HW/FW ADJUSTMENTS
@@ -1547,15 +1560,15 @@ class RouterMachine(object):
 # POSITIONAL SETTERS
 
     def set_workzone_to_pos_xy(self):
-        self.s.write_command('G10 L20 P1 X0 Y0')
+        self.set_datum(x=0, y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
-        self.s.write_command('G10 L20 P1 X0')
+        self.set_datum(x=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
-        self.s.write_command('G10 L20 P1 Y0')
+        self.set_datum(y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
@@ -1617,15 +1630,30 @@ class RouterMachine(object):
 
 
     def set_jobstart_z(self):
-        self.s.write_command('G10 L20 P1 Z0')
+        self.set_datum(z=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
-        self.get_grbl_status()
 
     def set_standby_to_pos(self):
         self.s.write_command('G28.1')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
-    
+    def set_datum(self, x=None, y=None, z=None, relative=False):
+        if relative:
+            datum_command = 'G10 L2'
+        else:
+            datum_command = 'G10 L20 P1'
+
+        if x is not None:
+            datum_command += " X" + str(x)
+        if y is not None:
+            datum_command += " Y" + str(y)
+        if z is not None:
+            datum_command += " Z" + str(z)
+
+        self.s.write_command(datum_command)
+        self.get_grbl_status()
+
+
 
 # MOVEMENT/ACTION
 

@@ -195,7 +195,12 @@ class Settings(object):
             try:
                 sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
                 self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
-                self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
+
+                beta_list = [tag for tag in sw_version_list if "beta" in tag]
+                if beta_list:
+                    self.latest_sw_beta = str(beta_list[0])
+                else:
+                    self.latest_sw_beta = ""
 
             except: 
                 print("Could not sort software version tags")

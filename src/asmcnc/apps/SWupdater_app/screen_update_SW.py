@@ -614,7 +614,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_usb(self):
 
-        popup_info.PopupWait(self.sm,  self.l)
+        wait_popup = popup_info.PopupWait(self.sm,  self.l)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
@@ -630,6 +630,7 @@ class SWUpdateScreen(Screen):
                         )
                     )
                 popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
 
             elif outcome == 0:
                 description = (
@@ -642,9 +643,9 @@ class SWUpdateScreen(Screen):
                         )
                     )
                 popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
 
             elif outcome == "update failed":
-
                 description = (
                     self.l.get_str("It was not possible to update your software from the USB drive.") + \
                     "\n\n" + \
@@ -656,6 +657,7 @@ class SWUpdateScreen(Screen):
                     )
 
                 popup_info.PopupError(self.sm, self.l, description)
+                wait_popup.popup.dismiss()
 
             else:
                 self.usb_stick.disable()
@@ -669,6 +671,7 @@ class SWUpdateScreen(Screen):
                     )
 
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
+                wait_popup.dismiss()
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 

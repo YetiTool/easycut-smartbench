@@ -1243,7 +1243,7 @@ class OvernightTesting(Screen):
             return
 
         self.set_stage("OvernightWearIn")
-        self._stream_overnight_file('three_hour_rectangle')
+        self._stream_overnight_file('two_hour_rectangle')
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.post_six_hour_wear_in, 60)
 
         log("Running six hour wear-in...")
@@ -1380,7 +1380,7 @@ class OvernightTesting(Screen):
         log("SB fully calibrated, start final run")
 
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', -32, 750)
+        self.m.jog_absolute_single_axis('Z', -25, 750)
 
         self.start_fully_calibrated_final_run_event = Clock.schedule_once(self.run_spiral_file, 5)
 
@@ -1484,7 +1484,10 @@ class OvernightTesting(Screen):
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
 
-        gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
+        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130: 
+            gcode = [self.m.quick_scrub(line).replace('14', '12') for line in gcode_prescrubbed]
+        else:
+            gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
 
         self.m.s.run_skeleton_buffer_stuffer(gcode)
 

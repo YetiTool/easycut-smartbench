@@ -68,7 +68,7 @@ Builder.load_string("""
 
                     TextInput:
                         id: y_over_count
-                        text: "Y"
+                        hint_text: "Y"
                         valign: 'middle'
                         halign: 'center'
                         font_size: '24sp'
@@ -130,7 +130,7 @@ Builder.load_string("""
 
                         TextInput:
                             id: x_over_count
-                            text: "X"
+                            hint_text: "X"
                             valign: 'middle'
                             halign: 'center'
                             font_size: '24sp'
@@ -279,8 +279,7 @@ class FinalTestScreen(Screen):
         try:
             x_overstep = float(self.x_over_count.text)*self.x_calibration_scale_factor
             print(x_overstep)
-            self.m.send_any_gcode_command("$100 = " + str(float(self.m.s.setting_100) - x_overstep))
-            self.m.send_any_gcode_command("$$")
+            self.m.write_dollar_setting(100, float(self.m.s.setting_100) - x_overstep, reset_grbl_after_stream=False)
             self.x_over_count.text = ""
         except:
             pass
@@ -289,8 +288,7 @@ class FinalTestScreen(Screen):
         try:
             y_overstep = float(self.y_over_count.text)*self.y_calibration_scale_factor
             print(y_overstep)
-            self.m.send_any_gcode_command("$101 = " + str(float(self.m.s.setting_101) - y_overstep))
-            self.m.send_any_gcode_command("$$")
+            self.m.write_dollar_setting(101, float(self.m.s.setting_101) - y_overstep, reset_grbl_after_stream=False)
             self.y_over_count.text = ""
         except:
             pass
