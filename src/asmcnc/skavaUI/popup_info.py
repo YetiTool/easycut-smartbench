@@ -18,8 +18,12 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
+from datetime import datetime
 from kivy.graphics import Color, Rectangle
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 class PopupWelcome(Widget):
 
@@ -571,7 +575,7 @@ class PopupSoftwareUpdateSuccess(Widget):
 
 # Popup asking the user if they are sure they want to continue with the update with a given warning_message
 class PopupSoftwareUpdateWarning(Widget):
-    def __init__(self, screen_manager, localization, settings_manager, warning_message):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
         self.sm = screen_manager
         self.set = settings_manager
         self.l = localization
@@ -584,15 +588,14 @@ class PopupSoftwareUpdateWarning(Widget):
 
         # Decide which update function should be run depending on which button was pressed
         def update(*args):
-            if self.sm.get_screen('update').set.usb_or_wifi == "WiFi":
-                self.sm.get_screen('update').prep_for_sw_update_over_wifi()
-            elif self.sm.get_screen('update').set.usb_or_wifi == "USB":
-                self.sm.get_screen('update').prep_for_sw_update_over_usb()
+            if update_method == "WiFi":
+                prep_for_sw_update_over_wifi()
+            elif update_method == "USB":
+                prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                message = self.l.get_str("Error getting update method. Please check screen_update_SW.py" + \
-                                         "\nShould be: 'WiFi' or 'USB'" + \
-                                         "\nBut was: " + self.sm.get_screen('update').set.usb_or_wifi)
-                PopupError(self.sm, self.l, message)
+                log("Error getting update method. Please check screen_update_SW.py" + \
+                         "\nShould be: 'WiFi' or 'USB'" + \
+                         "\nBut was: " + update_method)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(560, None), halign='center', valign='middle', text=description,

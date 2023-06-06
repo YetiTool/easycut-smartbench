@@ -491,8 +491,8 @@ class SWUpdateScreen(Screen):
     def prep_for_sw_update(self, update_method):
         self.set.usb_or_wifi = update_method
 
-        message = self.l.get_str("This update may take anywhere between 2 minutes and 2 hours")
-        popup_info.PopupSoftwareUpdateWarning(self.sm, self.l, self, message)
+        message = self.l.get_str("This update may take anywhere between 2 minutes and 2 hours.")
+        popup_info.PopupSoftwareUpdateWarning(self.sm, self.l, self, message, update_method, self.prep_for_sw_update_over_wifi, self.prep_for_sw_update_over_usb)
 
     def prep_for_sw_update_over_wifi(self):
 
