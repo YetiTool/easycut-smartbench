@@ -17,26 +17,31 @@ Builder.load_string("""
 <SpindleSaveWidget>
 
     BoxLayout:
-        size_hint: (None, None)
-        height: dp(280)
-        width: dp(160)
         pos: self.parent.pos
+        size: self.parent.size
         orientation: 'vertical'
 
-        BoxLayout: 
-	        size_hint: (None, None)
-	        height: dp(140)
-	        width: dp(160)
-            padding: [22,20,18,0]
-            ToggleButton:
-                id: save_button
+        BoxLayout:
+            padding: [dp(50), dp(30)]
+	        Button:
+	            on_press: root.get_info()
+	            background_color: [0,0,0,0]
+	            BoxLayout:
+                    size: self.parent.size
+	                pos: self.parent.pos
+	                Image:
+	                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+	                    center_x: self.parent.center_x
+	                    y: self.parent.y
+	                    size: self.parent.width, self.parent.height
+	                    allow_stretch: True
+
+        BoxLayout:
+            size_hint_y: 1.2
+            padding: [dp(20), dp(10)]
+            Button:
                 on_press: root.save()
-                size_hint: (None,None)
-                height: dp(120)
-                width: dp(120)
                 background_color: [0,0,0,0]
-                center: self.parent.center
-                pos: self.parent.pos
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -47,26 +52,6 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
-
-        BoxLayout: 
-	        size_hint: (None, None)
-	        height: dp(140)
-	        width: dp(160)
-            padding: [50,0,50,40]
-	        Button:
-	            background_color: hex('#F4433600')
-	            on_press: root.get_info()
-	            BoxLayout:
-	                size_hint: (None,None)
-	                height: dp(60)
-	                width: dp(60)
-	                pos: self.parent.pos
-	                Image:
-	                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
-	                    center_x: self.parent.center_x
-	                    y: self.parent.y
-	                    size: self.parent.width, self.parent.height
-	                    allow_stretch: True
 
 """)
 
@@ -82,30 +67,30 @@ class SpindleSaveWidget(Widget):
     def get_info(self):
 
         spindle_settings_info = (
-                self.l.get_bold("Spindle cooldown") + \
-                "[b]: [/b]" + \
-                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
-                " " + \
-                self.l.get_str("We recommend the following cooldown settings:") + \
-                "\n" + \
-                "       " + \
-                self.l.get_str("Yeti: 20,000 RPM; 10 seconds") + \
-                "\n" + \
-                "       " + \
-                self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
-                "\n\n" + \
                 self.l.get_bold("Spindle brand") + \
                 "[b]: [/b]" + \
                 self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
                 " " + \
                 self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
                 "\n\n" + \
+                self.l.get_bold("Spindle cooldown") + \
+                "[b]: [/b]" + \
+                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
+                " " + \
+                self.l.get_str("We recommend the following cooldown settings:") + \
+                "\n\n" + \
+                "       " + \
+                self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds") + \
+                "\n\n" + \
+                "       " + \
+                self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
+                "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
                 self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
             )
 
-        popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
+        popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
 
     def save(self):
 
@@ -142,7 +127,7 @@ class SpindleSaveWidget(Widget):
 
         try: 
 
-            time = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
+            time = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_time_slider.value)
 
             if (time >= 1 and time <= 60):
                 pass
@@ -172,7 +157,7 @@ class SpindleSaveWidget(Widget):
 
         try: 
 
-            speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_speed.text)
+            speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_speed_slider.value)
 
             if (speed >= 10000 and speed <= 20000):
                 pass
