@@ -737,26 +737,12 @@ class RouterMachine(object):
     theateam_path =  '../../plus.txt'
 
 # GRBL SETTINGS
-    def write_dollar_50_setting(self, serial_number):
-        dollar_50_setting = [
-                            '$50=' + str(serial_number),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_51_setting(self, value):
-        dollar_51_setting = [
-                            '$51=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_51_setting, reset_grbl_after_stream=True)
-
-    def write_dollar_54_setting(self, value):
-        dollar_54_setting = [
-                            '$54=' + str(value),
-                            '$$'
-                            ]
-        self.s.start_sequential_stream(dollar_54_setting, reset_grbl_after_stream=True)
+    def write_dollar_setting(self, setting_no, value, reset_grbl_after_stream=True):
+        list_to_stream = [
+            '$%s=%s' % (str(setting_no), str(value)),
+            '$$'
+        ]
+        self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
@@ -1018,11 +1004,11 @@ class RouterMachine(object):
         return self.look_at(self.theateam_path)
 
     def enable_theateam(self):
-        self.write_dollar_51_setting(1)
+        self.write_dollar_setting(51, 1)
         open(self.theateam_path, 'a').close()
 
     def disable_theateam(self):
-        self.write_dollar_51_setting(0)
+        self.write_dollar_setting(51, 0)
         os.remove(self.theateam_path)
 
 # HW/FW ADJUSTMENTS

@@ -87,13 +87,7 @@ class SpindleSaveWidget(Widget):
                 "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
-                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.") + \
-                "\n\n" + \
-                self.l.get_bold("Spindle uptime") + \
-                "[b]: [/b]" + \
-                self.l.get_str("This is the amount of time that the spindle has been on for.") + \
-                " " + \
-                self.l.get_str("If using an SC2 spindle, ensure it is connected before using the button to get uptime info.")
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
             )
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
@@ -194,10 +188,10 @@ class SpindleSaveWidget(Widget):
 
             if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Set $51 based on selected spindle'):
                 if "SC2" in brand:
-                    self.m.write_dollar_51_setting(1)
+                    self.m.write_dollar_setting(51, 1)
                     self.sm.current_screen.spindle_settings_widget.show_spindle_data_container()
                 else:
-                    self.m.write_dollar_51_setting(0)
+                    self.m.write_dollar_setting(51, 0)
                     self.sm.current_screen.spindle_settings_widget.hide_spindle_data_container()
 
             saved_success = self.l.get_str("Settings saved!")

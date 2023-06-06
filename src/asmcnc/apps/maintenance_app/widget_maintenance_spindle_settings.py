@@ -145,7 +145,7 @@ Builder.load_string("""
                             id: rpm_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(25)
+                            font_size: dp(22)
                             markup: True
                             halign: "center"
                             valign: "middle"
@@ -179,7 +179,7 @@ Builder.load_string("""
                             id: seconds_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(25)
+                            font_size: dp(22)
                             markup: True
                             halign: "center"
                             valign: "middle"
@@ -439,8 +439,16 @@ class SpindleSettingsWidget(Widget):
         self.seconds_label.text = self.l.get_str("seconds")
         self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
         self.get_data_label.text = self.l.get_str("Get data")
-        self.min_speed_label.text = "10k " + self.l.get_str("RPM")
-        self.max_speed_label.text = "20k " + self.l.get_str("RPM")
+        self.min_speed_label.text = "10000 " + self.l.get_str("RPM")
+        self.max_speed_label.text = "20000 " + self.l.get_str("RPM")
         self.min_time_label.text = "1 " + self.l.get_str("seconds")
         self.max_time_label.text = "60 " + self.l.get_str("seconds")
+
+        self.update_font_size(self.cooldown_settings_label)
+
+    def update_font_size(self, value):
+        if len(value.text) > 40:
+            value.font_size = 22
+        else: 
+            value.font_size = 24
 
