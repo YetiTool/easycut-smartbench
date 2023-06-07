@@ -6,12 +6,11 @@ Menu screen for system tools app
 @author: Letty
 '''
 
+import os
+import subprocess
+
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
-import traceback
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.systemTools_app.screens import popup_system
 
@@ -22,6 +21,7 @@ Builder.load_string("""
     button_download_logs: button_download_logs
     button_reinstall_pika : button_reinstall_pika
     button_git_fsck : button_git_fsck
+    button_upgrade_platform: button_upgrade_platform
     button_go_back: button_go_back
 
     canvas.before:
@@ -87,12 +87,23 @@ Builder.load_string("""
 
         BoxLayout:
             padding: 0
-
-
         BoxLayout:
             padding: 0
-        BoxLayout:
-            padding: 0
+            
+        Button:
+            id: button_upgrade_platform
+            text: 'Upgrade Platform'
+            on_press: root.try_upgrade_platform()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/upgrade_platform.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/upgrade_platform.png"
+            border: [dp(25)]*4
+            padding_y: 5
+            
         BoxLayout:
             padding: 0
         BoxLayout:
@@ -113,8 +124,8 @@ Builder.load_string("""
             padding_y: 5
 """)
 
-class SupportMenuScreen(Screen):
 
+class SupportMenuScreen(Screen):
     default_font_size = 16
 
     def __init__(self, **kwargs):
@@ -123,10 +134,10 @@ class SupportMenuScreen(Screen):
         self.l = kwargs['localization']
 
         self.id_list = [
-        self.button_download_logs,
-        self.button_reinstall_pika,
-        self.button_git_fsck,
-        self.button_go_back
+            self.button_download_logs,
+            self.button_reinstall_pika,
+            self.button_git_fsck,
+            self.button_go_back
         ]
 
         self.update_strings()
@@ -149,6 +160,25 @@ class SupportMenuScreen(Screen):
     def usb_first_aid(self):
         self.systemtools_sm.do_usb_first_aid()
 
+    def try_upgrade_platform(self):
+        if not self.systemtools_sm.set.wifi_available:
+            # TODO: Show popup with error
+            print('No internet connection')
+            return
+
+        cmd = 'sudo apt update -y && sudo apt upgrade -y'
+
+        result = subprocess.call(cmd, shell=True)
+
+        if result == 0:
+            # TODO: Show popup and restart
+            print('Platform upgraded')
+            return
+        else:
+            # TODO: Show popup with error
+            print('Platform upgrade failed')
+            return
+
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
         self.button_reinstall_pika.text = self.l.get_str('Get Pika')
@@ -161,7 +191,7 @@ class SupportMenuScreen(Screen):
     def update_font_size(self, value):
         if len(value.text) < 16:
             value.font_size = self.default_font_size
-        elif len(value.text) > 15: 
+        elif len(value.text) > 15:
             value.font_size = self.default_font_size - 2
-        if len(value.text) > 19: 
+        if len(value.text) > 19:
             value.font_size = self.default_font_size - 3
