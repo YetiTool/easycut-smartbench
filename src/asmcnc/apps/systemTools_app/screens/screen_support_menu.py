@@ -7,7 +7,10 @@ Menu screen for system tools app
 '''
 
 import os
+import re
 import subprocess
+import threading
+import time
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -160,24 +163,53 @@ class SupportMenuScreen(Screen):
     def usb_first_aid(self):
         self.systemtools_sm.do_usb_first_aid()
 
+    upgrade_in_progress = False
+    upgrade_percentage = 0
+
+    def get_upgrade_progress(self, process):
+        while True:
+            line = process.stdout.readline().decode().strip()
+
+            if not line:
+                break
+
+            match = re.search(r"([0-9]+)%", line)
+
+            if match:
+                percentage = int(match.group(1))
+                self.upgrade_percentage = percentage
+                print(percentage)
+
+            time.sleep(0.1)
+
     def try_upgrade_platform(self):
+        if self.upgrade_in_progress:
+            return
+
+        self.upgrade_in_progress = True
+
         if not self.systemtools_sm.set.wifi_available:
             # TODO: Show popup with error
             print('No internet connection')
             return
 
-        cmd = 'sudo apt update -y && sudo apt upgrade -y'
+        cmd = 'sudo apt update -y && sudo apt upgrade -y --show-progress'
 
-        result = subprocess.call(cmd, shell=True)
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        if result == 0:
+        thread = threading.Thread(target=self.get_upgrade_progress, args=(process,))
+
+        thread.start()
+        process.wait()
+
+        if process.returncode == 0:
             # TODO: Show popup and restart
-            print('Platform upgraded')
-            return
+            print('Platform upgrade success')
         else:
             # TODO: Show popup with error
             print('Platform upgrade failed')
-            return
+
+        self.upgrade_in_progress = False
 
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
