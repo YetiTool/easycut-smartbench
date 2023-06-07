@@ -70,6 +70,8 @@ class ScreenUpgradingPlatform(Screen):
             line = process.stdout.readline().decode().strip()
 
             if line:
+                print(line)
+
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
                 Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line), 0.1)
