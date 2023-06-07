@@ -78,10 +78,8 @@ class ScreenUpgradingPlatform(Screen):
             time.sleep(0.1)
 
     def clean_up(self):
-        print('Cleaning up...')
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
         subprocess.call('sudo apt-get clean', shell=True)
-        print('Clean up finished')
 
     def set_upgrade_in_progress(self, value):
         self.upgrade_in_progress = value
@@ -97,14 +95,11 @@ class ScreenUpgradingPlatform(Screen):
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        print('Starting upgrade...')
-
         upgrade_status_thread = threading.Thread(target=self.get_upgrade_status_text_thread, args=(process,))
         upgrade_status_thread.start()
 
         process.wait()
 
-        print('Upgrade finished')
         upgrade_status_thread.join()
         self.set_upgrade_in_progress(False)
 
