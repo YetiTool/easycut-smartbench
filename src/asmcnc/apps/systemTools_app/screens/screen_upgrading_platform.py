@@ -2,13 +2,11 @@
 @author archiejarvis on 07/06/2023
 """
 
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-
 import subprocess
-import threading
-import time
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
@@ -67,16 +65,19 @@ class ScreenUpgradingPlatform(Screen):
         self.upgrade_status_label.text = value
 
     def get_upgrade_status_text_thread(self, process):
-        while self.upgrade_in_progress:
-            line = process.stdout.readline().decode().strip()
+        def check_upgrade_status(dt):
+            if not self.upgrade_in_progress:
+                Clock.unschedule(clock)
+                return
 
+            line = process.stdout.readline().decode().strip()
             if line:
                 print(line)
-
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
                 Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line))
-            time.sleep(0.1)
+
+        clock = Clock.schedule_interval(check_upgrade_status, 0.1)
 
     def clean_up(self):
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
@@ -96,12 +97,9 @@ class ScreenUpgradingPlatform(Screen):
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        upgrade_status_thread = threading.Thread(target=self.get_upgrade_status_text_thread, args=(process,))
-        upgrade_status_thread.start()
+        self.get_upgrade_status_text_thread(process)
 
         process.wait()
-
-        upgrade_status_thread.join()
         # self.set_upgrade_in_progress(False)
 
         if process.returncode == 0:
