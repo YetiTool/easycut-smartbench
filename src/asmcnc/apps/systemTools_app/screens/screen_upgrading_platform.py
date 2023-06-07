@@ -27,21 +27,23 @@ Builder.load_string("""
         Label:
             text: "Upgrading Console Platform"
             font_size: 30
-            color: 1, 1, 1, 1
+            color: 0, 0, 0, 1
+            bold: True
             
         Label:
             text: "Once the upgrade is complete, your console will automatically restart."
-            color: 1, 1, 1, 1
+            color: 0, 0, 0, 1
             
         Label:
             text: "DO NOT POWER OFF YOUR CONSOLE"
             color: 1, 0, 0, 1
             font_size: 30
+            bold: True
             
         Label:
             id: upgrade_status_text
             font_size: 16
-            color: 1, 1, 1, 1
+            color: 0, 0, 0, 1
 """)
 
 
