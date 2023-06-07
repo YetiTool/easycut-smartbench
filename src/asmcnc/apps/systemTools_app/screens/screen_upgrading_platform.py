@@ -92,13 +92,18 @@ class ScreenUpgradingPlatform(Screen):
         self.clean_up()
 
         cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress'
+
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        print('Starting upgrade...')
 
         upgrade_status_thread = threading.Thread(target=self.get_upgrade_status_text_thread, args=(process,))
         upgrade_status_thread.start()
 
         process.wait()
 
+        print('Upgrade finished')
+        upgrade_status_thread.join()
         self.set_upgrade_in_progress(False)
 
         if process.returncode == 0:
