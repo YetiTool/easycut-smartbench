@@ -58,7 +58,7 @@ class ScreenUpgradingPlatform(Screen):
             if line:
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
-                self.upgrade_status_text = line
+                self.upgrade_status_text = str(line)
             time.sleep(0.1)
 
     def clean_up(self):
