@@ -53,7 +53,6 @@ Builder.load_string("""
 class ScreenUpgradingPlatform(Screen):
     upgrade_in_progress = False
     reboot_required = True
-    upgrade_status_text = ''
 
     def __init__(self, **kwargs):
         super(ScreenUpgradingPlatform, self).__init__(**kwargs)
@@ -73,7 +72,7 @@ class ScreenUpgradingPlatform(Screen):
             if line:
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
-                self.upgrade_status_text = str(line)
+                Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line), 0.1)
             time.sleep(0.1)
 
     def clean_up(self):
@@ -96,8 +95,6 @@ class ScreenUpgradingPlatform(Screen):
         upgrade_status_thread = threading.Thread(target=self.get_upgrade_status_text_thread, args=(process,))
         upgrade_status_thread.start()
 
-        upgrade_status_text_clock = Clock.schedule_interval(lambda dt: self.set_upgrade_status_text(self.upgrade_status_text), 0.1)
-
         process.wait()
 
         if process.returncode == 0:
@@ -109,6 +106,5 @@ class ScreenUpgradingPlatform(Screen):
             # TODO: Implement
 
         self.set_upgrade_in_progress(False)
-        Clock.unschedule(upgrade_status_text_clock)
 
 
