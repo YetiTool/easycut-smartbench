@@ -16,6 +16,14 @@ Builder.load_string("""
     
     BoxLayout:
         orientation: "vertical"
+        
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        
         Label:
             text: "Upgrading Console Platform"
             font_size: 30
