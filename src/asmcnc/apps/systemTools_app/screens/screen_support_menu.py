@@ -163,7 +163,7 @@ class SupportMenuScreen(Screen):
 
     def upgrade_platform(self):
         if self.systemtools_sm.set.wifi_available:
-            if not self.systemtools_sm.has_screen('upgrading_platform'):
+            if not self.systemtools_sm.sm.has_screen('upgrading_platform'):
                 upgrading_platform_screen = ScreenUpgradingPlatform(name='upgrading_platform', system_tools=self.systemtools_sm, localization=self.l)
                 self.systemtools_sm.sm.add_widget(upgrading_platform_screen)
             self.systemtools_sm.sm.current = 'upgrading_platform'
