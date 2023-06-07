@@ -48,7 +48,7 @@ class RouterMachine(object):
 
     # put commonly used speed and pos values here (or any values that need to be easy to find :))
     z_max_feed = 750
-    z_post_homing_raise_abs = -6.0
+    z_post_homing_raise_abs = -5.0
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
