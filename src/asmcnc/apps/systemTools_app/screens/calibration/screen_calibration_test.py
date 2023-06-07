@@ -1107,9 +1107,9 @@ class CalibrationTesting(Screen):
 
         if len(self.status_data_dict[self.stage]) > 0:
             last_status = self.status_data_dict[self.stage][-1]
-            x_dir = 1 if self.m.mpos_x() > last_status["XCoordinate"] else -1 if self.m.mpos_x() < last_status["XCoordinate"] else 0
-            y_dir = 1 if self.m.mpos_y() > last_status["YCoordinate"] else -1 if self.m.mpos_y() < last_status["YCoordinate"] else 0
-            z_dir = -1 if self.m.mpos_z() > last_status["ZCoordinate"] else 1 if self.m.mpos_z() < last_status["ZCoordinate"] else 0
+            x_dir = -1 if self.m.mpos_x() > last_status["XCoordinate"] else 1 if self.m.mpos_x() < last_status["XCoordinate"] else 0
+            y_dir = -1 if self.m.mpos_y() > last_status["YCoordinate"] else 1 if self.m.mpos_y() < last_status["YCoordinate"] else 0
+            z_dir = 1 if self.m.mpos_z() > last_status["ZCoordinate"] else -1 if self.m.mpos_z() < last_status["ZCoordinate"] else 0
         else:
             x_dir = 0
             y_dir = 0
