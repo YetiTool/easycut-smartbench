@@ -64,21 +64,6 @@ class ScreenUpgradingPlatform(Screen):
         print(value)
         self.upgrade_status_label.text = value
 
-    def get_upgrade_status_text_thread(self, process):
-        def check_upgrade_status(dt):
-            if not self.upgrade_in_progress:
-                Clock.unschedule(clock)
-                return
-
-            line = process.stdout.readline().decode().strip()
-            if line:
-                print(line)
-                if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
-                    self.reboot_required = False
-                Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line))
-
-        clock = Clock.schedule_interval(check_upgrade_status, 0.1)
-
     def clean_up(self):
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
         subprocess.call('sudo apt-get clean', shell=True)
@@ -97,10 +82,21 @@ class ScreenUpgradingPlatform(Screen):
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        self.get_upgrade_status_text_thread(process)
+        def check_upgrade_status(dt):
+            line = process.stdout.readline().decode().strip()
+            if line:
+                print(line)
+                if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
+                    self.reboot_required = False
+                self.set_upgrade_status_text(line)
+            if not self.upgrade_in_progress:
+                Clock.unschedule(check_upgrade_status)
+
+        Clock.schedule_interval(check_upgrade_status, 0.1)
 
         process.wait()
-        # self.set_upgrade_in_progress(False)
+
+        self.upgrade_in_progress = False
 
         if process.returncode == 0:
             self.set_upgrade_status_text('Platform upgrade success, rebooting...')
@@ -108,6 +104,5 @@ class ScreenUpgradingPlatform(Screen):
                 Clock.schedule_once(lambda dt: self.reboot(), 5)
         else:
             self.set_upgrade_status_text('Platform upgrade failed')
-            # TODO: Implement
-
+            # TODO: Implement error handling
 
