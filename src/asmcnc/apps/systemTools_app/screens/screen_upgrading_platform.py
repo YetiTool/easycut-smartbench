@@ -11,6 +11,7 @@ import threading
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
+    upgrade_status_text:upgrade_status_text
     Label:
         text: "Upgrading Console Platform"
         font_size: 30
