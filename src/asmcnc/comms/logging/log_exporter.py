@@ -33,7 +33,7 @@ def try_import_creds():
     except Exception:
         log("Log exporter not available - no creds file")
         try:
-            from ...production.database import credentials as creds
+            from asmcnc.production.database import credentials as creds
             log('Imported creds from dev path')
         except Exception:
             log('Creds not available from dev path')

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import traceback, threading
-import json
 import sys
+
+from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
 def log(message):
     timestamp = datetime.now()
@@ -69,11 +70,11 @@ class CalibrationDatabase(object):
         except ImportError:
             if sys.platform != 'win32':
                 log("Can't import credentials (trying to get local folder creds)")
-                import credentials
+                from asmcnc.production.database import credentials
 
         try:
             self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
-                                        passwd=credentials.password)
+                                              passwd=credentials.password)
             log("Connected to database")
 
         except:
@@ -559,8 +560,6 @@ class CalibrationDatabase(object):
 
 
     def send_data_through_publisher(self, sn_for_db, stage_id):
-        from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
-
         if not self.processed_running_data[str(stage_id)][0]:
             log("No status data to send for stage id: " + str(stage_id))
             return False
@@ -573,10 +572,6 @@ class CalibrationDatabase(object):
         )
 
         sent = send_csv_to_ftp(csv)
-
-        if not sent:
-            log("Failed to send data for stage id: " + str(stage_id))
-            return False
 
         return sent
 

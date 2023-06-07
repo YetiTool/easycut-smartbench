@@ -23,6 +23,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 
 from asmcnc.comms.logging import log_exporter
+from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -1563,8 +1564,6 @@ class OvernightTesting(Screen):
             # )
 
             # publisher = DataPublisher(self.sn_for_db)
-
-            from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
