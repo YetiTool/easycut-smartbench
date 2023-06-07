@@ -49,7 +49,7 @@ Builder.load_string("""
     gcode_preview_container:gcode_preview_container
     move_tab:move_tab
 
-    job_recovery_button:job_recovery_button
+    # job_recovery_button:job_recovery_button
     job_recovery_button_image:job_recovery_button_image
 
     BoxLayout:
