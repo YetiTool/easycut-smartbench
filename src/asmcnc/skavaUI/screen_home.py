@@ -263,11 +263,11 @@ Builder.load_string("""
             size_hint_y: 0.08
             id: status_container
 
-FloatLayout: 
-    Image:
-        id: job_recovery_button_image
-        size_hint: None, None
-        size: (0,0)
+    FloatLayout: 
+        Image:
+            id: job_recovery_button_image
+            size_hint: None, None
+            size: (0,0)
 
 """)
 
