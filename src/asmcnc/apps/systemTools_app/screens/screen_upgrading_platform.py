@@ -63,7 +63,7 @@ class ScreenUpgradingPlatform(Screen):
         Clock.schedule_once(lambda dt: self.start_upgrade(), 3)
 
     def set_upgrade_status_text(self, value):
-        self.upgrade_status_label.text = self.upgrade_status_text
+        self.upgrade_status_label.text = value
 
     def get_upgrade_status_text_thread(self, process):
         while self.upgrade_in_progress:
