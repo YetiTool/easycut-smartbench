@@ -193,7 +193,9 @@ class SupportMenuScreen(Screen):
             print('No internet connection')
             return
 
-        cmd = 'sudo apt update -y && sudo apt upgrade -y --show-progress'
+        print('Platform upgrade started')
+
+        cmd = 'sudo apt update -y && sudo apt upgrade -y'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
