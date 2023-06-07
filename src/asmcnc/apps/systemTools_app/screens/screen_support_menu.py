@@ -6,16 +6,11 @@ Menu screen for system tools app
 @author: Letty
 '''
 
-import os
-import re
-import subprocess
-import threading
-import time
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.apps.systemTools_app.screens.screen_upgrading_platform import ScreenUpgradingPlatform
 
 Builder.load_string("""
 
@@ -96,7 +91,7 @@ Builder.load_string("""
         Button:
             id: button_upgrade_platform
             text: 'Upgrade Platform'
-            on_press: root.try_upgrade_platform()
+            on_press: root.upgrade_platform()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -166,56 +161,15 @@ class SupportMenuScreen(Screen):
     upgrade_in_progress = False
     upgrade_percentage = 0
 
-    def get_upgrade_progress(self, process):
-        while self.upgrade_in_progress:
-            line = process.stdout.readline().decode().strip()
-            print(line)
-
-            match = re.search(r"([0-9]+)%", line)
-
-            if match:
-                percentage = int(match.group(1))
-                self.upgrade_percentage = percentage
-                print(percentage)
-
-            time.sleep(0.1)
-
-    def try_upgrade_platform(self):
-        if self.upgrade_in_progress:
-            return
-
-        self.upgrade_in_progress = True
-
-        if not self.systemtools_sm.set.wifi_available:
-            # TODO: Show popup with error
-            print('No internet connection')
-            return
-
-        print('Platform upgrade started')
-
-        # Clear package lists and cache
-        subprocess.call("sudo rm -rf /var/lib/apt/lists/*", shell=True)
-        subprocess.call("sudo apt-get clean", shell=True)
-
-        # Update package lists
-        cmd = 'stdbuf -oL sudo apt update -y && stdbuf -oL sudo apt upgrade -y --show-progress'
-
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-        thread = threading.Thread(target=self.get_upgrade_progress, args=(process,))
-
-        thread.start()
-        process.wait()
-
-        if process.returncode == 0:
-            # TODO: Show popup and restart
-            print('Platform upgrade success')
+    def upgrade_platform(self):
+        if self.systemtools_sm.set.wifi_available:
+            if not self.systemtools_sm.has_screen('upgrading_platform'):
+                upgrading_platform_screen = ScreenUpgradingPlatform(name='upgrading_platform', system_tools=self.systemtools_sm, localization=self.l)
+                self.systemtools_sm.sm.add_widget(upgrading_platform_screen)
+            self.systemtools_sm.sm.current = 'upgrading_platform'
         else:
-            # TODO: Show popup with error
-            print('Platform upgrade failed')
-
-        self.upgrade_in_progress = False
-        thread.join()
+            print('No wifi')
+            # TODO: Implement popup
 
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
