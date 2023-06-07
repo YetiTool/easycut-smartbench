@@ -113,13 +113,23 @@ Builder.load_string("""
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
-
-                                Spinner:
-                                    id: smartbench_model
-                                    text: 'Choose model'
-                                    values: root.machine_model_values
-                                    on_text: root.set_smartbench_model()
-
+                                
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    spacing: 5
+                                    
+                                    Spinner:
+                                        id: smartbench_model
+                                        text: 'Choose model'
+                                        values: root.latest_machine_model_values
+                                        on_text: root.set_smartbench_model()
+                                    
+                                    ToggleButton:
+                                        id: smartbench_model_button
+                                        text: 'Show all models'
+                                        on_press: root.show_all_smartbench_models()
+                                        size_hint: 0.5, 1
+                                    
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
@@ -514,13 +524,14 @@ Builder.load_string("""
 
 class FactorySettingsScreen(Screen):
 
-    machine_model_values = ['SmartBench V1.0 CNC Router',
+    latest_machine_model_values = ['SmartBench V1.3 PrecisionPro CNC Router',
+                            'SmartBench Mini V1.3 PrecisionPro']
+
+    old_machine_model_values = ['SmartBench V1.0 CNC Router',
                             'SmartBench V1.1 CNC Router',
                             'SmartBench V1.2 Standard CNC Router',
                             'SmartBench V1.2 Precision CNC Router',
-                            'SmartBench V1.2 PrecisionPro CNC Router',
-                            'SmartBench V1.3 PrecisionPro CNC Router',
-                            'SmartBench Mini V1.3 PrecisionPro']
+                            'SmartBench V1.2 PrecisionPro CNC Router']
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
@@ -1129,6 +1140,13 @@ class FactorySettingsScreen(Screen):
 
         confirm_popup.open()
 
+    def show_all_smartbench_models(self):
+        if self.ids.smartbench_model_button.state == 'normal':
+            self.ids.smartbench_model.values = self.latest_machine_model_values
+            self.ids.smartbench_model_button.text = "Show all models"
+        else:
+            self.ids.smartbench_model.values = self.old_machine_model_values + self.latest_machine_model_values
+            self.ids.smartbench_model_button.text = "Hide all models"
 
 
 
