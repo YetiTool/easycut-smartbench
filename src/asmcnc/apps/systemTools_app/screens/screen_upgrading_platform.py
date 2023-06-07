@@ -8,6 +8,7 @@ from kivy.clock import Clock
 
 import subprocess
 import threading
+import time
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
@@ -37,6 +38,7 @@ Builder.load_string("""
 class ScreenUpgradingPlatform(Screen):
     upgrade_in_progress = False
     reboot_required = True
+    upgrade_status_text = ''
 
     def __init__(self, **kwargs):
         super(ScreenUpgradingPlatform, self).__init__(**kwargs)
@@ -46,8 +48,8 @@ class ScreenUpgradingPlatform(Screen):
     def on_enter(self):
         self.start_upgrade()
 
-    def set_upgrade_status_text(self, text):
-        self.upgrade_status_text.text = text
+    def set_upgrade_status_text(self, value):
+        self.upgrade_status_text.text = self.upgrade_status_text
 
     def get_upgrade_status_text_thread(self, process):
         while self.upgrade_in_progress:
@@ -56,7 +58,8 @@ class ScreenUpgradingPlatform(Screen):
             if line:
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
-                self.set_upgrade_status_text(line)
+                Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line), 0.1)
+            time.sleep(0.1)
 
     def clean_up(self):
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
