@@ -167,7 +167,7 @@ class SupportMenuScreen(Screen):
     upgrade_percentage = 0
 
     def get_upgrade_progress(self, process):
-        while True:
+        while self.upgrade_in_progress:
             line = process.stdout.readline().decode().strip()
             print(line)
 
@@ -193,6 +193,11 @@ class SupportMenuScreen(Screen):
 
         print('Platform upgrade started')
 
+        # Clear package lists and cache
+        subprocess.call("sudo rm -rf /var/lib/apt/lists/*", shell=True)
+        subprocess.call("sudo apt-get clean", shell=True)
+
+        # Update package lists
         cmd = 'stdbuf -oL sudo apt update -y && stdbuf -oL sudo apt upgrade -y --show-progress'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -210,6 +215,7 @@ class SupportMenuScreen(Screen):
             print('Platform upgrade failed')
 
         self.upgrade_in_progress = False
+        thread.join()
 
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
