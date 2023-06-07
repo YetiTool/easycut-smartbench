@@ -41,7 +41,7 @@ Builder.load_string("""
             bold: True
             
         Label:
-            id: upgrade_status_text
+            id: upgrade_status_label
             font_size: 16
             color: 0, 0, 0, 1
 """)
