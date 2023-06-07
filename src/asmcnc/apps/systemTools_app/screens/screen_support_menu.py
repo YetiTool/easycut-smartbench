@@ -196,7 +196,7 @@ class SupportMenuScreen(Screen):
 
         print('Platform upgrade started')
 
-        cmd = 'sudo apt update -y && sudo apt upgrade -y'
+        cmd = 'stdbuf -oL sudo apt update -y && stdbuf -oL sudo apt upgrade -y --show-progress'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
