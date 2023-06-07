@@ -74,7 +74,7 @@ class ScreenUpgradingPlatform(Screen):
 
                 if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
-                Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line), 0.1)
+                Clock.schedule_once(lambda dt: self.set_upgrade_status_text(line))
             time.sleep(0.1)
 
     def clean_up(self):
@@ -101,7 +101,7 @@ class ScreenUpgradingPlatform(Screen):
         process.wait()
 
         upgrade_status_thread.join()
-        self.set_upgrade_in_progress(False)
+        # self.set_upgrade_in_progress(False)
 
         if process.returncode == 0:
             self.set_upgrade_status_text('Platform upgrade success, rebooting...')
