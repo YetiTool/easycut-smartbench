@@ -97,14 +97,14 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
+        self.set_upgrade_in_progress(False)
+
         if process.returncode == 0:
-            self.set_upgrade_status_text('Platform upgrade success')
+            self.set_upgrade_status_text('Platform upgrade success, rebooting...')
             if self.reboot_required:
                 Clock.schedule_once(lambda dt: self.reboot(), 5)
         else:
             self.set_upgrade_status_text('Platform upgrade failed')
             # TODO: Implement
-
-        self.set_upgrade_in_progress(False)
 
 
