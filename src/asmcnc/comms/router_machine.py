@@ -46,6 +46,10 @@ class RouterMachine(object):
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
     limit_switch_safety_distance = 1.0
 
+    # put commonly used speed and pos values here (or any values that need to be easy to find :))
+    z_max_feed = 750
+    z_post_homing_raise_abs = -5.0
+
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
@@ -62,7 +66,6 @@ class RouterMachine(object):
     starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
 
     # PERSISTENT MACHINE VALUES
-
 
     ## PERSISTENT VALUES SETUP
     smartbench_values_dir = './sb_values/'
@@ -1802,6 +1805,22 @@ class RouterMachine(object):
         
 # HOMING
 
+    """
+    These functions control all stages covered by the homing sequence. 
+    All of the "component" functions are independent of one another, and can be called as stand-alone commands
+    that do not link into any other functions. 
+
+    Component functions are called by specific sequencing functions that are set up to run through the list of 
+    component functions. 
+
+    To change the homing function sequence, you must update: 
+
+    auto_squaring_idx (only needs to be changed if the index for auto-squaring is changed)
+    homing_seq_first_delay (list of delays between functions)
+    homing_funcs_list (ordered list of functions in sequence)
+
+    """
+
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
     # this calls the first screen in the homing sequence
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
@@ -1823,6 +1842,7 @@ class RouterMachine(object):
         self.schedule_homing_event(self.do_next_task_in_sequence, self.homing_initial_delay_after_reset + 0.1)
         self.schedule_homing_event(self.complete_homing_task, self.homing_initial_delay_after_reset + 0.2)
 
+    # check this function from screens to determine whether auto-squaring is happening
     def i_am_auto_squaring(self):
 
         if self.homing_task_idx != self.auto_squaring_idx:
@@ -1886,7 +1906,12 @@ class RouterMachine(object):
         if not self.is_laser_enabled: return
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
-    
+
+    def raise_z_axis_for_collet_access(self, dt=0):
+        log("Raise Z axis to allow access to spindle motor clamping nut")
+        self.jog_absolute_single_axis('Z', self.z_post_homing_raise_abs, self.z_max_feed)
+
+    # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
         self.reset_homing_sequence_flags()
@@ -1896,6 +1921,8 @@ class RouterMachine(object):
         self.homing_in_progress = False
         log("Complete homing sequence")
 
+
+    # sequence control variables and functions
     homing_in_progress = False
     homing_interrupted = False
     homing_task_idx = 0
@@ -1904,6 +1931,8 @@ class RouterMachine(object):
     homing_funcs_list = []
     auto_squaring_idx = 2
 
+    # these are the initial delay in the clock scheduling between the event that's just completed
+    # and the event that will be called next - mostly used for protocol commands
     homing_seq_first_delay = [
         0,    # 0: null
         0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
@@ -1912,7 +1941,8 @@ class RouterMachine(object):
         0,    # 4: query_grbl_settings_modes_and_info - start_calibrating_after_homing
         0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
         0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
-        0,    # 7: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 7: move_to_accommodate_laser_offset - raise_z_axis_for_collet_access
+        0,    # 8: raise_z_axis_for_collet_access - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
@@ -1926,7 +1956,8 @@ class RouterMachine(object):
             self.calibrate_all_three_axes,                      # 4
             self.enable_stall_detection,                        # 5
             self.move_to_accommodate_laser_offset,              # 6
-            self.complete_homing_sequence                       # 7
+            self.raise_z_axis_for_collet_access,                # 7
+            self.complete_homing_sequence                       # 8
 
             ]
 

@@ -458,7 +458,7 @@ class PopupInfo(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(popup_width, 440),
-                      auto_dismiss= False
+                      auto_dismiss= True
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
@@ -660,7 +660,7 @@ class PopupError(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(500, 400),
-                      auto_dismiss= False
+                      auto_dismiss= True
                       )
         
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -703,7 +703,7 @@ class PopupWarning(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(500, 400),
-                      auto_dismiss= False
+                      auto_dismiss= True
                       )
         
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]

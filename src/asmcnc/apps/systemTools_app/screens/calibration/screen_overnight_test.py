@@ -1484,7 +1484,7 @@ class OvernightTesting(Screen):
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
 
-        if ("rectangle" in filename_end) and (int(self.m.get_dollar_setting(132)) == 130): 
+        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130: 
             gcode = [self.m.quick_scrub(line).replace('14', '12') for line in gcode_prescrubbed]
         else:
             gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
