@@ -171,9 +171,6 @@ class SupportMenuScreen(Screen):
             line = process.stdout.readline().decode().strip()
             print(line)
 
-            if not line:
-                break
-
             match = re.search(r"([0-9]+)%", line)
 
             if match:
