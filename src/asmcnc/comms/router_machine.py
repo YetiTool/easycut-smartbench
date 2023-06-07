@@ -1942,7 +1942,7 @@ class RouterMachine(object):
         0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
         0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
         0,    # 7: move_to_accommodate_laser_offset - raise_z_axis_for_collet_access
-        0,    # 8: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 8: raise_z_axis_for_collet_access - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
