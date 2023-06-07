@@ -169,6 +169,7 @@ class SupportMenuScreen(Screen):
     def get_upgrade_progress(self, process):
         while True:
             line = process.stdout.readline().decode().strip()
+            print(line)
 
             if not line:
                 break
