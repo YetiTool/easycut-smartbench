@@ -96,7 +96,7 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
-        self.upgrade_in_progress = False
+        # self.upgrade_in_progress = False
 
         if process.returncode == 0:
             self.set_upgrade_status_text('Platform upgrade success, rebooting...')
