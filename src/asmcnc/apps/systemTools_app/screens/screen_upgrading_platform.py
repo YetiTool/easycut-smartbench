@@ -13,22 +13,25 @@ import time
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
     upgrade_status_text:upgrade_status_text
-    Label:
-        text: "Upgrading Console Platform"
-        font_size: 30
-        
-    Label:
-        text: "Once the upgrade is complete, your console will automatically restart."
-        
-    Label:
-        text: "DO NOT POWER OFF YOUR CONSOLE"
-        color: 1, 0, 0, 1
-        font_size: 30
-        
-    Label:
-        id: upgrade_status_text
-        font_size: 16
-        color: hex('#BFBFBF')
+    
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Upgrading Console Platform"
+            font_size: 30
+            
+        Label:
+            text: "Once the upgrade is complete, your console will automatically restart."
+            
+        Label:
+            text: "DO NOT POWER OFF YOUR CONSOLE"
+            color: 1, 0, 0, 1
+            font_size: 30
+            
+        Label:
+            id: upgrade_status_text
+            font_size: 16
+            color: hex('#BFBFBF')
 """)
 
 
