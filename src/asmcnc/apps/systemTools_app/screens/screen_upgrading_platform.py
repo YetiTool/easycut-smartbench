@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
-    upgrade_status_label:upgrade_status_label
-    
     BoxLayout:
         orientation: "vertical"
         
@@ -37,11 +35,6 @@ Builder.load_string("""
             color: 1, 0, 0, 1
             font_size: 30
             bold: True
-            
-        Label:
-            id: upgrade_status_label
-            font_size: 16
-            color: 0, 0, 0, 1
 """)
 
 
@@ -82,21 +75,7 @@ class ScreenUpgradingPlatform(Screen):
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        def check_upgrade_status(dt):
-            line = process.stdout.readline().decode().strip()
-            if line:
-                print(line)
-                if line == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
-                    self.reboot_required = False
-                self.set_upgrade_status_text(line)
-            if not self.upgrade_in_progress:
-                Clock.unschedule(check_upgrade_status)
-
-        Clock.schedule_interval(check_upgrade_status, 0.1)
-
         process.wait()
-
-        # self.upgrade_in_progress = False
 
         if process.returncode == 0:
             self.set_upgrade_status_text('Platform upgrade success, rebooting...')
