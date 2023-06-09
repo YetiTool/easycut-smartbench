@@ -27,14 +27,18 @@ Builder.load_string("""
             bold: True
             
         Label:
-            text: "Once the upgrade is complete, your console will automatically restart."
-            color: 0, 0, 0, 1
-            
-        Label:
             text: "DO NOT POWER OFF YOUR CONSOLE"
             color: 1, 0, 0, 1
             font_size: 30
             bold: True
+            
+        Label:
+            text: "Once the upgrade is complete, your console will automatically restart."
+            color: 0, 0, 0, 1
+            
+        Image:
+            source: "./asmcnc/apps/systemTools_app/img/spinner.gif"
+            anim_delay: 0
 """)
 
 
@@ -51,11 +55,7 @@ class ScreenUpgradingPlatform(Screen):
         self.l = kwargs['localization']
 
     def on_enter(self):
-        Clock.schedule_once(lambda dt: self.start_upgrade(), 3)
-
-    def set_upgrade_status_text(self, value):
-        print(value)
-        self.upgrade_status_label.text = value
+        Clock.schedule_once(lambda dt: self.start_upgrade(), 1)
 
     def clean_up(self):
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
@@ -78,10 +78,9 @@ class ScreenUpgradingPlatform(Screen):
         process.wait()
 
         if process.returncode == 0:
-            self.set_upgrade_status_text('Platform upgrade success, rebooting...')
             if self.reboot_required:
                 Clock.schedule_once(lambda dt: self.reboot(), 5)
         else:
-            self.set_upgrade_status_text('Platform upgrade failed')
+            pass
             # TODO: Implement error handling
 
