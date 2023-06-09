@@ -35,10 +35,8 @@ Builder.load_string("""
         Label:
             text: "Once the upgrade is complete, your console will automatically restart."
             color: 0, 0, 0, 1
-            
-        Image:
-            source: "./asmcnc/apps/systemTools_app/img/spinner.gif"
-            anim_delay: 0
+            font_size: 26
+        
 """)
 
 
