@@ -401,7 +401,7 @@ class SpindleSettingsWidget(Widget):
 
     def get_spindle_data(self, dt):
         # Wait until Z axis is raised
-        if self.m.state().startswith('Idle'):
+        if not self.m.smartbench_is_busy():
             self.wait_popup.popup.dismiss()
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             self.m.s.write_command('M3 S0')
