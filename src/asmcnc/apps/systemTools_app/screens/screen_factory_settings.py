@@ -781,6 +781,7 @@ class FactorySettingsScreen(Screen):
                 self.set_user_to_view_privacy_notice()
                 self.welcome_user_to_smartbench()
                 self.set_check_config_flag()
+                self.set_wifi_never_connected()
                 return True
             else:
                 return False
@@ -809,13 +810,13 @@ class FactorySettingsScreen(Screen):
                 warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
-            elif self.software_version_label.text != self.latest_software_version.text:
-                warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-
-            elif self.platform_version_label.text != self.latest_platform_version.text:
-                warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # elif self.software_version_label.text != self.latest_software_version.text:
+            #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+            #     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            #
+            # elif self.platform_version_label.text != self.latest_platform_version.text:
+            #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+            #     popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
             else:
 
@@ -1054,6 +1055,14 @@ class FactorySettingsScreen(Screen):
 
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
+
+    def set_wifi_never_connected(self):
+        wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
+
+        if not wifi_connected_before:
+            os.system("sudo sed -i -e '$awifi_connected_before=False' /home/pi/easycut-smartbench/src/config.txt")
+        elif 'True' in wifi_connected_before:
+            os.system('sudo sed -i "s/wifi_connected_before=True/wifi_connected_before=False/" config.txt')
             
     def enter_serial_number_screen(self):
         if self.calibration_db.conn != None:

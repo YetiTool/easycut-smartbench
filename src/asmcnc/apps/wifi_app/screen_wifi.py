@@ -435,8 +435,12 @@ class WifiScreen(Screen):
                 except: self.network_name.text = ''
             else:
                 self.network_name.text = ''
-                message = self.l.get_str("No network connection.") + "\n" + self.l.get_str("Please refresh the list and try again.")
-                popup_info.PopupWarning(self.sm, self.l, message)
+                wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
+                print("Wifi flag: "+wifi_connected_before)
+                if 'True' in wifi_connected_before:
+                    message = self.l.get_str("No network connection.") + "\n" + self.l.get_str("Please refresh the list and try again.")
+                    popup_info.PopupWarning(self.sm, self.l, message)
+
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
@@ -493,6 +497,7 @@ class WifiScreen(Screen):
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
+            os.system('sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt')
         except: 
             try: 
                 self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -507,6 +512,7 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
+                os.system('sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt')
             except:
                 self.wpanetpass = 'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
                 os.system(self.wpanetpass)
@@ -520,6 +526,7 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
+                os.system('sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt')
         self.sm.current = 'rebooting'
 
     def refresh_ip_label_value(self, dt):
