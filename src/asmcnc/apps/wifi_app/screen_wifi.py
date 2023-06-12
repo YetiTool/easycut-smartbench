@@ -426,6 +426,8 @@ class WifiScreen(Screen):
         self.update_strings()
         self.get_rst_source()
 
+        self.check_connection()
+
     def on_enter(self):
 
         self.refresh_ip_label_value(1)
@@ -454,6 +456,10 @@ class WifiScreen(Screen):
 
         else: 
             self.connect_wifi()
+
+    def check_connection(self):
+        state = os.popen('ip addr show | grep "wlan0" | grep -oP "state\s\w+"').read()
+        print(state.split(" "))
 
     def connect_wifi(self):
         message = self.l.get_str("Please wait") + "...\n\n" + self.l.get_str("Console will reboot to connect to network.")
