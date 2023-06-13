@@ -41,7 +41,7 @@ Builder.load_string("""
 
 class ScreenUpgradingPlatform(Screen):
     upgrade_in_progress = False
-    override_fail = False
+    reboot_required = True
 
     def __init__(self, **kwargs):
         super(ScreenUpgradingPlatform, self).__init__(**kwargs)
@@ -68,7 +68,7 @@ class ScreenUpgradingPlatform(Screen):
                 break
             if output:
                 if output.strip() == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
-                    self.override_fail = True
+                    self.reboot_required = False
 
     def start_upgrade(self):
         self.set_upgrade_in_progress(True)
@@ -83,33 +83,66 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
-        process.returncode = self.override_fail
-
-        UpgradePlatformPopup(return_code=process.returncode, system_tools=self.systemtools_sm, localization=self.l)
+        UpgradePlatformPopup(reboot_required=self.reboot_required, return_code=int(process.returncode == 1),
+                             system_tools=self.systemtools_sm, localization=self.l)
 
 
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.metrics import dp
+
+labels = {
+    'title': {
+        True: {
+            0: 'Platform Upgrade - Failed, Reboot Required',
+            1: 'Platform Upgrade - Success, Reboot Required'
+        },
+        False: {
+            0: 'Platform Upgrade - Failed',
+            1: 'Platform Upgrade - Up to Date'
+        }
+    },
+    'description': {
+        True: {
+            0: 'Something went wrong while upgrading the console platform. Check your Wi-Fi connection and try again '
+               'later. Your console will automatically reboot.',
+            1: 'The platform upgrade has completed successfully installed. Your console will automatically restart in '
+               '30 seconds, or you can press reboot now.'
+        },
+        False: {
+            0: 'Something went wrong while upgrading the console platform. Check your Wi-Fi connection and try again '
+               'later.',
+            1: "Your console's platform is already up to date. Press the button below to return to System Tools."
+        }
+    },
+    'ok_string': {
+        True: {
+            0: 'Reboot Now',
+            1: 'Reboot Now'  # dupe
+        },
+        False: {
+            0: 'Ok',
+            1: 'Ok'  # dupe
+        }
+    }
+}
 
 
 class UpgradePlatformPopup(Popup):
     return_code = None
 
-    def __init__(self, return_code, **kwargs):
+    def __init__(self, return_code, reboot_required, **kwargs):
         super(UpgradePlatformPopup, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
         self.return_code = return_code
+        self.reboot_required = reboot_required
 
-        description = self.l.get_str(
-            "The platform upgrade has completed successfully installed. Your console will automatically restart in 30 "
-            "seconds.") \
-            if self.return_code == 1 else self.l.get_str(
-            "The platform upgrade has failed. Please check your WiFi connection and try again later.")
-        title_string = self.l.get_str('Platform Upgrade')
-        ok_string = self.l.get_bold('Reboot Now') if self.return_code == 1 else self.l.get_bold('Ok')
+        description = labels['description'][reboot_required][return_code]
+        title_string = labels['title'][reboot_required][return_code]
+        ok_string = labels['ok_string'][reboot_required][return_code]
 
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
@@ -118,10 +151,10 @@ class UpgradePlatformPopup(Popup):
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, dp(5), 0, 0])
         btn_layout.add_widget(ok_button)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30, 20, 30, 0])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[dp(30), dp(20), dp(30), 0])
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
 
@@ -131,7 +164,7 @@ class UpgradePlatformPopup(Popup):
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(360, 360),
+                      size=(dp(360), dp(360)),
                       auto_dismiss=False
                       )
 
@@ -139,7 +172,7 @@ class UpgradePlatformPopup(Popup):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
-        if self.return_code == 1:
+        if self.return_code == 1 and self.reboot_required:
             ok_button.bind(on_press=lambda x: self.reboot())
             Clock.schedule_once(lambda x: self.reboot(), 30)
         else:
