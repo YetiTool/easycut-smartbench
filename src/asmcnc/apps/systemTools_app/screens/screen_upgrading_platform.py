@@ -11,6 +11,8 @@ from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
+    status_label: status_label
+
     BoxLayout:
         orientation: "vertical"
         
@@ -32,6 +34,9 @@ Builder.load_string("""
             color: 1, 0, 0, 1
             font_size: dp(30)
             bold: True
+            
+        Label:
+            id: status_label
 """)
 
 
@@ -56,6 +61,9 @@ class ScreenUpgradingPlatform(Screen):
     def set_upgrade_in_progress(self, value):
         self.upgrade_in_progress = value
 
+    def set_status_text(self, text):
+        self.status_label.text = text
+
     def read_output(self, process):
         while True:
             output = process.stdout.readline()
@@ -63,6 +71,7 @@ class ScreenUpgradingPlatform(Screen):
                 break
             if output:
                 print(output.strip())
+                Clock.schedule_once(lambda dt: self.set_status_text(output.strip()), 0)
 
     def start_upgrade(self):
         self.set_upgrade_in_progress(True)
