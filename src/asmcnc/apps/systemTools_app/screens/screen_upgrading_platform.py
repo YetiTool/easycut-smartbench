@@ -65,6 +65,8 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
+        UpgradePlatformPopup(return_code=process.returncode, system_tools=self.systemtools_sm, localization=self.l)
+
 
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -82,7 +84,8 @@ class UpgradePlatformPopup(Popup):
         self.return_code = return_code
 
         description = self.l.get_str(
-            "The platform upgrade has completed successfully installed. Your console will automatically reboot in 30 seconds.") \
+            "The platform upgrade has completed successfully installed. Your console will automatically reboot in 30 "
+            "seconds.") \
             if self.return_code == 1 else self.l.get_str(
             "The platform upgrade has failed. Please check your WiFi connection and try again later.")
         title_string = self.l.get_str('Platform Upgrade')
