@@ -34,9 +34,6 @@ Builder.load_string("""
             color: 1, 0, 0, 1
             font_size: dp(30)
             bold: True
-            
-        Label:
-            id: status_label
 """)
 
 
