@@ -45,6 +45,7 @@ Builder.load_string("""
 
 class ScreenUpgradingPlatform(Screen):
     upgrade_in_progress = False
+    override_fail = False
 
     def __init__(self, **kwargs):
         super(ScreenUpgradingPlatform, self).__init__(**kwargs)
@@ -70,8 +71,8 @@ class ScreenUpgradingPlatform(Screen):
             if output == '' and process.poll() is not None:
                 break
             if output:
-                print(output.strip())
-                Clock.schedule_once(lambda dt: self.set_status_text(output.strip()), 0)
+                if output.strip() == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
+                    self.override_fail = True
 
     def start_upgrade(self):
         self.set_upgrade_in_progress(True)
@@ -85,6 +86,8 @@ class ScreenUpgradingPlatform(Screen):
         t.start()
 
         process.wait()
+
+        process.returncode = self.override_fail
 
         UpgradePlatformPopup(return_code=process.returncode, system_tools=self.systemtools_sm, localization=self.l)
 
