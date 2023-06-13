@@ -104,7 +104,7 @@ class UpgradePlatformPopup(Popup):
         self.return_code = return_code
 
         description = self.l.get_str(
-            "The platform upgrade has completed successfully installed. Your console will automatically reboot in 30 "
+            "The platform upgrade has completed successfully installed. Your console will automatically restart in 30 "
             "seconds.") \
             if self.return_code == 1 else self.l.get_str(
             "The platform upgrade has failed. Please check your WiFi connection and try again later.")
