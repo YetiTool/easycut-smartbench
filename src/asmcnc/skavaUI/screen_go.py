@@ -692,20 +692,23 @@ class GoScreen(Screen):
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         else:
             # self.m._grbl_soft_reset()
-            self.m.resume_from_a_soft_door()
 
             if self.m.is_spindle_health_check_active() \
                     and not self.m.has_spindle_health_check_run() \
                     and self.m.is_using_sc2():
                 self.run_spindle_health_check(start_after_pass=True)
             else:
-                self._start_running_job()
 
                 if not self.m.has_spindle_health_check_passed():
+
+                    if self.m.has_spindle_health_check_run(): self.m.resume_from_a_soft_door()
+
                     if self.m.is_spindle_health_check_active():
                         self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
                     else:
                         self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED)
+
+                self._start_running_job()
 
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
