@@ -2,6 +2,7 @@
 @author archiejarvis on 07/06/2023
 """
 
+import threading
 import subprocess
 
 from kivy.clock import Clock
@@ -55,6 +56,14 @@ class ScreenUpgradingPlatform(Screen):
     def set_upgrade_in_progress(self, value):
         self.upgrade_in_progress = value
 
+    def read_output(self, process):
+        while True:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                print(output.strip())
+
     def start_upgrade(self):
         self.set_upgrade_in_progress(True)
         self.clean_up()
@@ -62,6 +71,9 @@ class ScreenUpgradingPlatform(Screen):
         cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        t = threading.Thread(target=self.read_output, args=(process,))
+        t.start()
 
         process.wait()
 
