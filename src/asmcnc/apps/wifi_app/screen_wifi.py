@@ -456,8 +456,11 @@ class WifiScreen(Screen):
             self.connect_wifi()
 
     def connect_wifi(self):
-        message = self.l.get_str("Please wait") + "...\n\n" + self.l.get_str("Console will reboot to connect to network.")
-        popup_info.PopupMiniInfo(self.sm, self.l, message)
+        self._password.text = ''
+
+        # Save the current IP address to dismiss the wait popup when the address changes
+        current_ip_address = self.ip_status_label.text
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -475,6 +478,21 @@ class WifiScreen(Screen):
             os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
+            # Flush all the IP addresses from cache
+            os.system('sudo ip addr flush dev wlan0')
+
+            # Reload the updated wpa_supplicant file
+            os.system('sudo wpa_cli -i wlan0 reconfigure')
+
+            # Restart the DHCP service to allocate a new IP address on the new network
+            os.system('sudo systemctl restart dhcpcd')
+
+            def dismiss_wait_popup(dt):
+                if self.ip_status_label.text != '' and self.ip_status_label.text != current_ip_address:
+                    wait_popup.popup.dismiss()
+
+            Clock.schedule_interval(dismiss_wait_popup, 0.5)
 
         except: 
             try: 
@@ -502,8 +520,6 @@ class WifiScreen(Screen):
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-
-        self.sm.current = 'rebooting'
 
     def refresh_ip_label_value(self, dt):
 
