@@ -122,7 +122,7 @@ class UpgradePlatformPopup(Popup):
         if self.return_code == 1:
             ok_button.bind(on_press=self.reboot)
         else:
-            ok_button.bind(on_press=self.dismiss)
+            ok_button.bind(on_press=lambda dt: self.dismiss())
 
         if self.return_code == 1:
             Clock.schedule_once(lambda dt: self.reboot(), 30)
