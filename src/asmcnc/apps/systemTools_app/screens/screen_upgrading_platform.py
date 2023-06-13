@@ -11,7 +11,6 @@ from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
-    status_label: status_label
 
     BoxLayout:
         orientation: "vertical"
