@@ -15,7 +15,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
 widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
 
 Builder.load_string("""
@@ -46,11 +46,7 @@ Builder.load_string("""
 
     # Spindle settings widgets
     spindle_tab: spindle_tab
-    spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
-
-    # Spindle tab labels
-    spindle_cooldown_settings : spindle_cooldown_settings
 
     # Z touchplate and lead screw widgets
     z_misc_save_container: z_misc_save_container
@@ -306,65 +302,17 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(50)
                     width: dp(760)
-                    id: monitor_strip
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(50)
-                        width: dp(760)
-                        padding: [dp(10),dp(5),dp(5),dp(5)]
-                        orientation: 'horizontal'
-
-                        Label:
-                            id: spindle_cooldown_settings
-                            color: 0,0,0,1
-                            font_size: dp(22)
-                            markup: True
-                            halign: "left"
-                            valign: "middle"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(760)
-                    height: dp(280)
+                    height: dp(350)
                     orientation: "horizontal" 
                     padding: dp(0)
                     spacing: dp(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(280)
-                        width: dp(580)
+                        height: dp(350)
+                        width: dp(760)
                         id: spindle_settings_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
-
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(280)
-                        width: dp(160)
-                        id: spindle_save_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
 
         # Z Misc settings (probe plate and time since lead screw lubrication)
 
@@ -534,10 +482,7 @@ class MaintenanceScreenClass(Screen):
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
 
 
-        # SPINDLE SETTINGS WIDGET
-
-        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
-        self.spindle_save_container.add_widget(self.spindle_save_widget)       
+        # SPINDLE SETTINGS WIDGET   
 
         self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_settings_container.add_widget(self.spindle_settings_widget)
@@ -586,10 +531,10 @@ class MaintenanceScreenClass(Screen):
         # SPINDLE
         if self.m.spindle_digital: 
             string_digital = 'digital'
-            self.spindle_settings_widget.spindle_cooldown_speed.disabled = False
+            self.spindle_settings_widget.cooldown_speed_slider.disabled = False
         else: 
             string_digital = 'manual'
-            self.spindle_settings_widget.spindle_cooldown_speed.disabled = True
+            self.spindle_settings_widget.cooldown_speed_slider.disabled = True
 
         if self.m.is_stylus_enabled:
             self.spindle_settings_widget.stylus_switch.active = True
@@ -597,9 +542,14 @@ class MaintenanceScreenClass(Screen):
             self.spindle_settings_widget.stylus_switch.active = False
 
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
-        self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
-        self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
+        self.spindle_settings_widget.cooldown_time_slider.value = self.m.spindle_cooldown_time_seconds
+        self.spindle_settings_widget.cooldown_speed_slider.value = self.m.spindle_cooldown_rpm
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
+
+        # if self.m.theateam() and self.m.get_dollar_setting(51):
+        #     self.spindle_settings_widget.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        # else:
+        #     self.spindle_settings_widget.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
 
         # Only show SC2 options if machine supports it
         self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc1
@@ -667,7 +617,6 @@ class MaintenanceScreenClass(Screen):
 
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
-        self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
         self.brush_use_widget.update_strings()
         self.brush_life_widget.update_strings()
         self.spindle_settings_widget.update_strings()
