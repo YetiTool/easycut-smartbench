@@ -83,7 +83,8 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
-        UpgradePlatformPopup(reboot_required=self.reboot_required, return_code=int(process.returncode == 1),
+        UpgradePlatformPopup(reboot_required=self.reboot_required, return_code=int(process.returncode == 1
+                                                                                   or process.returncode != 0),
                              system_tools=self.systemtools_sm, localization=self.l)
 
 
