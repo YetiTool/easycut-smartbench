@@ -150,7 +150,7 @@ class UpgradePlatformPopup(Popup):
         popup.open()
 
     def reboot(self):
-        subprocess.call('sudo reboot', shell=True)
+        subprocess.call('sudo reboot -h now', shell=True)
 
     def on_open(self):
         if self.return_code == 1:
