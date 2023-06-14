@@ -476,23 +476,6 @@ class WifiScreen(Screen):
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-            # Flush all the IP addresses from cache
-            os.system('sudo ip addr flush dev wlan0')
-
-            # Reload the updated wpa_supplicant file
-            os.system('sudo wpa_cli -i wlan0 reconfigure')
-
-            # Restart the DHCP service to allocate a new IP address on the new network
-            os.system('sudo systemctl restart dhcpcd')
-
-            def dismiss_wait_popup(dt):
-                if self.set.wifi_available:
-                    wait_popup.popup.dismiss()
-                    return
-                Clock.schedule_once(dismiss_wait_popup, 0.5)
-
-            Clock.schedule_once(dismiss_wait_popup, 5)
-
         except: 
             try: 
                 self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -519,6 +502,31 @@ class WifiScreen(Screen):
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
+        # Flush all the IP addresses from cache
+        os.system('sudo ip addr flush dev wlan0')
+
+        # Reload the updated wpa_supplicant file
+        os.system('sudo wpa_cli -i wlan0 reconfigure')
+
+        # Restart the DHCP service to allocate a new IP address on the new network
+        os.system('sudo systemctl restart dhcpcd')
+
+        def dismiss_wait_popup(dt):
+            if self.set.wifi_available:
+                wait_popup.popup.dismiss()
+                Clock.unschedule(wifi_error_timeout)
+                return
+            Clock.schedule_once(dismiss_wait_popup, 0.5)
+
+        def wifi_error_timeout(dt):
+            Clock.unschedule(dismiss_wait_popup)
+            wait_popup.popup.dismiss()
+            message = self.l.get_str("No WiFi connection!")
+            popup_info.PopupWarning(self.sm, self.l, message)
+
+        Clock.schedule_once(dismiss_wait_popup, 5)
+        Clock.schedule_once(wifi_error_timeout, 30)
 
     def refresh_ip_label_value(self, dt):
 
