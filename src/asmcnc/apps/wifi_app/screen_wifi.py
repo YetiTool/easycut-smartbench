@@ -436,7 +436,6 @@ class WifiScreen(Screen):
             else:
                 self.network_name.text = ''
                 wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
-                print("Wifi flag: "+wifi_connected_before)
                 if 'True' in wifi_connected_before:
                     message = self.l.get_str("No network connection.") + "\n" + self.l.get_str("Please refresh the list and try again.")
                     popup_info.PopupWarning(self.sm, self.l, message)
