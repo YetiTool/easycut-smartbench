@@ -413,6 +413,9 @@ class WifiScreen(Screen):
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
+    dismiss_wait_popup_event = None
+    wifi_error_timeout_event = None
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -514,19 +517,27 @@ class WifiScreen(Screen):
 
         def dismiss_wait_popup(dt):
             if self.set.wifi_available:
-                wait_popup.popup.dismiss()
-                Clock.unschedule(wifi_error_timeout)
+                try:
+                    wait_popup.popup.dismiss()
+                except:
+                    pass
+                if self.wifi_error_timeout_event:
+                    Clock.unschedule(self.wifi_error_timeout_event)
                 return
-            Clock.schedule_once(dismiss_wait_popup, 0.5)
+            self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 0.5)
 
         def wifi_error_timeout(dt):
-            Clock.unschedule(dismiss_wait_popup)
-            wait_popup.popup.dismiss()
+            if self.dismiss_wait_popup_event:
+                Clock.unschedule(self.dismiss_wait_popup_event)
+            try:
+                wait_popup.popup.dismiss()
+            except:
+                pass
             message = self.l.get_str("No WiFi connection!")
             popup_info.PopupWarning(self.sm, self.l, message)
 
-        Clock.schedule_once(dismiss_wait_popup, 5)
-        Clock.schedule_once(wifi_error_timeout, 30)
+        self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
+        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
 
     def refresh_ip_label_value(self, dt):
 
@@ -601,3 +612,6 @@ class WifiScreen(Screen):
             except:
                 self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
+    def on_leave(self):
+        self.wifi_error_timeout_event.cancel()
+        self.dismiss_wait_popup_event.cancel()
