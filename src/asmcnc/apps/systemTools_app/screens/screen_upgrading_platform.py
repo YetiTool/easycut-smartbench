@@ -180,7 +180,7 @@ class UpgradePlatformPopup(Popup):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
-        if self.success:  #and self.reboot_required:
+        if self.success and self.reboot_required:
             # ok_button.bind(on_release=self.reboot)
             Clock.schedule_once(self.reboot, 30)
         else:
