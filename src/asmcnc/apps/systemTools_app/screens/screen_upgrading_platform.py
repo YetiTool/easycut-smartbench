@@ -75,7 +75,7 @@ class ScreenUpgradingPlatform(Screen):
                 break
             if output:
                 log(output.strip())
-                if output.strip() == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
+                if output.strip().startswith('0 upgraded, 0 newly installed'):
                     self.reboot_required = False
 
     def start_upgrade(self):
