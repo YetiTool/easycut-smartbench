@@ -185,10 +185,6 @@ class UpgradePlatformPopup(Popup):
         print('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
-    def on_open(self):
-        if self.reboot_required:
-            Clock.schedule_once(lambda dt: self.reboot(), 30)
-
     def dismiss(self, popup):
         popup.dismiss()
         self.systemtools_sm.sm.current = 'system_menu'
