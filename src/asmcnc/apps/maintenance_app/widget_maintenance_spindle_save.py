@@ -87,7 +87,13 @@ class SpindleSaveWidget(Widget):
                 "\n\n" + \
                 self.l.get_bold("CNC Stylus switch") + \
                 "[b]: [/b]" + \
-                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.") + \
+                "\n\n[b]" + \
+                self.l.get_str("SC2 Spindle motor data:") + \
+                " [/b]" + \
+                self.l.get_str("This button gets data from your spindle motor.") + \
+                " " + \
+                self.l.get_str("This is only available when an SC2 model is selected.")
             )
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
