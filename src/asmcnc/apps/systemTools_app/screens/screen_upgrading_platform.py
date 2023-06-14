@@ -191,10 +191,10 @@ class UpgradePlatformPopup(Popup):
 
         popup.open()
 
-    def reboot(self, dt=None, *args):
+    def reboot(self, *args):
         log('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
-    def go_back(self):
+    def go_back(self, *args):
         self.systemtools_sm.sm.current = 'system_menu'
 
