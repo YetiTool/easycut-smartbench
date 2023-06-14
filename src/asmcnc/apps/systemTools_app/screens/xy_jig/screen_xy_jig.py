@@ -344,6 +344,7 @@ class XYJig(Screen):
                 self.reset_after_calibration()
 
     def begin_test(self, dt):
+        self.m.s.write_command('$21 = 1')
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 # Need to move X to around middle before Y test
@@ -557,10 +558,12 @@ class XYJig(Screen):
 
 
     def show_calibration_popup(self):
+        self.m.s.write_command('$21 = 0')
         PopupCalibrate(self.systemtools_sm.sm, self.l)
 
     def home_then_calibrate_motor(self):
         self.enable_motor_drivers()
+        self.m.s.write_command('$21 = 1')
         self.calibration_waiting_to_start = True
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
