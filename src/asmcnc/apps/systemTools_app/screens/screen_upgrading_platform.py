@@ -191,5 +191,5 @@ class UpgradePlatformPopup(Popup):
             Clock.schedule_once(lambda dt: self.reboot(), 30)
 
     def dismiss(self):
-        self.systemtools_sm.current = 'screen_system_tools'
+        self.systemtools_sm.sm.current = 'system_menu'
         super(UpgradePlatformPopup, self).dismiss()
