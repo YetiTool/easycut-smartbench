@@ -186,7 +186,8 @@ class UpgradePlatformPopup(Popup):
             # ok_button.bind(on_release=self.reboot)
             Clock.schedule_once(self.reboot, 30)
         else:
-            ok_button.bind(on_press=lambda x: self.dismiss(popup))
+            ok_button.bind(on_press=popup.dismiss)
+            ok_button.bind(on_press=self.go_back)
 
         popup.open()
 
@@ -194,7 +195,6 @@ class UpgradePlatformPopup(Popup):
         log('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
-    def dismiss(self, popup):
-        popup.dismiss()
+    def go_back(self):
         self.systemtools_sm.sm.current = 'system_menu'
 
