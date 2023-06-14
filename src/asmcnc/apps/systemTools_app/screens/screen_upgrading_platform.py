@@ -109,8 +109,8 @@ labels = {
     'description': {
         True: {
             0: 'Something went wrong while upgrading the console platform. Check your Wi-Fi connection and try again '
-               'later. Your console will automatically reboot.',
-            1: 'The platform upgrade has completed successfully installed. Your console will automatically restart in '
+               'later. Your console will automatically reboot in 30 seconds, or you can press reboot now.',
+            1: 'The platform upgrade has completed successfully installed. Your console will automatically reboot in '
                '30 seconds, or you can press reboot now.'
         },
         False: {
@@ -139,7 +139,7 @@ class UpgradePlatformPopup(Popup):
         super(UpgradePlatformPopup, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
-        self.return_code = success
+        self.success = success
         self.reboot_required = reboot_required
 
         description = labels['description'][reboot_required][success]
