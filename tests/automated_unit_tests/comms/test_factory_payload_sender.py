@@ -1,6 +1,5 @@
 import os
 import sys
-import mock
 
 sys.path.append('./src')
 
@@ -14,6 +13,7 @@ RUN FROM easycut-smartbench FOLDER WITH:
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_factory_payload_sender.py
 ######################################
 '''
+
 
 def test_get_csv():
     json = [{
