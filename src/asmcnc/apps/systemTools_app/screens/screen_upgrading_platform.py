@@ -86,7 +86,7 @@ class ScreenUpgradingPlatform(Screen):
 
         success = process.returncode == 0
 
-        UpgradePlatformPopup(reboot_required=self.reboot_required, success=success,
+        UpgradePlatformPopup(reboot_required=self.reboot_required and success, success=success,
                              system_tools=self.systemtools_sm, localization=self.l)
 
 
