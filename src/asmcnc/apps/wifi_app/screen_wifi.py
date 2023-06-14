@@ -457,9 +457,6 @@ class WifiScreen(Screen):
 
     def connect_wifi(self):
         self._password.text = ''
-
-        # Save the current IP address to dismiss the wait popup when the address changes
-        current_ip_address = self.ip_status_label.text
         wait_popup = popup_info.PopupWait(self.sm, self.l)
 
         # pass credentials to wpa_supplicant file
@@ -489,10 +486,12 @@ class WifiScreen(Screen):
             os.system('sudo systemctl restart dhcpcd')
 
             def dismiss_wait_popup(dt):
-                if self.ip_status_label.text != '' and self.ip_status_label.text != current_ip_address:
+                if self.set.wifi_available:
                     wait_popup.popup.dismiss()
+                    return
+                Clock.schedule_once(dismiss_wait_popup, 0.5)
 
-            Clock.schedule_interval(dismiss_wait_popup, 0.5)
+            Clock.schedule_once(dismiss_wait_popup, 5)
 
         except: 
             try: 
