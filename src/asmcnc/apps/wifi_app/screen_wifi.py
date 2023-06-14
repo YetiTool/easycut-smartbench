@@ -422,7 +422,6 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
-        self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -431,7 +430,8 @@ class WifiScreen(Screen):
         self.get_rst_source()
 
     def on_enter(self):
-
+        self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
+                                                                    self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
@@ -616,4 +616,4 @@ class WifiScreen(Screen):
     def on_leave(self):
         self.wifi_error_timeout_event.cancel()
         self.dismiss_wait_popup_event.cancel()
-        self.refresh_ip_label_value_event.cancel()
+        #self.refresh_ip_label_value_event.cancel()
