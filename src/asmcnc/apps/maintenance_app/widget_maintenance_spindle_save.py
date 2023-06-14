@@ -67,15 +67,15 @@ class SpindleSaveWidget(Widget):
     def get_info(self):
 
         spindle_settings_info = (
-                self.l.get_bold("Spindle brand") + \
-                "[b]: [/b]" + \
-                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
+                self.l.get_bold("Spindle motor model:") + \
                 " " + \
-                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
+                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle motor you are using.") + \
+                " " + \
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle motor.") + \
                 "\n\n" + \
-                self.l.get_bold("Spindle cooldown") + \
-                "[b]: [/b]" + \
-                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
+                self.l.get_bold("Spindle motor cooldown:") + \
+                " " + \
+                self.l.get_str("The spindle motor needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
                 " " + \
                 self.l.get_str("We recommend the following cooldown settings:") + \
                 "\n\n" + \
