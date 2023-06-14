@@ -452,8 +452,8 @@ class XYJig(Screen):
                 Clock.schedule_once(self.finish_test, 0.1)
 
     def display_results(self):
-        self.load_home_peak.text = str(max(self.sg_values_home))
-        self.load_away_peak.text = str(max(self.sg_values_away))
+        self.load_home_peak.text = str(max(self.sg_values_home, key=abs))
+        self.load_away_peak.text = str(max(self.sg_values_away, key=abs))
         self.load_home_average.text = str(sum(self.sg_values_home) / len(self.sg_values_home))
         self.load_away_average.text = str(sum(self.sg_values_away) / len(self.sg_values_away))
 
