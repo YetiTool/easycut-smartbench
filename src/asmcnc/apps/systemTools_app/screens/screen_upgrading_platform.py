@@ -134,8 +134,6 @@ labels = {
 
 
 class UpgradePlatformPopup(Popup):
-    return_code = None
-
     def __init__(self, success, reboot_required, **kwargs):
         super(UpgradePlatformPopup, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -184,10 +182,11 @@ class UpgradePlatformPopup(Popup):
         popup.open()
 
     def reboot(self):
+        print('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
     def on_open(self):
-        if self.return_code == 1:
+        if self.reboot_required:
             Clock.schedule_once(lambda dt: self.reboot(), 30)
 
     def dismiss(self, popup):
