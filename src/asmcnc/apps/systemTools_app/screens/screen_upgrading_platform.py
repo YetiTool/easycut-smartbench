@@ -179,7 +179,7 @@ class UpgradePlatformPopup(Popup):
             ok_button.bind(on_press=lambda x: self.reboot())
             Clock.schedule_once(lambda x: self.reboot(), 30)
         else:
-            ok_button.bind(on_press=lambda x: self.dismiss())
+            ok_button.bind(on_press=lambda x: self.dismiss(popup))
 
         popup.open()
 
@@ -190,6 +190,7 @@ class UpgradePlatformPopup(Popup):
         if self.return_code == 1:
             Clock.schedule_once(lambda dt: self.reboot(), 30)
 
-    def dismiss(self):
+    def dismiss(self, popup):
+        popup.dismiss()
         self.systemtools_sm.sm.current = 'system_menu'
-        super(UpgradePlatformPopup, self).dismiss()
+
