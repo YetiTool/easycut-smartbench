@@ -415,13 +415,14 @@ class WifiScreen(Screen):
 
     dismiss_wait_popup_event = None
     wifi_error_timeout_event = None
+    refresh_ip_label_value_event = None
 
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
-        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+        self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -615,3 +616,4 @@ class WifiScreen(Screen):
     def on_leave(self):
         self.wifi_error_timeout_event.cancel()
         self.dismiss_wait_popup_event.cancel()
+        self.refresh_ip_label_value_event.cancel()
