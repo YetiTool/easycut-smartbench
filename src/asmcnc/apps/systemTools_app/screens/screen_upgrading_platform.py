@@ -174,14 +174,14 @@ class UpgradePlatformPopup(Popup):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
         if self.success and self.reboot_required:
-            ok_button.bind(on_press=lambda x: self.reboot())
-            Clock.schedule_once(lambda x: self.reboot(), 30)
+            ok_button.bind(on_press=self.reboot)
+            Clock.schedule_once(self.reboot, 30)
         else:
             ok_button.bind(on_press=lambda x: self.dismiss(popup))
 
         popup.open()
 
-    def reboot(self):
+    def reboot(self, dt=None, *args):
         print('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
