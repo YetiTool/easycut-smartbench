@@ -67,6 +67,7 @@ class ScreenUpgradingPlatform(Screen):
             if output == '' and process.poll() is not None:
                 break
             if output:
+                print(output.strip())
                 if output.strip() == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
 
