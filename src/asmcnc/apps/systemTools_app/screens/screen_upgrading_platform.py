@@ -83,8 +83,9 @@ class ScreenUpgradingPlatform(Screen):
 
         process.wait()
 
-        UpgradePlatformPopup(reboot_required=self.reboot_required, return_code=int(process.returncode == 1
-                                                                                   or process.returncode != 0),
+        success = process.returncode == 0
+
+        UpgradePlatformPopup(reboot_required=self.reboot_required, success=success,
                              system_tools=self.systemtools_sm, localization=self.l)
 
 
@@ -134,16 +135,16 @@ labels = {
 class UpgradePlatformPopup(Popup):
     return_code = None
 
-    def __init__(self, return_code, reboot_required, **kwargs):
+    def __init__(self, success, reboot_required, **kwargs):
         super(UpgradePlatformPopup, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
-        self.return_code = return_code
+        self.return_code = success
         self.reboot_required = reboot_required
 
-        description = labels['description'][reboot_required][return_code]
-        title_string = labels['title'][reboot_required][return_code]
-        ok_string = labels['ok_string'][reboot_required][return_code]
+        description = labels['description'][reboot_required][success]
+        title_string = labels['title'][reboot_required][success]
+        ok_string = labels['ok_string'][reboot_required][success]
 
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
@@ -173,7 +174,7 @@ class UpgradePlatformPopup(Popup):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
-        if self.return_code == 1 and self.reboot_required:
+        if self.success and self.reboot_required:
             ok_button.bind(on_press=lambda x: self.reboot())
             Clock.schedule_once(lambda x: self.reboot(), 30)
         else:
