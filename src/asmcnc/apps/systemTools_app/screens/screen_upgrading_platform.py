@@ -9,6 +9,13 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from datetime import datetime
+
+
+def log(message):
+    print(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " {message}")
+
+
 Builder.load_string("""
 <ScreenUpgradingPlatform>:
 
@@ -67,7 +74,7 @@ class ScreenUpgradingPlatform(Screen):
             if output == '' and process.poll() is not None:
                 break
             if output:
-                print(output.strip())
+                log(output.strip())
                 if output.strip() == '0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.':
                     self.reboot_required = False
 
@@ -182,7 +189,7 @@ class UpgradePlatformPopup(Popup):
         popup.open()
 
     def reboot(self, dt=None, *args):
-        print('rebooting')
+        log('rebooting')
         subprocess.call('sudo reboot', shell=True)
 
     def dismiss(self, popup):
