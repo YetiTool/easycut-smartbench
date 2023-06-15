@@ -560,6 +560,7 @@ class XYJig(Screen):
 
 
     def show_calibration_popup(self):
+        self.disable_motor_drivers()
         self.m.s.write_command('$21 = 0')
         PopupCalibrate(self.systemtools_sm.sm, self.l)
 
