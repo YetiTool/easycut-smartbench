@@ -361,7 +361,7 @@ class XYJig(Screen):
     def start_moving_away(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis(self.axis, self.max_travel, self.max_speed / 5)
+                self.m.jog_absolute_single_axis(self.axis, self.max_travel+5, self.max_speed / 5)
                 Clock.schedule_once(self.record_away_values, 0.4)
             else:
                 Clock.schedule_once(self.start_moving_away, 0.1)
@@ -369,7 +369,7 @@ class XYJig(Screen):
     def record_away_values(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed / 5)
+                self.m.jog_absolute_single_axis(self.axis, -5, self.max_speed / 5)
                 Clock.schedule_once(self.record_home_values, 0.4)
             else:
                 if self.axis == 'Y':
@@ -432,13 +432,13 @@ class XYJig(Screen):
         if self.test_running:
             self.m.set_motor_current(self.axis, self.phase_two_current)
             self.current_realtime.text = str(self.phase_two_current)
-            self.m.jog_absolute_single_axis(self.axis, self.max_travel, self.max_speed)
+            self.m.jog_absolute_single_axis(self.axis, self.max_travel+5, self.max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
     def continue_phase_two(self, dt):
         if self.test_running:
             if self.m.state().startswith('Idle'):
-                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
+                self.m.jog_absolute_single_axis(self.axis, -5, self.max_speed)
                 Clock.schedule_once(self.finish_test, 1)
             else:
                 Clock.schedule_once(self.continue_phase_two, 0.1)
