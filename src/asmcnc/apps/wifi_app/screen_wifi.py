@@ -44,6 +44,11 @@ Builder.load_string("""
     password_label : password_label
     country_label : country_label
     connect_button : connect_button
+    custom_ssid_button:custom_ssid_button
+    network_name_input:network_name_input
+    custom_network_name:custom_network_name
+    custom_network_name_box:custom_network_name_box
+    network_name_box:network_name_box
 
     connection_instructions_rst : connection_instructions_rst
     
@@ -139,7 +144,7 @@ Builder.load_string("""
                     height: dp(100)
                     width: dp(220)
                     orientation: "vertical"
-                    padding: [10,0,20,20]   
+                    padding: [10,0,20,-20]   
                     
                     BoxLayout: 
                         size_hint: (None, None) 
@@ -192,30 +197,72 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (5,8,5,8)
+                        padding: [0,0,0,0]
                         orientation: 'horizontal'
-                        canvas:
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                                source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
-
-                        Spinner:
-                            id: network_name
-                            halign: 'left'
-                            valign: 'top'
-                            markup: True
-                            size_hint: (None, None)
-                            size: 200, 24
-                            text: ''
-                            font_size: '20sp'
-                            text_size: self.size
-                            multiline: False
-                            color: 0,0,0,1
-                            values: root.SSID_list
-                            option_cls: Factory.get("NetworkSpinner")
-                            background_normal: ''
-                            background_color: [1,1,1,0]
+                        id: network_name_input
+                        
+                        # The Spinner with the background image, grouped together in this BoxLayout
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(210)
+                            padding: (5,5,5,8)
+                            id: network_name_box
+                            
+                            canvas:
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
+    
+                            Spinner:
+                                id: network_name
+                                halign: 'left'
+                                valign: 'top'
+                                markup: True
+                                size_hint: (None, None)
+                                size: 200, 24
+                                text: ''
+                                font_size: '20sp'
+                                text_size: self.size
+                                multiline: False
+                                color: 0,0,0,1
+                                values: root.SSID_list
+                                option_cls: Factory.get("NetworkSpinner")
+                                background_normal: ''
+                                background_color: [1,1,1,0]
+                        
+                        # The TextInput for the custom network name, very similar to the Password BoxLayout
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(210)
+                            padding: (0,0,0,0)
+                            id: custom_network_name_box
+                            
+                            TextInput: 
+                                id: custom_network_name
+                                valign: 'middle'
+                                halign: 'center'
+                                text_size: self.size
+                                font_size: '20sp'
+                                markup: True
+                                multiline: False
+                                text: ''
+                                hint_text: 'Enter custom SSID'
+                                background_normal: "./asmcnc/apps/wifi_app/img/password_bg.png"
+                    
+                    # The button to toggle between the normal network name and the custom network name
+                    BoxLayout: 
+                        size_hint: (None, None) 
+                        orientation: "horizontal"
+                        width: dp(210)
+                        height: dp(40)
+                        padding: [0,5,0,5]
+                        ToggleButton:
+                            id: custom_ssid_button
+                            text: 'Custom SSID'
+                            on_press: root.custom_ssid_input()
 
                 #Password
                 BoxLayout: 
@@ -425,6 +472,27 @@ class WifiScreen(Screen):
  
         self.update_strings()
         self.get_rst_source()
+
+        # I was getting an error for "weakly referenced objects". This line of code prevents the objects from getting
+        # garbage collected
+        self.refs = [self.network_name.__self__, self.custom_network_name_box.__self__]
+
+        # Remove the custom SSID input field on startup
+        self.network_name_input.remove_widget(self.custom_network_name_box)
+
+        # Testing purposes
+        self.network_name.values = ['Test1', 'Test2']
+
+    # Toggles between normal network selection and custom network name input for hidden networks
+    def custom_ssid_input(self):
+        if self.custom_ssid_button.state == 'normal':
+            self.custom_ssid_button.text = 'Custom SSID OFF'
+            self.network_name_input.remove_widget(self.custom_network_name_box)
+            self.network_name_input.add_widget(self.network_name_box)
+        else:
+            self.custom_ssid_button.text = 'Custom SSID ON'
+            self.network_name_input.remove_widget(self.network_name_box)
+            self.network_name_input.add_widget(self.custom_network_name_box)
 
     def on_enter(self):
 
