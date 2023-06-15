@@ -507,7 +507,11 @@ class WifiScreen(Screen):
     def check_credentials(self):
 
         # get network name and password from text entered (widget)
-        self.netname = self.network_name.text
+        if self.custom_ssid_button.state == 'normal':
+            self.netname = self.network_name.text
+        else:
+            self.netname = self.custom_network_name.text
+
         self.password = self._password.text
 
         if len(self.netname) < 1: 
