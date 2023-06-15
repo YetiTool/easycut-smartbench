@@ -590,6 +590,7 @@ class XYJig(Screen):
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, 'Calibration complete!')
+            self.m.s.write_command('$21 = 0')
             self.reset_after_calibration()
             Clock.unschedule(self.calibration_poll)    
 
