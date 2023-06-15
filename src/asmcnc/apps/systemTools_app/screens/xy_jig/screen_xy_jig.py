@@ -345,6 +345,8 @@ class XYJig(Screen):
 
     def begin_test(self, dt):
         self.m.s.write_command('$21 = 1')
+        self.m.enable_y_motors()
+        self.m.enable_x_motors()
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 # Need to move X to around middle before Y test
