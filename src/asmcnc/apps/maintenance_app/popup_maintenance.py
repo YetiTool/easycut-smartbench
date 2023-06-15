@@ -9,6 +9,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
+from kivy.uix.carousel import Carousel
 
 
 class PopupResetOffset(Widget):
@@ -396,5 +397,145 @@ class PopupDisplaySpindleData(Widget):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
         ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
+class PopupSpindleSettingsInfo(Widget):
+
+    def __init__(self, screen_manager, localization):
+
+        self.sm = screen_manager
+        self.l = localization
+
+        popup_width = 750
+        label_width = popup_width - 230
+
+        model_info = (
+                self.l.get_bold("Spindle motor model:") + \
+                "\n" + \
+                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle motor you are using.") + \
+                " " + \
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle motor.")
+            )
+
+        cooldown_info = (
+                self.l.get_bold("Spindle motor cooldown:") + \
+                "\n" + \
+                self.l.get_str("The spindle motor needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
+                " " + \
+                self.l.get_str("We recommend the following cooldown settings:") + \
+                "\n" + \
+                "       " + \
+                self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds") + \
+                "\n" + \
+                "       " + \
+                self.l.get_str("AMB: 10,000 RPM; 30 seconds")
+            )
+
+        stylus_info = (
+                self.l.get_bold("CNC Stylus switch") + \
+                "[b]:[/b]\n" + \
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
+            )
+
+        get_data_info = (
+                self.l.get_bold("SC2 Spindle motor data:") + \
+                "\n" + \
+                self.l.get_str("This button gets data from your spindle motor.") + \
+                " " + \
+                self.l.get_str("This is only available when an SC2 model is selected.")
+            )
+
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+
+        model_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/spindle_small.png", allow_stretch=False)
+        model_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=model_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        model_info_container = BoxLayout(orientation='horizontal')
+        model_info_container.add_widget(model_info_image)
+        model_info_container.add_widget(model_info_label)
+        cooldown_info_image_container = BoxLayout(orientation='vertical', size_hint_x=0.2)
+        speed_dial_image = Image(source="./asmcnc/apps/maintenance_app/img/speed_dial.png", allow_stretch=False)
+        countdown_image = Image(source="./asmcnc/apps/maintenance_app/img/countdown_small.png", allow_stretch=False)
+        cooldown_info_image_container.add_widget(speed_dial_image)
+        cooldown_info_image_container.add_widget(countdown_image)
+        cooldown_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=cooldown_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        cooldown_info_container = BoxLayout(orientation='horizontal')
+        cooldown_info_container.add_widget(cooldown_info_image_container)
+        cooldown_info_container.add_widget(cooldown_info_label)
+
+        stylus_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png", allow_stretch=False)
+        stylus_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=stylus_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        stylus_info_container = BoxLayout(orientation='horizontal')
+        stylus_info_container.add_widget(stylus_info_image)
+        stylus_info_container.add_widget(stylus_info_label)
+        get_data_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/spindle_info.png", allow_stretch=False)
+        get_data_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=get_data_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        get_data_info_container = BoxLayout(orientation='horizontal')
+        get_data_info_container.add_widget(get_data_info_image)
+        get_data_info_container.add_widget(get_data_info_label)
+
+        first_page_layout = BoxLayout(orientation='vertical')
+        first_page_layout.add_widget(model_info_container)
+        first_page_layout.add_widget(cooldown_info_container)
+        second_page_layout = BoxLayout(orientation='vertical')
+        second_page_layout.add_widget(stylus_info_container)
+        second_page_layout.add_widget(get_data_info_container)
+
+        carousel = Carousel(direction='right')
+        carousel.add_widget(first_page_layout)
+        carousel.add_widget(second_page_layout)
+
+        left_button = Button(background_color=[0,0,0,0.2], border=(0, 0, 0, 0), background_normal="./asmcnc/skavaUI/img/lobby_scrollleft.png", background_down="./asmcnc/skavaUI/img/lobby_scrollleft.png")
+        left_button_container = BoxLayout(size_hint_x=0.06, padding=[0,90])
+        left_button_container.add_widget(left_button)
+        right_button = Button(background_color=[0,0,0,0.2], border=(0, 0, 0, 0), background_normal="./asmcnc/skavaUI/img/lobby_scrollright.png", background_down="./asmcnc/skavaUI/img/lobby_scrollright.png")
+        right_button_container = BoxLayout(size_hint_x=0.06, padding=[0,90])
+        right_button_container.add_widget(right_button)
+
+        carousel_layout = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=4)
+        carousel_layout.add_widget(left_button_container)
+        carousel_layout.add_widget(carousel)
+        carousel_layout.add_widget(right_button_container)
+
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[300,10,300,0])
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(orientation='vertical')
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(carousel_layout)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(popup_width, 440),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        # Binding to the carousel functions directly causes argument issues, so create "wrapper" functions
+        def cycle_left(*args):
+            carousel.load_previous()
+
+        def cycle_right(*args):
+            carousel.load_next()
+
+        ok_button.bind(on_press=popup.dismiss)
+        left_button.bind(on_press=cycle_left)
+        right_button.bind(on_press=cycle_right)
 
         popup.open()
