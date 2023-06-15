@@ -353,7 +353,7 @@ class XYJig(Screen):
                 if self.axis == 'Y':
                     self.m.jog_absolute_single_axis('X', -660, self.max_x_speed)
 
-                self.m.jog_absolute_single_axis(self.axis, -1, self.max_speed)
+                self.m.jog_absolute_single_axis(self.axis, -5, self.max_speed)
                 Clock.schedule_once(self.start_moving_away, 1)
             else:
                 Clock.schedule_once(self.begin_test, 0.1)
