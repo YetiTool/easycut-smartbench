@@ -409,7 +409,7 @@ class PopupSpindleSettingsInfo(Widget):
         self.l = localization
 
         popup_width = 750
-        label_width = popup_width - 200
+        label_width = popup_width - 150
 
         spindle_settings_info1 = (
                 self.l.get_bold("Spindle motor model:") + \
@@ -447,19 +447,23 @@ class PopupSpindleSettingsInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        carousel = Carousel(size_hint_x=10, direction='right')
+        carousel = Carousel(direction='right')
         label1 = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=spindle_settings_info1, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         label2 = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=spindle_settings_info2, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         carousel.add_widget(label1)
         carousel.add_widget(label2)
 
-        left_button = Button()
-        right_button = Button()
+        left_button = Button(background_color=[0,0,0,0.2], border=(0, 0, 0, 0), background_normal="./asmcnc/skavaUI/img/lobby_scrollleft.png", background_down="./asmcnc/skavaUI/img/lobby_scrollleft.png")
+        left_button_container = BoxLayout(size_hint_x=0.06, padding=[0,90])
+        left_button_container.add_widget(left_button)
+        right_button = Button(background_color=[0,0,0,0.2], border=(0, 0, 0, 0), background_normal="./asmcnc/skavaUI/img/lobby_scrollright.png", background_down="./asmcnc/skavaUI/img/lobby_scrollright.png")
+        right_button_container = BoxLayout(size_hint_x=0.06, padding=[0,90])
+        right_button_container.add_widget(right_button)
 
         carousel_layout = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=4)
-        carousel_layout.add_widget(left_button)
+        carousel_layout.add_widget(left_button_container)
         carousel_layout.add_widget(carousel)
-        carousel_layout.add_widget(right_button)
+        carousel_layout.add_widget(right_button_container)
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -487,6 +491,7 @@ class PopupSpindleSettingsInfo(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
+        # Binding to the carousel functions directly causes argument issues, so create "wrapper" functions
         def cycle_left(*args):
             carousel.load_previous()
 
