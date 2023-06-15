@@ -82,7 +82,8 @@ class ScreenUpgradingPlatform(Screen):
         self.set_upgrade_in_progress(True)
         self.clean_up()
 
-        cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress'
+        cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress && sleep 30 && ' \
+              'sudo reboot'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -183,8 +184,7 @@ class UpgradePlatformPopup(Popup):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
         if self.success and self.reboot_required:
-            # ok_button.bind(on_release=self.reboot)
-            Clock.schedule_once(self.reboot, 30)
+            ok_button.bind(on_release=self.reboot)
         else:
             ok_button.bind(on_press=popup.dismiss)
             ok_button.bind(on_press=self.go_back)
