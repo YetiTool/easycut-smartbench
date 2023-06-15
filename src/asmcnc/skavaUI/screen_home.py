@@ -231,7 +231,7 @@ Builder.load_string("""
 
                                 Label:
                                     id: file_data_label
-                                    size_hint_x: 5
+                                    size_hint_x: 4
                                     text_size: self.size
                                     font_size: '20sp'
                                     markup: True

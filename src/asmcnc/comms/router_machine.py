@@ -46,6 +46,10 @@ class RouterMachine(object):
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
     limit_switch_safety_distance = 1.0
 
+    # put commonly used speed and pos values here (or any values that need to be easy to find :))
+    z_max_feed = 750
+    z_post_homing_raise_abs = -5.0
+
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
@@ -62,7 +66,6 @@ class RouterMachine(object):
     starting_serial_connection = False    # Stops user from starting serial connections while starting already (for zhead cycle app)
 
     # PERSISTENT MACHINE VALUES
-
 
     ## PERSISTENT VALUES SETUP
     smartbench_values_dir = './sb_values/'
@@ -746,41 +749,48 @@ class RouterMachine(object):
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
+        z_max_travel_value = self.get_z_max_travel_to_bake(
+            self.is_machines_fw_version_equal_to_or_greater_than_version('2.6.0', 'set Z travel'),
+            self.TMC_motor[TMC_X1].ActiveCurrentScale
+            )
+
+        if not z_max_travel_value: return False
+
         grbl_settings = [
-                    '$0=10',          #Step pulse, microseconds
-                    '$1=255',         #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',      #Homing feed, mm/min
-                    '$25=3000.0',     #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',     #Homing pull-off, mm
-                    '$30=25000.0',    #Max spindle speed, RPM
-                    '$31=0.0',        #Min spindle speed, RPM
-                    '$32=0',          #Laser mode, boolean
-#                     '$100=56.649',    #X steps/mm
-#                     '$101=56.665',    #Y steps/mm
-#                     '$102=1066.667',  #Z steps/mm
-                    '$110=8000.0',    #X Max rate, mm/min
-                    '$111=6000.0',    #Y Max rate, mm/min
-                    '$112=750.0',     #Z Max rate, mm/min
-                    '$120=130.0',     #X Acceleration, mm/sec^2
-                    '$121=130.0',     #Y Acceleration, mm/sec^2
-                    '$122=200.0',     #Z Acceleration, mm/sec^2
-                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2503.0',    #Y Max travel, mm
-                    '$132=150.0'     #Z Max travel, mm       
+                    '$0=10',                                        #Step pulse, microseconds
+                    '$1=255',                                       #Step idle delay, milliseconds
+                    '$2=4',                                         #Step port invert, mask
+                    '$3=1',                                         #Direction port invert, mask
+                    '$4=0',                                         #Step enable invert, boolean
+                    '$5=1',                                         #Limit pins invert, boolean
+                    '$6=0',                                         #Probe pin invert, boolean
+                    '$10=3',                                        #Status report, mask <----------------------
+                    '$11=0.010',                                    #Junction deviation, mm
+                    '$12=0.002',                                    #Arc tolerance, mm
+                    '$13=0',                                        #Report inches, boolean
+                    '$22=1',                                        #Homing cycle, boolean <------------------------
+                    '$20=1',                                        #Soft limits, boolean <-------------------
+                    '$21=1',                                        #Hard limits, boolean <------------------
+                    '$23=3',                                        #Homing dir invert, mask
+                    '$24=600.0',                                    #Homing feed, mm/min
+                    '$25=3000.0',                                   #Homing seek, mm/min
+                    '$26=250',                                      #Homing debounce, milliseconds
+                    '$27=15.000',                                   #Homing pull-off, mm
+                    '$30=25000.0',                                  #Max spindle speed, RPM
+                    '$31=0.0',                                      #Min spindle speed, RPM
+                    '$32=0',                                        #Laser mode, boolean
+#                     '$100=56.649',                                #X steps/mm
+#                     '$101=56.665',                                #Y steps/mm
+#                     '$102=1066.667',                              #Z steps/mm
+                    '$110=8000.0',                                  #X Max rate, mm/min
+                    '$111=6000.0',                                  #Y Max rate, mm/min
+                    '$112=750.0',                                   #Z Max rate, mm/min
+                    '$120=130.0',                                   #X Acceleration, mm/sec^2
+                    '$121=130.0',                                   #Y Acceleration, mm/sec^2
+                    '$122=200.0',                                   #Z Acceleration, mm/sec^2
+                    '$130=1300.0',                                  #X Max travel, mm TODO: Link to a settings object
+                    '$131=2503.0',                                  #Y Max travel, mm
+                    '$132=' + str(z_max_travel_value)  #Z Max travel, mm       
             ]
 
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
@@ -803,6 +813,26 @@ class RouterMachine(object):
         grbl_settings.append('$#')     # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
 
         self.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+        return True
+
+    def get_z_max_travel_to_bake(self, fw_at_least_2_6, x_current):
+        """
+        If FW version >= 2.6 and the x_current is >= 27, it is likely that the ZH has:
+          - double stack motors
+          - shorter cage
+        and therefore the max travel that can be baked should be 130.0.
+        Prior to this change, the value should be 150.0.
+        """
+
+        if fw_at_least_2_6:
+            if x_current >= 27:
+                return 130.0
+            elif x_current == 0:
+                return False
+
+        return 150.0
+
 
     def save_grbl_settings(self):
 
@@ -1775,6 +1805,22 @@ class RouterMachine(object):
         
 # HOMING
 
+    """
+    These functions control all stages covered by the homing sequence. 
+    All of the "component" functions are independent of one another, and can be called as stand-alone commands
+    that do not link into any other functions. 
+
+    Component functions are called by specific sequencing functions that are set up to run through the list of 
+    component functions. 
+
+    To change the homing function sequence, you must update: 
+
+    auto_squaring_idx (only needs to be changed if the index for auto-squaring is changed)
+    homing_seq_first_delay (list of delays between functions)
+    homing_funcs_list (ordered list of functions in sequence)
+
+    """
+
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
     # this calls the first screen in the homing sequence
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
@@ -1796,6 +1842,7 @@ class RouterMachine(object):
         self.schedule_homing_event(self.do_next_task_in_sequence, self.homing_initial_delay_after_reset + 0.1)
         self.schedule_homing_event(self.complete_homing_task, self.homing_initial_delay_after_reset + 0.2)
 
+    # check this function from screens to determine whether auto-squaring is happening
     def i_am_auto_squaring(self):
 
         if self.homing_task_idx != self.auto_squaring_idx:
@@ -1859,7 +1906,12 @@ class RouterMachine(object):
         if not self.is_laser_enabled: return
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
-    
+
+    def raise_z_axis_for_collet_access(self, dt=0):
+        log("Raise Z axis to allow access to spindle motor clamping nut")
+        self.jog_absolute_single_axis('Z', self.z_post_homing_raise_abs, self.z_max_feed)
+
+    # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
         self.reset_homing_sequence_flags()
@@ -1869,6 +1921,8 @@ class RouterMachine(object):
         self.homing_in_progress = False
         log("Complete homing sequence")
 
+
+    # sequence control variables and functions
     homing_in_progress = False
     homing_interrupted = False
     homing_task_idx = 0
@@ -1877,6 +1931,8 @@ class RouterMachine(object):
     homing_funcs_list = []
     auto_squaring_idx = 2
 
+    # these are the initial delay in the clock scheduling between the event that's just completed
+    # and the event that will be called next - mostly used for protocol commands
     homing_seq_first_delay = [
         0,    # 0: null
         0,    # 1: start_homing - disable_stall_detection_before_auto_squaring
@@ -1885,7 +1941,8 @@ class RouterMachine(object):
         0,    # 4: query_grbl_settings_modes_and_info - start_calibrating_after_homing
         0,    # 5: start_calibrating_after_homing - enable_stall_detection_after_calibrating
         0.1,  # 6: enable_stall_detection_after_calibrating - move_to_accommodate_laser_offset
-        0,    # 7: move_to_accommodate_laser_offset - complete_homing_sequence
+        0,    # 7: move_to_accommodate_laser_offset - raise_z_axis_for_collet_access
+        0,    # 8: raise_z_axis_for_collet_access - complete_homing_sequence
     ]
 
     def setup_homing_funcs_list(self):
@@ -1899,7 +1956,8 @@ class RouterMachine(object):
             self.calibrate_all_three_axes,                      # 4
             self.enable_stall_detection,                        # 5
             self.move_to_accommodate_laser_offset,              # 6
-            self.complete_homing_sequence                       # 7
+            self.raise_z_axis_for_collet_access,                # 7
+            self.complete_homing_sequence                       # 8
 
             ]
 

@@ -435,10 +435,14 @@ class ZHeadQC1(Screen):
         except:
             pass
 
-    def bake_grbl_settings(self):
+    def bake_grbl_settings(self):     
 
-        self.m.bake_default_grbl_settings(z_head_qc_bake=True)
-        self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        if self.m.bake_default_grbl_settings(z_head_qc_bake=True):
+            self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+        else: 
+            self.bake_grbl_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            popup_info.PopupError(self.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
 
     def test_motor_chips(self):
 
@@ -536,7 +540,7 @@ class ZHeadQC1(Screen):
         self.m.jog_relative('Z', -20, 750)
 
     def mini_cycle(self):
-        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-' + str(self.m.grbl_z_max_travel))
         self.m.s.write_command('G53 G0 Z-1')
 
     def quit_jog(self):
