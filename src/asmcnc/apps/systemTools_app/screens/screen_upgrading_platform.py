@@ -210,7 +210,7 @@ if __name__ == '__main__':
     success = True
     i = 0
 
-    def popup():
+    def popup(*args):
         global i, reboot_required, success
 
         if i == 5:
