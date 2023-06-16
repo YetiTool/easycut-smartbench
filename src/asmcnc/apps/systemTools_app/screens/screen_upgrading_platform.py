@@ -209,11 +209,10 @@ if __name__ == '__main__':
     class TestApp(App):
         def build(self):
             sm = screenmanager.ScreenManager()
-            sm.add_widget(ScreenUpgradingPlatform(name='upgrading_platform', system_tools=sm, localization=None))
 
             UpgradePlatformPopup(reboot_required=True, success=True, system_tools=None, localization=None)
 
-            return ScreenUpgradingPlatform()
+            return sm
 
     TestApp().run()
 
