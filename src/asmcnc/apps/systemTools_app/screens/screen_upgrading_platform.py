@@ -206,11 +206,38 @@ if __name__ == '__main__':
 
     Window.size = (800, 480)
 
+    reboot_required = True
+    success = True
+    i = 0
+
+    def popup():
+        global i, reboot_required, success
+
+        if i == 5:
+            i = 1
+        else:
+            i += 1
+
+        if i == 1:
+            reboot_required = True
+            success = True
+        elif i == 2:
+            reboot_required = False
+            success = True
+        elif i == 3:
+            reboot_required = True
+            success = False
+        elif i == 4:
+            reboot_required = False
+            success = False
+
+        UpgradePlatformPopup(reboot_required=reboot_required, success=success, system_tools=None, localization=None)
+
     class TestApp(App):
         def build(self):
             sm = screenmanager.ScreenManager()
 
-            UpgradePlatformPopup(reboot_required=True, success=True, system_tools=None, localization=None)
+            Clock.schedule_interval(popup, 3)
 
             return sm
 
