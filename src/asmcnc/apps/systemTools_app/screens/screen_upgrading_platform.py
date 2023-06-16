@@ -118,9 +118,8 @@ labels = {
     'description': {
         True: {
             0: 'Something went wrong while upgrading the console platform. Check your Wi-Fi connection and try again '
-               'later. Your console will automatically reboot in 30 seconds, or you can press reboot now.',
-            1: 'The platform upgrade has completed successfully installed. Your console will automatically reboot in '
-               '30 seconds, or you can press reboot now.'
+               'later. Click the button below to reboot your console.',
+            1: 'The platform upgrade has completed successfully installed. Click the button below to reboot your console.'
         },
         False: {
             0: 'Something went wrong while upgrading the console platform. Check your Wi-Fi connection and try again '
@@ -181,24 +180,18 @@ class UpgradePlatformPopup(Popup):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
+        popup.open()
+
         if self.success and self.reboot_required:
             log('Reboot required')
             ok_button.bind(on_press=self.reboot_now)
-            self.reboot_in_30()
         else:
             ok_button.bind(on_press=popup.dismiss)
             ok_button.bind(on_press=self.go_back)
 
-        popup.open()
-
-
     def reboot_now(self, *args):
         log('Rebooting now')
-        os.system('sudo reboot', shell=True)
-
-    def reboot_in_30(self, *args):
-        log('Scheduling reboot for 30 seconds')
-        os.system('sleep 30 && sudo reboot')
+        os.system('sudo reboot')
 
     def go_back(self, *args):
         self.systemtools_sm.sm.current = 'system_menu'
