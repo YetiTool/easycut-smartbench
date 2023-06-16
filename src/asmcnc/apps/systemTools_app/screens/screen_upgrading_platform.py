@@ -82,8 +82,7 @@ class ScreenUpgradingPlatform(Screen):
         self.set_upgrade_in_progress(True)
         self.clean_up()
 
-        cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress && sleep 30 && ' \
-              'sudo reboot'
+        cmd = 'stdbuf -oL sudo apt-get update -y && stdbuf -oL sudo apt-get upgrade -y --show-progress'
 
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -184,7 +183,8 @@ class UpgradePlatformPopup(Popup):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
         if self.success and self.reboot_required:
-            ok_button.bind(on_release=self.reboot)
+            ok_button.bind(on_press=self.reboot)
+            Clock.schedule_once(self.reboot, 30)
         else:
             ok_button.bind(on_press=popup.dismiss)
             ok_button.bind(on_press=self.go_back)
@@ -197,4 +197,23 @@ class UpgradePlatformPopup(Popup):
 
     def go_back(self, *args):
         self.systemtools_sm.sm.current = 'system_menu'
+
+
+if __name__ == '__main__':
+    from kivy.app import App
+    from kivy.core.window import Window
+    from kivy.uix import screenmanager
+
+    Window.size = (800, 480)
+
+    class TestApp(App):
+        def build(self):
+            sm = screenmanager.ScreenManager()
+            sm.add_widget(ScreenUpgradingPlatform(name='upgrading_platform'))
+
+            UpgradePlatformPopup(reboot_required=True, success=True, system_tools=None, localization=None)
+
+            return ScreenUpgradingPlatform()
+
+    TestApp().run()
 
