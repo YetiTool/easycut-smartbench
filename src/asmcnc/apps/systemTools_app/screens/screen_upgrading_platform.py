@@ -57,8 +57,7 @@ class ScreenUpgradingPlatform(Screen):
         self.l = kwargs['localization']
 
     def on_enter(self):
-        # Clock.schedule_once(lambda dt: self.start_upgrade(), 1)
-        self.fake_pass()
+        Clock.schedule_once(lambda dt: self.start_upgrade(), 1)
 
     def clean_up(self):
         subprocess.call('sudo rm -rf /var/lib/apt/lists/*', shell=True)
@@ -79,11 +78,6 @@ class ScreenUpgradingPlatform(Screen):
                 log(output.strip())
                 if output.strip().startswith('0 upgraded, 0 newly installed'):
                     self.reboot_required = False
-
-    def fake_pass(self):
-        UpgradePlatformPopup(reboot_required=True, success=True,
-                             system_tools=self.systemtools_sm, localization=self.l)
-
     def start_upgrade(self):
         self.set_upgrade_in_progress(True)
         self.clean_up()
