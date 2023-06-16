@@ -89,8 +89,6 @@ class ScreenUpgradingPlatform(Screen):
         t = threading.Thread(target=self.read_output, args=(process,))
         t.start()
 
-        t.join()
-
         process.wait()
 
         success = process.returncode == 0
