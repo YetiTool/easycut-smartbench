@@ -4,6 +4,7 @@
 
 import threading
 import subprocess
+import os
 
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -190,13 +191,14 @@ class UpgradePlatformPopup(Popup):
 
         popup.open()
 
+
     def reboot_now(self, *args):
         log('Rebooting now')
-        subprocess.call('sudo reboot', shell=True)
+        os.system('sudo reboot', shell=True)
 
     def reboot_in_30(self, *args):
         log('Scheduling reboot for 30 seconds')
-        subprocess.call('sleep 30 && sudo reboot', shell=True)
+        os.system('sleep 30 && sudo reboot')
 
     def go_back(self, *args):
         self.systemtools_sm.sm.current = 'system_menu'
