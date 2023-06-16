@@ -89,11 +89,11 @@ class ScreenUpgradingPlatform(Screen):
         t = threading.Thread(target=self.read_output, args=(process,))
         t.start()
 
+        t.join()
+
         process.wait()
 
         success = process.returncode == 0
-
-        t.join()
 
         UpgradePlatformPopup(reboot_required=self.reboot_required and success, success=success,
                              system_tools=self.systemtools_sm, localization=self.l)
@@ -190,6 +190,10 @@ class UpgradePlatformPopup(Popup):
             ok_button.bind(on_press=self.go_back)
 
         popup.open()
+
+    def reboot_wrapper(self, *args):
+        log('Scheduling reboot')
+        Clock.schedule_once(self.reboot, 30)
 
     def reboot(self, *args):
         log('rebooting')
