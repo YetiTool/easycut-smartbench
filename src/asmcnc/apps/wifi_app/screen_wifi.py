@@ -261,7 +261,7 @@ Builder.load_string("""
                         padding: [0,5,0,5]
                         ToggleButton:
                             id: custom_ssid_button
-                            text: 'Custom SSID'
+                            text: 'Custom SSID OFF'
                             on_press: root.custom_ssid_input()
 
                 #Password
@@ -416,6 +416,7 @@ Builder.load_string("""
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
+                        opacity: 1 if self.state == 'normal' else .5
 
                 BoxLayout: 
                     size_hint: (None, None)
