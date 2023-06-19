@@ -518,24 +518,25 @@ class WifiScreen(Screen):
 
         def dismiss_wait_popup(dt):
             if self.set.wifi_available:
+                if self.wifi_error_timeout_event:
+                    Clock.unschedule(self.wifi_error_timeout_event)
                 try:
                     wait_popup.popup.dismiss()
                 except:
                     pass
-                if self.wifi_error_timeout_event:
-                    Clock.unschedule(self.wifi_error_timeout_event)
                 return
             self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 0.5)
 
         def wifi_error_timeout(dt):
-            if self.dismiss_wait_popup_event:
-                Clock.unschedule(self.dismiss_wait_popup_event)
-            try:
-                wait_popup.popup.dismiss()
-            except:
-                pass
-            message = self.l.get_str("No WiFi connection!")
-            popup_info.PopupWarning(self.sm, self.l, message)
+            if not self.set.wifi_available:
+                if self.dismiss_wait_popup_event:
+                    Clock.unschedule(self.dismiss_wait_popup_event)
+                try:
+                    wait_popup.popup.dismiss()
+                except:
+                    pass
+                message = self.l.get_str("No WiFi connection!")
+                popup_info.PopupWarning(self.sm, self.l, message)
 
         self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
         self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
