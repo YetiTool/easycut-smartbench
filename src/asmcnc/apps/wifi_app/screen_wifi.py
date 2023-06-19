@@ -526,9 +526,10 @@ class WifiScreen(Screen):
         self.sm.current = 'lobby'
     
     def get_available_networks(self):
-        raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
+        raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep "SSID:"').read()
         SSID_list = raw_SSID_list.replace('\tSSID: ','').strip().split('\n')
         if '' in SSID_list: SSID_list.remove('')
+        SSID_list = set(SSID_list) #Remove duplicate entries
         return SSID_list
 
     def refresh_available_networks(self):
