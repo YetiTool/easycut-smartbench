@@ -261,8 +261,9 @@ Builder.load_string("""
                         padding: [0,5,0,5]
                         ToggleButton:
                             id: custom_ssid_button
-                            text: 'Custom SSID OFF'
                             on_press: root.custom_ssid_input()
+                            background_normal: "./asmcnc/apps/wifi_app/img/customSSID_off.png"
+                            background_down: "./asmcnc/apps/wifi_app/img/customSSID_on.png"
 
                 #Password
                 BoxLayout: 
@@ -481,17 +482,12 @@ class WifiScreen(Screen):
         # Remove the custom SSID input field on startup
         self.network_name_input.remove_widget(self.custom_network_name_box)
 
-        # Testing purposes
-        self.network_name.values = ['Test1', 'Test2']
-
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
         if self.custom_ssid_button.state == 'normal':
-            self.custom_ssid_button.text = 'Custom SSID OFF'
             self.network_name_input.remove_widget(self.custom_network_name_box)
             self.network_name_input.add_widget(self.network_name_box)
         else:
-            self.custom_ssid_button.text = 'Custom SSID ON'
             self.network_name_input.remove_widget(self.network_name_box)
             self.network_name_input.add_widget(self.custom_network_name_box)
 
