@@ -614,6 +614,9 @@ class WifiScreen(Screen):
                 self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
     def on_leave(self):
-        self.wifi_error_timeout_event.cancel()
-        self.dismiss_wait_popup_event.cancel()
-        #self.refresh_ip_label_value_event.cancel()
+        if self.wifi_error_timeout_event:
+            self.wifi_error_timeout_event.cancel()
+        if self.dismiss_wait_popup_event:
+            self.dismiss_wait_popup_event.cancel()
+        if self.refresh_ip_label_value_event:
+            self.refresh_ip_label_value_event.cancel()
