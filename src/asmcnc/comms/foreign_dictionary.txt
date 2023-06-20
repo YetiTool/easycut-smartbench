@@ -854,3 +854,5 @@ If you disable this, there will not be an option to use YetiPilot during a job.	
 Birch Plywood	Birkensperrholz	Contreplaqué de bouleau	Compensato di betulla	Koivuvaneri	Berkentriplex	Sklejka brzozowa	Birkekrydsfiner
 F	V	F	A	F	F	F	F
 S	D	S	G	S	S	S	H
+This update may take anywhere between 2 minutes and 2 hours.	Die Aktualisierung kann zwischen 2 Minuten und 2 Stunden in Anspruch nehmen.	Cette mise à jour peut durer quelques minutes à 2 heures.	Questo update potrebbe richiedere tra i 2 minuti e 2 ore.	Tämä päivitys voi kestää 2 minuutista 2 tuntiin.	Deze update kan tussen de 2 minuten en 2 uur duren.	Aktualizacja może potrwać od 2 minut do 2 godzin.	Denne opdatering kan tage alt mellem 2 minutter og 2 timer.
+Are you sure you want to update?	Sind Sie sicher, dass Sie aktualisieren möchten?	Êtes-vous sûr de vouloir effectuer la mise à jour?	Sei sicuro di eseguire l'update?	Oletko varma että haluat päivittää?	Weet je zeker dat je wilt updaten?	Czy na pewno chcesz dokonać aktualizacji?	Er du sikker på, du ønsker at opdatere?
