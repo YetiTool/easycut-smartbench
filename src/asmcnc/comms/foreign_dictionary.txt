@@ -879,3 +879,4 @@ Get data	Daten abrufen	Obtenir les données	Ottenere i dati	Hae tiedot	Gegevens 
 1 flute downcut spiral	einschneidiger Spiralnutfräser mit Linksdrall 	fraise hélicoïdale négative 1 dent	Monotagliente negativo	1-leikkuinen alassleikkaava spiraali	1 spiraal naar beneden	Frez spiralny 1-piórowy typu negatyw	1-skær negativ spiral sletfræser 	플루트 다운컷 나선형 1개	1 flöjt nedskärning spiral	1フルートダウンカットスパイラル	1 estría en espiral descendente
 2 flute straight	zweischneidiger Nutfräser 	fraise 2 dents droites	2 taglienti dritto	2-leikkuinen suora	2 spaangroeven recht	Frez prosty 2-piórowy	2 skær lige	플루트 스트레이트 2개	2 flöjt rak	2枚刃ストレート	2 canales rectos
 Oak	Eiche	Chêne	Rovere	Tammi	Eiken	Dąb	Egetræ	Oak	Ek	オーク	Roble
+2 flute compression	2 Nuten Kompression	2 dents à compression	2 taglienti compressione 	2-leikkuinen kompressio	2 fluit compressie	Frez spiralny 2-piórowy typu pozytyw-negatyw 	2 kompressions sletfræser	2 플루트 압축	2 skärs dubbeldragande	2フルート圧縮	Compresión de 2 flautas
