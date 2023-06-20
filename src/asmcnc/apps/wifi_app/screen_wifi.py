@@ -130,7 +130,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 height: dp(140)
                 width: dp(560)
-                padding: [10,20,10,20]
+                padding: [10,20,10,30]
                 spacing: 10
                 canvas:
                     Color:
@@ -249,7 +249,6 @@ Builder.load_string("""
                                 markup: True
                                 multiline: False
                                 text: ''
-                                hint_text: 'Enter custom SSID'
                                 background_normal: "./asmcnc/apps/wifi_app/img/password_bg.png"
                     
                     # The button to toggle between the normal network name and the custom network name
@@ -261,9 +260,12 @@ Builder.load_string("""
                         padding: [0,5,0,5]
                         ToggleButton:
                             id: custom_ssid_button
-                            on_press: root.custom_ssid_input()
-                            background_normal: "./asmcnc/apps/wifi_app/img/customSSID_off.png"
-                            background_down: "./asmcnc/apps/wifi_app/img/customSSID_on.png"
+                            on_release: root.custom_ssid_input()
+                            font_size: 20
+                            color: hex('#f9f9f9ff')
+                            markup: True
+                            background_normal: "./asmcnc/apps/wifi_app/img/customSSID_blank.png"
+                            background_down: "./asmcnc/apps/wifi_app/img/customSSID_blank.png"
 
                 #Password
                 BoxLayout: 
@@ -487,10 +489,12 @@ class WifiScreen(Screen):
         if self.custom_ssid_button.state == 'normal':
             self.network_name_input.remove_widget(self.custom_network_name_box)
             self.network_name_input.add_widget(self.network_name_box)
+            self.custom_ssid_button.text = self.l.get_str("Other network")
         else:
             self.network_name_input.remove_widget(self.network_name_box)
             self.network_name_input.add_widget(self.custom_network_name_box)
-
+            self.custom_network_name.focus = True
+            self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
 
         self.refresh_ip_label_value(1)
@@ -621,6 +625,8 @@ class WifiScreen(Screen):
         self.password_label.text = self.l.get_bold("Password")
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
+        self.custom_ssid_button.text = self.l.get_str("Other network")
+        self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
         self.update_font_size(self.country_label)
         self.update_button_font_size(self.connect_button)
