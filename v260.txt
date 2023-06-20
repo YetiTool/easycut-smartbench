@@ -1,0 +1,13 @@
+.. _top:
+
+Job Recovery
+====================================================
+You can now recover your cancelled jobs from the exact point of interruption!
+
+If something goes wrong, you can minimise any downtime - there’s no need to run back over completed parts. 
+
+Job recovery will work even if SmartBench has lost its position - the dedicated nudge screen allows you to adjust the position of your tool to make the recovery as seamless as possible. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
