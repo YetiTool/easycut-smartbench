@@ -880,3 +880,4 @@ Get data	Daten abrufen	Obtenir les données	Ottenere i dati	Hae tiedot	Gegevens 
 2 flute straight	zweischneidiger Nutfräser 	fraise 2 dents droites	2 taglienti dritto	2-leikkuinen suora	2 spaangroeven recht	Frez prosty 2-piórowy	2 skær lige	플루트 스트레이트 2개	2 flöjt rak	2枚刃ストレート	2 canales rectos
 Oak	Eiche	Chêne	Rovere	Tammi	Eiken	Dąb	Egetræ	Oak	Ek	オーク	Roble
 2 flute compression	2 Nuten Kompression	2 dents à compression	2 taglienti compressione 	2-leikkuinen kompressio	2 fluit compressie	Frez spiralny 2-piórowy typu pozytyw-negatyw 	2 kompressions sletfræser	2 플루트 압축	2 skärs dubbeldragande	2フルート圧縮	Compresión de 2 flautas
+1 flute compression	1 Nuten Kompression	1 dents à compression	1 taglienti compressione 	1-leikkuinen kompressio	1 fluit compressie	Frez spiralny 1-piórowy typu pozytyw-negatyw 	1 kompressions sletfræser	1 플루트 압축	1 skärs dubbeldragande	1フルート圧縮	Compresión de 1 flautas
