@@ -344,7 +344,7 @@ class BetaTestingScreen(Screen):
                     wait_popup.popup.dismiss()
                     message = (self.l.get_str("Failed to checkout and pull branch.") + \
                         '\n' + \
-                        self.l.get_str("Please check the spelling of the branch and your internet connection."))
+                        self.l.get_str("Please check the spelling of your branch and your internet connection."))
                     error_popup = popup_info.PopupError(self.systemtools_sm.sm, self.l, message)
 
             Clock.schedule_once(nested_branch_update, 0.5)
