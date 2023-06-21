@@ -531,8 +531,8 @@ class WifiScreen(Screen):
         raw_SSID_list = os.popen('sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"').read()
         SSID_list = raw_SSID_list.replace('"','').strip().split('\n')  # Remove " from network name and split on newline
         if '' in SSID_list: SSID_list.remove('')  # Remove empty entries
-        SSID_list = [x for x in SSID_list if not set(x) <= set("\\x00")]  # Remove any addresses that contain only NULL bytes
-        SSID_list = set(SSID_list)  # Remove duplicate entries
+        # Remove any addresses that contain only NULL bytes and cast it to a set to remove duplicates
+        SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
         return SSID_list
 
     def refresh_available_networks(self):
