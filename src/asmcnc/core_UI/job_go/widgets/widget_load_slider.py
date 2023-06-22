@@ -1,9 +1,8 @@
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.uix.button import  Button
 from functools import partial
-from kivy.graphics import Color
 
+from kivy.lang import Builder
+from kivy.uix.button import Button
+from kivy.uix.widget import Widget
 
 Builder.load_string("""
 

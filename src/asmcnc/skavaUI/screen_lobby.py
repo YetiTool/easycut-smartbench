@@ -6,21 +6,14 @@ Created on 19 Aug 2017
 '''
 # config
 
-import kivy
+import os
+import sys
+import textwrap
+
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-
-
-import sys, os, textwrap
-from os.path import expanduser
-from shutil import copy
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
-
 
 Builder.load_string("""
 

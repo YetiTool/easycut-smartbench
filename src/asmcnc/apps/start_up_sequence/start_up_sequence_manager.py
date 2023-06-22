@@ -1,15 +1,13 @@
 import os
 
-from asmcnc.apps.start_up_sequence.screens import \
-screen_reboot_to_apply_settings, \
-screen_release_notes, \
-screen_pro_plus_safety, \
-screen_starting_smartbench, \
-screen_safety_warning
-
-from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
-from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
+from asmcnc.apps.start_up_sequence.screens import \
+	screen_reboot_to_apply_settings, \
+	screen_release_notes, \
+	screen_pro_plus_safety, \
+	screen_starting_smartbench, \
+	screen_safety_warning
+from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 
 
@@ -98,7 +96,7 @@ class StartUpSequence(object):
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
 
-		if ('True' in flag): 
+		if 'True' in flag:
 			self.reboot_in_sequence = True
 			return True
 		else: return False

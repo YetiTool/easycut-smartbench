@@ -5,7 +5,9 @@ Created on 03 August 2020
 
 ## Renumber all items after vac
 
-import os, sys, subprocess
+import os
+import subprocess
+import sys
 from datetime import datetime
 
 try: 
@@ -14,14 +16,12 @@ try:
 except:
     pass
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 
-from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
@@ -517,50 +517,50 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         # If one of them fails, polling will stop and report will be triggered.
 
         if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 70):
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
         if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 60):
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 60 deg C.")
 
         if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
         if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
         if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
             fail_report.append("Should be greater than 22000 and less than 26000 mV.")
 
-        if self.m.s.power_loss_detected == True:
-            pass_fail = pass_fail*(True)
+        if self.m.s.power_loss_detected:
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("AC Loss: " + str(self.m.s.power_loss_detected))
             fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
 
@@ -706,9 +706,9 @@ class ZHeadQCWarrantyAfterApr21(Screen):
     def is_it_within_tolerance(self, value, expected, tolerance):
 
         if (value >= (expected - tolerance)) and (value <= (expected + tolerance)):
-            self.spindle_pass_fail = self.spindle_pass_fail*(True)
+            self.spindle_pass_fail = self.spindle_pass_fail * True
         else: 
-            self.spindle_pass_fail = self.spindle_pass_fail*(False)
+            self.spindle_pass_fail = self.spindle_pass_fail * False
 
 
     # TEST FIRMWARE UPDATE

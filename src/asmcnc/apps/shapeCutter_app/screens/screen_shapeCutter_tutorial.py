@@ -5,14 +5,17 @@ Tutorial Screen for the Shape Cutter App
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
+
+from builtins import
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-from builtins import False
+
+False
 
 Builder.load_string("""
 

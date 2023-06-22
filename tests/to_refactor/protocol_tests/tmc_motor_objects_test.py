@@ -12,9 +12,9 @@ try:
 except: 
     print("Can't import mocking packages, are you on a dev machine?")
 
+import sys
 from time import sleep
 
-import sys
 sys.path.append('./src')
 
 try:
@@ -23,9 +23,6 @@ try:
 
 except:
     pass
-
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
 
 ########################################################
 # IMPORTANT!!

@@ -6,8 +6,8 @@ Feedback Screen for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 

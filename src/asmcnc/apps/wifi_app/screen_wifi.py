@@ -6,14 +6,13 @@ Wifi screen
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.textinput import TextInput
-from kivy.uix.spinner import Spinner, SpinnerOption
+import os
+import sys
+
 from kivy.clock import Clock
-import socket, sys, os
-from kivy.properties import StringProperty, ObjectProperty
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
 
@@ -451,7 +450,7 @@ class WifiScreen(Screen):
             message = self.l.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
 
-        elif (len(self.password) < 8 or len(self.password) > 63): 
+        elif len(self.password) < 8 or len(self.password) > 63:
 
             message = self.l.get_str("Please enter a password between 8 and 63 characters.")
             popup_info.PopupWarning(self.sm, self.l, message)

@@ -4,17 +4,16 @@ Created 5 March 2020
 Module to manage apps and screens
 '''
 
-import os
-
-from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
-from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
-from asmcnc.calibration_app import screen_landing
-from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
-from asmcnc.apps.systemTools_app import screen_manager_systemtools
+from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
+from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
+from asmcnc.apps.wifi_app import screen_wifi
+from asmcnc.calibration_app import screen_finished
+from asmcnc.calibration_app import screen_landing
+
 
 # import shape cutter managing object
 

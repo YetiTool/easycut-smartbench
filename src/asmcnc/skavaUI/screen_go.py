@@ -6,26 +6,20 @@ Created on 19 Aug 2017
 '''
 # config
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty  # @UnresolvedImport
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from builtins import file, True, False
-from kivy.clock import Clock, mainthread
+from kivy.uix.screenmanager import Screen
+
+True, False
+from kivy.clock import Clock
 from datetime import datetime
 import traceback
 
-import os, sys, time
+import time
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, \
-    widget_feed_override, widget_speed_override  # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, \
+from asmcnc.skavaUI import widget_status_bar, widget_feed_override, widget_speed_override  # @UnresolvedImport
+from asmcnc.skavaUI import widget_z_height, \
     popup_info  # @UnresolvedImport
-from asmcnc.geometry import job_envelope  # @UnresolvedImport
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty  # @UnresolvedImport
 
 from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
 from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase

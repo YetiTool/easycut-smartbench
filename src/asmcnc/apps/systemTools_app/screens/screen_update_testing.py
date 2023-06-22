@@ -5,16 +5,13 @@ Update testing screen for system tools app
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty
-from kivy.clock import Clock
+import subprocess
 
-import subprocess, sys, os
-import csv, threading, time, textwrap
-from time import sleep
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
 
 Builder.load_string("""
 

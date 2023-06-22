@@ -5,22 +5,18 @@ Created on 19 Aug 2017
 @author: Ed
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.graphics import Color, Rectangle
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from asmcnc.comms import usb_storage
-from os import path
+import os
+import sys
 from itertools import takewhile
+from os import path
+from shutil import copy
+
+import kivy
 from chardet import detect
+from kivy.graphics import Color, Rectangle
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

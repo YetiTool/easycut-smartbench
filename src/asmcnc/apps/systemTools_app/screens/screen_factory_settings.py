@@ -7,25 +7,21 @@ Menu screen for system tools app
 import os
 import sys
 
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-from kivy.uix.spinner import Spinner
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_factory_settings
 from asmcnc.apps.systemTools_app.screens import popup_system
-
-from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
-from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
-from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
-from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
-from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
-from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 from asmcnc.production.database.calibration_database import CalibrationDatabase
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -641,19 +637,19 @@ class FactorySettingsScreen(Screen):
 
     def set_toggle_buttons(self):
 
-        if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
+        if not self.systemtools_sm.sm.get_screen('go').show_spindle_overload:
             self.show_spindle_overload_toggle.state = 'normal'
             self.show_spindle_overload_toggle.text = 'Show spindle overload'
 
-        elif self.systemtools_sm.sm.get_screen('go').show_spindle_overload == True:
+        elif self.systemtools_sm.sm.get_screen('go').show_spindle_overload:
             self.show_spindle_overload_toggle.state = 'down'
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
 
-        if self.m.reminders_enabled == True:
+        if self.m.reminders_enabled:
             self.maintenance_reminder_toggle.state = 'normal'
             self.maintenance_reminder_toggle.text = "Turn reminders off"
 
-        elif self.m.reminders_enabled == False:
+        elif not self.m.reminders_enabled:
             self.maintenance_reminder_toggle.state = 'down'
             self.maintenance_reminder_toggle.text = "Turn reminders on"
 

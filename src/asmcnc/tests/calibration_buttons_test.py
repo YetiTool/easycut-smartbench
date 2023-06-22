@@ -10,25 +10,12 @@ This screen does three things:
 - Asks the user to check their file before sending it to the machine
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.uix.progressbar import ProgressBar
-from builtins import file, False
-from kivy.clock import Clock
-from functools import partial
-from kivy.graphics import Color, Rectangle
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+False
 
-
-import sys, os, time
-from datetime import datetime
-import re
-
+import time
 
 Builder.load_string("""
 

@@ -5,18 +5,17 @@ Tabbed maintenance screen, for setting the laser datum; monitoring brush life.
 @author: Letty
 '''
 
-import os
-
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
-widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
-widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, \
+    widget_maintenance_laser_buttons, \
+    widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, \
+    widget_maintenance_brush_monitor, \
+    widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+    widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, \
+    widget_maintenance_spindle_health_check
 
 Builder.load_string("""
 
@@ -514,7 +513,7 @@ class MaintenanceScreenClass(Screen):
     def on_pre_enter(self):
 
         # LASER
-        if self.m.is_laser_enabled == True:
+        if self.m.is_laser_enabled:
             self.laser_switch_widget.laser_switch.active = True
         else: 
             self.laser_switch_widget.laser_switch.active = False
@@ -601,7 +600,7 @@ class MaintenanceScreenClass(Screen):
         # LASER DATUM
         self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
 
-        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        if self.m.is_laser_enabled: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         self.m.laser_off()

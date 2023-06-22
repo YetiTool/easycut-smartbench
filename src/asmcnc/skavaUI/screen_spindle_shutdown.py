@@ -7,13 +7,11 @@ Created March 2019
 Prepare to home
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
 from datetime import datetime
 
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

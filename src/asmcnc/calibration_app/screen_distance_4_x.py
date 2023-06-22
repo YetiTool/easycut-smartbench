@@ -9,12 +9,11 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
+
 # from asmcnc.calibration_app import screen_measurement
 
 Builder.load_string("""
@@ -257,7 +256,7 @@ class DistanceScreen4xClass(Screen):
 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
-        if self.m.s.is_sequential_streaming == False:
+        if not self.m.s.is_sequential_streaming:
             print("New steps have been set: $100 = " + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()

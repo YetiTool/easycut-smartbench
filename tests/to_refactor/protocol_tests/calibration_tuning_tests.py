@@ -13,9 +13,9 @@ try:
 except: 
     print("Can't import mocking packages, are you on a dev machine?")
 
+import sys
 from time import sleep
 
-import sys
 sys.path.append('./src')
 
 try:
@@ -24,9 +24,6 @@ try:
 
 except:
     pass
-
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
 
 ########################################################
 # IMPORTANT!!
@@ -60,7 +57,7 @@ class MotorCommandsTest(unittest.TestCase):
 
         return status
 
-    test_arr = [[[832, 1023, -999, 1023, 1023], [838, 1023, -999, 1023, 1023], [841, 1023, -999, 1023, 1023], [847, 1023, -999, 1023, 1023], [846, 1023, -999, 1023, 1023], [843, 1023, -999, 1023, 1023], [829, 1023, -999, 1023, 1023], [830, 1023, -999, 1023, 1023]]*(11)]*(21)
+    test_arr = [[[832, 1023, -999, 1023, 1023], [838, 1023, -999, 1023, 1023], [841, 1023, -999, 1023, 1023], [847, 1023, -999, 1023, 1023], [846, 1023, -999, 1023, 1023], [843, 1023, -999, 1023, 1023], [829, 1023, -999, 1023, 1023], [830, 1023, -999, 1023, 1023]] * 11] * 21
 
     def give_me_a_PCB(outerSelf):
 

@@ -6,24 +6,21 @@ Created June 2022
 
 Stall detection experiment
 '''
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from  kivy.uix.boxlayout import BoxLayout
-from  kivy.uix.label import Label
-from  kivy.uix.button import Button
-from kivy.uix.togglebutton import ToggleButton
-from kivy.clock import Clock
-import sys, os
-from functools import partial
-from time import sleep, time
 from datetime import datetime
+from functools import partial
+from time import time
 
-from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+from kivy.uix.togglebutton import ToggleButton
+
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
-from asmcnc.production.database.calibration_database import CalibrationDatabase
-from asmcnc.skavaUI.popup_info import PopupMiniInfo
 
 # Kivy UI bsystemTools_sm.uilder:
 Builder.load_string("""
@@ -739,7 +736,7 @@ class StallJigScreen(Screen):
 
     def generate_grid_key(self, aidx, tidx, fidx):
 
-        return (str(aidx) + str(tidx) + str(fidx))
+        return str(aidx) + str(tidx) + str(fidx)
 
     def store_button(self, aidx, tidx, fidx, button):
 
@@ -972,7 +969,7 @@ class StallJigScreen(Screen):
             return
 
         # if sequential_stream completes successfully
-        if self.m.s.is_sequential_streaming == False:
+        if not self.m.s.is_sequential_streaming:
             log("Homing detected as success!")
             if self.test_status_label.text != "CHECK CALIBRATION":
                 self.test_status_label.text = "READY"

@@ -6,13 +6,12 @@ Screen 31 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error, popup_info
+from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, \
+    widget_sC_work_coordinates
 
 Builder.load_string("""
 
@@ -392,7 +391,7 @@ class ShapeCutter31ScreenClass(Screen):
     def bounding_box_test(self):
         bounds_output = self.j.is_job_within_bounds()
         
-        if bounds_output == True:
+        if bounds_output:
             self.shapecutter_sm.next_screen()
         else: 
             description = "The job is not within the bounds of SmartBench." + \

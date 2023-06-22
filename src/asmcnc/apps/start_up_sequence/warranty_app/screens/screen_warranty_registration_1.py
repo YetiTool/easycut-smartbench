@@ -3,15 +3,8 @@ Created on nov 2020
 @author: Ollie
 '''
 
-from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.textinput import TextInput
-from asmcnc.skavaUI import widget_status_bar
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.gridlayout import GridLayout
-import sys, os
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
 

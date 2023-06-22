@@ -3,15 +3,9 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
-
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
 
 Builder.load_string("""
 
@@ -86,7 +80,7 @@ class VirtualZ(Widget):
         z_min = self.sm.get_screen('home').job_box.range_z[0]
         z0_machine_coords = self.m.z_wco()
                   
-        self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
+        self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords / self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
 
         if self.jd.filename == '':
             if self.z_clear.size[1] == 0: 
@@ -96,8 +90,8 @@ class VirtualZ(Widget):
                 self.z_cut.size[1] = 4
 
         else:
-            self.z_clear.size[1] = ( z_max/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
-            self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
+            self.z_clear.size[1] = (z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[1])
+            self.z_cut.size[1] = ((-z_min) / self.m.grbl_z_max_travel * self.z_clear.parent.size[1])
 
         self.z_cut.y = self.z_clear.y - self.z_cut.height
 
@@ -105,7 +99,7 @@ class VirtualZ(Widget):
 
     def setBitPos(self):
 
-        self.z_bit.y = (self.z_bit.parent.y + self.z_bit.parent.size[1] 
-                        - (-(self.m.mpos_z()/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1]))
+        self.z_bit.y = (self.z_bit.parent.y + self.z_bit.parent.size[1]
+                        - (-(self.m.mpos_z() / self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]))
 
     

@@ -1,11 +1,7 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.skavaUI import popup_info
-
-try: 
+try:
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt

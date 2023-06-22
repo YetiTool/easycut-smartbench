@@ -3,11 +3,10 @@ Created on nov 2020
 @author: Letty
 '''
 
+import os
+
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

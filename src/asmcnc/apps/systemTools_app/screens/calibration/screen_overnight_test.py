@@ -1,29 +1,18 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from datetime import datetime
-from asmcnc.skavaUI import popup_info
-import math
-import traceback
-from time import sleep
-import threading
-from datetime import datetime
-import json
-from asmcnc.production.database.payload_publisher import DataPublisher
-from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
-import os
 import glob
+import os
+import traceback
+from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
-
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopOvernightTest
-from kivy.uix.popup import Popup
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-
 from asmcnc.comms.logging import log_exporter
+from asmcnc.production.database.payload_publisher import DataPublisher
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -1045,7 +1034,7 @@ class OvernightTesting(Screen):
 
     def get_min_peak(self, raw_vals):
         try:
-            return (min(raw_vals))
+            return min(raw_vals)
         except:
             print("Min peak error:")
             print(traceback.format_exc())

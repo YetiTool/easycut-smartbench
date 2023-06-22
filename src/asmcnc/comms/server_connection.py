@@ -1,9 +1,8 @@
 import socket
-import sys, os
+import sys
 import threading
-from time import sleep
 from datetime import datetime
-import traceback
+from time import sleep
 
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 

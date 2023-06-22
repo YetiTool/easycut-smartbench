@@ -21,34 +21,18 @@ touch /home/pi/YETI_ZHEADQC_PROD_JIG.txt
 #######################################################
 '''
 
+from datetime import datetime
+
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-from time import sleep
-
-from .asmcnc.comms.router_machine import RouterMachine 
-from .asmcnc.comms import server_connection
-from .asmcnc.apps.app_manager import AppManagerClass
-from .settings.settings_manager import Settings
-from .asmcnc.job.job_data import JobData
-from .asmcnc.comms.localization import Localization
-from .asmcnc.comms import usb_storage
 from .asmcnc.comms import smartbench_flurry_database_connection
-
-from .asmcnc.skavaUI.screen_home import HomeScreen
-from .asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
-from .asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
-from .asmcnc.skavaUI.screen_homing_active import HomingScreenActive
-from .asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
-from .asmcnc.skavaUI import screen_door
-from .asmcnc.skavaUI import screen_error
-
-from .asmcnc.production.z_head_qc_jig.z_head_qc_connecting import ZHeadQCConnecting
-from .asmcnc.production.z_head_qc_jig.z_head_qc_pcb_set_up import ZHeadPCBSetUp
-from .asmcnc.production.z_head_qc_jig.z_head_qc_pcb_set_up_outcome import ZHeadPCBSetUpOutcome
-from .asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
-from .asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
+from .asmcnc.comms import usb_storage
+from .asmcnc.comms.localization import Localization
+from .asmcnc.comms.router_machine import RouterMachine
+from .asmcnc.job.job_data import JobData
+from .asmcnc.production.database.calibration_database import CalibrationDatabase
 from .asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
 from .asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
 from .asmcnc.production.z_head_qc_jig.z_head_qc_3 import ZHeadQC3
@@ -59,14 +43,23 @@ from .asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
 from .asmcnc.production.z_head_qc_jig.z_head_qc_8 import ZHeadQC8
 from .asmcnc.production.z_head_qc_jig.z_head_qc_aftr_apr_21 import ZHeadQCWarrantyAfterApr21
 from .asmcnc.production.z_head_qc_jig.z_head_qc_b4_apr_21 import ZHeadQCWarrantyBeforeApr21
+from .asmcnc.production.z_head_qc_jig.z_head_qc_connecting import ZHeadQCConnecting
 from .asmcnc.production.z_head_qc_jig.z_head_qc_db1 import ZHeadQCDB1
 from .asmcnc.production.z_head_qc_jig.z_head_qc_db2 import ZHeadQCDB2
-from .asmcnc.production.z_head_qc_jig.z_head_qc_db_success import ZHeadQCDBSuccess
 from .asmcnc.production.z_head_qc_jig.z_head_qc_db_fail import ZHeadQCDBFail
-
-from .asmcnc.production.database.calibration_database import CalibrationDatabase
-
-from datetime import datetime
+from .asmcnc.production.z_head_qc_jig.z_head_qc_db_success import ZHeadQCDBSuccess
+from .asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
+from .asmcnc.production.z_head_qc_jig.z_head_qc_pcb_set_up import ZHeadPCBSetUp
+from .asmcnc.production.z_head_qc_jig.z_head_qc_pcb_set_up_outcome import ZHeadPCBSetUpOutcome
+from .asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
+from .asmcnc.skavaUI import screen_door
+from .asmcnc.skavaUI import screen_error
+from .asmcnc.skavaUI.screen_home import HomeScreen
+from .asmcnc.skavaUI.screen_homing_active import HomingScreenActive
+from .asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
+from .asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
+from .asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
+from .settings.settings_manager import Settings
 
 Cmport = 'COM3'
 

@@ -141,7 +141,8 @@ class YetiPilotWidget(Widget):
         self.profile_label.text = self.l.get_str("Profile")
 
     def toggle_button_img(self, state):
-        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (('on' if state=="down" else 'off'))
+        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (
+            'on' if state == "down" else 'off')
 
     def switch_reflects_yp(self):
         self.switch.state = "down" if self.yp.use_yp else "normal"

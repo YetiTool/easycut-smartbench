@@ -6,10 +6,8 @@ Screen 22 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.switch import Switch
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
@@ -544,14 +542,14 @@ class ShapeCutter20ScreenClass(Screen):
 
     def toggle_units(self):
         
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
             
             if not (self.a_dimension.text == ""): self.a_dimension.text = "{:.2f}".format(float(self.a_dimension.text) / 25.4)
             if not (self.b_dimension.text == ""): self.b_dimension.text = "{:.2f}".format(float(self.b_dimension.text) / 25.4)
             if not (self.c_dimension.text == ""): self.c_dimension.text = "{:.2f}".format(float(self.c_dimension.text) / 25.4)
 
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
 
             if not (self.a_dimension.text == ""): self.a_dimension.text = "{:.2f}".format(float(self.a_dimension.text) * 25.4)
@@ -562,10 +560,10 @@ class ShapeCutter20ScreenClass(Screen):
         if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
         and not self.c_dimension.text == "":
            
-            if self.unit_toggle.active == True:
+            if self.unit_toggle.active:
                 self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
     
-            elif self.unit_toggle.active == False: 
+            elif not self.unit_toggle.active:
                 self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
             
             units = self.j.parameter_dict["cutter dimensions"]["units"]

@@ -7,29 +7,16 @@ Created on 25 Feb 2019
 This screen checks the users job, and allows them to review any errors 
 '''
 
-import kivy
-import docutils
-import time
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.scrollview import ScrollView
-from builtins import file
+from datetime import datetime
+from functools import partial
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import widget_gcode_view
-
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from datetime import datetime
-from functools import partial
-import re
 
 ERROR_CODES = {
 
@@ -498,7 +485,7 @@ class CheckingScreen(Screen):
     
     def get_error_log(self, dt):  
     
-        if self.error_log != []:
+        if self.error_log:
             Clock.unschedule(self.error_out_event)
             if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
             
@@ -541,7 +528,7 @@ class CheckingScreen(Screen):
     
             self.write_error_output(self.error_log)
             
-            if self.job_ok == False:
+            if not self.job_ok:
                 self.jd.reset_values()
     
             log('File has been checked!')
@@ -598,7 +585,7 @@ class CheckingScreen(Screen):
                     )
                 error_summary.append('G-code: "' + f[1] + '"\n\n')
         
-        if error_summary == []:
+        if not error_summary:
             self.display_output = self.display_output + ''
         else:
             # Put everything into a giant string for the ReStructed Text object        

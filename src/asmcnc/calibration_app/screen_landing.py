@@ -6,14 +6,13 @@ Landing Screen for the Calibration App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.calibration_app import screen_prep_calibration
-from asmcnc.calibration_app import screen_wait
 from asmcnc.calibration_app import screen_finished
+from asmcnc.calibration_app import screen_prep_calibration
 from asmcnc.calibration_app import screen_tape_measure
+from asmcnc.calibration_app import screen_wait
 
 Builder.load_string("""
 

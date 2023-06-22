@@ -5,15 +5,17 @@ Screen 22 for the Shape Cutter App
 @author: Letty
 '''
 
+
+from builtins import
+
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.switch import Switch
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from builtins import False
+
+False
 
 Builder.load_string("""
 
@@ -585,14 +587,14 @@ class ShapeCutter22ScreenClass(Screen):
 # Screen specific
     def toggle_units(self):
             
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.parameter_dict["tabs"]["units"] = "inches"
             
             if not (self.td_dimension.text == ""): self.td_dimension.text = "{:.2f}".format(float(self.td_dimension.text) / 25.4)
             if not (self.th_dimension.text == ""): self.th_dimension.text = "{:.2f}".format(float(self.th_dimension.text) / 25.4)
             if not (self.tw_dimension.text == ""): self.tw_dimension.text = "{:.2f}".format(float(self.tw_dimension.text) / 25.4)
 
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.parameter_dict["tabs"]["units"] = "mm"
 
             if not (self.td_dimension.text == ""): self.td_dimension.text = "{:.2f}".format(float(self.td_dimension.text) * 25.4)
@@ -600,12 +602,12 @@ class ShapeCutter22ScreenClass(Screen):
             if not (self.tw_dimension.text == ""): self.tw_dimension.text = "{:.2f}".format(float(self.tw_dimension.text) * 25.4) 
             
     def toggle_tabs(self):
-        if self.tab_toggle.active == True:
+        if self.tab_toggle.active:
             self.j.parameter_dict["tabs"]["tabs?"] = True
             self.td_dimension.disabled = False
             self.th_dimension.disabled = False
             self.tw_dimension.disabled = False           
-        elif self.tab_toggle.active == False: 
+        elif not self.tab_toggle.active:
             self.j.parameter_dict["tabs"]["tabs?"] = False    
             self.td_dimension.text = ''
             self.td_dimension.disabled = True
@@ -615,17 +617,17 @@ class ShapeCutter22ScreenClass(Screen):
             self.tw_dimension.disabled = True
 
     def check_dimensions(self):
-        if self.tab_toggle.active == True:
+        if self.tab_toggle.active:
             self.j.parameter_dict["tabs"]["tabs?"] = True
             
             if not self.td_dimension.text == "" and not self.th_dimension.text == "" \
             and not self.tw_dimension.text == "":
 
             
-                if self.unit_toggle.active == True:
+                if self.unit_toggle.active:
                     self.j.parameter_dict["tabs"]["units"] = "inches"
         
-                elif self.unit_toggle.active == False:
+                elif not self.unit_toggle.active:
                     self.j.parameter_dict["tabs"]["units"] = "mm"
             
                 units = self.j.parameter_dict["tabs"]["units"]
@@ -657,7 +659,7 @@ class ShapeCutter22ScreenClass(Screen):
             else:
                 pass
             
-        elif self.tab_toggle.active == False:
+        elif not self.tab_toggle.active:
             self.j.parameter_dict["tabs"]["tabs?"] = False
             
             self.shapecutter_sm.next_screen()

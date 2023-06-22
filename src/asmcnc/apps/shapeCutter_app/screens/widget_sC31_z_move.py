@@ -3,16 +3,10 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC31_z_height
-
 
 Builder.load_string("""
 

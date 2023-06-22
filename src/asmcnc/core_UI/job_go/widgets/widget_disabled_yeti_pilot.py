@@ -1,8 +1,7 @@
-from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
 from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
-from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty
 
 Builder.load_string("""
 

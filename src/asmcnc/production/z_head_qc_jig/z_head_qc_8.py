@@ -1,9 +1,8 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
-from asmcnc.skavaUI import widget_status_bar
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
-import datetime
+from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
 <ZHeadQC8>:

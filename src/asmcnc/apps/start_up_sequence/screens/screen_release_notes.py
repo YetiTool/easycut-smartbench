@@ -5,13 +5,13 @@ Created on 6 Aug 2021
 Screen shown after update to display new release notes
 '''
 
-import kivy, os
+import os
+from datetime import datetime
+
 from kivy.lang import Builder
+from kivy.properties import StringProperty, DictProperty
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty, DictProperty
-
-from datetime import datetime
 
 Builder.load_string("""
 
@@ -148,7 +148,7 @@ class ReleaseNotesScreen(Screen):
 
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
-        self.release_notes_filename = '../' + (self.version).replace(".","") + '.txt'
+        self.release_notes_filename = '../' + self.version.replace(".", "") + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
         self.update_strings()

@@ -4,16 +4,12 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy, textwrap
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+import textwrap
 
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -381,13 +377,13 @@ class XYMove(Widget):
         popup_info.PopupPark(self.sm, self.m, self.l, warning)
 
     def go_x_datum(self):
-        if self.m.is_machine_homed == False:
+        if not self.m.is_machine_homed:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
-        if self.m.is_machine_homed == False:
+        if not self.m.is_machine_homed:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_y_datum()

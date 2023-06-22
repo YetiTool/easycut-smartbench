@@ -1,15 +1,15 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from kivy.properties import ObjectProperty
 import re
+import subprocess
 import traceback
 from datetime import datetime
+
 from kivy.clock import Clock
-import subprocess
-from asmcnc.skavaUI import popup_info
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupNoSSHFile, PopupFailedToSendSSHKey
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <UploadSerialNumbersScreen>:

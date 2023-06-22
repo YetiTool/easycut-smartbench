@@ -1,14 +1,14 @@
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from kivy.lang import Builder
+import glob
+import os
+import re
+import subprocess
+import sys
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
-
-import subprocess
-
-import sys, os, re, glob
 
 try: 
     import pigpio

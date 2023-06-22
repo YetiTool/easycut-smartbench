@@ -1,10 +1,9 @@
 import sys
-
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ZHeadQCConnecting>:
@@ -71,7 +70,7 @@ class ZHeadQCConnecting(Screen):
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
 
-        if not self.m.TMC_registers_have_been_read_in() and (self.m.s.fw_version).startswith("2"):
+        if not self.m.TMC_registers_have_been_read_in() and self.m.s.fw_version.startswith("2"):
             log("Waiting to get TMC registers")
             self.connecting_label.text = "Waiting to get TMC registers"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)

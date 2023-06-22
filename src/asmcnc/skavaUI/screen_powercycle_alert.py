@@ -6,12 +6,11 @@ Created March 2020
 
 Basic screen 
 '''
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
-import sys, os
+import sys
 
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 # Kivy UI builder:
 Builder.load_string("""

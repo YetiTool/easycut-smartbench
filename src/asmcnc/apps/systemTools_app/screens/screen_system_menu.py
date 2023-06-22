@@ -7,12 +7,8 @@ Menu screen for system tools app
 '''
 
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string("""

@@ -7,12 +7,8 @@ Created March 2019
 Prepare to home
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
-
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 
@@ -124,7 +120,7 @@ class HomingScreenPrepare(Screen):
 
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
-        if self.m.is_squaring_XY_needed_after_homing == True:
+        if self.m.is_squaring_XY_needed_after_homing:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
@@ -139,7 +135,7 @@ class HomingScreenPrepare(Screen):
         
     def update_strings(self):
         self.press_to_home_label.text = self.l.get_str('Then, press button to home.')
-        if self.m.is_squaring_XY_needed_after_homing == True:
+        if self.m.is_squaring_XY_needed_after_homing:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')

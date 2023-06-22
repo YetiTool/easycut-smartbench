@@ -5,11 +5,10 @@ Screen 23 for the Shape Cutter App
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
@@ -569,7 +568,7 @@ class ShapeCutter23ScreenClass(Screen):
 # Screen specific
     def toggle_units(self):
 
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.parameter_dict["feed rates"]["units"] = "inches"
             self.xy_feed_units.text = "inches/min"
             self.z_feed_units.text = "inches/min"
@@ -577,7 +576,7 @@ class ShapeCutter23ScreenClass(Screen):
             if not (self.xy_feed.text == ""): self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) / 25.4)
             if not (self.z_feed.text == ""): self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) / 25.4)
  
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.parameter_dict["feed rates"]["units"] = "mm"
             self.xy_feed_units.text = "mm/min"
             self.z_feed_units.text = "mm/min"
@@ -589,9 +588,9 @@ class ShapeCutter23ScreenClass(Screen):
     def check_dimensions(self):        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
             
-            if self.unit_toggle.active == True:
+            if self.unit_toggle.active:
                 self.j.parameter_dict["feed rates"]["units"] = "inches"
-            elif self.unit_toggle.active == False: 
+            elif not self.unit_toggle.active:
                 self.j.parameter_dict["feed rates"]["units"] = "mm"
             
                 # save the dimensions

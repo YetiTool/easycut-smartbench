@@ -6,11 +6,10 @@ Screen 27 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, Screen
-from asmcnc.apps.shapeCutter_app.screens import popup_info
+from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
 
 Builder.load_string("""
 
@@ -336,12 +335,12 @@ class ShapeCutter27ScreenClass(Screen):
         if self.j.shape_dict["shape"] == 'circle':
             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
                                       "This is always in the centre of your circle. ")
-            self.image_source = ("./asmcnc/apps/shapeCutter_app/img/27_circ.png")
+            self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_circ.png"
             self.image_box.padding = 120,0,0,0
         elif self.j.shape_dict["shape"] == 'rectangle':
             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
                                       "This is always in the bottom right corner of your rectangle.")
-            self.image_source = ("./asmcnc/apps/shapeCutter_app/img/27_rect.png")
+            self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_rect.png"
             self.image_box.padding = 25,0,0,0
 
 # Action buttons       

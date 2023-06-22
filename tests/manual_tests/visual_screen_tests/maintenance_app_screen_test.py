@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from kivy.config import Config
-from kivy.clock import Clock
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')

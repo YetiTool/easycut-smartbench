@@ -6,10 +6,8 @@ Dimensions Entry Screen for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
-from kivy.uix.textinput import TextInput
-from kivy.uix.switch import Switch
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
@@ -448,10 +446,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.j.shape_dict["dimensions"] = self.j.circle_dimensions
             
             if self.j.shape_dict["cut_type"] == 'island':
-                self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_is_circ.png")
+                self.image_dims.source = "./asmcnc/apps/shapeCutter_app/img/dims_is_circ.png"
             
             elif self.j.shape_dict["cut_type"] == 'aperture':
-                self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_circ.png")
+                self.image_dims.source = "./asmcnc/apps/shapeCutter_app/img/dims_apt_circ.png"
               
         elif self.j.shape_dict["shape"] == 'rectangle':
             
@@ -475,10 +473,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.j.shape_dict["dimensions"] = self.j.rectangle_dimensions 
             
             if self.j.shape_dict["cut_type"] == 'island':
-                self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_is_rect.png")
+                self.image_dims.source = "./asmcnc/apps/shapeCutter_app/img/dims_is_rect.png"
 
             elif self.j.shape_dict["cut_type"] == 'aperture':
-                self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_rect.png")
+                self.image_dims.source = "./asmcnc/apps/shapeCutter_app/img/dims_apt_rect.png"
 
     def get_info(self):
         pass
@@ -490,7 +488,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.shapecutter_sm.next_screen()
       
     def toggle_units(self):       
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.shape_dict["units"] = "inches"
             
             if not (self.input_dim1.text == ""): self.input_dim1.text = "{:.2f}".format(float(self.input_dim1.text) / 25.4)
@@ -498,7 +496,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
             if not (self.input_dim3.text == ""): self.input_dim3.text = "{:.2f}".format(float(self.input_dim3.text) / 25.4)
             if not (self.input_dim4.text == ""): self.input_dim4.text = "{:.2f}".format(float(self.input_dim4.text) / 25.4)
         
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.shape_dict["units"] = "mm"
             
             if not (self.input_dim1.text == ""): self.input_dim1.text = "{:.2f}".format(float(self.input_dim1.text) * 25.4)
@@ -508,10 +506,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
 
     def check_dimensions(self):    
 
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.shape_dict["units"] = "inches"
 
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.shape_dict["units"] = "mm"
         
         units = self.j.shape_dict["units"]

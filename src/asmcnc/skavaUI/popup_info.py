@@ -4,24 +4,20 @@
 Info pop-up
 '''
 
-import kivy
 import os
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.image import Image
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.rst import RstDocument
-from kivy.clock import Clock
-from kivy.uix.checkbox import CheckBox
 from datetime import datetime
-from kivy.graphics import Color, Rectangle
+
+from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.checkbox import CheckBox
+from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.rst import RstDocument
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
+
 
 def log(message):
     timestamp = datetime.now()
@@ -112,7 +108,7 @@ class PopupDatum(Widget):
 
         def set_datum(*args):
 
-            if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
+            if self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True:
 
                 if xy == 'X':
                     self.m.set_x_datum_with_laser()  # testing!!
@@ -152,7 +148,7 @@ class PopupDatum(Widget):
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
-        if self.m.is_laser_enabled == True:
+        if self.m.is_laser_enabled:
             chk_label = Label(size_hint_y=1, size_hint_x=0.8, halign='center', valign='middle', text=chk_message,
                               text_size=[200, 100], color=[0, 0, 0, 1], padding=[0, 20], markup=True)
             checkbox = CheckBox(size_hint_x=0.2,
@@ -165,7 +161,7 @@ class PopupDatum(Widget):
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20, 20, 20, 20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
-        if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
+        if self.m.is_laser_enabled: layout_plan.add_widget(chk_layout)
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title=title_string,
@@ -182,7 +178,7 @@ class PopupDatum(Widget):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
-        if self.m.is_laser_enabled == True: checkbox.bind(active=on_checkbox_active)
+        if self.m.is_laser_enabled: checkbox.bind(active=on_checkbox_active)
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=set_datum)
@@ -332,7 +328,7 @@ class PopupUSBInfo(Widget):
 
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-        elif safe_to_remove == False:
+        elif not safe_to_remove:
 
             description = (
                     self.l.get_str("Do not remove your USB stick yet.") + "\n\n" + \
@@ -341,7 +337,7 @@ class PopupUSBInfo(Widget):
 
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-        elif safe_to_remove == True:
+        elif safe_to_remove:
             description = self.l.get_str('It is now safe to remove your USB stick.')
             ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
@@ -790,7 +786,7 @@ class PopupWait(Widget):
         self.sm = screen_manager
         self.l = localization
 
-        if description == False:
+        if not description:
             description = self.l.get_str("Please wait") + "..."
 
         title_string = self.l.get_str("Please Wait") + "..."

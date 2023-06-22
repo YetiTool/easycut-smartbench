@@ -6,8 +6,8 @@ ApIs Screen for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 
@@ -239,12 +239,12 @@ class ShapeCutterApIsScreenClass(Screen):
         
     def on_pre_enter(self):
         if self.j.shape_dict["shape"] == "circle":
-            self.image_apt.source = ("./asmcnc/apps/shapeCutter_app/img/apt_circ.png")
-            self.image_is.source = ("./asmcnc/apps/shapeCutter_app/img/is_circ.png")
+            self.image_apt.source = "./asmcnc/apps/shapeCutter_app/img/apt_circ.png"
+            self.image_is.source = "./asmcnc/apps/shapeCutter_app/img/is_circ.png"
         
         elif self.j.shape_dict["shape"] == 'rectangle':
-            self.image_apt.source = ("./asmcnc/apps/shapeCutter_app/img/apt_rect.png")
-            self.image_is.source = ("./asmcnc/apps/shapeCutter_app/img/is_rect.png")
+            self.image_apt.source = "./asmcnc/apps/shapeCutter_app/img/apt_rect.png"
+            self.image_is.source = "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
       
     def aperture(self):
         self.j.shape_dict["cut_type"] = "aperture"

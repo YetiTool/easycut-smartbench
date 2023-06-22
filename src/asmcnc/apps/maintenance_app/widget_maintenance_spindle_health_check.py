@@ -1,8 +1,5 @@
 from kivy.lang import Builder
-from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.graphics import RoundedRectangle
 
 Builder.load_string("""
 
@@ -97,7 +94,8 @@ class WidgetSpindleHealthCheck(BoxLayout):
         self.switch.state = "down" if self.m.is_spindle_health_check_active() else "normal"
 
     def toggle_button_img(self, state):
-        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (('on' if state=="down" else 'off'))
+        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (
+            'on' if state == "down" else 'off')
 
     def toggle_yeti_pilot_availability(self, switch):
         self.toggle_button_img(switch.state)

@@ -7,13 +7,12 @@ Created March 2019
 Squaring decision: manual or auto?
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from asmcnc.skavaUI import popup_info
 from datetime import datetime
 
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 

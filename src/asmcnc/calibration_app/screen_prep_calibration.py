@@ -6,9 +6,7 @@ Screen to inform user of essential preparation before they continue calibrating
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.calibration_app import screen_measurement
 

@@ -1,14 +1,15 @@
-import re
-from functools import partial
 import glob
-import os, subprocess
-
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+import os
+import re
+import subprocess
 from datetime import datetime
+from functools import partial
 
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
@@ -626,7 +627,7 @@ class ZHeadPCBSetUp(Screen):
 
     def generate_fw_string_from_path(self, fw_path):
         just_numbers_and_underscores = re.findall('[0-9_]+', os.path.basename(fw_path))[0]
-        return (".".join(just_numbers_and_underscores.split("_")))
+        return ".".join(just_numbers_and_underscores.split("_"))
 
     def check_and_set_textinput_values(self):
 

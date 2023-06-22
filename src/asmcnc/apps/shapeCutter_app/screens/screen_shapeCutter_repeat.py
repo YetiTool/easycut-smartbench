@@ -6,9 +6,7 @@ Repeat? Screen for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
-
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

@@ -79,7 +79,7 @@ class protocol_v2(object):
     # Enable or disable extraction. 1: enable, 0: disable.
     def SetExtractorState(self, ExtractorState):
         command = SET_EXTRACTION_STATE
-        if (ExtractorState>1):
+        if ExtractorState>1:
             ExtractorState = 1
         byte_array = self.custom_int_to_bytes(ExtractorState) 
         return self.construct_rtl_v2_packet(command, byte_array)
@@ -89,7 +89,7 @@ class protocol_v2(object):
     def SetSpindleSpeed(self, SpindleSpeed):
         command = SET_SPINDLE_SPEED
         data_length = 2
-        if (SpindleSpeed>65000):
+        if SpindleSpeed>65000:
             SpindleSpeed = 65000
         u16_data = SpindleSpeed
         byte_array = b''
@@ -101,7 +101,7 @@ class protocol_v2(object):
     # Enable or disable laser datum. 1: enable, 0: disable.
     def SetLaserDatumState(self, LaserDatumState):
         command = SET_LASER_DATUM_STATE
-        if (LaserDatumState>1):
+        if LaserDatumState>1:
             LaserDatumState = 1
         byte_array = self.custom_int_to_bytes(LaserDatumState) 
         return self.construct_rtl_v2_packet(command, byte_array)

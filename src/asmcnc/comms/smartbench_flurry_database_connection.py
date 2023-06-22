@@ -1,9 +1,11 @@
-from kivy.clock import Clock
-import json, socket, datetime, time
-from requests import get
-import threading, queue
-from time import sleep
+import json, datetime, time
+import json
+import queue
+import threading
+import time
 import traceback
+from time import sleep
+
 
 def log(message):
 	timestamp = datetime.datetime.now()
@@ -17,7 +19,7 @@ except:
 	log("Couldn't import pika lib")
 
 
-class DatabaseEventManager():
+class DatabaseEventManager:
 
 	z_lube_percent_left_next = 50
 	spindle_brush_percent_left_next = 50

@@ -1,6 +1,10 @@
-from kivy.uix.screenmanager import ScreenManager, Screen
 import os
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3, popup_data_wifi_warning
+import os
+
+from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, \
+    wifi_and_data_consent_3, popup_data_wifi_warning
+
 
 class ScreenManagerDataConsent(object):
 

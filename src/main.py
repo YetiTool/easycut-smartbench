@@ -17,14 +17,13 @@ www.yetitool.com
 # except:
 # 	print("Could not import hanging_threads")
 
-import time
-import sys, os
-from datetime import datetime
+import os
 import os.path
-from os import path
+import sys
+from datetime import datetime
 
 from kivy.config import Config
-from kivy.clock import Clock
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
@@ -32,58 +31,53 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 
 # COMMS IMPORTS
-from .asmcnc.comms import router_machine  # @UnresolvedImport
-from .asmcnc.comms import server_connection
-from .asmcnc.comms import smartbench_flurry_database_connection
+from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import server_connection
+from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from .asmcnc.apps import app_manager # @UnresolvedImport
-from .settings import settings_manager # @UnresolvedImport
-from .asmcnc.comms import localization
+from asmcnc.apps import app_manager # @UnresolvedImport
+from settings import settings_manager # @UnresolvedImport
+from asmcnc.comms import localization
 
 # JOB DATA IMPORT
-from .asmcnc.job import job_data
-from .asmcnc.job.yetipilot.yetipilot import YetiPilot
+from asmcnc.job import job_data
+from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
-from .asmcnc.skavaUI import screen_home # @UnresolvedImport
-from .asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
-from .asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
-from .asmcnc.skavaUI import screen_go # @UnresolvedImport
-from .asmcnc.skavaUI import screen_jobstart_warning
-from .asmcnc.skavaUI import screen_lobby # @UnresolvedImport
-from .asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
-from .asmcnc.skavaUI import screen_check_job # @UnresolvedImport
-from .asmcnc.skavaUI import screen_error # @UnresolvedImport
-from .asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from .asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
-from .asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
-from .asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
-from .asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
-from .asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
-from .asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
-from .asmcnc.skavaUI import screen_door # @UnresolvedImport
-from .asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
-from .asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
-from .asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
-from .asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
-from .asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
-from .asmcnc.skavaUI import screen_spindle_cooldown
-from .asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
-from .asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
-from .asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
-from .asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
-from .asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
-from .asmcnc.skavaUI import screen_nudge # @UnresolvedImport
-from .asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
-from .asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_home # @UnresolvedImport
+from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
+from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
+from asmcnc.skavaUI import screen_go # @UnresolvedImport
+from asmcnc.skavaUI import screen_jobstart_warning
+from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
+from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
+from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
+from asmcnc.skavaUI import screen_error # @UnresolvedImport
+from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
+from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
+from asmcnc.skavaUI import screen_door # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
+from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_spindle_cooldown
+from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
+from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
+from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 
 # developer testing
 Cmport = 'COM3'

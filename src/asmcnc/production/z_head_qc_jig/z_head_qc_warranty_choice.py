@@ -1,9 +1,11 @@
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+import glob
+import re
+import traceback
+
 from kivy.clock import Clock
-import traceback, glob, os, re
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import widget_status_bar
 

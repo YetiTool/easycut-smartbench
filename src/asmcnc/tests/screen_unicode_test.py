@@ -7,8 +7,7 @@ Unicode test screen
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

@@ -8,7 +8,11 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 '''
 
 import sys, os, subprocess
-sys.path.append('./src')
+ import os
+ import subprocess
+ import sys
+
+ sys.path.append('./src')
 os.chdir('./src')
 
 from kivy.config import Config
@@ -20,25 +24,17 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import unittest
-from mock import Mock, MagicMock, patch
+ from mock import Mock
 
-
-import kivy
-from kivy.app import App
+ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from asmcnc.comms import localization
-from kivy.lang import Builder
+ from kivy.lang import Builder
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
-from asmcnc.comms import server_connection
-from asmcnc.comms import smartbench_flurry_database_connection
 
-# NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+ # NB: router_machine imports serial_connection
+ from settings import settings_manager # @UnresolvedImport
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *

@@ -3,20 +3,13 @@
 Created for info buttons in the shapecutter app
 '''
 
-import kivy
-
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
+from kivy.uix.button import Button
 from kivy.uix.checkbox import CheckBox
-from kivy.uix.popup import Popup
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label
-from kivy.uix.button import  Button
 from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.widget import Widget
 
 
 class PopupInputError(Widget):
@@ -78,7 +71,7 @@ class PopupDatum(Widget):
 
       def set_datum(*args):
 
-          if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
+          if self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True:
             print("setting datum with laser")
 
             if xy == 'X':
@@ -123,7 +116,7 @@ class PopupDatum(Widget):
       btn_layout.add_widget(ok_button)
 
 
-      if self.m.is_laser_enabled == True:
+      if self.m.is_laser_enabled:
         chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
@@ -133,7 +126,7 @@ class PopupDatum(Widget):
       layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
       layout_plan.add_widget(img)
       layout_plan.add_widget(label)
-      if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
+      if self.m.is_laser_enabled: layout_plan.add_widget(chk_layout)
       layout_plan.add_widget(btn_layout)
       
       popup = Popup(title='Warning!',
@@ -150,7 +143,7 @@ class PopupDatum(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
-      if self.m.is_laser_enabled == True: checkbox.bind(active=on_checkbox_active)
+      if self.m.is_laser_enabled: checkbox.bind(active=on_checkbox_active)
 
       ok_button.bind(on_press=popup.dismiss)
       ok_button.bind(on_press=set_datum)

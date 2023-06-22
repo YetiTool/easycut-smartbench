@@ -1,4 +1,5 @@
-import sys, os
+import sys
+
 sys.path.append('./src')
 
 try: 
@@ -11,9 +12,6 @@ except:
 
 from asmcnc.job import job_data
 from asmcnc.comms import localization
-from datetime import datetime
-
-from kivy.clock import Clock
 
 '''
 ######################################

@@ -12,9 +12,8 @@ Y measurement:
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.calibration_app import screen_backlash
 from asmcnc.calibration_app import screen_distance_1_x

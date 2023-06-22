@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-import traceback, threading
-import json
 import sys
+import threading
+import traceback
+from datetime import datetime
+
 from asmcnc.production.database.payload_publisher import DataPublisher
+
 
 def log(message):
     timestamp = datetime.now()

@@ -5,10 +5,9 @@ Created on 1 February 2021
 Screen to provide user with important safety information prior to every job start.
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

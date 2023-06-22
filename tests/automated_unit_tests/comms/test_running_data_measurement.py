@@ -3,7 +3,8 @@ Created August 2022
 @author: Letty
 '''
 
-import sys, os
+import sys
+
 sys.path.append('./src')
 
 try: 

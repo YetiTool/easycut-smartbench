@@ -42,14 +42,14 @@ class USB_storage(object):
             self.usb_path = self.linux_usb_path
 
     def enable(self):
-        if self.stick_enabled != True:
+        if not self.stick_enabled:
             self.start_polling_for_usb()
             self.stick_enabled = True
 
     def disable(self):
         self.stick_enabled = False
         self.stop_polling_for_usb()
-        if self.is_usb_mounted_flag == True:
+        if self.is_usb_mounted_flag:
             if sys.platform != "win32":
                 self.unmount_linux_usb()
     
@@ -110,7 +110,7 @@ class USB_storage(object):
                                 if self.IS_USB_VERBOSE: print('Stopped polling')
                                 self.mount_event = Clock.schedule_once(lambda dt: self.mount_linux_usb('sd' + char), 1) # allow time for linux to establish filesystem after os detection of device
                                 break
-            except (OSError):
+            except OSError:
                 pass
 
     def unmount_linux_usb(self):

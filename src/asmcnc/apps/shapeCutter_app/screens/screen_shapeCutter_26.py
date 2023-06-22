@@ -6,9 +6,8 @@ Screen 26 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
@@ -351,6 +350,6 @@ class ShapeCutter26ScreenClass(Screen):
             self.homing_button.disabled = True
             popup_input_error.PopupInputError(self.shapecutter_sm, description)
 
-        if gcode_generated == True: 
+        if gcode_generated:
             self.homing_button.disabled = False
         

@@ -5,11 +5,10 @@ Landing Screen for the Calibration App
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
 
 # from asmcnc.calibration_app import screen_prep_calibration
 

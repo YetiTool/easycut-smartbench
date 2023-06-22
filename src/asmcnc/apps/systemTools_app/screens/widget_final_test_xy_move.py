@@ -3,16 +3,8 @@ X-Y move widget for final test screen
 @author: Ed
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
-
 
 Builder.load_string("""
 #:import hex kivy.utils.get_color_from_hex

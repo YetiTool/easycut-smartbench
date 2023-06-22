@@ -7,25 +7,9 @@ Created on 25 Feb 2019
 This screen checks the users job, and allows them to review any errors 
 '''
 
-import kivy
-import docutils
-import time
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.scrollview import ScrollView
-from builtins import file
-from kivy.clock import Clock
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from datetime import datetime
-from functools import partial
-import re
+from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

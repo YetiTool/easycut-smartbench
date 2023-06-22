@@ -2,16 +2,8 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '440')
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-import sys, os
-from kivy.base import runTouchApp
-
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 

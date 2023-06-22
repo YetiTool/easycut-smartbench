@@ -436,9 +436,9 @@ class ZHeadQC2(Screen):
     
     def is_it_within_tolerance(self, value, expected, tolerance):
         if (value >= (expected - tolerance)) and (value <= (expected + tolerance)):
-            self.spindle_pass_fail = self.spindle_pass_fail*(True)
+            self.spindle_pass_fail = self.spindle_pass_fail * True
         else: 
-            self.spindle_pass_fail = self.spindle_pass_fail*(False)
+            self.spindle_pass_fail = self.spindle_pass_fail * False
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)

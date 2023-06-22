@@ -13,15 +13,12 @@ Distance: step 1
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
-from asmcnc.calibration_app import screen_distance_2_x
-from _ast import Or
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
 
+from asmcnc.calibration_app import screen_distance_2_x
 
 Builder.load_string("""
 

@@ -285,7 +285,7 @@ class ShapeCutterJobParameters(object):
             
             warning_step_down = (float(self.parameter_dict["cutter dimensions"]["diameter"])*multiplier) / 2
             
-            if input > (float(self.shape_dict["dimensions"]["Z"])): return (float(self.shape_dict["dimensions"]["Z"]))
+            if input > (float(self.shape_dict["dimensions"]["Z"])): return float(self.shape_dict["dimensions"]["Z"])
             if not input > 0: return 0
             if input > warning_step_down: return False
             self.parameter_dict["strategy parameters"]["step down"] = input
@@ -390,7 +390,7 @@ class ShapeCutterJobParameters(object):
         # TAB PARAMS
         tabs = self.parameter_dict["tabs"]["tabs?"]
         
-        if tabs == True:
+        if tabs:
             tab_height = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
             tab_width = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
             tab_distance = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
@@ -439,7 +439,7 @@ class ShapeCutterJobParameters(object):
             
             # tabs
             
-            if tabs == True:
+            if tabs:
                 
                 rect_tab_offset_from_origin = cutter_rad # so tab doesn't start near the flat end point (potential errors with r0 hack
                 
@@ -489,7 +489,7 @@ class ShapeCutterJobParameters(object):
             elif aperture_or_island == "island":
                 circ_path_rad = (circ_input_diameter + cutter_diameter) / 2
         
-            if tabs == True:
+            if tabs:
                 
                 # calculate an even distribution of tabs along the circumference, based on desired distance between each (round down the distance between tabs as needed to achieve even distribution)
                 # working in rads here
@@ -697,9 +697,9 @@ class ShapeCutterJobParameters(object):
                 print(blocks)
                 for part in blocks:
                     try:
-                        if part.startswith(('X')): x_values.append(float(part[1:]))
-                        if part.startswith(('Y')): y_values.append(float(part[1:]))
-                        if part.startswith(('Z')): z_values.append(float(part[1:]))
+                        if part.startswith('X'): x_values.append(float(part[1:]))
+                        if part.startswith('Y'): y_values.append(float(part[1:]))
+                        if part.startswith('Z'): z_values.append(float(part[1:]))
                     except:
                         print("Envelope calculator: skipped '" + part + "'")
             
@@ -724,7 +724,7 @@ class ShapeCutterJobParameters(object):
                 blocks = str(line).strip().split(" ")
                 for part in blocks:
                     try:
-                        if part.startswith(('Z')): z_values.append(float(part[1:]))
+                        if part.startswith('Z'): z_values.append(float(part[1:]))
                     except:
                         print("Envelope calculator: skipped '" + part + "'")           
             

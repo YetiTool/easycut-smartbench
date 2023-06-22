@@ -6,8 +6,8 @@ GRBL settings screen for system tools app
 '''
 
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""

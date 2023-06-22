@@ -4,7 +4,6 @@ Created on 31 Jan 2018
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
 
-from kivy.config import Config
 from builtins import True
 
 import serial, sys, time, string, threading, serial.tools.list_ports
@@ -14,7 +13,6 @@ from kivy.clock import Clock
 
 import re
 from functools import partial
-from serial.serialutil import SerialException
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -308,7 +306,7 @@ class SerialConnection(object):
 
         while self.grbl_scanner_running or run_grbl_scanner_once:
 
-            if self.FLUSH_FLAG == True:
+            if self.FLUSH_FLAG:
                 self.s.flushInput()
                 self.FLUSH_FLAG = False
 
@@ -325,14 +323,14 @@ class SerialConnection(object):
                 self.write_direct(*command)
                 command_counter += 1
 
-            del self.write_command_buffer[0:(command_counter)]
+            del self.write_command_buffer[0:command_counter]
 
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText=realtime_command[1], realtime=True)
                 realtime_counter += 1
 
-            del self.write_realtime_buffer[0:(realtime_counter)]
+            del self.write_realtime_buffer[0:realtime_counter]
 
             if self.write_protocol_buffer and self.last_protocol_send_time + 0.05 < time.time():
                 protocol_command = self.write_protocol_buffer[0]
@@ -386,7 +384,7 @@ class SerialConnection(object):
                     # - this bit grinds to a halt
 
                 # Job streaming: stuff buffer
-                if (self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state()):
+                if self.is_job_streaming and not self.m.is_machine_paused and not "Alarm" in self.m.state():
 
                     if self.is_use_yp() and self.m.has_spindle_health_check_passed() and self.m.is_using_sc2():
 
@@ -609,7 +607,7 @@ class SerialConnection(object):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
-        if self.suppress_error_screens == True:
+        if self.suppress_error_screens:
             self.response_log.append(message)
 
         if message.startswith('error'):
@@ -631,7 +629,7 @@ class SerialConnection(object):
 
         elif self.is_job_streaming:
             self.g_count += 1  # Iterate g-code counter
-            if self.c_line != []:
+            if self.c_line:
                 del self.c_line[0]  # Delete the block character count corresponding to the last 'ok'
 
     # After streaming is completed
@@ -1033,7 +1031,7 @@ class SerialConnection(object):
                         self.print_buffer_status = True  # flag to print
 
                     # print if change flagged
-                    if self.print_buffer_status == True:
+                    if self.print_buffer_status:
                         self.print_buffer_status = False
 
                 # Get line number first so that all other data is in relation to this
@@ -1813,7 +1811,7 @@ class SerialConnection(object):
         if self.s:
             try:
 
-                if realtime == True:
+                if realtime:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
                     self.s.write(serialCommand)
 
@@ -1821,7 +1819,7 @@ class SerialConnection(object):
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
                     self.s.write(serialCommand + '\n')
 
-                elif protocol == True:
+                elif protocol:
                     self.s.write(serialCommand)
                     self.last_protocol_send_time = time.time()
 

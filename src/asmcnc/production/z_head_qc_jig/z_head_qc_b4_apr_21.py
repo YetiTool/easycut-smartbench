@@ -5,7 +5,9 @@ Created on 03 August 2020
 
 ## Renumber all items after vac
 
-import os, sys, subprocess
+import os
+import subprocess
+import sys
 from datetime import datetime
 
 try: 
@@ -14,14 +16,12 @@ try:
 except:
     pass
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 
-from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 

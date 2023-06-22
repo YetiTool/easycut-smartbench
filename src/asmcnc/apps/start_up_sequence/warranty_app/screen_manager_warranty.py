@@ -1,8 +1,3 @@
-from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from asmcnc.skavaUI import popup_info
-
 from asmcnc.apps.start_up_sequence.warranty_app.screens import \
 screen_warranty_registration_1, \
 screen_warranty_registration_2, \

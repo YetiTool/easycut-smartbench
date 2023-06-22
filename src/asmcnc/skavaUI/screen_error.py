@@ -9,15 +9,10 @@ Pauses streaming until user returns (and if they are in Go stream until they res
 @author: Letty
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
-import sys, os
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 ERROR_CODES = {
 

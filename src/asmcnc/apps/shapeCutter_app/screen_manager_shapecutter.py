@@ -7,10 +7,9 @@ Module to manage screens within the shape cutter app
 import gc
 
 from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
 
 from asmcnc.apps.shapeCutter_app.cut_parameters import sC_job_parameters
-
+from asmcnc.apps.shapeCutter_app.screens import popup_machine
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_1
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_10
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_11
@@ -50,13 +49,12 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_9
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_aperture_island
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_dimensions
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_exit
+from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_post_job_save
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_repeat
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_tutorial
-from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 
-from asmcnc.apps.shapeCutter_app.screens import popup_machine
 
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
@@ -110,7 +108,7 @@ class ScreenManagerShapeCutter(object):
         
     def check_tab(self):
         
-        if self.positioned == True:
+        if self.positioned:
             if not self.sm.has_screen('sC33'):
                 sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC33_screen) 

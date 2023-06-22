@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import time
-import os, csv
+import csv
+import os
 from datetime import datetime
 
 
@@ -33,10 +33,10 @@ class Localization(object):
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):
-        return ('[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]')
+        return '[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]'
 
     def get_italic(self, string):
-        return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
+        return '[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]'
 
     def get_localized_days(self, string):
 

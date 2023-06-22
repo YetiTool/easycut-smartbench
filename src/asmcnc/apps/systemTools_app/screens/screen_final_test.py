@@ -6,14 +6,10 @@ Screen to help production move through final test more quickly
 '''
 
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
-from kivy.properties import ObjectProperty
-from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
-from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
+from kivy.uix.screenmanager import Screen
 
-import os, sys
+from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
+from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
 
 Builder.load_string("""
 

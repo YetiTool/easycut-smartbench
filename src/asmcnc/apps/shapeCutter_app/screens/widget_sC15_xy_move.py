@@ -3,17 +3,8 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import widget_virtual_bed
-from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-
 
 Builder.load_string("""
 

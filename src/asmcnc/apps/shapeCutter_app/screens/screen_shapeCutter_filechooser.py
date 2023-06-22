@@ -5,19 +5,12 @@ Screen allows user to select their job for loading into easycut, either from Job
 '''
 # config
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
+import os
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
-import sys, os
-from os.path import expanduser
-from shutil import copy
-
-from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""

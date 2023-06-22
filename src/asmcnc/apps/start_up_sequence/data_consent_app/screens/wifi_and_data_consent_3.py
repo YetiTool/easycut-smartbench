@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
-
-from asmcnc.skavaUI import popup_info
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
 
 Builder.load_string("""
 

@@ -6,14 +6,10 @@ Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfi
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
-
-
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <DistanceScreen4yClass>:
@@ -246,7 +242,7 @@ class DistanceScreen4yClass(Screen):
 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
-        if self.m.s.is_sequential_streaming == False:
+        if not self.m.s.is_sequential_streaming:
             print("New steps have been set: $101 = " + str(self.new_y_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()

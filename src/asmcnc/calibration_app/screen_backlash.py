@@ -12,11 +12,11 @@ Step 3: Inform
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_distance_1_x
 from asmcnc.calibration_app import screen_distance_1_y
 

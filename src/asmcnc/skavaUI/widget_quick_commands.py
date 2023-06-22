@@ -3,18 +3,13 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+import sys
+import textwrap
 
-import sys, textwrap
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -157,7 +152,7 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
-        if self.jd.job_gcode == []:
+        if not self.jd.job_gcode:
             info = (
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
@@ -191,7 +186,7 @@ class QuickCommands(Widget):
             self.jd.screen_to_cancel_to_after_job = 'home'
 
             # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
+            if self.m.is_stylus_enabled:
                 # Display tool selection screen
                 self.sm.current = 'tool_selection'
 

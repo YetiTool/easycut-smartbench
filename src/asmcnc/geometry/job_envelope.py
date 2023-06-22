@@ -26,9 +26,9 @@ class BoundingBox(object):
             blocks = line.strip().split(" ")
             for part in blocks:
                 try:
-                    if part.startswith(('X')): x_values.append(float(part[1:]))
-                    if part.startswith(('Y')): y_values.append(float(part[1:]))
-                    if part.startswith(('Z')): z_values.append(float(part[1:]))
+                    if part.startswith('X'): x_values.append(float(part[1:]))
+                    if part.startswith('Y'): y_values.append(float(part[1:]))
+                    if part.startswith('Z'): z_values.append(float(part[1:]))
                 except:
                     print("Envelope calculator: skipped '" + part + "'")
         self.range_x[0], self.range_x[1] = min(x_values), max(x_values)

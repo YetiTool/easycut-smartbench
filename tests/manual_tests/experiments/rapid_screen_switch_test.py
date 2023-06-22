@@ -1,8 +1,8 @@
  # -*- coding: utf-8 -*-
 
 from kivy.config import Config
-from kivy.clock import Clock
-Config.set('kivy', 'keyboard_mode', 'systemanddock')
+
+ Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
@@ -17,12 +17,10 @@ python -m tests.manual_tests.experiments.rapid_screen_switch_test
 
 '''
 
-import kivy
-from kivy.app import App
+ from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
+ from kivy.clock import Clock
 
 
 Builder.load_string("""

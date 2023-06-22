@@ -6,13 +6,10 @@ Screen 33 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC_work_coordinates, widget_sC_virtual_bed
-from asmcnc.geometry import job_envelope
 
 Builder.load_string("""
 

@@ -3,12 +3,13 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
-import sys, os, re
-from datetime import datetime, timedelta
-from pipes import quote
-from chardet import detect
-from itertools import takewhile
+import re
+import sys
 import traceback
+from datetime import datetime
+from itertools import takewhile
+
+from chardet import detect
 
 decode_and_encode = lambda x: (str(x, detect(x)['encoding']).encode('utf-8'))
 
@@ -334,7 +335,7 @@ class JobData(object):
         summary_list = []
 
         summary_list.append(self.l.get_bold('Check info and warnings') + '\n')
-        if self.checked == False:
+        if not self.checked:
             summary_list.append(self.l.get_str('Checked:') + ' ' + self.l.get_str('No') + '\n')
         else:
             summary_list.append(self.l.get_str('Checked:') + ' ' + self.l.get_str('Yes'))
@@ -401,7 +402,7 @@ class JobData(object):
 
             def replace_metadata(old_line):
                 key_to_update = old_line.split(':')[0]
-                return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update, "")) + ')\n')
+                return '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update, "")) + ')\n'
 
             with open(self.filename, "r+") as previewed_file:
 

@@ -15,8 +15,6 @@ try:
 except:
     print("Can't import mocking packages, are you on a dev machine?")
 
-
-from datetime import datetime
 from asmcnc.comms import localization
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.comms import router_machine

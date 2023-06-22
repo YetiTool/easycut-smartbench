@@ -6,18 +6,11 @@ Created March 2020
 
 Screen to handle door command, and allow user to resume.
 '''
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
 from kivy.animation import Animation
-
-import sys, os
-
-from asmcnc.skavaUI import widget_status_bar  # @UnresolvedImport
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -275,7 +268,7 @@ class DoorScreen(Screen):
 
     def check_spindle_has_raised(self):
 
-        if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
+        if str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door')):
 
             Clock.unschedule(self.poll_for_resume)
             self.anim_spindle_label.repeat = False

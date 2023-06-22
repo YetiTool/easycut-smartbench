@@ -3,9 +3,7 @@ Created on 31 March 2021
 @author: Letty
 '''
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
-
+from kivy.uix.screenmanager import Screen
 
 # Kivy UI builder:
 Builder.load_string("""

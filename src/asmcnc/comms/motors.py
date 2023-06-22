@@ -2,7 +2,6 @@
 Class to hold the parameters for each individual motor
 '''
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 class motor_class(object):
 

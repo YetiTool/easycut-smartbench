@@ -1,7 +1,6 @@
 import os
 import sys
 
-from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 

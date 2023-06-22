@@ -6,9 +6,8 @@ Screen 23 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
@@ -597,7 +596,7 @@ class ShapeCutter24ScreenClass(Screen):
 
     def toggle_units(self):
 
-        if self.unit_toggle.active == True:
+        if self.unit_toggle.active:
             self.j.parameter_dict["strategy parameters"]["units"] = "inches"
             self.stock_bottom_offset_units.text = "inches"
             self.step_down_units.text = "inches"
@@ -605,7 +604,7 @@ class ShapeCutter24ScreenClass(Screen):
             if not (self.stock_bottom_offset.text == ""): self.stock_bottom_offset.text = "{:.2f}".format(float(self.stock_bottom_offset.text) / 25.4)
             if not (self.step_down.text == ""): self.step_down.text = "{:.2f}".format(float(self.step_down.text) / 25.4)
 
-        elif self.unit_toggle.active == False:
+        elif not self.unit_toggle.active:
             self.j.parameter_dict["strategy parameters"]["units"] = "mm"
             self.stock_bottom_offset_units.text = "mm"
             self.step_down_units.text = "mm"
@@ -621,10 +620,10 @@ class ShapeCutter24ScreenClass(Screen):
             self.j.parameter_dict["strategy parameters"]["step down"] = float(self.step_down.text)
             self.j.parameter_dict["strategy parameters"]["finishing passes"] = float(self.finishing_passes.text)
             
-            if self.unit_toggle.active == True:
+            if self.unit_toggle.active:
                 self.j.parameter_dict["strategy parameters"]["units"] = "inches"
     
-            elif self.unit_toggle.active == False:
+            elif not self.unit_toggle.active:
                 self.j.parameter_dict["strategy parameters"]["units"] = "mm"       
 
             input_dim_list = [("stock bottom offset", float(self.stock_bottom_offset.text)),

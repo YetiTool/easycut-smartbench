@@ -1,4 +1,5 @@
-import sys, os
+import sys
+
 sys.path.append('./src')
 
 try: 
@@ -12,8 +13,6 @@ except:
 
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
-from datetime import datetime
-
 
 '''
 ######################################

@@ -1,7 +1,6 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
-from asmcnc.comms.logging import log_exporter
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ZHeadQC4>:

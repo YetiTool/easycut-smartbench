@@ -5,15 +5,16 @@ Beta testers screen for system tools app
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from asmcnc.comms import usb_storage
-from asmcnc.apps.systemTools_app.screens import popup_system
-from asmcnc.skavaUI import popup_info
-from kivy.clock import Clock
+import os
+import sys
 
-import os, sys
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -296,7 +297,7 @@ class BetaTestingScreen(Screen):
         self.set = kwargs['settings']
         self.l = kwargs['localization']
 
-        self.user_branch.text = (self.set.sw_branch).strip('* ')
+        self.user_branch.text = self.set.sw_branch.strip('* ')
         self.beta_version.text = self.set.latest_sw_beta
 
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
@@ -361,7 +362,7 @@ class BetaTestingScreen(Screen):
 
     def refresh_latest_software_version(self):
         self.set.refresh_latest_sw_version()
-        self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.user_branch.text = self.set.sw_branch.strip('*')
         self.beta_version.text = self.set.latest_sw_beta
 
     ## LOCALIZATION TESTING
@@ -373,5 +374,5 @@ class BetaTestingScreen(Screen):
         self.reset_language = True
 
     def restart_app(self):
-        if self.reset_language == True: 
+        if self.reset_language:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)

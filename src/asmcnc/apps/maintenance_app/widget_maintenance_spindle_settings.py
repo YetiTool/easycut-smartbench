@@ -4,13 +4,12 @@ Created on 19 August 2020
 widget to spindle settings
 '''
 
-import kivy
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.apps.maintenance_app import widget_maintenance_spindle_save, popup_maintenance
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 

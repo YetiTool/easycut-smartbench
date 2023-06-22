@@ -1,19 +1,13 @@
-from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
-from kivy.base import runTouchApp
-from kivy.properties import ObjectProperty  # @UnresolvedImport
-from kivy.clock import Clock
-from kivy.graphics import *
-from kivy.utils import *
-import math
-from datetime import datetime
-from kivy.uix.widget import Widget
-from kivy.uix.stencilview import StencilView
-from kivy.uix.boxlayout import BoxLayout
-import re
 from functools import partial
 
+from kivy.clock import Clock
+from kivy.graphics import *
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.stencilview import StencilView
+from kivy.uix.widget import Widget
+from kivy.utils import *
 
 Builder.load_string("""
 
@@ -310,7 +304,7 @@ class GCodeView(Widget):
                 # centers reset each loop
                 i, j, k = '0', '0', '0'
     
-                if line.startswith('(') == True: continue   # skip any lines with comments
+                if line.startswith('('): continue   # skip any lines with comments
                 elif len(line) <= 1: continue
                 
     ### -------------------------------------------------------------------------------------  

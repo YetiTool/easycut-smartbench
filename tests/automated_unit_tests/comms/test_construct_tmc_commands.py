@@ -21,7 +21,6 @@ python -m tests.automated_unit_tests.comms.test_construct_tmc_commands
 '''
 
 from asmcnc.comms.yeti_grbl_protocol import protocol
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 
 class ConstructTMCCommandTest(unittest.TestCase):

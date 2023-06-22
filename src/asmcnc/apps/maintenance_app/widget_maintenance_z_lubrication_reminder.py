@@ -4,13 +4,8 @@ Created on 17 August 2020
 widget to allow user to change touchplate offset
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -120,7 +115,7 @@ class ZLubricationReminderWidget(Widget):
 
     def update_time_left(self):
         self.update_strings()
-        self.time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/3600)
+        self.time_in_hours = int(self.m.time_since_z_head_lubricated_seconds / 3600)
 
         if self.time_in_hours < 30: 
             self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'

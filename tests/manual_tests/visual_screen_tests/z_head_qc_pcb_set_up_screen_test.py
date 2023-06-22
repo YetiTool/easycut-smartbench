@@ -1,8 +1,8 @@
  # -*- coding: utf-8 -*-
 
 from kivy.config import Config
-from kivy.clock import Clock
-Config.set('kivy', 'keyboard_mode', 'systemanddock')
+
+ Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
@@ -21,11 +21,9 @@ path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
-import kivy
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from asmcnc.comms import localization
+ from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, NoTransition
+ from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
 
@@ -40,10 +38,7 @@ try:
 except: 
     pass
 
-
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
-Cmport = 'COM3'
+ Cmport = 'COM3'
 
 class ScreenTest(App):
 

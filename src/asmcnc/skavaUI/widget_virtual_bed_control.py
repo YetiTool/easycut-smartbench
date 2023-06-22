@@ -4,13 +4,11 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy, textwrap
+import textwrap
+
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
+
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -198,13 +196,13 @@ class VirtualBedControl(Widget):
         popup_info.PopupPark(self.sm, self.m, self.l, warning)
         
     def go_to_jobstart_xy(self):
-        if self.m.is_machine_homed == False:
+        if not self.m.is_machine_homed:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
-        if self.m.is_machine_homed == False:
+        if not self.m.is_machine_homed:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_to_standby()

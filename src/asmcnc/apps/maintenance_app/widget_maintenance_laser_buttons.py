@@ -4,9 +4,7 @@ Created on 10 June 2020
 widget to hold laser datum setting buttons
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
 from asmcnc.apps.maintenance_app import popup_maintenance
@@ -152,7 +150,7 @@ class LaserDatumButtons(Widget):
         popup_maintenance.PopupResetOffset(self.sm, self.l)
 
     def save_button_press(self):
-        if self.m.is_laser_enabled == True:
+        if self.m.is_laser_enabled:
             popup_maintenance.PopupSaveOffset(self.sm, self.l)
 
         else:

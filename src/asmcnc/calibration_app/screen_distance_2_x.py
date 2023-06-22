@@ -10,13 +10,11 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
+
 # from asmcnc.calibration_app import screen_measurement
 from asmcnc.calibration_app import screen_distance_3_x
-
 
 Builder.load_string("""
 

@@ -4,7 +4,9 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging, threading, re, traceback
+import re
+import threading
+import traceback
 
 try: 
     import pigpio
@@ -17,12 +19,10 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
 
 from kivy.clock import Clock
-import sys, os, time
+import os, time
 from datetime import datetime
 import os.path
 from os import path
-
-from builtins import True
 
 from asmcnc.skavaUI import popup_info
 
@@ -890,7 +890,7 @@ class RouterMachine(object):
             ]
 
         f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
-        f.write(('\n').join(grbl_settings_and_params))
+        f.write('\n'.join(grbl_settings_and_params))
         f.close()
         log('Saved grbl settings to file')
 
@@ -1264,8 +1264,8 @@ class RouterMachine(object):
     def _stop_all_streaming(self):
         # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
         log('Streaming stopped.')
-        if self.s.is_job_streaming == True: self.s.cancel_stream()
-        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
+        if self.s.is_job_streaming: self.s.cancel_stream()
+        if self.s.is_sequential_streaming: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     def _grbl_resume(self):
         log('grbl realtime cmd sent: ~ resume')
@@ -1370,14 +1370,14 @@ class RouterMachine(object):
         
         switch_states = []
         
-        if self.s.limit_x == True: switch_states.append('limit_x') # convention: min is lower_case
-        if self.s.limit_X == True: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
-        if self.s.limit_y == True: switch_states.append('limit_y')   
-        if self.s.limit_Y == True: switch_states.append('limit_Y') 
-        if self.s.limit_z == True: switch_states.append('limit_z') 
-        if self.s.probe == True: switch_states.append('probe') 
-        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover') 
-        if self.s.spare_door == True: switch_states.append('spare_door')
+        if self.s.limit_x: switch_states.append('limit_x') # convention: min is lower_case
+        if self.s.limit_X: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
+        if self.s.limit_y: switch_states.append('limit_y')
+        if self.s.limit_Y: switch_states.append('limit_Y')
+        if self.s.limit_z: switch_states.append('limit_z')
+        if self.s.probe: switch_states.append('probe')
+        if self.s.dust_shoe_cover: switch_states.append('dust_shoe_cover')
+        if self.s.spare_door: switch_states.append('spare_door')
         
         return switch_states 
     
@@ -1688,7 +1688,7 @@ class RouterMachine(object):
         self.zUp()
 
     def laser_on(self):
-        if self.is_laser_enabled == True: 
+        if self.is_laser_enabled:
 
             if self.hw_can_operate_laser_commands():
                 self.s.write_command('AZ')
@@ -1700,7 +1700,7 @@ class RouterMachine(object):
         self.is_laser_on = False
         if self.hw_can_operate_laser_commands():
             self.s.write_command('AX')
-        if bootup == True:
+        if bootup:
             self.set_led_colour('YELLOW')
         else:
             self.set_led_colour('GREEN')
@@ -2045,7 +2045,7 @@ class RouterMachine(object):
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
-            probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probeZTarget = -self.grbl_z_max_travel - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
             self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
@@ -2076,8 +2076,8 @@ class RouterMachine(object):
             self.led_colour_status = colour_name 
     
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
-            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
+            elif colour_name == 'GREEN'and self.is_machine_homed:    self.s.write_command("*L11FF00")
+            elif colour_name == 'GREEN'and not self.is_machine_homed:    self.s.write_command("*LFFFF00")
             elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
@@ -2258,7 +2258,7 @@ class RouterMachine(object):
         if command == SET_DISS2G     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, DISS2G_MASK  , DISS2G_SHIFT      )
         if command == SET_SLPL       : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SLPL_MASK    , SLPL_SHIFT        )
         if command == SET_SLPH       : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SLPH_MASK    , SLPH_SHIFT        )
-        if (command == SET_SLPL or command == SET_SLPH):                            val = self.setShadowReg(motor, DRVCONF, value > 3, SLP2_MASK, SLP2_SHIFT        ) # hadle slope control MSB:
+        if command == SET_SLPL or command == SET_SLPH:                            val = self.setShadowReg(motor, DRVCONF, value > 3, SLP2_MASK, SLP2_SHIFT) # hadle slope control MSB:
         if command == SET_TST        : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, TST_MASK     , TST_SHIFT         )
         if command == SET_SDOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SDOFF_MASK   , SDOFF_SHIFT       )
 
@@ -2439,7 +2439,7 @@ class RouterMachine(object):
         self.temp_sgt = self.sgt_min
 
     def motor_driver_temp_in_range(self, temp_to_assess):
-        return (self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit)
+        return self.lower_temp_limit <= temp_to_assess <= self.upper_temp_limit
 
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
@@ -2835,7 +2835,7 @@ class RouterMachine(object):
 
         elif motor == 'Z':
             gradient_per_Celsius = 10000.0
-            rpm = 30.0/(3200/(1066.67))
+            rpm = 30.0/(3200 / 1066.67)
 
         delta_to_current_temperature = self.reference_temp - current_temperature
         step_us = 60000000 / (rpm * 3200)
@@ -3237,7 +3237,7 @@ class RouterMachine(object):
 
         constructed_value  = (motor_index << 24)      & 0xFF000000
         constructed_value |= (idx   << 16)      & 0x00FF0000
-        constructed_value |= (val)              & 0x0000FFFF
+        constructed_value |= val & 0x0000FFFF
 
         self.send_command_to_motor(altDisplayText, motor = motor_index, command=UPLOAD_CALIBR_VALUE, value = constructed_value)
         time.sleep(0.1)

@@ -6,16 +6,13 @@ Landing Screen for the Calibration App
 @author: Letty
 '''
 
-import sys, os
-
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
+import sys
 from datetime import datetime
 
-from asmcnc.skavaUI import popup_info
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 # from asmcnc.calibration_app import screen_prep_calibration
 
 Builder.load_string("""
@@ -116,12 +113,12 @@ class StartingSmartBenchScreen(Screen):
     def set_machine_value_driven_user_settings(self, dt):
 
         # Laser settings
-        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        if self.m.is_laser_enabled: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
 
         # SW Update available?
-        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
+        if self.set.sw_version != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
             self.sm.get_screen('lobby').trigger_update_popup = True
 
 

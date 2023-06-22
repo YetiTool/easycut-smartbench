@@ -4,9 +4,8 @@ Created on nov 2020
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from asmcnc.skavaUI import widget_status_bar
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string("""
 
 <WarrantyScreen2>:

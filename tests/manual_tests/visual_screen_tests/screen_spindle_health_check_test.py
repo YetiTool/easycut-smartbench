@@ -1,8 +1,8 @@
  # -*- coding: utf-8 -*-
 
 from kivy.config import Config
-from kivy.clock import Clock
-Config.set('kivy', 'keyboard_mode', 'systemanddock')
+
+ Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
@@ -22,19 +22,14 @@ import sys, os
 sys.path.append('./src')
 os.chdir('./src')
 
-import kivy
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
+ from kivy.app import App
+ from kivy.uix.screenmanager import ScreenManager
 
-from asmcnc.comms import localization
+ from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
-from asmcnc.comms import smartbench_flurry_database_connection
-from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
-from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+ from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
 
 Cmport = "COM3"

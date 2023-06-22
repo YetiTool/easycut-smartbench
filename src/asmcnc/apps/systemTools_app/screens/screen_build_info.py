@@ -5,19 +5,15 @@ Build info screen for system tools app
 
 @author: Letty
 '''
-import os, sys
 
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
-from kivy.metrics import dp
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
-from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
+from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -737,7 +733,7 @@ class BuildInfoScreen(Screen):
             self.hardware_header.font_size = 18
 
     def restart_app(self):
-        if self.reset_language == True: 
+        if self.reset_language:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
 
     ## SMARTBENCH NAMING

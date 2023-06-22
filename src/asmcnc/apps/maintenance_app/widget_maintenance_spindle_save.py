@@ -4,9 +4,7 @@ Created on 19 August 2020
 widget to hold brush maintenance save and info
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
 from asmcnc.apps.maintenance_app import popup_maintenance
@@ -70,7 +68,7 @@ class SpindleSaveWidget(Widget):
     def save(self):
 
         try: 
-            [brand, digital, voltage] = (self.sm.get_screen('maintenance').spindle_settings_widget.spindle_brand.text).rsplit(' ', 2)
+            [brand, digital, voltage] = self.sm.get_screen('maintenance').spindle_settings_widget.spindle_brand.text.rsplit(' ', 2)
 
             brand = brand[1:]
             voltage = voltage.strip('V')
@@ -104,7 +102,7 @@ class SpindleSaveWidget(Widget):
 
             time = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_time_slider.value)
 
-            if (time >= 1 and time <= 60):
+            if time >= 1 and time <= 60:
                 pass
 
             else:
@@ -134,7 +132,7 @@ class SpindleSaveWidget(Widget):
 
             speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.cooldown_speed_slider.value)
 
-            if (speed >= 10000 and speed <= 20000):
+            if speed >= 10000 and speed <= 20000:
                 pass
 
             else:

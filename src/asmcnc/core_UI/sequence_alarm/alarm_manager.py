@@ -1,13 +1,13 @@
-from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
 import datetime
+import os
 import traceback
 
-from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
-screen_alarm_2, screen_alarm_3, \
-screen_alarm_4, screen_alarm_5
+from kivy.clock import Clock
+
 from asmcnc.comms import usb_storage
+from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
+	screen_alarm_2, screen_alarm_3, \
+	screen_alarm_4, screen_alarm_5
 from asmcnc.skavaUI import popup_info
 
 # this class is set up in serial comms, so that alarm screens are available at any time
@@ -95,7 +95,7 @@ class AlarmSequenceManager(object):
 
 					self.alarm_code = message
 					self.alarm_description = ALARM_CODES_DICT.get(message, "")
-					if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+					if self.alarm_code.endswith('1') or self.alarm_code.endswith('8'):
 						self.sm.get_screen('alarm_1').description_label.text = (
 							self.l.get_str(self.alarm_description) + \
 							"\n" + \
@@ -128,10 +128,10 @@ class AlarmSequenceManager(object):
 
 
 	def determine_screen_sequence(self):
-		if ((self.alarm_code).endswith('4') or \
-			(self.alarm_code).endswith('5') or \
-			(self.alarm_code).endswith('6') or \
-			(self.alarm_code).endswith('7') or \
+		if (self.alarm_code.endswith('4') or \
+			self.alarm_code.endswith('5') or \
+			self.alarm_code.endswith('6') or \
+			self.alarm_code.endswith('7') or \
 			self.sg_alarm):
 			self.support_sequence = False
 		else:
@@ -205,10 +205,10 @@ class AlarmSequenceManager(object):
 		if self.m.s.limit_z: 
 			limit_list.append(self.l.get_str('Z home'))
 
-		if limit_list == []:
+		if not limit_list:
 			limit_list.append(self.l.get_str('Unknown'))
 
-		self.trigger_description = limit_code + (', ').join(limit_list)
+		self.trigger_description = limit_code + ', '.join(limit_list)
 
 
 	def get_status_info(self):
@@ -219,7 +219,7 @@ class AlarmSequenceManager(object):
 
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
-		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
+		self.status_cache = '\n'.join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n - 2:n])
 
 
 	def get_stall_info(self):
@@ -236,7 +236,7 @@ class AlarmSequenceManager(object):
 		if self.m.s.stall_Z: 
 			stall_list.append("Z")
 
-		self.stall_axis = (', ').join(stall_list)
+		self.stall_axis = ', '.join(stall_list)
 
 		self.sm.get_screen('alarm_1').description_label.text = (
 			self.l.get_str("The N axis was overloaded during a move.").replace("N", self.stall_axis) + \
@@ -267,7 +267,7 @@ class AlarmSequenceManager(object):
 		self.get_version_data()
 
 		if not self.sg_alarm: 
-			if (self.alarm_code).endswith('1') or (self.alarm_code).endswith('8'):
+			if self.alarm_code.endswith('1') or self.alarm_code.endswith('8'):
 				self.get_suspected_trigger()
 
 		if self.trigger_description != '':
@@ -297,7 +297,7 @@ class AlarmSequenceManager(object):
 		count = 0
 
 		def get_report(count):
-			if self.usb_stick.is_usb_mounted_flag == True:
+			if self.usb_stick.is_usb_mounted_flag:
 				message = 'Downloading report, please wait...'
 				wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 				self.write_report_to_file()

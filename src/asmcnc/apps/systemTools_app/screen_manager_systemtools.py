@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
+import os
+
 from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
+
+from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, \
+    screen_beta_testing, \
+    screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, \
+    screen_support_menu
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
-from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
-screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
+
 
 class ScreenManagerSystemTools(object):
 
@@ -43,7 +47,7 @@ class ScreenManagerSystemTools(object):
         count = 0
 
         def get_logs(count):
-            if self.usb_stick.is_usb_mounted_flag == True:
+            if self.usb_stick.is_usb_mounted_flag:
                 os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
@@ -106,7 +110,7 @@ class ScreenManagerSystemTools(object):
         wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
         def get_grbl_settings_onto_usb():
-          if self.usb_stick.is_usb_mounted_flag == True:
+          if self.usb_stick.is_usb_mounted_flag:
               os.system("sudo cp --no-preserve=mode,ownership /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt /media/usb/")
               os.system("rm /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt")
 
@@ -127,7 +131,7 @@ class ScreenManagerSystemTools(object):
         wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
         def get_grbl_settings_from_usb():
-          if self.usb_stick.is_usb_mounted_flag == True:
+          if self.usb_stick.is_usb_mounted_flag:
               filename = '/media/usb/saved_grbl_settings_params.txt'
               success_flag = self.m.restore_grbl_settings_from_file(filename)
               wait_popup.popup.dismiss()

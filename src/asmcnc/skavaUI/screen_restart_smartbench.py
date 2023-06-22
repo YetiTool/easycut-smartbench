@@ -4,7 +4,6 @@ Created on 9 Aug 2021
 Screen shown after exiting release notes telling the user to restart
 '''
 
-import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 

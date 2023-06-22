@@ -1,8 +1,6 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
-
-import datetime
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <ZHeadQC6>:

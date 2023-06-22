@@ -6,15 +6,13 @@ Software updater screen
 @author: Letty
 '''
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
-import sys, os, socket
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.SWupdater_app import popup_update_SW
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.SWupdater_app import popup_update_SW
 
 Builder.load_string("""
 
@@ -547,7 +545,7 @@ class SWUpdateScreen(Screen):
 
             outcome = self.set.get_sw_update_via_wifi()
 
-            if outcome == False:
+            if not outcome:
                 description = self.l.get_str("There was a problem updating your software.") + \
                 " \n\n" + \
                 self.l.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
@@ -589,7 +587,7 @@ class SWUpdateScreen(Screen):
 
                 outcome = self.set.reclone_EC()
 
-                if outcome == False:
+                if not outcome:
 
                     description = (
                         self.l.get_str("It was not possible to backup the software safely, please check your connection and try again later.") + \

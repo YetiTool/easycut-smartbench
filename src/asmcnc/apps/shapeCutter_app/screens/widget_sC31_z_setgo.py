@@ -3,14 +3,8 @@ Created on 5 March 2020
 @author: Letty
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-
 
 Builder.load_string("""
 

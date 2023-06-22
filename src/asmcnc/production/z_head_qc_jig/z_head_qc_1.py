@@ -474,37 +474,37 @@ class ZHeadQC1(Screen):
         # If X motors are controlled by 2 drivers, don't measure combined X value
         if self.m.s.sg_x1_motor != None and self.m.s.sg_x2_motor != None:
             if lower_sg_limit <= self.m.s.sg_x1_motor <= upper_sg_limit:
-                pass_fail = pass_fail*(True)
+                pass_fail = pass_fail * True
 
             else:
-                pass_fail = pass_fail*(False)
+                pass_fail = pass_fail * False
                 fail_report.append("X1 motor SG value: " + str(self.m.s.sg_x1_motor))
                 fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
             if lower_sg_limit <= self.m.s.sg_x2_motor <= upper_sg_limit:
-                pass_fail = pass_fail*(True)
+                pass_fail = pass_fail * True
 
             else:
-                pass_fail = pass_fail*(False)
+                pass_fail = pass_fail * False
                 fail_report.append("X2 motor SG value: " + str(self.m.s.sg_x2_motor))
                 fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
         # If X motors are controlled by 1 driver, only measure combined X value
         else:
             if lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
-                pass_fail = pass_fail*(True)
+                pass_fail = pass_fail * True
 
             else:
-                pass_fail = pass_fail*(False)
+                pass_fail = pass_fail * False
                 fail_report.append("X motor/axis SG value: " + str(self.m.s.sg_x_motor_axis))
                 fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
         # Measure Z value
         if lower_sg_limit <= self.m.s.sg_z_motor_axis <= upper_sg_limit:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("Z motor/axis SG value: " + str(self.m.s.sg_z_motor_axis))
             fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
 
@@ -593,59 +593,59 @@ class ZHeadQC1(Screen):
         fail_report = []
 
         if 10 < self.m.s.pcb_temp < 70:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
         if 15 < self.m.s.motor_driver_temp < 100:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
             fail_report.append("Should be greater than 15 and less than 100 deg C.")
 
         if 0 < self.m.s.transistor_heatsink_temp < 100:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
 
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
         if 4500 < self.m.s.microcontroller_mV < 5500:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
         if 4500 < self.m.s.LED_mV < 5500:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
             fail_report.append("Should be greater than 4500 and less than 5500 mV.")
 
         if 22000 < self.m.s.PSU_mV < 26000:
-            pass_fail = pass_fail*(True)
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
             fail_report.append("Should be greater than 22000 and less than 26000 mV.")
 
-        if self.m.s.power_loss_detected == True:
-            pass_fail = pass_fail*(True)
+        if self.m.s.power_loss_detected:
+            pass_fail = pass_fail * True
 
         else:
-            pass_fail = pass_fail*(False)
+            pass_fail = pass_fail * False
             fail_report.append("AC Loss: " + str(self.m.s.power_loss_detected))
             fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
 

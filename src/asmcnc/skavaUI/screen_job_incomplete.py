@@ -3,13 +3,12 @@ Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
 '''
-from datetime import datetime, timedelta
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.metrics import dp
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 <JobIncompleteScreen>
@@ -413,7 +412,8 @@ class JobIncompleteScreen(Screen):
 
         else:
             self.job_cancelled_label.text = (
-                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str((self.event_type).lower()) + \
+                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str(
+                    self.event_type.lower()) + \
                 ": " + self.specific_event)
                 )
 

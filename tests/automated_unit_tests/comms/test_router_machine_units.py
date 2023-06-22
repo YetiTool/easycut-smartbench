@@ -3,7 +3,9 @@ Created on 1 Aug 2022
 @author: Letty
 '''
 
-import sys, os
+import os
+import sys
+
 sys.path.append('./src')
 
 try: 
@@ -16,7 +18,6 @@ except:
 
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
-from datetime import datetime
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 from kivy.clock import Clock

@@ -1,5 +1,3 @@
-from kivy.uix.screenmanager import ScreenManager, Screen
-import os
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app.screens import screen_language_select, screen_welcome
 
 class ScreenManagerWelcomeToSmartBench(object):

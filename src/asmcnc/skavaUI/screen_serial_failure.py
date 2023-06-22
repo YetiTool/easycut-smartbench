@@ -8,14 +8,9 @@ Currently forces user to reboot, as I'm not sure how to get a successful re-esta
 @author: Letty
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-
-import sys, os
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 # Kivy UI builder:
 Builder.load_string("""

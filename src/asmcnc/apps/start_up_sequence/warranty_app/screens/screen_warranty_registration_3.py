@@ -4,16 +4,12 @@ Created on nov 2020
 Text input # on_enter: root.sucessful_activation
 '''
 
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.textinput import TextInput
-from asmcnc.skavaUI import widget_status_bar
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.gridlayout import GridLayout
-from kivy.clock import Clock
 import os
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string("""
 
@@ -255,7 +251,7 @@ class WarrantyScreen3(Screen):
 			except: 
 				if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
 
-		elif auto == True:
+		elif auto:
 			pass
 
 		else: 

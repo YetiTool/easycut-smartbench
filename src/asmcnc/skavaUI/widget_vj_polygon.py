@@ -1,11 +1,10 @@
-import kivy
-from kivy.lang import Builder
-from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty, ListProperty
+from asmcnc.gcode_writer import GcodeWriter
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, ListProperty
+from kivy.uix.widget import Widget
 
 from asmcnc.geometry import geometry
-from asmcnc.gcode_writer import GcodeWriter
 
 Builder.load_string("""
 

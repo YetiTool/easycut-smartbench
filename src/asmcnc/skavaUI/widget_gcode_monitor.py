@@ -4,15 +4,11 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
+from kivy.properties import StringProperty  # @UnresolvedImport
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.uix.widget import Widget
+
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -268,7 +264,7 @@ class GCodeMonitor(Widget):
         
     def send_gcode_textinput(self): 
         
-        if self.popup_flag == True: 
+        if self.popup_flag:
             description = (
                 self.l.get_str("Sending commands directly to the machine can change how it operates.") + \
                 "\n\n" + \

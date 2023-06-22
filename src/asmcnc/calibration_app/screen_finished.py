@@ -7,11 +7,10 @@ Landing Screen for the Calibration App
 
 import gc
 
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
 
 # from asmcnc.calibration_app import screen_prep_calibration
 
@@ -60,7 +59,7 @@ class FinishedCalScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        if self.calibration_cancelled == True:
+        if self.calibration_cancelled:
             self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
         else: 
             self.screen_text.text = '[color=455A64]Calibration Complete![/color]'                   
@@ -79,7 +78,7 @@ class FinishedCalScreenClass(Screen):
             self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
             
     def on_enter(self):
-        if self.calibration_cancelled == False:
+        if not self.calibration_cancelled:
             self.m.write_calibration_settings(0, float(320*3600))
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
  

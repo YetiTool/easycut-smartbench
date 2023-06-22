@@ -317,7 +317,7 @@ class Settings(object):
                 os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
                 '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
         
-        if backup_EC() == True:
+        if backup_EC():
             clone_new_EC_and_restart()
 
         else: return False
@@ -360,9 +360,9 @@ class Settings(object):
         
         log('directory name: ' + dir_path_name)
 
-        if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
+        if (dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1):
             return 2
-        elif ((dir_path_name.count('SmartBench-SW-update') == 0) and (dir_path_name.count('easycut-smartbench') == 0)):
+        elif (dir_path_name.count('SmartBench-SW-update') == 0) and (dir_path_name.count('easycut-smartbench') == 0):
             return 0
         else:
             return dir_path_name
@@ -406,7 +406,7 @@ class Settings(object):
 
         self.clear_remote_repo(dir_path_name)
 
-        if checkout_success == False: 
+        if not checkout_success:
             return "update failed"
         else:
             return checkout_success
