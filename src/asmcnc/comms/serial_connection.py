@@ -4,7 +4,6 @@ Created on 31 Jan 2018
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
 
-from builtins import True
 
 import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta

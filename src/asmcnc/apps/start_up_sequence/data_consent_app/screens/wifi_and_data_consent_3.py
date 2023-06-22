@@ -9,13 +9,13 @@ Builder.load_string("""
 
 <ScrollPrivacyNotice>:
 
-    privacy_notice : privacy_notice
+	privacy_notice : privacy_notice
 
-    RstDocument:
-        id: privacy_notice
-        base_font_size: 30
-        underline_color: 'e5e5e5'
-        colors: root.color_dict
+	RstDocument:
+		id: privacy_notice
+		base_font_size: 30
+		underline_color: 'e5e5e5'
+		colors: root.color_dict
 
 <WiFiAndDataConsentScreen3>
 
@@ -26,97 +26,97 @@ Builder.load_string("""
 	decline_button : decline_button
 	accept_button : accept_button
 
-    BoxLayout:
-        height: dp(800)
-        width: dp(480)
-        canvas.before:
-            Color: 
-                rgba: hex('#e5e5e5ff')
-            Rectangle: 
-                size: self.size
-                pos: self.pos
+	BoxLayout:
+		height: dp(800)
+		width: dp(480)
+		canvas.before:
+			Color: 
+				rgba: hex('#e5e5e5ff')
+			Rectangle: 
+				size: self.size
+				pos: self.pos
 
-        BoxLayout:
-            padding: 0
-            spacing: 0
-            orientation: "vertical"
+		BoxLayout:
+			padding: 0
+			spacing: 0
+			orientation: "vertical"
 
-            # HEADER
-            BoxLayout:
-                padding: 0
-                spacing: 0
-                canvas:
-                    Color:
-                        rgba: hex('#1976d2ff')
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                Label:
-                	id: header_label
-                    size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
-                    text: "Wi-Fi and Data Consent"
-                    color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
-                    font_size: dp(30)
-                    halign: "center"
-                    valign: "bottom"
-                    markup: True
-                   
-            # BODY
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(288)
-                padding: [dp(15), dp(5), dp(15), dp(5)]
-                spacing: 5
-                orientation: 'vertical'
+			# HEADER
+			BoxLayout:
+				padding: 0
+				spacing: 0
+				canvas:
+					Color:
+						rgba: hex('#1976d2ff')
+					Rectangle:
+						pos: self.pos
+						size: self.size
+				Label:
+					id: header_label
+					size_hint: (None,None)
+					height: dp(60)
+					width: dp(800)
+					text: "Wi-Fi and Data Consent"
+					color: hex('#f9f9f9ff')
+					# color: hex('#333333ff') #grey
+					font_size: dp(30)
+					halign: "center"
+					valign: "bottom"
+					markup: True
+				   
+			# BODY
+			BoxLayout:
+				size_hint: (None,None)
+				width: dp(800)
+				height: dp(288)
+				padding: [dp(15), dp(5), dp(15), dp(5)]
+				spacing: 5
+				orientation: 'vertical'
 
-                BoxLayout: 
-                	size_hint: (1,8)
-	                canvas.before:
-	                    Color:
-	                        rgba: hex('#e5e5e5ff')
-	                    Rectangle:
-	                        pos: self.pos
-	                        size: self.size
+				BoxLayout: 
+					size_hint: (1,8)
+					canvas.before:
+						Color:
+							rgba: hex('#e5e5e5ff')
+						Rectangle:
+							pos: self.pos
+							size: self.size
 					padding: dp(1)
-	            	ScrollPrivacyNotice:
-	                	id: scroll_privacy_notice
+					ScrollPrivacyNotice:
+						id: scroll_privacy_notice
 
-                BoxLayout: 
-                	size_hint: (1,1)
-                	orientation: 'horizontal'
-                	padding: [dp(20), dp(0)]
-	                # canvas:
-	                #	# Test to see box
-	                #     Color:
-	                #         rgba: hex('#1976d2ff')
-	                #     Rectangle:
-	                #         pos: self.pos
-	                #         size: self.size
+				BoxLayout: 
+					size_hint: (1,1)
+					orientation: 'horizontal'
+					padding: [dp(20), dp(0)]
+					# canvas:
+					#	# Test to see box
+					#     Color:
+					#         rgba: hex('#1976d2ff')
+					#     Rectangle:
+					#         pos: self.pos
+					#         size: self.size
 
-	                Label: 
-	                	id: user_info
+					Label: 
+						id: user_info
 						size_hint: (0.7,1)
-	                    # color: hex('#f9f9f9ff') # white
-	                    color: hex('#333333ff') #grey
-	                    font_size: dp(18)
-	                    halign: "center"
-	                    valign: "middle"
-	                    markup: True
-	                    text_size: self.size
-	                    size: self.texture_size
+						# color: hex('#f9f9f9ff') # white
+						color: hex('#333333ff') #grey
+						font_size: dp(18)
+						halign: "center"
+						valign: "middle"
+						markup: True
+						text_size: self.size
+						size: self.texture_size
 
 
 					CheckBox:
 						id: terms_checkbox
 						size_hint: (0.3,1)
-		                background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-		                on_active: root.on_checkbox_active()
+						background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+						on_active: root.on_checkbox_active()
 
-            # FOOTER
+			# FOOTER
 			BoxLayout: 
 				padding: [10,0,10,10]
 				size_hint: (None, None)
@@ -193,14 +193,14 @@ Builder.load_string("""
 """)
 
 class ScrollPrivacyNotice(ScrollView):
-    text = StringProperty('')
+	text = StringProperty('')
 
-    color_dict = DictProperty({
-                    'background': 'e5e5e5ff',
-                    'link': '1976d2ff',
-                    'paragraph': '333333ff',
-                    'title': '333333ff',
-                    'bullet': '333333ff'})
+	color_dict = DictProperty({
+					'background': 'e5e5e5ff',
+					'link': '1976d2ff',
+					'paragraph': '333333ff',
+					'title': '333333ff',
+					'bullet': '333333ff'})
 
 
 class WiFiAndDataConsentScreen3(Screen):

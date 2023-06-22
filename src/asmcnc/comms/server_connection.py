@@ -36,7 +36,7 @@ class ServerConnection(object):
 		server_thread.start()
 
 	def __del__(self):
-  		log("Server connection class has been deleted")
+		log("Server connection class has been deleted")
 
 	def initialise_server_connection(self):
 
