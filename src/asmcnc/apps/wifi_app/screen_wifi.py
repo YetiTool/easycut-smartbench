@@ -413,12 +413,15 @@ class WifiScreen(Screen):
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
+    dismiss_wait_popup_event = None
+    wifi_error_timeout_event = None
+    refresh_ip_label_value_event = None
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
-        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -427,7 +430,8 @@ class WifiScreen(Screen):
         self.get_rst_source()
 
     def on_enter(self):
-
+        self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
+                                                                    self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
@@ -456,8 +460,8 @@ class WifiScreen(Screen):
             self.connect_wifi()
 
     def connect_wifi(self):
-        message = self.l.get_str("Please wait") + "...\n\n" + self.l.get_str("Console will reboot to connect to network.")
-        popup_info.PopupMiniInfo(self.sm, self.l, message)
+        self._password.text = ''
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -503,7 +507,39 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        self.sm.current = 'rebooting'
+        # Flush all the IP addresses from cache
+        os.system('sudo ip addr flush dev wlan0')
+
+        # Reload the updated wpa_supplicant file
+        os.system('sudo wpa_cli -i wlan0 reconfigure')
+
+        # Restart the DHCP service to allocate a new IP address on the new network
+        os.system('sudo systemctl restart dhcpcd')
+
+        def dismiss_wait_popup(dt):
+            if self.set.wifi_available:
+                if self.wifi_error_timeout_event:
+                    Clock.unschedule(self.wifi_error_timeout_event)
+                try:
+                    wait_popup.popup.dismiss()
+                except:
+                    pass
+                return
+            self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 0.5)
+
+        def wifi_error_timeout(dt):
+            if not self.set.wifi_available:
+                if self.dismiss_wait_popup_event:
+                    Clock.unschedule(self.dismiss_wait_popup_event)
+                try:
+                    wait_popup.popup.dismiss()
+                except:
+                    pass
+                message = self.l.get_str("No WiFi connection!")
+                popup_info.PopupWarning(self.sm, self.l, message)
+
+        self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
+        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
 
     def refresh_ip_label_value(self, dt):
 
@@ -526,9 +562,13 @@ class WifiScreen(Screen):
         self.sm.current = 'lobby'
     
     def get_available_networks(self):
-        raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
-        SSID_list = raw_SSID_list.replace('\tSSID: ','').strip().split('\n')
-        if '' in SSID_list: SSID_list.remove('')
+        # Scan for networks, select only ESSIDs, remove ESSID from the line, remove any leading whitespaces or tabs.
+        # This leaves each network name in the format "NETWORK NAME" with each of them on their own new line
+        raw_SSID_list = os.popen('sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"').read()
+        SSID_list = raw_SSID_list.replace('"','').strip().split('\n')  # Remove " from network name and split on newline
+        if '' in SSID_list: SSID_list.remove('')  # Remove empty entries
+        # Remove any addresses that contain only NULL bytes and cast it to a set to remove duplicates
+        SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
         return SSID_list
 
     def refresh_available_networks(self):
@@ -578,3 +618,10 @@ class WifiScreen(Screen):
             except:
                 self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
+    def on_leave(self):
+        if self.wifi_error_timeout_event:
+            self.wifi_error_timeout_event.cancel()
+        if self.dismiss_wait_popup_event:
+            self.dismiss_wait_popup_event.cancel()
+        if self.refresh_ip_label_value_event:
+            self.refresh_ip_label_value_event.cancel()
