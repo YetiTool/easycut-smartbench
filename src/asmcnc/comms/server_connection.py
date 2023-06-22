@@ -10,7 +10,7 @@ PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 def log(message):
 	timestamp = datetime.now()
-	print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' Server connection: ' + str(message))
+	print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' Server connection: ' + str(message))
 
 
 class ServerConnection(object):

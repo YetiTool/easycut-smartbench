@@ -200,13 +200,13 @@ class StartUpSequence(object):
 
 			try:
 				self.sm.remove_widget(self.sm.get_screen(screen_name))
-				print (screen_name + ' deleted')
+				print(screen_name + ' deleted')
 
 			except: pass
 
 
 	def __del__(self):
-		print 'End of startup sequence'
+		print('End of startup sequence')
 
 
 

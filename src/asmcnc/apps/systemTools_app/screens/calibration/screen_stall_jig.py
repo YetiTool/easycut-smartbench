@@ -184,7 +184,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
 class StallJigScreen(Screen):
@@ -235,9 +235,9 @@ class StallJigScreen(Screen):
 
     threshold_dict = {
 
-        "X": range(125, 375, 25),
-        "Y": range(100, 375, 25),
-        "Z": range(120, 220, 20) 
+        "X": list(range(125, 375, 25)),
+        "Y": list(range(100, 375, 25)),
+        "Z": list(range(120, 220, 20)) 
 
     }
 

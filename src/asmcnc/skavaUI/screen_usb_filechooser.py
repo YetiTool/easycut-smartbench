@@ -235,7 +235,7 @@ def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
 
-decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
+decode_and_encode = lambda x: (str(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 class USBFileChooser(Screen):
 
@@ -301,7 +301,7 @@ class USBFileChooser(Screen):
 
         self.usb_path = usb_path
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+        if verbose: print('Filechooser_usb path: ' + self.filechooser_usb.path)
 
     def on_enter(self):
 
@@ -380,7 +380,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing filechooser'
+        if verbose: print('Refreshing filechooser')
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 self.display_selected_file()
@@ -430,12 +430,12 @@ class USBFileChooser(Screen):
                 try:
 
                     if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                        metadata_or_gcode_preview = list(map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ]))
 
                     else: 
                         # just get GCode preview if no metadata
                         previewed_file.seek(0)
-                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
+                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in range(20)]
 
                     self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
@@ -459,7 +459,7 @@ class USBFileChooser(Screen):
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination          
             file_name = os.path.basename(file_selection)
             new_file_path = job_cache_dir + file_name
-            print new_file_path
+            print(new_file_path)
             
             self.go_to_loading_screen(new_file_path)
         

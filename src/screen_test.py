@@ -13,7 +13,7 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
-from asmcnc.comms import localization
+from .asmcnc.comms import localization
 
 try: 
     from mock import Mock, MagicMock
@@ -21,11 +21,11 @@ try:
 except: 
     pass
 
-from asmcnc.comms import router_machine
+from .asmcnc.comms import router_machine
 
-from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
+from .asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from .asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Cmport = 'COM3'
 

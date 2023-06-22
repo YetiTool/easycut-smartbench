@@ -270,11 +270,11 @@ class WarrantyScreen3(Screen):
 
 	def generate_activation_code(self, serial_number):
 		ActiveTempNoOnly = int(''.join(filter(str.isdigit, serial_number)))
-		print (str(ActiveTempNoOnly)+'\n')
+		print(str(ActiveTempNoOnly)+'\n')
 		ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
-		print (ActiveTempStart+'\n')
+		print(ActiveTempStart+'\n')
 		ActiveTempStartReduce = ActiveTempStart[0:15]
-		print (ActiveTempStartReduce+'\n')
+		print(ActiveTempStartReduce+'\n')
 		Activation_Code_1 = int(ActiveTempStartReduce[0])*171350;
 		Activation_Code_2 = int(ActiveTempStartReduce[3])*152740;
 		Activation_Code_3 = int(ActiveTempStartReduce[5])*213431; 

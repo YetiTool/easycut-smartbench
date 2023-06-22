@@ -328,7 +328,7 @@ TEMP_POWER_POLL = 5
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')

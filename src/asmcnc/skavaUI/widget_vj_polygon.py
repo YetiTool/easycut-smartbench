@@ -261,14 +261,14 @@ class PolygonVJ(Widget):
 
     def on_sides_textinput(self):
         if self.sides_textinput2.text and float(self.sides_textinput2.text) > 2:
-            print ("on_sides_textinput " + str(self.sides_textinput2.text))
+            print("on_sides_textinput " + str(self.sides_textinput2.text))
             polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
 
     def on_rad_textinput(self):
         if self.rad_textinput2.text and float(self.rad_textinput2.text) > 0:
-            print ("on_rad_textinput " + str(self.rad_textinput2.text))
+            print("on_rad_textinput " + str(self.rad_textinput2.text))
             polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 

@@ -247,7 +247,7 @@ class DistanceScreen4yClass(Screen):
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
-            print ("New steps have been set: $101 = " + str(self.new_y_steps))
+            print("New steps have been set: $101 = " + str(self.new_y_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 

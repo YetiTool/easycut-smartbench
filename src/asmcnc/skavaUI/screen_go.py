@@ -13,7 +13,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty  # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file, True, False
+from builtins import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
 import traceback
@@ -373,7 +373,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class GoScreen(Screen):
@@ -829,7 +829,7 @@ class GoScreen(Screen):
 
             return line
 
-        self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
+        self.jd.job_gcode_modified = list(map(mapGcodes, modified_job_gcode))
 
         try:
             self.m.s.run_job(self.jd.job_gcode_modified)

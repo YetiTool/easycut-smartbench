@@ -70,7 +70,7 @@ class CalibrationDatabase(object):
         except ImportError:
             if sys.platform != 'win32':
                 log("Can't import credentials (trying to get local folder creds)")
-                import credentials
+                from . import credentials
 
         try:
             self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
@@ -401,9 +401,9 @@ class CalibrationDatabase(object):
 
         try:
 
-            query = u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE \
+            query = 'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE \
             ("device_ID" = \'“eDGE-2”\') AND time > now() - 2m ORDER ' \
-                    u'BY DESC LIMIT 1 '
+                    'BY DESC LIMIT 1 '
 
             return self.influx_client.query(query).raw['series'][0]['values'][0][1]
 

@@ -48,7 +48,7 @@ class MotorCommandsTest(unittest.TestCase):
 
     job_object = []
 
-    comparison_string = ''.join(map(str,range(max_count+1)))
+    comparison_string = ''.join(map(str,list(range(max_count+1))))
 
     def create_job_object(self, n_lines):
 

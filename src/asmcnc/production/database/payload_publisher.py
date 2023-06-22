@@ -62,7 +62,7 @@ def json_to_csv(data, machine_serial, table, stage):
 
     file_path = CSV_PATH + get_unique_file_name(machine_serial, table, stage)
 
-    keys = data[0].keys()
+    keys = list(data[0].keys())
     keys.sort(key=lambda i: status_order[i])
 
     with open(file_path, 'w') as data_file:

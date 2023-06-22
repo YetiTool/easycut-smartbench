@@ -236,7 +236,7 @@ class GCodeMonitor(Widget):
     def update_monitor_text_buffer(self, input_or_output, content):
 
         # Try to chuck out any problem strings
-        if isinstance(content, basestring):
+        if isinstance(content, str):
             
             # Don't update if content is to be hidden
             if content.startswith('<') and self.hide_received_status == 'down':

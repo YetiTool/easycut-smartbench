@@ -17,7 +17,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
-from __builtin__ import file, False
+from builtins import file, False
 from kivy.clock import Clock
 from functools import partial
 from kivy.graphics import Color, Rectangle
@@ -157,7 +157,7 @@ job_q_dir = './jobQ/'            # where file is copied if to be used next in jo
 def log(message):
     
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
 class LoadingScreen(Screen):  
@@ -363,7 +363,7 @@ class LoadingScreen(Screen):
                                     if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
                                         self.sm.get_screen('check_job').as_high_as = float(feed_rate)
 
-                            except: print 'Failed to extract feed rate. Probable G-code error!'
+                            except: print('Failed to extract feed rate. Probable G-code error!')
 
                         # strip line numbers
                         if "N" in l_block:

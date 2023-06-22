@@ -1,13 +1,13 @@
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
-import threading, Queue
+import threading, queue
 from time import sleep
 import traceback
 
 def log(message):
 	timestamp = datetime.datetime.now()
-	print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+	print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 try:
 	import pika
@@ -43,7 +43,7 @@ class DatabaseEventManager():
 		self.jd = self.m.jd
 		self.set = settings_manager
 
-		self.event_queue = Queue.Queue()
+		self.event_queue = queue.Queue()
 
 
 
@@ -476,7 +476,7 @@ class DatabaseEventManager():
 					"time": self.get_local_time()
 			}
 
-			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
+			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.items()}
 
 			data["metadata"] = metadata_in_json_format
 

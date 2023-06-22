@@ -10,7 +10,7 @@ from chardet import detect
 from itertools import takewhile
 import traceback
 
-decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
+decode_and_encode = lambda x: (str(x, detect(x)['encoding']).encode('utf-8'))
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
@@ -205,7 +205,7 @@ class JobData(object):
 
     def generate_job_data(self, raw_gcode):
 
-        self.job_gcode_raw = map(remove_newlines, raw_gcode)
+        self.job_gcode_raw = list(map(remove_newlines, raw_gcode))
 
         try:
             metadata_start_index = self.job_gcode_raw.index('(YetiTool SmartBench MES-Data)')
@@ -272,7 +272,7 @@ class JobData(object):
         # if len(metadata_list) > 0:
 
         if self.metadata_dict:
-            metadata_list = self.metadata_dict.items()
+            metadata_list = list(self.metadata_dict.items())
 
             [summary_list.append('[b]:[/b] '.join([self.l.get_bold(sublist[0]), sublist[1]])) for sublist in metadata_list]
 
@@ -410,7 +410,7 @@ class JobData(object):
                 if '(YetiTool SmartBench MES-Data)' in first_line:
 
                     all_lines = [first_line] + previewed_file.readlines()                    
-                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) ])
+                    metadata = list(map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) ]))
                     all_lines[1: len(metadata) + 1] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)

@@ -6,7 +6,7 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
-from __builtin__ import True, False
+from builtins import True, False
 from datetime import datetime
 from requests import get
 
@@ -20,7 +20,7 @@ from kivy.clock import Clock
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class Settings(object):
     
@@ -266,7 +266,7 @@ class Settings(object):
                 unformatted_git_output = p.communicate()[1]
 
                 git_output = str(unformatted_git_output).split('\n')
-                git_output = list(filter(lambda x: x!= '', git_output))
+                git_output = list([x for x in git_output if x!= ''])
                      
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
@@ -415,7 +415,7 @@ class Settings(object):
 ## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
-        print "pigpio daemon started"
+        print("pigpio daemon started")
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):

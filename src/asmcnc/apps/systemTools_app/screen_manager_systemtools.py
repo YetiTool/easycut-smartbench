@@ -60,7 +60,7 @@ class ScreenManagerSystemTools(object):
             else:
                 count +=1
                 Clock.schedule_once(lambda dt: get_logs(count), 0.2)
-                print count
+                print(count)
 
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)
@@ -211,7 +211,7 @@ class ScreenManagerSystemTools(object):
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print (screen_name + ' deleted')
+            print(screen_name + ' deleted')
 
     def do_usb_first_aid(self):
         message = self.l.get_str('Ensuring USB is unmounted, please wait...')

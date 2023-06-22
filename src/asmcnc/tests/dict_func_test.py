@@ -27,7 +27,7 @@ detection_too_late = { # this may need changing depending on direction that X ax
 
 
 if detection_too_late["X"](100): 
-	print "YES"
+	print("YES")
 
 else:
-	print "NO"
+	print("NO")

@@ -17,7 +17,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
+from builtins import file
 from kivy.clock import Clock
 
 from asmcnc.geometry import job_envelope
@@ -214,7 +214,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class CheckingScreen(Screen):
     
@@ -585,7 +585,7 @@ class CheckingScreen(Screen):
         error_summary = []
         
         # Zip error log and GRBL commands together, and remove any lines with no gcode
-        no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.jd.job_gcode)))
+        no_empties = list([x for x in zip(error_log, self.jd.job_gcode) if x != ('ok', '')])
 
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):

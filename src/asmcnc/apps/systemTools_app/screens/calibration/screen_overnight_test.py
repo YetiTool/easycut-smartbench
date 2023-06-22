@@ -705,7 +705,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class OvernightTesting(Screen):
@@ -1720,10 +1720,10 @@ class OvernightTesting(Screen):
 
         print("Lower bound: " + str((-1 * within_plus_minus)))
         print("Upper bound: " + str(within_plus_minus))
-        print ("Peak pos: " + str(peak_id_pos.text))
-        print ("Peak neg: " + str(peak_id_neg.text))
-        print ("Min pos: " + str(min_pos))
-        print ("Min neg: " + str(min_neg))
+        print("Peak pos: " + str(peak_id_pos.text))
+        print("Peak neg: " + str(peak_id_neg.text))
+        print("Min pos: " + str(min_pos))
+        print("Min neg: " + str(min_neg))
 
         try:
             if not (-1 * within_plus_minus) < int(peak_id_pos.text) < within_plus_minus: return False

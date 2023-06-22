@@ -2,23 +2,23 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
 
-from settings.settings_manager import Settings
-from asmcnc.job.job_data import JobData
-from asmcnc.comms.router_machine import RouterMachine
-from asmcnc.comms.localization import Localization
-from asmcnc.comms import smartbench_flurry_database_connection
+from .settings.settings_manager import Settings
+from .asmcnc.job.job_data import JobData
+from .asmcnc.comms.router_machine import RouterMachine
+from .asmcnc.comms.localization import Localization
+from .asmcnc.comms import smartbench_flurry_database_connection
 
-from asmcnc.skavaUI.screen_home import HomeScreen
-from asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
-from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
-from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
-from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
-from asmcnc.skavaUI import screen_door
-from asmcnc.skavaUI import screen_error
-from asmcnc.production.z_head_mechanics_jig.z_head_mechanics import ZHeadMechanics
-from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHeadMechanicsMonitor
-from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_booting import ZHeadMechanicsBooting
-from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_manual_move import ZHeadMechanicsManualMove
+from .asmcnc.skavaUI.screen_home import HomeScreen
+from .asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
+from .asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
+from .asmcnc.skavaUI.screen_homing_active import HomingScreenActive
+from .asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
+from .asmcnc.skavaUI import screen_door
+from .asmcnc.skavaUI import screen_error
+from .asmcnc.production.z_head_mechanics_jig.z_head_mechanics import ZHeadMechanics
+from .asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHeadMechanicsMonitor
+from .asmcnc.production.z_head_mechanics_jig.z_head_mechanics_booting import ZHeadMechanicsBooting
+from .asmcnc.production.z_head_mechanics_jig.z_head_mechanics_manual_move import ZHeadMechanicsManualMove
 
 from datetime import datetime
 
@@ -28,7 +28,7 @@ Cmport = 'COM3'
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ZHeadMechanicsApp(App):
     def build(self):

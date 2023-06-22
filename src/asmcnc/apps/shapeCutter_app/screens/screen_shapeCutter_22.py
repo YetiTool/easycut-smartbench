@@ -13,7 +13,7 @@ from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from __builtin__ import False
+from builtins import False
 
 Builder.load_string("""
 

@@ -5,7 +5,7 @@ Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino 
 '''
 
 from kivy.config import Config
-from __builtin__ import True
+from builtins import True
 
 import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
@@ -26,7 +26,7 @@ GRBL_SCANNER_MIN_DELAY = 0.01  # Delay between checking for response from grbl. 
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class SerialConnection(object):
@@ -125,7 +125,7 @@ class SerialConnection(object):
                         log(new_string)
                         return new_string
 
-                    stripped_input = map(strip_and_log, self.s.readlines())
+                    stripped_input = list(map(strip_and_log, self.s.readlines()))
 
                     # Is this device a SmartBench? 
                     if any('SmartBench' in ele for ele in stripped_input):
@@ -184,7 +184,7 @@ class SerialConnection(object):
                 for comport in port_list:
 
                     print("Windows port to try: ")
-                    print comport
+                    print(comport)
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
@@ -200,7 +200,7 @@ class SerialConnection(object):
                 if line.startswith('tty.usbmodem'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
-                    print line
+                    print(line)
 
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
@@ -908,7 +908,7 @@ class SerialConnection(object):
 
     def process_grbl_push(self, message):
 
-        if self.VERBOSE_ALL_PUSH_MESSAGES: print message
+        if self.VERBOSE_ALL_PUSH_MESSAGES: print(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
@@ -1439,7 +1439,7 @@ class SerialConnection(object):
                     all_cal_data_list = all_cal_data.strip(',').split(',')
 
                     try:
-                        map(int, all_cal_data_list)
+                        list(map(int, all_cal_data_list))
 
                     except:
                         log("ERROR status parse: TCAL registers invalid: " + message)
@@ -1470,13 +1470,13 @@ class SerialConnection(object):
                                 "-------------------------------------"
                         )
 
-                        map(log, calibration_report_string.split("\n"))
+                        list(map(log, calibration_report_string.split("\n")))
 
                     except:
                         log("Could not print calibration output")
 
-            if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
-                                           self.serial_blocks_available, self.serial_chars_available)
+            if self.VERBOSE_STATUS: print((self.m_state, self.m_x, self.m_y, self.m_z,
+                                           self.serial_blocks_available, self.serial_chars_available))
 
             if self.measure_running_data:
 
@@ -1772,7 +1772,7 @@ class SerialConnection(object):
         if reset_grbl_after_cancel or self._reset_grbl_after_stream:
             self._reset_grbl_after_stream = False
             self.m._grbl_soft_reset()
-            print "GRBL Reset after sequential stream cancelled"
+            print("GRBL Reset after sequential stream cancelled")
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):

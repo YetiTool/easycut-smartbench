@@ -79,7 +79,7 @@ class PopupDatum(Widget):
       def set_datum(*args):
 
           if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
-            print "setting datum with laser"
+            print("setting datum with laser")
 
             if xy == 'X':
                 self.m.set_x_datum_with_laser() #testing!!
@@ -90,7 +90,7 @@ class PopupDatum(Widget):
                 self.m.set_workzone_to_pos_xy_with_laser()
 
           else:
-            print "setting datum without laser"
+            print("setting datum without laser")
 
             if xy == 'X':
                 self.m.set_x_datum()

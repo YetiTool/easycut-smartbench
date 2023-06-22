@@ -39,7 +39,7 @@ Builder.load_string("""
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print(timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
 class StencilBox(StencilView, BoxLayout):
@@ -196,7 +196,7 @@ class GCodeView(Widget):
                     last_x, last_y = target_x, target_y
 
                 else:
-                    print 'Did not draw: ' + line
+                    print('Did not draw: ' + line)
         log('< for line in gcode_list')
 
 
@@ -358,7 +358,7 @@ class GCodeView(Widget):
                             if self.last_x < self.min_x: self.min_x = self.last_x
                             self.last_x = bit[1:]
                         except: 
-                            print 'Line not for preview (' + str(self.line_number) + '): ' + line
+                            print('Line not for preview (' + str(self.line_number) + '): ' + line)
                     elif start == 'Y':
                         try: 
                             self.last_y = float(bit[1:])
@@ -366,7 +366,7 @@ class GCodeView(Widget):
                             if self.last_y < self.min_y: self.min_y = self.last_y
                             self.last_y = bit[1:]
                         except: 
-                            print 'Line not for preview (' + str(self.line_number) + '): ' + line                        
+                            print('Line not for preview (' + str(self.line_number) + '): ' + line)                        
                             
                     elif start == 'Z':
                         try:
@@ -375,7 +375,7 @@ class GCodeView(Widget):
                             if self.last_z < self.min_z: self.min_z = self.last_z
                             self.last_z = bit[1:]
                         except: 
-                            print 'Line not for preview (' + str(self.line_number) + '): ' + line
+                            print('Line not for preview (' + str(self.line_number) + '): ' + line)
                     elif start == 'F': self.feed_rate = bit[1:]
                     elif start == 'I': i = bit[1:]
                     elif start == 'J': j = bit[1:]
@@ -390,7 +390,7 @@ class GCodeView(Widget):
                 elif self.move == 'G2' or self.move == 'G3':
                     processed_line = self.plane + ' ' + self.move + ' X' + self.last_x + ' Y' + self.last_y + ' Z' + self.last_z + ' I' + i + ' J' + j + ' K' + k + ' F' + self.feed_rate
                     self.xy_preview_gcode.append(processed_line)
-                else: print 'Line not for preview (' + str(self.line_number) + self.move + '): ' + line
+                else: print('Line not for preview (' + str(self.line_number) + self.move + '): ' + line)
 
 
             # take a breather and update progress report
