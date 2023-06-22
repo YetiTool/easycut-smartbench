@@ -562,9 +562,13 @@ class WifiScreen(Screen):
         self.sm.current = 'lobby'
     
     def get_available_networks(self):
-        raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
-        SSID_list = raw_SSID_list.replace('\tSSID: ','').strip().split('\n')
-        if '' in SSID_list: SSID_list.remove('')
+        # Scan for networks, select only ESSIDs, remove ESSID from the line, remove any leading whitespaces or tabs.
+        # This leaves each network name in the format "NETWORK NAME" with each of them on their own new line
+        raw_SSID_list = os.popen('sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"').read()
+        SSID_list = raw_SSID_list.replace('"','').strip().split('\n')  # Remove " from network name and split on newline
+        if '' in SSID_list: SSID_list.remove('')  # Remove empty entries
+        # Remove any addresses that contain only NULL bytes and cast it to a set to remove duplicates
+        SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
         return SSID_list
 
     def refresh_available_networks(self):
