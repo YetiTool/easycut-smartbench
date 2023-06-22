@@ -65,32 +65,7 @@ class SpindleSaveWidget(Widget):
         self.l=kwargs['localization']
 
     def get_info(self):
-
-        spindle_settings_info = (
-                self.l.get_bold("Spindle brand") + \
-                "[b]: [/b]" + \
-                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
-                " " + \
-                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
-                "\n\n" + \
-                self.l.get_bold("Spindle cooldown") + \
-                "[b]: [/b]" + \
-                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
-                " " + \
-                self.l.get_str("We recommend the following cooldown settings:") + \
-                "\n\n" + \
-                "       " + \
-                self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds") + \
-                "\n\n" + \
-                "       " + \
-                self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
-                "\n\n" + \
-                self.l.get_bold("CNC Stylus switch") + \
-                "[b]: [/b]" + \
-                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
-            )
-
-        popup_info.PopupScrollableInfo(self.sm, self.l, 750, spindle_settings_info)
+        popup_maintenance.PopupSpindleSettingsInfo(self.sm, self.l)
 
     def save(self):
 
@@ -189,8 +164,10 @@ class SpindleSaveWidget(Widget):
             if self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Set $51 based on selected spindle'):
                 if "SC2" in brand:
                     self.m.write_dollar_setting(51, 1)
+                    self.sm.current_screen.spindle_settings_widget.show_spindle_data_container()
                 else:
                     self.m.write_dollar_setting(51, 0)
+                    self.sm.current_screen.spindle_settings_widget.hide_spindle_data_container()
 
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
