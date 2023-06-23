@@ -164,8 +164,8 @@ Builder.load_string("""
 class AlarmScreen2(Screen):
 	
 	def __init__(self, **kwargs):
+		self.a=kwargs.pop('alarm_manager')
 		super(AlarmScreen2, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
 
 		self.alarm_title.text = self.a.l.get_bold("Alarm: Record details")
 		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"

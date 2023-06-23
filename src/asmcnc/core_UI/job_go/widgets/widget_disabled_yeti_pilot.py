@@ -88,12 +88,13 @@ class DisabledYetiPilotWidget(Widget):
     smaller_font_str = font_str % 15
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
+        self.m = kwargs.pop('machine')
+        self.db = kwargs.pop('database')
+        self.yp = kwargs.pop('yetipilot')
+
         super(DisabledYetiPilotWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.m = kwargs['machine']
-        self.db = kwargs['database']
-        self.yp = kwargs['yetipilot']
 
         self.yp.disable()
         self.update_strings()

@@ -42,8 +42,8 @@ class ScrollViewGCode(ScrollView):
 class GCodeSummary(Widget):
 
     def __init__(self, **kwargs):
+        self.jd = kwargs.pop('job')
         super(GCodeSummary, self).__init__(**kwargs)
-        self.jd = kwargs['job']
 
     def display_summary(self):
 

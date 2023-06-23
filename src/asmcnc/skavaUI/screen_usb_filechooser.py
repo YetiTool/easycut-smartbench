@@ -244,11 +244,11 @@ class USBFileChooser(Screen):
 
 
     def __init__(self, **kwargs):
- 
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
+
         super(USBFileChooser, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l=kwargs['localization']
 
     # MANAGING KIVY SCROLL BUG
 

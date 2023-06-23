@@ -271,15 +271,14 @@ class HomeScreen(Screen):
     has_datum_been_reset = False
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
 
         super(HomeScreen, self).__init__(**kwargs)
         Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.home_tab))
-
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
 
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)

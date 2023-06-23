@@ -6,16 +6,12 @@ Tutorial Screen for the Shape Cutter App
 '''
 
 
-from builtins import
-
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-
-False
 
 Builder.load_string("""
 

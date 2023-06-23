@@ -6,16 +6,12 @@ Screen 22 for the Shape Cutter App
 '''
 
 
-from builtins import
-
 from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-
-False
 
 Builder.load_string("""
 

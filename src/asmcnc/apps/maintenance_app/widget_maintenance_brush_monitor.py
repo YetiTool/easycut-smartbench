@@ -59,12 +59,12 @@ class BrushMonitorWidget(Widget):
     percentage_text = ''
 
     def __init__(self, **kwargs):
-    
-        super(BrushMonitorWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.monitor_percentage = kwargs.pop('input_percentage')
 
-        self.monitor_percentage = kwargs['input_percentage']
+        super(BrushMonitorWidget, self).__init__(**kwargs)
+
         self.x_pos_modifier = 1 - self.monitor_percentage
         self.percentage_text = str(int(self.monitor_percentage*100)) + '%'
 

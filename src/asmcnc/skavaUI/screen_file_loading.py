@@ -178,12 +178,12 @@ class LoadingScreen(Screen):
     continuing_to_recovery = False
 
     def __init__(self, **kwargs):
-        super(LoadingScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.jd=kwargs['job']
-        self.l=kwargs['localization']
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
 
+        super(LoadingScreen, self).__init__(**kwargs)
 
     def on_pre_enter(self):    
 

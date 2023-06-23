@@ -160,11 +160,11 @@ class VirtualBedControl(Widget):
     # localize meeee
 
     def __init__(self, **kwargs):
-    
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
+
         super(VirtualBedControl, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
         
     def zoomStateCheck(self):
         if self.zoomToggleButton.state == 'down':

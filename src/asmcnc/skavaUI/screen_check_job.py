@@ -228,11 +228,12 @@ class CheckingScreen(Screen):
     serial_function_called = False
     
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.jd = kwargs.pop('job')
+
         super(CheckingScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-        self.jd=kwargs['job']
 
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.jd)
 

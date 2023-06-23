@@ -60,14 +60,15 @@ class StartingSmartBenchScreen(Screen):
     start_in_warranty_mode = False
     
     def __init__(self, **kwargs):
-        
+        self.start_seq = kwargs.pop('start_sequence')
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.set = kwargs.pop('settings')
+        self.db = kwargs.pop('database')
+        self.l = kwargs.pop('localization')
+
         super(StartingSmartBenchScreen, self).__init__(**kwargs)
-        self.start_seq=kwargs['start_sequence']
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.set=kwargs['settings']
-        self.db=kwargs['database']
-        self.l=kwargs['localization']
+
         self.update_strings()
 
     def on_enter(self):

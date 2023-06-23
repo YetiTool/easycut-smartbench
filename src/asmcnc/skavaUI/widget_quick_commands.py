@@ -121,15 +121,13 @@ Builder.load_string("""
 
 class QuickCommands(Widget):
 
-
-
     def __init__(self, **kwargs):
-    
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
+
         super(QuickCommands, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l=kwargs['localization']
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

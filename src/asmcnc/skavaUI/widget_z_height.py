@@ -62,11 +62,12 @@ class VirtualZ(Widget):
     WIDGET_REFRESH_INTERVAL = 0.1
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
     
         super(VirtualZ, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
+
         Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):

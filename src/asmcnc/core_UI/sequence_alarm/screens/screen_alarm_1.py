@@ -141,8 +141,8 @@ Builder.load_string("""
 class AlarmScreen1(Screen):
 
 	def __init__(self, **kwargs):
+		self.a=kwargs.pop('alarm_manager')
 		super(AlarmScreen1, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
 
 		self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"

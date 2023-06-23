@@ -328,11 +328,12 @@ class LocalFileChooser(Screen):
     is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
 
         super(LocalFileChooser, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l=kwargs['localization']
+
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
 
         self.check_for_job_cache_dir()

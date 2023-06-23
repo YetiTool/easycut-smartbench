@@ -104,13 +104,14 @@ class SerialFailureClass(Screen):
     reboot_button = ObjectProperty()
     user_instruction = StringProperty()
 
-    
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.win_port = kwargs.pop('win_port')
 
         super(SerialFailureClass, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']  
-        self.l=kwargs['localization']
 
         self.update_strings()
 
