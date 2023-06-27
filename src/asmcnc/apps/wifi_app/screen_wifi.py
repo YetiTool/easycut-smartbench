@@ -491,13 +491,19 @@ class WifiScreen(Screen):
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
         if self.custom_ssid_button.state == 'normal':
-            self.network_name_input.remove_widget(self.custom_network_name_box)
-            self.network_name_input.add_widget(self.network_name_box)
+            try:
+                self.network_name_input.remove_widget(self.custom_network_name_box)
+                self.network_name_input.add_widget(self.network_name_box)
+            except:
+                pass
             self.custom_ssid_button.text = self.l.get_str("Other network")
         else:
-            self.network_name_input.remove_widget(self.network_name_box)
-            self.network_name_input.add_widget(self.custom_network_name_box)
-            self.custom_network_name.focus = True
+            try:
+                self.network_name_input.remove_widget(self.network_name_box)
+                self.network_name_input.add_widget(self.custom_network_name_box)
+                self.custom_network_name.focus = True
+            except:
+                pass
             self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
@@ -509,6 +515,8 @@ class WifiScreen(Screen):
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
+
+        self.update_strings()
 
     def check_credentials(self):
 
@@ -666,13 +674,13 @@ class WifiScreen(Screen):
         self.password_label.text = self.l.get_bold("Password")
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
-        self.custom_ssid_button.text = self.l.get_str("Other network")
+        self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
         self.update_font_size(self.country_label)
-        self.update_font_size(self.custom_network_name)
-        self.update_button_font_size(self.connect_button, False)
-        self.update_button_font_size(self.custom_ssid_button, True)
+        self.update_hint_font_size(self.custom_network_name)
+        self.update_button_font_size(self.connect_button, 28, 10)
+        self.update_button_font_size(self.custom_ssid_button, 20, 20)
 
     def update_font_size(self, value):
         if len(value.text) < 8:
@@ -680,24 +688,15 @@ class WifiScreen(Screen):
         elif len(value.text) > 7: 
             value.font_size = self.default_font_size - 2
 
-        try:
-            if value.hint_text:
-                if len(value.hint_text) < 20:
-                    value.font_size = value.font_size
-                elif len(value.hint_text) > 19:
-                    value.font_size = self.default_font_size - 3
-        except:
-            pass
+    def update_hint_font_size(self, value):
+        if value.hint_text:
+            if len(value.hint_text) > 22:
+                value.font_size = self.default_font_size - 3
 
-    def update_button_font_size(self, value, small_button):
-        if small_button:
-            value.font_size = 20
-            if len(value.text) > 20:
-                value.font_size = 19
-        else:
-            value.font_size = 28
-            if len(value.text) > 10:
-                value.font_size = 19
+    def update_button_font_size(self, value, default_size, max_length):
+        value.font_size = default_size
+        if len(value.text) > max_length:
+            value.font_size = 19
 
     def get_rst_source(self):
         try:
