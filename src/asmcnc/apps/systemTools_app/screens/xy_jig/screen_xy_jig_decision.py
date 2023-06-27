@@ -13,41 +13,54 @@ Builder.load_string("""
 <XYJigDecision>:
 
     BoxLayout:
-        padding: [dp(20), dp(150)]
+        orientation: 'vertical'
+        padding: [dp(20), dp(100)]
         spacing: dp(20)
 
         Button:
-            text: 'X Single Stack'
-            font_size: dp(50)
+            size_hint_y: 0.4
+            text: 'Exit'
             bold: True
-            text_size: self.size
-            halign: 'center'
-            valign: 'middle'
-            background_color: [1,0,0,1]
+            font_size: dp(50)
+            background_color: hex('#888888FF')
             background_normal: ''
-            on_press: root.enter_xy_jig('X_single')
+            on_press: root.exit()
 
-        Button:
-            text: 'X Double Stack'
-            font_size: dp(50)
-            bold: True
-            text_size: self.size
-            halign: 'center'
-            valign: 'middle'
-            background_color: [1,0,0,1]
-            background_normal: ''
-            on_press: root.enter_xy_jig('X_double')
+        BoxLayout:
+            spacing: dp(20)
 
-        Button:
-            text: 'Y'
-            font_size: dp(50)
-            bold: True
-            text_size: self.size
-            halign: 'center'
-            valign: 'middle'
-            background_color: hex('#00C300FF')
-            background_normal: ''
-            on_press: root.enter_xy_jig('Y')
+            Button:
+                text: 'X Single Stack'
+                font_size: dp(50)
+                bold: True
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                background_color: [1,0,0,1]
+                background_normal: ''
+                on_press: root.enter_xy_jig('X_single')
+
+            Button:
+                text: 'X Double Stack'
+                font_size: dp(50)
+                bold: True
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                background_color: [1,0,0,1]
+                background_normal: ''
+                on_press: root.enter_xy_jig('X_double')
+
+            Button:
+                text: 'Y'
+                font_size: dp(50)
+                bold: True
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                background_color: hex('#00C300FF')
+                background_normal: ''
+                on_press: root.enter_xy_jig('Y')
 
 """)
 
@@ -60,6 +73,9 @@ class XYJigDecision(Screen):
         self.systemtools_sm = kwargs['systemtools']
         self.m = kwargs['m']
         self.l = kwargs['l']
+
+    def exit(self):
+        self.systemtools_sm.open_factory_settings_screen()
 
     def enter_xy_jig(self, axis):
 
