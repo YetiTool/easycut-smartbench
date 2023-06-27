@@ -1149,6 +1149,7 @@ class FactorySettingsScreen(Screen):
 
         confirm_popup.open()
 
+    # Switches the contents of the Spinner to toggle showing all contents or not
     def show_all_smartbench_models(self):
         if self.ids.smartbench_model_button.state == 'normal':
             self.ids.smartbench_model.values = self.latest_machine_model_values
