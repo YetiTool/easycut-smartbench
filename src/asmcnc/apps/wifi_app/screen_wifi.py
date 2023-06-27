@@ -242,7 +242,8 @@ Builder.load_string("""
                             
                             TextInput: 
                                 id: custom_network_name
-                                valign: 'middle'
+                                # valign: 'middle'
+                                padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
                                 halign: 'center'
                                 text_size: self.size
                                 font_size: '20sp'
@@ -669,7 +670,9 @@ class WifiScreen(Screen):
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
         self.update_font_size(self.country_label)
-        self.update_button_font_size(self.connect_button)
+        self.update_font_size(self.custom_network_name)
+        self.update_button_font_size(self.connect_button, False)
+        self.update_button_font_size(self.custom_ssid_button, True)
 
     def update_font_size(self, value):
         if len(value.text) < 8:
@@ -677,10 +680,24 @@ class WifiScreen(Screen):
         elif len(value.text) > 7: 
             value.font_size = self.default_font_size - 2
 
-    def update_button_font_size(self, value):
-        value.font_size = 28
-        if len(value.text) > 10:
-            value.font_size = 19
+        try:
+            if value.hint_text:
+                if len(value.hint_text) < 20:
+                    value.font_size = value.font_size
+                elif len(value.hint_text) > 19:
+                    value.font_size = self.default_font_size - 3
+        except:
+            pass
+
+    def update_button_font_size(self, value, small_button):
+        if small_button:
+            value.font_size = 20
+            if len(value.text) > 20:
+                value.font_size = 19
+        else:
+            value.font_size = 28
+            if len(value.text) > 10:
+                value.font_size = 19
 
     def get_rst_source(self):
         try:
