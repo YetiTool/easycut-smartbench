@@ -325,7 +325,7 @@ class HomeScreen(Screen):
 
         file_name = 'export_' + datetime.now().strftime('%m-%d-%Y-%H-%M-%S') + '.csv'
 
-        with open(file_name, 'w', newline='') as csvfile:
+        with open(file_name, 'w') as csvfile:
             writer = csv.writer(csvfile)
 
             writer.writerow(['Load', 'Time'])
