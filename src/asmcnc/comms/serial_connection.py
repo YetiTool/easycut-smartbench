@@ -1151,10 +1151,15 @@ class SerialConnection(object):
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
+                        try:
+                            self.digital_spindle_ld_W = sqrt(self.digital_spindle_ld_qdA)*23
+                        except:
+                            self.digital_spindle_ld_W = null
+
                         if self.spindle_health_check and not self.in_inrush:
                             self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
-                        self.load_over_time.append((self.digital_spindle_ld_qdA, datetime.now().strftime('%H:%M:%S.%f')))
+                        self.load_over_time.append((self.digital_spindle_ld_W, datetime.now().strftime('%H:%M:%S.%f')))
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
