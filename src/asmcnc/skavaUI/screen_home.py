@@ -320,7 +320,26 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
+    def export_to_csv(self):
+        import csv
+
+        file_name = 'export_' + datetime.now().strftime('%m-%d-%Y-%H-%M-%S') + '.csv'
+
+        with open(file_name, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+
+            writer.writerow(['Load', 'Time'])
+
+            writer.writerows(self.m.s.load_over_time)
+
+        print('Exported to ' + file_name)
+
+        self.m.s.load_over_time[:] = []
+
     def on_enter(self):
+
+        if len(self.m.s.load_over_time) > 0:
+            self.export_to_csv()
 
         self.m.stylus_router_choice = 'router'
 

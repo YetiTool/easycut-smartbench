@@ -59,6 +59,8 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+    load_over_time = []
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
@@ -1151,6 +1153,8 @@ class SerialConnection(object):
 
                         if self.spindle_health_check and not self.in_inrush:
                             self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
+
+                        self.load_over_time.append((self.digital_spindle_ld_qdA, time.time()))
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
