@@ -510,8 +510,16 @@ class WifiScreen(Screen):
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-            except: self.network_name.text = ''
+            if self.is_wlan0_connected():
+                try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
+                except: self.network_name.text = ''
+            else:
+                self.network_name.text = ''
+                wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
+                if 'True' in wifi_connected_before:
+                    message = self.l.get_str("No network connection.") + "\n" + self.l.get_str("Please refresh the list and try again.")
+                    popup_info.PopupWarning(self.sm, self.l, message)
+
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
@@ -541,6 +549,12 @@ class WifiScreen(Screen):
         else: 
             self.connect_wifi()
 
+    def is_wlan0_connected(self):
+        #returns "state UP" or "state DOWN" depending on whether wlan0 is connected or not
+        state_raw = os.popen('ip addr show | grep "wlan0" | grep -oP "state\s\w+"').read()
+        state = state_raw.split(" ")[1].strip("\n")
+
+        return state == "UP"
     def connect_wifi(self):
         self._password.text = ''
         wait_popup = popup_info.PopupWait(self.sm, self.l)
@@ -588,6 +602,8 @@ class WifiScreen(Screen):
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
+        os.system('sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt')
 
         # Flush all the IP addresses from cache
         os.system('sudo ip addr flush dev wlan0')
