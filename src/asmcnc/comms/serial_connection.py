@@ -1147,22 +1147,16 @@ class SerialConnection(object):
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
-                        self.digital_spindle_ld_W = null
-
                         try:
-                            self.digital_spindle_ld_W = sqrt(self.digital_spindle_ld_qdA)*self.digital_spindle_mains_voltage*0.1
+                            self.digital_spindle_ld_W = (self.digital_spindle_ld_W**0.5)*self.digital_spindle_mains_voltage*0.1
                         except:
-                            self.digital_spindle_ld_W = null
-
-                        
-                        
-
+                            self.digital_spindle_ld_W = None
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
 
                         if self.spindle_health_check and not self.in_inrush:
-                            self.spindle_health_check_data.append(self.digital_spindle_ld_W)
+                            self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
                         self.load_over_time.append(((datetime.now().strftime('%H:%M:%S.%f')), (self.digital_spindle_ld_qdA)))
 
