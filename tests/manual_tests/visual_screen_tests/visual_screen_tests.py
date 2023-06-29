@@ -66,11 +66,19 @@ class ScreenTest(App):
 
     fw_version = "2.4.2"
 
+    alarm_message = "\n"
+
+    status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+    def give_status(self):
+
+        return self.status
+
     def give_me_a_PCB(outerSelf, status):
 
         class YETIPCB(MockSerial):
             simple_queries = {
-                "?": status,
+                "?": outerSelf.give_status,
                 "\x18": "",
                 "*LFFFF00": "ok",
                 "$$": outerSelf.alarm_message
@@ -120,12 +128,8 @@ class ScreenTest(App):
                 str(y_coord) + "," + \
                 str(z_coord) + ">\n"
 
-            if self.stall_alarm_test: status = self.sg_alarm_status
-            else: status = self.limit_status
-
-            m.s.s = DummySerial(self.give_me_a_PCB(status))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
+            if self.stall_alarm_test: self.status = self.sg_alarm_status
+            else: self.status = self.limit_status
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
@@ -143,13 +147,7 @@ class ScreenTest(App):
             self.alarm_message = "\n"
 
             killtime = 9
-            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
-
-            m.s.s = DummySerial(self.give_me_a_PCB(killtime_status))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
+            self.status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
             
             m.is_using_sc2 = Mock(return_value=True)
             m.is_spindle_health_check_active = Mock(return_value=False)
@@ -159,6 +157,25 @@ class ScreenTest(App):
             sm.current = 'go'
             
             Clock.schedule_once(m.s.start_services, 0.1)
+
+        def job_pause_tests():
+            self.alarm_message = "\n"
+
+            self.status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            sm.current = 'go'
+
+            sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+            def stream_and_pause(dt=0):
+                m.s.is_job_streaming = True
+                m.set_pause(True, 'yetipilot_low_feed')
+                print("STOP FOR STREAM PAUSE")
+                # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
+
+            Clock.schedule_once(stream_and_pause, 5)
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
@@ -194,6 +211,13 @@ class ScreenTest(App):
         config_flag = False
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
+
+        m.s.s = DummySerial(self.give_me_a_PCB())
+        m.s.s.fd = 1 # this is needed to force it to run
+        m.s.fw_version = self.fw_version
+        m.s.setting_50 = 0.03
+        m.s.yp = yp
+        m.s.setting_27 = 1
 
         test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
         sm.add_widget(test_screen)
