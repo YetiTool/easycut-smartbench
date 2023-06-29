@@ -328,7 +328,7 @@ class HomeScreen(Screen):
         with open(file_name, 'w') as csvfile:
             writer = csv.writer(csvfile)
 
-            writer.writerow(['Load', 'Time'])
+            writer.writerow(['Time', 'Load (W)'])
 
             writer.writerows(self.m.s.load_over_time)
 
