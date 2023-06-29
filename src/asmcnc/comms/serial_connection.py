@@ -1149,12 +1149,13 @@ class SerialConnection(object):
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
+                        
                         if self.digital_spindle_ld_qdA > 0:
                             self.digital_spindle_ld_W = math.sqrt(self.digital_spindle_ld_qdA)*self.digital_spindle_mains_voltage*0.1
-                            self.digital_spindle_ld_W = round(self.digital_spindle_ld_W)
+                            self.digital_spindle_ld_W = int(round(self.digital_spindle_ld_W))
                         else:                        
                             self.digital_spindle_ld_W = None
-                        print(self.digital_spindle_ld_W)
+                        
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
                         self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
                         self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
