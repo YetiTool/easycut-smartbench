@@ -126,10 +126,6 @@ class ScreenTest(App):
             m.s.s = DummySerial(self.give_me_a_PCB(status))
             m.s.s.fd = 1 # this is needed to force it to run
             m.s.fw_version = self.fw_version
-
-            home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
-            sm.add_widget(home_screen)
-            sm.current = 'home'
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
@@ -141,9 +137,6 @@ class ScreenTest(App):
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
                 ]
 
-            # CHANGE ME
-            test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
-            sm.add_widget(test_screen)
             sm.current = 'test'
 
         def go_screen_sc2_overload_test():
@@ -157,15 +150,6 @@ class ScreenTest(App):
             m.s.fw_version = self.fw_version
             m.s.setting_50 = 0.03
             m.s.yp = yp
-
-            home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
-            sm.add_widget(home_screen)
-
-            job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
-            sm.add_widget(job_feedback_screen)
-
-            go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
-            sm.add_widget(go_screen)
             
             m.is_using_sc2 = Mock(return_value=True)
             m.is_spindle_health_check_active = Mock(return_value=False)
@@ -210,6 +194,18 @@ class ScreenTest(App):
         config_flag = False
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
+
+        test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
+        sm.add_widget(test_screen)
+
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        sm.add_widget(home_screen)
+
+        job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
+        sm.add_widget(job_feedback_screen)
+
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
+        sm.add_widget(go_screen)
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")
