@@ -16,6 +16,8 @@ import re
 from functools import partial
 from serial.serialutil import SerialException
 
+import math
+
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
@@ -1147,9 +1149,9 @@ class SerialConnection(object):
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
-                        if self.digital_spindle_ld_qdA > 0:
-                            self.digital_spindle_ld_W = (self.digital_spindle_ld_W**0.5)*self.digital_spindle_mains_voltage*0.1
-                        else:                        
+                        try:
+                            self.digital_spindle_ld_W = math.sqrt(self.digital_spindle_ld_W)*self.digital_spindle_mains_voltage*0.1
+                        except:                        
                             self.digital_spindle_ld_W = None
                         print(self.digital_spindle_ld_W)
                         self.digital_spindle_temperature = int(digital_spindle_feedback[1])
