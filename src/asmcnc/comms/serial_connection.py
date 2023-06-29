@@ -1150,7 +1150,7 @@ class SerialConnection(object):
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
                         if self.digital_spindle_ld_qdA > 0:
-                            self.digital_spindle_ld_W = math.sqrt(self.digital_spindle_ld_W)*self.digital_spindle_mains_voltage*0.1
+                            self.digital_spindle_ld_W = math.sqrt(self.digital_spindle_ld_qdA)*self.digital_spindle_mains_voltage*0.1
                         else:                        
                             self.digital_spindle_ld_W = None
                         print(self.digital_spindle_ld_W)
