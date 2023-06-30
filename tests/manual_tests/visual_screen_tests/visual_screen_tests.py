@@ -66,22 +66,14 @@ class ScreenTest(App):
 
     fw_version = "2.4.2"
 
-    alarm_message = "\n"
-
-    status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
-
-    def give_status(self):
-
-        return self.status
-
-    def give_me_a_PCB(outerSelf, status):
+    def give_me_a_PCB(outerSelf, status, alarm_message):
 
         class YETIPCB(MockSerial):
             simple_queries = {
-                "?": outerSelf.give_status,
+                "?": status,
                 "\x18": "",
                 "*LFFFF00": "ok",
-                "$$": outerSelf.alarm_message
+                "$$": alarm_message
             }
 
         return YETIPCB
@@ -99,7 +91,7 @@ class ScreenTest(App):
 
             alarm_number = 1
 
-            self.stall_alarm_test = True
+            stall_alarm_test = True
 
             motor_id = 0
             step_size = 75
@@ -112,10 +104,10 @@ class ScreenTest(App):
             z_coord = -99.954
 
 
-            self.alarm_message = "ALARM:" + str(alarm_number) + "\n"
+            alarm_message = "ALARM:" + str(alarm_number) + "\n"
 
-            self.limit_status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>\n"
-            self.sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
+            limit_status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>\n"
+            sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
                 stall_pin + \
                 "|SGALARM:" + \
                 str(motor_id) + "," + \
@@ -128,8 +120,14 @@ class ScreenTest(App):
                 str(y_coord) + "," + \
                 str(z_coord) + ">\n"
 
-            if self.stall_alarm_test: self.status = self.sg_alarm_status
-            else: self.status = self.limit_status
+            if stall_alarm_test: status = sg_alarm_status
+            else: status = limit_status
+
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+
+            sm.current = 'home'
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
@@ -144,10 +142,16 @@ class ScreenTest(App):
             sm.current = 'test'
 
         def go_screen_sc2_overload_test():
-            self.alarm_message = "\n"
+            alarm_message = "\n"
 
             killtime = 9
-            self.status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
+            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
+
+            m.s.s = DummySerial(self.give_me_a_PCB(killtime_status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+            m.s.setting_50 = 0.03
+            m.s.yp = yp
             
             m.is_using_sc2 = Mock(return_value=True)
             m.is_spindle_health_check_active = Mock(return_value=False)
@@ -159,9 +163,16 @@ class ScreenTest(App):
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def job_pause_tests():
-            self.alarm_message = "\n"
+            alarm_message = "\n"
 
-            self.status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+            status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+            m.s.setting_50 = 0.03
+            m.s.yp = yp
+            m.s.setting_27 = 1
 
             sm.current = 'go'
 
@@ -211,13 +222,6 @@ class ScreenTest(App):
         config_flag = False
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
-
-        m.s.s = DummySerial(self.give_me_a_PCB())
-        m.s.s.fd = 1 # this is needed to force it to run
-        m.s.fw_version = self.fw_version
-        m.s.setting_50 = 0.03
-        m.s.yp = yp
-        m.s.setting_27 = 1
 
         test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
         sm.add_widget(test_screen)
