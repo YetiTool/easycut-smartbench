@@ -38,6 +38,9 @@ from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
+from asmcnc.apps.maintenance_app import screen_maintenance
+
 
 try: 
     from mock import Mock, MagicMock
@@ -188,6 +191,14 @@ class ScreenTest(App):
 
             Clock.schedule_once(stream_and_pause, 5)
 
+        def maintenance_app_screen_test():
+            m.is_using_sc2 = Mock(return_value=True)
+            m.theateam = Mock(return_value=True)
+
+            landing_tab = 'spindle_health_check_tab'
+            sm.get_screen('maintenance').landing_tab = landing_tab
+            sm.current = 'maintenance'
+
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
@@ -232,8 +243,17 @@ class ScreenTest(App):
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
         sm.add_widget(job_feedback_screen)
 
+        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(spindle_shutdown_screen)
+
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        sm.add_widget(stop_or_resume_decision_screen)
+
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l,  yetipilot=yp)
         sm.add_widget(go_screen)
+
+        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine = m, localization = l, job = jd)
+        sm.add_widget(maintenance_screen)
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")
