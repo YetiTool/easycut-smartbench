@@ -22,11 +22,13 @@ Run from easycut-smartbench folder, with
 python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>
 '''
 
+path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
 import kivy
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
@@ -43,6 +45,9 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
+from asmcnc.production.z_head_qc_jig import z_head_qc_pcb_set_up_outcome, z_head_qc_pcb_set_up
 
 try: 
     from mock import Mock, MagicMock
@@ -54,6 +59,26 @@ except:
 
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
+Builder.load_string("""
+<BasicScreen>:
+
+""")
+
+class BasicScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(BasicScreen, self).__init__(**kwargs)
+        self.sm = kwargs['sm']
+        self.l = kwargs['l']
+        self.m = kwargs['m']
+        self.db = kwargs['db']
+        self.yp = kwargs['yp']
+
+
+    def on_enter(self):
+        if self.sm.has_screen('go'):
+            self.sm.get_screen('go').yp_widget.yp_settings_popup = popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = 'COM3'
 
@@ -244,6 +269,91 @@ class ScreenTest(App):
             go_screen.yp_widget.toggle_yeti_pilot(go_screen.yp_widget.switch)
 
             sm.current = 'stop_or_resume_job_decision'
+
+        def stall_jig_screen_tests():
+            alarm_pin = "Y"
+
+            stall_pin = "S"
+            motor_id = 0
+            step_size = 75
+            sg_val = 151
+            thresh = 150
+            distance = 42103020
+            x_coord = -1084.997
+            y_coord = -2487.003
+            z_coord = -99.954
+
+
+            alarm_message = "ALARM:1\n"
+
+            status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
+            sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
+                stall_pin + \
+                "|SGALARM:" + \
+                str(motor_id) + "," + \
+                str(step_size) + "," + \
+                str(sg_val) + "," + \
+                str(thresh) + "," + \
+                str(distance) + "," + \
+                str(x_coord) + "," + \
+                str(y_coord) + "," + \
+                str(z_coord) + ">\n"
+            
+            status = sg_alarm_status
+            # status = status
+
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+
+            # CHANGE ME
+            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+            sm.add_widget(stall_jig_screen)
+            sm.current = 'stall_jig'
+            
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+        def yetipilot_settings_popup_test():
+            m.has_spindle_health_check_run = Mock(return_value=False)
+
+            sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
+            sm.current = 'basic'
+
+        def z_head_qc_pcb_outcome_screen_test():
+            m.s.fw_version = "2.5.5; HW: 35"
+
+            prep_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='prep', sm = sm, m = m)
+            sm.add_widget(prep_screen)
+            sm.get_screen('prep').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+
+            test_screen = z_head_qc_pcb_set_up_outcome.ZHeadPCBSetUpOutcome(name='test', sm = sm, m = m)
+            sm.add_widget(test_screen)
+            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+            sm.current = 'test'
+
+            prep = sm.get_screen('prep')
+            outcome_screen = sm.get_screen("test")
+
+            outcome_screen.x_current_correct*=prep.check_current(TMC_X1, 0)
+            outcome_screen.x_current_correct*=prep.check_current(TMC_X2, 10)
+            outcome_screen.y_current_correct*=prep.check_current(TMC_Y1, 12)
+            outcome_screen.y_current_correct*=prep.check_current(TMC_Y2, 11)
+            outcome_screen.z_current_correct*=prep.check_current(TMC_Z, 2)
+
+            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X1, 0)
+            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X2, 11)
+            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y1, 0)
+            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y2, 0)
+            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Z, 0)
+
+        def z_head_qc_pcb_set_up_screen_test():
+            m.s.fw_version = "2.5.5; HW: 35"
+
+            # CHANGE ME
+            test_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='test', sm = sm, m = m)
+            sm.add_widget(test_screen)
+            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+            sm.current = 'test'
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
