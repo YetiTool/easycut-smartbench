@@ -42,6 +42,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_s
 from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
+from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
 
 try: 
     from mock import Mock, MagicMock
@@ -143,6 +144,8 @@ class ScreenTest(App):
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
                 ]
 
+            test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
+            sm.add_widget(test_screen)
             sm.current = 'test'
 
         def go_screen_sc2_overload_test():
@@ -209,6 +212,21 @@ class ScreenTest(App):
             sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
             sm.current = 'basic'
 
+        def screen_spindle_health_check_test():
+            alarm_message = "\n"
+
+            status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+            m.s.setting_50 = 0.03
+            m.s.yp = yp
+            m.s.setting_27 = 1
+
+            sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
+            sm.current = 'test'
+
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
@@ -243,9 +261,6 @@ class ScreenTest(App):
         config_flag = False
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
-
-        test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
-        sm.add_widget(test_screen)
 
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
