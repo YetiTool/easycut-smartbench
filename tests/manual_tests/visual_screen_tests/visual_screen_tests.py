@@ -227,6 +227,24 @@ class ScreenTest(App):
             sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
             sm.current = 'test'
 
+        def screen_stop_or_resume_decision_test():
+            m.is_using_sc2 = Mock(return_value=True)
+
+            stop_or_resume_decision_screen.return_screen = 'go'
+
+            stop_or_resume_decision_screen.reason_for_pause = 'spindle_overload'
+            # stop_or_resume_decision_screen.reason_for_pause = 'job_pause'
+            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_low_feed'
+            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_spindle_data_loss'
+            # stop_or_resume_decision_screen.reason_for_pause = 'spindle_health_check_failed'
+
+            # Set yetipilot initially enabled, to test disable on unpause
+            go_screen.is_job_started_already = True
+            go_screen.yp_widget.switch.active = True
+            go_screen.yp_widget.toggle_yeti_pilot(go_screen.yp_widget.switch)
+
+            sm.current = 'stop_or_resume_job_decision'
+
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
