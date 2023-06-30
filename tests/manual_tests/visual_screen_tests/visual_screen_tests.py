@@ -40,7 +40,8 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.apps.maintenance_app import screen_maintenance
-
+from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
+from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 
 try: 
     from mock import Mock, MagicMock
@@ -198,6 +199,15 @@ class ScreenTest(App):
             landing_tab = 'spindle_health_check_tab'
             sm.get_screen('maintenance').landing_tab = landing_tab
             sm.current = 'maintenance'
+
+        def pro_plus_safety_screen_test():
+            start_seq = Mock()
+
+            consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
+            sm.add_widget(consent_1_screen)
+
+            sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
+            sm.current = 'basic'
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
