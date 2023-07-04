@@ -110,6 +110,19 @@ class ScreenTest(App):
             m.s.yp = yp
             m.s.setting_27 = 1
 
+        # Call with list of screen names to run through multiple screens automatically
+        def cycle_through_screens(screen_list):
+            def show_next_screen(screen_list, index):
+                sm.current = screen_list[index]
+
+                index += 1
+                if index >= len(screen_list):
+                    Clock.schedule_once(lambda dt: show_next_screen(screen_list, 0), 5)
+                else:
+                    Clock.schedule_once(lambda dt: show_next_screen(screen_list, index), 5)
+
+            show_next_screen(screen_list, 0)
+
 
         # Add tests as functions below
 
