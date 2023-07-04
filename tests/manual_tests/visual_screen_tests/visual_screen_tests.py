@@ -110,6 +110,15 @@ class ScreenTest(App):
 
     def build(self):
 
+        # Default values for dummy serial, which can be reassigned or added to if needed
+        def set_up_dummy_serial(status, alarm_message):
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+            m.s.setting_50 = 0.03
+            m.s.yp = yp
+            m.s.setting_27 = 1
+
         # Add tests as functions below
 
         def alarm_screen_tests():
@@ -153,9 +162,7 @@ class ScreenTest(App):
             if stall_alarm_test: status = sg_alarm_status
             else: status = limit_status
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
+            set_up_dummy_serial(status, alarm_message)
 
             sm.current = 'home'
         
@@ -179,11 +186,7 @@ class ScreenTest(App):
             killtime = 9
             killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
 
-            m.s.s = DummySerial(self.give_me_a_PCB(killtime_status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
+            set_up_dummy_serial(killtime_status, alarm_message)
             
             m.is_using_sc2 = Mock(return_value=True)
             m.is_spindle_health_check_active = Mock(return_value=False)
@@ -199,12 +202,7 @@ class ScreenTest(App):
 
             status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
-            m.s.setting_27 = 1
+            set_up_dummy_serial(status, alarm_message)
 
             sm.current = 'go'
 
@@ -242,12 +240,7 @@ class ScreenTest(App):
 
             status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
-            m.s.setting_27 = 1
+            set_up_dummy_serial(status, alarm_message)
 
             sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
             sm.current = 'test'
@@ -302,9 +295,7 @@ class ScreenTest(App):
             status = sg_alarm_status
             # status = status
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
+            set_up_dummy_serial(status, alarm_message)
 
             # CHANGE ME
             stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
