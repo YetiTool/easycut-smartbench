@@ -42,9 +42,9 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.apps.maintenance_app import screen_maintenance
-from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
-from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
 from asmcnc.production.z_head_qc_jig import z_head_qc_pcb_set_up_outcome, z_head_qc_pcb_set_up
@@ -167,9 +167,7 @@ class ScreenTest(App):
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
                 ]
 
-            test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
-            sm.add_widget(test_screen)
-            sm.current = 'test'
+            sm.current = 'general_measurement'
 
         def go_screen_sc2_overload_test():
             alarm_message = "\n"
@@ -218,23 +216,14 @@ class ScreenTest(App):
             sm.current = 'maintenance'
 
         def pro_plus_safety_screen_test():
-            start_seq = Mock()
-
-            consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
-            sm.add_widget(consent_1_screen)
-
-            sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
-            sm.current = 'basic'
+            sm.current = 'pro_plus_safety'
 
         def screen_spindle_health_check_test():
             alarm_message = "\n"
-
             status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
-
             set_up_dummy_serial(status, alarm_message)
 
-            sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
-            sm.current = 'test'
+            sm.current = 'spindle_health_check_active'
 
         def screen_stop_or_resume_decision_test():
             m.is_using_sc2 = Mock(return_value=True)
@@ -289,8 +278,6 @@ class ScreenTest(App):
             set_up_dummy_serial(status, alarm_message)
 
             # CHANGE ME
-            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
-            sm.add_widget(stall_jig_screen)
             sm.current = 'stall_jig'
             
             Clock.schedule_once(m.s.start_services, 0.1)
@@ -298,45 +285,30 @@ class ScreenTest(App):
         def yetipilot_settings_popup_test():
             m.has_spindle_health_check_run = Mock(return_value=False)
 
-            sm.add_widget(BasicScreen(name='basic'))
             popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
             sm.current = 'basic'
 
         def z_head_qc_pcb_outcome_screen_test():
             m.s.fw_version = "2.5.5; HW: 35"
 
-            prep_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='prep', sm = sm, m = m)
-            sm.add_widget(prep_screen)
-            sm.get_screen('prep').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+            sm.current = 'qcpcbsetupoutcome'
 
-            test_screen = z_head_qc_pcb_set_up_outcome.ZHeadPCBSetUpOutcome(name='test', sm = sm, m = m)
-            sm.add_widget(test_screen)
-            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
-            sm.current = 'test'
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X2, 10)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y1, 12)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y2, 11)
+            zhqc_pcb_set_up_outcome.z_current_correct*=zhqc_pcb_set_up.check_current(TMC_Z, 2)
 
-            prep = sm.get_screen('prep')
-            outcome_screen = sm.get_screen("test")
-
-            outcome_screen.x_current_correct*=prep.check_current(TMC_X1, 0)
-            outcome_screen.x_current_correct*=prep.check_current(TMC_X2, 10)
-            outcome_screen.y_current_correct*=prep.check_current(TMC_Y1, 12)
-            outcome_screen.y_current_correct*=prep.check_current(TMC_Y2, 11)
-            outcome_screen.z_current_correct*=prep.check_current(TMC_Z, 2)
-
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X1, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X2, 11)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y1, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y2, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Z, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
 
         def z_head_qc_pcb_set_up_screen_test():
             m.s.fw_version = "2.5.5; HW: 35"
 
-            # CHANGE ME
-            test_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='test', sm = sm, m = m)
-            sm.add_widget(test_screen)
-            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
-            sm.current = 'test'
+            sm.current = 'qcpcbsetup'
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
@@ -373,6 +345,8 @@ class ScreenTest(App):
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
+        start_seq = Mock()
+
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
 
@@ -390,6 +364,32 @@ class ScreenTest(App):
 
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine = m, localization = l, job = jd)
         sm.add_widget(maintenance_screen)
+
+        general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = systemtools_sm, machine = m)
+        sm.add_widget(general_measurement_screen)
+
+        consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
+        sm.add_widget(consent_1_screen)
+
+        pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = start_seq, screen_manager =sm, localization =l)
+        sm.add_widget(pro_plus_safety_screen)
+
+        shc_screen = screen_spindle_health_check.SpindleHealthCheckActiveScreen(name='spindle_health_check_active', screen_manager =sm, localization =l, machine=m)
+        sm.add_widget(shc_screen)
+
+        stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+        sm.add_widget(stall_jig_screen)
+
+        basic_screen = BasicScreen(name='basic')
+        sm.add_widget(basic_screen)
+
+        zhqc_pcb_set_up = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='qcpcbsetup', sm = sm, m = m)
+        sm.add_widget(zhqc_pcb_set_up)
+        sm.get_screen('qcpcbsetup').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+
+        zhqc_pcb_set_up_outcome = z_head_qc_pcb_set_up_outcome.ZHeadPCBSetUpOutcome(name='qcpcbsetupoutcome', sm = sm, m = m)
+        sm.add_widget(zhqc_pcb_set_up_outcome)
+        sm.get_screen('qcpcbsetupoutcome').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")
