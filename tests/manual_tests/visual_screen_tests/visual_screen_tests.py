@@ -69,16 +69,7 @@ class BasicScreen(Screen):
 
     def __init__(self, **kwargs):
         super(BasicScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
-        self.m = kwargs['m']
-        self.db = kwargs['db']
-        self.yp = kwargs['yp']
 
-
-    def on_enter(self):
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').yp_widget.yp_settings_popup = popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = 'COM3'
 
@@ -307,7 +298,8 @@ class ScreenTest(App):
         def yetipilot_settings_popup_test():
             m.has_spindle_health_check_run = Mock(return_value=False)
 
-            sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
+            sm.add_widget(BasicScreen(name='basic'))
+            popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
             sm.current = 'basic'
 
         def z_head_qc_pcb_outcome_screen_test():
