@@ -110,7 +110,10 @@ class ScreenTest(App):
             m.s.yp = yp
             m.s.setting_27 = 1
 
+
         # Add tests as functions below
+
+        # REGULAR SCREENS
 
         def alarm_screen_tests():
             # STALL ALARMS
@@ -159,6 +162,35 @@ class ScreenTest(App):
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
+        def maintenance_app_screen_test():
+            m.is_using_sc2 = Mock(return_value=True)
+            m.theateam = Mock(return_value=True)
+
+            landing_tab = 'spindle_health_check_tab'
+            sm.get_screen('maintenance').landing_tab = landing_tab
+            sm.current = 'maintenance'
+
+        def screen_stop_or_resume_decision_test():
+            m.is_using_sc2 = Mock(return_value=True)
+
+            stop_or_resume_decision_screen.return_screen = 'go'
+
+            stop_or_resume_decision_screen.reason_for_pause = 'spindle_overload'
+            # stop_or_resume_decision_screen.reason_for_pause = 'job_pause'
+            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_low_feed'
+            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_spindle_data_loss'
+            # stop_or_resume_decision_screen.reason_for_pause = 'spindle_health_check_failed'
+
+            # Set yetipilot initially enabled, to test disable on unpause
+            go_screen.is_job_started_already = True
+            go_screen.yp_widget.switch.active = True
+            go_screen.yp_widget.toggle_yeti_pilot(go_screen.yp_widget.switch)
+
+            sm.current = 'stop_or_resume_job_decision'
+
+
+        # FACTORY/PRODUCTION SCREENS
+
         def general_measurement_screen_test():
             m.measured_running_data = [
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
@@ -168,6 +200,69 @@ class ScreenTest(App):
                 ]
 
             sm.current = 'general_measurement'
+
+        def stall_jig_screen_tests():
+            alarm_pin = "Y"
+
+            stall_pin = "S"
+            motor_id = 0
+            step_size = 75
+            sg_val = 151
+            thresh = 150
+            distance = 42103020
+            x_coord = -1084.997
+            y_coord = -2487.003
+            z_coord = -99.954
+
+            alarm_message = "ALARM:1\n"
+
+            status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
+            sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
+                stall_pin + \
+                "|SGALARM:" + \
+                str(motor_id) + "," + \
+                str(step_size) + "," + \
+                str(sg_val) + "," + \
+                str(thresh) + "," + \
+                str(distance) + "," + \
+                str(x_coord) + "," + \
+                str(y_coord) + "," + \
+                str(z_coord) + ">\n"
+            
+            status = sg_alarm_status
+            # status = status
+
+            set_up_dummy_serial(status, alarm_message)
+
+            # CHANGE ME
+            sm.current = 'stall_jig'
+            
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+        def z_head_qc_pcb_outcome_screen_test():
+            m.s.fw_version = "2.5.5; HW: 35"
+
+            sm.current = 'qcpcbsetupoutcome'
+
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X2, 10)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y1, 12)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y2, 11)
+            zhqc_pcb_set_up_outcome.z_current_correct*=zhqc_pcb_set_up.check_current(TMC_Z, 2)
+
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
+
+        def z_head_qc_pcb_set_up_screen_test():
+            m.s.fw_version = "2.5.5; HW: 35"
+
+            sm.current = 'qcpcbsetup'
+
+
+        # YETIPILOT/PRO+ SCREENS
 
         def go_screen_sc2_overload_test():
             alarm_message = "\n"
@@ -207,14 +302,6 @@ class ScreenTest(App):
 
             Clock.schedule_once(stream_and_pause, 5)
 
-        def maintenance_app_screen_test():
-            m.is_using_sc2 = Mock(return_value=True)
-            m.theateam = Mock(return_value=True)
-
-            landing_tab = 'spindle_health_check_tab'
-            sm.get_screen('maintenance').landing_tab = landing_tab
-            sm.current = 'maintenance'
-
         def pro_plus_safety_screen_test():
             sm.current = 'pro_plus_safety'
 
@@ -225,90 +312,12 @@ class ScreenTest(App):
 
             sm.current = 'spindle_health_check_active'
 
-        def screen_stop_or_resume_decision_test():
-            m.is_using_sc2 = Mock(return_value=True)
-
-            stop_or_resume_decision_screen.return_screen = 'go'
-
-            stop_or_resume_decision_screen.reason_for_pause = 'spindle_overload'
-            # stop_or_resume_decision_screen.reason_for_pause = 'job_pause'
-            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_low_feed'
-            # stop_or_resume_decision_screen.reason_for_pause = 'yetipilot_spindle_data_loss'
-            # stop_or_resume_decision_screen.reason_for_pause = 'spindle_health_check_failed'
-
-            # Set yetipilot initially enabled, to test disable on unpause
-            go_screen.is_job_started_already = True
-            go_screen.yp_widget.switch.active = True
-            go_screen.yp_widget.toggle_yeti_pilot(go_screen.yp_widget.switch)
-
-            sm.current = 'stop_or_resume_job_decision'
-
-        def stall_jig_screen_tests():
-            alarm_pin = "Y"
-
-            stall_pin = "S"
-            motor_id = 0
-            step_size = 75
-            sg_val = 151
-            thresh = 150
-            distance = 42103020
-            x_coord = -1084.997
-            y_coord = -2487.003
-            z_coord = -99.954
-
-
-            alarm_message = "ALARM:1\n"
-
-            status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
-            sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
-                stall_pin + \
-                "|SGALARM:" + \
-                str(motor_id) + "," + \
-                str(step_size) + "," + \
-                str(sg_val) + "," + \
-                str(thresh) + "," + \
-                str(distance) + "," + \
-                str(x_coord) + "," + \
-                str(y_coord) + "," + \
-                str(z_coord) + ">\n"
-            
-            status = sg_alarm_status
-            # status = status
-
-            set_up_dummy_serial(status, alarm_message)
-
-            # CHANGE ME
-            sm.current = 'stall_jig'
-            
-            Clock.schedule_once(m.s.start_services, 0.1)
-
         def yetipilot_settings_popup_test():
             m.has_spindle_health_check_run = Mock(return_value=False)
 
             popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
             sm.current = 'basic'
 
-        def z_head_qc_pcb_outcome_screen_test():
-            m.s.fw_version = "2.5.5; HW: 35"
-
-            sm.current = 'qcpcbsetupoutcome'
-
-            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X1, 0)
-            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X2, 10)
-            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y1, 12)
-            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y2, 11)
-            zhqc_pcb_set_up_outcome.z_current_correct*=zhqc_pcb_set_up.check_current(TMC_Z, 2)
-
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
-
-        def z_head_qc_pcb_set_up_screen_test():
-            m.s.fw_version = "2.5.5; HW: 35"
-
-            sm.current = 'qcpcbsetup'
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
