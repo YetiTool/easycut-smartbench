@@ -129,6 +129,16 @@ class ScreenTest(App):
         # REGULAR SCREENS
 
         def alarm_screen_tests():
+
+            '''
+            This test is set up to check that alarms trigger (and that the codes and details are presented correctly) as expected,
+            when an alarm status is parsed by the serial module (the dummy serial object creates passes this). 
+
+            Stall/alarm pins and alarm parameters can be modified to conduct tests as needed. 
+
+            At some point it might be worth setting up all possible cases/setting up some kind of automated run through of cases. 
+            '''
+
             # STALL ALARMS
             stall_pin = "z"
 
@@ -184,6 +194,11 @@ class ScreenTest(App):
             sm.current = 'maintenance'
 
         def screen_stop_or_resume_decision_test():
+
+            '''
+            This test can be used to check the various cases of the stop/resume decision screen
+            '''
+
             m.is_using_sc2 = Mock(return_value=True)
 
             stop_or_resume_decision_screen.return_screen = 'go'
@@ -205,6 +220,12 @@ class ScreenTest(App):
         # FACTORY/PRODUCTION SCREENS
 
         def general_measurement_screen_test():
+
+            ''' 
+            This tests the general measrement dev screen available in the factory settings app. Running data is just to pass
+            a test dataset for plotting. 
+            '''
+
             m.measured_running_data = [
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
@@ -215,6 +236,11 @@ class ScreenTest(App):
             sm.current = 'general_measurement'
 
         def stall_jig_screen_tests():
+
+            '''
+            This tests that an alarm appears and is registered correctly by stall jig, at the same time as suppressing normal alarm screens
+            '''
+
             alarm_pin = "Y"
 
             stall_pin = "S"
@@ -253,6 +279,11 @@ class ScreenTest(App):
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def z_head_qc_pcb_outcome_screen_test():
+
+            '''
+            These parameters can be modified to check that the outcome screen shows passes/fails correctly, and correctly shows values
+            '''
+
             m.s.fw_version = "2.5.5; HW: 35"
 
             sm.current = 'qcpcbsetupoutcome'
@@ -278,6 +309,11 @@ class ScreenTest(App):
         # YETIPILOT/PRO+ SCREENS
 
         def go_screen_sc2_overload_test():
+
+            '''
+            Check that overload message triggers correctly
+            '''
+
             alarm_message = "\n"
 
             killtime = 9
@@ -295,6 +331,12 @@ class ScreenTest(App):
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def job_pause_tests():
+
+            '''
+            Check that job pausing happens correctly from go screen, and that correct pause screen gets called
+            (Case can be set by the string put into the pause functions)
+            '''
+
             alarm_message = "\n"
 
             status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
