@@ -42,9 +42,9 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.apps.maintenance_app import screen_maintenance
-from asmcnc.apps.start_up_sequence.screens.screen_pro_plus_safety import ProPlusSafetyScreen
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
-from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
 from asmcnc.production.z_head_qc_jig import z_head_qc_pcb_set_up_outcome, z_head_qc_pcb_set_up
@@ -69,16 +69,7 @@ class BasicScreen(Screen):
 
     def __init__(self, **kwargs):
         super(BasicScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
-        self.m = kwargs['m']
-        self.db = kwargs['db']
-        self.yp = kwargs['yp']
 
-
-    def on_enter(self):
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').yp_widget.yp_settings_popup = popup_yetipilot_settings.PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile)
 
 Cmport = 'COM3'
 
@@ -110,9 +101,44 @@ class ScreenTest(App):
 
     def build(self):
 
+        # Default values for dummy serial, which can be reassigned or added to if needed
+        def set_up_dummy_serial(status, alarm_message):
+            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
+            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.fw_version = self.fw_version
+            m.s.setting_50 = 0.03
+            m.s.yp = yp
+            m.s.setting_27 = 1
+
+        # Call with list of screen names to run through multiple screens automatically
+        def cycle_through_screens(screen_list):
+            def show_next_screen(screen_list, index):
+                sm.current = screen_list[index]
+
+                index += 1
+                if index >= len(screen_list):
+                    Clock.schedule_once(lambda dt: show_next_screen(screen_list, 0), 5)
+                else:
+                    Clock.schedule_once(lambda dt: show_next_screen(screen_list, index), 5)
+
+            show_next_screen(screen_list, 0)
+
+
         # Add tests as functions below
 
+        # REGULAR SCREENS
+
         def alarm_screen_tests():
+
+            '''
+            This test is set up to check that alarms trigger (and that the codes and details are presented correctly) as expected,
+            when an alarm status is parsed by the serial module (the dummy serial object creates passes this). 
+
+            Stall/alarm pins and alarm parameters can be modified to conduct tests as needed. 
+
+            At some point it might be worth setting up all possible cases/setting up some kind of automated run through of cases. 
+            '''
+
             # STALL ALARMS
             stall_pin = "z"
 
@@ -153,72 +179,11 @@ class ScreenTest(App):
             if stall_alarm_test: status = sg_alarm_status
             else: status = limit_status
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
+            set_up_dummy_serial(status, alarm_message)
 
             sm.current = 'home'
         
             Clock.schedule_once(m.s.start_services, 0.1)
-
-        def general_measurement_screen_test():
-            m.measured_running_data = [
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-                ]
-
-            test_screen = screen_general_measurement.GeneralMeasurementScreen(name='test', systemtools = systemtools_sm, machine = m)
-            sm.add_widget(test_screen)
-            sm.current = 'test'
-
-        def go_screen_sc2_overload_test():
-            alarm_message = "\n"
-
-            killtime = 9
-            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
-
-            m.s.s = DummySerial(self.give_me_a_PCB(killtime_status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
-            
-            m.is_using_sc2 = Mock(return_value=True)
-            m.is_spindle_health_check_active = Mock(return_value=False)
-            # m.has_spindle_health_check_failed = Mock(return_value=True)
-            sm.get_screen('go').is_job_started_already = False
-
-            sm.current = 'go'
-            
-            Clock.schedule_once(m.s.start_services, 0.1)
-
-        def job_pause_tests():
-            alarm_message = "\n"
-
-            status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
-
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
-            m.s.setting_27 = 1
-
-            sm.current = 'go'
-
-            sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-
-            Clock.schedule_once(m.s.start_services, 0.1)
-
-            def stream_and_pause(dt=0):
-                m.s.is_job_streaming = True
-                m.set_pause(True, 'yetipilot_low_feed')
-                print("STOP FOR STREAM PAUSE")
-                # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
-
-            Clock.schedule_once(stream_and_pause, 5)
 
         def maintenance_app_screen_test():
             m.is_using_sc2 = Mock(return_value=True)
@@ -228,31 +193,12 @@ class ScreenTest(App):
             sm.get_screen('maintenance').landing_tab = landing_tab
             sm.current = 'maintenance'
 
-        def pro_plus_safety_screen_test():
-            start_seq = Mock()
-
-            consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
-            sm.add_widget(consent_1_screen)
-
-            sm.add_widget(ProPlusSafetyScreen(name='basic', start_sequence = start_seq, screen_manager =sm, localization =l))
-            sm.current = 'basic'
-
-        def screen_spindle_health_check_test():
-            alarm_message = "\n"
-
-            status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
-
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
-            m.s.yp = yp
-            m.s.setting_27 = 1
-
-            sm.add_widget(SpindleHealthCheckActiveScreen(name='test', screen_manager =sm, localization =l, machine=m))
-            sm.current = 'test'
-
         def screen_stop_or_resume_decision_test():
+
+            '''
+            This test can be used to check the various cases of the stop/resume decision screen
+            '''
+
             m.is_using_sc2 = Mock(return_value=True)
 
             stop_or_resume_decision_screen.return_screen = 'go'
@@ -270,7 +216,31 @@ class ScreenTest(App):
 
             sm.current = 'stop_or_resume_job_decision'
 
+
+        # FACTORY/PRODUCTION SCREENS
+
+        def general_measurement_screen_test():
+
+            ''' 
+            This tests the general measrement dev screen available in the factory settings app. Running data is just to pass
+            a test dataset for plotting. 
+            '''
+
+            m.measured_running_data = [
+                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+                ]
+
+            sm.current = 'general_measurement'
+
         def stall_jig_screen_tests():
+
+            '''
+            This tests that an alarm appears and is registered correctly by stall jig, at the same time as suppressing normal alarm screens
+            '''
+
             alarm_pin = "Y"
 
             stall_pin = "S"
@@ -282,7 +252,6 @@ class ScreenTest(App):
             x_coord = -1084.997
             y_coord = -2487.003
             z_coord = -99.954
-
 
             alarm_message = "ALARM:1\n"
 
@@ -302,58 +271,108 @@ class ScreenTest(App):
             status = sg_alarm_status
             # status = status
 
-            m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
-            m.s.fw_version = self.fw_version
+            set_up_dummy_serial(status, alarm_message)
 
             # CHANGE ME
-            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
-            sm.add_widget(stall_jig_screen)
             sm.current = 'stall_jig'
             
             Clock.schedule_once(m.s.start_services, 0.1)
 
-        def yetipilot_settings_popup_test():
-            m.has_spindle_health_check_run = Mock(return_value=False)
-
-            sm.add_widget(BasicScreen(name='basic', sm=sm, l=l, m=m, db=db, yp=yp))
-            sm.current = 'basic'
-
         def z_head_qc_pcb_outcome_screen_test():
+
+            '''
+            These parameters can be modified to check that the outcome screen shows passes/fails correctly, and correctly shows values
+            '''
+
             m.s.fw_version = "2.5.5; HW: 35"
 
-            prep_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='prep', sm = sm, m = m)
-            sm.add_widget(prep_screen)
-            sm.get_screen('prep').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+            sm.current = 'qcpcbsetupoutcome'
 
-            test_screen = z_head_qc_pcb_set_up_outcome.ZHeadPCBSetUpOutcome(name='test', sm = sm, m = m)
-            sm.add_widget(test_screen)
-            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
-            sm.current = 'test'
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X2, 10)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y1, 12)
+            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y2, 11)
+            zhqc_pcb_set_up_outcome.z_current_correct*=zhqc_pcb_set_up.check_current(TMC_Z, 2)
 
-            prep = sm.get_screen('prep')
-            outcome_screen = sm.get_screen("test")
-
-            outcome_screen.x_current_correct*=prep.check_current(TMC_X1, 0)
-            outcome_screen.x_current_correct*=prep.check_current(TMC_X2, 10)
-            outcome_screen.y_current_correct*=prep.check_current(TMC_Y1, 12)
-            outcome_screen.y_current_correct*=prep.check_current(TMC_Y2, 11)
-            outcome_screen.z_current_correct*=prep.check_current(TMC_Z, 2)
-
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X1, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_X2, 11)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y1, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Y2, 0)
-            outcome_screen.thermal_coefficients_correct*=prep.check_temp_coeff(TMC_Z, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
 
         def z_head_qc_pcb_set_up_screen_test():
             m.s.fw_version = "2.5.5; HW: 35"
 
-            # CHANGE ME
-            test_screen = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='test', sm = sm, m = m)
-            sm.add_widget(test_screen)
-            sm.get_screen('test').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
-            sm.current = 'test'
+            sm.current = 'qcpcbsetup'
+
+
+        # YETIPILOT/PRO+ SCREENS
+
+        def go_screen_sc2_overload_test():
+
+            '''
+            Check that overload message triggers correctly
+            '''
+
+            alarm_message = "\n"
+
+            killtime = 9
+            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
+
+            set_up_dummy_serial(killtime_status, alarm_message)
+            
+            m.is_using_sc2 = Mock(return_value=True)
+            m.is_spindle_health_check_active = Mock(return_value=False)
+            # m.has_spindle_health_check_failed = Mock(return_value=True)
+            sm.get_screen('go').is_job_started_already = False
+
+            sm.current = 'go'
+            
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+        def job_pause_tests():
+
+            '''
+            Check that job pausing happens correctly from go screen, and that correct pause screen gets called
+            (Case can be set by the string put into the pause functions)
+            '''
+
+            alarm_message = "\n"
+
+            status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            set_up_dummy_serial(status, alarm_message)
+
+            sm.current = 'go'
+
+            sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+            def stream_and_pause(dt=0):
+                m.s.is_job_streaming = True
+                m.set_pause(True, 'yetipilot_low_feed')
+                print("STOP FOR STREAM PAUSE")
+                # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
+
+            Clock.schedule_once(stream_and_pause, 5)
+
+        def pro_plus_safety_screen_test():
+            sm.current = 'pro_plus_safety'
+
+        def screen_spindle_health_check_test():
+            alarm_message = "\n"
+            status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+            set_up_dummy_serial(status, alarm_message)
+
+            sm.current = 'spindle_health_check_active'
+
+        def yetipilot_settings_popup_test():
+            m.has_spindle_health_check_run = Mock(return_value=False)
+
+            popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
+            sm.current = 'basic'
+
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
@@ -390,6 +409,8 @@ class ScreenTest(App):
         initial_version = 'v2.1.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
+        start_seq = Mock()
+
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
 
@@ -407,6 +428,32 @@ class ScreenTest(App):
 
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine = m, localization = l, job = jd)
         sm.add_widget(maintenance_screen)
+
+        general_measurement_screen = screen_general_measurement.GeneralMeasurementScreen(name='general_measurement', systemtools = systemtools_sm, machine = m)
+        sm.add_widget(general_measurement_screen)
+
+        consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = start_seq, consent_manager = self, localization = l)
+        sm.add_widget(consent_1_screen)
+
+        pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = start_seq, screen_manager =sm, localization =l)
+        sm.add_widget(pro_plus_safety_screen)
+
+        shc_screen = screen_spindle_health_check.SpindleHealthCheckActiveScreen(name='spindle_health_check_active', screen_manager =sm, localization =l, machine=m)
+        sm.add_widget(shc_screen)
+
+        stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+        sm.add_widget(stall_jig_screen)
+
+        basic_screen = BasicScreen(name='basic')
+        sm.add_widget(basic_screen)
+
+        zhqc_pcb_set_up = z_head_qc_pcb_set_up.ZHeadPCBSetUp(name='qcpcbsetup', sm = sm, m = m)
+        sm.add_widget(zhqc_pcb_set_up)
+        sm.get_screen('qcpcbsetup').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
+
+        zhqc_pcb_set_up_outcome = z_head_qc_pcb_set_up_outcome.ZHeadPCBSetUpOutcome(name='qcpcbsetupoutcome', sm = sm, m = m)
+        sm.add_widget(zhqc_pcb_set_up_outcome)
+        sm.get_screen('qcpcbsetupoutcome').usb_path = path_to_EC + "/tests/test_resources/media/usb/"
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")
