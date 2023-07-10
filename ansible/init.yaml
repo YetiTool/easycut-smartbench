@@ -41,6 +41,14 @@
       src: starteasycut.sh
       dest: /home/pi/starteasycut.sh
       mode: '0755'
+  - name: Disable low voltage mode
+    lineinfile:
+      name: /boot/cmdline.txt
+      state: present
+      insertafter: EOF
+      line: 'sdhci.debug_quirks2=4'
+    when: ansible_distribution_major_version == '11'
+
 
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
