@@ -1,0 +1,13 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+source =
+	src/asmcnc/
+
+omit=
+	*screen*
+	*widget*
+	*__init__**
+	*popup*
+	*/production/*
+	*/tests/*
