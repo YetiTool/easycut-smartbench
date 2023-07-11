@@ -24,7 +24,7 @@ phrases_to_add = []
 # When True it will keep the same order of the foreign_dictionary.txt and add any extra phrases from the localisation
 # master at the end.
 # When False it will keep the same order as the foreign_dictionary.txt and not add any new phrases
-new_strings = True
+new_strings = False
 
 # File paths of the current foreign dictionary and the localisation master
 foreign_dictionary = "foreign_dictionary.txt"
@@ -52,6 +52,7 @@ with open(foreign_dictionary, "r", encoding="utf8") as foreign_dict:
 
             writer.writerow(supported_languages)
             count = 0
+            failed_phrases = []
             for foreign_line in foreign_lst:
                 row = []
                 for localisation_line in localisation_lst:
@@ -61,20 +62,27 @@ with open(foreign_dictionary, "r", encoding="utf8") as foreign_dict:
                         # writer.writerow doesn't deal well with quotes so writing directly to the file is easiest
                         # writer.writerow(row)
                         f.write('\t'.join(row) + '\n')
+                        localisation_lst.remove(localisation_line)
                         break
+                else:
+                    failed_phrases.append(foreign_line[default_lang])
 
-            if new_strings:
-                # Get only the english phrases in the dictionary
-                english_lst = [x[default_lang] for x in foreign_lst]
+            # Log generation
 
-                try:
-                    os.mkdir("logs")
-                except:
-                    pass
+            # Get only the english phrases in the dictionary
+            english_lst = [x[default_lang] for x in foreign_lst]
 
-                with open("logs\\log " + datetime.now().strftime("%d-%m-%Y %H-%M-%S") + ".txt", "w", encoding="utf8") as log:
-                    log.write("Languages: \n")
-                    log.write("\t- " + " ".join(supported_languages) + "\n")
+            try:
+                os.mkdir("logs")
+            except:
+                pass
+
+            with open("logs\\log " + datetime.now().strftime("%d-%m-%Y %H-%M-%S") + ".txt", "w",
+                      encoding="utf8") as log:
+                log.write("Languages: \n")
+                log.write("\t- " + " ".join(supported_languages) + "\n")
+
+                if new_strings:
                     log.write("\nNewly added phrases: \n")
                     for localisation_line in localisation_lst:
                         row = []
@@ -86,3 +94,13 @@ with open(foreign_dictionary, "r", encoding="utf8") as foreign_dict:
                                 row.append(localisation_line[language].strip())
                             writer.writerow(row)
                             log.write("\t- " + localisation_line[default_lang] + "\n")
+                else:
+                    log.write("\nNo newly added phrases.\n")
+
+                if len(failed_phrases) > 0:
+                    log.write("\nFailed to add following phrases (phrases in foreign dictionary but not in "
+                              "localisation master - possible duplicate) \n")
+                    for phrase in failed_phrases:
+                        log.write("\t- " + phrase + "\n")
+                else:
+                    log.write("\nNo failed phrases")
