@@ -41,7 +41,7 @@ from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
 
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.apps.maintenance_app import screen_maintenance
@@ -97,6 +97,7 @@ class ScreenTest(App):
                 "?": status,
                 "\x18": "",
                 "*LFFFF00": "ok",
+                "*LFF0000": "ok",
                 "$$": alarm_message
             }
 
@@ -135,6 +136,52 @@ class ScreenTest(App):
         # Add tests as functions below
 
         # REGULAR SCREENS
+
+        def maintenance_app_screen_test():
+            m.is_using_sc2 = Mock(return_value=True)
+            m.theateam = Mock(return_value=True)
+
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
+                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision'],
+                            [screen_go.GoScreen, 'go'],
+                            [screen_maintenance.MaintenanceScreenClass, 'maintenance']])
+
+            landing_tab = 'spindle_health_check_tab'
+            sm.get_screen('maintenance').landing_tab = landing_tab
+            sm.current = 'maintenance'
+
+        def screen_stop_or_resume_decision_test():
+
+            '''
+            This test can be used to check the various cases of the stop/resume decision screen
+            '''
+
+            m.is_using_sc2 = Mock(return_value=True)
+
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_go.GoScreen, 'go'],
+                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']])
+
+            sm.get_screen('stop_or_resume_job_decision').return_screen = 'go'
+
+            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_spindle_data_loss'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_health_check_failed'
+
+            # Set yetipilot initially enabled, to test disable on unpause
+            sm.get_screen('go').is_job_started_already = True
+            sm.get_screen('go').yp_widget.switch.active = True
+            sm.get_screen('go').yp_widget.toggle_yeti_pilot(sm.get_screen('go').yp_widget.switch)
+
+            sm.current = 'stop_or_resume_job_decision'
+
+
+        # ALARM/ERROR
 
         def alarm_screen_tests():
 
@@ -195,48 +242,24 @@ class ScreenTest(App):
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
-        def maintenance_app_screen_test():
-            m.is_using_sc2 = Mock(return_value=True)
-            m.theateam = Mock(return_value=True)
+        def error_screen_tests():
+
+            error_number = 1
+
+            error_message = "error:" + str(error_number) + "\n"
+
+            status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            set_up_dummy_serial(status, error_message)
 
             set_up_screens([[screen_home.HomeScreen, 'home'],
-                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
-                            [screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
-                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision'],
-                            [screen_go.GoScreen, 'go'],
-                            [screen_maintenance.MaintenanceScreenClass, 'maintenance']])
+                            [screen_error.ErrorScreenClass, 'errorScreen']])
 
-            landing_tab = 'spindle_health_check_tab'
-            sm.get_screen('maintenance').landing_tab = landing_tab
-            sm.current = 'maintenance'
+            sm.current = 'home'
 
-        def screen_stop_or_resume_decision_test():
+            m.s.suppress_error_screens = False
 
-            '''
-            This test can be used to check the various cases of the stop/resume decision screen
-            '''
-
-            m.is_using_sc2 = Mock(return_value=True)
-
-            set_up_screens([[screen_home.HomeScreen, 'home'],
-                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
-                            [screen_go.GoScreen, 'go'],
-                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']])
-
-            sm.get_screen('stop_or_resume_job_decision').return_screen = 'go'
-
-            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_spindle_data_loss'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_health_check_failed'
-
-            # Set yetipilot initially enabled, to test disable on unpause
-            sm.get_screen('go').is_job_started_already = True
-            sm.get_screen('go').yp_widget.switch.active = True
-            sm.get_screen('go').yp_widget.toggle_yeti_pilot(sm.get_screen('go').yp_widget.switch)
-
-            sm.current = 'stop_or_resume_job_decision'
+            Clock.schedule_once(m.s.start_services, 0.1)
 
 
         # FACTORY/PRODUCTION SCREENS
