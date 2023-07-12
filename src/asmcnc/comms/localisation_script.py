@@ -77,7 +77,7 @@ with open(foreign_dictionary, "r", encoding="utf8") as foreign_dict:
             except:
                 pass
 
-            with open("logs\\log " + datetime.now().strftime("%d-%m-%Y %H-%M-%S") + ".txt", "w",
+            with open("logs/log " + datetime.now().strftime("%d-%m-%Y %H-%M-%S") + ".txt", "w",
                       encoding="utf8") as log:
                 log.write("Languages: \n")
                 log.write("\t- " + " ".join(supported_languages) + "\n")
