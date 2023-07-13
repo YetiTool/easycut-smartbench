@@ -13,7 +13,6 @@ Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
-Config.write()
 
 '''
 ########################################################
@@ -21,6 +20,25 @@ IMPORTANT!!
 Run from easycut-smartbench folder, with 
 python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>
 '''
+
+lang_idx = 7
+
+# 0 - English (y)
+# 1 - Italian (y)
+# 2 - Finnish (y)
+# 3 - German (y)
+# 4 - French (y)
+# 5 - Polish (y)
+# 6 - Danish (y)
+# 7 - Korean (y)
+
+# Need to set the font here because by the time localisation does it is too late and requires another restart
+if lang_idx == 7:
+    Config.set('kivy', 'default_font', ['NanumGothic', 'NanumGothic-Regular.ttf', 'NanumGothic-Bold.ttf'])
+    Config.write()
+else:
+    Config.set('kivy', 'default_font', ['Roboto', 'data/fonts/Roboto-Regular.ttf', 'data/fonts/Roboto-Italic.ttf', 'data/fonts/Roboto-Bold.ttf', 'data/fonts/Roboto-BoldItalic.ttf'])
+    Config.write()
 
 from tests.manual_tests.visual_screen_tests.screen_maker import ScreenMaker
 
@@ -77,16 +95,6 @@ class BasicScreen(Screen):
 Cmport = 'COM3'
 
 class ScreenTest(App):
-
-    lang_idx = 0
-
-    # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
-    # 5 - Polish (y)
-    # 6 - Danish (y)
 
     fw_version = "2.4.2"
 
@@ -459,7 +467,7 @@ class ScreenTest(App):
 
         # Localization/language object
         l = localization.Localization()
-        l.load_in_new_language(l.approved_languages[self.lang_idx])
+        l.load_in_new_language(l.approved_languages[lang_idx])
 
         # Initialise settings object
         sett = settings_manager.Settings(sm)

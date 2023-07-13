@@ -3,6 +3,8 @@ import time
 import os, csv
 from datetime import datetime
 
+from kivy.config import Config
+
 
 def log(message):
     timestamp = datetime.now()
@@ -11,8 +13,8 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
-    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)"]
-    supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)"]
+    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
+    supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -101,6 +103,15 @@ class Localization(object):
                 for lines in csv_reader:
                     self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
             log("Loaded language in from full dictionary")
+
+            # For Korean characters to show up, an external font is required
+            if self.lang == "Korean (KO)":
+                Config.set('kivy', 'default_font', ['NanumGothic', 'fonts/NanumGothic-Regular.ttf', 'fonts/NanumGothic-Bold.ttf'])
+                Config.write()
+            else:
+                # Roboto is the standard kivy font
+                Config.set('kivy', 'default_font', ['Roboto', 'data/fonts/Roboto-Regular.ttf', 'data/fonts/Roboto-Italic.ttf', 'data/fonts/Roboto-Bold.ttf', 'data/fonts/Roboto-BoldItalic.ttf'])
+                Config.write()
 
         except:
             log("Could not load in from full dictionary")
