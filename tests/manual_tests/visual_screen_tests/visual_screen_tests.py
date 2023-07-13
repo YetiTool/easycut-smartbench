@@ -34,7 +34,7 @@ lang_idx = 7
 
 # Need to set the font here because by the time localisation does it is too late and requires another restart
 if lang_idx == 7:
-    Config.set('kivy', 'default_font', ['NanumGothic', 'NanumGothic-Regular.ttf', 'NanumGothic-Bold.ttf'])
+    Config.set('kivy', 'default_font', ['NanumGothic', 'fonts/NanumGothic-Regular.ttf', 'fonts/NanumGothic-Bold.ttf'])
     Config.write()
 else:
     Config.set('kivy', 'default_font', ['Roboto', 'data/fonts/Roboto-Regular.ttf', 'data/fonts/Roboto-Italic.ttf', 'data/fonts/Roboto-Bold.ttf', 'data/fonts/Roboto-BoldItalic.ttf'])
