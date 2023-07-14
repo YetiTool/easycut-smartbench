@@ -12,7 +12,7 @@ class Localization(object):
 
     dictionary = {}
     approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)"]
-    supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)"]
+    supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
