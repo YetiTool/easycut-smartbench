@@ -273,7 +273,6 @@ class PopupYetiPilotSettings(Widget):
             step_downs_msg_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.6),
                                     markup=True,
-                                    font= 'Roboto',
                                     font_size='14sp',
                                     halign='left', 
                                     valign='top',
@@ -288,7 +287,6 @@ class PopupYetiPilotSettings(Widget):
             unexpected_results_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.4),
                                     markup=True,
-                                    font= 'Roboto',
                                     font_size='14sp',
                                     halign='left',
                                     valign='top',
@@ -319,7 +317,6 @@ class PopupYetiPilotSettings(Widget):
             target_ml_label = Label( size_hint_y=0.1,
                                     text_size=(dropdowns_width-10, self.height),
                                     markup=True,
-                                    font= 'Roboto',
                                     font_size='17sp',
                                     halign='center', 
                                     valign='middle', 
@@ -373,7 +370,6 @@ class PopupYetiPilotSettings(Widget):
                               height=subtitle_height,
                               text_size=(pop_width, subtitle_height),
                               markup=True,
-                              font= 'Roboto',
                               font_size='15sp',
                               halign='center', 
                               valign='middle', 
@@ -440,7 +436,6 @@ class PopupYetiPilotSettings(Widget):
 
         self.popup = Popup(title=title_string,
                     title_color= subtle_white,
-                    title_font= 'Roboto-Bold',
                     title_size = '20sp',
                     title_align = 'center',
                     content=AL,

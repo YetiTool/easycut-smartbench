@@ -58,7 +58,6 @@ class PopupDownloadLogs(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -113,7 +112,6 @@ class RebootConsole(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -168,7 +166,6 @@ class QuitToConsole(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -229,7 +226,6 @@ class PopupUSBFirstAid(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -295,7 +291,6 @@ class PopupBetaTesting(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -355,7 +350,6 @@ class PopupGRBLSettingsPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -407,7 +401,6 @@ class PopupFactorySettingsPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -469,7 +462,6 @@ class PopupUpdateTestingPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -529,7 +521,6 @@ class PopupDeveloperPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -583,7 +574,6 @@ class RebootAfterLanguageChange(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -628,7 +618,6 @@ class PopupSSHToggleFailed(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -669,7 +658,6 @@ class PopupFailedToSendSSHKey(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -710,7 +698,6 @@ class PopupNoSSHFile(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -752,7 +739,6 @@ class PopupCSVOnUSB(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -817,7 +803,6 @@ class PopupStopOvernightTest(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -876,7 +861,6 @@ class PopupFSCKGood(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -934,7 +918,6 @@ class PopupFSCKErrors(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -985,7 +968,6 @@ class PopupFSCKInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1055,7 +1037,6 @@ class PopupStopStallJig(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1115,7 +1096,6 @@ class PopupConfirmStoreCurrentValues(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1171,7 +1151,6 @@ class PopupConfirmSpindleTest(Widget):
 
         self.popup = Popup(title=title_string,
                            title_color=[0, 0, 0, 1],
-                           title_font='Roboto-Bold',
                            title_size='20sp',
                            content=layout_plan,
                            size_hint=(None, None),

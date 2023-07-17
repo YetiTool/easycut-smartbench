@@ -637,7 +637,7 @@ class BuildInfoScreen(Screen):
         self.m.send_any_gcode_command('$I')
 
     def on_enter(self, *args):
-        kb = custom_keyboard.Keyboard([self.smartbench_name_input, self.smartbench_location_input])
+        kb = custom_keyboard.Keyboard([self.smartbench_name_input, self.smartbench_location_input], localization=self.l)
         self.scrape_fw_version()
 
     def scrape_fw_version(self):

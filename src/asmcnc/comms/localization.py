@@ -2,7 +2,13 @@
 import time
 import os, csv
 from datetime import datetime
+from kivy.lang import Builder
 
+builder_font_string = """
+<Widget>:
+    font_name: "%s"
+    title_font: "%s"
+"""
 
 def log(message):
     timestamp = datetime.now()
@@ -11,7 +17,7 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
-    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)"]
+    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
     supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
 
     # use this for just getting user language, and if it's empty just assume english
@@ -20,6 +26,11 @@ class Localization(object):
 
     default_lang = 'English (GB)'
     lang = default_lang
+
+    standard_font = 'Roboto'
+    standard_font_bold = 'Roboto-Bold'
+    korean_font = './asmcnc/keyboard/fonts/KRFont.ttf'
+    korean_font_bold = './asmcnc/keyboard/fonts/KRFont-Bold.ttf'
 
     def __init__(self):
 
@@ -33,7 +44,7 @@ class Localization(object):
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):
-        return ('[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]')
+        return (('[font=%s][b]' % self.font_bold) + str(self.dictionary.get(str(string), str(string))) + '[/b][/font]')
 
     def get_italic(self, string):
         return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
@@ -101,6 +112,17 @@ class Localization(object):
                 for lines in csv_reader:
                     self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
             log("Loaded language in from full dictionary")
+
+            # For Korean characters to show up, an external font is required
+            if self.lang == "Korean (KO)":
+                self.font_regular = self.korean_font
+                self.font_bold = self.korean_font_bold
+            else:
+                # Roboto is the standard kivy font
+                self.font_regular = self.standard_font
+                self.font_bold = self.standard_font_bold
+
+            Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
 
         except:
             log("Could not load in from full dictionary")

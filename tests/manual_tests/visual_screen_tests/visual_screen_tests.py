@@ -445,7 +445,8 @@ class ScreenTest(App):
         def yetipilot_settings_popup_test():
             m.has_spindle_health_check_run = Mock(return_value=False)
 
-            set_up_screens([[BasicScreen, 'basic']])
+            set_up_screens([[BasicScreen, 'basic'],
+                            [screen_go.GoScreen, 'go']])
 
             popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
             sm.current = 'basic'

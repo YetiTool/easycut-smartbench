@@ -57,7 +57,6 @@ class PopupResetOffset(Widget):
 
         popup = Popup(title=reset_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -117,7 +116,6 @@ class PopupSaveOffset(Widget):
 
         popup = Popup(title=save_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -163,6 +161,8 @@ class PopupBrushInfo(Widget):
                 "  " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return the brush reminder to the hours previously set.") + "\n" + \
                 "  " + self.l.get_bold("Reset:") + " " + self.l.get_str("Sets the brush reminder to 120 hours.")
             )
+
+        title_string = self.l.get_str('Information')
 
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
@@ -232,9 +232,8 @@ class PopupBrushInfo(Widget):
         layout_plan.add_widget(reminder_layout)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -299,7 +298,6 @@ class PopupGetSpindleData(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -384,7 +382,6 @@ class PopupDisplaySpindleData(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -515,7 +512,6 @@ class PopupSpindleSettingsInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

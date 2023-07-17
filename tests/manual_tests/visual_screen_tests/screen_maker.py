@@ -7,7 +7,10 @@ import inspect
 
 
 def get_required_parameters(clazz):
-    file_path = inspect.getfile(clazz)[:-1]
+    file_path = inspect.getfile(clazz)
+
+    # File path is ___.py, so ends at rightmost y, this fixes random funkiness
+    file_path = file_path[:file_path.rfind('y') + 1]
 
     with open(file_path, 'r') as f:
         tree = ast.parse(f.read())

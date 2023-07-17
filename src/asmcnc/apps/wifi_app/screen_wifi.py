@@ -507,7 +507,7 @@ class WifiScreen(Screen):
                 pass
             self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
-        kb = custom_keyboard.Keyboard([self._password, self.custom_network_name])
+        kb = custom_keyboard.Keyboard([self._password, self.custom_network_name], localization=self.l)
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)

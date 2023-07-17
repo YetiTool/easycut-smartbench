@@ -9,15 +9,12 @@ try:
 except:
     pass
 
-Builder.load_string("""
-<Widget>:
-    font_name: './asmcnc/keyboard/fonts/KRFont.ttf'
-""")
-
 
 class Keyboard(VKeyboard):
     def __init__(self, text_inputs, **kwargs):
         super(Keyboard, self).__init__(**kwargs)
+
+        self.l = kwargs['localization']
 
         # For python 2 encoding issues
         reload(sys)
@@ -27,12 +24,15 @@ class Keyboard(VKeyboard):
 
         self.kr_layout = "./asmcnc/keyboard/layouts/kr.json"
         self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
-        self.qwerty_layout = "./asmcnc/keyboard/layouts/qwerty.json"
+        self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
 
-        self.layout = self.kr_layout
-
-        self.font = './asmcnc/keyboard/fonts/KRFont.ttf'
+        if self.l.lang == "Korean (KO)":
+            self.font = self.l.korean_font
+            self.layout = self.kr_layout
+        else:
+            self.font = self.l.standard_font
+            self.layout = self.qwerty_layout
 
         self.font_name = self.font
         self.do_translation = False
