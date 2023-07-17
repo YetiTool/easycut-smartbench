@@ -9,6 +9,7 @@ Created on 19 Aug 2017
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
@@ -38,6 +39,10 @@ Builder.load_string("""
     upgrade_app_label:upgrade_app_label
 
     upgrade_app_container:upgrade_app_container
+    
+    nav_buttons:nav_buttons
+    help_button:help_button
+    nav_buttons_container:nav_buttons_container
 
     canvas.before:
         Color: 
@@ -351,15 +356,18 @@ Builder.load_string("""
             Image:
                 source: "./asmcnc/skavaUI/img/lobby_separator.png"
 
-        BoxLayout:
+        FloatLayout:
+            id: nav_buttons_container
             size_hint_y: 134
+            size_hint_x: None
             orientation: 'horizontal'
 
             BoxLayout:
+                id: nav_buttons
                 size_hint_x: None
-                width: 720
+                pos: self.parent.pos
                 height: self.parent.height
-                padding: [80, 40, 0, 40]
+                padding: [0, 40, 0, 40]
                 orientation: 'horizontal'
                 
                 Button:
@@ -426,7 +434,9 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
+                id: help_button
                 size_hint: (None, None)
+                #size_hint_y: 0.3
                 size: (80,80)
                 orientation: 'horizontal'
                 padding: [29,29,10,10]
@@ -485,6 +495,12 @@ class LobbyScreen(Screen):
 
         # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
+
+        self.nav_buttons.width = Window.width / 2
+        self.nav_buttons.pos = (((Window.width / 2) - (self.nav_buttons.width / 2)), 0)
+
+        self.help_button.pos = (Window.width - self.help_button.width, 0)
+        #self.help_button.
 
     def help_popup(self):
         popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
