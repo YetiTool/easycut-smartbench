@@ -393,7 +393,7 @@ class LanguageSelectScreen(Screen):
 
 			# If korean is selected, the startup sequence needs font updated to display it correctly
 			if current_font != self.l.font_regular:
-				# No way to do this without a nested for loop, but it executes quite quickly
+				# I know this is a nested for loop, but it executes very quickly
 				for screen in self.start_seq.screen_sequence:
 					for widget in self.sm.get_screen(screen).walk():
 						if isinstance(widget, Label):
