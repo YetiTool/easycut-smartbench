@@ -201,6 +201,33 @@ class ScreenTest(App):
 
             sm.current = 'stop_or_resume_job_decision'
 
+        def start_up_sequence_test():
+
+            '''
+            This test runs the start up sequence with every possible screen included.
+
+            If this test does not run properly, try updating the initial_version variable in the main set up code.
+            '''
+
+            am.start_up.cc = True
+
+            am.start_up.welcome_user = Mock(return_value=True)
+            am.start_up.show_release_notes = Mock(return_value=True)
+            am.start_up.show_user_data_consent = Mock(return_value=True)
+            am.start_up.show_warranty_app = Mock(return_value=True)
+            am.start_up.show_user_pro_plus_safety = Mock(return_value=True)
+            am.start_up.reboot_in_sequence = True
+
+            am.start_up.set_up_sequence()
+            # Delete first two unwanted screens from sequence, which the am init set up
+            del am.start_up.screen_sequence[:2]
+            am.start_up.start_sequence()
+
+            # Automatically place activation code in text input
+            serial_number = sm.get_screen('warranty_2').serial_number_label.text
+            activation_code = sm.get_screen('warranty_3').generate_activation_code(serial_number)
+            sm.get_screen('warranty_3').activation_code.text = str(activation_code)
+
 
         # ALARM/ERROR
 
@@ -505,7 +532,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.1.0'
+        initial_version = 'v2.6.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
         # Server connection object
