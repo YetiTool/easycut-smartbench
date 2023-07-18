@@ -9,6 +9,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+from kivy.uix.label import Label
 
 Builder.load_string("""
 
@@ -24,7 +25,7 @@ Builder.load_string("""
 	row_2_col_2 : row_2_col_2
 	row_2_col_3 : row_2_col_3
 	row_3_col_1 : row_3_col_1
-	# row_3_col_2 : row_3_col_2
+	row_3_col_2 : row_3_col_2
 	# row_3_col_3 : row_3_col_3
 
 	row_1_col_1_image : row_1_col_1_image
@@ -34,7 +35,7 @@ Builder.load_string("""
 	row_2_col_2_image : row_2_col_2_image
 	row_2_col_3_image : row_2_col_3_image
 	row_3_col_1_image : row_3_col_1_image
-	# row_3_col_2_image : row_3_col_2_image
+	row_3_col_2_image : row_3_col_2_image
 	# row_3_col_3_image : row_3_col_3_image
 
 	next_button : next_button
@@ -232,33 +233,27 @@ Builder.load_string("""
 						halign: "left"
 						color: hex('#333333ff')
 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_3_col_2)
+						color: hex('#333333ff')
 
-					# CheckBox: 
-					# 	group: "language_radio_buttons" 
-					# 	on_press: root.select_language(self, row_3_col_2)
-					# 	on_press: root.select_language(self)
-					# 	color: hex('#333333ff')
+	                Image: 
+	                	id: row_3_col_2_image
+	    				allow_stretch: True
 
-	    #             Image: 
-	    #             	id: row_3_col_2_image
-	    # 				allow_stretch: True
+	                Label: 
+	                	id: row_3_col_2
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
 
-	    #             Label: 
-	    #             	id: row_3_col_2
-	    #             	text: "Suomalainen (FI)"
-	    #             	valign: "middle"
-					# 	font_size: '20sp'
-					# 	text_size: self.size
-					# 	markup: True
-					# 	halign: "left"
-					# 	color: hex('#333333ff')
-
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
@@ -355,7 +350,7 @@ class LanguageSelectScreen(Screen):
 		self.row_2_col_2.text = self.l.approved_languages[4]
 		self.row_2_col_3.text = self.l.approved_languages[5]
 		self.row_3_col_1.text = self.l.approved_languages[6]
-		# self.row_3_col_2.text = self.l.approved_languages[7]
+		self.row_3_col_2.text = self.l.approved_languages[7]
 		# self.row_3_col_3.text = self.l.approved_languages[8]
 
 		self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
@@ -365,7 +360,7 @@ class LanguageSelectScreen(Screen):
 		self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
 		self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
 		self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
-		# self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
+		self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
 		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
 
 	def get_image_filename(self, value):
@@ -390,9 +385,20 @@ class LanguageSelectScreen(Screen):
 	def select_language(self, radio_button, language_label):
 
 		if radio_button.state == 'down':
+			current_font = self.l.font_regular
+
 			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
 			self.l.load_in_new_language(language_label.text)
 			[self.sm.get_screen(screen).update_strings() for screen in self.start_seq.screen_sequence]
+
+			# If korean is selected, the startup sequence needs font updated to display it correctly
+			if current_font != self.l.font_regular:
+				# No way to do this without a nested for loop, but it executes quite quickly
+				for screen in self.start_seq.screen_sequence:
+					for widget in self.sm.get_screen(screen).walk():
+						if isinstance(widget, Label):
+							widget.font_name = self.l.font_regular
+
 			self.next_button.opacity = 1
 			self.next_button.disabled = False
 
