@@ -71,7 +71,6 @@ Builder.load_string("""
 						valign: 'top'
 						halign: 'center'
 						markup: 'true'
-						bold: True
 						color: hex('#333333ff')
 			# FOOTER
 			BoxLayout: 
@@ -151,7 +150,7 @@ class ApplySettingsScreen(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("Reboot!")
-		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
+		self.success_label.text = self.l.get_bold("Reboot to finish applying your settings, and get started!")
 		self.next_button.text = self.l.get_str("Reboot!")
 
 		self.update_font_size(self.next_button)

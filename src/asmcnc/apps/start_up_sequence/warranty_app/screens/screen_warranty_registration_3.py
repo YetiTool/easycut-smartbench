@@ -83,7 +83,6 @@ Builder.load_string("""
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 
 				BoxLayout:
@@ -295,7 +294,7 @@ class WarrantyScreen3(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.enter_your_activation_code_label.text = self.l.get_str("Enter your activation code:")
+		self.enter_your_activation_code_label.text = self.l.get_bold("Enter your activation code:")
 		self.error_message_top.text = self.l.get_str("Please check your activation code.")
 		self.error_message_bottom.text = self.l.get_str("Stuck on this screen? Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."

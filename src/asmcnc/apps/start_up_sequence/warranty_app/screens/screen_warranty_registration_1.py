@@ -91,7 +91,6 @@ Builder.load_string("""
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 
 				BoxLayout:
@@ -261,7 +260,7 @@ class WarrantyScreen1(Screen):
 	
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.scan_qr_code.text = self.l.get_str("Scan the QR Code to start")
+		self.scan_qr_code.text = self.l.get_bold("Scan the QR Code to start")
 		self.instructions_label.text = self.l.get_str("To submit your details and receive your activation code, go to")
 		self.cant_use_web_label.text = self.l.get_str("Can't use the web form?")
 		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")
