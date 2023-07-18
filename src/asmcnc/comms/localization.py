@@ -3,6 +3,14 @@ import time
 import os, csv, re
 from datetime import datetime
 from kivy.lang import Builder
+from kivy.core.text import LabelBase
+
+LabelBase.register(name='KRFont',
+                   fn_regular='./asmcnc/keyboard/fonts/KRFont.ttf',
+                   fn_bold='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
+
+LabelBase.register(name='KRFont-Bold',
+                   fn_regular='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
 
 builder_font_string = """
 <Widget>:
@@ -29,8 +37,8 @@ class Localization(object):
 
     standard_font = 'Roboto'
     standard_font_bold = 'Roboto-Bold'
-    korean_font = './asmcnc/keyboard/fonts/KRFont.ttf'
-    korean_font_bold = './asmcnc/keyboard/fonts/KRFont-Bold.ttf'
+    korean_font = 'KRFont'
+    korean_font_bold = 'KRFont-Bold'
 
     kivy_markup_regex = re.compile('\[.*?\]')
 
@@ -46,7 +54,7 @@ class Localization(object):
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):
-        return (('[font=%s][b]' % self.font_bold) + str(self.dictionary.get(str(string), str(string))) + '[/b][/font]')
+        return ('[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]')
 
     def get_italic(self, string):
         return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
