@@ -240,7 +240,9 @@ class JobstartWarningScreen(Screen):
         self.update_font_size(self.scan_label)
 
     def update_font_size(self, value):
-        if len(value.text) > 20:
+        len_without_markup = self.l.get_text_length(value.text)
+
+        if len_without_markup > 12:
             value.font_size = 19
         else: 
             value.font_size = 22

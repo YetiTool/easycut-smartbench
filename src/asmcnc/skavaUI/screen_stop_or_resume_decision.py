@@ -167,9 +167,12 @@ class StopOrResumeDecisionScreen(Screen):
             )
 
             popup_info.PopupQRInfo(self.sm, self.l, 500, info, self.qr_source)
- 
-    
+
+
     def on_pre_enter(self):
+        self.update_strings()
+ 
+    def update_strings(self):
 
         # Update go screen button in case this screen was called from outside go screen (e.g. spindle overload)
         try: self.sm.get_screen('go').start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
@@ -263,9 +266,11 @@ class StopOrResumeDecisionScreen(Screen):
         self.sm.current = self.return_screen
 
     def update_font_size(self, value):
-        if len(value.text) > 700:
+        len_without_markup = self.l.get_text_length(value.text)
+
+        if len_without_markup > 700:
             value.font_size = 16
-        if len(value.text) > 570:
+        elif len_without_markup > 500:
             value.font_size = 17
         else: 
             value.font_size = 18

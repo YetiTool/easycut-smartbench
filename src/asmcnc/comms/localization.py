@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-import os, csv
+import os, csv, re
 from datetime import datetime
 from kivy.lang import Builder
 
@@ -32,6 +32,8 @@ class Localization(object):
     korean_font = './asmcnc/keyboard/fonts/KRFont.ttf'
     korean_font_bold = './asmcnc/keyboard/fonts/KRFont-Bold.ttf'
 
+    kivy_markup_regex = re.compile('\[.*?\]')
+
     def __init__(self):
 
         if os.path.exists(self.persistent_language_path):
@@ -59,6 +61,10 @@ class Localization(object):
 
         else: 
             return string
+    
+    # Removes kivy markup tags to leave only text before returning length
+    def get_text_length(self, string):
+        return len(re.sub(self.kivy_markup_regex, '', string))
 
 
     ## DEBUGGING (forces KeyErrors)

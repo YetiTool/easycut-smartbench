@@ -695,16 +695,9 @@ class WifiScreen(Screen):
         self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
-        self.update_font_size(self.country_label)
         self.update_hint_font_size(self.custom_network_name)
         self.update_button_font_size(self.connect_button, 28, 10)
         self.update_button_font_size(self.custom_ssid_button, 20, 20)
-
-    def update_font_size(self, value):
-        if len(value.text) < 8:
-            value.font_size = self.default_font_size
-        elif len(value.text) > 7: 
-            value.font_size = self.default_font_size - 2
 
     def update_hint_font_size(self, value):
         if value.hint_text:

@@ -634,7 +634,9 @@ class MaintenanceScreenClass(Screen):
         self.update_font_size(self.brush_monitor_label)
 
     def update_font_size(self, value):
-        if len(value.text) > 25:
+        len_without_markup = self.l.get_text_length(value.text)
+
+        if len_without_markup > 18:
             value.font_size = 19
         else: 
             value.font_size = 22

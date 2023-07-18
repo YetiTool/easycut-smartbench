@@ -77,7 +77,8 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 7
+    lang_idx = 0
+    cycle_languages = False
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -126,6 +127,26 @@ class ScreenTest(App):
                     Clock.schedule_once(lambda dt: show_next_screen(screen_list, index), 5)
 
             show_next_screen(screen_list, 0)
+
+        def cycle_through_languages():
+            test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
+
+            def show_next_language(test_languages, index):
+                lang = test_languages[index]
+                l.load_in_new_language(lang)
+                print("New lang: " + str(lang))
+                try:
+                    sm.get_screen(str(sm.current)).update_strings()
+                except: 
+                    print(str(sm.current) + " has no update strings function")
+
+                index += 1
+                if index >= len(test_languages):
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), 5)
+                else:
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), 5)
+
+            show_next_language(test_languages, 0)
 
         # Call with list of pairs of screen constructors and their names
         def set_up_screens(screen_list):
@@ -496,6 +517,9 @@ class ScreenTest(App):
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")
+
+        if self.cycle_languages:
+            cycle_through_languages()
 
         return sm
 
