@@ -44,7 +44,6 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_e
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
-from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
@@ -78,7 +77,7 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 7
+    lang_idx = 0
     cycle_languages = False
 
     # 0 - English (y)
@@ -167,8 +166,7 @@ class ScreenTest(App):
                             [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
                             [screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
                             [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision'],
-                            [screen_go.GoScreen, 'go'],
-                            [screen_maintenance.MaintenanceScreenClass, 'maintenance']])
+                            [screen_go.GoScreen, 'go']])
 
             landing_tab = 'spindle_health_check_tab'
             sm.get_screen('maintenance').landing_tab = landing_tab
