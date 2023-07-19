@@ -6,6 +6,7 @@ from kivy.graphics import Line
 
 import svgwrite
 import math
+import os
 
 
 class LineDrawingWidget(Widget):
@@ -47,9 +48,13 @@ class LineDrawingApp(App):
         save_svg_button = Button(text='Save')
         save_svg_button.bind(on_release=self.save_svg)
 
-        button_layout = BoxLayout()
+        shutdown_button = Button(text='ShutDown')
+        shutdown_button.bind(on_release=self.shutdown_console)
+
+        button_layout = BoxLayout(padding=[10,0,0,0])
         button_layout.add_widget(clear_button)
         button_layout.add_widget(save_svg_button)
+        button_layout.add_widget(shutdown_button)
 
         parent.add_widget(self.line_drawing_widget)
         parent.add_widget(button_layout)
@@ -67,6 +72,8 @@ class LineDrawingApp(App):
             dwg.add(dwg.line((line[0], line[1]), (line[2], line[3]), stroke=svgwrite.rgb(0, 0, 0, '%'), transform="scale(1,-1) translate(0,%s)" % -self.root.height))
         dwg.save()
 
+    def shutdown_console(self, *args):
+        os.system('sudo shutdown -h now')
 
 if __name__ == '__main__':
     LineDrawingApp().run()
