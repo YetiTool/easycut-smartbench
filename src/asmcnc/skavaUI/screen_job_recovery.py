@@ -350,6 +350,8 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
+        # Force gcode label font to show roboto because korean font has different spacing
+        self.gcode_label.font_name = 'Roboto'
 
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""

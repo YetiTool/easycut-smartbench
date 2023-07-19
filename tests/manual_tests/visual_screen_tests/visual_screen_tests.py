@@ -40,7 +40,8 @@ from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
 
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading
+from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.apps.maintenance_app import screen_maintenance
@@ -77,8 +78,8 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
-    cycle_languages = True
+    lang_idx = 7
+    cycle_languages = False
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -238,6 +239,55 @@ class ScreenTest(App):
             # Delete first two unwanted screens from sequence, which the am init set up
             del am.start_up.screen_sequence[:2]
             am.start_up.start_sequence()
+
+        def job_recovery_tests():
+            # Set this to None, -1, or 6 for the three cases on the decision screen
+            # Set this to 1 to show arc movement message on line selection screen
+            jd.job_recovery_cancel_line = 1
+
+            # Choose between following cases to show different error messages on completion
+            success, message = True, ''
+            # success, message = False, l.get_str('The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.')
+            # success, message = False, l.get_str('Job recovery does not currently support arc distance modes. This job contains N, and therefore cannot be recovered.').replace('N', 'G90.1')
+            # success, message = False, l.get_str('Job recovery only supports feed rate mode G94. This job contains N, and therefore cannot be recovered.').replace('N', 'G93')
+            # success, message = False, l.get_str('This job cannot be recovered! Please check your job for errors.')
+
+            jd.generate_recovery_gcode = Mock(return_value=(success, message))
+
+            # Long filename to check if it fits on screen
+            jd.job_recovery_filepath = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHH.gcode'
+
+            os.path.isfile = Mock(return_value=True)
+
+            jd.job_gcode = [
+                'G90',
+                'G91',
+                'G90.1',
+                'G93',
+                'G1 X1000 Y1000 Z100 F1000',
+                'M5'
+            ]
+
+            jd.job_recovery_selected_line = -1
+            jd.filename = jd.job_recovery_filepath
+
+            m.state = Mock(return_value='Idle')
+            m.s.g54_x = 0
+            m.s.g54_y = 0
+
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_job_recovery.JobRecoveryScreen, 'job_recovery'],
+                            [screen_nudge.NudgeScreen, 'nudge'],
+                            [screen_recovery_decision.RecoveryDecisionScreen, 'recovery_decision'],
+                            [screen_homing_decision.HomingDecisionScreen, 'homing_decision'],
+                            [screen_file_loading.LoadingScreen, 'loading']])
+
+            sm.current = 'recovery_decision'
+
+        def job_recovery_nudge_warning_popup_test():
+            set_up_screens([[BasicScreen, 'basic']])
+            popup_nudge.PopupNudgeWarning(sm, m, l, '5.05')
+            sm.current = 'basic'
 
 
         # ALARM/ERROR
@@ -531,6 +581,7 @@ class ScreenTest(App):
         jd.gcode_summary_string = ""
         jd.screen_to_return_to_after_job = ""
         jd.job_gcode_running = []
+        jd.job_gcode = []
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
