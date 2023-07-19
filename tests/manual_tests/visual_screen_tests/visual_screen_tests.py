@@ -40,7 +40,7 @@ from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
 
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
@@ -288,6 +288,12 @@ class ScreenTest(App):
             set_up_screens([[BasicScreen, 'basic']])
             popup_nudge.PopupNudgeWarning(sm, m, l, '5.05')
             sm.current = 'basic'
+
+        def lobby_update_popup_test():
+            set_up_screens([[screen_lobby.LobbyScreen, 'lobby']])
+            sm.get_screen('lobby').trigger_update_popup = True
+            m.trigger_setup = False
+            sm.current = 'lobby'
 
 
         # ALARM/ERROR
