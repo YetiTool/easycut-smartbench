@@ -164,6 +164,9 @@ Builder.load_string("""
                     text: "Help"
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
 
 ######### END ############
  
@@ -349,5 +352,13 @@ class GCodeMonitor(Widget):
         self.help_button.text = self.l.get_str('Help')
         self.clear_button.text = self.l.get_str('Clear')
         self.status_label.text = self.l.get_str('Status')
+
+        self.update_font_size(self.help_button)
+
+    def update_font_size(self, value):
+        if len(value.text) > 20:
+            value.font_size = 12
+        else: 
+            value.font_size = 15
 
 
