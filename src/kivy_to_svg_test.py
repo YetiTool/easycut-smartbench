@@ -51,7 +51,7 @@ class LineDrawingApp(App):
         shutdown_button = Button(text='ShutDown')
         shutdown_button.bind(on_release=self.shutdown_console)
 
-        button_layout = BoxLayout(orientation='vertical', padding=[10,0,0,0], height=300, width=150)
+        button_layout = BoxLayout(orientation='vertical', padding=[10,0,0,0], height=150, width=100)
         button_layout.add_widget(clear_button)
         button_layout.add_widget(save_svg_button)
         button_layout.add_widget(shutdown_button)
