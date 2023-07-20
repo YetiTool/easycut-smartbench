@@ -193,3 +193,35 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: Creating SSH private key file for deploy key
+    copy:
+      dest: "/root/.ssh/id_ed25519"
+      content: |
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+        QyNTUxOQAAACDwE+gPGef8B//CSPCJh2bvCi+uuItgUHGCYZxPx3XogQAAAKBRZfRpUWX0
+        aQAAAAtzc2gtZWQyNTUxOQAAACDwE+gPGef8B//CSPCJh2bvCi+uuItgUHGCYZxPx3XogQ
+        AAAEAPguYN0i+A2s/xMGoTjp7qF1KvZOuhakszw/rdsFXZ7vAT6A8Z5/wH/8JI8ImHZu8K
+        L664i2BQcYJhnE/HdeiBAAAAGHZsYWQucGF2ZWxlc2N1QGdtYWlsLmNvbQECAwQF
+        -----END OPENSSH PRIVATE KEY-----
+    become: true
+    become_user: root
+  - name: Creating SSH public key file for deploy key
+    copy:
+      dest: "/root/.ssh/id_ed25519.pub"
+      content: |
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPAT6A8Z5/wH/8JI8ImHZu8KL664i2BQcYJhnE/HdeiB vlad.pavelescu@gmail.com
+    become: true
+    become_user: root
+  - name: Setting file permissions
+    file:
+      path: "/root/.ssh/id_ed25519"
+      mode: 0600
+    become: true
+    become_user: root
+  - name: Setting file permissions
+    file:
+      path: "/root/.ssh/id_ed25519.pub"
+      mode: 0644
+    become: true
+    become_user: root
