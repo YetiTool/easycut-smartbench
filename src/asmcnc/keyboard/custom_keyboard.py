@@ -41,15 +41,9 @@ class Keyboard(VKeyboard):
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
 
-        for text_input in text_inputs:
-            text_input.keyboard_mode = 'managed'
-            text_input.bind(focus=self.on_focus)
-            text_input.font_name = self.font
-            text_input.multiline = False
+        self.setup_text_inputs(text_inputs)
 
     def setup_text_inputs(self, text_inputs):
-
-
         for text_input in text_inputs:
             text_input.keyboard_mode = 'managed'
             text_input.bind(focus=self.on_focus)
@@ -79,9 +73,8 @@ class Keyboard(VKeyboard):
                     self.text_instance.focus = False
                 if keycode == "backspace":
                     self.text_instance.text = self.text_instance.text[:-1]
-                if keycode == "spacebar":
-                    print("SPace")
-                    self.text_instance.text = self.text_instance.text + " "
+                # if keycode == "spacebar":
+                #     self.text_instance.text = self.text_instance.text + " "
                 return
 
             self.text_instance.text = self.text_instance.text + internal
@@ -93,14 +86,12 @@ class Keyboard(VKeyboard):
             except:
                 pass
             instance.focus = True
-            print(str(instance.hint_text) + " focused")
             try:
                 Window.add_widget(self)
             except:
                 pass
             self.text_instance = instance
         else:
-            print(str(instance.hint_text) + " not focused")
             try:
                 Window.remove_widget(self)
             except:
