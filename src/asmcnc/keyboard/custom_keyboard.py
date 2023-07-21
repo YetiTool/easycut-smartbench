@@ -31,10 +31,9 @@ class Keyboard(VKeyboard):
             self.font = self.l.korean_font
             self.layout = self.kr_layout
         else:
-            self.font = self.l.standard_font
+            self.font_name = "data/fonts/DejaVuSans.ttf"
             self.layout = self.qwerty_layout
 
-        self.font_name = self.font
         self.do_translation = False
         self.width = Window.width
         self.height = 250
@@ -47,7 +46,6 @@ class Keyboard(VKeyboard):
         for text_input in text_inputs:
             text_input.keyboard_mode = 'managed'
             text_input.bind(focus=self.on_focus)
-            text_input.font_name = self.font
             text_input.multiline = False
 
     def key_up(self, keycode, internal, modifiers):
