@@ -58,6 +58,7 @@ class RebootingScreen(Screen):
     
     def on_pre_enter(self):
         self.reboot_label.text = self.l.get_str('Rebooting') + '...'
+        self.reboot_label.font_name = self.l.font_regular
 
     def on_enter(self):
         Clock.schedule_once(self.reboot, 1)
