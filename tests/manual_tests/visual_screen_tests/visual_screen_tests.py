@@ -32,6 +32,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+from kivy.uix.label import Label
 from asmcnc.comms import localization
 from asmcnc.comms import router_machine
 from settings import settings_manager
@@ -136,7 +137,11 @@ class ScreenTest(App):
                 l.load_in_new_language(lang)
                 print("New lang: " + str(lang))
                 try:
-                    sm.get_screen(str(sm.current)).update_strings()
+                    current_screen = sm.get_screen(str(sm.current))
+                    current_screen.update_strings()
+                    for widget in current_screen.walk():
+                        if isinstance(widget, Label):
+                            widget.font_name = l.font_regular
                 except: 
                     print(str(sm.current) + " has no update strings function")
 

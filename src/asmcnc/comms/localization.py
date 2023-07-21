@@ -72,7 +72,7 @@ class Localization(object):
     
     # Removes kivy markup tags to leave only text before returning length
     def get_text_length(self, string):
-        return len(re.sub(self.kivy_markup_regex, '', string))
+        return len(re.sub(self.kivy_markup_regex, '', string).decode('utf-8'))
 
 
     ## DEBUGGING (forces KeyErrors)
