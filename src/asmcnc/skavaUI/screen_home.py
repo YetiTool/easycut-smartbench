@@ -327,8 +327,6 @@ class HomeScreen(Screen):
         self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
     def on_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
-
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
@@ -347,6 +345,7 @@ class HomeScreen(Screen):
                 log('Unable to preview file')
 
     def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
 
         if self.jd.job_gcode == []:
 
