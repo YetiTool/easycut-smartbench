@@ -351,7 +351,7 @@ class JobRecoveryScreen(Screen):
 
         self.update_strings()
         # Add the IDs of ALL the TextInputs on this screen
-        self.text_inputs = [self.batch_number_input, self.post_production_notes]
+        self.text_inputs = [self.line_input]
 
     def on_touch(self):
         for text_input in self.text_inputs:
