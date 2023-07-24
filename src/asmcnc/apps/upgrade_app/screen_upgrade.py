@@ -5,6 +5,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 <UpgradeScreen>:
@@ -20,6 +21,8 @@ Builder.load_string("""
     qr_image:qr_image
 
     exit_button:exit_button
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         orientation: 'vertical'
@@ -164,7 +167,15 @@ class UpgradeScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.upgrade_code_input]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         # Reset app
         self.update_strings()
         self.hide_error_message()
