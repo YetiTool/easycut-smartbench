@@ -17,6 +17,7 @@ from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maint
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
 widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
 widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -508,7 +509,11 @@ class MaintenanceScreenClass(Screen):
 
         self.update_strings()
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.brush_use_widget.brush_use, self.brush_life_widget.brush_life, self.touchplate_offset_widget.touchplate_offset]
+
     def quit_to_lobby(self):
+        self.on_tab_switch()
         self.sm.current = 'lobby'
         
     def on_pre_enter(self):
@@ -575,6 +580,7 @@ class MaintenanceScreenClass(Screen):
             self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
 
         # TAB TO LAND ON
         if self.landing_tab == 'brush_tab':
@@ -642,6 +648,8 @@ class MaintenanceScreenClass(Screen):
             value.font_size = 22
 
     def on_tab_switch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
         # Save button disabled upon switching tabs
         if self.tab_panel.current_tab != self.laser_tab:
             self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"

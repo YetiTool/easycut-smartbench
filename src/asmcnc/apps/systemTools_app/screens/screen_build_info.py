@@ -67,6 +67,8 @@ Builder.load_string("""
     show_more_info: show_more_info
     console_serial_number: console_serial_number
     toggle_ssh_button:toggle_ssh_button
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -620,6 +622,9 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_name()
         self.get_smartbench_location()
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -637,8 +642,12 @@ class BuildInfoScreen(Screen):
         self.m.send_any_gcode_command('$I')
 
     def on_enter(self, *args):
-        kb = custom_keyboard.Keyboard([self.smartbench_name_input, self.smartbench_location_input], localization=self.l)
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         self.scrape_fw_version()
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])

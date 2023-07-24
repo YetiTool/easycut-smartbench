@@ -2,7 +2,6 @@
 import sys
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
-from kivy.lang import Builder
 
 try:
     import hgtk
@@ -34,7 +33,7 @@ class Keyboard(VKeyboard):
             self.font_name = "data/fonts/DejaVuSans.ttf"
             self.layout = self.qwerty_layout
 
-        self.do_translation = False
+        # self.do_translation = False
         self.width = Window.width
         self.height = 250
         self.pos = (Window.width - self.width, 0)
@@ -49,7 +48,6 @@ class Keyboard(VKeyboard):
             text_input.multiline = False
 
     def key_up(self, keycode, internal, modifiers):
-
         try:
             if "kr" in self.layout.lower():
                 if keycode == "spacebar":
@@ -66,13 +64,10 @@ class Keyboard(VKeyboard):
                 if keycode == "Han/Yeong":
                     #https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
-
                 if keycode == "escape":
                     self.text_instance.focus = False
                 if keycode == "backspace":
                     self.text_instance.text = self.text_instance.text[:-1]
-                # if keycode == "spacebar":
-                #     self.text_instance.text = self.text_instance.text + " "
                 return
 
             self.text_instance.text = self.text_instance.text + internal
@@ -84,13 +79,21 @@ class Keyboard(VKeyboard):
             except:
                 pass
             instance.focus = True
+            self.text_instance = instance
             try:
-                Window.add_widget(self)
+                for child in Window.children:
+                    if isinstance(child,Keyboard):
+                        print("Keyboard instance")
+                        return
+                else:
+                    Window.add_widget(self)
+
             except:
                 pass
-            self.text_instance = instance
         else:
             try:
-                Window.remove_widget(self)
+                for child in Window.children:
+                    if isinstance(child, Keyboard):
+                        Window.remove_widget(child)
             except:
                 pass
