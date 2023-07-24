@@ -12,6 +12,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -33,6 +34,8 @@ Builder.load_string("""
     back_button:back_button
     info_button:info_button
     #switch_rectangle:switch_rectangle
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -417,8 +420,16 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.input_dim1, self.input_dim2, self.input_dim3, self.input_dim4]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
         
-    def on_pre_enter(self):        
+    def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.info_button.opacity = 0
         
         if self.j.shape_dict["units"] == 'mm':

@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.metrics import dp
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 <JobFeedbackScreen>
@@ -25,6 +26,8 @@ Builder.load_string("""
     post_production_notes : post_production_notes
     success_question : success_question
     sending_label : sending_label
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -266,7 +269,15 @@ class JobFeedbackScreen(Screen):
         self.jd = kwargs['job']
         self.db = kwargs['database']
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.batch_number_input, self.post_production_notes]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         self.update_strings()
         self.sending_label.text = ""
         self.return_to_screen = self.jd.screen_to_return_to_after_job

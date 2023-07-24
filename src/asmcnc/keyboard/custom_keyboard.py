@@ -26,12 +26,15 @@ class Keyboard(VKeyboard):
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
 
-        if self.l.lang == "Korean (KO)":
-            self.font = self.l.korean_font
-            self.layout = self.kr_layout
-        else:
-            self.font_name = "data/fonts/DejaVuSans.ttf"
-            self.layout = self.qwerty_layout
+        try:
+            if self.l.lang == "Korean (KO)":
+                self.font = self.l.korean_font
+                self.layout = self.kr_layout
+            else:
+                self.font_name = "data/fonts/DejaVuSans.ttf"
+                self.layout = self.qwerty_layout
+        except:
+            pass
 
         # self.do_translation = False
         self.width = Window.width
@@ -43,9 +46,12 @@ class Keyboard(VKeyboard):
 
     def setup_text_inputs(self, text_inputs):
         for text_input in text_inputs:
-            text_input.keyboard_mode = 'managed'
-            text_input.bind(focus=self.on_focus)
-            text_input.multiline = False
+            try:
+                text_input.keyboard_mode = 'managed'
+                text_input.bind(focus=self.on_focus)
+                text_input.multiline = False
+            except:
+                print("setup failed")
 
     def key_up(self, keycode, internal, modifiers):
         try:

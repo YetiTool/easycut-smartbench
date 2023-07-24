@@ -12,6 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -25,6 +26,8 @@ Builder.load_string("""
     finishing_passes: finishing_passes
     stock_bottom_offset: stock_bottom_offset
     step_down: step_down 
+    
+    on_touch_down: root.on_touch()
     
 
     BoxLayout:
@@ -541,7 +544,15 @@ class ShapeCutter24ScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.stock_bottom_offset, self.step_down, self.finishing_passes]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.counter = 0
         self.info_button.opacity = 1
     
