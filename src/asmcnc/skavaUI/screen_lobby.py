@@ -342,7 +342,48 @@ Builder.load_string("""
                         font_size: '25sp'
                         text: 'System Tools'
                         markup: True
-                       
+
+            # Carousel pane 5
+            BoxLayout:
+                orientation: 'horizontal'
+                padding: [100, 20, 100, 50]
+                spacing: 20
+
+                BoxLayout:
+                    id: geberit_cutter_app_container
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                    padding: [215, 0]
+
+                    Button:
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release:
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.geberit_cutter_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                            Label:
+                                text: 'Geberit cutter'
+                                color: 0,0,0,1
+                    Label:
+                        id: geberit_cutter_app_label
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Geberit cutter'
+                        markup: True
+
         BoxLayout:
             size_hint_y: 6
             size: self.parent.size
@@ -519,6 +560,9 @@ class LobbyScreen(Screen):
             self.am.start_upgrade_app()
         else:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+
+    def geberit_cutter_app(self):
+        self.am.start_geberit_cutter_app()
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
