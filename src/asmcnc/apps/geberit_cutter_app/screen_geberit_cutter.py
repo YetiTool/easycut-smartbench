@@ -2,9 +2,13 @@ from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.uix.image import Image
+from kivy.uix.scatter import Scatter
 
 Builder.load_string("""
 <GeberitCutterScreen>:
+
+    editor_container:editor_container
 
     BoxLayout:
         orientation: 'horizontal'
@@ -162,19 +166,31 @@ Builder.load_string("""
                 padding: [dp(0), dp(10), dp(10), dp(10)]
 
                 BoxLayout:
-                    canvas.before:
-                        Color:
-                            rgba: .5, .5, .5, 1
-                        Line:
-                            width: 2
-                            rectangle: self.x, self.y, self.width, self.height
+                    padding: [dp(0), dp((self.height - (self.width / 2)) / 2)]
 
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
+                    BoxLayout:
+                        canvas.before:
+                            Color:
+                                rgba: .5, .5, .5, 1
+                            Line:
+                                width: 2
+                                rectangle: self.x, self.y, self.width, self.height
+
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        StencilView:
+                            size: self.parent.size
+                            pos: self.parent.pos
+
+                            FloatLayout:
+                                id: editor_container
+                                size: self.parent.size
+                                pos: self.parent.pos
 
 """)
 
@@ -182,7 +198,21 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
+class PanelWidget(Scatter):
+    def __init__(self, panel_height, pos, **kwargs):
+        super(PanelWidget, self).__init__(**kwargs)
+
+        panel_width = panel_height / 2
+        self.size_hint = (None, None)
+        self.size = (panel_width, panel_height)
+        self.pos = pos
+
+        image = Image(source="./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png", size_hint=(None,None), size=(panel_width,panel_height))
+        self.add_widget(image)
+
 class GeberitCutterScreen(Screen):
+
+    panels_added = 0
 
     def __init__(self, **kwargs):
         super(GeberitCutterScreen, self).__init__(**kwargs)
@@ -192,13 +222,19 @@ class GeberitCutterScreen(Screen):
         self.l = kwargs['localization']
 
     def add_panel(self):
-        pass
+        if self.panels_added < 4:
+            self.panels_added += 1
+            self.editor_container.add_widget(PanelWidget(self.editor_container.height, self.editor_container.pos))
 
     def rotate_panel(self):
         pass
 
     def save(self):
-        pass
+        self.reset_editor()
+
+    def reset_editor(self):
+        self.editor_container.canvas.clear()
+        self.panels_added = 0
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
