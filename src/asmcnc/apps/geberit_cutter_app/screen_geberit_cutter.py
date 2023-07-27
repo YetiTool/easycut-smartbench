@@ -19,7 +19,6 @@ Builder.load_string("""
         BoxLayout:
             size_hint_x: 0.3
             orientation: 'vertical'
-            spacing: dp(10)
             padding: dp(10)
                     
             Label:
@@ -28,9 +27,38 @@ Builder.load_string("""
                 color: 0,0,0,1
                 font_size: dp(28)
 
-            Button
+            BoxLayout:
+                size_hint_y: 1.3
+                padding: [dp(10), dp(0)]
 
-            Button
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.add_panel()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/geberit_cutter_app/img/add_panel_button.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+            BoxLayout:
+                padding: [dp(25), dp(0)]
+
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.rotate_panel()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/geberit_cutter_app/img/rotate_button.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
 
             TextInput:
                 size_hint_y: 0.4
@@ -38,19 +66,33 @@ Builder.load_string("""
                 multiline: False
                 hint_text: 'Enter filename'
 
-            Button
+            BoxLayout:
+                padding: [dp(25), dp(0)]
+
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.save()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/maintenance_app/img/save_button_132.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
 
         BoxLayout:
             orientation: 'vertical'
 
             BoxLayout:
-                size_hint_y: 0.3
+                size_hint_y: 0.28
                 orientation: 'horizontal'
 
                 BoxLayout:
                     orientation: 'vertical'
                     spacing: dp(10)
-                    padding: dp(10)
+                    padding: [dp(10), dp(10), dp(10), dp(0)]
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -117,7 +159,7 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                padding: [dp(0), dp(0), dp(10), dp(10)]
+                padding: [dp(0), dp(10), dp(10), dp(10)]
 
                 BoxLayout:
                     canvas.before:
@@ -148,6 +190,15 @@ class GeberitCutterScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+
+    def add_panel(self):
+        pass
+
+    def rotate_panel(self):
+        pass
+
+    def save(self):
+        pass
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
