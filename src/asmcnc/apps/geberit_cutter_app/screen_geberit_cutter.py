@@ -199,20 +199,47 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class PanelWidget(Scatter):
+
+    panel_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png"
+    panel_selected_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel_selected.png"
+
     def __init__(self, panel_height, pos, **kwargs):
         super(PanelWidget, self).__init__(**kwargs)
+
+        self.sm = kwargs['screen_manager']
 
         panel_width = panel_height / 2
         self.size_hint = (None, None)
         self.size = (panel_width, panel_height)
         self.pos = pos
+        self.do_rotation=False
+        self.do_scale=False
 
-        image = Image(source="./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png", size_hint=(None,None), size=(panel_width,panel_height))
-        self.add_widget(image)
+        self.panel_image = Image(source=self.panel_image_filepath, size_hint=(None,None), size=(panel_width,panel_height))
+        self.add_widget(self.panel_image)
+
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x, touch.y):
+            self.select_panel()
+
+        return super(PanelWidget, self).on_touch_down(touch)
+
+    def select_panel(self):
+        # When clicked, show that the panel is selected by changing its colour
+        current_panel_selection = self.sm.get_screen('geberit_cutter').current_panel_selection
+        if current_panel_selection:
+            current_panel_selection.panel_image.source = self.panel_image_filepath
+
+        self.panel_image.source = self.panel_selected_image_filepath
+        self.sm.get_screen('geberit_cutter').current_panel_selection = self
+
+    def rotate_clockwise(self):
+        self.rotation -= 90
 
 class GeberitCutterScreen(Screen):
 
     panels_added = 0
+    current_panel_selection = None
 
     def __init__(self, **kwargs):
         super(GeberitCutterScreen, self).__init__(**kwargs)
@@ -224,17 +251,21 @@ class GeberitCutterScreen(Screen):
     def add_panel(self):
         if self.panels_added < 4:
             self.panels_added += 1
-            self.editor_container.add_widget(PanelWidget(self.editor_container.height, self.editor_container.pos))
+            new_panel = PanelWidget(self.editor_container.height, self.editor_container.pos, screen_manager=self.sm)
+            new_panel.select_panel()
+            self.editor_container.add_widget(new_panel)
 
     def rotate_panel(self):
-        pass
+        if self.current_panel_selection:
+            self.current_panel_selection.rotate_clockwise()
 
     def save(self):
         self.reset_editor()
 
     def reset_editor(self):
-        self.editor_container.canvas.clear()
+        self.editor_container.clear_widgets()
         self.panels_added = 0
+        self.current_panel_selection = None
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
