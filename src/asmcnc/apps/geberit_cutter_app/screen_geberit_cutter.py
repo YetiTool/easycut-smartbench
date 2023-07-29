@@ -5,6 +5,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
 
+import svgwrite
+
 Builder.load_string("""
 <GeberitCutterScreen>:
 
@@ -238,6 +240,8 @@ class PanelWidget(Scatter):
 
 class GeberitCutterScreen(Screen):
 
+    svg_output_filepath = './asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg'
+
     panels_added = 0
     current_panel_selection = None
 
@@ -260,7 +264,20 @@ class GeberitCutterScreen(Screen):
             self.current_panel_selection.rotate_clockwise()
 
     def save(self):
-        self.reset_editor()
+        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=(self.editor_container.width,self.editor_container.height))
+        for panel in self.editor_container.children:
+            # When a panel is drawn, a scaling and translation is applied, which vertically flips the svg
+            # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
+            transformation = "scale(1,-1) translate(0,%s)" % -self.editor_container.height
+            # Position has to be converted to local coordinates of the container, as they are relative to the window
+            panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
+            # Second element of bbox tuple has size of panel, and swaps width/height on rotation, so saves us rotating manually
+            panel_size = panel.bbox[1]
+
+            dwg.add(dwg.rect(panel_pos, panel_size, fill='none', stroke='black', transform=transformation))
+        dwg.save()
+
+        # self.reset_editor()
 
     def reset_editor(self):
         self.editor_container.clear_widgets()
