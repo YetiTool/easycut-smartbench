@@ -1002,7 +1002,7 @@ class RouterMachine(object):
         return self.s.is_job_streaming
 
     def state(self):
-        return self.s.m_state
+        return self.s.m_state or 'Unknown'
 
     def buffer_capacity(self):
         return self.s.buffer_info.serial_blocks_available
