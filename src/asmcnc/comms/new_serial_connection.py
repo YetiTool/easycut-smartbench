@@ -952,7 +952,7 @@ class SerialConnection:
     def process_setting(self, setting, value):
         setting_num = int(setting[1:])
 
-        value = int(value)
+        value = int(float(value))
         self.settings.store_variable(setting_num, value)
 
         if setting_num == 110:
@@ -1017,7 +1017,6 @@ class SerialConnection:
                 self._reset_grbl_after_stream = False
                 self.m._grbl_soft_reset()
             self.is_sequential_streaming = False
-
 
     def _after_grbl_settings_insert_dwell(self):
         if self._sequential_stream_buffer:
