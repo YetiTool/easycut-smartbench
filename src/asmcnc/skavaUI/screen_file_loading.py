@@ -272,12 +272,18 @@ class LoadingScreen(Screen):
                             if l_block.find('S') >= 0:
                                 rpm = int(float(l_block[l_block.find('S') +
                                     1:].split('M')[0]))
-                                if (rpm > self.jd.spindle_speed_max or self
-                                    .jd.spindle_speed_max == None):
+                                if self.jd.spindle_speed_max is None:
                                     self.jd.spindle_speed_max = rpm
-                                if (rpm < self.jd.spindle_speed_min or self
-                                    .jd.spindle_speed_min == None):
+                                else:
+                                    if rpm > self.jd.spindle_speed_max:
+                                        self.jd.spindle_speed_max = rpm
+
+                                if self.jd.spindle_speed_min is None:
                                     self.jd.spindle_speed_min = rpm
+                                else:
+                                    if rpm < self.jd.spindle_speed_min:
+                                        self.jd.spindle_speed_min = rpm
+
                                 if self.m.spindle_voltage == 110:
                                     rpm = self.m.convert_from_110_to_230(rpm)
                                     l_block = 'M3S' + str(rpm)
