@@ -17,6 +17,8 @@ from asmcnc.comms import serial_classes
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 from asmcnc.job.yetipilot import yetipilot
 
+import traceback
+
 
 class SerialConnection:
     # CONSTANTS
@@ -274,6 +276,7 @@ class SerialConnection:
                             self.process_grbl_push(received)
                         except Exception as e:
                             self.logger.error(e)
+                            print(traceback.format_exc())
 
                     if self.is_job_streaming and not self.m.is_machine_paused \
                             and 'Alarm' not in self.m.state():
