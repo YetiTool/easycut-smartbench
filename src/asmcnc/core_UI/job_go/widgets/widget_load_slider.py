@@ -90,9 +90,9 @@ dark_grey = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
 class LoadSliderWidget(Widget):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.yp = kwargs.pop('yetipilot')
         super(LoadSliderWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.yp = kwargs['yetipilot']
         self.load_label.color = dark_grey
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey

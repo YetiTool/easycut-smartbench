@@ -306,10 +306,10 @@ class ScrollableLabelStatus(ScrollView):
 class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop('sm')
+        self.l = kwargs.pop('l')
         super(ZHeadQCWarrantyBeforeApr21, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
         self.z_limit_set = False
         self.spindle_pass_fail = True
         self.string_overload_summary = ''

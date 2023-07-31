@@ -439,11 +439,11 @@ class MaintenanceScreenClass(Screen):
     landing_tab = StringProperty()
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(MaintenanceScreenClass, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(
             machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)

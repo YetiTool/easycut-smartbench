@@ -110,9 +110,9 @@ class WorkCoordinates(Widget):
     cheeky_color = StringProperty('#2498f4ff')
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(WorkCoordinates, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.
             GRBL_REPORT_INTERVAL)
 

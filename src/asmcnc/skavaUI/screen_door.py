@@ -211,12 +211,12 @@ class DoorScreen(Screen):
     spindle_raise_label = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
+        self.l = kwargs.pop('localization')
         super(DoorScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l = kwargs['localization']
         self.header_label.text = self.l.get_bold('Interrupt bar pushed!')
         self.anim_spindle_label = Animation(opacity=1, duration=1.5
             ) + Animation(opacity=0, duration=0.5) + Animation(opacity=0,

@@ -44,17 +44,17 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message))
+    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[
+        :12] + ' ' + str(message))
 
 
 class ZHeadQCConnecting(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.usb = kwargs.pop('usb')
         super(ZHeadQCConnecting, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.usb = kwargs['usb']
         self.connecting_label.text = 'Connecting to Z Head...'
         self.z_current = 25
         self.x_current = 26

@@ -108,10 +108,10 @@ class ZLubricationReminderWidget(Widget):
     default_time_label_font_size = 100
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(ZLubricationReminderWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def update_time_left(self):

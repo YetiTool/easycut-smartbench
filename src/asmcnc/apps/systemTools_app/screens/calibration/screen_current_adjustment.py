@@ -214,10 +214,10 @@ class CurrentAdjustment(Screen):
     update_protocol_status_label_event = None
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.l = kwargs.pop('l')
         super(CurrentAdjustment, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.systemtools_sm = kwargs['systemtools']
-        self.l = kwargs['l']
         self.xy_move_container.add_widget(widget_final_test_xy_move.
             FinalTestXYMove(machine=self.m, screen_manager=self.
             systemtools_sm.sm))

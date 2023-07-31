@@ -304,10 +304,10 @@ class ShapeCutter15ScreenClass(Screen):
         )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutter15ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
         self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(machine=self.m,
             screen_manager=self.shapecutter_sm.sm, job_parameters=self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)

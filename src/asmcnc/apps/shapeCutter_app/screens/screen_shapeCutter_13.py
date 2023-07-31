@@ -301,9 +301,9 @@ For work holding techniques visit www.yetitool.com/support."""
         )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutter13ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0

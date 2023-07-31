@@ -762,12 +762,12 @@ class OvernightTesting(Screen):
     z_fully_calibrated_min_neg = None
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.calibration_db = kwargs.pop('calibration_db')
+        self.sm = kwargs.pop('sm')
+        self.l = kwargs.pop('l')
         super(OvernightTesting, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.systemtools_sm = kwargs['systemtools']
-        self.calibration_db = kwargs['calibration_db']
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
         self.setup_arrays()
         self.overnight_running = False
         self.statuses = []

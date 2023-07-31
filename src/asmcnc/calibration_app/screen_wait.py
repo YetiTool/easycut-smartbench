@@ -46,9 +46,9 @@ class WaitScreenClass(Screen):
     return_to_screen = StringProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(WaitScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_interval(self.

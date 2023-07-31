@@ -143,8 +143,8 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message))
+    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[
+        :12] + ' ' + str(message))
 
 
 class ZHeadPCBSetUpOutcome(Screen):
@@ -158,9 +158,9 @@ class ZHeadPCBSetUpOutcome(Screen):
     thermal_coefficients_correct = True
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadPCBSetUpOutcome, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)

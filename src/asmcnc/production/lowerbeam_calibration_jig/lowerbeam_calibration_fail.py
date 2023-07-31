@@ -52,9 +52,9 @@ Builder.load_string(
 class LBCalibrationFail(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(LBCalibrationFail, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def enter_prev_screen(self):
         self.sm.current = 'lbc4'

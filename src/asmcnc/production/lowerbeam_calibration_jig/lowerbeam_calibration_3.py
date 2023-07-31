@@ -48,9 +48,9 @@ Builder.load_string(
 class LBCalibration3(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(LBCalibration3, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def enter_prev_screen(self):
         self.sm.current = 'lbc2'

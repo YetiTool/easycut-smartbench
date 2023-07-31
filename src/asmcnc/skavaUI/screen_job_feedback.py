@@ -255,12 +255,12 @@ class JobFeedbackScreen(Screen):
         'Total time (with pauses): 0:45:41' + '\n' + 'Parts completed: 8/24')
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
         super(JobFeedbackScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
 
     def on_pre_enter(self):
         self.update_strings()

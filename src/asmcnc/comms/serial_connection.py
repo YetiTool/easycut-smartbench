@@ -101,7 +101,8 @@ class SerialConnection(object):
                         new_string = input_string.strip()
                         log(new_string)
                         return new_string
-                    stripped_input = list(map(strip_and_log, self.s.readlines()))
+                    stripped_input = list(map(strip_and_log, self.s.
+                        readlines()))
                     if any('SmartBench' in ele for ele in stripped_input):
                         SmartBench_port = available_port
                         return SmartBench_port

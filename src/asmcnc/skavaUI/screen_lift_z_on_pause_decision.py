@@ -105,10 +105,10 @@ class LiftZOnPauseDecisionScreen(Screen):
     default_font_size = '36sp'
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def popup_help(self):

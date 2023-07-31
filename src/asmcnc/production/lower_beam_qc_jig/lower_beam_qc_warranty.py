@@ -211,10 +211,10 @@ class PopupMotorChipsTest(Widget):
 class LowerBeamQCWarranty(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(LowerBeamQCWarranty, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
         self.xy_move_widget = LowerBeamQCXYMove(machine=self.m,
             screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)

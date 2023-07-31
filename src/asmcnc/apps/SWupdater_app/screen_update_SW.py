@@ -367,10 +367,10 @@ class SWUpdateScreen(Screen):
     poll_wifi = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
         super(SWUpdateScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
         self.update_strings()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'

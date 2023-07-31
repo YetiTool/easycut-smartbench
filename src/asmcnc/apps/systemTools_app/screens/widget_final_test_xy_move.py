@@ -257,9 +257,9 @@ class FinalTestXYMove(Widget):
     jog_mode_button_press_counter = 0
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(FinalTestXYMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
 
     def jogModeCycled(self):

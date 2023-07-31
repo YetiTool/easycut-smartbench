@@ -298,9 +298,9 @@ class DistanceScreen1xClass(Screen):
     x_cal_measure_1 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen1xClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]X Distance:[/color]'

@@ -154,10 +154,10 @@ Builder.load_string(
 class WarrantyScreen2(Screen):
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(WarrantyScreen2, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.serial_number_label.text = self.get_serial_number()
         self.update_strings()
 
@@ -169,7 +169,9 @@ class WarrantyScreen2(Screen):
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print('Could not get serial number! Please contact YetiTool support!')
+            print(
+                'Could not get serial number! Please contact YetiTool support!'
+                )
         return str(serial_number_from_file)
 
     def next_screen(self):

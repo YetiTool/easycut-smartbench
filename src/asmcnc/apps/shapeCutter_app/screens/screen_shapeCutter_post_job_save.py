@@ -212,10 +212,10 @@ class ShapeCutterSaveJobScreenClass(Screen):
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.display_profile = self.j.parameters_to_string()

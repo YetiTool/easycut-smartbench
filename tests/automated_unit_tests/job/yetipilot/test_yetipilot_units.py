@@ -66,16 +66,16 @@ def test_get_feed_adjustment_percentage(yp):
     yp.use_profile(yp.available_profiles[0])
     feed_up_args = True, 1, False
     no_feed_up_args = False, 0, True
-    assert yp.get_feed_adjustment_percentage(950, feed_multiplier=-45, *
-        no_feed_up_args) == -40
-    assert yp.get_feed_adjustment_percentage(950, feed_multiplier=45, *
-        no_feed_up_args) == 0
-    assert yp.get_feed_adjustment_percentage(950, feed_multiplier=17, *
-        no_feed_up_args) == 0
-    assert yp.get_feed_adjustment_percentage(950, feed_multiplier=45, *
-        feed_up_args) == 20
-    assert yp.get_feed_adjustment_percentage(950, feed_multiplier=17, *
-        feed_up_args) == 17
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
+        feed_multiplier=-45) == -40
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
+        feed_multiplier=45) == 0
+    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
+        feed_multiplier=17) == 0
+    assert yp.get_feed_adjustment_percentage(950, *feed_up_args,
+        feed_multiplier=45) == 20
+    assert yp.get_feed_adjustment_percentage(950, *feed_up_args,
+        feed_multiplier=17) == 17
 
 
 def test_get_multiplier(yp):

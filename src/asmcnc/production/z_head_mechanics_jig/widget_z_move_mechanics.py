@@ -121,9 +121,9 @@ Builder.load_string(
 class ZMoveMechanics(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(ZMoveMechanics, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
     fast_z_speed = 750
     feedSpeedJogZ = 750

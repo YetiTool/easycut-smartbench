@@ -869,12 +869,12 @@ class CalibrationTesting(Screen):
     mini_run_dev_mode = False
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.calibration_db = kwargs.pop('calibration_db')
+        self.sm = kwargs.pop('sm')
+        self.l = kwargs.pop('l')
         super(CalibrationTesting, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.systemtools_sm = kwargs['systemtools']
-        self.calibration_db = kwargs['calibration_db']
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
         self.x_running = False
         self.y_running = False
         self.z_running = False

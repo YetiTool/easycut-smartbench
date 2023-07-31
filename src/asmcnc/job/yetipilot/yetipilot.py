@@ -58,10 +58,10 @@ class YetiPilot(object):
     adjusting_spindle_speed = False
 
     def __init__(self, **kwargs):
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job_data']
-        self.l = kwargs['localization']
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job_data')
+        self.l = kwargs.pop('localization')
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
             self.parameters_path = 'src/' + self.parameters_path

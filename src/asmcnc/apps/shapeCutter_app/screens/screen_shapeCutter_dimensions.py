@@ -411,10 +411,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
     dim_4 = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutterDimensionsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0

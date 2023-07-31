@@ -38,9 +38,9 @@ Builder.load_string(
 class ZHeadQC5(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadQC5, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def enter_next_screen(self):
         self.sm.current = 'qcDB1'

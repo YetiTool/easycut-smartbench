@@ -533,12 +533,12 @@ class FactorySettingsScreen(Screen):
     poll_for_creds_file = None
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
+        self.usb_stick = kwargs.pop('usb_stick')
         super(FactorySettingsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
-        self.usb_stick = kwargs['usb_stick']
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
         self.latest_software_version.text = self.set.latest_sw_version
@@ -1034,7 +1034,9 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print('Could not get serial number! Please contact YetiTool support!')
+            print(
+                'Could not get serial number! Please contact YetiTool support!'
+                )
         return str(serial_number_from_file)
 
     def final_test(self, board):

@@ -191,8 +191,8 @@ class StallJigScreen(Screen):
     feed_dict = {'X': [8000, 6000, 4500, 3000, 2000, 1200, 600], 'Y': [6000,
         5000, 4000, 3000, 2000, 1200, 600], 'Z': [750, 600, 500, 400, 300, 
         150, 75]}
-    threshold_dict = {'X': list(range(125, 375, 25)), 'Y': list(range(100, 375, 25)),
-        'Z': list(range(120, 220, 20))}
+    threshold_dict = {'X': list(range(125, 375, 25)), 'Y': list(range(100, 
+        375, 25)), 'Z': list(range(120, 220, 20))}
     indices = {'axis': 0, 'threshold': 0, 'feed': 0}
     minimum_threshold_index = {'X': 0, 'Y': 0, 'Z': 0}
     absolute_start_pos = {}
@@ -292,11 +292,11 @@ class StallJigScreen(Screen):
     VERBOSE = True
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.l = kwargs.pop('localization')
+        self.m = kwargs.pop('machine')
+        self.calibration_db = kwargs.pop('calibration_db')
         super(StallJigScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['systemtools']
-        self.l = kwargs['localization']
-        self.m = kwargs['machine']
-        self.calibration_db = kwargs['calibration_db']
         self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
         self.combined_id = (self.sn_for_db + str(self.stage_id))[2:]
         self.absolute_start_pos = {'X': -1299, 'Y': self.m.

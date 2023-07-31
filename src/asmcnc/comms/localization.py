@@ -11,11 +11,11 @@ def log(message):
 class Localization(object):
     dictionary = {}
     approved_languages = ['English (GB)', 'Italiano (IT)',
-        'Suomalainen (FI)', 'Deutsch (DE)', 'Fran\xc3\xa7ais (FR)',
+        'Suomalainen (FI)', 'Deutsch (DE)', 'FranÃ§ais (FR)', 'Polski (PL)',
+        'Dansk (DK)']
+    supported_languages = ['English (GB)', 'Deutsch (DE)', 'FranÃ§ais (FR)',
+        'Italiano (IT)', 'Suomalainen (FI)', 'Nederlands (NL)',
         'Polski (PL)', 'Dansk (DK)']
-    supported_languages = ['English (GB)', 'Deutsch (DE)',
-        'Fran\xc3\xa7ais (FR)', 'Italiano (IT)', 'Suomalainen (FI)',
-        'Nederlands (NL)', 'Polski (PL)', 'Dansk (DK)']
     persistent_language_path = './sb_values/user_language.txt'
     complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.txt'
     default_lang = 'English (GB)'

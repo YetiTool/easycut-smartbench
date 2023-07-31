@@ -131,10 +131,10 @@ Builder.load_string(
 class SetThresholdsScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(SetThresholdsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['systemtools']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
 
     def on_enter(self):
         self.show_thresholds()

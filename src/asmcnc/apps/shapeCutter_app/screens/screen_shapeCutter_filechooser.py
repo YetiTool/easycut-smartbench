@@ -186,10 +186,10 @@ parameter_file_dir = (
 class SCFileChooser(Screen):
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.l = kwargs.pop('localization')
+        self.j = kwargs.pop('job_parameters')
         super(SCFileChooser, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.l = kwargs['localization']
-        self.j = kwargs['job_parameters']
 
     def on_enter(self):
         self.refresh_filechooser()

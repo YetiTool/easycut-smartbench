@@ -73,8 +73,8 @@ Builder.load_string(
 class HelpScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
         super(HelpScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
 
     def load_video(self, selection):
         self.video_player.source = selection

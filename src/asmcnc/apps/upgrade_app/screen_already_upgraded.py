@@ -76,10 +76,10 @@ Builder.load_string(
 class AlreadyUpgradedScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(AlreadyUpgradedScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def next_screen(self):

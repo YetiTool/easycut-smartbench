@@ -122,12 +122,12 @@ class StopOrResumeDecisionScreen(Screen):
     qr_source = qr_spindle_overload
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
+        self.l = kwargs.pop('localization')
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l = kwargs['localization']
 
     def popup_help(self):
         info = self.l.get_bold('Cancel'

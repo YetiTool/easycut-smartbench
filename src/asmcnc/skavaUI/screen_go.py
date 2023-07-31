@@ -390,14 +390,14 @@ class GoScreen(Screen):
     total_runtime_seconds = 0
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.am = kwargs.pop('app_manager')
+        self.l = kwargs.pop('localization')
+        self.database = kwargs.pop('database')
+        self.yp = kwargs.pop('yetipilot')
         super(GoScreen, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.am = kwargs['app_manager']
-        self.l = kwargs['localization']
-        self.database = kwargs['database']
-        self.yp = kwargs['yetipilot']
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.
             m, screen_manager=self.sm, database=self.database)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=

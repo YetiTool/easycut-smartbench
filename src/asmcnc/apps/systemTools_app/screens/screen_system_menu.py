@@ -207,9 +207,9 @@ class SystemMenuScreen(Screen):
     default_font_size = 16
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.l = kwargs.pop('localization')
         super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.l = kwargs['localization']
         self.id_list = [self.button_system_info, self.button_support_menu,
             self.button_reboot, self.button_exit_software, self.
             button_usb_first_aid, self.button_beta_testing, self.

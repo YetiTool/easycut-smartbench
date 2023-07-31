@@ -247,10 +247,10 @@ Builder.load_string(
 class WarrantyScreen1(Screen):
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(WarrantyScreen1, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def next_screen(self):

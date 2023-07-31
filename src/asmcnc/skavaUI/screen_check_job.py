@@ -246,11 +246,11 @@ class CheckingScreen(Screen):
     serial_function_called = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.jd = kwargs.pop('job')
         super(CheckingScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.jd = kwargs['job']
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
 
     def on_pre_enter(self):
@@ -558,8 +558,8 @@ class CheckingScreen(Screen):
                     'The recommended maximum feed rate is 5000 mm/min.') +
                     '\n\n')
         error_summary = []
-        no_empties = list([x for x in zip(error_log,
-            self.jd.job_gcode) if x != ('ok', '')])
+        no_empties = list([x for x in zip(error_log, self.jd.job_gcode) if 
+            x != ('ok', '')])
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
                 error_description = self.l.get_str(ERROR_CODES.get(f[0], ''))

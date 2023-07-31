@@ -585,11 +585,11 @@ class BuildInfoScreen(Screen):
     smartbench_name_formatted = 'My SmartBench'
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
         super(BuildInfoScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
         self.smartbench_location_unformatted = self.l.get_str(
             'SmartBench Location')
         self.smartbench_location_formatted = self.l.get_str(

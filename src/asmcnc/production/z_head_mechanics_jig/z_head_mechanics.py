@@ -212,10 +212,10 @@ class ZHeadMechanics(Screen):
     phase_two_current = 13
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(ZHeadMechanics, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
         Clock.schedule_interval(self.update_realtime_load, 0.1)
 
     def prepare_for_test(self):

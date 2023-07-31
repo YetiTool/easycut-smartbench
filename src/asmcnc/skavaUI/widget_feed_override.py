@@ -111,10 +111,10 @@ class FeedOverride(Widget):
     enable_button_time = 0.36
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.db = kwargs.pop('database')
         super(FeedOverride, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.db = kwargs['database']
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())

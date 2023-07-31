@@ -293,9 +293,9 @@ class DistanceScreen1yClass(Screen):
     expected_user_entry = 200
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen1yClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
         if self.m.bench_is_standard():
             self.initial_y_cal_move = 2000
         elif self.m.bench_is_short():

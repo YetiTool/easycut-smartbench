@@ -1,6 +1,8 @@
 import sys, os
 if len(sys.argv) != 2:
-    print('Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>')
+    print(
+        'Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>'
+        )
     sys.exit(0)
 from kivy.config import Config
 from kivy.clock import Clock

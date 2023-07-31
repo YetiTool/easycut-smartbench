@@ -69,10 +69,10 @@ class LBCalibration4(Screen):
     serial_number = ''
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.calibration_db = kwargs.pop('calibration_db')
         super(LBCalibration4, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.calibration_db = kwargs['calibration_db']
 
     def enter_prev_screen(self):
         self.sm.current = 'lbc2'

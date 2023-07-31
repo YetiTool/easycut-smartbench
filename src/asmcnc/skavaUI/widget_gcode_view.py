@@ -74,8 +74,8 @@ class GCodeView(Widget):
     max_lines_to_read = 2000
 
     def __init__(self, **kwargs):
+        self.jd = kwargs.pop('job')
         super(GCodeView, self).__init__(**kwargs)
-        self.jd = kwargs['job']
 
     def draw_file_in_xy_plane(self, gcode_list):
         self.gCodePreview.canvas.clear()
@@ -365,8 +365,8 @@ class GCodeView(Widget):
                         self.feed_rate)
                     self.xy_preview_gcode.append(processed_line)
                 else:
-                    print('Line not for preview (' + str(self.line_number
-                        ) + self.move + '): ' + line)
+                    print('Line not for preview (' + str(self.line_number) +
+                        self.move + '): ' + line)
             self.line_threshold_to_pause_and_update_at += (self.
                 interrupt_line_threshold)
             percentage_progress = int(self.lines_read * 1.0 / self.

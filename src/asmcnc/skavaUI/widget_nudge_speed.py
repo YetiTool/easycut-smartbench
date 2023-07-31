@@ -55,9 +55,9 @@ Builder.load_string(
 class NudgeSpeed(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(NudgeSpeed, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
     fast_x_speed = 6000
     fast_y_speed = 6000

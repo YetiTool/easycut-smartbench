@@ -159,10 +159,10 @@ def log(message):
 class UpgradeScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(UpgradeScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
 
     def on_pre_enter(self):
         self.update_strings()

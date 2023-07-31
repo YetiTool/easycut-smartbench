@@ -335,10 +335,10 @@ class SpindleSettingsWidget(Widget):
         ] + brand_list_sc1
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SpindleSettingsWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.rpm_override = self.m.spindle_cooldown_rpm_override
         self.cooldown_speed_slider.bind(value=self.cooldown_speed_updated)
         self.cooldown_time_slider.bind(value=self.cooldown_time_updated)

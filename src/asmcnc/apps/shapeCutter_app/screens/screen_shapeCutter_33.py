@@ -361,10 +361,10 @@ class ShapeCutter33ScreenClass(Screen):
         )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutter33ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
         self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(machine
             =self.m, job_parameters=self.j, screen_manager=self.
             shapecutter_sm.sm)

@@ -132,13 +132,13 @@ class SpindleHealthCheckActiveScreen(Screen):
     update_timer_event = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.seconds = self.max_seconds
         self.cool_down_label.text = self.l.get_str(
-            'Running Spindle motor health check\xe2\x80\xa6'
+            'Running Spindle motor health checkâ\x80¦'
             ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
 
     def on_pre_enter(self):
@@ -148,13 +148,13 @@ class SpindleHealthCheckActiveScreen(Screen):
     def on_enter(self):
         self.run_spindle_health_check()
         self.cool_down_label.text = self.l.get_str(
-            'Running Spindle motor health check\xe2\x80\xa6'
+            'Running Spindle motor health checkâ\x80¦'
             ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
 
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
         self.cool_down_label.text = self.l.get_str(
-            'Running Spindle motor health check\xe2\x80\xa6')
+            'Running Spindle motor health checkâ\x80¦')
 
     def exit_screen(self, dt=0):
         self.sm.current = self.return_screen

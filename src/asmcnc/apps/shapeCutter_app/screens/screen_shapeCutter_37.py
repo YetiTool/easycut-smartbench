@@ -124,6 +124,6 @@ Builder.load_string(
 class ShapeCutterTemplateButtonsScreenClass(Screen):
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutterTemplateButtonsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']

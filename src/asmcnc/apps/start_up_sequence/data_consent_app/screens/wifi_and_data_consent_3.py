@@ -206,10 +206,10 @@ class WiFiAndDataConsentScreen3(Screen):
         './asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/')
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.c = kwargs.pop('consent_manager')
+        self.l = kwargs.pop('localization')
         super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.c = kwargs['consent_manager']
-        self.l = kwargs['localization']
         self.update_strings()
         self.set_checkbox_default()
 
@@ -224,7 +224,7 @@ class WiFiAndDataConsentScreen3(Screen):
 
     def update_strings(self):
         self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
-        if self.l.lang == 'Fran\xc3\xa7ais (FR)':
+        if self.l.lang == 'FranÃ§ais (FR)':
             self.scroll_privacy_notice.privacy_notice.source = (self.
                 privacy_notice_path + 'Francais (FR).rst')
         else:

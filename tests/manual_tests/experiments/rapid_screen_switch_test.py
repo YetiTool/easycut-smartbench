@@ -47,8 +47,8 @@ class SettingsScreen(Screen):
 class MenuScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
         super(MenuScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
 
     def on_enter(self):
         Clock.schedule_once(self.go_to_settings, 1)

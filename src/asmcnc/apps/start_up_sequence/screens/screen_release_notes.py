@@ -135,11 +135,11 @@ class ReleaseNotesScreen(Screen):
     user_has_confirmed = False
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.sm = kwargs.pop('screen_manager')
+        self.version = kwargs.pop('version')
+        self.l = kwargs.pop('localization')
         super(ReleaseNotesScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.sm = kwargs['screen_manager']
-        self.version = kwargs['version']
-        self.l = kwargs['localization']
         self.release_notes_filename = '../' + self.version.replace('.', ''
             ) + '.txt'
         self.scroll_release_notes.release_notes.source = (self.

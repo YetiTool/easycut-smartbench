@@ -131,9 +131,9 @@ class ShapeCutterFeedbackScreenClass(Screen):
     info_button = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutterFeedbackScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
 
     def thumbs_up(self):
         self.next_screen()

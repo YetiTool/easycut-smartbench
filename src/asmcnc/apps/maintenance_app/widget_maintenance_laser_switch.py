@@ -65,9 +65,9 @@ Builder.load_string(
 class LaserOnOffWidget(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(LaserOnOffWidget, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
 
     def toggle_laser(self):
         if self.laser_switch.active == True:

@@ -193,9 +193,9 @@ class DistanceScreen4yClass(Screen):
     expected_steps = 56.7
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen4yClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'

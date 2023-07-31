@@ -273,10 +273,10 @@ Builder.load_string(
 class XYMove(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(XYMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
