@@ -232,7 +232,7 @@ class SerialConnection:
     def write_all_protocol_buffer(self):
         if self.write_protocol_buffer and not self.is_protocol_busy():
             self.write_direct(self.write_protocol_buffer[0], protocol=True)
-        del self.write_protocol_buffer[0]
+            del self.write_protocol_buffer[0]
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
         self.logger.info("Starting GRBL scanner")
