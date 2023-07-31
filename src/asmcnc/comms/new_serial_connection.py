@@ -1080,3 +1080,6 @@ class SerialConnection:
     def write_protocol(self, serialCommand, altDisplayText):
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    def is_connected(self):
+        return self.s and self.s.is_open
