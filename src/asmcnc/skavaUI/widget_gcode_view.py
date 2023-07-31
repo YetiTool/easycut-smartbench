@@ -342,7 +342,7 @@ class GCodeView(Widget):
                             print('Line not for preview (' + str(self.
                                 line_number) + '): ' + line)
                     elif start == 'F':
-                        self.feeds_and_speeds.feed_rate = bit[1:]
+                        self.feed_rate = bit[1:]
                     elif start == 'I':
                         i = bit[1:]
                     elif start == 'J':
@@ -356,13 +356,13 @@ class GCodeView(Widget):
                 elif self.move == 'G1':
                     processed_line = (self.plane + ' ' + self.move + ' X' +
                         self.last_x + ' Y' + self.last_y + ' Z' + self.
-                        last_z + ' F' + self.feeds_and_speeds.feed_rate)
+                        last_z + ' F' + self.feed_rate)
                     self.xy_preview_gcode.append(processed_line)
                 elif self.move == 'G2' or self.move == 'G3':
                     processed_line = (self.plane + ' ' + self.move + ' X' +
                         self.last_x + ' Y' + self.last_y + ' Z' + self.
                         last_z + ' I' + i + ' J' + j + ' K' + k + ' F' +
-                        self.feeds_and_speeds.feed_rate)
+                        self.feed_rate)
                     self.xy_preview_gcode.append(processed_line)
                 else:
                     print('Line not for preview (' + str(self.line_number) +
