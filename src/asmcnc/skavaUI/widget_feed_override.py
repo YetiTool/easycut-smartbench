@@ -117,7 +117,7 @@ class FeedOverride(Widget):
         super(FeedOverride, self).__init__(**kwargs)
 
     def update_feed_rate_label(self):
-        self.feed_absolute.text = str(self.m.feeds_and_speeds.feed_rate())
+        self.feed_absolute.text = str(self.m.feed_rate())
 
     def update_feed_percentage_override_label(self):
         self.feed_rate_label.text = str(self.m.s.feeds_and_speeds.feed_override

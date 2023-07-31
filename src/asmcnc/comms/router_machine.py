@@ -2485,7 +2485,7 @@ class RouterMachine(object):
                         self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
                         self.start_slow_tuning_jog(X=X, Y=Y, Z=Z)
                         time.sleep(0.01)
-                    elif self.feeds_and_speeds.feed_rate() > 430:
+                    elif self.feed_rate() > 430:
                         log('Feed rate too high, skipping')
                         self.s.record_sg_values_flag = False
                         self.temp_sg_array = []
