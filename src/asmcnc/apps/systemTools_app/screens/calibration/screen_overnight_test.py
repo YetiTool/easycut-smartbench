@@ -20,7 +20,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from asmcnc.comms.logging import log_exporter
+from asmcnc.comms.logging_system import log_exporter
 Builder.load_string(
     """
 <OvernightTesting>:

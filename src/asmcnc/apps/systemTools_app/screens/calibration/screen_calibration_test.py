@@ -5,7 +5,7 @@ from datetime import datetime
 from asmcnc.skavaUI import popup_info
 import traceback
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
-from asmcnc.comms.logging import log_exporter
+from asmcnc.comms.logging_system import log_exporter
 Builder.load_string(
     """
 <CalibrationTesting>:
