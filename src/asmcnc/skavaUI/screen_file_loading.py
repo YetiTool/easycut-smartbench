@@ -299,12 +299,19 @@ class LoadingScreen(Screen):
                             try:
                                 feed_rate = re.match('\\d+', l_block[
                                     l_block.find('F') + 1:]).group()
-                                if (int(feed_rate) > self.jd.feedrate_max or
-                                    self.jd.feedrate_max == None):
+
+                                if self.jd.feedrate_max is None:
                                     self.jd.feedrate_max = int(feed_rate)
-                                if (int(feed_rate) < self.jd.feedrate_min or
-                                    self.jd.feedrate_min == None):
+                                else:
+                                    if int(feed_rate) > self.jd.feedrate_max:
+                                        self.jd.feedrate_max = int(feed_rate)
+
+                                if self.jd.feedrate_min is None:
                                     self.jd.feedrate_min = int(feed_rate)
+                                else:
+                                    if int(feed_rate) < self.jd.feedrate_min:
+                                        self.jd.feedrate_min = int(feed_rate)
+
                                 if float(feed_rate) < self.minimum_feed_rate:
                                     self.sm.get_screen('check_job'
                                         ).flag_min_feed_rate = True
