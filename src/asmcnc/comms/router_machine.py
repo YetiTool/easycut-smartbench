@@ -1016,6 +1016,25 @@ class RouterMachine(object):
         if temp_state in grbl_state_words:
             self.s.m_state = temp_state
 
+    def is_busy(self):
+        busy_conditions = [
+            self.state().startswith('Idle'),
+            self.s.is_sequential_streaming,
+            self.s.is_job_streaming,
+            self.s.write_command_buffer,
+            self.s.write_realtime_buffer,
+            self.s.write_protocol_buffer,
+            int(self.s.buffer_info.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE,
+            int(self.s.buffer_info.serial_chars_available) != self.s.RX_BUFFER_SIZE,
+            self.s.grbl_waiting_for_reset,
+            self.is_machine_paused
+        ]
+
+        # if any of the busy conditions are true, then the machine is busy
+        # and we return True and the busy conditions
+        if any(busy_conditions):
+            return True, [condition for condition in busy_conditions if condition]
+
     def smartbench_is_busy(self):
         if not self.state().startswith('Idle'):
             return True
@@ -1675,8 +1694,12 @@ class RouterMachine(object):
             self.cancel_homing_sequence()
             log('Cancel homing from router_machine due to: ' + self.state())
             return True
-        if self.smartbench_is_busy() or self.run_calibration:
+
+        busy, why = self.is_busy()
+
+        if busy or self.run_calibration:
             self.schedule_homing_event(func, delay)
+            print(why)
             return True
 
     def unschedule_homing_events(self):
