@@ -10,7 +10,7 @@ from chardet import detect
 from itertools import takewhile
 import traceback
 
-decode_and_encode = lambda x: str(x, detect(x)['encoding']).encode('utf-8')
+decode_and_encode = lambda x: str(x, detect(x.encode('utf-8'))['encoding']).encode('utf-8')
 
 
 def remove_newlines(gcode_line):
