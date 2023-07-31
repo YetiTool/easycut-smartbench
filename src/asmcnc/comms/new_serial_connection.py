@@ -1070,3 +1070,13 @@ class SerialConnection:
             self.sm.get_screen('go').update_overload_peak(self.overload_state)
         else:
             self.is_ready_to_assess_spindle_for_shutdown = True
+
+    def write_command(self, serialCommand, **kwargs):
+        self.write_command_buffer.append([serialCommand, kwargs])
+
+    def write_realtime(self, serialCommand, altDisplayText=None):
+        self.write_realtime_buffer.append([serialCommand, altDisplayText])
+
+    def write_protocol(self, serialCommand, altDisplayText):
+        self.write_protocol_buffer.append([serialCommand, altDisplayText])
+        return serialCommand
