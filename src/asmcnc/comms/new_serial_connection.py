@@ -1092,7 +1092,7 @@ class SerialConnection:
     def start_sequential_stream(self, list_to_stream,
         reset_grbl_after_stream=False, end_dwell=False):
         self.is_sequential_streaming = True
-        log('Start_sequential_stream')
+        print('Start_sequential_stream')
         if reset_grbl_after_stream:
             list_to_stream.append(self._dwell_command)
         elif end_dwell:
