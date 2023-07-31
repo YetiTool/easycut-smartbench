@@ -138,7 +138,6 @@ class SerialConnection:
     def connect(self):
         self.get_ports_to_try()
         self.port = self.get_smartbench_port()
-        self.start_services()
 
     def write_to_serial(self, message):
         if self.s is not None:

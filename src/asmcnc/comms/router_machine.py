@@ -9,6 +9,7 @@ try:
 except:
     pass
 from asmcnc.comms import serial_connection
+from asmcnc.comms import new_serial_connection
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
@@ -18,7 +19,7 @@ from datetime import datetime
 import os.path
 from os import path
 from asmcnc.skavaUI import popup_info
-
+import logging
 
 def log(message):
     timestamp = datetime.now()
@@ -100,9 +101,14 @@ class RouterMachine(object):
         self.jd = job
         self.set_jog_limits()
         self.win_serial_port = win_serial_port
-        self.s = serial_connection.SerialConnection(self, self.sm, self.
-            sett, self.l, self.jd)
-        self.s.establish_connection(win_serial_port)
+        # self.s = serial_connection.SerialConnection(self, self.sm, self.
+        #     sett, self.l, self.jd)
+        # self.s.establish_connection(win_serial_port)
+
+        self.s = new_serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd,
+                                                        logging.Logger(name=__name__))
+        self.s.connect()
+
         self.p = protocol.protocol_v2()
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
