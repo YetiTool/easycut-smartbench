@@ -55,6 +55,7 @@ class SerialConnection:
     _dwell_time: float = 0.5
     _dwell_command: str = 'G4 P' + str(_dwell_time)
 
+    is_sequential_streaming: bool = False
     is_job_streaming: bool = False
     is_stream_lines_remaining: bool = False
 
