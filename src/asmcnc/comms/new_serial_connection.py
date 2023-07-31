@@ -1011,6 +1011,13 @@ class SerialConnection:
                 self._sequential_stream_buffer[0] = self._dwell_command
             else:
                 del self._sequential_stream_buffer[0]
+        else:
+            self._process_oks_from_sequential_streaming = False
+            if self._reset_grbl_after_stream:
+                self._reset_grbl_after_stream = False
+                self.m._grbl_soft_reset()
+            self.is_sequential_streaming = False
+
 
     def _after_grbl_settings_insert_dwell(self):
         if self._sequential_stream_buffer:
