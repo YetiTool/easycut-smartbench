@@ -1705,6 +1705,7 @@ class RouterMachine(object):
         if self.if_last_task_complete():
             self.schedule_homing_event(self.next_homing_task_wrapper, self.
                 homing_seq_first_delay[self.homing_task_idx])
+            print('Homing task idx: ' + str(self.homing_task_idx))
             if not self.homing_task_idx:
                 return
             self.schedule_homing_event(self.complete_homing_task, self.
