@@ -53,7 +53,7 @@ Builder.load_string(
 
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
+            orientation: 'lr-tb'
             spacing: 0
             size_hint_y: None
             height: self.width
