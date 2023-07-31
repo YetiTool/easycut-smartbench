@@ -1703,6 +1703,7 @@ class RouterMachine(object):
 
     def do_next_task_in_sequence(self, dt=0):
         print('Homing task idx: ' + str(self.homing_task_idx))
+        print('Homing task list: ' + str(self.completed_homing_tasks))
         if self.if_last_task_complete():
             self.schedule_homing_event(self.next_homing_task_wrapper, self.
                                        homing_seq_first_delay[self.homing_task_idx])
