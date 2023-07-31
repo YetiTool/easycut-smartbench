@@ -952,6 +952,7 @@ class SerialConnection:
     def process_setting(self, setting, value):
         setting_num = int(setting[1:])
 
+        # should these be float or int?
         value = int(float(value))
         self.settings.store_variable(setting_num, value)
 

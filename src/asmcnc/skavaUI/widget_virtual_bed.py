@@ -138,7 +138,7 @@ class VirtualBed(Widget):
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
         self.setG54SizePx()
-        self.setG28PosByMachineCoords(self.m.g28.x(), self.m.g28.y())
+        self.setG28PosByMachineCoords(self.m.g28_x(), self.m.g28_y())
         self.setCarriagePosByMachineCoords(self.m.mpos_x(), self.m.mpos_y())
     g54box_x0 = 0.0
     g54box_y0 = 0.0
