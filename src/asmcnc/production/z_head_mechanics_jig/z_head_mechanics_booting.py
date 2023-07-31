@@ -33,9 +33,9 @@ class ZHeadMechanicsBooting(Screen):
     def next_screen(self, dt):
         try:
             self.sm.get_screen('mechanics'
-                ).z_axis_max_travel = -self.m.s.setting_132
+                ).z_axis_max_travel = -self.m.s.settings.s132
             self.sm.get_screen('mechanics'
-                ).z_axis_max_speed = self.m.s.setting_112
+                ).z_axis_max_speed = self.m.s.settings.s112
             self.m.send_command_to_motor('DISABLE MOTOR DRIVERS', motor=
                 TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
             self.sm.current = 'mechanics'

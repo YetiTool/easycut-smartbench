@@ -602,11 +602,11 @@ class StallJigScreen(Screen):
 
     def get_limits(self):
         limit_list = []
-        if self.m.s.limit_x or self.m.s.limit_X:
+        if self.m.s.pin_info.limit_x or self.m.s.pin_info.limit_X:
             limit_list.append(self.l.get_str('X'))
-        if self.m.s.limit_Y_axis:
+        if self.m.s.pin_info.limit_Y_axis:
             limit_list.append(self.l.get_str('Y'))
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             limit_list.append(self.l.get_str('Z'))
         return limit_list
 
@@ -680,9 +680,11 @@ class StallJigScreen(Screen):
             return True
         if self.m.s.write_protocol_buffer:
             return True
-        if int(self.m.s.serial_blocks_available) != self.m.s.GRBL_BLOCK_SIZE:
+        if int(self.m.s.buffer_info.serial_blocks_available
+            ) != self.m.s.GRBL_BLOCK_SIZE:
             return True
-        if int(self.m.s.serial_chars_available) != self.m.s.RX_BUFFER_SIZE:
+        if int(self.m.s.buffer_info.serial_chars_available
+            ) != self.m.s.RX_BUFFER_SIZE:
             return True
         if self.m.s.grbl_waiting_for_reset:
             return True
@@ -852,7 +854,7 @@ class StallJigScreen(Screen):
             if self.VERBOSE:
                 log('DISABLE HARD LIMITS')
             move_sequence.append('$21=0')
-        move_sequence.append('G0 G53 Z-' + str(self.m.s.setting_27))
+        move_sequence.append('G0 G53 Z-' + str(self.m.s.settings.s27))
         move_sequence.append('G53 ' + 'X' + str(pos_dict['X']) + ' Y' + str
             (pos_dict['Y']) + ' F' + str(self.fast_travel['Y']))
         move_sequence.append('G53 ' + 'Z' + str(pos_dict['Z']) + ' F' + str
@@ -1328,21 +1330,21 @@ class StallJigScreen(Screen):
 
     def record_stall_event(self):
         if self.indices['axis'] == 0:
-            step_rate = self.m.s.setting_100
-            stall_coord = self.m.s.last_stall_x_coord
+            step_rate = self.m.s.settings.s100
+            stall_coord = self.m.s.stall_guard.last_stall.x_coord
         if self.indices['axis'] == 1:
-            step_rate = self.m.s.setting_101
-            stall_coord = self.m.s.last_stall_y_coord
+            step_rate = self.m.s.settings.s101
+            stall_coord = self.m.s.stall_guard.last_stall.y_coord
         if self.indices['axis'] == 2:
-            step_rate = self.m.s.setting_102
-            stall_coord = self.m.s.last_stall_z_coord
-        step_us = float(self.m.s.last_stall_motor_step_size)
+            step_rate = self.m.s.settings.s102
+            stall_coord = self.m.s.stall_guard.last_stall.z_coord
+        step_us = float(self.m.s.stall_guard.last_stall.motor_step_size)
         rpm = 60.0 * (1000000.0 / step_us) / 3200.0
         reported_feed = 3200.0 / float(step_rate) * float(rpm)
         last_test_pass = [self.combined_id, self.indices['axis'], self.
             feed_dict[self.current_axis()][self.indices['feed']], self.
             threshold_dict[self.current_axis()][self.indices['threshold']],
-            reported_feed, self.m.s.last_stall_load, stall_coord]
+            reported_feed, self.m.s.stall_guard.last_stall.load, stall_coord]
         self.stall_test_events.append(last_test_pass)
         log('Stall event: ')
         for i in range(len(last_test_pass)):

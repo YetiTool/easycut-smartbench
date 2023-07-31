@@ -80,7 +80,7 @@ class ZHeadQCHome(Screen):
 
     def on_enter(self):
         try:
-            self.hw_version = int(self.m.s.hw_version)
+            self.versions.hardware = int(self.m.s.versions.hardware)
             self.update_usb_button_label()
         except:
             print("Can't get HW version or hex file")
@@ -89,9 +89,9 @@ class ZHeadQCHome(Screen):
         self.sm.current = 'qcpcbsetup'
 
     def get_fw_filepath(self):
-        if int(self.hw_version) >= 34:
+        if int(self.versions.hardware) >= 34:
             return '/media/usb/GRBL*5.hex'
-        elif int(self.hw_version) >= 20:
+        elif int(self.versions.hardware) >= 20:
             if glob.glob('/media/usb/GRBL*4.hex'):
                 return '/media/usb/GRBL*4.hex'
             return '/media/usb/GRBL23*.hex'

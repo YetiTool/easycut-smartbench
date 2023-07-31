@@ -253,7 +253,7 @@ class LowerBeamQCWarranty(Screen):
         self.y_max_switch()
 
     def y_home_switch(self):
-        if self.m.s.limit_y:
+        if self.m.s.pin_info.limit_y:
             self.y_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -261,7 +261,7 @@ class LowerBeamQCWarranty(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def y_max_switch(self):
-        if self.m.s.limit_Y:
+        if self.m.s.pin_info.limit_Y:
             self.y_max_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:

@@ -152,25 +152,25 @@ class AlarmSequenceManager(object):
     def get_suspected_trigger(self):
         limit_code = self.l.get_str('Unexpected limit reached:') + ' '
         limit_list = []
-        if self.m.s.limit_x:
+        if self.m.s.pin_info.limit_x:
             limit_list.append(self.l.get_str('X home'))
-        if self.m.s.limit_X:
+        if self.m.s.pin_info.limit_X:
             limit_list.append(self.l.get_str('X max'))
-        if self.m.s.limit_y:
+        if self.m.s.pin_info.limit_y:
             limit_list.append(self.l.get_str('Y home'))
-        if self.m.s.limit_Y:
+        if self.m.s.pin_info.limit_Y:
             limit_list.append(self.l.get_str('Y max'))
-        if self.m.s.limit_Y_axis:
+        if self.m.s.pin_info.limit_Y_axis:
             limit_list.append(self.l.get_str('Y home or Y max'))
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             limit_list.append(self.l.get_str('Z home'))
         if limit_list == []:
             limit_list.append(self.l.get_str('Unknown'))
         self.trigger_description = limit_code + ', '.join(limit_list)
 
     def get_status_info(self):
-        if self.sg_alarm and self.m.s.last_stall_status:
-            self.status_cache = self.m.s.last_stall_status
+        if self.sg_alarm and self.m.s.stall_guard.last_stall.status:
+            self.status_cache = self.m.s.stall_guard.last_stall.status
             return
         status_list = self.sm.get_screen('home'
             ).gcode_monitor_widget.status_report_buffer
@@ -182,11 +182,11 @@ class AlarmSequenceManager(object):
         self.sm.get_screen('alarm_1').alarm_title.text = self.l.get_bold(
             'Alarm: Motor overload event!')
         stall_list = []
-        if self.m.s.stall_X:
+        if self.m.s.pin_info.stall_X:
             stall_list.append('X')
-        if self.m.s.stall_Y:
+        if self.m.s.pin_info.stall_Y:
             stall_list.append('Y')
-        if self.m.s.stall_Z:
+        if self.m.s.stall_guard.stall_Z:
             stall_list.append('Z')
         self.stall_axis = ', '.join(stall_list)
         self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(
@@ -205,8 +205,9 @@ class AlarmSequenceManager(object):
 
     def get_version_data(self):
         self.sw_version = self.set.sw_version
-        self.fw_version = str(str(self.m.s.fw_version).split('; HW')[0])
-        self.hw_version = self.m.s.hw_version
+        self.versions.firmware = str(str(self.m.s.versions.firmware).split(
+            '; HW')[0])
+        self.versions.hardware = self.m.s.versions.hardware
         try:
             self.machine_serial_number = 'YS6' + str(self.m.serial_number())[
                 0:4]
@@ -271,13 +272,13 @@ class AlarmSequenceManager(object):
         self.report_string = (self.l.get_bold('Alarm report') + '\n\n' +
             self.l.get_str('Software version:') + ' ' + self.sw_version +
             '\n' + self.l.get_str('Firmware version:') + ' ' + self.
-            fw_version + '\n' + self.l.get_str('Hardware version:') + ' ' +
-            self.hw_version + '\n' + self.l.get_str('Serial number:') + ' ' +
-            self.machine_serial_number + '\n\n' + self.l.get_str(
-            'Alarm code:') + ' ' + alarm_number + '\n' + self.l.get_str(
-            'Alarm description:') + ' ' + description + '\n' + self.
-            trigger_description + '\n\n' + self.l.get_str('Status cache:') +
-            ' ' + '\n' + self.status_cache)
+            versions.firmware + '\n' + self.l.get_str('Hardware version:') +
+            ' ' + self.versions.hardware + '\n' + self.l.get_str(
+            'Serial number:') + ' ' + self.machine_serial_number + '\n\n' +
+            self.l.get_str('Alarm code:') + ' ' + alarm_number + '\n' +
+            self.l.get_str('Alarm description:') + ' ' + description + '\n' +
+            self.trigger_description + '\n\n' + self.l.get_str(
+            'Status cache:') + ' ' + '\n' + self.status_cache)
         self.sm.get_screen('alarm_3'
             ).description_label.text = self.report_string
 

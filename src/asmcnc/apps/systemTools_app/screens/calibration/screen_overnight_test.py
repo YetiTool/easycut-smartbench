@@ -877,40 +877,42 @@ class OvernightTesting(Screen):
             stage_id)), 'XCoordinate': self.m.mpos_x(), 'YCoordinate': self
             .m.mpos_y(), 'ZCoordinate': self.m.mpos_z(), 'XDirection':
             x_dir, 'YDirection': y_dir, 'ZDirection': z_dir, 'XSG': int(
-            self.m.s.sg_x_motor_axis), 'YSG': int(self.m.s.sg_y_axis),
-            'Y1SG': int(self.m.s.sg_y1_motor), 'Y2SG': int(self.m.s.
-            sg_y2_motor), 'ZSG': int(self.m.s.sg_z_motor_axis),
-            'TMCTemperature': int(self.m.s.motor_driver_temp),
-            'PCBTemperature': int(self.m.s.pcb_temp), 'MOTTemperature': int
-            (self.m.s.transistor_heatsink_temp), 'Timestamp': datetime.now(
-            ).strftime('%Y-%m-%d %H:%M:%S'), 'Feedrate': self.m.feed_rate(),
-            'XWeight': 0, 'YWeight': 0, 'ZWeight': 2}
+            self.m.s.stall_guard.x_motor_axis), 'YSG': int(self.m.s.
+            stall_guard.y_axis), 'Y1SG': int(self.m.s.stall_guard.y1_motor),
+            'Y2SG': int(self.m.s.stall_guard.y2_motor), 'ZSG': int(self.m.s
+            .stall_guard.z_motor_axis), 'TMCTemperature': int(self.m.s.
+            temperatures.motor_driver), 'PCBTemperature': int(self.m.s.
+            temperatures.pcb), 'MOTTemperature': int(self.m.s.
+            temperatures.transistor_heatsink), 'Timestamp': datetime.now().
+            strftime('%Y-%m-%d %H:%M:%S'), 'Feedrate': self.m.
+            feeds_and_speeds.feed_rate(), 'XWeight': 0, 'YWeight': 0,
+            'ZWeight': 2}
         self.status_data_dict[self.stage]['Statuses'].append(status)
-        if -999 < self.m.s.sg_x_motor_axis < 1023:
+        if -999 < self.m.s.stall_guard.x_motor_axis < 1023:
             if x_dir > 0:
-                self.raw_x_pos_vals.append(self.m.s.sg_x_motor_axis)
+                self.raw_x_pos_vals.append(self.m.s.stall_guard.x_motor_axis)
             if x_dir < 0:
-                self.raw_x_neg_vals.append(self.m.s.sg_x_motor_axis)
-        if -999 < self.m.s.sg_y_axis < 1023:
+                self.raw_x_neg_vals.append(self.m.s.stall_guard.x_motor_axis)
+        if -999 < self.m.s.stall_guard.y_axis < 1023:
             if y_dir > 0:
-                self.raw_y_pos_vals.append(self.m.s.sg_y_axis)
+                self.raw_y_pos_vals.append(self.m.s.stall_guard.y_axis)
             if y_dir < 0:
-                self.raw_y_neg_vals.append(self.m.s.sg_y_axis)
-        if -999 < self.m.s.sg_y1_motor < 1023:
+                self.raw_y_neg_vals.append(self.m.s.stall_guard.y_axis)
+        if -999 < self.m.s.stall_guard.y1_motor < 1023:
             if y_dir > 0:
-                self.raw_y1_pos_vals.append(self.m.s.sg_y1_motor)
+                self.raw_y1_pos_vals.append(self.m.s.stall_guard.y1_motor)
             if y_dir < 0:
-                self.raw_y1_neg_vals.append(self.m.s.sg_y1_motor)
-        if -999 < self.m.s.sg_y2_motor < 1023:
+                self.raw_y1_neg_vals.append(self.m.s.stall_guard.y1_motor)
+        if -999 < self.m.s.stall_guard.y2_motor < 1023:
             if y_dir > 0:
-                self.raw_y2_pos_vals.append(self.m.s.sg_y2_motor)
+                self.raw_y2_pos_vals.append(self.m.s.stall_guard.y2_motor)
             if y_dir < 0:
-                self.raw_y2_neg_vals.append(self.m.s.sg_y2_motor)
-        if -999 < self.m.s.sg_z_motor_axis < 1023:
+                self.raw_y2_neg_vals.append(self.m.s.stall_guard.y2_motor)
+        if -999 < self.m.s.stall_guard.z_motor_axis < 1023:
             if z_dir < 0:
-                self.raw_z_pos_vals.append(self.m.s.sg_z_motor_axis)
+                self.raw_z_pos_vals.append(self.m.s.stall_guard.z_motor_axis)
             if z_dir > 0:
-                self.raw_z_neg_vals.append(self.m.s.sg_z_motor_axis)
+                self.raw_z_neg_vals.append(self.m.s.stall_guard.z_motor_axis)
         self.update_peaks()
 
     def update_peaks(self):

@@ -198,7 +198,7 @@ class UploadSerialNumbersScreen(Screen):
         self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split(
             '.')[0]
         self.get_software_version_before_release()
-        self.fw_version = self.get_truncated_fw_version(str(self.m.
+        self.versions.firmware = self.get_truncated_fw_version(str(self.m.
             firmware_version()))
         self.already_in_database = self.check_for_duplicates_and_autofill()
         if self.dev_mode:
@@ -241,7 +241,8 @@ class UploadSerialNumbersScreen(Screen):
                 zhead_serial_input.text, self.lb_serial_input.text, self.
                 ub_serial_input.text, self.console_serial_input.text, self.
                 ybench_serial_input.text, self.spindle_serial_input.text,
-                self.sw_version, self.fw_version, self.squareness_input.text]
+                self.sw_version, self.versions.firmware, self.
+                squareness_input.text]
             self.calibration_db.insert_serial_numbers(*all_serial_numbers)
         self.error_label.text = 'Getting LB data...'
         Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data
@@ -260,7 +261,7 @@ class UploadSerialNumbersScreen(Screen):
     def check_versions_valid_regex(self):
         fw_version_pattern = re.compile('\\d[.]\\d[.]\\d')
         sw_version_pattern = re.compile('v\\d[.]\\d[.]\\d')
-        fw_match = bool(fw_version_pattern.match(self.fw_version))
+        fw_match = bool(fw_version_pattern.match(self.versions.firmware))
         sw_match = bool(sw_version_pattern.match(self.sw_version))
         validated = True
         if not fw_match:

@@ -103,8 +103,9 @@ class SpindleFeedbackTest(unittest.TestCase):
     def test_does_serial_read_in_analogue_spindle_load(self):
         self.status_and_PCB_constructor(case=2, spindle_load_voltage=self.
             test_spindle_load_voltage)
-        self.assertEqual(self.serial_module.spindle_load_voltage, self.
-            test_spindle_load_voltage), 'Analogue spindle load voltage wrong'
+        self.assertEqual(self.serial_module.analog_spindle.load_voltage,
+            self.test_spindle_load_voltage
+            ), 'Analogue spindle load voltage wrong'
 
     def test_does_serial_give_correct_overload_value(self):
         self.status_and_PCB_constructor(case=2, spindle_load_voltage=self.
@@ -119,8 +120,8 @@ class SpindleFeedbackTest(unittest.TestCase):
         self.status_and_PCB_constructor(case=3, spindle_load_voltage=self.
             test_spindle_load_voltage, digital_spindle_ld_qdA=self.
             test_digital_spindle_ld_qdA)
-        self.assertNotEqual(self.serial_module.spindle_load_voltage, self.
-            test_spindle_load_voltage
+        self.assertNotEqual(self.serial_module.analog_spindle.load_voltage,
+            self.test_spindle_load_voltage
             ), 'Digital feedback reading into analogue load'
 
     def test_does_serial_not_overload_if_digital_readin(self):
@@ -134,27 +135,27 @@ class SpindleFeedbackTest(unittest.TestCase):
     def test_does_serial_read_in_digital_spindle_ld(self):
         self.status_and_PCB_constructor(case=3, digital_spindle_ld_qdA=self
             .test_digital_spindle_ld_qdA)
-        self.assertEqual(self.serial_module.digital_spindle_ld_qdA, self.
+        self.assertEqual(self.serial_module.digital_spindle.ld_qdA, self.
             test_digital_spindle_ld_qdA), 'Digital spindle ld wrong'
 
     def test_does_serial_read_in_digital_spindle_temp(self):
         self.status_and_PCB_constructor(case=3, digital_spindle_temperature
             =self.test_digital_spindle_temperature)
-        self.assertEqual(self.serial_module.digital_spindle_temperature,
+        self.assertEqual(self.serial_module.digital_spindle.temperature,
             self.test_digital_spindle_temperature
             ), 'Digital spindle temp wrong'
 
     def test_does_serial_read_in_digital_spindle_kill_time(self):
         self.status_and_PCB_constructor(case=3, digital_spindle_kill_time=
             self.test_digital_spindle_kill_time)
-        self.assertEqual(self.serial_module.digital_spindle_kill_time, self
+        self.assertEqual(self.serial_module.digital_spindle.kill_time, self
             .test_digital_spindle_kill_time), 'Digital spindle kill time wrong'
 
     def test_does_serial_read_in_digital_spindle_mains_voltage(self):
         self.status_and_PCB_constructor(case=3,
             digital_spindle_mains_voltage=self.
             test_digital_spindle_mains_voltage)
-        self.assertEqual(self.serial_module.digital_spindle_mains_voltage,
+        self.assertEqual(self.serial_module.digital_spindle.mains_voltage,
             self.test_digital_spindle_mains_voltage
             ), 'Digital spindle mains voltage wrong'
 

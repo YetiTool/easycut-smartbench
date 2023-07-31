@@ -530,10 +530,10 @@ class GoScreen(Screen):
     def read_spindle_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        if self.m.s.spindle_production_year != 99:
+        if self.m.s.spindle_statistics.production_year != 99:
             try:
                 self.check_brush_use_and_lifetime(self.m.s.
-                    spindle_brush_run_time_seconds, self.m.
+                    spindle_statistics.brush_run_time_seconds, self.m.
                     spindle_brush_lifetime_seconds)
                 return
             except:
@@ -805,18 +805,18 @@ class GoScreen(Screen):
         self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
-        if abs(self.speedOverride.speed_override_percentage - 100) > abs(
+        if abs(self.speedOverride.feeds_and_speeds.speed_override - 100) > abs(
             self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = (self.speedOverride.
-                speed_override_percentage)
+                feeds_and_speeds.speed_override)
         if (self.speedOverride.spindle_rpm.text > self.
             spindle_speed_max_absolute):
             self.spindle_speed_max_absolute = (self.speedOverride.
                 spindle_rpm.text)
-        if abs(self.feedOverride.feed_override_percentage - 100) > abs(self
-            .feed_rate_max_percentage - 100):
+        if abs(self.feedOverride.feeds_and_speeds.feed_override - 100) > abs(
+            self.feed_rate_max_percentage - 100):
             self.feed_rate_max_percentage = (self.feedOverride.
-                feed_override_percentage)
+                feeds_and_speeds.feed_override)
         if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
             self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 

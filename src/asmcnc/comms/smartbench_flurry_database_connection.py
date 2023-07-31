@@ -354,8 +354,9 @@ class DatabaseEventManager:
                 device_location, 'hostname': self.set.console_hostname,
                 'ec_version': self.m.sett.sw_version, 'public_ip_address':
                 self.set.public_ip_address}, 'speeds': {'spindle_speed':
-                self.m.spindle_speed(), 'spindle_percentage': self.sm.
-                get_screen('go').speedOverride.speed_rate_label.text,
+                self.m.feeds_and_speeds.spindle_speed(),
+                'spindle_percentage': self.sm.get_screen('go').
+                speedOverride.speed_rate_label.text,
                 'max_spindle_speed_absolute': self.sm.get_screen('go').
                 spindle_speed_max_absolute or '',
                 'max_spindle_speed_percentage': self.sm.get_screen('go').
@@ -369,12 +370,12 @@ class DatabaseEventManager:
                 self.m.device_label, 'location': self.m.device_location,
                 'hostname': self.set.console_hostname, 'ec_version': self.m
                 .sett.sw_version, 'public_ip_address': self.set.
-                public_ip_address}, 'feeds': {'feed_rate': self.m.feed_rate
-                (), 'feed_percentage': self.sm.get_screen('go').
-                feedOverride.feed_rate_label.text, 'max_feed_rate_absolute':
-                self.sm.get_screen('go').feed_rate_max_absolute or '',
-                'max_feed_rate_percentage': self.sm.get_screen('go').
-                feed_rate_max_percentage or ''}}
+                public_ip_address}, 'feeds': {'feed_rate': self.m.
+                feeds_and_speeds.feed_rate(), 'feed_percentage': self.sm.
+                get_screen('go').feedOverride.feed_rate_label.text,
+                'max_feed_rate_absolute': self.sm.get_screen('go').
+                feed_rate_max_absolute or '', 'max_feed_rate_percentage': 
+                self.sm.get_screen('go').feed_rate_max_percentage or ''}}
             self.event_queue.put((self.publish_event_with_temp_channel, [
                 data, 'Feed rate', time.time() + self.event_send_timeout]))
 

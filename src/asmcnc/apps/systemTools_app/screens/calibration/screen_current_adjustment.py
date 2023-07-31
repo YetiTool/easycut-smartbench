@@ -276,29 +276,29 @@ class CurrentAdjustment(Screen):
             'current_adjustment')
 
     def measure(self):
-        if self.m.s.sg_x_motor_axis != -999:
-            self.x_vals.append(self.m.s.sg_x_motor_axis)
-            self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
+        if self.m.s.stall_guard.x_motor_axis != -999:
+            self.x_vals.append(self.m.s.stall_guard.x_motor_axis)
+            self.rt_x_sg.text = str(self.m.s.stall_guard.x_motor_axis)
             self.peak_x_sg.text = str(max(self.x_vals))
-        if self.m.s.sg_x1_motor not in [-999, None]:
-            self.x1_vals.append(self.m.s.sg_x1_motor)
-            self.rt_x1_sg.text = str(self.m.s.sg_x1_motor)
+        if self.m.s.stall_guard.x1_motor not in [-999, None]:
+            self.x1_vals.append(self.m.s.stall_guard.x1_motor)
+            self.rt_x1_sg.text = str(self.m.s.stall_guard.x1_motor)
             self.peak_x1_sg.text = str(max(self.x1_vals))
-        if self.m.s.sg_x2_motor not in [-999, None]:
-            self.x2_vals.append(self.m.s.sg_x2_motor)
-            self.rt_x2_sg.text = str(self.m.s.sg_x2_motor)
+        if self.m.s.stall_guard.x2_motor not in [-999, None]:
+            self.x2_vals.append(self.m.s.stall_guard.x2_motor)
+            self.rt_x2_sg.text = str(self.m.s.stall_guard.x2_motor)
             self.peak_x2_sg.text = str(max(self.x2_vals))
-        if self.m.s.sg_y1_motor != -999:
-            self.y1_vals.append(self.m.s.sg_y1_motor)
-            self.rt_y1_sg.text = str(self.m.s.sg_y1_motor)
+        if self.m.s.stall_guard.y1_motor != -999:
+            self.y1_vals.append(self.m.s.stall_guard.y1_motor)
+            self.rt_y1_sg.text = str(self.m.s.stall_guard.y1_motor)
             self.peak_y1_sg.text = str(max(self.y1_vals))
-        if self.m.s.sg_y2_motor != -999:
-            self.y2_vals.append(self.m.s.sg_y2_motor)
-            self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
+        if self.m.s.stall_guard.y2_motor != -999:
+            self.y2_vals.append(self.m.s.stall_guard.y2_motor)
+            self.rt_y2_sg.text = str(self.m.s.stall_guard.y2_motor)
             self.peak_y2_sg.text = str(max(self.y2_vals))
-        if self.m.s.sg_z_motor_axis != -999:
-            self.z_vals.append(self.m.s.sg_z_motor_axis)
-            self.rt_z_sg.text = str(self.m.s.sg_z_motor_axis)
+        if self.m.s.stall_guard.z_motor_axis != -999:
+            self.z_vals.append(self.m.s.stall_guard.z_motor_axis)
+            self.rt_z_sg.text = str(self.m.s.stall_guard.z_motor_axis)
             self.peak_z_sg.text = str(max(self.z_vals))
 
     def clear_sg_vals(self):

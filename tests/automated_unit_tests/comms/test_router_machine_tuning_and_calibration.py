@@ -85,8 +85,8 @@ def test_do_tuning_with_x1_x2_vals(m):
     m.find_best_combo_per_motor_or_axis = Mock()
     m.find_best_combo_per_motor_or_axis.return_value = 2, 10
     m.toff_and_sgt_found = False
-    m.s.sg_x1_motor = 30
-    m.s.sg_x2_motor = 32
+    m.s.stall_guard.x1_motor = 30
+    m.s.stall_guard.x2_motor = 32
     m.do_tuning(True, False, False)
     assert m.toff_and_sgt_found
     assert m.x1_toff_tuned == 2

@@ -89,28 +89,32 @@ class SpindleStatisticsTest(unittest.TestCase):
         """Test spindle serial number read-in"""
         self.status_and_PCB_constructor(case=2, spindle_serial_number=self.
             test_spindle_serial_number)
-        self.assertEqual(self.serial_module.spindle_serial_number, self.
-            test_spindle_serial_number), 'Serial number wrong'
+        self.assertEqual(self.serial_module.
+            spindle_statistics.serial_number, self.test_spindle_serial_number
+            ), 'Serial number wrong'
 
     def test_does_serial_read_in_spindle_production_year(self):
         """Test spindle production year read-in"""
         self.status_and_PCB_constructor(case=2, spindle_production_year=
             self.test_spindle_production_year)
-        self.assertEqual(self.serial_module.spindle_production_year, self.
+        self.assertEqual(self.serial_module.
+            spindle_statistics.production_year, self.
             test_spindle_production_year), 'Production year wrong'
 
     def test_does_serial_read_in_spindle_production_week(self):
         """Test spindle production week read-in"""
         self.status_and_PCB_constructor(case=2, spindle_production_week=
             self.test_spindle_production_week)
-        self.assertEqual(self.serial_module.spindle_production_week, self.
+        self.assertEqual(self.serial_module.
+            spindle_statistics.production_week, self.
             test_spindle_production_week), 'Production week wrong'
 
     def test_does_serial_read_in_spindle_firmware_version(self):
         """Test spindle firmware version read-in"""
         self.status_and_PCB_constructor(case=2, spindle_firmware_version=
             self.test_spindle_firmware_version)
-        self.assertEqual(self.serial_module.spindle_firmware_version, self.
+        self.assertEqual(self.serial_module.
+            spindle_statistics.firmware_version, self.
             test_spindle_firmware_version), 'Firmware version wrong'
 
     def test_does_serial_read_in_spindle_total_run_time_seconds(self):
@@ -118,24 +122,27 @@ class SpindleStatisticsTest(unittest.TestCase):
         self.status_and_PCB_constructor(case=2,
             spindle_total_run_time_seconds=self.
             test_spindle_total_run_time_seconds)
-        self.assertEqual(self.serial_module.spindle_total_run_time_seconds,
-            self.test_spindle_total_run_time_seconds), 'Total run time wrong'
+        self.assertEqual(self.serial_module.
+            spindle_statistics.total_run_time_seconds, self.
+            test_spindle_total_run_time_seconds), 'Total run time wrong'
 
     def test_does_serial_read_in_spindle_brush_run_time_seconds(self):
         """Test spindle brush run time read-in"""
         self.status_and_PCB_constructor(case=2,
             spindle_brush_run_time_seconds=self.
             test_spindle_brush_run_time_seconds)
-        self.assertEqual(self.serial_module.spindle_brush_run_time_seconds,
-            self.test_spindle_brush_run_time_seconds), 'Brush run time wrong'
+        self.assertEqual(self.serial_module.
+            spindle_statistics.brush_run_time_seconds, self.
+            test_spindle_brush_run_time_seconds), 'Brush run time wrong'
 
     def test_does_serial_read_in_spindle_mains_frequency_hertz(self):
         """Test spindle mains frequency read-in"""
         self.status_and_PCB_constructor(case=2,
             spindle_mains_frequency_hertz=self.
             test_spindle_mains_frequency_hertz)
-        self.assertEqual(self.serial_module.spindle_mains_frequency_hertz,
-            self.test_spindle_mains_frequency_hertz), 'Mains frequency wrong'
+        self.assertEqual(self.serial_module.
+            spindle_statistics.mains_frequency_hertz, self.
+            test_spindle_mains_frequency_hertz), 'Mains frequency wrong'
 
 
 if __name__ == '__main__':

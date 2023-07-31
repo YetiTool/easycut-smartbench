@@ -54,12 +54,12 @@ class MotorCommandsTest(unittest.TestCase):
         return YETIPCB
 
     def status_and_PCB_constructor(self, ver='2.3.1'):
-        self.fw_version = ver
+        self.versions.firmware = ver
         self.m = router_machine.RouterMachine(Cmport, self.sm, self.sett,
             self.l, self.jd)
         self.m.s.s = DummySerial(self.give_me_a_PCB())
         self.m.s.s.fd = 1
-        self.m.s.fw_version = ver
+        self.m.s.versions.firmware = ver
         self.m.s.start_services(1)
         sleep(0.02)
 

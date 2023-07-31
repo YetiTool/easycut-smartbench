@@ -333,14 +333,16 @@ class PopupDisplaySpindleData(Widget):
             ) + '\n\n' + self.l.get_str('Total runtime'
             ) + '\n\n' + self.l.get_str('Brush runtime since last reset'
             ) + '\n\n' + self.l.get_str('Mains frequency')
-        value_string = str(self.s.spindle_serial_number) + '\n\n' + str(self
-            .s.spindle_production_year) + '\n\n' + str(self.s.
-            spindle_production_week) + '\n\n' + str(self.s.
-            spindle_firmware_version) + '\n\n' + str(self.s.
-            spindle_total_run_time_seconds / 3600) + ' ' + self.l.get_str(
-            'hours') + '\n\n' + str(self.s.spindle_brush_run_time_seconds /
-            3600) + ' ' + self.l.get_str('hours') + '\n\n' + str(self.s.
-            spindle_mains_frequency_hertz)
+        value_string = str(self.s.spindle_statistics.serial_number
+            ) + '\n\n' + str(self.s.spindle_statistics.production_year
+            ) + '\n\n' + str(self.s.spindle_statistics.production_week
+            ) + '\n\n' + str(self.s.spindle_statistics.firmware_version
+            ) + '\n\n' + str(self.s.
+            spindle_statistics.total_run_time_seconds / 3600
+            ) + ' ' + self.l.get_str('hours') + '\n\n' + str(self.s.
+            spindle_statistics.brush_run_time_seconds / 3600
+            ) + ' ' + self.l.get_str('hours') + '\n\n' + str(self.s.
+            spindle_statistics.mains_frequency_hertz)
         title_string = self.l.get_str('SC2 Spindle data')
         ok_string = self.l.get_bold('Ok')
         img = Image(size_hint_y=0.5, source=

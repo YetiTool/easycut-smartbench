@@ -121,7 +121,7 @@ class ZHeadWarrantyChoice(Screen):
     def scrape_fw_version(self, dt):
         try:
             self.fw_version_label.text = 'Detected FW version: ' + str(str(
-                self.m.s.fw_version).split('; HW')[0])
+                self.m.s.versions.firmware).split('; HW')[0])
             if self.poll_for_fw != None:
                 Clock.unschedule(self.poll_for_fw)
         except:

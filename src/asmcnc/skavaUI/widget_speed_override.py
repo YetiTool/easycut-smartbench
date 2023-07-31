@@ -116,15 +116,16 @@ class SpeedOverride(Widget):
         super(SpeedOverride, self).__init__(**kwargs)
 
     def update_spindle_speed_label(self):
-        self.spindle_rpm.text = str(self.m.spindle_speed())
+        self.spindle_rpm.text = str(self.m.feeds_and_speeds.spindle_speed())
 
     def update_speed_percentage_override_label(self):
-        self.speed_override_percentage = self.m.s.speed_override_percentage
-        self.speed_rate_label.text = str(self.m.s.speed_override_percentage
-            ) + '%'
+        self.feeds_and_speeds.speed_override = (self.m.s.
+            feeds_and_speeds.speed_override)
+        self.speed_rate_label.text = str(self.m.s.
+            feeds_and_speeds.speed_override) + '%'
 
     def speed_up(self):
-        if self.m.s.speed_override_percentage >= 200:
+        if self.m.s.feeds_and_speeds.speed_override >= 200:
             return
         self.disable_buttons()
         for i in range(5):
@@ -139,7 +140,7 @@ class SpeedOverride(Widget):
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
 
     def speed_down(self):
-        if self.m.s.speed_override_percentage <= 10:
+        if self.m.s.feeds_and_speeds.speed_override <= 10:
             return
         self.disable_buttons()
         for i in range(5):

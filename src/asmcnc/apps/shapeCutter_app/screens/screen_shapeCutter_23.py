@@ -516,8 +516,8 @@ class ShapeCutter23ScreenClass(Screen):
             'feed rates']['xy feed rate']))
         self.z_feed.text = '{:.2f}'.format(float(self.j.parameter_dict[
             'feed rates']['z feed rate']))
-        self.spindle_speed.text = '{:.0f}'.format(float(self.j.
-            parameter_dict['feed rates']['spindle speed']))
+        self.feeds_and_speeds.spindle_speed.text = '{:.0f}'.format(float(
+            self.j.parameter_dict['feed rates']['spindle speed']))
         if self.j.parameter_dict['feed rates']['units'] == 'inches':
             self.unit_toggle.active = True
             self.xy_feed_units.text = 'inches/min'
@@ -587,7 +587,7 @@ class ShapeCutter23ScreenClass(Screen):
                 self.j.parameter_dict['feed rates']['units'] = 'mm'
             input_dim_list = [('xy feed rate', float(self.xy_feed.text)), (
                 'z feed rate', float(self.z_feed.text)), ('spindle speed',
-                float(self.spindle_speed.text))]
+                float(self.feeds_and_speeds.spindle_speed.text))]
             for dim, input in input_dim_list:
                 setting = self.j.validate_feed_rates(dim, input)
                 if not setting == True:

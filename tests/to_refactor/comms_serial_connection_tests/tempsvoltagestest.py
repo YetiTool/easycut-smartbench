@@ -101,7 +101,7 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.pcb_temp, None
+        self.assertEqual(self.serial_module.temperatures.pcb, None
             ), 'pcb temp error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -111,7 +111,7 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.motor_driver_temp, None
+        self.assertEqual(self.serial_module.temperatures.motor_driver, None
             ), 'motor_driver temp error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -121,7 +121,8 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.transistor_heatsink_temp, None
+        self.assertEqual(self.serial_module.
+            temperatures.transistor_heatsink, None
             ), 'transistor heatsink temp error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -131,7 +132,7 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.microcontroller_mV, None
+        self.assertEqual(self.serial_module.voltages.microcontroller_mV, None
             ), 'microcontroller voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -141,7 +142,7 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.LED_mV, None
+        self.assertEqual(self.serial_module.voltages.LED_mV, None
             ), 'LED voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -151,7 +152,7 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.PSU_mV, None
+        self.assertEqual(self.serial_module.voltages.PSU_mV, None
             ), 'PSU voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -161,7 +162,8 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, None
+        self.assertEqual(self.serial_module.
+            voltages.spindle_speed_monitor_mV, None
             ), 'spindle speed monitor voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -172,7 +174,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140, pcb_temp=self.
             t_pcb_temp)
-        self.assertEqual(self.serial_module.pcb_temp, self.t_pcb_temp
+        self.assertEqual(self.serial_module.temperatures.pcb, self.t_pcb_temp
             ), 'pcb temp error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -183,8 +185,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140,
             motor_driver_temp=self.t_motor_driver_temp)
-        self.assertEqual(self.serial_module.motor_driver_temp, self.
-            t_motor_driver_temp), 'motor_driver temp error, case 2'
+        self.assertEqual(self.serial_module.temperatures.motor_driver, self
+            .t_motor_driver_temp), 'motor_driver temp error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_transistor_heatsink_temperature_case_136_140(self):
@@ -193,7 +195,8 @@ class TempsVoltagesTest(unittest.TestCase):
         This is relevant to FW between v136 and v140
         """
         self.status_and_PCB_constructor(self.case_136_140)
-        self.assertEqual(self.serial_module.transistor_heatsink_temp, None
+        self.assertEqual(self.serial_module.
+            temperatures.transistor_heatsink, None
             ), 'transistor heatsink temp error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -204,8 +207,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140,
             microcontroller_mV=self.t_microcontroller_mV)
-        self.assertEqual(self.serial_module.microcontroller_mV, self.
-            t_microcontroller_mV), 'microcontroller voltage error, case 2'
+        self.assertEqual(self.serial_module.voltages.microcontroller_mV,
+            self.t_microcontroller_mV), 'microcontroller voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_LED_voltage_case_136_140(self):
@@ -215,7 +218,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140, LED_mV=self.t_LED_mV
             )
-        self.assertEqual(self.serial_module.LED_mV, self.t_LED_mV
+        self.assertEqual(self.serial_module.voltages.LED_mV, self.t_LED_mV
             ), 'LED voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -226,7 +229,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140, PSU_mV=self.t_PSU_mV
             )
-        self.assertEqual(self.serial_module.PSU_mV, self.t_PSU_mV
+        self.assertEqual(self.serial_module.voltages.PSU_mV, self.t_PSU_mV
             ), 'PSU voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -237,8 +240,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_136_140,
             spindle_speed_monitor_mV=self.t_spindle_speed_monitor_mV)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, self.
-            t_spindle_speed_monitor_mV
+        self.assertEqual(self.serial_module.
+            voltages.spindle_speed_monitor_mV, self.t_spindle_speed_monitor_mV
             ), 'spindle speed monitor voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -249,7 +252,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW, pcb_temp=self.
             t_pcb_temp)
-        self.assertEqual(self.serial_module.pcb_temp, self.t_pcb_temp
+        self.assertEqual(self.serial_module.temperatures.pcb, self.t_pcb_temp
             ), 'pcb temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -260,8 +263,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW,
             motor_driver_temp=self.t_motor_driver_temp)
-        self.assertEqual(self.serial_module.motor_driver_temp, self.
-            t_motor_driver_temp), 'motor_driver temp error, case 3'
+        self.assertEqual(self.serial_module.temperatures.motor_driver, self
+            .t_motor_driver_temp), 'motor_driver temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_transistor_heatsink_temperature_case_228_NOW(self):
@@ -271,8 +274,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW,
             transistor_heatsink_temp=self.t_transistor_heatsink_temp)
-        self.assertEqual(self.serial_module.transistor_heatsink_temp, self.
-            t_transistor_heatsink_temp
+        self.assertEqual(self.serial_module.
+            temperatures.transistor_heatsink, self.t_transistor_heatsink_temp
             ), 'transistor heatsink temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -283,8 +286,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW,
             microcontroller_mV=self.t_microcontroller_mV)
-        self.assertEqual(self.serial_module.microcontroller_mV, self.
-            t_microcontroller_mV), 'microcontroller voltage error, case 3'
+        self.assertEqual(self.serial_module.voltages.microcontroller_mV,
+            self.t_microcontroller_mV), 'microcontroller voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_LED_voltage_case_228_NOW(self):
@@ -294,7 +297,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW, LED_mV=self.t_LED_mV
             )
-        self.assertEqual(self.serial_module.LED_mV, self.t_LED_mV
+        self.assertEqual(self.serial_module.voltages.LED_mV, self.t_LED_mV
             ), 'LED voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -305,7 +308,7 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW, PSU_mV=self.t_PSU_mV
             )
-        self.assertEqual(self.serial_module.PSU_mV, self.t_PSU_mV
+        self.assertEqual(self.serial_module.voltages.PSU_mV, self.t_PSU_mV
             ), 'PSU voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -316,8 +319,8 @@ class TempsVoltagesTest(unittest.TestCase):
         """
         self.status_and_PCB_constructor(self.case_228_NOW,
             spindle_speed_monitor_mV=self.t_spindle_speed_monitor_mV)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, self.
-            t_spindle_speed_monitor_mV
+        self.assertEqual(self.serial_module.
+            voltages.spindle_speed_monitor_mV, self.t_spindle_speed_monitor_mV
             ), 'spindle speed monitor voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 

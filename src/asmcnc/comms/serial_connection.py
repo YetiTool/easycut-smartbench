@@ -298,14 +298,15 @@ class SerialConnection(object):
                     if self.is_use_yp(
                         ) and self.m.has_spindle_health_check_passed(
                         ) and self.m.is_using_sc2():
-                        if (self.digital_spindle_ld_qdA >= 0 and self.
+                        if (self.digital_spindle.ld_qdA >= 0 and self.
                             grbl_ln is not None and self.
-                            digital_spindle_mains_voltage >= 0 and not self
+                            digital_spindle.mains_voltage >= 0 and not self
                             .in_inrush):
                             self.yp.add_status_to_yetipilot(self.
-                                digital_spindle_ld_qdA, self.
-                                digital_spindle_mains_voltage, self.
-                                feed_override_percentage, int(self.feed_rate))
+                                digital_spindle.ld_qdA, self.
+                                digital_spindle.mains_voltage, self.
+                                feeds_and_speeds.feed_override, int(self.
+                                feeds_and_speeds.feed_rate))
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     elif self.g_count == self.l_count:
@@ -682,20 +683,20 @@ class SerialConnection(object):
                 log('ERROR status parse: Status invalid: ' + message)
                 return
             if not '|Pn:' in message:
-                self.limit_x = False
-                self.limit_X = False
-                self.limit_y = False
-                self.limit_Y = False
-                self.limit_z = False
-                self.probe = False
-                self.dust_shoe_cover = False
-                self.spare_door = False
-                self.limit_Y_axis = False
-                self.stall_X = False
-                self.stall_Z = False
-                self.stall_Y = False
+                self.pin_info.limit_x = False
+                self.pin_info.limit_X = False
+                self.pin_info.limit_y = False
+                self.pin_info.limit_Y = False
+                self.pin_info.limit_z = False
+                self.pin_info.probe = False
+                self.pin_info.dust_shoe_cover = False
+                self.pin_info.spare_door = False
+                self.pin_info.limit_Y_axis = False
+                self.pin_info.stall_X = False
+                self.stall_guard.stall_Z = False
+                self.pin_info.stall_Y = False
             if not re.search(self.digital_load_pattern, message
-                ) or self.digital_spindle_ld_qdA == 0:
+                ) or self.digital_spindle.ld_qdA == 0:
                 self.inrush_counter = 0
                 self.in_inrush = True
             elif self.inrush_counter < self.inrush_max:
@@ -713,12 +714,13 @@ class SerialConnection(object):
                     except:
                         log('ERROR status parse: Position invalid: ' + message)
                         return
-                    self.x_change = self.m_x != pos[0]
-                    self.y_change = self.m_y != pos[1]
-                    self.z_change = self.m_z != pos[2]
-                    self.m_x = pos[0]
-                    self.m_y = pos[1]
-                    self.m_z = pos[2]
+                    self.x_change = self.machine_position.x != pos[0]
+                    self.y_change = self.machine_position.y != pos[1]
+                    self.machine_position.z_change = (self.
+                        machine_position.z != pos[2])
+                    self.machine_position.x = pos[0]
+                    self.machine_position.y = pos[1]
+                    self.machine_position.z = pos[2]
                 elif part.startswith('WPos:'):
                     pos = part[5:].split(',')
                     try:
@@ -740,9 +742,9 @@ class SerialConnection(object):
                     except:
                         log('ERROR status parse: Position invalid: ' + message)
                         return
-                    self.wco_x = pos[0]
-                    self.wco_y = pos[1]
-                    self.wco_z = pos[2]
+                    self.wco.x = pos[0]
+                    self.work_coordinate_offset.y = pos[1]
+                    self.wco.z = pos[2]
                 elif part.startswith('Bf:'):
                     buffer_info = part[3:].split(',')
                     try:
@@ -752,11 +754,15 @@ class SerialConnection(object):
                         log('ERROR status parse: Buffer status invalid: ' +
                             message)
                         return
-                    if self.serial_chars_available != buffer_info[1]:
-                        self.serial_chars_available = buffer_info[1]
+                    if self.buffer_info.serial_chars_available != buffer_info[1
+                        ]:
+                        self.buffer_info.serial_chars_available = buffer_info[1
+                            ]
                         self.print_buffer_status = True
-                    if self.serial_blocks_available != buffer_info[0]:
-                        self.serial_blocks_available = buffer_info[0]
+                    if self.buffer_info.serial_blocks_available != buffer_info[
+                        0]:
+                        self.buffer_info.serial_blocks_available = buffer_info[
+                            0]
                         self.print_buffer_status = True
                     if self.print_buffer_status == True:
                         self.print_buffer_status = False
@@ -776,37 +782,38 @@ class SerialConnection(object):
                     self.grbl_ln = int(value)
                 elif part.startswith('Pn:'):
                     pins_info = part.split(':')[1]
-                    self.limit_x = 'x' in pins_info
-                    self.limit_X = 'X' in pins_info
-                    self.limit_z = 'Z' in pins_info
+                    self.pin_info.limit_x = 'x' in pins_info
+                    self.pin_info.limit_X = 'X' in pins_info
+                    self.pin_info.limit_z = 'Z' in pins_info
                     if 'P' in pins_info:
-                        self.probe = True
+                        self.pin_info.probe = True
                     else:
-                        self.probe = False
+                        self.pin_info.probe = False
                     if 'g' in pins_info:
-                        self.spare_door = True
+                        self.pin_info.spare_door = True
                     else:
-                        self.spare_door = False
+                        self.pin_info.spare_door = False
                     if 'G' in pins_info:
-                        self.dust_shoe_cover = True
+                        self.pin_info.dust_shoe_cover = True
                     else:
-                        self.dust_shoe_cover = False
+                        self.pin_info.dust_shoe_cover = False
                     if 'Y' or 'y' in pins_info:
-                        if self.fw_version and int(self.fw_version.split(
-                            '.')[0]) < 2:
-                            self.limit_y = 'y' in pins_info
-                            self.limit_Y = 'Y' in pins_info
+                        if self.versions.firmware and int(self.
+                            versions.firmware.split('.')[0]) < 2:
+                            self.pin_info.limit_y = 'y' in pins_info
+                            self.pin_info.limit_Y = 'Y' in pins_info
                         else:
-                            self.limit_Y_axis = 'y' in pins_info
-                            self.stall_Y = 'Y' in pins_info
+                            self.pin_info.limit_Y_axis = 'y' in pins_info
+                            self.pin_info.stall_Y = 'Y' in pins_info
                     else:
-                        self.limit_y = False
-                        self.limit_Y = False
-                        self.limit_Y_axis = False
-                        self.stall_Y = False
-                    self.stall_X = 'S' in pins_info
-                    self.stall_Z = 'z' in pins_info
-                    if self.stall_X or self.stall_Y or self.stall_Z:
+                        self.pin_info.limit_y = False
+                        self.pin_info.limit_Y = False
+                        self.pin_info.limit_Y_axis = False
+                        self.pin_info.stall_Y = False
+                    self.pin_info.stall_X = 'S' in pins_info
+                    self.stall_guard.stall_Z = 'z' in pins_info
+                    if (self.pin_info.stall_X or self.pin_info.stall_Y or
+                        self.stall_guard.stall_Z):
                         self.alarm.sg_alarm = True
                     if ('r' in pins_info and not self.power_loss_detected and
                         sys.platform not in ['win32', 'darwin']):
@@ -844,28 +851,28 @@ class SerialConnection(object):
                                 'ERROR status parse: Digital spindle feedback invalid: '
                                  + message)
                             return
-                        self.digital_spindle_ld_qdA = int(
+                        self.digital_spindle.ld_qdA = int(
                             digital_spindle_feedback[0])
-                        self.digital_spindle_temperature = int(
+                        self.digital_spindle.temperature = int(
                             digital_spindle_feedback[1])
-                        self.digital_spindle_kill_time = int(
+                        self.digital_spindle.kill_time = int(
                             digital_spindle_feedback[2])
-                        self.digital_spindle_mains_voltage = int(
+                        self.digital_spindle.mains_voltage = int(
                             digital_spindle_feedback[3])
                         if self.spindle_health_check and not self.in_inrush:
                             self.spindle_health_check_data.append(self.
-                                digital_spindle_ld_qdA)
-                        if self.digital_spindle_kill_time >= 160:
+                                digital_spindle.ld_qdA)
+                        if self.digital_spindle.kill_time >= 160:
                             overload_mV_equivalent_state = 0
-                        elif self.digital_spindle_kill_time >= 80:
+                        elif self.digital_spindle.kill_time >= 80:
                             overload_mV_equivalent_state = 20
-                        elif self.digital_spindle_kill_time >= 40:
+                        elif self.digital_spindle.kill_time >= 40:
                             overload_mV_equivalent_state = 40
-                        elif self.digital_spindle_kill_time >= 20:
+                        elif self.digital_spindle.kill_time >= 20:
                             overload_mV_equivalent_state = 60
-                        elif self.digital_spindle_kill_time >= 10:
+                        elif self.digital_spindle.kill_time >= 10:
                             overload_mV_equivalent_state = 80
-                        elif self.digital_spindle_kill_time < 10:
+                        elif self.digital_spindle.kill_time < 10:
                             overload_mV_equivalent_state = 100
                         else:
                             log('Killtime value not recognised')
@@ -877,18 +884,19 @@ class SerialConnection(object):
                                 'ERROR status parse: Analogue spindle feedback invalid: '
                                  + message)
                             return
-                        self.spindle_load_voltage = int(spindle_feedback)
-                        if self.spindle_load_voltage < 400:
+                        self.analog_spindle.load_voltage = int(spindle_feedback
+                            )
+                        if self.analog_spindle.load_voltage < 400:
                             overload_mV_equivalent_state = 0
-                        elif self.spindle_load_voltage < 1000:
+                        elif self.analog_spindle.load_voltage < 1000:
                             overload_mV_equivalent_state = 20
-                        elif self.spindle_load_voltage < 1500:
+                        elif self.analog_spindle.load_voltage < 1500:
                             overload_mV_equivalent_state = 40
-                        elif self.spindle_load_voltage < 2000:
+                        elif self.analog_spindle.load_voltage < 2000:
                             overload_mV_equivalent_state = 60
-                        elif self.spindle_load_voltage < 2500:
+                        elif self.analog_spindle.load_voltage < 2500:
                             overload_mV_equivalent_state = 80
-                        elif self.spindle_load_voltage >= 2500:
+                        elif self.analog_spindle.load_voltage >= 2500:
                             overload_mV_equivalent_state = 100
                         else:
                             log('Overload value not recognised')
@@ -896,7 +904,8 @@ class SerialConnection(object):
                         self.overload_state = overload_mV_equivalent_state
                         log('Overload state change: ' + str(self.
                             overload_state))
-                        log('Load voltage: ' + str(self.spindle_load_voltage))
+                        log('Load voltage: ' + str(self.
+                            analog_spindle.load_voltage))
                         try:
                             self.sm.get_screen('go').update_overload_label(self
                                 .overload_state)
@@ -914,8 +923,8 @@ class SerialConnection(object):
                             check_for_sustained_max_overload, 0.5)
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
-                    self.feed_rate = feed_speed[0]
-                    self.spindle_speed = feed_speed[1]
+                    self.feeds_and_speeds.feed_rate = feed_speed[0]
+                    self.feeds_and_speeds.spindle_speed = feed_speed[1]
                 elif part.startswith('Ov:'):
                     values = part[3:].split(',')
                     try:
@@ -926,8 +935,8 @@ class SerialConnection(object):
                         log('ERROR status parse: Ov values invalid: ' + message
                             )
                         return
-                    self.feed_override_percentage = int(values[0])
-                    self.speed_override_percentage = int(values[2])
+                    self.feeds_and_speeds.feed_override = int(values[0])
+                    self.feeds_and_speeds.speed_override = int(values[2])
                 elif part.startswith('TC:'):
                     temps = part[3:].split(',')
                     try:
@@ -937,11 +946,11 @@ class SerialConnection(object):
                         log('ERROR status parse: Temperature invalid: ' +
                             message)
                         return
-                    self.motor_driver_temp = float(temps[0])
-                    self.pcb_temp = float(temps[1])
+                    self.temperatures.motor_driver = float(temps[0])
+                    self.temperatures.pcb = float(temps[1])
                     try:
                         float(temps[2])
-                        self.transistor_heatsink_temp = float(temps[2])
+                        self.temperatures.transistor_heatsink = float(temps[2])
                     except IndexError:
                         pass
                     except:
@@ -958,10 +967,10 @@ class SerialConnection(object):
                     except:
                         log('ERROR status parse: Voltage invalid: ' + message)
                         return
-                    self.microcontroller_mV = float(voltages[0])
-                    self.LED_mV = float(voltages[1])
-                    self.PSU_mV = float(voltages[2])
-                    self.spindle_speed_monitor_mV = float(voltages[3])
+                    self.voltages.microcontroller_mV = float(voltages[0])
+                    self.voltages.LED_mV = float(voltages[1])
+                    self.voltages.PSU_mV = float(voltages[2])
+                    self.voltages.spindle_speed_monitor_mV = float(voltages[3])
                 elif part.startswith('SG:'):
                     sg_values = part[3:].split(',')
                     try:
@@ -974,11 +983,11 @@ class SerialConnection(object):
                         log('ERROR status parse: SG values invalid: ' + message
                             )
                         return
-                    self.sg_z_motor_axis = int(sg_values[0])
-                    self.sg_x_motor_axis = int(sg_values[1])
-                    self.sg_y_axis = int(sg_values[2])
-                    self.sg_y1_motor = int(sg_values[3])
-                    self.sg_y2_motor = int(sg_values[4])
+                    self.stall_guard.z_motor_axis = int(sg_values[0])
+                    self.stall_guard.x_motor_axis = int(sg_values[1])
+                    self.stall_guard.y_axis = int(sg_values[2])
+                    self.stall_guard.y1_motor = int(sg_values[3])
+                    self.stall_guard.y2_motor = int(sg_values[4])
                     try:
                         int(sg_values[5])
                         int(sg_values[6])
@@ -989,13 +998,15 @@ class SerialConnection(object):
                             )
                         return
                     else:
-                        self.sg_x1_motor = int(sg_values[5])
-                        self.sg_x2_motor = int(sg_values[6])
+                        self.stall_guard.x1_motor = int(sg_values[5])
+                        self.stall_guard.x2_motor = int(sg_values[6])
                     if self.record_sg_values_flag:
-                        self.m.temp_sg_array.append([self.sg_z_motor_axis,
-                            self.sg_x_motor_axis, self.sg_y_axis, self.
-                            sg_y1_motor, self.sg_y2_motor, self.sg_x1_motor,
-                            self.sg_x2_motor])
+                        self.m.temp_sg_array.append([self.
+                            stall_guard.z_motor_axis, self.
+                            stall_guard.x_motor_axis, self.
+                            stall_guard.y_axis, self.stall_guard.y1_motor,
+                            self.stall_guard.y2_motor, self.
+                            stall_guard.x1_motor, self.stall_guard.x2_motor])
                     if self.FINAL_TEST:
                         if self.sm.has_screen('calibration_testing'):
                             self.sm.get_screen('calibration_testing').measure()
@@ -1020,15 +1031,19 @@ class SerialConnection(object):
                             message)
                         return
                     self.last_stall_tmc_index = int(sg_alarm_parts[0])
-                    self.last_stall_motor_step_size = int(sg_alarm_parts[1])
-                    self.last_stall_load = int(sg_alarm_parts[2])
+                    self.stall_guard.last_stall.motor_step_size = int(
+                        sg_alarm_parts[1])
+                    self.stall_guard.last_stall.load = int(sg_alarm_parts[2])
                     self.last_stall_threshold = int(sg_alarm_parts[3])
                     self.last_stall_travel_distance = int(sg_alarm_parts[4])
                     self.last_stall_temperature = int(sg_alarm_parts[5])
-                    self.last_stall_x_coord = float(sg_alarm_parts[6])
-                    self.last_stall_y_coord = float(sg_alarm_parts[7])
-                    self.last_stall_z_coord = float(sg_alarm_parts[8])
-                    self.last_stall_status = message
+                    self.stall_guard.last_stall.x_coord = float(sg_alarm_parts
+                        [6])
+                    self.stall_guard.last_stall.y_coord = float(sg_alarm_parts
+                        [7])
+                    self.stall_guard.last_stall.z_coord = float(sg_alarm_parts
+                        [8])
+                    self.stall_guard.last_stall.status = message
                 elif part.startswith('Sp:'):
                     spindle_statistics = part[3:].split(',')
                     try:
@@ -1043,16 +1058,20 @@ class SerialConnection(object):
                         log('ERROR status parse: Sp values invalid: ' + message
                             )
                         return
-                    self.spindle_serial_number = int(spindle_statistics[0])
-                    self.spindle_production_year = int(spindle_statistics[1])
-                    self.spindle_production_week = int(spindle_statistics[2])
-                    self.spindle_firmware_version = int(spindle_statistics[3])
-                    self.spindle_total_run_time_seconds = int(
+                    self.spindle_statistics.serial_number = int(
+                        spindle_statistics[0])
+                    self.spindle_statistics.production_year = int(
+                        spindle_statistics[1])
+                    self.spindle_statistics.production_week = int(
+                        spindle_statistics[2])
+                    self.spindle_statistics.firmware_version = int(
+                        spindle_statistics[3])
+                    self.spindle_statistics.total_run_time_seconds = int(
                         spindle_statistics[4])
-                    self.spindle_brush_run_time_seconds = int(
+                    self.spindle_statistics.brush_run_time_seconds = int(
                         spindle_statistics[5])
-                    self.spindle_mains_frequency_hertz = int(spindle_statistics
-                        [6])
+                    self.spindle_statistics.mains_frequency_hertz = int(
+                        spindle_statistics[6])
                 elif part.startswith('TREG:'):
                     tmc_registers = part[5:].split(',')
                     try:
@@ -1143,18 +1162,24 @@ class SerialConnection(object):
                     except:
                         log('Could not print calibration output')
             if self.VERBOSE_STATUS:
-                print((self.m_state, self.m_x, self.m_y, self.m_z, self.
-                    serial_blocks_available, self.serial_chars_available))
+                print((self.m_state, self.machine_position.x, self.
+                    machine_position.y, self.machine_position.z, self.
+                    buffer_info.serial_blocks_available, self.
+                    buffer_info.serial_chars_available))
             if self.measure_running_data:
                 try:
                     self.running_data.append([int(self.measurement_stage),
-                        float(self.m_x), float(self.m_y), float(self.m_z),
-                        int(self.sg_x_motor_axis), int(self.sg_y_axis), int
-                        (self.sg_y1_motor), int(self.sg_y2_motor), int(self
-                        .sg_z_motor_axis), int(self.motor_driver_temp), int
-                        (self.pcb_temp), int(self.transistor_heatsink_temp),
-                        datetime.now(), int(self.feed_rate), self.
-                        sg_x1_motor, self.sg_x2_motor])
+                        float(self.machine_position.x), float(self.
+                        machine_position.y), float(self.machine_position.z),
+                        int(self.stall_guard.x_motor_axis), int(self.
+                        stall_guard.y_axis), int(self.stall_guard.y1_motor),
+                        int(self.stall_guard.y2_motor), int(self.
+                        stall_guard.z_motor_axis), int(self.
+                        temperatures.motor_driver), int(self.
+                        temperatures.pcb), int(self.
+                        temperatures.transistor_heatsink), datetime.now(),
+                        int(self.feeds_and_speeds.feed_rate), self.
+                        stall_guard.x1_motor, self.stall_guard.x2_motor])
                 except:
                     pass
         elif message.startswith('ALARM:'):
@@ -1167,94 +1192,94 @@ class SerialConnection(object):
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
             if setting == '$0':
-                self.setting_0 = value
+                self.settings.s0 = value
             elif setting == '$1':
-                self.setting_1 = value
+                self.settings.s1 = value
             elif setting == '$2':
-                self.setting_2 = value
+                self.settings.s2 = value
             elif setting == '$3':
-                self.setting_3 = value
+                self.settings.s3 = value
             elif setting == '$4':
-                self.setting_4 = value
+                self.settings.s4 = value
             elif setting == '$5':
-                self.setting_5 = value
+                self.settings.s5 = value
             elif setting == '$6':
-                self.setting_6 = value
+                self.settings.s6 = value
             elif setting == '$10':
-                self.setting_10 = value
+                self.settings.s10 = value
             elif setting == '$11':
-                self.setting_11 = value
+                self.settings.s11 = value
             elif setting == '$12':
-                self.setting_12 = value
+                self.settings.s12 = value
             elif setting == '$13':
-                self.setting_13 = value
+                self.settings.s13 = value
             elif setting == '$20':
-                self.setting_20 = value
+                self.settings.s20 = value
             elif setting == '$21':
-                self.setting_21 = value
+                self.settings.s21 = value
             elif setting == '$22':
-                self.setting_22 = value
+                self.settings.s22 = value
             elif setting == '$23':
-                self.setting_23 = value
+                self.settings.s23 = value
             elif setting == '$24':
-                self.setting_24 = value
+                self.settings.s24 = value
             elif setting == '$25':
-                self.setting_25 = value
+                self.settings.s25 = value
             elif setting == '$26':
-                self.setting_26 = value
+                self.settings.s26 = value
             elif setting == '$27':
-                self.setting_27 = value
+                self.settings.s27 = value
             elif setting == '$30':
-                self.setting_30 = value
+                self.settings.s30 = value
             elif setting == '$31':
-                self.setting_31 = value
+                self.settings.s31 = value
             elif setting == '$32':
-                self.setting_32 = value
+                self.settings.s32 = value
             elif setting == '$50':
-                self.setting_50 = value
+                self.settings.s50 = value
             elif setting == '$51':
-                self.setting_51 = value
+                self.settings.s51 = value
             elif setting == '$53':
-                self.setting_53 = value
+                self.settings.s53 = value
             elif setting == '$54':
-                self.setting_54 = value
+                self.settings.s54 = value
             elif setting == '$100':
-                self.setting_100 = value
+                self.settings.s100 = value
             elif setting == '$101':
-                self.setting_101 = value
+                self.settings.s101 = value
             elif setting == '$102':
-                self.setting_102 = value
+                self.settings.s102 = value
             elif setting == '$110':
-                self.setting_110 = value
+                self.settings.s110 = value
                 self.sm.get_screen('home'
                     ).common_move_widget.fast_x_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$111':
-                self.setting_111 = value
+                self.settings.s111 = value
                 self.sm.get_screen('home'
                     ).common_move_widget.fast_y_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$112':
-                self.setting_112 = value
+                self.settings.s112 = value
                 self.sm.get_screen('home'
                     ).common_move_widget.fast_z_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$120':
-                self.setting_120 = value
+                self.settings.s120 = value
             elif setting == '$121':
-                self.setting_121 = value
+                self.settings.s121 = value
             elif setting == '$122':
-                self.setting_122 = value
+                self.settings.s122 = value
             elif setting == '$130':
-                self.setting_130 = value
+                self.settings.s130 = value
                 self.m.grbl_x_max_travel = value
                 self.m.set_jog_limits()
             elif setting == '$131':
-                self.setting_131 = value
+                self.settings.s131 = value
                 self.m.grbl_y_max_travel = value
                 self.m.set_jog_limits()
             elif setting == '$132':
-                self.setting_132 = value
+                self.settings.s132 = value
                 self.m.grbl_z_max_travel = value
                 self.m.set_jog_limits()
         elif message.startswith('['):
@@ -1262,13 +1287,13 @@ class SerialConnection(object):
                 )
             if stripped_message.startswith('G28:'):
                 pos = stripped_message[4:].split(',')
-                self.g28_x = pos[0]
-                self.g28_y = pos[1]
-                self.g28_z = pos[2]
+                self.g28.x = pos[0]
+                self.g28.y = pos[1]
+                self.g28.z = pos[2]
             elif stripped_message.startswith('G54:'):
                 pos = stripped_message[4:].split(',')
-                self.g54_x = pos[0]
-                self.g54_y = pos[1]
+                self.g54.x = pos[0]
+                self.g54.y = pos[1]
                 self.g54_z = pos[2]
             elif self.expecting_probe_result and stripped_message.startswith(
                 'PRB'):
@@ -1284,13 +1309,13 @@ class SerialConnection(object):
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
                 try:
-                    self.fw_version = fw_hw_versions[1].split(':')[1]
-                    log('FW version: ' + str(self.fw_version))
+                    self.versions.firmware = fw_hw_versions[1].split(':')[1]
+                    log('FW version: ' + str(self.versions.firmware))
                 except:
                     log('Could not retrieve FW version')
                 try:
-                    self.hw_version = fw_hw_versions[2].split(':')[1]
-                    log('HW version: ' + str(self.hw_version))
+                    self.versions.hardware = fw_hw_versions[2].split(':')[1]
+                    log('HW version: ' + str(self.versions.hardware))
                 except:
                     log('Could not retrieve HW version')
         elif re.match(self.grbl_initialisation_message, message):
@@ -1390,8 +1415,9 @@ class SerialConnection(object):
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):
-        if int(self.serial_chars_available) == self.RX_BUFFER_SIZE and int(self
-            .serial_blocks_available) == self.GRBL_BLOCK_SIZE:
+        if int(self.buffer_info.serial_chars_available
+            ) == self.RX_BUFFER_SIZE and int(self.
+            buffer_info.serial_blocks_available) == self.GRBL_BLOCK_SIZE:
             return True
         return False
 
