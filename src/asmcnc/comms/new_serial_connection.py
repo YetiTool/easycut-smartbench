@@ -30,7 +30,7 @@ class SerialConnection:
     RX_BUFFER_SIZE: int = 255
     DIGITAL_LOAD_PATTERN = re.compile('Ld:\\d+,\\d+,\\d+,\\d+')
     GRBL_INITIALISATION_MESSAGE = "^Grbl .+ \\['\\$' for help\\]$"
-    VALID_GRBL_STATUSES: list[str] = ["Idle", "Run", "Hold", "Jog", "Alarm", "Door", "Check", "Sleep"]
+    VALID_GRBL_STATUSES: list[str] = ["Idle", "Run", "Hold", "Jog", "Alarm", "Door", "Check", "Sleep", "Home"]
 
     # VARIABLES
     port: str = None
