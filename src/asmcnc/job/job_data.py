@@ -31,8 +31,8 @@ class JobData(object):
     comments_list = []
     feedrate_max = None
     feedrate_min = None
-    spindle_speed_max = None
-    spindle_speed_min = None
+    spindle_speed_max = 0
+    spindle_speed_min = 0
     x_max = None
     x_min = None
     y_max = None
