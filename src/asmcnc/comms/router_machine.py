@@ -1017,18 +1017,18 @@ class RouterMachine(object):
             self.s.m_state = temp_state
 
     def is_busy(self):
-        busy_conditions = [
-            self.state().startswith('Idle'),
-            self.s.is_sequential_streaming,
-            self.s.is_job_streaming,
-            self.s.write_command_buffer,
-            self.s.write_realtime_buffer,
-            self.s.write_protocol_buffer,
-            int(self.s.buffer_info.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE,
-            int(self.s.buffer_info.serial_chars_available) != self.s.RX_BUFFER_SIZE,
-            self.s.grbl_waiting_for_reset,
-            self.is_machine_paused
-        ]
+        busy_conditions = {
+            "Not idle": not self.state().startswith('Idle'),
+            "Seq streaming": self.s.is_sequential_streaming,
+            "Job streaming": self.s.is_job_streaming,
+            "Cmd buffer": self.s.write_command_buffer,
+            "Realtime buffer": self.s.write_realtime_buffer,
+            "Protocol buffer": self.s.write_protocol_buffer,
+            "Block size": int(self.s.buffer_info.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE,
+            "Buffer size": int(self.s.buffer_info.serial_chars_available) != self.s.RX_BUFFER_SIZE,
+            "Waiting for reset": self.s.grbl_waiting_for_reset,
+            "Paused": self.is_machine_paused
+        }
 
         # if any of the busy conditions are true, then the machine is busy
         # and we return True and the busy conditions
