@@ -261,7 +261,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
 
 class HomeScreen(Screen):
@@ -338,7 +338,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print('No G-code loaded.')
             self.gcode_summary_widget.hide_summary()
         else:
             self.file_data_label.text = ('[color=333333]' + self.jd.
@@ -369,7 +369,7 @@ class HomeScreen(Screen):
                 non_modal_gcode_list)
             log('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print('Unable to draw gcode')
         log('DONE')
 
     def on_pre_leave(self):

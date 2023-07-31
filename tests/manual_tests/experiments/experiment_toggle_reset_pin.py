@@ -208,11 +208,11 @@ class TestScreen(Screen):
             did_fw_update_succeed = 'Success!'
         else:
             did_fw_update_succeed = 'Update failed.'
-        print did_fw_update_succeed
-        print str(stdout)
+        print(did_fw_update_succeed)
+        print(str(stdout))
 
     def test_fw_update(self):
-        print 'Updating'
+        print('Updating')
 
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -251,15 +251,15 @@ class TestScreen(Screen):
                 did_fw_update_succeed = 'Success!'
             else:
                 did_fw_update_succeed = 'Update failed.'
-            print did_fw_update_succeed
-            print str(self.stdout)
+            print(did_fw_update_succeed)
+            print(str(self.stdout))
         disconnect_and_update()
 
 
 class ScreenTest(App):
 
     def build(self):
-        print 'Starting App:'
+        print('Starting App:')
         sm = ScreenManager(transition=NoTransition())
         l = localization.Localization()
         sett = settings_manager.Settings(sm)

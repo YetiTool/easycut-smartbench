@@ -67,7 +67,7 @@ class LBCalibration1(Screen):
         def count_down(seconds):
             if seconds == 0:
                 if self.sm.current == self.name:
-                    print 'entering'
+                    print('entering')
                     self.sm.current = 'lbc2'
                     return
             if seconds > 0:

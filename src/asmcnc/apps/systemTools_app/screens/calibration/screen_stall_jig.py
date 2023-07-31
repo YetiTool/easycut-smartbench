@@ -182,7 +182,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class StallJigScreen(Screen):
@@ -191,8 +191,8 @@ class StallJigScreen(Screen):
     feed_dict = {'X': [8000, 6000, 4500, 3000, 2000, 1200, 600], 'Y': [6000,
         5000, 4000, 3000, 2000, 1200, 600], 'Z': [750, 600, 500, 400, 300, 
         150, 75]}
-    threshold_dict = {'X': range(125, 375, 25), 'Y': range(100, 375, 25),
-        'Z': range(120, 220, 20)}
+    threshold_dict = {'X': list(range(125, 375, 25)), 'Y': list(range(100, 375, 25)),
+        'Z': list(range(120, 220, 20))}
     indices = {'axis': 0, 'threshold': 0, 'feed': 0}
     minimum_threshold_index = {'X': 0, 'Y': 0, 'Z': 0}
     absolute_start_pos = {}
@@ -742,7 +742,7 @@ class StallJigScreen(Screen):
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 11)
         except:
             log('Could not insert final test stage into DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
         data_send_successful = self.calibration_db.send_data_through_publisher(
             self.sn_for_db, 9)
         cal_data_send_successful = (self.calibration_db.

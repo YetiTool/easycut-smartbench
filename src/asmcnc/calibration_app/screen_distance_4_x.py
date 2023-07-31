@@ -259,7 +259,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
 
     def check_for_successful_completion(self, dt):
         if self.m.s.is_sequential_streaming == False:
-            print 'New steps have been set: $100 = ' + str(self.new_x_steps)
+            print('New steps have been set: $100 = ' + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 

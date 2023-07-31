@@ -219,8 +219,8 @@ class YetiPilot(object):
                 feed_adjustment_percentage, self.get_command_dictionary(
                 feed=True), feed=True)
             if feed_adjustments:
-                print 'YetiPilot: Feed Adjustments done: ' + str(
-                    feed_adjustments)
+                print('YetiPilot: Feed Adjustments done: ' + str(
+                    feed_adjustments))
             if (not self.using_advanced_profile and not self.
                 adjusting_spindle_speed):
                 speed_adjustment_percentage = (self.
@@ -229,8 +229,8 @@ class YetiPilot(object):
                     speed_adjustment_percentage, self.
                     get_command_dictionary(feed=False), feed=False)
                 if speed_adjustments:
-                    print 'YetiPilot: Speed Adjustments done: ' + str(
-                        speed_adjustments)
+                    print('YetiPilot: Speed Adjustments done: ' + str(
+                        speed_adjustments))
 
     def stop_and_show_error(self):
         self.disable()

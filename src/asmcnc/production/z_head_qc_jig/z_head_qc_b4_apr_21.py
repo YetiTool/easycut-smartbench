@@ -296,7 +296,7 @@ TEMP_POWER_POLL = 5
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
 
 class ScrollableLabelStatus(ScrollView):
@@ -486,7 +486,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print pi.get_mode(17)
+            print(pi.get_mode(17))
             pi.stop()
             cmd = (
                 'grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'

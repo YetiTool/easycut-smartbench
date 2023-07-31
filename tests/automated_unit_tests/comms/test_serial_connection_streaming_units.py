@@ -9,7 +9,7 @@ try:
     import pytest
     from mock import Mock, MagicMock
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from asmcnc.comms import serial_connection
 from asmcnc.comms import localization
 from asmcnc.job import job_data

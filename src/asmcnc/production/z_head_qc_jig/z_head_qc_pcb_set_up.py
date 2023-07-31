@@ -420,8 +420,8 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print 'Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message)
+    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
+        ] + ' ' + str(message))
 
 
 class ZHeadPCBSetUp(Screen):
@@ -644,13 +644,13 @@ Problems getting available FW :("""
             return False
 
     def print_settings_to_set(self):
-        print 'FW version ' + str(self.firmware_version)
-        print 'X current: ' + str(self.x_current)
-        print 'Y current: ' + str(self.y_current)
-        print 'Z current: ' + str(self.z_current)
-        print 'X thermal coefficient: ' + str(self.x_thermal_coefficient)
-        print 'Y thermal coefficient: ' + str(self.y_thermal_coefficient)
-        print 'Z thermal coefficient: ' + str(self.z_thermal_coefficient)
+        print('FW version ' + str(self.firmware_version))
+        print('X current: ' + str(self.x_current))
+        print('Y current: ' + str(self.y_current))
+        print('Z current: ' + str(self.z_current))
+        print('X thermal coefficient: ' + str(self.x_thermal_coefficient))
+        print('Y thermal coefficient: ' + str(self.y_thermal_coefficient))
+        print('Z thermal coefficient: ' + str(self.z_thermal_coefficient))
 
     def toggle_connection_to_z_head(self):
         if self.connection_button.state == 'normal':

@@ -17,7 +17,7 @@ from kivy.clock import Clock
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class Settings(object):
@@ -158,10 +158,10 @@ class Settings(object):
                 else:
                     self.latest_sw_beta = ''
             except:
-                print 'Could not sort software version tags'
+                print('Could not sort software version tags')
                 self.latest_sw_version = ''
         else:
-            print 'Could not fetch software version tags'
+            print('Could not fetch software version tags')
             self.latest_sw_version = ''
 
     def fetch_platform_tags(self):
@@ -218,7 +218,7 @@ class Settings(object):
                     subprocess.PIPE)
                 unformatted_git_output = p.communicate()[1]
                 git_output = str(unformatted_git_output).split('\n')
-                git_output = list(filter(lambda x: x != '', git_output))
+                git_output = list([x for x in git_output if x != ''])
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
                     description = str(git_output[-1])
@@ -364,7 +364,7 @@ class Settings(object):
 
     def get_fw_update(self):
         os.system('sudo pigpiod')
-        print 'pigpio daemon started'
+        print('pigpio daemon started')
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):
@@ -377,7 +377,7 @@ class Settings(object):
     def flash_fw(self):
         pi = pigpio.pi()
         pi.set_mode(17, pigpio.ALT3)
-        print pi.get_mode(17)
+        print(pi.get_mode(17))
         pi.stop()
         os.system('sudo service pigpiod stop')
         os.system('./update_fw.sh')

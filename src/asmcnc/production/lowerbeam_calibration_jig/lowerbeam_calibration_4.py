@@ -121,7 +121,7 @@ class LBCalibration4(Screen):
                 next_screen_name = 'lbc5'
             except Exception as e:
                 next_screen_name = 'lbc6'
-                print traceback.format_exc()
+                print(traceback.format_exc())
         else:
             next_screen_name = 'lbc6'
         self.sm.get_screen(next_screen_name).set_serial_no(self.serial_number)

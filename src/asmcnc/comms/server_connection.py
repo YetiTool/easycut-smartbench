@@ -9,8 +9,8 @@ PORT = 65432
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' Server connection: ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12
+        ] + ' Server connection: ' + str(message))
 
 
 class ServerConnection(object):

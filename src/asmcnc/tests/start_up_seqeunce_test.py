@@ -81,7 +81,7 @@ min_r = 1
 max_r = 6
 for r in range(min_r, max_r):
     for sublist in list(combinations(function_list, r)):
-        print sublist
+        print(sublist)
         for i in sublist:
             i()
         set_check_config_flag()

@@ -22,7 +22,7 @@ from asmcnc.skavaUI import popup_info
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class RouterMachine(object):
@@ -1081,12 +1081,12 @@ class RouterMachine(object):
         return switch_states
 
     def disable_limit_switches(self):
-        print 'switching soft limits & hard limts OFF'
+        print('switching soft limits & hard limts OFF')
         settings = ['$22=0', '$20=0', '$21=0']
         self.s.start_sequential_stream(settings)
 
     def enable_limit_switches(self):
-        print 'switching soft limits & hard limts ON'
+        print('switching soft limits & hard limts ON')
         settings = ['$22=1', '$20=1', '$21=1']
         self.s.start_sequential_stream(settings)
 
@@ -1484,11 +1484,11 @@ class RouterMachine(object):
 
     def jog_spindle_to_laser_datum(self, axis):
         if axis == 'X' or axis == 'XY' or axis == 'YX':
-            print 'Laser offset value: ' + str(self.laser_offset_x_value)
-            print 'Pos value: ' + str(self.mpos_x())
-            print 'Try to move to: ' + str(self.mpos_x() + float(self.
-                laser_offset_x_value))
-            print 'Limit at: ' + str(float(self.x_min_jog_abs_limit))
+            print('Laser offset value: ' + str(self.laser_offset_x_value))
+            print('Pos value: ' + str(self.mpos_x()))
+            print('Try to move to: ' + str(self.mpos_x() + float(self.
+                laser_offset_x_value)))
+            print('Limit at: ' + str(float(self.x_min_jog_abs_limit)))
             if self.mpos_x() + float(self.laser_offset_x_value) <= float(self
                 .x_max_jog_abs_limit) and self.mpos_x() + float(self.
                 laser_offset_x_value) >= float(self.x_min_jog_abs_limit):
@@ -1774,7 +1774,7 @@ class RouterMachine(object):
             elif colour_name == 'OFF':
                 self.s.write_command('*L110000')
         else:
-            print 'LED Colour denied because streaming: ' + colour_name + '\n'
+            print('LED Colour denied because streaming: ' + colour_name + '\n')
 
     def led_restore(self):
         self.s.write_realtime('&', altDisplayText='LED restore')
@@ -1808,7 +1808,7 @@ class RouterMachine(object):
             self._strobe_loop(strobe_colour1, strobe_colour2,
                 colour_1_period, colour_2_period, cycles, end_on_colour)
         else:
-            print 'Strobe situation: ' + situation + ' not recognised'
+            print('Strobe situation: ' + situation + ' not recognised')
     strobe_cycle_count = 0
 
     def _strobe_loop(self, strobe_colour1, strobe_colour2, colour_1_period,
@@ -1869,7 +1869,7 @@ class RouterMachine(object):
             '\n' + 'Thermal Coefficient: ' + str(self.TMC_motor[int(
             motor_idx)].temperatureCoefficient) + '\n' +
             '-------------------------------------')
-        map(log, TMC_registers_report_string.split('\n'))
+        list(map(log, TMC_registers_report_string.split('\n')))
 
     def send_command_to_motor(self, altDisplayText, motor=TMC_X1, command=
         SET_ACTIVE_CURRENT, value=0, printlog=True):
@@ -2396,8 +2396,8 @@ class RouterMachine(object):
     def sweep_toff_and_sgt_and_motor_driver_temp(self, X=False, Y=False, Z=
         False):
         temperature_list = []
-        tuning_array = [[[] for sgt_holder in xrange(self.sgt_max + 1)] for
-            toff_holder in xrange(self.toff_max + 1)]
+        tuning_array = [[[] for sgt_holder in range(self.sgt_max + 1)] for
+            toff_holder in range(self.toff_max + 1)]
         while self.temp_toff <= self.toff_max:
             if X:
                 self.send_command_to_motor('SET TOFF X1 ' + str(self.

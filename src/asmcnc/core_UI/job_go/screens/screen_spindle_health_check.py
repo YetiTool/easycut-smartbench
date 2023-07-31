@@ -181,7 +181,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             return int(ceil(n / 10.0)) * 10
 
         def pass_test(free_load):
-            print 'Spindle health check passed - free load: ' + str(free_load)
+            print('Spindle health check passed - free load: ' + str(free_load))
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
             self.m.s.yp.set_free_load(free_load)
@@ -200,7 +200,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                     =True)
 
         def fail_test(reason):
-            print 'Spindle health check failed - ' + reason
+            print('Spindle health check failed - ' + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
             show_fail_screen(reason)

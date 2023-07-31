@@ -8,12 +8,12 @@ try:
     import pika
 except:
     pika = None
-    print traceback.format_exc()
+    print(traceback.format_exc())
 try:
     import paramiko
 except:
     paramiko = None
-    print traceback.format_exc()
+    print(traceback.format_exc())
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
@@ -23,7 +23,7 @@ if os.getcwd().endswith('easycut-smartbench'):
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 def get_unique_file_name(machine_serial, table, stage):
@@ -43,7 +43,7 @@ def json_to_csv(data, machine_serial, table, stage):
     if not os.path.exists(CSV_PATH):
         os.mkdir(CSV_PATH)
     file_path = CSV_PATH + get_unique_file_name(machine_serial, table, stage)
-    keys = data[0].keys()
+    keys = list(data[0].keys())
     keys.sort(key=lambda i: status_order[i])
     with open(file_path, 'w') as data_file:
         dict_writer = csv.DictWriter(data_file, keys)
@@ -84,7 +84,7 @@ class DataPublisher(object):
                 =json.dumps(data))
             return True
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             return False
 
     def run_data_send(self, statuses, table, stage):
@@ -92,7 +92,7 @@ class DataPublisher(object):
         try:
             self.send_file_paramiko_sftp(csv_name)
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             return False
         raw_file_name = csv_name.split('/')[-1]
         payload = {'Stage': stage, 'MachineSerial': self.machine_serial,

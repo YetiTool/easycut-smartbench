@@ -65,4 +65,4 @@ class ScreenManagerWarranty(object):
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print screen_name + ' deleted'
+            print(screen_name + ' deleted')

@@ -319,7 +319,7 @@ def name_order_sort_reverse(files, filesystem):
         f in files if not filesystem.is_dir(f)), reverse=True)
 
 
-decode_and_encode = lambda x: unicode(x, detect(x)['encoding'] or 'utf-8'
+decode_and_encode = lambda x: str(x, detect(x)['encoding'] or 'utf-8'
     ).encode('utf-8')
 
 
@@ -538,17 +538,17 @@ class LocalFileChooser(Screen):
                 try:
                     if ('(YetiTool SmartBench MES-Data)' in previewed_file.
                         readline()):
-                        metadata_or_gcode_preview = map(format_metadata, [
+                        metadata_or_gcode_preview = list(map(format_metadata, [
                             decode_and_encode(i).strip('\n\r()') for i in
                             takewhile(not_end_of_metadata, previewed_file) if
                             decode_and_encode(i).split(':', 1)[1].strip(
-                            '\n\r() ')])
+                            '\n\r() ')]))
                     else:
                         previewed_file.seek(0)
                         metadata_or_gcode_preview = [self.l.get_bold(
                             'G-Code Preview (first 20 lines)'), ''] + [
                             decode_and_encode(next(previewed_file, '')).
-                            strip('\n\r') for x in xrange(20)]
+                            strip('\n\r') for x in range(20)]
                     self.metadata_preview.text = '\n'.join(
                         metadata_or_gcode_preview)
                 except:
@@ -592,7 +592,7 @@ class LocalFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                print 'attempt to delete folder, or undeletable file'
+                print('attempt to delete folder, or undeletable file')
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -605,7 +605,7 @@ class LocalFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    print 'attempt to delete folder, or undeletable file'
+                    print('attempt to delete folder, or undeletable file')
         self.filechooser.selection = []
         self.refresh_filechooser()
 

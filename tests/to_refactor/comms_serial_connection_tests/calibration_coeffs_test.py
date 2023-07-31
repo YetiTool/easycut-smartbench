@@ -8,7 +8,7 @@ try:
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 import sys
 sys.path.append('./src')
@@ -63,7 +63,7 @@ class SGTest(unittest.TestCase):
                 ) + ':,' + dataset_str + ',' + str(self.test_current_setting
                 ) + ',' + str(self.test_sgt_setting) + ',' + str(self.
                 test_toff_setting) + ',' + str(self.test_temp_at_cal) + '>'
-            print self.status
+            print(self.status)
         self.m.s.s = DummySerial(self.give_me_a_PCB())
         self.m.s.s.fd = 1
         self.m.s.start_services(1)

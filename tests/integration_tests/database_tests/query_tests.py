@@ -1,7 +1,7 @@
 try:
     import unittest
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 import sys
 sys.path.append('./src')
 from datetime import datetime

@@ -9,7 +9,7 @@ from pipes import quote
 from chardet import detect
 from itertools import takewhile
 import traceback
-decode_and_encode = lambda x: unicode(x, detect(x)['encoding']).encode('utf-8')
+decode_and_encode = lambda x: str(x, detect(x)['encoding']).encode('utf-8')
 
 
 def remove_newlines(gcode_line):
@@ -148,7 +148,7 @@ class JobData(object):
             return 0
 
     def generate_job_data(self, raw_gcode):
-        self.job_gcode_raw = map(remove_newlines, raw_gcode)
+        self.job_gcode_raw = list(map(remove_newlines, raw_gcode))
         try:
             metadata_start_index = self.job_gcode_raw.index(
                 '(YetiTool SmartBench MES-Data)')
@@ -159,7 +159,7 @@ class JobData(object):
             metadata = [line.strip('()').split(': ', 1) for line in
                 metadata if line.split(':', 1)[1].strip('() ')]
             self.metadata_dict = dict(metadata)
-            print self.metadata_dict
+            print(self.metadata_dict)
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index
                 ] + self.job_gcode_raw[metadata_end_index + 1:-1]
             self.comments_list = [''.join(re.findall('\\(.*?\\)', s)) for s in
@@ -169,7 +169,7 @@ class JobData(object):
                 self.job_gcode_raw if '(' in s]
 
     def create_gcode_summary_string(self):
-        print 'Create summary string'
+        print('Create summary string')
         self.smarttransfer_metadata_into_string()
         self.scraped_feeds_speeds_and_boundaries_into_string()
         self.check_info_into_string()
@@ -179,7 +179,7 @@ class JobData(object):
             check_info_string + self.comments_string)
 
     def update_changeables_in_gcode_summary_string(self):
-        print 'Update changeable string'
+        print('Update changeable string')
         self.check_info_into_string()
         self.smarttransfer_metadata_into_string()
         self.gcode_summary_string = (self.smarttransfer_metadata_string +
@@ -189,14 +189,14 @@ class JobData(object):
     def smarttransfer_metadata_into_string(self):
         summary_list = []
         if self.metadata_dict:
-            metadata_list = self.metadata_dict.items()
+            metadata_list = list(self.metadata_dict.items())
             [summary_list.append('[b]:[/b] '.join([self.l.get_bold(sublist[
                 0]), sublist[1]])) for sublist in metadata_list]
             try:
                 summary_list.sort(key=lambda i: self.metadata_order[i.split
                     ('[b]:[/b]')[0]])
             except Exception as e:
-                print str(e)
+                print(str(e))
             summary_list.insert(0, self.l.get_bold('SmartTransfer data'))
             summary_list.insert(1, '')
             summary_list.append('')
@@ -290,7 +290,7 @@ class JobData(object):
                     self.metadata_dict['Parts Made So Far'] = str(int(
                         extra_parts_completed))
             except:
-                print "Parts Made So Far couldn't be updated."
+                print("Parts Made So Far couldn't be updated.")
 
     def update_update_info_in_metadata(self):
         if self.metadata_dict:
@@ -316,16 +316,16 @@ class JobData(object):
                 first_line = previewed_file.readline()
                 if '(YetiTool SmartBench MES-Data)' in first_line:
                     all_lines = [first_line] + previewed_file.readlines()
-                    metadata = map(replace_metadata, [decode_and_encode(i).
+                    metadata = list(map(replace_metadata, [decode_and_encode(i).
                         strip('\n\r()') for i in takewhile(
-                        not_end_of_metadata, all_lines[1:])])
+                        not_end_of_metadata, all_lines[1:])]))
                     all_lines[1:len(metadata) + 1] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)
                     previewed_file.truncate()
         except:
-            print 'Could not update file'
-            print str(traceback.format_exc())
+            print('Could not update file')
+            print(str(traceback.format_exc()))
 
     def post_job_data_update_post_send(self):
         self.post_production_notes = ''
@@ -339,10 +339,10 @@ class JobData(object):
                 job_recovery_info = job_recovery_info_file.read().splitlines()
             self.job_recovery_filepath = job_recovery_info[0]
             self.job_recovery_cancel_line = int(job_recovery_info[1])
-            print 'Read recovery info'
+            print('Read recovery info')
         except:
-            print 'Could not read recovery info'
-            print str(traceback.format_exc())
+            print('Could not read recovery info')
+            print(str(traceback.format_exc()))
 
     def write_to_recovery_file_after_cancel(self, cancel_line, cancel_time):
 
@@ -353,7 +353,7 @@ class JobData(object):
                     cancel_line))
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
-            print 'Wrote recovery info'
+            print('Wrote recovery info')
         try:
             cancel_line -= self.job_recovery_offset
             if cancel_line >= 0:
@@ -361,11 +361,11 @@ class JobData(object):
             elif cancel_time >= 30:
                 write_to_file(1)
             else:
-                print 'Job cancelled before start, not writing recovery info'
+                print('Job cancelled before start, not writing recovery info')
             self.reset_recovery()
         except:
-            print 'Could not write recovery info'
-            print str(traceback.format_exc())
+            print('Could not write recovery info')
+            print(str(traceback.format_exc()))
 
     def write_to_recovery_file_after_completion(self):
         try:
@@ -377,10 +377,10 @@ class JobData(object):
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
             self.reset_recovery()
-            print 'Wrote recovery info'
+            print('Wrote recovery info')
         except:
-            print 'Could not write recovery info'
-            print str(traceback.format_exc())
+            print('Could not write recovery info')
+            print(str(traceback.format_exc()))
 
     def reset_recovery(self):
         self.job_recovery_selected_line = -1

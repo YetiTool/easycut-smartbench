@@ -1,14 +1,14 @@
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
-import threading, Queue
+import threading, queue
 from time import sleep
 import traceback
 
 
 def log(message):
     timestamp = datetime.datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 try:
@@ -36,7 +36,7 @@ class DatabaseEventManager:
         self.sm = screen_manager
         self.jd = self.m.jd
         self.set = settings_manager
-        self.event_queue = Queue.Queue()
+        self.event_queue = queue.Queue()
 
     def __del__(self):
         log('Database Event Manager closed - garbage collected!')
@@ -342,7 +342,7 @@ class DatabaseEventManager:
                 job_name or '', 'job_start': self.get_local_time()},
                 'metadata': {}, 'time': self.get_local_time()}
             metadata_in_json_format = {k.translate(None, ' '): v for k, v in
-                self.jd.metadata_dict.iteritems()}
+                self.jd.metadata_dict.items()}
             data['metadata'] = metadata_in_json_format
             self.event_queue.put((self.publish_event_with_temp_channel, [
                 data, 'Job Start', time.time() + self.event_send_timeout]))

@@ -11,7 +11,7 @@ creds_imported = False
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 try:
@@ -99,5 +99,5 @@ def send_logs(log_file_path):
 
 
 if __name__ == '__main__':
-    print 'Testing basic log send'
+    print('Testing basic log send')
     create_trim_and_send_logs('123456', 100)

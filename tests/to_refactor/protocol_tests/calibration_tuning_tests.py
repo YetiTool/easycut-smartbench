@@ -9,7 +9,7 @@ try:
     from serial_mock.decorators import serial_query
     from random import randint
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 import sys
 sys.path.append('./src')
@@ -79,7 +79,7 @@ class MotorCommandsTest(unittest.TestCase):
         sleep(3)
         self.m.s.record_sg_values_flag = False
         self.m.are_sg_values_in_range_after_calibration(['X', 'Y', 'Z'])
-        print self.m.checking_calibration_fail_info
+        print(self.m.checking_calibration_fail_info)
         assert self.m.checking_calibration_fail_info.startswith(
             'All values -999 for idx: 0')
 

@@ -225,7 +225,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
 
 class CheckingScreen(Screen):
@@ -558,8 +558,8 @@ class CheckingScreen(Screen):
                     'The recommended maximum feed rate is 5000 mm/min.') +
                     '\n\n')
         error_summary = []
-        no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log,
-            self.jd.job_gcode)))
+        no_empties = list([x for x in zip(error_log,
+            self.jd.job_gcode) if x != ('ok', '')])
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
                 error_description = self.l.get_str(ERROR_CODES.get(f[0], ''))

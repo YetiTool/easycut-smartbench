@@ -110,6 +110,6 @@ class CurrentAdjustmentWidget(Widget):
         except:
             popup_info.PopupError(self.systemtools_sm, self.l,
                 'Issue setting current')
-            print traceback.format_exc()
+            print(traceback.format_exc())
         self.current_current_label.text = str(self.current_current)
         self.current_current_label.focus = False

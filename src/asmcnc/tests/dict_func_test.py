@@ -18,6 +18,6 @@ def if_more_than_coord(expected_pos):
 detection_too_late = {'X': if_more_than_coord, 'Y': if_more_than_coord, 'Z':
     if_less_than_coord}
 if detection_too_late['X'](100):
-    print 'YES'
+    print('YES')
 else:
-    print 'NO'
+    print('NO')

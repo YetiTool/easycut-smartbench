@@ -253,16 +253,16 @@ class ShapeCutterJobParameters(object):
         self.profile_filename = filename
         w = csv.writer(open(self.parameterCache_file_path + filename +
             '.csv', 'w'), delimiter='\t', lineterminator='\n')
-        for param_group, group_dict in self.parameter_dict.items():
+        for param_group, group_dict in list(self.parameter_dict.items()):
             w.writerow([param_group])
-            for param, value in group_dict.items():
+            for param, value in list(group_dict.items()):
                 w.writerow(['', param, value])
 
     def parameters_to_string(self):
         string_parameters = ''
-        for param_group, group_dict in self.parameter_dict.items():
+        for param_group, group_dict in list(self.parameter_dict.items()):
             string_parameters = string_parameters + str(param_group) + '\n\r'
-            for param, value in group_dict.items():
+            for param, value in list(group_dict.items()):
                 string_parameters = string_parameters + '\t' + str(param
                     ) + ':\t' + str(value) + '\n\r'
         return string_parameters
@@ -294,7 +294,7 @@ class ShapeCutterJobParameters(object):
             strategy_unit_multiplier = 1
         material_thickness = float(self.shape_dict['dimensions']['Z']
             ) * dim_unit_multiplier
-        print material_thickness
+        print(material_thickness)
         if shape == 'rectangle':
             rect_job_x = float(self.shape_dict['dimensions']['X']
                 ) * dim_unit_multiplier
@@ -302,13 +302,13 @@ class ShapeCutterJobParameters(object):
                 ) * dim_unit_multiplier
             rect_job_rad = float(self.shape_dict['dimensions']['R']
                 ) * dim_unit_multiplier
-            print rect_job_x
-            print rect_job_y
-            print rect_job_rad
+            print(rect_job_x)
+            print(rect_job_y)
+            print(rect_job_rad)
         elif shape == 'circle':
             circ_input_diameter = float(self.shape_dict['dimensions']['D']
                 ) * dim_unit_multiplier
-            print circ_input_diameter
+            print(circ_input_diameter)
         cutter_diameter = float(self.parameter_dict['cutter dimensions'][
             'diameter']) * cutter_unit_multiplier
         cutter_rad = cutter_diameter / 2
@@ -379,10 +379,10 @@ class ShapeCutterJobParameters(object):
                 while y > y_flat_min + cutter_rad + tab_effective_width:
                     y_rtn_tabs.append(y)
                     y -= tab_distance
-                print 'Number of tabs in X axis: ' + str(len(x_out_tabs))
-                print 'Number of tabs in Y axis: ' + str(len(y_out_tabs))
+                print('Number of tabs in X axis: ' + str(len(x_out_tabs)))
+                print('Number of tabs in Y axis: ' + str(len(y_out_tabs)))
             else:
-                print 'No tabs'
+                print('No tabs')
         elif shape == 'circle':
             if aperture_or_island == 'aperture':
                 circ_path_rad = (circ_input_diameter - cutter_diameter) / 2
@@ -533,7 +533,7 @@ class ShapeCutterJobParameters(object):
         f = open(self.gcode_filename, 'w')
         for line in self.gcode_lines:
             f.write(line + '\n')
-        print 'Done: ' + self.gcode_filename
+        print('Done: ' + self.gcode_filename)
 
     def set_job_envelope(self, lines):
         if self.shape_dict['units'] == 'inches':
@@ -545,9 +545,9 @@ class ShapeCutterJobParameters(object):
             y_values = []
             z_values = []
             for line in lines:
-                print line
+                print(line)
                 blocks = str(line).strip().split(' ')
-                print blocks
+                print(blocks)
                 for part in blocks:
                     try:
                         if part.startswith('X'):
@@ -557,10 +557,10 @@ class ShapeCutterJobParameters(object):
                         if part.startswith('Z'):
                             z_values.append(float(part[1:]))
                     except:
-                        print "Envelope calculator: skipped '" + part + "'"
-            print x_values
-            print y_values
-            print z_values
+                        print("Envelope calculator: skipped '" + part + "'")
+            print(x_values)
+            print(y_values)
+            print(z_values)
             self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
             self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
             self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
@@ -581,7 +581,7 @@ class ShapeCutterJobParameters(object):
                         if part.startswith('Z'):
                             z_values.append(float(part[1:]))
                     except:
-                        print "Envelope calculator: skipped '" + part + "'"
+                        print("Envelope calculator: skipped '" + part + "'")
             self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
 
     def is_job_within_bounds(self):

@@ -155,8 +155,8 @@ class VirtualBed(Widget):
         machineY = int((self.touch_zone.x + self.touch_zone.width - touch.x
             ) / self.touch_zone.width * self.m.grbl_y_max_travel - self.m.
             grbl_y_max_travel)
-        print ('Y: ', str(touch.y), str(self.touch_zone.y), str(self.
-            touch_zone.pos[1]))
+        print(('Y: ', str(touch.y), str(self.touch_zone.y), str(self.
+            touch_zone.pos[1])))
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 

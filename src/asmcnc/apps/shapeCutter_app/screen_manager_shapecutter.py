@@ -1631,6 +1631,6 @@ class ScreenManagerShapeCutter(object):
         if self.sm.has_screen(screen_name):
             self.sm.get_screen(screen_name).clear_widgets()
             self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print screen_name + ' deleted'
+            print(screen_name + ' deleted')
         else:
             pass

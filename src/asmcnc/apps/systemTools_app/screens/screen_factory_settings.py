@@ -579,10 +579,10 @@ class FactorySettingsScreen(Screen):
                 os.system(
                     'cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py'
                     )
-                print 'Credentials file found on USB'
+                print('Credentials file found on USB')
                 self.calibration_db.set_up_connection()
         except:
-            print 'No /media/usb/ folder found'
+            print('No /media/usb/ folder found')
 
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -767,7 +767,7 @@ class FactorySettingsScreen(Screen):
                 return False
         if self.dev_mode:
             if nested_factory_reset():
-                print 'doing factory reset...'
+                print('doing factory reset...')
                 Clock.schedule_once(self.close_sw, 5)
         else:
             try:
@@ -953,7 +953,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
             Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
             Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
-        print str(Final_Activation_Code) + '\n'
+        print(str(Final_Activation_Code) + '\n')
         return Final_Activation_Code
 
     def show_sc2_decision_popup(self):
@@ -1034,7 +1034,7 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
         return str(serial_number_from_file)
 
     def final_test(self, board):

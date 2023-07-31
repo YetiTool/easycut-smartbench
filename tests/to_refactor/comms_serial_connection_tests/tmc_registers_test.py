@@ -8,7 +8,7 @@ try:
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 import sys
 sys.path.append('./src')

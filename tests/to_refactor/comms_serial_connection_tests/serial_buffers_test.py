@@ -8,7 +8,7 @@ try:
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 from random import randint
 import sys
@@ -32,7 +32,7 @@ class MotorCommandsTest(unittest.TestCase):
     realtime_buffer = ''
     protocol_buffer = ''
     job_object = []
-    comparison_string = ''.join(map(str, range(max_count + 1)))
+    comparison_string = ''.join(map(str, list(range(max_count + 1))))
 
     def create_job_object(self, n_lines):
         for i in range(n_lines):
@@ -53,7 +53,7 @@ class MotorCommandsTest(unittest.TestCase):
                     return 'ok'
                 if buffer_type == 'run':
                     outerSelf.run_buffer = outerSelf.run_buffer + str(counter)
-                    print outerSelf.run_buffer
+                    print(outerSelf.run_buffer)
                     return 'ok'
                 if buffer_type == 'realtime':
                     outerSelf.realtime_buffer = (outerSelf.realtime_buffer +

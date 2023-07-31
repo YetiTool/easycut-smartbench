@@ -8,7 +8,7 @@ try:
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 import sys
 sys.path.append('./src')
@@ -72,7 +72,7 @@ class SpindleFeedbackTest(unittest.TestCase):
                 digital_spindle_temperature) + ',' + str(
                 digital_spindle_kill_time) + ',' + str(
                 digital_spindle_mains_voltage) + '>')
-            print self.status
+            print(self.status)
         self.serial_module.s = DummySerial(self.give_me_a_PCB())
         self.serial_module.s.fd = 1
         self.serial_module.start_services(1)

@@ -8,7 +8,7 @@ try:
     import pytest
     from mock import Mock
 except:
-    print "Can't import mocking packages, are you on a dev machine?"
+    print("Can't import mocking packages, are you on a dev machine?")
 from datetime import datetime
 from asmcnc.comms import localization
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
@@ -97,4 +97,4 @@ def test_record_stall_event(stall_jig_screen, m):
     m.s.last_stall_motor_step_size = 5
     stall_jig_screen.record_stall_event()
     stall_jig_screen.record_stall_event()
-    print stall_jig_screen.stall_test_events
+    print(stall_jig_screen.stall_test_events)

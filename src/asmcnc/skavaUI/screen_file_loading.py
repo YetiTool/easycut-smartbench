@@ -149,7 +149,7 @@ job_q_dir = './jobQ/'
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
 
 class LoadingScreen(Screen):
@@ -314,7 +314,7 @@ class LoadingScreen(Screen):
                                         self.sm.get_screen('check_job'
                                             ).as_high_as = float(feed_rate)
                             except:
-                                print 'Failed to extract feed rate. Probable G-code error!'
+                                print('Failed to extract feed rate. Probable G-code error!')
                         if 'N' in l_block:
                             l_block = self.jd.remove_line_number(l_block)
                         self.preloaded_job_gcode.append(l_block)

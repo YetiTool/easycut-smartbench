@@ -7,7 +7,7 @@ from asmcnc.production.database.payload_publisher import DataPublisher
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 try:
@@ -47,7 +47,7 @@ class CalibrationDatabase(object):
             log('Connected to database')
         except:
             log('Unable to connect to database')
-            print traceback.format_exc()
+            print(traceback.format_exc())
         try:
             self.ssh_conn = my_sql_client.connect(host=credentials.server,
                 db='sshdb', user=credentials.username, passwd=credentials.
@@ -248,7 +248,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def insert_final_test_statuses(self, statuses):
-        print 'Before insert ft status'
+        print('Before insert ft status')
         try:
             with self.conn.cursor() as cursor:
                 query = (
@@ -257,8 +257,8 @@ class CalibrationDatabase(object):
                 cursor.executemany(query, statuses)
                 self.conn.commit()
         except:
-            print traceback.format_exc()
-        print 'After insert ft status'
+            print(traceback.format_exc())
+        print('After insert ft status')
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
@@ -291,7 +291,7 @@ class CalibrationDatabase(object):
     def get_ambient_temperature(self):
         try:
             query = (
-                u'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE             ("device_ID" = \'\u201ceDGE-2\u201d\') AND time > now() - 2m ORDER BY DESC LIMIT 1 '
+                'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE             ("device_ID" = \'\u201ceDGE-2\u201d\') AND time > now() - 2m ORDER BY DESC LIMIT 1 '
                 )
             return self.influx_client.query(query).raw['series'][0]['values'][0
                 ][1]
@@ -309,7 +309,7 @@ class CalibrationDatabase(object):
                 data[6]]
 
     def insert_stall_experiment_results(self, stall_events):
-        print 'Before insert stall events'
+        print('Before insert stall events')
         try:
             with self.conn.cursor() as cursor:
                 query = (
@@ -319,9 +319,9 @@ class CalibrationDatabase(object):
                 self.conn.commit()
                 return True
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             return False
-        print 'After insert stall events'
+        print('After insert stall events')
     processing_running_data = False
     processed_running_data = {'2': ([], 'CalibrationCheckStatuses',
         'CalibrationCheckQC'), '9': ([], 'FinalTestStatuses',
@@ -361,7 +361,7 @@ class CalibrationDatabase(object):
                     z_weight}
                 self.processed_running_data[str(element[0])][0].append(status)
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
         self.processing_running_data = False
 
     def generate_directions(self, unprocessed_status_data, idx):

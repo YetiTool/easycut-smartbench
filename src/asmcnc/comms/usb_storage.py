@@ -76,10 +76,10 @@ class USB_storage(object):
                 if files_in_usb_dir:
                     self.is_usb_mounted_flag = True
                     if self.IS_USB_VERBOSE:
-                        print 'USB: OK'
+                        print('USB: OK')
                 else:
                     if self.IS_USB_VERBOSE:
-                        print 'USB: NONE'
+                        print('USB: NONE')
                     if self.is_usb_mounted_flag:
                         self.unmount_linux_usb()
                     else:
@@ -88,7 +88,7 @@ class USB_storage(object):
                             if 'sd' + char in devices:
                                 self.stop_polling_for_usb()
                                 if self.IS_USB_VERBOSE:
-                                    print 'Stopped polling'
+                                    print('Stopped polling')
                                 self.mount_event = Clock.schedule_once(lambda
                                     dt: self.mount_linux_usb('sd' + char), 1)
                                 break
@@ -104,7 +104,7 @@ class USB_storage(object):
             os.system(unmount_command)
         except:
             if self.IS_USB_VERBOSE:
-                print 'FAILED: Could not UNmount USB'
+                print('FAILED: Could not UNmount USB')
 
         def check_linux_usb_unmounted(popup_USB):
             if sys.platform != 'win32':
@@ -112,10 +112,10 @@ class USB_storage(object):
                 if files_in_usb_dir:
                     self.is_usb_mounted_flag = True
                     if self.IS_USB_VERBOSE:
-                        print 'USB: STILL MOUNTED'
+                        print('USB: STILL MOUNTED')
                 else:
                     if self.IS_USB_VERBOSE:
-                        print 'USB: UNMOUNTED'
+                        print('USB: UNMOUNTED')
                     self.is_usb_mounted_flag = False
                     Clock.unschedule(poll_for_dismount)
 
@@ -132,7 +132,7 @@ class USB_storage(object):
         if self.mount_event != None:
             Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE:
-            print 'Attempting to mount'
+            print('Attempting to mount')
         mount_command = ('echo posys | sudo mount /dev/' + device + '1 ' +
             self.linux_usb_path)
         try:
@@ -144,14 +144,14 @@ class USB_storage(object):
                 self.is_usb_mounted_flag = True
                 self.start_polling_for_usb()
                 if self.IS_USB_VERBOSE:
-                    print 'USB: MOUNTED'
+                    print('USB: MOUNTED')
                 self.show_user_usb_status('connected')
             else:
                 popup_USB_error = popup_info.PopupUSBError(self.sm, self.l,
                     self)
         except:
             if self.IS_USB_VERBOSE:
-                print 'FAILED: Could not mount USB'
+                print('FAILED: Could not mount USB')
             self.is_usb_mounted_flag = False
             self.start_polling_for_usb()
 

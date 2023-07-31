@@ -164,8 +164,8 @@ class GeneralMeasurementScreen(Screen):
     def display_results(self):
         try:
             plt.rcParams['figure.figsize'] = 7, 3.55
-            xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(),
-                self.get_y_axis()) if y != -999 and y != None))
+            xVar, yVar = list(zip(*((x, y) for x, y in zip(self.get_x_axis(),
+                self.get_y_axis()) if y != -999 and y != None)))
             plt.plot(xVar, yVar, 'bx')
             plt.xlabel(self.descriptors[self.x_idx])
             plt.ylabel(self.descriptors[self.y_idx])

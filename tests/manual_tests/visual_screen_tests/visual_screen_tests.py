@@ -1,6 +1,6 @@
 import sys, os
 if len(sys.argv) != 2:
-    print 'Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>'
+    print('Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>')
     sys.exit(0)
 from kivy.config import Config
 from kivy.clock import Clock
@@ -259,7 +259,7 @@ class ScreenTest(App):
             def stream_and_pause(dt=0):
                 m.s.is_job_streaming = True
                 m.set_pause(True, 'yetipilot_low_feed')
-                print 'STOP FOR STREAM PAUSE'
+                print('STOP FOR STREAM PAUSE')
             Clock.schedule_once(stream_and_pause, 5)
 
         def pro_plus_safety_screen_test():

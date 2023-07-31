@@ -703,7 +703,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class OvernightTesting(Screen):
@@ -829,7 +829,7 @@ class OvernightTesting(Screen):
                 self.stage_id)
         except:
             log('Could not insert final test stage into DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
         self.status_data_dict[self.stage]['Statuses'] = []
         log('Overnight test, stage: ' + str(self.stage))
 
@@ -1005,8 +1005,8 @@ class OvernightTesting(Screen):
         try:
             return min(raw_vals)
         except:
-            print 'Min peak error:'
-            print traceback.format_exc()
+            print('Min peak error:')
+            print(traceback.format_exc())
             return None
 
     def read_out_peaks(self, stage):
@@ -1051,7 +1051,7 @@ class OvernightTesting(Screen):
                 sum(self.raw_z_neg_vals) / len(self.raw_z_neg_vals),
                 peak_list[9]]
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1419,7 +1419,7 @@ class OvernightTesting(Screen):
             return done_send
         except:
             log('Failed to send data to DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
             log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
@@ -1433,7 +1433,7 @@ class OvernightTesting(Screen):
             return True
         except:
             log('Failed to send calibration coefficients to DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
             return False
 
     def send_calibration_coefficients_for_one_motor(self, sub_serial,
@@ -1529,12 +1529,12 @@ class OvernightTesting(Screen):
 
     def check_in_range(self, peak_id_pos, peak_id_neg, min_pos, min_neg,
         within_plus_minus):
-        print 'Lower bound: ' + str(-1 * within_plus_minus)
-        print 'Upper bound: ' + str(within_plus_minus)
-        print 'Peak pos: ' + str(peak_id_pos.text)
-        print 'Peak neg: ' + str(peak_id_neg.text)
-        print 'Min pos: ' + str(min_pos)
-        print 'Min neg: ' + str(min_neg)
+        print('Lower bound: ' + str(-1 * within_plus_minus))
+        print('Upper bound: ' + str(within_plus_minus))
+        print('Peak pos: ' + str(peak_id_pos.text))
+        print('Peak neg: ' + str(peak_id_neg.text))
+        print('Min pos: ' + str(min_pos))
+        print('Min neg: ' + str(min_neg))
         try:
             if not -1 * within_plus_minus < int(peak_id_pos.text
                 ) < within_plus_minus:
@@ -1548,5 +1548,5 @@ class OvernightTesting(Screen):
                 return False
             return True
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             return False

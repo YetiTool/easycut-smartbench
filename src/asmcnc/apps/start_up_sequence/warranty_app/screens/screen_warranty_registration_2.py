@@ -169,7 +169,7 @@ class WarrantyScreen2(Screen):
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print 'Could not get serial number! Please contact YetiTool support!'
+            print('Could not get serial number! Please contact YetiTool support!')
         return str(serial_number_from_file)
 
     def next_screen(self):
