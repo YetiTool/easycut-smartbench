@@ -9,13 +9,14 @@ from pipes import quote
 from chardet import detect
 from itertools import takewhile
 import traceback
+
 decode_and_encode = lambda x: str(x, detect(x)['encoding']).encode('utf-8')
 
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
         return ' '
-    gcode_line = decode_and_encode(gcode_line).strip('\n\r')
+    gcode_line = decode_and_encode(gcode_line).strip(b'\n\r')
     return gcode_line
 
 
