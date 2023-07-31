@@ -1032,7 +1032,7 @@ class RouterMachine(object):
 
         # if any of the busy conditions are true, then the machine is busy
         # and we return True and the busy conditions that are true
-        if any(busy_conditions):
+        if any(busy_conditions.values()):
             return True, [k for k, v in busy_conditions.items() if v]
         return False, []
 
@@ -1701,7 +1701,6 @@ class RouterMachine(object):
         if busy or self.run_calibration:
             self.schedule_homing_event(func, delay)
             print(why)
-            print(self.run_calibration)
             return True
 
     def unschedule_homing_events(self):
