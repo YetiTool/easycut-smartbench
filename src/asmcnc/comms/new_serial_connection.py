@@ -196,7 +196,7 @@ class SerialConnection:
             self.logger.error(e)
             return False
 
-    def start_services(self):
+    def start_services(self, dt=None):
         self.logger.info("Starting services")
         self.s.flushInput()
 
