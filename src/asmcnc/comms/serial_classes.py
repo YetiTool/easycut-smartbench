@@ -186,10 +186,10 @@ class TMCRegisters:
 @dataclass
 class Settings:
     def store_variable(self, variable, value):
-        setattr(self, 's' + variable, value)
+        setattr(self, 's' + str(variable), value)
 
     def get_variable(self, variable):
-        return getattr(self, 's' + variable)
+        return getattr(self, 's' + str(variable))
 
 @dataclass
 class G28:
