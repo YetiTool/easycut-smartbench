@@ -1,26 +1,22 @@
-# -*- coding: utf-8 -*-
-'''
+"""
 Created March 2020
 
 @author: Letty
 
 Screen to handle door command, and allow user to resume.
-'''
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.animation import Animation
-
 import sys, os
-
-from asmcnc.skavaUI import widget_status_bar  # @UnresolvedImport
-
-# Kivy UI builder:
-Builder.load_string("""
+from asmcnc.skavaUI import widget_status_bar
+Builder.load_string(
+    """
 
 <DoorScreen>:
 
@@ -204,37 +200,43 @@ Builder.load_string("""
                         allow_stretch: True 
                 
 
-""")
+"""
+    )
 
-# This screen only gets activated when the PHYSICAL door pin is activated. Firmware automatically flicks to door state.
 
 class DoorScreen(Screen):
-
-    poll_for_resume = None 
+    poll_for_resume = None
     return_to_screen = 'home'
-
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
 
-    
     def __init__(self, **kwargs):
-    
         super(DoorScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
         self.jd = kwargs['job']
         self.db = kwargs['database']
-        self.l=kwargs['localization']
-
+        self.l = kwargs['localization']
         self.header_label.text = self.l.get_bold('Interrupt bar pushed!')
-
-        self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
-        self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
-        self.anim_stop_bar = Animation(x = 150, duration = 0.3) + Animation(x = 153, duration = 0.2) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 1.6) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
-        self.anim_stop_img = Animation(opacity = 0, duration = 0.3) +Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
-
-        self.anim_spindle_label_end = Animation(opacity = 0, duration = 0.5)
-        self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
+        self.anim_spindle_label = Animation(opacity=1, duration=1.5
+            ) + Animation(opacity=0, duration=0.5) + Animation(opacity=0,
+            duration=1.5) + Animation(opacity=1, duration=0.5)
+        self.anim_countdown_img = Animation(opacity=0, duration=1.5
+            ) + Animation(opacity=1, duration=0.5) + Animation(opacity=1,
+            duration=1.5) + Animation(opacity=0, duration=0.5)
+        self.anim_stop_bar = Animation(x=150, duration=0.3) + Animation(x=
+            153, duration=0.2) + Animation(x=151, duration=0.2) + Animation(x
+            =152, duration=0.2) + Animation(x=152, duration=0.2) + Animation(x
+            =152, duration=0.2) + Animation(x=152, duration=1.6) + Animation(x
+            =140, duration=2) + Animation(x=140, duration=2)
+        self.anim_stop_img = Animation(opacity=0, duration=0.3) + Animation(
+            opacity=1, duration=0.2) + Animation(opacity=0.8, duration=0.2
+            ) + Animation(opacity=1, duration=0.2) + Animation(opacity=0.8,
+            duration=0.2) + Animation(opacity=1, duration=0.2) + Animation(
+            opacity=1, duration=1.6) + Animation(opacity=0, duration=2
+            ) + Animation(opacity=0, duration=2)
+        self.anim_spindle_label_end = Animation(opacity=0, duration=0.5)
+        self.anim_countdown_img_end = Animation(opacity=0, duration=0.5)
 
     def on_pre_enter(self):
         self.resume_button.disabled = True
@@ -243,28 +245,30 @@ class DoorScreen(Screen):
         self.cancel_button.opacity = 0
 
     def on_enter(self):
-
         if not str(self.m.state()).startswith('Door:0'):
-            print(str(self.m.state()))
+            print str(self.m.state())
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)
-            self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
-
-        else: Clock.schedule_once(self.ready_to_resume, 0.2)
-
-        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
+            self.poll_for_resume = Clock.schedule_interval(lambda dt: self.
+                check_spindle_has_raised(), 0.2)
+        else:
+            Clock.schedule_once(self.ready_to_resume, 0.2)
+        self.db.send_event(1, 'Job paused', 
+            'Paused job (Interrupt bar pushed): ' + self.jd.job_name, 3)
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
-        if self.poll_for_resume != None: Clock.unschedule(self.poll_for_resume)
+        if self.poll_for_resume != None:
+            Clock.unschedule(self.poll_for_resume)
         self.anim_stop_bar.repeat = False
         self.anim_stop_img.repeat = False
 
     def on_leave(self):
-        self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
+        self.spindle_raise_label.text = self.l.get_str(
+            'Preparing to resume, please wait') + '...'
 
-    def start_x_beam_animation(self,dt):
+    def start_x_beam_animation(self, dt):
         self.anim_stop_bar.start(self.x_beam)
         self.anim_stop_img.start(self.stop_img)
 
@@ -274,19 +278,16 @@ class DoorScreen(Screen):
             self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
-
-        if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
-
+        if str(self.m.state()).startswith('Door:0') or not str(self.m.state()
+            ).startswith('Door'):
             Clock.unschedule(self.poll_for_resume)
             self.anim_spindle_label.repeat = False
             self.anim_countdown_img.repeat = False
             self.anim_spindle_label.cancel(self.spindle_raise_label)
             self.anim_countdown_img.cancel(self.countdown_image)
             self.anim_countdown_img_end.start(self.countdown_image)
-
             Clock.schedule_once(self.ready_to_resume, 0.2)
             self.start_x_beam_animation(1.5)
-
 
     def ready_to_resume(self, dt):
         self.resume_button.opacity = 1
@@ -295,28 +296,28 @@ class DoorScreen(Screen):
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
-        self.spindle_raise_label.text = '...' + self.l.get_str('ready to resume')
+        self.spindle_raise_label.text = '...' + self.l.get_str(
+            'ready to resume')
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):
-        # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.
+            job_name, 4)
         self.m.resume_after_a_hard_door()
         self.return_to_app()
 
     def cancel_stream(self):
         if self.return_to_screen == 'go':
-            self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+            self.sm.get_screen('job_incomplete').prep_this_screen('cancelled',
+                event_number=False)
             self.return_to_screen = 'job_incomplete'
-
         else:
-            self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-
+            self.m.s.cancel_sequential_stream(reset_grbl_after_cancel=False)
         self.m.cancel_after_a_hard_door()
         self.return_to_app()
-            
+
     def return_to_app(self):
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen
-        else: self.sm.current = 'lobby'
-        
+        else:
+            self.sm.current = 'lobby'

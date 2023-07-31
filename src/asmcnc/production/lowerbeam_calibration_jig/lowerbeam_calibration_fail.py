@@ -1,8 +1,8 @@
 from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <LBCalibrationFail>:
     success_label:success_label
 
@@ -45,12 +45,14 @@ Builder.load_string("""
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+    )
+
 
 class LBCalibrationFail(Screen):
+
     def __init__(self, **kwargs):
         super(LBCalibrationFail, self).__init__(**kwargs)
-
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 

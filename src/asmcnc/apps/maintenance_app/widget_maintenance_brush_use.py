@@ -1,18 +1,16 @@
-'''
+"""
 Created on 17 August 2020
 @author: Letty
 widget to hold brush use input and buttons
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <BrushUseWidget>
     
@@ -132,32 +130,29 @@ Builder.load_string("""
                             allow_stretch: True 
 
 
-""")
+"""
+    )
 
 
 class BrushUseWidget(Widget):
-
     default_font_size = 24
 
     def __init__(self, **kwargs):
-    
         super(BrushUseWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
+        self.l = kwargs['localization']
         self.update_strings()
-        
+
     def restore(self):
-        self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
+        self.brush_use.text = str(int(self.m.spindle_brush_use_seconds / 3600))
 
     def reset_to_0(self):
         self.brush_use.text = '0'
 
     def update_strings(self):
-        self.brush_use_label.text = self.l.get_bold("BRUSH USE")
-        self.hours_label.text = self.l.get_str("hours")
-
+        self.brush_use_label.text = self.l.get_bold('BRUSH USE')
+        self.hours_label.text = self.l.get_str('hours')
         self.update_font_size(self.brush_use_label)
 
     def update_font_size(self, value):
@@ -169,13 +164,3 @@ class BrushUseWidget(Widget):
             value.font_size = self.default_font_size - 6
         if len(value.text) > 35:
             value.font_size = self.default_font_size - 7
-
-
-
-
-
-
-
-
-
-

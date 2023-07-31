@@ -1,20 +1,17 @@
-'''
+"""
 Created on 2 March 2020
 Tutorial Screen for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-from __builtin__ import False
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterTutorialScreenClass>
 
@@ -287,61 +284,59 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutterTutorialScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
-    screen_number = StringProperty("[b]I[/b]")
-    title_label = StringProperty("[b]Using the app[/b]")
-#     user_instructions = StringProperty()
-    
-    instructions_list = ["Use the Back and Next buttons to move through each section.\n\n",
-                                       "Use the navigation tabs to move between sections.\n\n",
-                                       "Press the [b]i[/b] if you need more information.\n\n",
-                                       "For more help, see the video at www.yetitool.com/support"]
-    
+    screen_number = StringProperty('[b]I[/b]')
+    title_label = StringProperty('[b]Using the app[/b]')
+    instructions_list = [
+        'Use the Back and Next buttons to move through each section.\n\n',
+        """Use the navigation tabs to move between sections.
+
+""",
+        'Press the [b]i[/b] if you need more information.\n\n',
+        'For more help, see the video at www.yetitool.com/support']
+
     def __init__(self, **kwargs):
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
+        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.user_instructions.text = ''
-        
         self.info_button.disabled = True
         self.next_arrow.disabled = True
         self.back_arrow.disabled = True
 
-    def on_enter(self):   
+    def on_enter(self):
         Clock.schedule_once(lambda dt: self.append_instructions(0), 0.5)
-        Clock.schedule_once(lambda dt: self.flashy_arrows(), 1)        
-        
+        Clock.schedule_once(lambda dt: self.flashy_arrows(), 1)
         Clock.schedule_once(lambda dt: self.append_instructions(1), 3.5)
         Clock.schedule_once(lambda dt: self.flashy_tabs(), 4)
-        
         Clock.schedule_once(lambda dt: self.append_instructions(2), 7)
         Clock.schedule_once(lambda dt: self.flashy_info(), 7.5)
-        
         Clock.schedule_once(lambda dt: self.append_instructions(3), 10)
         Clock.schedule_once(lambda dt: self.enable_buttons(), 10)
-        
+
     def append_instructions(self, n):
-        self.user_instructions.text = self.user_instructions.text + str(self.instructions_list[n])
+        self.user_instructions.text = self.user_instructions.text + str(self
+            .instructions_list[n])
 
     def flashy_arrows(self):
         arrow_flash = Clock.schedule_interval(lambda dt: arrow_opacity(), 0.2)
         Clock.schedule_once(lambda dt: cancel_arrow_flash(), 1.9)
-        
+
         def arrow_opacity():
             if self.next_arrow.opacity == 1:
                 self.next_arrow.opacity = 0.6
                 self.back_arrow.opacity = 0.6
-            else: 
+            else:
                 self.next_arrow.opacity = 1
                 self.back_arrow.opacity = 1
-                      
+
         def cancel_arrow_flash():
             Clock.unschedule(arrow_flash)
             self.next_arrow.opacity = 1
@@ -350,49 +345,45 @@ class ShapeCutterTutorialScreenClass(Screen):
     def flashy_tabs(self):
         self.flash_counter = 0
         tab_flash = Clock.schedule_interval(lambda dt: tab_opacity(), 0.4)
-        
+
         def tab_opacity():
             if self.flash_counter == 0:
                 self.flash_counter = 1
                 self.prepare_tab.opacity = 0.6
-            elif self.flash_counter == 1: 
+            elif self.flash_counter == 1:
                 self.flash_counter = 2
                 self.prepare_tab.opacity = 1
                 self.load_tab.opacity = 0.6
-            elif self.flash_counter == 2: 
+            elif self.flash_counter == 2:
                 self.flash_counter = 3
                 self.load_tab.opacity = 1
                 self.define_tab.opacity = 0.6
-            elif self.flash_counter == 3: 
+            elif self.flash_counter == 3:
                 self.flash_counter = 4
                 self.define_tab.opacity = 1
                 self.position_tab.opacity = 0.6
-            elif self.flash_counter == 4: 
+            elif self.flash_counter == 4:
                 self.flash_counter = 5
                 self.position_tab.opacity = 1
-                self.check_tab.opacity = 0.6                                             
-            elif self.flash_counter == 5: 
+                self.check_tab.opacity = 0.6
+            elif self.flash_counter == 5:
                 self.flash_counter = 0
                 self.check_tab.opacity = 1
                 cancel_tab_flash()
-                    
+
         def cancel_tab_flash():
             Clock.unschedule(tab_flash)
-
-
-
-# Action buttons       
 
     def flashy_info(self):
         info_flash = Clock.schedule_interval(lambda dt: info_opacity(), 0.2)
         Clock.schedule_once(lambda dt: cancel_info_flash(), 1.9)
-        
+
         def info_opacity():
             if self.info_button.opacity == 1:
                 self.info_button.opacity = 0.4
-            else: 
+            else:
                 self.info_button.opacity = 1
-                
+
         def cancel_info_flash():
             Clock.unschedule(info_flash)
             self.info_button.opacity = 1
@@ -401,52 +392,47 @@ class ShapeCutterTutorialScreenClass(Screen):
         self.info_button.disabled = False
         self.next_arrow.disabled = False
         self.back_arrow.disabled = False
-                
+
     def get_info(self):
-        info = "Hi there! I'm a pop-up!.\n\n" \
-                "If you get stuck, I'm here to give you some handy hints and tips ;). \n\n" \
-                "Happy shaping!"
+        info = """Hi there! I'm a pop-up!.
+
+If you get stuck, I'm here to give you some handy hints and tips ;). 
+
+Happy shaping!"""
         popup_info.PopupInfo(self.shapecutter_sm, info)
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
-# Tutorial specific functions
-
     def arrows(self):
         pass
-    
+
     def nav_tabs(self):
         pass
-    
+
     def info_button(self):
         pass
-    
+
     def more_help(self):
         pass
-    
-
-        

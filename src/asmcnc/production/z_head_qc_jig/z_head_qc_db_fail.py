@@ -2,8 +2,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.logging import log_exporter
 import os, sys
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCDBFail>:
     success_label:success_label
 
@@ -49,13 +49,14 @@ Builder.load_string("""
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+    )
 
 
 class ZHeadQCDBFail(Screen):
+
     def __init__(self, **kwargs):
         super(ZHeadQCDBFail, self).__init__(**kwargs)
-
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
