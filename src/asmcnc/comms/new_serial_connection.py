@@ -653,9 +653,9 @@ class SerialConnection:
 
         wco = [float(i) for i in wco]
 
-        self.work_coordinate_offset.x = wco[0]
-        self.work_coordinate_offset.y = wco[1]
-        self.work_coordinate_offset.z = wco[2]
+        self.wco.x = wco[0]
+        self.wco.y = wco[1]
+        self.wco.z = wco[2]
 
     def process_buffer_info(self, buffer_info):
         if len(buffer_info) != 2:

@@ -1259,7 +1259,7 @@ class RouterMachine(object):
         return float(self.s.wco.x)
 
     def y_wco(self):
-        return float(self.s.work_coordinate_offset.y)
+        return float(self.s.wco.y)
 
     def z_wco(self):
         return float(self.s.wco.z)
