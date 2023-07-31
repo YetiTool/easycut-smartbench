@@ -282,7 +282,7 @@ class UpdateTestingScreen(Screen):
         while True:
             line = proc.stdout.readline()
             stdout_buffer.append(line)
-            print line,
+            print line
             if line == '' and proc.poll() != None:
                 break
         # return ''.join(stdout_buffer)
