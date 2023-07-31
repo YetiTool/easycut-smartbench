@@ -78,7 +78,7 @@ class SerialConnection:
     # DATA CLASSES (probably replace all default values with None)
     machine_position: serial_classes.MachinePosition = serial_classes.MachinePosition(0, 0, 0, False, False, False)
     work_position: serial_classes.WorkPosition = serial_classes.WorkPosition(0, 0, 0)
-    work_coordinate_offset: serial_classes.WorkCoordinateOffset = serial_classes.WorkCoordinateOffset(0, 0, 0)
+    wco: serial_classes.WorkCoordinateOffset = serial_classes.WorkCoordinateOffset(0, 0, 0)
     buffer_info: serial_classes.BufferInfo = serial_classes.BufferInfo(0, 0, False)
     pin_info: serial_classes.PinInfo = serial_classes.PinInfo(False, False, False, False, False, False, False, False,
                                                               False, False, False, False)
