@@ -54,6 +54,7 @@ class SerialConnection:
     _sequential_stream_buffer: list = []
     _dwell_time: float = 0.5
     _dwell_command: str = 'G4 P' + str(_dwell_time)
+    _micro_dwell_command = 'G4 P' + str(0.01)
 
     is_sequential_streaming: bool = False
     is_job_streaming: bool = False
@@ -1084,3 +1085,25 @@ class SerialConnection:
 
     def is_connected(self):
         return self.s and self.s.is_open
+
+    def start_sequential_stream(self, list_to_stream,
+        reset_grbl_after_stream=False, end_dwell=False):
+        self.is_sequential_streaming = True
+        log('Start_sequential_stream')
+        if reset_grbl_after_stream:
+            list_to_stream.append(self._dwell_command)
+        elif end_dwell:
+            list_to_stream.append(self._micro_dwell_command)
+        self._sequential_stream_buffer = list_to_stream
+        self._reset_grbl_after_stream = reset_grbl_after_stream
+        self._ready_to_send_first_sequential_stream = True
+
+    def cancel_sequential_stream(self, reset_grbl_after_cancel=False):
+        self._sequential_stream_buffer = []
+        self._process_oks_from_sequential_streaming = False
+        self._ready_to_send_first_sequential_stream = False
+        if reset_grbl_after_cancel or self._reset_grbl_after_stream:
+            self._reset_grbl_after_stream = False
+            self.m._grbl_soft_reset()
+            print('GRBL Reset after sequential stream cancelled')
+        self.is_sequential_streaming = False
