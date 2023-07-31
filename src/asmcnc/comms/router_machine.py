@@ -1701,6 +1701,7 @@ class RouterMachine(object):
         if busy or self.run_calibration:
             self.schedule_homing_event(func, delay)
             print(why)
+            print(self.run_calibration)
             return True
 
     def unschedule_homing_events(self):
