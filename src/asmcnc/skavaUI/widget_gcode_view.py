@@ -253,7 +253,7 @@ class GCodeView(Widget):
         self.last_x, self.last_y, self.last_z = '0', '0', '0'
         self.plane = 'G17'
         self.move = '0'
-        self.feeds_and_speeds.feed_rate = 0
+        self.feed_rate = 0
         self.feed_rate_list = []
         self.speed_list = []
         self.xy_preview_gcode = []
