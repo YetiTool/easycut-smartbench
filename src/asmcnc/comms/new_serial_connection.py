@@ -689,12 +689,13 @@ class SerialConnection:
         self.pin_info.dust_shoe_cover = 'G' in pin_info
 
         if 'Y' or 'y' in pin_info:
-            if int(self.versions.firmware.split('.')[0]) < 2:
-                self.pin_info.limit_y = 'y' in pin_info
-                self.pin_info.limit_Y = 'Y' in pin_info
-            else:
-                self.pin_info.limit_Y_axis = 'y' in pin_info
-                self.pin_info.stall_Y = 'Y' in pin_info
+            if self.versions.firmware:
+                if int(self.versions.firmware.split('.')[0]) < 2:
+                    self.pin_info.limit_y = 'y' in pin_info
+                    self.pin_info.limit_Y = 'Y' in pin_info
+                else:
+                    self.pin_info.limit_Y_axis = 'y' in pin_info
+                    self.pin_info.stall_Y = 'Y' in pin_info
         else:
             self.pin_info.limit_y = False
             self.pin_info.limit_Y = False
