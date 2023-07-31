@@ -116,7 +116,7 @@ class SpeedOverride(Widget):
         super(SpeedOverride, self).__init__(**kwargs)
 
     def update_spindle_speed_label(self):
-        self.spindle_rpm.text = str(self.m.feeds_and_speeds.spindle_speed())
+        self.spindle_rpm.text = str(self.m.spindle_speed())
 
     def update_speed_percentage_override_label(self):
         self.speed_override = (self.m.s.
