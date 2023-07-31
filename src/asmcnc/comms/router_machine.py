@@ -1031,9 +1031,9 @@ class RouterMachine(object):
         }
 
         # if any of the busy conditions are true, then the machine is busy
-        # and we return True and the busy conditions
+        # and we return True and the busy conditions that are true
         if any(busy_conditions):
-            return True, [condition for condition in busy_conditions if condition]
+            return True, [k for k, v in busy_conditions.items() if v]
 
     def smartbench_is_busy(self):
         if not self.state().startswith('Idle'):
