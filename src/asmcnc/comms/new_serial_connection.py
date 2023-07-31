@@ -16,7 +16,6 @@ from kivy.clock import Clock
 from asmcnc.comms import serial_classes
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 from asmcnc.job.yetipilot import yetipilot
-from asmcnc.comms.router_machine import RouterMachine
 
 
 class SerialConnection:
@@ -125,8 +124,8 @@ class SerialConnection:
     spindle_freeload: int = None
     yp: yetipilot.YetiPilot = None
 
-    def __init__(self, machine: RouterMachine, screen_manager, settings_manager, localization, job, logger):
-        self.m: RouterMachine = machine
+    def __init__(self, machine, screen_manager, settings_manager, localization, job, logger):
+        self.m = machine
         self.sm = screen_manager
         self.sett = settings_manager
         self.l = localization
