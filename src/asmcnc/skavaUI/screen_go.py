@@ -805,18 +805,16 @@ class GoScreen(Screen):
         self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
-        if abs(self.speedOverride.feeds_and_speeds.speed_override - 100) > abs(
+        if abs(self.speedOverride.speed_override - 100) > abs(
             self.spindle_speed_max_percentage - 100):
-            self.spindle_speed_max_percentage = (self.speedOverride.
-                feeds_and_speeds.speed_override)
+            self.spindle_speed_max_percentage = (self.speedOverride.speed_override)
         if (self.speedOverride.spindle_rpm.text > self.
             spindle_speed_max_absolute):
             self.spindle_speed_max_absolute = (self.speedOverride.
                 spindle_rpm.text)
-        if abs(self.feedOverride.feeds_and_speeds.feed_override - 100) > abs(
+        if abs(self.feedOverride.feed_override - 100) > abs(
             self.feed_rate_max_percentage - 100):
-            self.feed_rate_max_percentage = (self.feedOverride.
-                feeds_and_speeds.feed_override)
+            self.feed_rate_max_percentage = (self.feedOverride.feed_override)
         if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
             self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 
