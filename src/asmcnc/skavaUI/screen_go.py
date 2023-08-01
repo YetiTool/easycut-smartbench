@@ -743,8 +743,9 @@ class GoScreen(Screen):
         try:
             self.m.s.run_job(self.jd.job_gcode_modified)
             log('Job started ok from go screen...')
-        except:
+        except Exception as e:
             log('Job start from go screen failed!')
+            print(traceback.format_exc())
 
     def return_to_app(self):
         if self.m.fw_can_operate_zUp_on_pause():
