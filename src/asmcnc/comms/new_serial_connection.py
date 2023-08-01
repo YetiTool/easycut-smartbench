@@ -1118,3 +1118,65 @@ class SerialConnection:
             self.m._grbl_soft_reset()
             print('GRBL Reset after sequential stream cancelled')
         self.is_sequential_streaming = False
+
+    def check_job(self, job_object):
+        self.m.enable_check_mode()
+        self.set_use_yp(False)
+
+        def check_job_inner_function():
+            if self.m_state == 'Check':
+                self.check_streaming_started = True
+                self.suppress_error_screens = True
+                self.response_log = []
+                self.run_job(job_object)
+                Clock.schedule_interval(lambda dt: self.return_check_outcome(job_object), 0.1)
+            else:
+                Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+        Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+
+    def return_check_outcome(self, job_object):
+        if len(self.response_log) >= job_object:
+            self.suppress_error_screens = False
+            self.sm.get_screen('check_job').error_log = self.response_log
+            return False
+
+    def reset_job_info(self):
+        self.grbl_ln = None
+        self.jd.grbl_mode_tracker = []
+
+    def run_job(self, job_object):
+        self.reset_job_info()
+        self.jd.job_gcode_running = job_object
+
+        if self.initialise_job() and self.jd.job_gcode_running:
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
+        elif not self.jd.job_gcode_running:
+            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
+
+    def initialise_job(self):
+        if self.m_state != 'Check':
+            self.m.set_led_colour('GREEN')
+            self.m.zUp()
+
+        self.flush_flag = True
+        self.NOT_SKELETON_STUFF = True
+        time.sleep(0.1)
+        self._reset_counters()
+        return True
+
+    def run_skeleton_buffer_stuffer(self, job_object):
+        self.reset_job_info()
+        self.jd.job_gcode_running = job_object
+
+        self.m.set_pause(False)
+        self.flush_flag = True
+        self.NOT_SKELETON_STUFF = False
+        time.sleep(0.1)
+
+        self._reset_counters()
+        if self.jd.job_gcode_running:
+            Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
+
+    def set_streaming_flags_to_true(self):
+        self.is_stream_lines_remaining = True
+        self.is_job_streaming = True
