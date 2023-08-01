@@ -809,8 +809,8 @@ class GoScreen(Screen):
         if abs(self.speedOverride.speed_override - 100) > abs(
             self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = (self.speedOverride.speed_override)
-        if (int(self.speedOverride.spindle_rpm.text) > self.
-            spindle_speed_max_absolute):
+        if (int(self.speedOverride.spindle_rpm.text) > int(self.
+            spindle_speed_max_absolute)):
             self.spindle_speed_max_absolute = (self.speedOverride.
                 spindle_rpm.text)
         if abs(self.feedOverride.feed_override_percentage - 100) > abs(
