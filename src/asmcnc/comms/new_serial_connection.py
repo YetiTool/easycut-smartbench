@@ -361,6 +361,10 @@ class SerialConnection:
         self.stream_end_time = time.time()
 
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10
+
+        if not self.stream_paused_accumulated_time:
+            self.stream_paused_accumulated_time = 0
+
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
 
         self.jd.pause_duration = str(timedelta(seconds=self.stream_paused_accumulated_time)).split('.')[0]
