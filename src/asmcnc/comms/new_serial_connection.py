@@ -335,12 +335,12 @@ class SerialConnection:
                     Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
 
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
-                    self.raise_screen('spindle_cooldown')
+                    Clock.schedule_once(lambda dt: self.raise_screen('spindle_cooldown'))
                 else:
                     self.m.spindle_off()
                     time.sleep(0.4)
                     self.update_machine_runtime()
-                    self.raise_screen('job_feedback')
+                    Clock.schedule_once(lambda dt: self.raise_screen('job_feedback'))
                 if not self.jd.job_recovery_skip_recovery:
                     self.jd.write_to_recovery_file_after_completion()
             else:
@@ -539,7 +539,7 @@ class SerialConnection:
                         if self.sm.current != 'door':
                             # log
                             self.sm.get_screen('door').return_to_screen = self.sm.current
-                            Clock.schedule_once(lambda dt: self.raise_screen('door'), 0.1)
+                            Clock.schedule_once(lambda dt: self.raise_screen('door'))
                 elif part.startswith('Ld'):
                     spindle_feedback = part.split(':')[1]
 
@@ -1090,7 +1090,7 @@ class SerialConnection:
             self.m.stop_for_a_stream_pause('spindle_overload')
             self.sm.get_screen('spindle_shutdown').reason_for_pause = 'spindle_overload'
             self.sm.get_screen('spindle_shutdown').return_screen = self.sm.current
-            self.raise_screen('spindle_shutdown')
+            Clock.schedule_once(lambda dt: self.raise_screen('spindle_shutdown'))
 
             self.sm.get_screen('go').update_overload_peak(self.overload_state)
         else:
