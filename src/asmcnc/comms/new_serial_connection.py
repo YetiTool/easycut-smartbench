@@ -335,12 +335,12 @@ class SerialConnection:
                     Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
 
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
-                    self.sm.current = 'spindle_cooldown'
+                    self.raise_screen('spindle_cooldown')
                 else:
                     self.m.spindle_off()
                     time.sleep(0.4)
                     self.update_machine_runtime()
-                    self.sm.current = 'job_feedback'
+                    self.raise_screen('job_feedback')
                 if not self.jd.job_recovery_skip_recovery:
                     self.jd.write_to_recovery_file_after_completion()
             else:
@@ -443,6 +443,9 @@ class SerialConnection:
     def raise_error_screen(self):
         self.sm.current = 'errorScreen'
 
+    def raise_screen(self, screen_name):
+        self.sm.current = screen_name
+
     def process_grbl_response(self, received):
         if self.suppress_error_screens:
             self.response_log.append(received)
@@ -536,7 +539,7 @@ class SerialConnection:
                         if self.sm.current != 'door':
                             # log
                             self.sm.get_screen('door').return_to_screen = self.sm.current
-                            self.sm.current = 'door'
+                            Clock.schedule_once(lambda dt: self.raise_screen('door'), 0.1)
                 elif part.startswith('Ld'):
                     spindle_feedback = part.split(':')[1]
 
@@ -1087,7 +1090,7 @@ class SerialConnection:
             self.m.stop_for_a_stream_pause('spindle_overload')
             self.sm.get_screen('spindle_shutdown').reason_for_pause = 'spindle_overload'
             self.sm.get_screen('spindle_shutdown').return_screen = self.sm.current
-            self.sm.current = 'spindle_shutdown'
+            self.raise_screen('spindle_shutdown')
 
             self.sm.get_screen('go').update_overload_peak(self.overload_state)
         else:
