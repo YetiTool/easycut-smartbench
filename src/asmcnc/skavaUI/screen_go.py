@@ -816,7 +816,7 @@ class GoScreen(Screen):
         if abs(self.feedOverride.feed_override_percentage - 100) > abs(
             self.feed_rate_max_percentage - 100):
             self.feed_rate_max_percentage = (self.feedOverride.feed_override_percentage)
-        if int(self.feedOverride.feed_absolute.text) > self.feed_rate_max_absolute:
+        if int(self.feedOverride.feed_absolute.text) > int(self.feed_rate_max_absolute):
             self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 
     def update_overload_label(self, state):
