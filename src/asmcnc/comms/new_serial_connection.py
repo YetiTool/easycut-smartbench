@@ -386,8 +386,13 @@ class SerialConnection:
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
-        time_without_current_pause = (self.stream_pause_start_time - self.
-                                      stream_start_time - self.stream_paused_accumulated_time)
+        if self.stream_pause_start_time:
+            time_without_current_pause = (self.stream_pause_start_time - self.
+                                          stream_start_time - self.stream_paused_accumulated_time)
+        else:
+            time_without_current_pause = (self.stream_start_time -
+                                          self.stream_paused_accumulated_time)
+
         self._reset_counters()
         return time_without_current_pause
 
@@ -1102,7 +1107,7 @@ class SerialConnection:
         return self.s and self.s.is_open
 
     def start_sequential_stream(self, list_to_stream,
-        reset_grbl_after_stream=False, end_dwell=False):
+                                reset_grbl_after_stream=False, end_dwell=False):
         self.is_sequential_streaming = True
         print('Start_sequential_stream')
         if reset_grbl_after_stream:
@@ -1136,6 +1141,7 @@ class SerialConnection:
                 Clock.schedule_interval(lambda dt: self.return_check_outcome(job_object), 0.1)
             else:
                 Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
     def return_check_outcome(self, job_object):
