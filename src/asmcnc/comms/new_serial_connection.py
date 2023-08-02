@@ -269,6 +269,9 @@ class SerialConnection:
 
                 # Process data received
                 if len(received):
+
+                    self.logger.info(" < " + received)
+
                     if received.startswith(('ok', 'error')):
                         self.process_grbl_response(received)
                     else:
@@ -615,8 +618,6 @@ class SerialConnection:
 
             self.process_setting(setting, value)
         elif message.startswith('['):
-            print("RECEIVED MESSAGE: " + message)
-
             trans_table = str.maketrans('', '', '[]')
 
             stripped_message = message.translate(trans_table)
@@ -635,8 +636,6 @@ class SerialConnection:
                 self.process_probe_result(successful_probe, stripped_message)
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
-
-                self.logger.info("RECEIVED VERSIONS: " + str(fw_hw_versions))
 
                 self.process_fw_hw_versions(fw_hw_versions)
         elif re.match(self.GRBL_INITIALISATION_MESSAGE, message):
