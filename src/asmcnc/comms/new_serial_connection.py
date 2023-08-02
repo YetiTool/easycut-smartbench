@@ -269,9 +269,6 @@ class SerialConnection:
 
                 # Process data received
                 if len(received):
-
-                    self.logger.info(" < " + received)
-
                     if received.startswith(('ok', 'error')):
                         self.process_grbl_response(received)
                     else:
