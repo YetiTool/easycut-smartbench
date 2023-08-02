@@ -435,7 +435,9 @@ class SerialConnection:
             self.logger.info(' >>> ' + alt_display_text)
 
         if show_in_console and alt_display_text is None:
-            pass  # TODO: add console output
+            self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serial_command)
+        elif alt_display_text is not None:
+            self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', alt_display_text)
 
         if self.s:
             if realtime:
