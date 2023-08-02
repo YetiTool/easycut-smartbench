@@ -36,7 +36,7 @@ class Keyboard(VKeyboard):
         except:
             pass
 
-        # self.do_translation = False
+        self.do_translation = False
         self.width = Window.width
         self.height = 250
         self.pos = (Window.width - self.width, 0)
