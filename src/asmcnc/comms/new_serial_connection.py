@@ -621,8 +621,6 @@ class SerialConnection:
         elif message.startswith('$'):
             setting, value = message.split('=', 1)
 
-            print('Setting: ' + setting + ' Value: ' + value)
-
             self.process_setting(setting, value)
         elif message.startswith('['):
             trans_table = str.maketrans('', '', '[]')
