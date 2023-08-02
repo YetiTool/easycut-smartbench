@@ -634,6 +634,8 @@ class SerialConnection:
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
 
+                self.logger.info("RECEIVED VERSIONS: " + str(fw_hw_versions))
+
                 self.process_fw_hw_versions(fw_hw_versions)
         elif re.match(self.GRBL_INITIALISATION_MESSAGE, message):
             self.grbl_waiting_for_reset = False
