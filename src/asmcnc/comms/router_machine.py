@@ -697,11 +697,6 @@ class RouterMachine(object):
 
         if all(conditions):
             return True
-        else:
-            print('Not using SC2')
-            false_conditions = [i for i, x in enumerate(conditions) if not x]
-            print(false_conditions)
-            return False
 
     def is_spindle_health_check_active(self):
         return self.is_spindle_health_check_enabled_as_default
@@ -1255,7 +1250,7 @@ class RouterMachine(object):
         return 'SmartBench model detection failed'
 
     def get_dollar_setting(self, setting_num):
-        return getattr(self.s, 'setting_' + str(setting_num), 0)
+        return self.s.settings.get_variable(setting_num)
 
     def x_pos_str(self):
         return self.s.machine_position.x
