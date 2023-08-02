@@ -238,7 +238,7 @@ class SerialConnection:
 
     def write_all_protocol_buffer(self):
         if self.write_protocol_buffer and not self.is_protocol_busy():
-            self.write_direct(self.write_protocol_buffer[0], protocol=True)
+            self.write_direct(self.write_protocol_buffer[0], protocol=True, alt_display_text=self.write_protocol_buffer[1])
             del self.write_protocol_buffer[0]
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
