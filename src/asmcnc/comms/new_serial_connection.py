@@ -426,10 +426,9 @@ class SerialConnection:
         if not serial_command and not isinstance(serial_command, str):
             serial_command = str(serial_command)
 
-        print(serial_command)
-
-        if not serial_command.startswith('?') and not protocol:
-            self.logger.info(' >>> ' + serial_command)
+        if not protocol:
+            if not serial_command.startswith('?'):
+                self.logger.info(' >>> ' + serial_command)
 
         if alt_display_text is not None:
             self.logger.info(' >>> ' + alt_display_text)
