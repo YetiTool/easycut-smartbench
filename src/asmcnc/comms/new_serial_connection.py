@@ -974,7 +974,7 @@ class SerialConnection:
         setting_num = int(setting[1:])
 
         # should these be float or int?
-        value = int(float(value))
+        value = float(value)
         self.settings.store_variable(setting_num, value)
 
         if setting_num == 110:
