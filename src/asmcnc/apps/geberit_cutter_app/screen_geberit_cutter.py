@@ -1,11 +1,16 @@
+import os, sys, subprocess
 from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_info
 
 import svgwrite
+from svgpathtools import svg2paths, parse_path
 
 Builder.load_string("""
 <GeberitCutterScreen>:
@@ -264,7 +269,11 @@ class GeberitCutterScreen(Screen):
             self.current_panel_selection.rotate_clockwise()
 
     def save(self):
-        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=(self.editor_container.width,self.editor_container.height))
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('Please wait'))
+        Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
+
+    def convert_to_gcode(self):
+        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
         for panel in self.editor_container.children:
             # When a panel is drawn, a scaling and translation is applied, which vertically flips the svg
             # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
@@ -274,10 +283,32 @@ class GeberitCutterScreen(Screen):
             # Second element of bbox tuple has size of panel, and swaps width/height on rotation, so saves us rotating manually
             panel_size = panel.bbox[1]
 
-            dwg.add(dwg.rect(panel_pos, panel_size, fill='none', stroke='black', transform=transformation))
+            dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
         dwg.save()
 
-        # self.reset_editor()
+        # The svg now has to be converted to paths, as required by the gcode converter
+        paths, attributes = svg2paths(self.svg_output_filepath)
+        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
+        for path in paths:
+            # Convert from svgpathtools path to svgwrite path using shared attribute d
+            dwg.add(svgwrite.path.Path(path.d(), fill='white', stroke='black'))
+        dwg.save()
+
+        if sys.platform != "win32":
+            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o /home/pi/easycut-smartbench/src/jobCache/geberit_cutter_output.gcode"
+            working_directory = '/home/pi/svg2gcode'
+        else:
+            # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
+            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o %s/jobCache/geberit_cutter_output.gcode" % (os.getcwd(), os.getcwd(), os.getcwd())
+            working_directory = os.getcwd() + '/../../svg2gcode'
+
+        # This is required because command needs to be executed from svg2gcode folder
+        subprocess.Popen(cmd.split(), cwd=working_directory).wait()
+
+        self.wait_popup.popup.dismiss()
+        popup_info.PopupInfo(self.sm, self.l, 500, self.l.get_str("Gcode file saved to filechooser!"))
+
+        self.reset_editor()
 
     def reset_editor(self):
         self.editor_container.clear_widgets()
