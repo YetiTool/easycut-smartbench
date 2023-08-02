@@ -3,7 +3,7 @@
 # No change shall be made to the byte_command, no end of line is required: use write_realtime()
 
 
-from c_defines import *  # definitions common between FW and console SW
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 import logging
 import crc8
 
