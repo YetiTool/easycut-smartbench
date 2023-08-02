@@ -615,6 +615,8 @@ class SerialConnection:
 
             self.process_setting(setting, value)
         elif message.startswith('['):
+            print("RECEIVED MESSAGE: " + message)
+
             trans_table = str.maketrans('', '', '[]')
 
             stripped_message = message.translate(trans_table)
