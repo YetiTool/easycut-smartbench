@@ -238,7 +238,8 @@ class SerialConnection:
 
     def write_all_protocol_buffer(self):
         if self.write_protocol_buffer and not self.is_protocol_busy():
-            self.write_direct(self.write_protocol_buffer[0], protocol=True, alt_display_text=self.write_protocol_buffer[1])
+            self.write_direct(self.write_protocol_buffer[0][0], protocol=True,
+                              alt_display_text=self.write_protocol_buffer[0][1])
             del self.write_protocol_buffer[0]
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
@@ -424,8 +425,6 @@ class SerialConnection:
                      protocol=False):
         if not serial_command and not isinstance(serial_command, str):
             serial_command = str(serial_command)
-
-        print(serial_command)
 
         if not serial_command.startswith('?') and not protocol:
             self.logger.info(' >>> ' + serial_command)
