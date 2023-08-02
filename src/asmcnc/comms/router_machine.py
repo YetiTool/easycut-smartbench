@@ -690,10 +690,18 @@ class RouterMachine(object):
         return self.grbl_y_max_travel > 2000.0
 
     def is_using_sc2(self):
-        return self.is_machines_fw_version_equal_to_or_greater_than_version(
-            '2.2.8', 'SC2 capable') and self.theateam(
-            ) and self.get_dollar_setting(51
-            ) and self.stylus_router_choice != 'stylus'
+        conditions = [self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'SC2 capable'),
+                      self.theateam(),
+                      self.get_dollar_setting(51),
+                      self.stylus_router_choice != 'stylus']
+
+        if all(conditions):
+            return True
+        else:
+            print('Not using SC2')
+            false_conditions = [i for i, x in enumerate(conditions) if not x]
+            print(false_conditions)
+            return False
 
     def is_spindle_health_check_active(self):
         return self.is_spindle_health_check_enabled_as_default
