@@ -87,7 +87,7 @@ class YetiPilot(object):
         self.m.speed_override_reset()
 
     def ldA_to_watts(self, load):
-        return self.digital_spindle.mains_voltage * 0.1 * sqrt(load)
+        return self.digital_spindle_mains_voltage * 0.1 * sqrt(load)
 
     def get_multiplier(self, load):
         if load > self.get_total_target_power():
@@ -198,7 +198,7 @@ class YetiPilot(object):
         :param feed_override_percentage: the current feed override percentage
         :param feed_rate: the current feed rate
         """
-        self.digital_spindle.mains_voltage = digital_spindle_mains_voltage
+        self.digital_spindle_mains_voltage = digital_spindle_mains_voltage
         digital_spindle_ld_w = self.ldA_to_watts(digital_spindle_ld_qdA)
         if len(self.digital_spindle_load_stack
             ) == self.spindle_load_stack_size:
