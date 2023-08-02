@@ -21,14 +21,15 @@ class protocol_v2(object):
         if packet_length <= RTL_V2_COMMAND_SIZE_MAX:
             hash = crc8.crc8()
             byte_array = self.custom_int_to_bytes(packet_length
-                ) + self.custom_int_to_bytes(self.sequence_number
-                ) + self.custom_int_to_bytes(command) + data
+                                                  ) + self.custom_int_to_bytes(self.sequence_number
+                                                                               ) + self.custom_int_to_bytes(
+                command) + data
             hash.update(byte_array)
             byte_command += bytearray([CMD_RTL_V2]) + byte_array + hash.digest(
-                )
+            )
             if printlog:
                 logging.info('sending command :' + str(command) + ', val:' +
-                    str(data))
+                             str(data))
                 logging.info(str([hex(b) for b in byte_command]))
         else:
             logging.info('ERROR: unknown RTL command ' + ', cmd:' + str(
@@ -46,7 +47,7 @@ class protocol_v2(object):
     def RGB_LED(self, R, G, B):
         command = SET_RGB_LED_STATE
         byte_array = self.custom_int_to_bytes(R) + self.custom_int_to_bytes(G
-            ) + self.custom_int_to_bytes(B)
+                                                                            ) + self.custom_int_to_bytes(B)
         return self.construct_rtl_v2_packet(command, byte_array)
 
     def SetExtractorState(self, ExtractorState):
@@ -64,8 +65,8 @@ class protocol_v2(object):
         u16_data = SpindleSpeed
         byte_array = ''
         for idx in range(data_length):
-            byte_array = byte_array + self.custom_int_to_bytes(u16_data >> 
-                idx * 8 & 255)
+            byte_array = byte_array + self.custom_int_to_bytes(u16_data >>
+                                                               idx * 8 & 255)
         return self.construct_rtl_v2_packet(command, byte_array)
 
     def SetLaserDatumState(self, LaserDatumState):
@@ -87,7 +88,7 @@ class protocol_v2(object):
             SerialNumber = SerialNumber[len(SerialNumber) - data_length:]
         if len(SerialNumber) < data_length:
             SerialNumber = '0' * (data_length - len(SerialNumber)
-                ) + SerialNumber
+                                  ) + SerialNumber
         byte_array = str.encode(SerialNumber)
         return self.construct_rtl_v2_packet(command, byte_array)
 
@@ -98,7 +99,7 @@ class protocol_v2(object):
             ProductVersion = ProductVersion[len(ProductVersion) - data_length:]
         if len(ProductVersion) < data_length:
             ProductVersion = '0' * (data_length - len(ProductVersion)
-                ) + ProductVersion
+                                    ) + ProductVersion
         byte_array = str.encode(ProductVersion)
         return self.construct_rtl_v2_packet(command, byte_array)
 
@@ -130,8 +131,8 @@ class protocol_v2(object):
     def constructTMCcommand(self, cmd, data, len):
         command = TMC_COMMAND
         data_length = len
-        byte_array = self.custom_int_to_bytes(cmd)
+        byte_array = bytes(cmd)
         for idx in range(data_length):
-            byte_array = byte_array + self.custom_int_to_bytes(data >> idx *
-                8 & 255)
+            byte_array = byte_array + bytes(data >> idx *
+                                            8 & 255)
         return self.construct_rtl_v2_packet(command, byte_array)
