@@ -211,6 +211,9 @@ class SerialConnection:
         self.grbl_scanner_thread.daemon = True
         self.grbl_scanner_thread.start()
 
+        self.m.bootup_sequence()
+        self.m.starting_serial_connection = False
+
     def update_next_poll_time(self):
         self.next_poll_time = time.time() + self.STATUS_INTERVAL
 
