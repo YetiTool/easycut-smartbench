@@ -109,6 +109,7 @@ class SerialConnection:
     running_data: list = None
 
     VERBOSE_STATUS: bool = False
+    VERBOSE_ALL_RESPONSE: bool = False
 
     # LAST SENT VARIABLES
     last_sent_motion_mode: int = None
@@ -266,14 +267,17 @@ class SerialConnection:
             if self.s.inWaiting():
                 try:
                     received = self.s.readline().decode('utf-8').strip()
-
-                    self.logger.info(" < " + received)
                 except serial.SerialException as e:
                     self.logger.error(e)
                     continue
 
                 # Process data received
                 if len(received):
+                    if self.VERBOSE_ALL_RESPONSE:
+                        self.logger.info(" < " + received)
+
+                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', received)
+
                     if received.startswith(('ok', 'error')):
                         self.process_grbl_response(received)
                     else:
