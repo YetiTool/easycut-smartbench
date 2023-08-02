@@ -738,6 +738,7 @@ class RouterMachine(object):
             error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + """.
 
  Please check Z Head connection."""
+            print(traceback.format_exc())
             log(error_description)
             return False
         if machine_fw_parts[0] > ref_version_parts[0]:
