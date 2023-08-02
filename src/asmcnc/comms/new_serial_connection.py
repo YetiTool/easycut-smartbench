@@ -144,7 +144,7 @@ class SerialConnection:
 
     def write_to_serial(self, message):
         if self.s is not None:
-            message = message if isinstance(bytes, message) else message.encode('utf-8')
+            message = message if isinstance(message, bytes) else message.encode('utf-8')
             self.s.write(message)
 
     def get_ports_to_try(self):
