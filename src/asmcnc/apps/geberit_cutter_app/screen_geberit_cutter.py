@@ -273,6 +273,7 @@ class GeberitCutterScreen(Screen):
         Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
 
     def convert_to_gcode(self):
+        # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
         dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
         for panel in self.editor_container.children:
             # When a panel is drawn, a scaling and translation is applied, which vertically flips the svg
@@ -289,9 +290,11 @@ class GeberitCutterScreen(Screen):
         # The svg now has to be converted to paths, as required by the gcode converter
         paths, attributes = svg2paths(self.svg_output_filepath)
         dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
-        for path in paths:
+        for i, path in enumerate(paths):
+            # Recover attributes of current path, or else transformation is lost
+            path_attributes = attributes[i]
             # Convert from svgpathtools path to svgwrite path using shared attribute d
-            dwg.add(svgwrite.path.Path(path.d(), fill='white', stroke='black'))
+            dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
         dwg.save()
 
         if sys.platform != "win32":
