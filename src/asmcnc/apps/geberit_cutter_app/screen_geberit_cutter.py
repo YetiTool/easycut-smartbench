@@ -170,10 +170,12 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                padding: [dp(0), dp(10), dp(10), dp(10)]
+                padding: [dp(5), dp((self.height - (self.width / 2)) / 2)]
 
                 BoxLayout:
-                    padding: [dp(0), dp((self.height - (self.width / 2)) / 2)]
+                    width: dp(600)
+                    height: dp(300)
+                    size_hint: (None, None)
 
                     BoxLayout:
                         canvas.before:
