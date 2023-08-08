@@ -17,6 +17,8 @@ Builder.load_string("""
 
     editor_container:editor_container
 
+    filename_input:filename_input
+
     BoxLayout:
         orientation: 'horizontal'
 
@@ -72,6 +74,7 @@ Builder.load_string("""
                             allow_stretch: True
 
             TextInput:
+                id: filename_input
                 size_hint_y: 0.4
                 font_size: dp(23)
                 multiline: False
@@ -271,8 +274,11 @@ class GeberitCutterScreen(Screen):
             self.current_panel_selection.rotate_clockwise()
 
     def save(self):
-        self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('Please wait'))
-        Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
+        if self.filename_input.text.endswith(('.nc','.NC','.gcode','.GCODE','.GCode','.Gcode','.gCode')):
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('Please wait'))
+            Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
+        else:
+            popup_info.PopupError(self.sm, self.l, "Please ensure that the filename ends with a valid GCode file extension.")
 
     def convert_to_gcode(self):
         # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
@@ -312,11 +318,11 @@ class GeberitCutterScreen(Screen):
         dwg.save()
 
         if sys.platform != "win32":
-            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o /home/pi/easycut-smartbench/src/jobCache/geberit_cutter_output.gcode"
+            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o /home/pi/easycut-smartbench/src/jobCache/%s" % self.filename_input.text
             working_directory = '/home/pi/svg2gcode'
         else:
             # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
-            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o %s/jobCache/geberit_cutter_output.gcode" % (os.getcwd(), os.getcwd(), os.getcwd())
+            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o %s/jobCache/%s" % (os.getcwd(), os.getcwd(), os.getcwd(), self.filename_input.text)
             working_directory = os.getcwd() + '/../../svg2gcode'
 
         # This is required because command needs to be executed from svg2gcode folder
@@ -331,6 +337,7 @@ class GeberitCutterScreen(Screen):
         self.editor_container.clear_widgets()
         self.panels_added = 0
         self.current_panel_selection = None
+        self.filename_input.text = ""
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
