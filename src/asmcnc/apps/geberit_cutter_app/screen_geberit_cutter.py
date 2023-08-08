@@ -276,13 +276,25 @@ class GeberitCutterScreen(Screen):
         # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
         dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
         for panel in self.editor_container.children:
+            # Position has to be converted to local coordinates of the container, as they are relative to the window
+            panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
+
             # When a panel is drawn, a scaling and translation is applied, which vertically flips the svg
             # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
             transformation = "scale(1,-1) translate(0,%s)" % -self.editor_container.height
-            # Position has to be converted to local coordinates of the container, as they are relative to the window
-            panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
-            # Second element of bbox tuple has size of panel, and swaps width/height on rotation, so saves us rotating manually
-            panel_size = panel.bbox[1]
+
+            # Now rotate around the centre of the panel, which again needs the coord converted
+            panel_centre = self.editor_container.to_local(*panel.center, relative=True)
+            # Then add rotation
+            transformation += " rotate(%s,%s,%s)" % (panel.rotation, panel_centre[0], panel_centre[1])
+
+            # If the panel is turned sideways
+            if int(panel.rotation) % 180 != 0:
+                # Then rotation will mess up its position so align centre first
+                # It is important to note that this has to be added after the rotation, because transformations are performed right to left
+                transformation += " translate(%s,%s)" % (panel.width/2, -panel.height/4)
+
+            panel_size = (panel.width, panel.height)
 
             dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
         dwg.save()
