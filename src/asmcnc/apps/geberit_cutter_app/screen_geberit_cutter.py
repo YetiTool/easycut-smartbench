@@ -275,7 +275,7 @@ class GeberitCutterScreen(Screen):
 
     def save(self):
         if self.filename_input.text.endswith(('.nc','.NC','.gcode','.GCODE','.GCode','.Gcode','.gCode')):
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('Please wait'))
+            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
         else:
             popup_info.PopupError(self.sm, self.l, "Please ensure that the filename ends with a valid GCode file extension.")
@@ -304,7 +304,31 @@ class GeberitCutterScreen(Screen):
 
             panel_size = (panel.width, panel.height)
 
+            # Create rectangle for panel background
             dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
+
+            # Set up objects for the detail of the panel as relative to rectangle position and size
+            # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
+            big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
+            big_circle_radius = panel.height / 10
+            dwg.add(dwg.circle(big_circle_centre, big_circle_radius, fill='white', stroke='black', transform=transformation))
+
+            small_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height * 0.45))
+            small_circle_radius = panel.height / 40
+            dwg.add(dwg.circle(small_circle_centre, small_circle_radius, fill='white', stroke='black', transform=transformation))
+
+            small_rect_pos = (panel_pos[0] + (panel.width / 4), panel_pos[1] + (panel.height * 0.78))
+            small_rect_size = (panel.width / 2, panel.width / 4)
+            dwg.add(dwg.rect(small_rect_pos, small_rect_size, fill='white', stroke='black', transform=transformation))
+
+            rounded_rect_size = (panel.width / 6, panel.width / 16)
+            roundedness = rounded_rect_size[0] / 10
+
+            rounded_rect_left_pos = (panel_pos[0] + (panel.width * 0.18), panel_pos[1] + (panel.height * 0.37))
+            dwg.add(dwg.rect(rounded_rect_left_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+
+            rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
+            dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
         dwg.save()
 
         # The svg now has to be converted to paths, as required by the gcode converter
@@ -317,6 +341,7 @@ class GeberitCutterScreen(Screen):
             dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
         dwg.save()
 
+        # Now, convert to gcode
         if sys.platform != "win32":
             cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o /home/pi/easycut-smartbench/src/jobCache/%s" % self.filename_input.text
             working_directory = '/home/pi/svg2gcode'
