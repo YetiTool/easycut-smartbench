@@ -18,6 +18,9 @@ Builder.load_string("""
     editor_container:editor_container
 
     filename_input:filename_input
+    feed_input:feed_input
+    speed_input:speed_input
+    depth_input:depth_input
 
     BoxLayout:
         orientation: 'horizontal'
@@ -108,55 +111,63 @@ Builder.load_string("""
                     spacing: dp(10)
                     padding: [dp(10), dp(10), dp(10), dp(0)]
 
+                    # BoxLayout:
+                    #     orientation: 'horizontal'
+                    #     spacing: dp(10)
+
+                    #     TextInput:
+                    #         font_size: dp(20)
+                    #         multiline: False
+                    #         hint_text: 'Stock length'
+                    #         input_filter: 'int'
+                    #         disabled: True
+
+                    #     TextInput:
+                    #         font_size: dp(20)
+                    #         multiline: False
+                    #         hint_text: 'Stock width'
+                    #         input_filter: 'int'
+                    #         disabled: True
+
+                    #     TextInput:
+                    #         font_size: dp(20)
+                    #         multiline: False
+                    #         hint_text: 'Stock depth'
+                    #         input_filter: 'int'
+                    #         disabled: True
+
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing: dp(10)
 
                         TextInput:
-                            font_size: dp(20)
-                            multiline: False
-                            hint_text: 'Stock length'
-                            input_filter: 'int'
-
-                        TextInput:
-                            font_size: dp(20)
-                            multiline: False
-                            hint_text: 'Stock width'
-                            input_filter: 'int'
-
-                        TextInput:
-                            font_size: dp(20)
-                            multiline: False
-                            hint_text: 'Stock depth'
-                            input_filter: 'int'
-
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing: dp(10)
-
-                        TextInput:
+                            id: feed_input
                             font_size: dp(20)
                             multiline: False
                             hint_text: 'Feed'
                             input_filter: 'int'
 
                         TextInput:
+                            id: speed_input
                             font_size: dp(20)
                             multiline: False
                             hint_text: 'Speed'
                             input_filter: 'int'
 
                         TextInput:
+                            id: depth_input
                             font_size: dp(20)
                             multiline: False
                             hint_text: 'Pass depth'
                             input_filter: 'int'
 
-                        TextInput:
-                            font_size: dp(20)
-                            multiline: False
-                            hint_text: '# of passes'
-                            input_filter: 'int'
+                        # TextInput:
+                        #     font_size: dp(20)
+                        #     multiline: False
+                        #     hint_text: '# of passes'
+                        #     input_filter: 'int'
+
+                    BoxLayout
 
                 Button:
                     size_hint_x: 0.2
@@ -274,6 +285,10 @@ class GeberitCutterScreen(Screen):
             self.current_panel_selection.rotate_clockwise()
 
     def save(self):
+        if not (self.filename_input.text and self.feed_input.text and self.speed_input.text and self.depth_input.text):
+            popup_info.PopupError(self.sm, self.l, "Please ensure that every text box is filled in.")
+            return
+
         if self.filename_input.text.endswith(('.nc','.NC','.gcode','.GCODE','.GCode','.Gcode','.gCode')):
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
@@ -343,11 +358,14 @@ class GeberitCutterScreen(Screen):
 
         # Now, convert to gcode
         if sys.platform != "win32":
-            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o /home/pi/easycut-smartbench/src/jobCache/%s" % self.filename_input.text
+            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
+            # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
+            cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
             working_directory = '/home/pi/svg2gcode'
         else:
             # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
-            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg --off M5 --on M3 -o %s/jobCache/%s" % (os.getcwd(), os.getcwd(), os.getcwd(), self.filename_input.text)
+            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
+            cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
             working_directory = os.getcwd() + '/../../svg2gcode'
 
         # This is required because command needs to be executed from svg2gcode folder
@@ -363,6 +381,9 @@ class GeberitCutterScreen(Screen):
         self.panels_added = 0
         self.current_panel_selection = None
         self.filename_input.text = ""
+        self.feed_input.text = ""
+        self.speed_input.text = ""
+        self.depth_input.text = ""
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
