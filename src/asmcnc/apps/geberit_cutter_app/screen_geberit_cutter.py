@@ -287,7 +287,7 @@ class GeberitCutterScreen(Screen):
 
         if self.filename_input.text.endswith(('.nc','.NC','.gcode','.GCODE','.GCode','.Gcode','.gCode')):
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-            Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.1)
+            Clock.schedule_once(lambda dt: self.convert_to_gcode(), 0.5)
         else:
             popup_info.PopupError(self.sm, self.l, "Please ensure that the filename ends with a valid GCode file extension.")
 
