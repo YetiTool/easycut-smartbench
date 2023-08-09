@@ -360,12 +360,12 @@ class GeberitCutterScreen(Screen):
         if sys.platform != "win32":
             cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
             # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
-            cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
+            cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
             working_directory = '/home/pi/svg2gcode'
         else:
             # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
             cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
-            cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
+            cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
             working_directory = os.getcwd() + '/../../svg2gcode'
 
         # This is required because command needs to be executed from svg2gcode folder
