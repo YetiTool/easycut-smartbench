@@ -45,7 +45,6 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_y: 1.3
-                padding: [dp(10), dp(0)]
 
                 Button:
                     background_color: [0,0,0,0]
@@ -61,7 +60,7 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                padding: [dp(25), dp(0)]
+                padding: [dp(15), dp(0)]
 
                 Button:
                     background_color: [0,0,0,0]
@@ -76,15 +75,8 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
 
-            TextInput:
-                id: filename_input
-                size_hint_y: 0.4
-                font_size: dp(23)
-                multiline: False
-                hint_text: 'Enter filename'
-
             BoxLayout:
-                padding: [dp(25), dp(0)]
+                padding: [dp(15), dp(0)]
 
                 Button:
                     background_color: [0,0,0,0]
@@ -167,7 +159,11 @@ Builder.load_string("""
                         #     hint_text: '# of passes'
                         #     input_filter: 'int'
 
-                    BoxLayout
+                    TextInput:
+                        id: filename_input
+                        font_size: dp(20)
+                        multiline: False
+                        hint_text: 'Enter filename'
 
                 Button:
                     size_hint_x: 0.2
