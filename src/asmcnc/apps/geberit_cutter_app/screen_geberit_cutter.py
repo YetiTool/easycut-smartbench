@@ -293,14 +293,18 @@ class GeberitCutterScreen(Screen):
 
     def convert_to_gcode(self):
         # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
-        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
+        # The height and width are switched - this is necessary so that everything is drawn in full size but out of bounds, which is fixed by a reflection further down
+        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
         for panel in self.editor_container.children:
             # Position has to be converted to local coordinates of the container, as they are relative to the window
             panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
 
-            # When a panel is drawn, a scaling and translation is applied, which vertically flips the svg
+            # The long side has to be drawn parallel to the y axis - to solve this, this matrix transformation performs a reflection in the line y=x
+            # This means that the long side can be drawn parallel to the x axis, directly from the kivy coords, instead of figuring out how to switch all the x/y coords
+            transformation = "matrix(0 1 1 0 0 0)"
+            # Additionally, when a panel is drawn, a scaling and translation is applied, which vertically flips the svg
             # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
-            transformation = "scale(1,-1) translate(0,%s)" % -self.editor_container.height
+            transformation += " scale(1,-1) translate(0,%s)" % -self.editor_container.height
 
             # Now rotate around the centre of the panel, which again needs the coord converted
             panel_centre = self.editor_container.to_local(*panel.center, relative=True)
@@ -344,7 +348,7 @@ class GeberitCutterScreen(Screen):
 
         # The svg now has to be converted to paths, as required by the gcode converter
         paths, attributes = svg2paths(self.svg_output_filepath)
-        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('2400mm','1200mm'), viewBox='0 0 %s %s' % (self.editor_container.width, self.editor_container.height))
+        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
         for i, path in enumerate(paths):
             # Recover attributes of current path, or else transformation is lost
             path_attributes = attributes[i]
