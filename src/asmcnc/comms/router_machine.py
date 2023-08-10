@@ -101,8 +101,8 @@ class RouterMachine(object):
         self.set_jog_limits()
         self.win_serial_port = win_serial_port
         self.s = serial_connection.SerialConnection(self, self.sm, self.
-            sett, self.l, self.jd)
-        self.s.establish_connection(win_serial_port)
+            sett, self.l, self.jd, logging.Logger(name=__name__))
+        self.s.connect()
         self.p = protocol.protocol_v2()
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
@@ -116,7 +116,7 @@ class RouterMachine(object):
         self.starting_serial_connection = True
         self.close_serial_connection(0)
         log('Reconnect serial connection')
-        self.s.establish_connection(self.win_serial_port)
+        self.s.connect()
 
     def close_serial_connection(self, dt):
         if self.s.is_connected():
