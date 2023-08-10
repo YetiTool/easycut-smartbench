@@ -211,8 +211,8 @@ class NudgeScreen(Screen):
     def on_pre_enter(self):
         self.initial_x = self.m.mpos_x()
         self.initial_y = self.m.mpos_y()
-        self.initial_g54_x = self.m.s.g54_x
-        self.initial_g54_y = self.m.s.g54_y
+        self.initial_g54_x = self.m.s.g54.x
+        self.initial_g54_y = self.m.s.g54.y
 
     def get_info(self):
         info = self.l.get_str(

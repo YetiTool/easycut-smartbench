@@ -66,14 +66,14 @@ class ZHeadQCConnecting(Screen):
             self.progress_to_next_screen()
 
     def ensure_hw_version_and_registers_are_loaded_in(self):
-        if not self.m.s.fw_version:
+        if not self.m.s.versions.firmware:
             log('Waiting to get FW version')
             self.connecting_label.text = 'Waiting to get FW version'
             Clock.schedule_once(lambda dt: self.
                 ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
         if not self.m.TMC_registers_have_been_read_in(
-            ) and self.m.s.fw_version.startswith('2'):
+            ) and self.m.s.versions.firmware.startswith('2'):
             log('Waiting to get TMC registers')
             self.connecting_label.text = 'Waiting to get TMC registers'
             Clock.schedule_once(lambda dt: self.

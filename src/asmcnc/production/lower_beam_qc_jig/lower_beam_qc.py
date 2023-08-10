@@ -266,20 +266,20 @@ class LowerBeamQC(Screen):
         fail_report = []
         lower_sg_limit = 200
         upper_sg_limit = 800
-        if lower_sg_limit <= self.m.s.sg_y1_motor <= upper_sg_limit:
+        if lower_sg_limit <= self.m.s.stall_guard.y1_motor <= upper_sg_limit:
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('Y1 motor SG value: ' + str(self.m.s.
-                sg_y1_motor))
+                stall_guard.y1_motor))
             fail_report.append('Should be between %s and %s.' % (
                 lower_sg_limit, upper_sg_limit))
-        if lower_sg_limit <= self.m.s.sg_y2_motor <= upper_sg_limit:
+        if lower_sg_limit <= self.m.s.stall_guard.y2_motor <= upper_sg_limit:
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('Y2 motor SG value: ' + str(self.m.s.
-                sg_y2_motor))
+                stall_guard.y2_motor))
             fail_report.append('Should be between %s and %s.' % (
                 lower_sg_limit, upper_sg_limit))
         if not pass_fail:
@@ -303,7 +303,7 @@ class LowerBeamQC(Screen):
         self.y_home_switch()
 
     def y_home_switch(self):
-        if self.m.s.limit_Y_axis:
+        if self.m.s.pin_info.limit_Y_axis:
             self.y_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:

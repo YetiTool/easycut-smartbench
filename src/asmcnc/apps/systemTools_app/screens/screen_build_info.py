@@ -602,7 +602,7 @@ class BuildInfoScreen(Screen):
         self.pl_version_label.text = self.set.platform_version
         self.latest_sw_version = self.set.latest_sw_version
         self.latest_platform_version = self.set.latest_platform_version
-        self.hw_version_label.text = self.m.s.hw_version
+        self.hw_version_label.text = self.m.s.versions.hardware
         self.zh_version_label.text = str(self.m.z_head_version())
         try:
             self.machine_serial_number_label.text = 'YS6' + str(self.m.
@@ -629,8 +629,8 @@ class BuildInfoScreen(Screen):
         self.scrape_fw_version()
 
     def scrape_fw_version(self):
-        self.fw_version_label.text = str(str(self.m.s.fw_version).split(
-            '; HW')[0])
+        self.fw_version_label.text = str(str(self.m.s.versions.firmware).
+            split('; HW')[0])
 
     def open_data_consent_app(self):
         wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, 

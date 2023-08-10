@@ -530,10 +530,10 @@ class GoScreen(Screen):
     def read_spindle_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        if self.m.s.spindle_production_year != 99:
+        if self.m.s.spindle_statistics.production_year != 99:
             try:
                 self.check_brush_use_and_lifetime(self.m.s.
-                    spindle_brush_run_time_seconds, self.m.
+                    spindle_statistics.brush_run_time_seconds, self.m.
                     spindle_brush_lifetime_seconds)
                 return
             except:

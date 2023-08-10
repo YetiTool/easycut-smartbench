@@ -480,14 +480,14 @@ class ZHeadPCBSetUp(Screen):
         self.exit_code = None
         self.set_default_thermal_coefficients()
         self.set_default_z_current()
-        if not self.m.s.hw_version:
+        if not self.m.s.versions.hardware:
             self.hw_info_label.text = "Can't read HW version :("
             return
         self.number_of_drivers = self.generate_no_drivers_based_on_hw_version(
-            self.m.s.hw_version)
+            self.m.s.versions.hardware)
         self.set_default_x_current(self.number_of_drivers)
-        self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.
-            fw_version, self.number_of_drivers)
+        self.generate_hw_and_fw_info_label(self.m.s.versions.hardware, self
+            .m.s.versions.firmware, self.number_of_drivers)
         self.set_default_firmware_version()
 
     def go_to_qc_home(self):
@@ -524,8 +524,8 @@ class ZHeadPCBSetUp(Screen):
         self.alt_v2_firmware_checkbox.state = 'normal'
         try:
             self.get_fw_options_from_usb(self.usb_path)
-            self.choose_recommended_firmware_from_available(self.m.s.hw_version
-                )
+            self.choose_recommended_firmware_from_available(self.m.s.
+                versions.hardware)
             self.firmware_version = self.set_value_to_update_to(self.
                 recommended_firmware_label, self.recommended_firmware_checkbox)
         except:
@@ -734,11 +734,11 @@ Problems getting available FW :("""
                 self.ok_button.text = 'Check pigpiod and AMA0 port'
 
         def set_settings_if_fw_version_high_enough():
-            if not self.m.s.fw_version:
+            if not self.m.s.versions.firmware:
                 Clock.schedule_once(lambda dt:
                     set_settings_if_fw_version_high_enough(), 1)
                 return
-            if str(self.m.s.fw_version).startswith('2'):
+            if str(self.m.s.versions.firmware).startswith('2'):
                 set_currents_and_coeffs()
             else:
                 self.sm.get_screen('qcpcbsetupoutcome'

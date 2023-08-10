@@ -67,7 +67,7 @@ class MotorCommandsTest(unittest.TestCase):
         self.m.s.s = DummySerial(self.give_me_a_PCB())
         self.m.s.s.fd = 1
         self.m.s.start_services(1)
-        self.m.s.motor_driver_temp = self.temp_to_test_against
+        self.m.s.temperatures.motor_driver = self.temp_to_test_against
         sleep(0.01)
 
     def tearDown(self):

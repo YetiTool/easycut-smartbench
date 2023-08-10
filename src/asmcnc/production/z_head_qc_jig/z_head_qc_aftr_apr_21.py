@@ -361,8 +361,8 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.m.s.write_command('$21 = 1')
 
     def scrape_fw_version(self, dt):
-        self.fw_version_label.text = 'FW: ' + str(str(self.m.s.fw_version).
-            split('; HW')[0])
+        self.fw_version_label.text = 'FW: ' + str(str(self.m.s.
+            versions.firmware).split('; HW')[0])
 
     def bake_grbl_settings(self):
         grbl_settings = ['$0=10', '$1=255', '$2=4', '$3=1', '$4=0', '$5=1',
@@ -435,7 +435,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.probe()
 
     def x_home_switch(self):
-        if self.m.s.limit_x:
+        if self.m.s.pin_info.limit_x:
             self.x_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -443,7 +443,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def x_max_switch(self):
-        if self.m.s.limit_X:
+        if self.m.s.pin_info.limit_X:
             self.x_max_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -451,7 +451,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def z_home_switch(self):
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             self.z_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -459,7 +459,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def probe(self):
-        if self.m.s.probe:
+        if self.m.s.pin_info.probe:
             self.probe_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -469,45 +469,47 @@ class ZHeadQCWarrantyAfterApr21(Screen):
     def temp_power_check(self, dt):
         pass_fail = True
         fail_report = []
-        if self.m.s.pcb_temp > 10 and self.m.s.pcb_temp < 70:
+        if self.m.s.temperatures.pcb > 10 and self.m.s.temperatures.pcb < 70:
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
-            fail_report.append('PCB Temperature: ' + str(self.m.s.pcb_temp) +
-                ' degrees C')
+            fail_report.append('PCB Temperature: ' + str(self.m.s.
+                temperatures.pcb) + ' degrees C')
             fail_report.append(
                 'Should be greater than 10 and less than 70 deg C.')
-        if self.m.s.motor_driver_temp > 10 and self.m.s.motor_driver_temp < 60:
+        if (self.m.s.temperatures.motor_driver > 10 and self.m.s.
+            temperatures.motor_driver < 60):
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('Motor Driver Temperature: ' + str(self.m.s.
-                motor_driver_temp) + ' degrees C')
+                temperatures.motor_driver) + ' degrees C')
             fail_report.append(
                 'Should be greater than 10 and less than 60 deg C.')
-        if (self.m.s.microcontroller_mV > 4800 and self.m.s.
-            microcontroller_mV < 5200):
+        if (self.m.s.voltages.microcontroller_mV > 4800 and self.m.s.
+            voltages.microcontroller_mV < 5200):
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('Microcontroller voltage: ' + str(self.m.s.
-                microcontroller_mV) + ' mV')
+                voltages.microcontroller_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4800 and less than 5200 mV.')
-        if self.m.s.LED_mV > 4800 and self.m.s.LED_mV < 5200:
+        if self.m.s.voltages.LED_mV > 4800 and self.m.s.voltages.LED_mV < 5200:
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('LED (dust shoe) voltage: ' + str(self.m.s.
-                LED_mV) + ' mV')
+                voltages.LED_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4800 and less than 5200 mV.')
-        if self.m.s.PSU_mV > 22000 and self.m.s.PSU_mV < 26000:
+        if (self.m.s.voltages.PSU_mV > 22000 and self.m.s.voltages.PSU_mV <
+            26000):
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
-            fail_report.append('24V PSU Voltage: ' + str(self.m.s.PSU_mV) +
-                ' mV')
+            fail_report.append('24V PSU Voltage: ' + str(self.m.s.
+                voltages.PSU_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 22000 and less than 26000 mV.')
         if self.m.s.power_loss_detected == True:
@@ -529,7 +531,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 './asmcnc/skavaUI/img/file_select_select.png')
 
     def cycle_limit_switch(self):
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             self.cycle_limit_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
             self.z_limit_set = True
@@ -616,8 +618,8 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                     )
             elif self.spindle_test_counter > 3:
                 return
-            overload_value = self.m.s.spindle_load_voltage
-            spindle_speed_value = self.m.s.spindle_speed_monitor_mV
+            overload_value = self.m.s.analog_spindle.load_voltage
+            spindle_speed_value = self.m.s.voltages.spindle_speed_monitor_mV
             self.string_overload_summary = (self.string_overload_summary +
                 '\n' + 'Test ' + str(self.spindle_test_counter) +
                 ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +

@@ -325,7 +325,7 @@ Nudging will move the Z head away from Y-home."""
         self.final_y_cal_move = self.initial_y_cal_move + self.nudge_total
         self.measured_y_cal_move = self.y_cal_measure_2 - self.y_cal_measure_1
         self.m.get_grbl_settings()
-        self.existing_y_steps_per_mm = self.m.s.setting_101
+        self.existing_y_steps_per_mm = self.m.s.settings.s101
         self.new_y_steps_per_mm = self.existing_y_steps_per_mm * (self.
             final_y_cal_move / self.measured_y_cal_move)
         self.next_screen()

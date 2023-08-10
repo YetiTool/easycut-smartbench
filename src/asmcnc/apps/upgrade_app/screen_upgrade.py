@@ -193,9 +193,9 @@ class UpgradeScreen(Screen):
 
     def check_restore_info(self, dt):
         self.check_info_count += 1
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.
-            spindle_serial_number not in [None, -999, 999] or self.
-            check_info_count > 10):
+        if (self.m.s.digital_spindle.ld_qdA != -999 and self.m.s.
+            spindle_statistics.serial_number not in [None, -999, 999] or 
+            self.check_info_count > 10):
             self.read_restore_info()
         else:
             Clock.schedule_once(self.check_restore_info, 0.3)
@@ -203,11 +203,11 @@ class UpgradeScreen(Screen):
     def read_restore_info(self):
         self.m.s.write_command('M5')
         self.hide_verifying()
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.
-            spindle_serial_number not in [None, -999, 999]):
+        if (self.m.s.digital_spindle.ld_qdA != -999 and self.m.s.
+            spindle_statistics.serial_number not in [None, -999, 999]):
             self.spindle_label.text = self.l.get_str('Need support?'
                 ) + ' ' + self.l.get_str('Quote Spindle motor number: NN'
-                ).replace('NN', str(self.m.s.spindle_serial_number))
+                ).replace('NN', str(self.m.s.spindle_statistics.serial_number))
             self.check_unlock_code()
         else:
             self.show_error_message(self.l.get_str(
@@ -218,7 +218,7 @@ class UpgradeScreen(Screen):
 
     def check_unlock_code(self):
         correct_unlock_code = self.get_correct_unlock_code(self.m.s.
-            spindle_serial_number)
+            spindle_statistics.serial_number)
         entered_unlock_code = self.upgrade_code_input.text.lower().replace('o',
             '0')
         if correct_unlock_code == entered_unlock_code:

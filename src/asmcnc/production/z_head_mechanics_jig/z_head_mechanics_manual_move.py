@@ -200,11 +200,11 @@ class ZHeadMechanicsManualMove(Screen):
         self.m.request_homing_procedure('manual_move', 'manual_move')
 
     def update_realtime_labels(self, dt):
-        if (self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis ==
-            None):
+        if (self.m.s.stall_guard.z_motor_axis == -999 or self.m.s.
+            stall_guard.z_motor_axis == None):
             self.load_label.text = '-'
         else:
-            self.load_label.text = str(self.m.s.sg_z_motor_axis)
+            self.load_label.text = str(self.m.s.stall_guard.z_motor_axis)
         self.pos_label.text = str(self.m.mpos_z())
 
     def back(self):

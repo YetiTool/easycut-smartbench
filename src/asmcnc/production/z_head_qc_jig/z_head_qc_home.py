@@ -80,7 +80,7 @@ class ZHeadQCHome(Screen):
 
     def on_enter(self):
         try:
-            self.hw_version = int(self.m.s.hw_version)
+            self.hw_version = int(self.m.s.versions.hardware)
             self.update_usb_button_label()
         except:
             print("Can't get HW version or hex file")

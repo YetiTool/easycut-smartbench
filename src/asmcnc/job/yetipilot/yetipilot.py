@@ -82,7 +82,7 @@ class YetiPilot(object):
                 self.sm.get_screen('go').yp_widget.profile_selection.text = ''
             self.sm.get_screen('go').feedOverride.set_widget_visibility(True)
             self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
-        if self.m.s.feed_override_percentage > 100:
+        if self.m.s.feeds_and_speeds.feed_override > 100:
             self.m.feed_override_reset()
         self.m.speed_override_reset()
 
@@ -156,10 +156,11 @@ class YetiPilot(object):
             command_delay = (self.override_command_delay if feed else self.
                 spindle_override_command_delay) * i
             if feed:
-                if self.m.s.feed_override_percentage == 200 and adjustment > 0:
+                if (self.m.s.feeds_and_speeds.feed_override == 200 and 
+                    adjustment > 0):
                     return adjustment_list[:i]
                 percentage_after_adjustments = (adjustment + self.m.s.
-                    feed_override_percentage)
+                    feeds_and_speeds.feed_override)
                 if percentage_after_adjustments < 10:
                     if not self.waiting_for_feed_too_low_decision:
                         self.start_feed_too_low_check()
@@ -212,7 +213,7 @@ class YetiPilot(object):
                 .jd.grbl_mode_tracker[0][1], feed_override_percentage,
                 feed_rate, self.tolerance_for_acceleration_detection)
             gcode_mode = self.m.get_grbl_motion_mode()
-            is_z_moving = self.m.s.z_change
+            is_z_moving = self.m.s.machine_position.z_change
             feed_adjustment_percentage = self.get_feed_adjustment_percentage(
                 average_spindle_load, constant_feed, gcode_mode, is_z_moving)
             feed_adjustments = self.do_override_adjustment(
@@ -241,7 +242,7 @@ class YetiPilot(object):
             is_machine_paused and 'Alarm' not in self.m.state()):
             self.waiting_for_feed_too_low_decision = False
             return
-        if self.m.s.feed_override_percentage == 10:
+        if self.m.s.feeds_and_speeds.feed_override == 10:
             self.stop_and_show_error()
         self.waiting_for_feed_too_low_decision = False
 
