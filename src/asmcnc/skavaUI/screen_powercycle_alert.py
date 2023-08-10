@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
-'''
+"""
 Created March 2020
 
 @author: Letty
 
 Basic screen 
-'''
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
-
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <PowerCycleScreen>:
 
@@ -71,20 +68,23 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'
 
-""")
+"""
+    )
+
 
 class PowerCycleScreen(Screen):
-    
-    def __init__(self, **kwargs):
-        super(PowerCycleScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
 
-        self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
-        self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
+    def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
+        super(PowerCycleScreen, self).__init__(**kwargs)
+        self.finishing_install_label.text = self.l.get_str(
+            'Finishing install... please wait')
+        self.warning_label.text = self.l.get_str('DO NOT POWER OFF SMARTBENCH')
 
     def on_enter(self):
-        self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
+        self.wait_for_install = Clock.schedule_once(self.
+            finished_installing, 30)
         self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
 
     def update_label(self, dt):

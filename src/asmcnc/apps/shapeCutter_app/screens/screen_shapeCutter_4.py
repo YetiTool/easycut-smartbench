@@ -1,16 +1,15 @@
-'''
+"""
 Created on 20 February 2020
 Screen 4 for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter4ScreenClass>
 
@@ -341,55 +340,49 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter4ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
-    screen_number = StringProperty("[b]4[/b]")
-    title_label = StringProperty("[b]Clean SmartBench Axes[/b]")
-    user_instructions = StringProperty("Vacuum the Y bench [b](1)[/b], wheel tracks [b](2)[/b]" \
-                                       " and racks [b](3)[/b].")
-    
+    screen_number = StringProperty('[b]4[/b]')
+    title_label = StringProperty('[b]Clean SmartBench Axes[/b]')
+    user_instructions = StringProperty(
+        'Vacuum the Y bench [b](1)[/b], wheel tracks [b](2)[/b] and racks [b](3)[/b].'
+        )
+
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutter4ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-
-        
-
-        

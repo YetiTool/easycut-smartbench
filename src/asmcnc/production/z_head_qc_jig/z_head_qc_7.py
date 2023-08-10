@@ -3,11 +3,10 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 from asmcnc.skavaUI import widget_status_bar
-
 import datetime
 import os, sys
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQC7>:
     disconnect_button:disconnect_button
     cycle_button:cycle_button
@@ -84,18 +83,19 @@ Builder.load_string("""
             id: status_container
             pos: self.pos
 
-""")
+"""
+    )
+
 
 class ZHeadQC7(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(ZHeadQC7, self).__init__(**kwargs)
-
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
-
-        # Green status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
+            screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self):
@@ -110,7 +110,7 @@ class ZHeadQC7(Screen):
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('qc7','qc7')
+        self.m.request_homing_procedure('qc7', 'qc7')
 
     def resume_from_alarm(self):
         self.m.resume_from_alarm()

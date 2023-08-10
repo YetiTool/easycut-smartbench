@@ -1,25 +1,22 @@
-# -*- coding: utf-8 -*-
-'''
+"""
 Created on 18 November 2020
 Build info screen for system tools app
 
 @author: Letty
-'''
+"""
 import os, sys
-
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 from kivy.metrics import dp
-
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import Factory kivy.factory.Factory
 
@@ -575,82 +572,75 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-""")
+"""
+    )
+
 
 class BuildInfoScreen(Screen):
-
     language_list = []
     reset_language = False
-
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     smartbench_name_filepath = '/home/pi/smartbench_name.txt'
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
         super(BuildInfoScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
-
-        self.smartbench_location_unformatted = self.l.get_str('SmartBench Location')
-        self.smartbench_location_formatted = self.l.get_str('SmartBench Location')
-
+        self.smartbench_location_unformatted = self.l.get_str(
+            'SmartBench Location')
+        self.smartbench_location_formatted = self.l.get_str(
+            'SmartBench Location')
         self.update_strings()
         self.language_button.values = self.l.approved_languages
-
         self.smartbench_name_input.bind(focus=self.on_focus)
-        self.smartbench_location_input.bind(focus = self.on_focus_location)
-
+        self.smartbench_location_input.bind(focus=self.on_focus_location)
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
         self.latest_sw_version = self.set.latest_sw_version
         self.latest_platform_version = self.set.latest_platform_version
-
         self.hw_version_label.text = self.m.s.hw_version
         self.zh_version_label.text = str(self.m.z_head_version())
-        try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
-        except: self.machine_serial_number_label.text = '-'
-
+        try:
+            self.machine_serial_number_label.text = 'YS6' + str(self.m.
+                serial_number())[0:4]
+        except:
+            self.machine_serial_number_label.text = '-'
         self.console_serial_number.text = self.set.console_hostname
-
         self.get_smartbench_model()
         self.get_smartbench_name()
         self.get_smartbench_location()
 
-
-    ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
-    ## GET BUILD INFO
     def on_pre_enter(self, *args):
-        # check if language is up to date, if it isn't update all screen strings
         if self.serial_number_header.text != self.l.get_str('Serial number'):
             self.update_strings()
-
         self.m.send_any_gcode_command('$I')
 
     def on_enter(self, *args):
         self.scrape_fw_version()
 
     def scrape_fw_version(self):
-        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
+        self.fw_version_label.text = str(str(self.m.s.fw_version).split(
+            '; HW')[0])
 
-    
     def open_data_consent_app(self):
-
-        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, self.l.get_str("Loading Data and Wi-Fi") + "...")
+        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, 
+            self.l.get_str('Loading Data and Wi-Fi') + '...')
 
         def nested_open_data_consent_app(dt):
-            self.data_consent_app = screen_manager_data_consent.ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l)
+            self.data_consent_app = (screen_manager_data_consent.
+                ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l))
             self.data_consent_app.open_data_consent('build_info', 'build_info')
             wait_popup.popup.dismiss()
-
         Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
     def do_show_more_info(self):
@@ -661,12 +651,11 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_model(self):
         model = self.m.smartbench_model()
-        if model != "SmartBench model detection failed":
-            self.smartbench_model.text = model.replace("SmartBench ", "").replace("CNC Router", "")
+        if model != 'SmartBench model detection failed':
+            self.smartbench_model.text = model.replace('SmartBench ', ''
+                ).replace('CNC Router', '')
         else:
             self.smartbench_model.text = 'SmartBench CNC Router'
-
-    ## LOCALIZATION TESTING
 
     def choose_language(self):
         chosen_lang = self.language_button.text
@@ -677,15 +666,16 @@ class BuildInfoScreen(Screen):
 
     def toggle_ssh(self):
         toggled = self.set.toggle_ssh()
-
         self.refresh_ssh_button()
-
         if not toggled:
             PopupSSHToggleFailed(localization=self.l)
 
     def refresh_ssh_button(self):
-        enabled_text = self.l.get_str("Enabled") if self.set.is_service_running('ssh') else self.l.get_str("Disabled")
-        self.toggle_ssh_button.text = self.l.get_str("SSH") + ": " + enabled_text
+        enabled_text = self.l.get_str('Enabled'
+            ) if self.set.is_service_running('ssh') else self.l.get_str(
+            'Disabled')
+        self.toggle_ssh_button.text = self.l.get_str('SSH'
+            ) + ': ' + enabled_text
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -694,29 +684,19 @@ class BuildInfoScreen(Screen):
         self.header.text = self.l.get_str('System Information')
         self.smartbench_model_header.text = self.l.get_str('SmartBench model')
         self.serial_number_header.text = self.l.get_str('Serial number')
-        self.console_serial_number_header.text = self.l.get_str('Console hostname')
+        self.console_serial_number_header.text = self.l.get_str(
+            'Console hostname')
         self.software_header.text = self.l.get_str('Software')
         self.platform_header.text = self.l.get_str('Platform')
         self.firmware_header.text = self.l.get_str('Firmware')
         self.zhead_header.text = self.l.get_str('Z head')
         self.hardware_header.text = self.l.get_str('Hardware')
-
         self.refresh_ssh_button()
-
-        self.show_more_info.text = (
-            self.l.get_str('Software') + '\n' + \
-            self.set.sw_branch + '\n' + \
-            self.set.sw_hash + '\n\n' #+ \
-            # self.l.get_str('Platform') + '\n' + \
-            # self.set.pl_branch + '\n' + \
-            # self.set.pl_hash + '\n\n' + \
-            # self.l.get_str('IP Address') + '\n' + \
-            # str(self.set.ip_address)
-            )
-
+        self.show_more_info.text = self.l.get_str('Software'
+            ) + '\n' + self.set.sw_branch + '\n' + self.set.sw_hash + '\n\n'
         self.update_font_sizes()
 
-    def update_font_sizes(self): # Update everything together so it looks nicer
+    def update_font_sizes(self):
         if len(self.firmware_header.text) < 20:
             self.smartbench_model_header.font_size = 20
             self.serial_number_header.font_size = 20
@@ -737,10 +717,8 @@ class BuildInfoScreen(Screen):
             self.hardware_header.font_size = 18
 
     def restart_app(self):
-        if self.reset_language == True: 
+        if self.reset_language == True:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
-
-    ## SMARTBENCH NAMING
 
     def on_focus(self, instance, value):
         if not value:
@@ -750,7 +728,6 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.focus = True
 
     def open_rename(self):
-        
         self.smartbench_name.disabled = True
         self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
@@ -758,48 +735,37 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.height = 40
         self.smartbench_name_input.opacity = 1
         self.smartbench_name.focus = False
-
         Clock.schedule_once(self.set_focus_on_text_input, 0.3)
-        
 
     def save_new_name(self):
         self.smartbench_name_unformatted = self.smartbench_name_input.text
         self.write_name_to_file()
-
         self.smartbench_name_input.focus = False
-
         self.smartbench_name_input.disabled = True
         self.smartbench_name.disabled = False
         self.smartbench_name_input.height = 0
         self.smartbench_name_input.opacity = 0
         self.smartbench_name.height = 40
         self.smartbench_name.opacity = 1
-
         self.get_smartbench_name()
 
     def get_smartbench_name(self):
-        
         self.smartbench_name_unformatted = self.m.device_label
-
-        # Remove newlines
-        self.smartbench_name_formatted = self.smartbench_name_unformatted.replace('\n', ' ')
-        # Remove trailing and leading whitespaces
+        self.smartbench_name_formatted = (self.smartbench_name_unformatted.
+            replace('\n', ' '))
         self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
-
-        self.smartbench_name_label.text = '[b]' + self.smartbench_name_formatted + '[/b]'
+        self.smartbench_name_label.text = ('[b]' + self.
+            smartbench_name_formatted + '[/b]')
         self.smartbench_name_input.text = self.smartbench_name_formatted
 
     def write_name_to_file(self):
-
         if self.m.write_device_label(str(self.smartbench_name_unformatted)):
             return True
-
         else:
             warning_message = self.l.get_str('Problem saving nickname!')
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
+                warning_message)
             return False
-
-    ## SMARTBENCH LOCATION NAMING
 
     def on_focus_location(self, instance, value):
         if not value:
@@ -809,7 +775,6 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.focus = True
 
     def open_rename_location(self):
-        
         self.smartbench_location.disabled = True
         self.smartbench_location_input.disabled = False
         self.smartbench_location.height = 0
@@ -817,13 +782,12 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.height = 30
         self.smartbench_location_input.opacity = 1
         self.smartbench_location.focus = False
-
         Clock.schedule_once(self.set_focus_on_location_input, 0.3)
 
     def save_new_location(self):
-        self.smartbench_location_unformatted = self.smartbench_location_input.text
+        self.smartbench_location_unformatted = (self.
+            smartbench_location_input.text)
         self.write_location_to_file()
-
         self.smartbench_location_input.focus = False
         self.smartbench_location_input.disabled = True
         self.smartbench_location.disabled = False
@@ -833,29 +797,26 @@ class BuildInfoScreen(Screen):
         self.smartbench_location.opacity = 1
         self.get_smartbench_location()
 
-
     def get_smartbench_location(self):
-        
         self.smartbench_location_unformatted = self.m.device_location
-
-        # Remove newlines
-        self.smartbench_location_formatted = self.smartbench_location_unformatted.replace('\n', ' ')
-        # Remove trailing and leading whitespaces
-        self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
-
+        self.smartbench_location_formatted = (self.
+            smartbench_location_unformatted.replace('\n', ' '))
+        self.smartbench_location_formatted = (self.
+            smartbench_location_formatted.strip())
         if self.smartbench_location_formatted == 'SmartBench location':
-            self.smartbench_location_formatted = self.l.get_str('SmartBench location')
-
-        self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
-        self.smartbench_location_input.text = self.smartbench_location_formatted
-
+            self.smartbench_location_formatted = self.l.get_str(
+                'SmartBench location')
+        self.smartbench_location_label.text = ('[b]' + self.
+            smartbench_location_formatted + '[/b]')
+        self.smartbench_location_input.text = (self.
+            smartbench_location_formatted)
 
     def write_location_to_file(self):
-
-        if self.m.write_device_location(str(self.smartbench_location_unformatted)):
+        if self.m.write_device_location(str(self.
+            smartbench_location_unformatted)):
             return True
-
         else:
             warning_message = self.l.get_str('Problem saving location!')
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
+                warning_message)
             return False

@@ -1,13 +1,13 @@
-'''
+"""
 Created on nov 2020
 @author: Ollie
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <WarrantyScreen4>:
 				
@@ -138,25 +138,28 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
 
-""")
+"""
+    )
+
 
 class WarrantyScreen4(Screen):
 
-	def __init__(self, **kwargs):
-		super(WarrantyScreen4, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
+    def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        super(WarrantyScreen4, self).__init__(**kwargs)
+        self.update_strings()
 
-		self.update_strings()
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.success_label.text = self.l.get_str("You have successfully completed your warranty registration.")
-		self.next_button.text = self.l.get_str("Next") + "..."
+    def update_strings(self):
+        self.title_label.text = self.l.get_str(
+            'SmartBench Warranty Registration')
+        self.success_label.text = self.l.get_str(
+            'You have successfully completed your warranty registration.')
+        self.next_button.text = self.l.get_str('Next') + '...'
