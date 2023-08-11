@@ -6,6 +6,7 @@ Screen shown after exiting release notes telling the user to restart
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -53,17 +54,15 @@ Builder.load_string(
                     allow_stretch: True
 
 """
-    )
+)
 
 
 class RestartSmartbenchScreen(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
         super(RestartSmartbenchScreen, self).__init__(**kwargs)
-        self.restart_label.text = self.l.get_str(
-            'Please restart SmartBench now.')
+        self.restart_label.text = self.l.get_str("Please restart SmartBench now.")
 
     def switch_screen(self):
-        self.sm.current = 'release_notes'
+        self.sm.current = "release_notes"

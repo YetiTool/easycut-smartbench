@@ -8,6 +8,7 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
+
 Builder.load_string(
     """
 
@@ -56,15 +57,15 @@ Builder.load_string(
                     markup: True
 
 """
-    )
+)
 
 
 class ShapeCutterExitScreenClass(Screen):
     info_button = ObjectProperty()
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterExitScreenClass, self).__init__(**kwargs)
 
     def on_enter(self):

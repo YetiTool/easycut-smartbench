@@ -7,6 +7,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -322,23 +323,27 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class LanguageSelectScreen(Screen):
-    flag_img_path = (
-        './asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/')
-    welcome_to_smartbench_labels = ['Welcome to SmartBench',
-        'Willkommen bei SmartBench', 'Benvenuto in Smartbench',
-        'Benvenuti in Smartbench', 'Tervetuloa Smartbenchiin',
-        'Witamy w SmartBench', 'Velkommen til SmartBench']
+    flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
+    welcome_to_smartbench_labels = [
+        "Welcome to SmartBench",
+        "Willkommen bei SmartBench",
+        "Benvenuto in Smartbench",
+        "Benvenuti in Smartbench",
+        "Tervetuloa Smartbenchiin",
+        "Witamy w SmartBench",
+        "Velkommen til SmartBench",
+    ]
     welcome_i = 0
     update_welcome_header = None
 
     def __init__(self, **kwargs):
-        self.start_seq = kwargs.pop('start_sequence')
-        self.sm = kwargs.pop('screen_manager')
-        self.l = kwargs.pop('localization')
+        self.start_seq = kwargs.pop("start_sequence")
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
         super(LanguageSelectScreen, self).__init__(**kwargs)
         self.row_1_col_1.text = self.l.approved_languages[0]
         self.row_1_col_2.text = self.l.approved_languages[1]
@@ -347,44 +352,39 @@ class LanguageSelectScreen(Screen):
         self.row_2_col_2.text = self.l.approved_languages[4]
         self.row_2_col_3.text = self.l.approved_languages[5]
         self.row_3_col_1.text = self.l.approved_languages[6]
-        self.row_1_col_1_image.source = self.get_image_filename(self.
-            row_1_col_1)
-        self.row_1_col_2_image.source = self.get_image_filename(self.
-            row_1_col_2)
-        self.row_1_col_3_image.source = self.get_image_filename(self.
-            row_1_col_3)
-        self.row_2_col_1_image.source = self.get_image_filename(self.
-            row_2_col_1)
-        self.row_2_col_2_image.source = self.get_image_filename(self.
-            row_2_col_2)
-        self.row_2_col_3_image.source = self.get_image_filename(self.
-            row_2_col_3)
-        self.row_3_col_1_image.source = self.get_image_filename(self.
-            row_3_col_1)
+        self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
+        self.row_1_col_2_image.source = self.get_image_filename(self.row_1_col_2)
+        self.row_1_col_3_image.source = self.get_image_filename(self.row_1_col_3)
+        self.row_2_col_1_image.source = self.get_image_filename(self.row_2_col_1)
+        self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
+        self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
+        self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
 
     def get_image_filename(self, value):
-        if value.text == 'FranÃ§ais (FR)':
-            return self.flag_img_path + 'Francais (FR)' + '.png'
-        return self.flag_img_path + value.text + '.png'
+        if value.text == "FranÃ§ais (FR)":
+            return self.flag_img_path + "Francais (FR)" + ".png"
+        return self.flag_img_path + value.text + ".png"
 
     def on_enter(self):
-        self.update_welcome_header = Clock.schedule_interval(self.
-            change_welcome_label, 1)
+        self.update_welcome_header = Clock.schedule_interval(
+            self.change_welcome_label, 1
+        )
 
     def change_welcome_label(self, dt):
-        self.header_label.text = self.welcome_to_smartbench_labels[self.
-            welcome_i]
+        self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
         if self.welcome_i < 6:
             self.welcome_i += 1
         else:
             self.welcome_i = 0
 
     def select_language(self, radio_button, language_label):
-        if radio_button.state == 'down':
+        if radio_button.state == "down":
             radio_button.color = [25 / 255.0, 118 / 255.0, 210 / 255.0, 1]
             self.l.load_in_new_language(language_label.text)
-            [self.sm.get_screen(screen).update_strings() for screen in self
-                .start_seq.screen_sequence]
+            [
+                self.sm.get_screen(screen).update_strings()
+                for screen in self.start_seq.screen_sequence
+            ]
             self.next_button.opacity = 1
             self.next_button.disabled = False
         else:
@@ -396,8 +396,8 @@ class LanguageSelectScreen(Screen):
         self.start_seq.next_in_sequence()
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str('Welcome to SmartBench')
-        self.next_button.text = self.l.get_str('Next') + '...'
+        self.header_label.text = self.l.get_str("Welcome to SmartBench")
+        self.next_button.text = self.l.get_str("Next") + "..."
         if self.update_welcome_header:
             Clock.unschedule(self.update_welcome_header)
 

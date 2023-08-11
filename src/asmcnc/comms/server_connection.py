@@ -4,21 +4,23 @@ import threading
 from time import sleep
 from datetime import datetime
 import traceback
+
 PORT = 65432
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' Server connection: ' +
-        str(message))
+    print(
+        timestamp.strftime("%H:%M:%S.%f")[:12] + " Server connection: " + str(message)
+    )
 
 
 class ServerConnection(object):
-    smartbench_name_filepath = '/home/pi/smartbench_name.txt'
-    smartbench_name = 'My SmartBench'
+    smartbench_name_filepath = "/home/pi/smartbench_name.txt"
+    smartbench_name = "My SmartBench"
     sock = None
-    HOST = ''
-    prev_host = ''
+    HOST = ""
+    prev_host = ""
     is_socket_available = True
     doing_reconnect = False
     poll_connection = None
@@ -26,69 +28,64 @@ class ServerConnection(object):
     def __init__(self, settings_manager):
         self.set = settings_manager
         self.get_smartbench_name()
-        server_thread = threading.Thread(target=self.
-            initialise_server_connection)
+        server_thread = threading.Thread(target=self.initialise_server_connection)
         server_thread.daemon = True
         server_thread.start()
 
     def __del__(self):
-        log('Server connection class has been deleted')
+        log("Server connection class has been deleted")
 
     def initialise_server_connection(self):
-        log('Initialising server connection...')
+        log("Initialising server connection...")
         self.HOST = self.set.ip_address
-        log('IP address: ' + str(self.HOST))
+        log("IP address: " + str(self.HOST))
         self.prev_host = self.HOST
         self.doing_reconnect = True
         self.set_up_socket()
-        checking_thread = threading.Thread(target=self.do_check_connection_loop
-            )
+        checking_thread = threading.Thread(target=self.do_check_connection_loop)
         checking_thread.daemon = True
         checking_thread.start()
 
     def set_up_socket(self):
-        log('Attempting to set up socket with IP address: ' + str(self.HOST))
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            if self.HOST != '':
+        log("Attempting to set up socket with IP address: " + str(self.HOST))
+        if sys.platform != "win32" and sys.platform != "darwin":
+            if self.HOST != "":
                 try:
-                    self.sock = socket.socket(socket.AF_INET, socket.
-                        SOCK_STREAM)
-                    self.sock.setsockopt(socket.SOL_SOCKET, socket.
-                        SO_REUSEADDR, 1)
+                    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                     self.sock.bind((self.HOST, PORT))
                     self.sock.listen(5)
                     self.sock.settimeout(20)
                     self.is_socket_available = True
                     try:
-                        log('Thread is alive? ' + str(t.is_alive()))
+                        log("Thread is alive? " + str(t.is_alive()))
                     except:
                         t = threading.Thread(target=self.do_connection_loop)
                         t.daemon = True
                         t.start()
                 except Exception as e:
-                    log('Unable to set up socket, exception: ' + str(e))
+                    log("Unable to set up socket, exception: " + str(e))
             else:
-                log('No IP address available to open socket with.')
+                log("No IP address available to open socket with.")
         else:
             self.set.get_public_ip_address()
         self.doing_reconnect = False
 
     def do_connection_loop(self):
-        log('Starting server connection loop...')
+        log("Starting server connection loop...")
         while True:
             try:
                 """Waiting for connection..."""
                 if self.is_socket_available:
                     self.set.get_public_ip_address()
                     conn, addr = self.sock.accept()
-                    log('Accepted connection with IP address ' + str(self.HOST)
-                        )
+                    log("Accepted connection with IP address " + str(self.HOST))
                     self.set.start_ssh()
                     try:
                         self.get_smartbench_name()
                         conn.send(self.smartbench_name)
                     except:
-                        log('Message not sent')
+                        log("Message not sent")
                     conn.close()
                 else:
                     sleep(20)
@@ -100,7 +97,7 @@ class ServerConnection(object):
                     sleep(20)
 
     def do_check_connection_loop(self):
-        log('Starting connection checking loop...')
+        log("Starting connection checking loop...")
         while True:
             if not self.doing_reconnect:
                 self.check_connection()
@@ -110,14 +107,13 @@ class ServerConnection(object):
         if not self.doing_reconnect:
             self.doing_reconnect = True
             try:
-                log('Closing socket before attempting to reconnect...')
+                log("Closing socket before attempting to reconnect...")
                 self.is_socket_available = False
                 self.sock.shutdown(socket.SHUT_RDWR)
                 self.sock.close()
             except Exception as e:
-                log('Attempted to close socket, but raised exception: ' +
-                    str(e))
-            log('Try to reconnect...')
+                log("Attempted to close socket, but raised exception: " + str(e))
+            log("Try to reconnect...")
             sleep(2)
             self.set_up_socket()
 
@@ -129,10 +125,10 @@ class ServerConnection(object):
 
     def get_smartbench_name(self):
         try:
-            file = open(self.smartbench_name_filepath, 'r')
+            file = open(self.smartbench_name_filepath, "r")
             self.smartbench_name = str(file.read())
             file.close()
         except:
-            self.smartbench_name = 'My SmartBench'
-        self.smartbench_name = self.smartbench_name.replace('\n', ' ')
+            self.smartbench_name = "My SmartBench"
+        self.smartbench_name = self.smartbench_name.replace("\n", " ")
         self.smartbench_name = self.smartbench_name.strip()

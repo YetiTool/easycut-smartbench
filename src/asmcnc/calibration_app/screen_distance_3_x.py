@@ -12,6 +12,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from asmcnc.calibration_app import screen_distance_4_x
+
 Builder.load_string(
     """
 
@@ -264,7 +265,7 @@ Builder.load_string(
                                 text: '[color=455A64]Set and check[/color]'
                                 markup: True
 """
-    )
+)
 
 
 class DistanceScreen3xClass(Screen):
@@ -284,28 +285,28 @@ class DistanceScreen3xClass(Screen):
     x_cal_measure_2 = NumericProperty()
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen3xClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
         self.nudge_counter = 0
-        self.value_input.text = ''
-        self.title_label.text = '[color=000000]X Distance:[/color]'
+        self.value_input.text = ""
+        self.title_label.text = "[color=000000]X Distance:[/color]"
         self.user_instructions_text.text = """Using the nudges move the carriage to achieve a measurement at the next perfect millimeter increment.
 
 Nudging will move the Z head away from X-home."""
         self.test_instructions_label.text = (
-            '[color=000000]Enter the value recorded by your tape measure. [/color]'
-            )
+            "[color=000000]Enter the value recorded by your tape measure. [/color]"
+        )
         self.warning_label.opacity = 0
 
     def nudge_01(self):
-        self.m.jog_relative('X', 0.1, 9999)
+        self.m.jog_relative("X", 0.1, 9999)
         self.nudge_counter += 0.1
 
     def nudge_002(self):
-        self.m.jog_relative('X', 0.02, 9999)
+        self.m.jog_relative("X", 0.02, 9999)
         self.nudge_counter += 0.02
 
     def save_measured_value(self):
@@ -316,18 +317,17 @@ Nudging will move the Z head away from X-home."""
         self.measured_x_cal_move = self.x_cal_measure_2 - self.x_cal_measure_1
         self.m.get_grbl_settings()
         self.existing_x_steps_per_mm = self.m.s.settings.s100
-        self.new_x_steps_per_mm = self.existing_x_steps_per_mm * (self.
-            final_x_cal_move / self.measured_x_cal_move)
+        self.new_x_steps_per_mm = self.existing_x_steps_per_mm * (
+            self.final_x_cal_move / self.measured_x_cal_move
+        )
         self.next_screen()
 
     def next_instruction(self):
-        if self.value_input.text == '':
+        if self.value_input.text == "":
             self.warning_label.opacity = 1
             return
         if self.x_cal_measure_1 == float(self.value_input.text):
-            self.test_instructions_label.text = (
-                '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm incrementand record the new value[/color]'
-                )
+            self.test_instructions_label.text = "[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm incrementand record the new value[/color]"
             return
         self.save_measured_value()
         self.nudge_total = self.nudge_counter
@@ -335,33 +335,35 @@ Nudging will move the Z head away from X-home."""
         self.set_and_check()
 
     def quit_calibration(self):
-        self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
-        self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'tape_measure_alert'
+        self.sm.get_screen(
+            "tape_measure_alert"
+        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("calibration_complete").calibration_cancelled = True
+        self.sm.current = "tape_measure_alert"
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x
-        distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name=
-            'distance1x', screen_manager=self.sm, machine=self.m)
+
+        distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
+            name="distance1x", screen_manager=self.sm, machine=self.m
+        )
         self.sm.add_widget(distance_screen1x)
-        self.sm.current = 'distance1x'
+        self.sm.current = "distance1x"
 
     def skip_section(self):
-        self.sm.get_screen('measurement').axis = 'Y'
-        self.sm.current = 'measurement'
+        self.sm.get_screen("measurement").axis = "Y"
+        self.sm.current = "measurement"
 
     def next_screen(self):
-        if not self.sm.has_screen('distance4x'):
-            distance4x_screen = screen_distance_4_x.DistanceScreen4xClass(name
-                ='distance4x', screen_manager=self.sm, machine=self.m)
+        if not self.sm.has_screen("distance4x"):
+            distance4x_screen = screen_distance_4_x.DistanceScreen4xClass(
+                name="distance4x", screen_manager=self.sm, machine=self.m
+            )
             self.sm.add_widget(distance4x_screen)
-        self.sm.get_screen('distance4x'
-            ).old_x_steps = self.existing_x_steps_per_mm
-        self.sm.get_screen('distance4x').new_x_steps = self.new_x_steps_per_mm
-        self.sm.current = 'distance4x'
+        self.sm.get_screen("distance4x").old_x_steps = self.existing_x_steps_per_mm
+        self.sm.get_screen("distance4x").new_x_steps = self.new_x_steps_per_mm
+        self.sm.current = "distance4x"
 
     def on_leave(self):
-        if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
-            self.sm.remove_widget(self.sm.get_screen('distance3x'))
+        if self.sm.current != "alarmScreen" and self.sm.current != "errorScreen":
+            self.sm.remove_widget(self.sm.get_screen("distance3x"))

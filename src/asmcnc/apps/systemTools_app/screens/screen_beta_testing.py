@@ -12,6 +12,7 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.skavaUI import popup_info
 from kivy.clock import Clock
 import os, sys
+
 Builder.load_string(
     """
 
@@ -283,21 +284,20 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BetaTestingScreen(Screen):
     reset_language = False
 
     def __init__(self, **kwargs):
-        self.systemtools_sm = kwargs.pop('system_tools')
-        self.set = kwargs.pop('settings')
-        self.l = kwargs.pop('localization')
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
         super(BetaTestingScreen, self).__init__(**kwargs)
-        self.user_branch.text = self.set.sw_branch.strip('* ')
+        self.user_branch.text = self.set.sw_branch.strip("* ")
         self.beta_version.text = self.set.latest_sw_beta
-        self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l
-            )
+        self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
         self.language_button.values = self.l.supported_languages
         self.language_button.text = self.l.lang
 
@@ -312,46 +312,54 @@ class BetaTestingScreen(Screen):
         self.usb_stick.enable()
 
     def checkout_branch(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            message = self.l.get_str('Please wait') + '...\n' + self.l.get_str(
-                'Console will reboot to finish update.')
-            wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.
-                l, description=message)
+        if sys.platform != "win32" and sys.platform != "darwin":
+            message = (
+                self.l.get_str("Please wait")
+                + "...\n"
+                + self.l.get_str("Console will reboot to finish update.")
+            )
+            wait_popup = popup_info.PopupWait(
+                self.systemtools_sm.sm, self.l, description=message
+            )
 
             def nested_branch_update(dt):
                 self.set.update_config()
-                branch_name_formatted = str(self.user_branch.text).translate(
-                    None, ' ')
+                branch_name_formatted = str(self.user_branch.text).translate(None, " ")
                 checkout_exit_code = os.system(
-                    'cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout '
-                     + branch_name_formatted)
-                pull_exit_code = os.system('git pull')
+                    "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
+                    + branch_name_formatted
+                )
+                pull_exit_code = os.system("git pull")
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()
-                    self.systemtools_sm.sm.current = 'rebooting'
+                    self.systemtools_sm.sm.current = "rebooting"
                 else:
                     wait_popup.popup.dismiss()
-                    message = self.l.get_str(
-                        'Failed to checkout and pull branch.'
-                        ) + '\n' + self.l.get_str(
-                        'Please check the spelling of your branch and your internet connection.'
+                    message = (
+                        self.l.get_str("Failed to checkout and pull branch.")
+                        + "\n"
+                        + self.l.get_str(
+                            "Please check the spelling of your branch and your internet connection."
                         )
-                    error_popup = popup_info.PopupError(self.systemtools_sm
-                        .sm, self.l, message)
+                    )
+                    error_popup = popup_info.PopupError(
+                        self.systemtools_sm.sm, self.l, message
+                    )
+
             Clock.schedule_once(nested_branch_update, 0.5)
 
     def update_to_latest_beta(self):
-        if self.wifi_toggle.state == 'down':
+        if self.wifi_toggle.state == "down":
             self.set.get_sw_update_via_wifi(beta=True)
-        elif self.usb_toggle.state == 'down':
+        elif self.usb_toggle.state == "down":
             self.set.get_sw_update_via_usb(beta=True)
         self.usb_stick.disable()
-        self.systemtools_sm.sm.current = 'rebooting'
+        self.systemtools_sm.sm.current = "rebooting"
 
     def refresh_latest_software_version(self):
         self.set.refresh_latest_sw_version()
-        self.user_branch.text = self.set.sw_branch.strip('*')
+        self.user_branch.text = self.set.sw_branch.strip("*")
         self.beta_version.text = self.set.latest_sw_beta
 
     def choose_language(self):

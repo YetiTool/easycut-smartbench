@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.button import Button
 from functools import partial
 from kivy.graphics import Color
+
 Builder.load_string(
     """
 
@@ -77,7 +78,7 @@ Builder.load_string(
 
                 
 """
-    )
+)
 
 
 class PowerAdjustButtons(Button):
@@ -88,10 +89,9 @@ dark_grey = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
 
 
 class LoadSliderWidget(Widget):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.yp = kwargs.pop('yetipilot')
+        self.sm = kwargs.pop("screen_manager")
+        self.yp = kwargs.pop("yetipilot")
         super(LoadSliderWidget, self).__init__(**kwargs)
         self.load_label.color = dark_grey
         self.min_label.color = dark_grey
@@ -103,26 +103,31 @@ class LoadSliderWidget(Widget):
         self.power_slider.value = self.yp.get_total_target_power()
         self.on_slider_value_change()
         self.power_slider.bind(value=self.on_slider_value_change)
-        self.min_label.text = str(int(self.power_slider.min)) + ' W'
-        self.max_label.text = str(int(self.power_slider.max)) + ' W'
+        self.min_label.text = str(int(self.power_slider.min)) + " W"
+        self.max_label.text = str(int(self.power_slider.max)) + " W"
         self.make_buttons(self.button_container, self.power_slider, -100)
         self.make_buttons(self.button_container, self.power_slider, -10)
         self.make_buttons(self.button_container, self.power_slider, +10)
         self.make_buttons(self.button_container, self.power_slider, +100)
 
     def make_buttons(self, container, slider, val):
-        btn_str = str(val) if val < 0 else '+' + str(val)
+        btn_str = str(val) if val < 0 else "+" + str(val)
         button_adjust_func = partial(self.button_adjust_slider, val)
-        container.add_widget(PowerAdjustButtons(text=btn_str, on_press=
-            button_adjust_func, color=dark_grey))
+        container.add_widget(
+            PowerAdjustButtons(
+                text=btn_str, on_press=button_adjust_func, color=dark_grey
+            )
+        )
 
     def button_adjust_slider(self, val, instance=None):
-        if (self.power_slider.min <= self.power_slider.value + val <= self.
-            power_slider.max):
+        if (
+            self.power_slider.min
+            <= self.power_slider.value + val
+            <= self.power_slider.max
+        ):
             self.power_slider.value += val
 
     def on_slider_value_change(self, instance=None, value=None):
-        self.load_label.text = '[b]' + str(int(self.power_slider.value)
-            ) + ' W' + '[/b]'
+        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
         tool_load = int(self.power_slider.value) - self.yp.get_free_load()
         self.yp.set_tool_load(tool_load)

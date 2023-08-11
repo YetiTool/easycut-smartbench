@@ -12,6 +12,7 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -200,30 +201,31 @@ Builder.load_string(
                
          
 """
-    )
+)
 from kivy.clock import Clock
+
 WIDGET_UPDATE_DELAY = 0.2
 STATUS_UPDATE_DELAY = 0.4
 
 
 class ScrollableLabelCommands(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
 
 
 class ScrollableLabelStatus(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
 
 
 class GCodeMonitor(Widget):
-    hide_received_ok = StringProperty('down')
-    hide_received_status = StringProperty('down')
+    hide_received_ok = StringProperty("down")
+    hide_received_status = StringProperty("down")
     monitor_text_buffer = []
     status_report_buffer = []
 
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('machine')
-        self.sm = kwargs.pop('screen_manager')
-        self.l = kwargs.pop('localization')
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
         super(GCodeMonitor, self).__init__(**kwargs)
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)
@@ -232,54 +234,64 @@ class GCodeMonitor(Widget):
 
     def update_monitor_text_buffer(self, input_or_output, content):
         if isinstance(content, str):
-            if content.startswith('<') and self.hide_received_status == 'down':
+            if content.startswith("<") and self.hide_received_status == "down":
                 self.status_report_buffer.append(content)
                 return
-            if content == 'ok' and self.hide_received_ok == 'down':
+            if content == "ok" and self.hide_received_ok == "down":
                 return
-            if input_or_output == 'snd':
-                self.monitor_text_buffer.append('> ' + content)
-            if input_or_output == 'rec':
+            if input_or_output == "snd":
+                self.monitor_text_buffer.append("> " + content)
+            if input_or_output == "rec":
                 self.monitor_text_buffer.append(content)
-            if input_or_output == 'debug':
+            if input_or_output == "debug":
                 self.monitor_text_buffer.append(content)
 
     def update_display_text(self, dt):
-        self.consoleScrollText.text = '\n'.join(self.monitor_text_buffer)
+        self.consoleScrollText.text = "\n".join(self.monitor_text_buffer)
         if len(self.monitor_text_buffer) > 61:
-            del self.monitor_text_buffer[0:len(self.monitor_text_buffer) - 60]
+            del self.monitor_text_buffer[0 : len(self.monitor_text_buffer) - 60]
 
     def update_status_text(self, dt):
-        if self.m.state() == 'Alarm' and not any('Alarm' in s for s in self
-            .status_report_buffer):
-            self.status_report_buffer.append(self.l.get_str(
-                'Please reset for status update'))
-        self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
+        if self.m.state() == "Alarm" and not any(
+            "Alarm" in s for s in self.status_report_buffer
+        ):
+            self.status_report_buffer.append(
+                self.l.get_str("Please reset for status update")
+            )
+        self.consoleStatusText.text = "\n".join(self.status_report_buffer)
         if len(self.status_report_buffer) > 4:
-            del self.status_report_buffer[0:len(self.status_report_buffer) - 3]
+            del self.status_report_buffer[0 : len(self.status_report_buffer) - 3]
 
     def send_gcode_textinput(self):
         if self.popup_flag == True:
-            description = self.l.get_str(
-                'Sending commands directly to the machine can change how it operates.'
-                ) + '\n\n' + self.l.get_str(
-                'Please exercise caution when using this feature.') + '\n\n'
+            description = (
+                self.l.get_str(
+                    "Sending commands directly to the machine can change how it operates."
+                )
+                + "\n\n"
+                + self.l.get_str("Please exercise caution when using this feature.")
+                + "\n\n"
+            )
             popup_info.PopupWarning(self.sm, self.l, description)
             self.popup_flag = False
         elif self.validate_gcode_textinput(self.gCodeInput.text):
             self.m.send_any_gcode_command(str(self.gCodeInput.text))
         else:
-            message = self.l.get_str(
-                'This command is forbidden because it will alter the fundamental settings of the machine.'
-                ) + '\n\n' + self.l.get_str(
-                'If you need to alter the fundamental settings of the machine please contact YetiTool support.'
+            message = (
+                self.l.get_str(
+                    "This command is forbidden because it will alter the fundamental settings of the machine."
                 )
+                + "\n\n"
+                + self.l.get_str(
+                    "If you need to alter the fundamental settings of the machine please contact YetiTool support."
+                )
+            )
             popup_info.PopupWarning(self.sm, self.l, message)
 
     def validate_gcode_textinput(self, gcode_input):
-        if '$50' in gcode_input:
+        if "$50" in gcode_input:
             return False
-        elif '$RST' in gcode_input:
+        elif "$RST" in gcode_input:
             return False
         else:
             return True
@@ -288,17 +300,22 @@ class GCodeMonitor(Widget):
         self.m.send_any_gcode_command(gcode_input)
 
     def toggle_check_mode(self):
-        if self.m.s.m_state == 'Check':
+        if self.m.s.m_state == "Check":
             self.m.disable_check_mode()
-        elif self.m.s.m_state == 'Idle':
+        elif self.m.s.m_state == "Idle":
             self.m.enable_check_mode()
         else:
-            self.update_monitor_text_buffer('debug', self.l.get_str(
-                'Could not enable check mode; please check machine is Idle.'))
+            self.update_monitor_text_buffer(
+                "debug",
+                self.l.get_str(
+                    "Could not enable check mode; please check machine is Idle."
+                ),
+            )
 
     def clear_monitor(self):
-        self.monitor_text_buffer = [self.l.get_str(
-            'Welcome to the GCode console') + '...']
+        self.monitor_text_buffer = [
+            self.l.get_str("Welcome to the GCode console") + "..."
+        ]
 
     def send_grbl_reset(self):
         self.m._grbl_soft_reset()
@@ -319,13 +336,13 @@ class GCodeMonitor(Widget):
         self.m.led_restore()
 
     def update_strings(self):
-        self.enter_button.text = self.l.get_str('Enter')
-        self.hide_ok_button.text = self.l.get_str('Hide oks')
-        self.settings_button.text = self.l.get_str('Settings')
-        self.params_button.text = self.l.get_str('Params')
-        self.state_button.text = self.l.get_str('State')
-        self.build_button.text = self.l.get_str('Build')
-        self.check_button.text = self.l.get_str('Check') + ' $C'
-        self.help_button.text = self.l.get_str('Help')
-        self.clear_button.text = self.l.get_str('Clear')
-        self.status_label.text = self.l.get_str('Status')
+        self.enter_button.text = self.l.get_str("Enter")
+        self.hide_ok_button.text = self.l.get_str("Hide oks")
+        self.settings_button.text = self.l.get_str("Settings")
+        self.params_button.text = self.l.get_str("Params")
+        self.state_button.text = self.l.get_str("State")
+        self.build_button.text = self.l.get_str("Build")
+        self.check_button.text = self.l.get_str("Check") + " $C"
+        self.help_button.text = self.l.get_str("Help")
+        self.clear_button.text = self.l.get_str("Clear")
+        self.status_label.text = self.l.get_str("Status")

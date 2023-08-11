@@ -10,6 +10,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -285,28 +286,29 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutterTutorialScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]I[/b]')
-    title_label = StringProperty('[b]Using the app[/b]')
+    screen_number = StringProperty("[b]I[/b]")
+    title_label = StringProperty("[b]Using the app[/b]")
     instructions_list = [
-        'Use the Back and Next buttons to move through each section.\n\n',
+        "Use the Back and Next buttons to move through each section.\n\n",
         """Use the navigation tabs to move between sections.
 
 """,
-        'Press the [b]i[/b] if you need more information.\n\n',
-        'For more help, see the video at www.yetitool.com/support']
+        "Press the [b]i[/b] if you need more information.\n\n",
+        "For more help, see the video at www.yetitool.com/support",
+    ]
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
-        self.user_instructions.text = ''
+        self.user_instructions.text = ""
         self.info_button.disabled = True
         self.next_arrow.disabled = True
         self.back_arrow.disabled = True
@@ -322,8 +324,9 @@ class ShapeCutterTutorialScreenClass(Screen):
         Clock.schedule_once(lambda dt: self.enable_buttons(), 10)
 
     def append_instructions(self, n):
-        self.user_instructions.text = self.user_instructions.text + str(self
-            .instructions_list[n])
+        self.user_instructions.text = self.user_instructions.text + str(
+            self.instructions_list[n]
+        )
 
     def flashy_arrows(self):
         arrow_flash = Clock.schedule_interval(lambda dt: arrow_opacity(), 0.2)

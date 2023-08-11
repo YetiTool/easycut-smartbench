@@ -6,6 +6,7 @@ from asmcnc.skavaUI import popup_info
 import traceback
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.comms.logging import log_exporter
+
 Builder.load_string(
     """
 <CalibrationTesting>:
@@ -844,22 +845,22 @@ Builder.load_string(
             size_hint_y: 0.08
             id: status_container
 """
-    )
+)
 MAX_XY_SPEED = 2400.0
 MAX_Z_SPEED = 150.0
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
 
 
 class CalibrationTesting(Screen):
     next_run_event = None
     confirm_event = None
-    checkbox_inactive = './asmcnc/skavaUI/img/checkbox_inactive.png'
-    red_cross = './asmcnc/skavaUI/img/template_cancel.png'
-    green_tick = './asmcnc/skavaUI/img/file_select_select.png'
+    checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
+    green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
     X_SG_to_kg_scaling = 13.7
     Y_SG_to_kg_scaling = 11.5
     Z_SG_to_kg_scaling = 5.0
@@ -869,39 +870,42 @@ class CalibrationTesting(Screen):
     mini_run_dev_mode = False
 
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('m')
-        self.systemtools_sm = kwargs.pop('systemtools')
-        self.calibration_db = kwargs.pop('calibration_db')
-        self.sm = kwargs.pop('sm')
-        self.l = kwargs.pop('l')
+        self.m = kwargs.pop("m")
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.sm = kwargs.pop("sm")
+        self.l = kwargs.pop("l")
         super(CalibrationTesting, self).__init__(**kwargs)
         self.x_running = False
         self.y_running = False
         self.z_running = False
-        self.stage = ''
+        self.stage = ""
         self.stage_id = 0
         self.statuses = []
         self.x_weight = 0
         self.y_weight = 0
         self.z_weight = 2
-        self.status_data_dict = {'UnweightedFT': [], 'WeightedFT': []}
-        self.statistics_data_dict = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_x_pos_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y_pos_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y1_pos_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y2_pos_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_z_pos_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_x_neg_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y_neg_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y1_neg_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_y2_neg_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.raw_z_neg_vals = {'UnweightedFT': [], 'WeightedFT': []}
-        self.setup_arrays('UnweightedFT')
-        self.setup_arrays('WeightedFT')
-        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(
-            machine=self.m, screen_manager=self.systemtools_sm.sm))
+        self.status_data_dict = {"UnweightedFT": [], "WeightedFT": []}
+        self.statistics_data_dict = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_x_pos_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y_pos_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y1_pos_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y2_pos_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_z_pos_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_x_neg_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y_neg_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y1_neg_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_y2_neg_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.raw_z_neg_vals = {"UnweightedFT": [], "WeightedFT": []}
+        self.setup_arrays("UnweightedFT")
+        self.setup_arrays("WeightedFT")
+        self.status_container.add_widget(
+            widget_sg_status_bar.SGStatusBar(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
         if self.mini_run_dev_mode:
-            self.sn_for_db = 'YS6test'
+            self.sn_for_db = "YS6test"
 
     def setup_arrays(self, stage):
         self.raw_x_pos_vals[stage] = []
@@ -917,10 +921,9 @@ class CalibrationTesting(Screen):
 
     def set_stage(self, stage):
         self.stage = stage
-        self.stage_id = self.calibration_db.get_stage_id_by_description(self
-            .stage)
+        self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
         self.status_data_dict[self.stage] = []
-        log('Overnight test, stage: ' + str(self.stage))
+        log("Overnight test, stage: " + str(self.stage))
 
     def stop(self):
         self.x_running = False
@@ -934,7 +937,7 @@ class CalibrationTesting(Screen):
         self.enable_run_buttons()
 
     def on_enter(self):
-        self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
+        self.sn_for_db = "ys6" + str(self.m.serial_number()).split(".")[0]
         self.m.s.FINAL_TEST = True
         if self.next_run_event != None:
             Clock.unschedule(self.next_run_event)
@@ -956,8 +959,7 @@ class CalibrationTesting(Screen):
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('calibration_testing',
-            'calibration_testing')
+        self.m.request_homing_procedure("calibration_testing", "calibration_testing")
 
     def reset(self):
         if self.next_run_event != None:
@@ -968,14 +970,15 @@ class CalibrationTesting(Screen):
         self.enable_run_buttons()
 
     def zero_x_and_y(self):
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.
-            y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_xy(
+            self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000
+        )
 
     def mid_x_and_zero_y(self):
         self.m.jog_absolute_xy(-700, self.m.y_min_jog_abs_limit, 6000)
 
     def zero_Z(self):
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
+        self.m.jog_absolute_single_axis("Z", self.m.z_max_jog_abs_limit, 750)
 
     def disable_x_measurement(self, dt):
         self.x_running = False
@@ -994,9 +997,13 @@ class CalibrationTesting(Screen):
         self.x0y0_jog_button.disabled = False
         self.x7y0_jog_button.disabled = False
         self.z0_jog_button.disabled = False
-        if all([self.is_step_ticked(self.unweighted_test_check), self.
-            is_step_ticked(self.x_test_check), self.is_step_ticked(self.
-            y_test_check)]):
+        if all(
+            [
+                self.is_step_ticked(self.unweighted_test_check),
+                self.is_step_ticked(self.x_test_check),
+                self.is_step_ticked(self.y_test_check),
+            ]
+        ):
             self.data_send_button.disabled = False
         else:
             self.data_send_button.disabled = True
@@ -1012,33 +1019,58 @@ class CalibrationTesting(Screen):
         self.data_send_button.disabled = True
 
     def measure(self):
-        if not (self.x_running and self.m.feed_rate() < MAX_XY_SPEED * 1.1
-            ) and not (self.y_running and self.m.feed_rate() < MAX_XY_SPEED *
-            1.1) and not (self.z_running and self.m.feed_rate() < 
-            MAX_Z_SPEED * 1.1):
+        if (
+            not (self.x_running and self.m.feed_rate() < MAX_XY_SPEED * 1.1)
+            and not (self.y_running and self.m.feed_rate() < MAX_XY_SPEED * 1.1)
+            and not (self.z_running and self.m.feed_rate() < MAX_Z_SPEED * 1.1)
+        ):
             return
         if len(self.status_data_dict[self.stage]) > 0:
-            if self.status_data_dict[self.stage][len(self.status_data_dict[
-                self.stage]) - 1][1] < self.m.mpos_x():
+            if (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][1]
+                < self.m.mpos_x()
+            ):
                 x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.
-                status_data_dict[self.stage]) - 1][1] > self.m.mpos_x():
+            elif (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][1]
+                > self.m.mpos_x()
+            ):
                 x_dir = 1
             else:
                 x_dir = 0
-            if self.status_data_dict[self.stage][len(self.status_data_dict[
-                self.stage]) - 1][2] < self.m.mpos_y():
+            if (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][2]
+                < self.m.mpos_y()
+            ):
                 y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.
-                status_data_dict[self.stage]) - 1][2] > self.m.mpos_y():
+            elif (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][2]
+                > self.m.mpos_y()
+            ):
                 y_dir = 1
             else:
                 y_dir = 0
-            if self.status_data_dict[self.stage][len(self.status_data_dict[
-                self.stage]) - 1][3] < self.m.mpos_z():
+            if (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][3]
+                < self.m.mpos_z()
+            ):
                 z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.
-                status_data_dict[self.stage]) - 1][3] > self.m.mpos_z():
+            elif (
+                self.status_data_dict[self.stage][
+                    len(self.status_data_dict[self.stage]) - 1
+                ][3]
+                > self.m.mpos_z()
+            ):
                 z_dir = -1
             else:
                 z_dir = 0
@@ -1046,93 +1078,110 @@ class CalibrationTesting(Screen):
             x_dir = 0
             y_dir = 0
             z_dir = 0
-        status = int(self.sn_for_db[2:] + str(self.stage_id)), self.m.mpos_x(
-            ), self.m.mpos_y(), self.m.mpos_z(), x_dir, y_dir, z_dir, int(self
-            .m.s.stall_guard.x_motor_axis), int(self.m.s.stall_guard.y_axis
-            ), int(self.m.s.stall_guard.y1_motor), int(self.m.s.stall_guard
-            .y2_motor), int(self.m.s.stall_guard.z_motor_axis), int(self.m.
-            s.temperatures.motor_driver), int(self.m.s.temperatures.pcb), int(
-            self.m.s.temperatures.transistor_heatsink), datetime.now(
-            ).strftime('%Y-%m-%d %H:%M:%S'), self.m.feed_rate(
-            ), self.x_weight, self.y_weight, self.z_weight
+        status = (
+            int(self.sn_for_db[2:] + str(self.stage_id)),
+            self.m.mpos_x(),
+            self.m.mpos_y(),
+            self.m.mpos_z(),
+            x_dir,
+            y_dir,
+            z_dir,
+            int(self.m.s.stall_guard.x_motor_axis),
+            int(self.m.s.stall_guard.y_axis),
+            int(self.m.s.stall_guard.y1_motor),
+            int(self.m.s.stall_guard.y2_motor),
+            int(self.m.s.stall_guard.z_motor_axis),
+            int(self.m.s.temperatures.motor_driver),
+            int(self.m.s.temperatures.pcb),
+            int(self.m.s.temperatures.transistor_heatsink),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            self.m.feed_rate(),
+            self.x_weight,
+            self.y_weight,
+            self.z_weight,
+        )
         self.status_data_dict[self.stage].append(status)
         if -999 < self.m.s.stall_guard.x_motor_axis < 1023:
             if x_dir > 0:
-                self.raw_x_pos_vals[self.stage].append(self.m.s.stall_guard
-                    .x_motor_axis)
+                self.raw_x_pos_vals[self.stage].append(
+                    self.m.s.stall_guard.x_motor_axis
+                )
             if x_dir < 0:
-                self.raw_x_neg_vals[self.stage].append(self.m.s.stall_guard
-                    .x_motor_axis)
+                self.raw_x_neg_vals[self.stage].append(
+                    self.m.s.stall_guard.x_motor_axis
+                )
         if -999 < self.m.s.stall_guard.y_axis < 1023:
             if y_dir > 0:
-                self.raw_y_pos_vals[self.stage].append(self.m.s.stall_guard
-                    .y_axis)
+                self.raw_y_pos_vals[self.stage].append(self.m.s.stall_guard.y_axis)
             if y_dir < 0:
-                self.raw_y_neg_vals[self.stage].append(self.m.s.stall_guard
-                    .y_axis)
+                self.raw_y_neg_vals[self.stage].append(self.m.s.stall_guard.y_axis)
         if -999 < self.m.s.stall_guard.y1_motor < 1023:
             if y_dir > 0:
-                self.raw_y1_pos_vals[self.stage].append(self.m.s.
-                    stall_guard.y1_motor)
+                self.raw_y1_pos_vals[self.stage].append(self.m.s.stall_guard.y1_motor)
             if y_dir < 0:
-                self.raw_y1_neg_vals[self.stage].append(self.m.s.
-                    stall_guard.y1_motor)
+                self.raw_y1_neg_vals[self.stage].append(self.m.s.stall_guard.y1_motor)
         if -999 < self.m.s.stall_guard.y2_motor < 1023:
             if y_dir > 0:
-                self.raw_y2_pos_vals[self.stage].append(self.m.s.
-                    stall_guard.y2_motor)
+                self.raw_y2_pos_vals[self.stage].append(self.m.s.stall_guard.y2_motor)
             if y_dir < 0:
-                self.raw_y2_neg_vals[self.stage].append(self.m.s.
-                    stall_guard.y2_motor)
+                self.raw_y2_neg_vals[self.stage].append(self.m.s.stall_guard.y2_motor)
         if -999 < self.m.s.stall_guard.z_motor_axis < 1023:
             if z_dir < 0:
-                self.raw_z_pos_vals[self.stage].append(self.m.s.stall_guard
-                    .z_motor_axis)
+                self.raw_z_pos_vals[self.stage].append(
+                    self.m.s.stall_guard.z_motor_axis
+                )
             if z_dir > 0:
-                self.raw_z_neg_vals[self.stage].append(self.m.s.stall_guard
-                    .z_motor_axis)
+                self.raw_z_neg_vals[self.stage].append(
+                    self.m.s.stall_guard.z_motor_axis
+                )
         self.update_peaks()
 
     def update_peaks(self):
-        if self.stage == 'UnweightedFT':
-            self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals[
-                self.stage])
-            self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals[
-                self.stage])
-            self.get_peak_as_string(self.y1_peak_posve, self.
-                raw_y1_pos_vals[self.stage])
-            self.get_peak_as_string(self.y2_peak_posve, self.
-                raw_y2_pos_vals[self.stage])
-            self.get_peak_as_string(self.z_peak_posve, self.raw_z_pos_vals[
-                self.stage])
-            self.get_peak_as_string(self.x_peak_negve, self.raw_x_neg_vals[
-                self.stage])
-            self.get_peak_as_string(self.y_peak_negve, self.raw_y_neg_vals[
-                self.stage])
-            self.get_peak_as_string(self.y1_peak_negve, self.
-                raw_y1_neg_vals[self.stage])
-            self.get_peak_as_string(self.y2_peak_negve, self.
-                raw_y2_neg_vals[self.stage])
-            self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals[
-                self.stage])
+        if self.stage == "UnweightedFT":
+            self.get_peak_as_string(self.x_peak_posve, self.raw_x_pos_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_posve, self.raw_y_pos_vals[self.stage])
+            self.get_peak_as_string(
+                self.y1_peak_posve, self.raw_y1_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y2_peak_posve, self.raw_y2_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(self.z_peak_posve, self.raw_z_pos_vals[self.stage])
+            self.get_peak_as_string(self.x_peak_negve, self.raw_x_neg_vals[self.stage])
+            self.get_peak_as_string(self.y_peak_negve, self.raw_y_neg_vals[self.stage])
+            self.get_peak_as_string(
+                self.y1_peak_negve, self.raw_y1_neg_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y2_peak_negve, self.raw_y2_neg_vals[self.stage]
+            )
+            self.get_peak_as_string(self.z_peak_negve, self.raw_z_neg_vals[self.stage])
             return
-        if self.stage == 'WeightedFT':
-            self.get_peak_as_string(self.x_peak_posve_weighted, self.
-                raw_x_pos_vals[self.stage])
-            self.get_peak_as_string(self.y_peak_posve_weighted, self.
-                raw_y_pos_vals[self.stage])
-            self.get_peak_as_string(self.y1_peak_posve_weighted, self.
-                raw_y1_pos_vals[self.stage])
-            self.get_peak_as_string(self.y2_peak_posve_weighted, self.
-                raw_y2_pos_vals[self.stage])
-            self.get_peak_as_string(self.x_peak_negve_weighted, self.
-                raw_x_neg_vals[self.stage])
-            self.get_peak_as_string(self.y_peak_negve_weighted, self.
-                raw_y_neg_vals[self.stage])
-            self.get_peak_as_string(self.y1_peak_negve_weighted, self.
-                raw_y1_neg_vals[self.stage])
-            self.get_peak_as_string(self.y2_peak_negve_weighted, self.
-                raw_y2_neg_vals[self.stage])
+        if self.stage == "WeightedFT":
+            self.get_peak_as_string(
+                self.x_peak_posve_weighted, self.raw_x_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y_peak_posve_weighted, self.raw_y_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y1_peak_posve_weighted, self.raw_y1_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y2_peak_posve_weighted, self.raw_y2_pos_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.x_peak_negve_weighted, self.raw_x_neg_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y_peak_negve_weighted, self.raw_y_neg_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y1_peak_negve_weighted, self.raw_y1_neg_vals[self.stage]
+            )
+            self.get_peak_as_string(
+                self.y2_peak_negve_weighted, self.raw_y2_neg_vals[self.stage]
+            )
             return
 
     def get_peak_as_string(self, label_id, raw_vals):
@@ -1142,183 +1191,215 @@ class CalibrationTesting(Screen):
             pass
 
     def read_out_peaks(self, stage):
-        if stage == 'UnweightedFT':
-            peak_list = [int(self.x_peak_posve.text), int(self.x_peak_negve
-                .text), int(self.y_peak_posve.text), int(self.y_peak_negve.
-                text), int(self.y1_peak_posve.text), int(self.y1_peak_negve
-                .text), int(self.y2_peak_posve.text), int(self.
-                y2_peak_negve.text), int(self.z_peak_negve.text), int(self.
-                z_peak_posve.text)]
+        if stage == "UnweightedFT":
+            peak_list = [
+                int(self.x_peak_posve.text),
+                int(self.x_peak_negve.text),
+                int(self.y_peak_posve.text),
+                int(self.y_peak_negve.text),
+                int(self.y1_peak_posve.text),
+                int(self.y1_peak_negve.text),
+                int(self.y2_peak_posve.text),
+                int(self.y2_peak_negve.text),
+                int(self.z_peak_negve.text),
+                int(self.z_peak_posve.text),
+            ]
             return peak_list
-        if stage == 'WeightedFT':
-            peak_list = [int(self.x_peak_posve_weighted.text), int(self.
-                x_peak_negve_weighted.text), int(self.y_peak_posve_weighted
-                .text), int(self.y_peak_negve_weighted.text), int(self.
-                y1_peak_posve_weighted.text), int(self.
-                y1_peak_negve_weighted.text), int(self.
-                y2_peak_posve_weighted.text), int(self.
-                y2_peak_negve_weighted.text)]
+        if stage == "WeightedFT":
+            peak_list = [
+                int(self.x_peak_posve_weighted.text),
+                int(self.x_peak_negve_weighted.text),
+                int(self.y_peak_posve_weighted.text),
+                int(self.y_peak_negve_weighted.text),
+                int(self.y1_peak_posve_weighted.text),
+                int(self.y1_peak_negve_weighted.text),
+                int(self.y2_peak_posve_weighted.text),
+                int(self.y2_peak_negve_weighted.text),
+            ]
             return peak_list
 
     def get_statistics(self, stage):
         peak_list = self.read_out_peaks(stage)
-        if stage == 'UnweightedFT':
-            self.statistics_data_dict[stage] = [sum(self.raw_x_pos_vals[
-                stage]) / len(self.raw_x_pos_vals[stage]), peak_list[0], 
-                sum(self.raw_x_neg_vals[stage]) / len(self.raw_x_neg_vals[
-                stage]), peak_list[1], sum(self.raw_y_pos_vals[stage]) /
-                len(self.raw_y_pos_vals[stage]), peak_list[2], sum(self.
-                raw_y_neg_vals[stage]) / len(self.raw_y_neg_vals[stage]),
-                peak_list[3], sum(self.raw_y1_pos_vals[stage]) / len(self.
-                raw_y1_pos_vals[stage]), peak_list[4], sum(self.
-                raw_y1_neg_vals[stage]) / len(self.raw_y1_neg_vals[stage]),
-                peak_list[5], sum(self.raw_y2_pos_vals[stage]) / len(self.
-                raw_y2_pos_vals[stage]), peak_list[6], sum(self.
-                raw_y2_neg_vals[stage]) / len(self.raw_y2_neg_vals[stage]),
-                peak_list[7], sum(self.raw_z_pos_vals[stage]) / len(self.
-                raw_z_pos_vals[stage]), peak_list[8], sum(self.
-                raw_z_neg_vals[stage]) / len(self.raw_z_neg_vals[stage]),
-                peak_list[9]]
-        if stage == 'WeightedFT':
-            self.statistics_data_dict[stage] = [sum(self.raw_x_pos_vals[
-                stage]) / len(self.raw_x_pos_vals[stage]), peak_list[0], 
-                sum(self.raw_x_neg_vals[stage]) / len(self.raw_x_neg_vals[
-                stage]), peak_list[1], sum(self.raw_y_pos_vals[stage]) /
-                len(self.raw_y_pos_vals[stage]), peak_list[2], sum(self.
-                raw_y_neg_vals[stage]) / len(self.raw_y_neg_vals[stage]),
-                peak_list[3], sum(self.raw_y1_pos_vals[stage]) / len(self.
-                raw_y1_pos_vals[stage]), peak_list[4], sum(self.
-                raw_y1_neg_vals[stage]) / len(self.raw_y1_neg_vals[stage]),
-                peak_list[5], sum(self.raw_y2_pos_vals[stage]) / len(self.
-                raw_y2_pos_vals[stage]), peak_list[6], sum(self.
-                raw_y2_neg_vals[stage]) / len(self.raw_y2_neg_vals[stage]),
-                peak_list[7], 0, 0, 0, 0]
+        if stage == "UnweightedFT":
+            self.statistics_data_dict[stage] = [
+                sum(self.raw_x_pos_vals[stage]) / len(self.raw_x_pos_vals[stage]),
+                peak_list[0],
+                sum(self.raw_x_neg_vals[stage]) / len(self.raw_x_neg_vals[stage]),
+                peak_list[1],
+                sum(self.raw_y_pos_vals[stage]) / len(self.raw_y_pos_vals[stage]),
+                peak_list[2],
+                sum(self.raw_y_neg_vals[stage]) / len(self.raw_y_neg_vals[stage]),
+                peak_list[3],
+                sum(self.raw_y1_pos_vals[stage]) / len(self.raw_y1_pos_vals[stage]),
+                peak_list[4],
+                sum(self.raw_y1_neg_vals[stage]) / len(self.raw_y1_neg_vals[stage]),
+                peak_list[5],
+                sum(self.raw_y2_pos_vals[stage]) / len(self.raw_y2_pos_vals[stage]),
+                peak_list[6],
+                sum(self.raw_y2_neg_vals[stage]) / len(self.raw_y2_neg_vals[stage]),
+                peak_list[7],
+                sum(self.raw_z_pos_vals[stage]) / len(self.raw_z_pos_vals[stage]),
+                peak_list[8],
+                sum(self.raw_z_neg_vals[stage]) / len(self.raw_z_neg_vals[stage]),
+                peak_list[9],
+            ]
+        if stage == "WeightedFT":
+            self.statistics_data_dict[stage] = [
+                sum(self.raw_x_pos_vals[stage]) / len(self.raw_x_pos_vals[stage]),
+                peak_list[0],
+                sum(self.raw_x_neg_vals[stage]) / len(self.raw_x_neg_vals[stage]),
+                peak_list[1],
+                sum(self.raw_y_pos_vals[stage]) / len(self.raw_y_pos_vals[stage]),
+                peak_list[2],
+                sum(self.raw_y_neg_vals[stage]) / len(self.raw_y_neg_vals[stage]),
+                peak_list[3],
+                sum(self.raw_y1_pos_vals[stage]) / len(self.raw_y1_pos_vals[stage]),
+                peak_list[4],
+                sum(self.raw_y1_neg_vals[stage]) / len(self.raw_y1_neg_vals[stage]),
+                peak_list[5],
+                sum(self.raw_y2_pos_vals[stage]) / len(self.raw_y2_pos_vals[stage]),
+                peak_list[6],
+                sum(self.raw_y2_neg_vals[stage]) / len(self.raw_y2_neg_vals[stage]),
+                peak_list[7],
+                0,
+                0,
+                0,
+                0,
+            ]
 
     def run_y_procedure(self, dt):
         self.disable_run_buttons()
-        self.raw_y_pos_vals['WeightedFT'] = []
-        self.raw_y_neg_vals['WeightedFT'] = []
-        self.raw_y1_pos_vals['WeightedFT'] = []
-        self.raw_y1_neg_vals['WeightedFT'] = []
-        self.raw_y2_pos_vals['WeightedFT'] = []
-        self.raw_y2_neg_vals['WeightedFT'] = []
-        if self.stage != 'WeightedFT':
-            self.set_stage('WeightedFT')
+        self.raw_y_pos_vals["WeightedFT"] = []
+        self.raw_y_neg_vals["WeightedFT"] = []
+        self.raw_y1_pos_vals["WeightedFT"] = []
+        self.raw_y1_neg_vals["WeightedFT"] = []
+        self.raw_y2_pos_vals["WeightedFT"] = []
+        self.raw_y2_neg_vals["WeightedFT"] = []
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
         self.x_weight = 0
         self.y_weight = 7.5
         self.set_weighted_y_range()
         self.y_running = True
-        self.m.send_any_gcode_command('G53 G1 Y' + str(self.m.
-            y_max_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-        self.m.send_any_gcode_command('G53 G1 Y' + str(self.m.
-            y_min_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
+        self.m.send_any_gcode_command(
+            "G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+        )
+        self.m.send_any_gcode_command(
+            "G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+        )
         self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
 
     def confirm_y(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.y_running = False
             self.enable_run_buttons()
-            self.y_test_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
-            self.tick_checkbox(self.y_peak_checkbox_weighted, self.
-                check_in_range(self.y_peak_posve_weighted))
-            self.tick_checkbox(self.y1_peak_checkbox_weighted, self.
-                check_in_range(self.y1_peak_posve_weighted))
-            self.tick_checkbox(self.y2_peak_checkbox_weighted, self.
-                check_in_range(self.y2_peak_posve_weighted))
+            self.y_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(
+                self.y_peak_checkbox_weighted,
+                self.check_in_range(self.y_peak_posve_weighted),
+            )
+            self.tick_checkbox(
+                self.y1_peak_checkbox_weighted,
+                self.check_in_range(self.y1_peak_posve_weighted),
+            )
+            self.tick_checkbox(
+                self.y2_peak_checkbox_weighted,
+                self.check_in_range(self.y2_peak_posve_weighted),
+            )
 
     def run_x_procedure(self, dt):
         self.disable_run_buttons()
-        self.raw_x_pos_vals['WeightedFT'] = []
-        self.raw_x_neg_vals['WeightedFT'] = []
-        if self.stage != 'WeightedFT':
-            self.set_stage('WeightedFT')
+        self.raw_x_pos_vals["WeightedFT"] = []
+        self.raw_x_neg_vals["WeightedFT"] = []
+        if self.stage != "WeightedFT":
+            self.set_stage("WeightedFT")
         self.x_weight = 7.5
         self.y_weight = 0
         self.set_weighted_x_range()
         self.x_running = True
-        self.m.send_any_gcode_command('G53 G1 X' + str(self.m.
-            x_max_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-        self.m.send_any_gcode_command('G53 G1 X' + str(self.m.
-            x_min_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
+        self.m.send_any_gcode_command(
+            "G53 G1 X" + str(self.m.x_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+        )
+        self.m.send_any_gcode_command(
+            "G53 G1 X" + str(self.m.x_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+        )
         self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
 
     def confirm_x(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.x_running = False
             self.enable_run_buttons()
-            self.x_test_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
-            self.tick_checkbox(self.x_peak_checkbox_weighted, self.
-                check_in_range(self.x_peak_posve_weighted))
+            self.x_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.tick_checkbox(
+                self.x_peak_checkbox_weighted,
+                self.check_in_range(self.x_peak_posve_weighted),
+            )
 
     def run_unweighted_test(self):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.disable_run_buttons()
-            self.set_stage('UnweightedFT')
+            self.set_stage("UnweightedFT")
             self.x_weight = 0
             self.y_weight = 0
             self.zero_x_and_y()
             self.zero_Z()
-            self.next_run_event = Clock.schedule_once(self.
-                part_1_unweighted_x, 3)
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
         else:
-            popup_info.PopupError(self.sm, self.l, 'SB not Idle! Check status')
+            popup_info.PopupError(self.sm, self.l, "SB not Idle! Check status")
 
     def part_1_unweighted_x(self, dt):
-        if self.m.state().startswith('Idle'):
-            self.setup_arrays('UnweightedFT')
+        if self.m.state().startswith("Idle"):
+            self.setup_arrays("UnweightedFT")
             self.set_unweighted_x_range()
             self.x_running = True
-            self.m.send_any_gcode_command('G53 G1 X' + str(self.m.
-                x_max_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-            self.m.send_any_gcode_command('G53 G1 X' + str(self.m.
-                x_min_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-            self.next_run_event = Clock.schedule_once(self.
-                part_2_unweighted_y, 20)
+            self.m.send_any_gcode_command(
+                "G53 G1 X" + str(self.m.x_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+            )
+            self.m.send_any_gcode_command(
+                "G53 G1 X" + str(self.m.x_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+            )
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 20)
         else:
-            self.next_run_event = Clock.schedule_once(self.
-                part_1_unweighted_x, 3)
+            self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
 
     def part_2_unweighted_y(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.set_unweighted_y_range()
             self.x_running = False
             self.y_running = True
-            self.m.send_any_gcode_command('G53 G1 Y' + str(self.m.
-                y_max_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-            self.m.send_any_gcode_command('G53 G1 Y' + str(self.m.
-                y_min_jog_abs_limit) + ' F' + str(MAX_XY_SPEED))
-            self.next_run_event = Clock.schedule_once(self.
-                part_3_unweighted_z, 20)
+            self.m.send_any_gcode_command(
+                "G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+            )
+            self.m.send_any_gcode_command(
+                "G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
+            )
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 20)
         else:
-            self.next_run_event = Clock.schedule_once(self.
-                part_2_unweighted_y, 3)
+            self.next_run_event = Clock.schedule_once(self.part_2_unweighted_y, 3)
 
     def part_3_unweighted_z(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.set_unweighted_z_range()
             self.y_running = False
             self.z_running = True
-            self.m.send_any_gcode_command('G53 G1 Z' + str(self.m.
-                z_min_jog_abs_limit) + ' F' + str(MAX_Z_SPEED))
-            self.m.send_any_gcode_command('G53 G1 Z' + str(self.m.
-                z_max_jog_abs_limit) + ' F' + str(MAX_Z_SPEED))
-            self.confirm_event = Clock.schedule_once(self.
-                confirm_unweighted, 20)
+            self.m.send_any_gcode_command(
+                "G53 G1 Z" + str(self.m.z_min_jog_abs_limit) + " F" + str(MAX_Z_SPEED)
+            )
+            self.m.send_any_gcode_command(
+                "G53 G1 Z" + str(self.m.z_max_jog_abs_limit) + " F" + str(MAX_Z_SPEED)
+            )
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 20)
         else:
-            self.next_run_event = Clock.schedule_once(self.
-                part_3_unweighted_z, 3)
+            self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 3)
 
     def confirm_unweighted(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.z_running = False
             self.enable_run_buttons()
             self.unweighted_test_check.source = self.green_tick
             self.pass_or_fail_unweighted_peak_loads()
         else:
-            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3
-                )
+            self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
 
     def tick_checkbox(self, checkbox_id, tick):
         if tick:
@@ -1344,16 +1425,15 @@ class CalibrationTesting(Screen):
 
     def pass_or_fail_unweighted_peak_loads(self):
         within_plus_minus = 400
-        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.
-            y_peak_posve))
-        self.tick_checkbox(self.y1_peak_checkbox, self.check_in_range(self.
-            y1_peak_posve))
-        self.tick_checkbox(self.y2_peak_checkbox, self.check_in_range(self.
-            y2_peak_posve))
-        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.
-            x_peak_posve))
-        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.
-            z_peak_posve))
+        self.tick_checkbox(self.y_peak_checkbox, self.check_in_range(self.y_peak_posve))
+        self.tick_checkbox(
+            self.y1_peak_checkbox, self.check_in_range(self.y1_peak_posve)
+        )
+        self.tick_checkbox(
+            self.y2_peak_checkbox, self.check_in_range(self.y2_peak_posve)
+        )
+        self.tick_checkbox(self.x_peak_checkbox, self.check_in_range(self.x_peak_posve))
+        self.tick_checkbox(self.z_peak_checkbox, self.check_in_range(self.z_peak_posve))
 
     def up_range(self, friction, load):
         expected_min = (friction + float(load)) * (1.0 - self.tolerance)
@@ -1368,27 +1448,32 @@ class CalibrationTesting(Screen):
     def get_range_text(self, friction, load, scaling):
         fw_expected_min, fw_expected_max = self.up_range(friction, load)
         bw_expected_min, bw_expected_max = self.down_range(friction, load)
-        fw_range_text = str(fw_expected_min * scaling) + ' - ' + str(
-            fw_expected_max * scaling)
-        bw_range_text = str(bw_expected_min * scaling) + ' - ' + str(
-            bw_expected_max * scaling)
+        fw_range_text = (
+            str(fw_expected_min * scaling) + " - " + str(fw_expected_max * scaling)
+        )
+        bw_range_text = (
+            str(bw_expected_min * scaling) + " - " + str(bw_expected_max * scaling)
+        )
         return fw_range_text, bw_range_text
 
     def set_unweighted_x_range(self):
-        x_fw_range_text, x_bw_range_text = self.get_range_text(self.
-            xy_friction, 0, self.X_SG_to_kg_scaling)
+        x_fw_range_text, x_bw_range_text = self.get_range_text(
+            self.xy_friction, 0, self.X_SG_to_kg_scaling
+        )
         self.x_fw_range.text = x_fw_range_text
         self.x_bw_range.text = x_bw_range_text
 
     def set_weighted_x_range(self):
-        x_fw_range_text, x_bw_range_text = self.get_range_text(self.
-            xy_friction, 7.5, self.X_SG_to_kg_scaling)
+        x_fw_range_text, x_bw_range_text = self.get_range_text(
+            self.xy_friction, 7.5, self.X_SG_to_kg_scaling
+        )
         self.x_fw_range_weighted.text = x_fw_range_text
         self.x_bw_range_weighted.text = x_bw_range_text
 
     def set_unweighted_y_range(self):
-        y_fw_range_text, y_bw_range_text = self.get_range_text(self.
-            xy_friction, 0, self.Y_SG_to_kg_scaling)
+        y_fw_range_text, y_bw_range_text = self.get_range_text(
+            self.xy_friction, 0, self.Y_SG_to_kg_scaling
+        )
         self.y_axis_fw_range.text = y_fw_range_text
         self.y1_fw_range.text = y_fw_range_text
         self.y2_fw_range.text = y_fw_range_text
@@ -1397,8 +1482,9 @@ class CalibrationTesting(Screen):
         self.y2_bw_range.text = y_bw_range_text
 
     def set_weighted_y_range(self):
-        y_fw_range_text, y_bw_range_text = self.get_range_text(self.
-            xy_friction, 7.5, self.Y_SG_to_kg_scaling)
+        y_fw_range_text, y_bw_range_text = self.get_range_text(
+            self.xy_friction, 7.5, self.Y_SG_to_kg_scaling
+        )
         self.y_axis_fw_range_weighted.text = y_fw_range_text
         self.y1_fw_range_weighted.text = y_fw_range_text
         self.y2_fw_range_weighted.text = y_fw_range_text
@@ -1407,15 +1493,16 @@ class CalibrationTesting(Screen):
         self.y2_bw_range_weighted.text = y_bw_range_text
 
     def set_unweighted_z_range(self):
-        z_fw_range_text, z_bw_range_text = self.get_range_text(self.
-            z_friction, 2, self.Z_SG_to_kg_scaling)
+        z_fw_range_text, z_bw_range_text = self.get_range_text(
+            self.z_friction, 2, self.Z_SG_to_kg_scaling
+        )
         self.z_fw_range.text = z_fw_range_text
         self.z_bw_range.text = z_bw_range_text
 
     def send_all_data(self):
         self.calibration_db.set_up_connection()
         self.data_send_button.disabled = True
-        self.data_send_label.text = 'Sending...'
+        self.data_send_label.text = "Sending..."
         self.sent_data_check.source = self.checkbox_inactive
         Clock.schedule_once(self.do_data_send, 0.2)
 
@@ -1423,13 +1510,16 @@ class CalibrationTesting(Screen):
         success = True
         try:
             if self.is_step_ticked(self.unweighted_test_check):
-                self.get_statistics('UnweightedFT')
-                success = success * self.send_data_for_each_stage(
-                    'UnweightedFT')
-            if all([self.is_step_ticked(self.x_test_check), self.
-                is_step_ticked(self.y_test_check)]):
-                self.get_statistics('WeightedFT')
-                success = success * self.send_data_for_each_stage('WeightedFT')
+                self.get_statistics("UnweightedFT")
+                success = success * self.send_data_for_each_stage("UnweightedFT")
+            if all(
+                [
+                    self.is_step_ticked(self.x_test_check),
+                    self.is_step_ticked(self.y_test_check),
+                ]
+            ):
+                self.get_statistics("WeightedFT")
+                success = success * self.send_data_for_each_stage("WeightedFT")
             if success:
                 self.sent_data_check.source = self.green_tick
             else:
@@ -1437,18 +1527,18 @@ class CalibrationTesting(Screen):
         except:
             self.sent_data_check.source = self.red_cross
             print(traceback.format_exc())
-        self.data_send_label.text = 'Sent data?'
+        self.data_send_label.text = "Sent data?"
         self.data_send_button.disabled = False
         log_exporter.create_and_send_logs(self.sn_for_db)
 
     def send_data_for_each_stage(self, stage):
         try:
             try:
-                stage_id = self.calibration_db.get_stage_id_by_description(
-                    stage)
+                stage_id = self.calibration_db.get_stage_id_by_description(stage)
                 self.insert_stage_into_database(stage_id)
-                self.calibration_db.insert_final_test_statuses(self.
-                    status_data_dict[stage])
+                self.calibration_db.insert_final_test_statuses(
+                    self.status_data_dict[stage]
+                )
                 statistics = [self.sn_for_db, stage_id]
                 statistics.extend(self.statistics_data_dict[stage])
                 self.calibration_db.insert_final_test_statistics(*statistics)
@@ -1461,12 +1551,9 @@ class CalibrationTesting(Screen):
 
     def insert_stage_into_database(self, stage_id):
         try:
-            self.calibration_db.insert_final_test_stage(self.sn_for_db,
-                stage_id)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
         except:
-            log('Could not insert final test stage into DB!!')
+            log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
-            message = (
-                'Issue contacting database - if you continue data send may fail!'
-                )
+            message = "Issue contacting database - if you continue data send may fail!"
             popup_info.PopupError(self.sm, self.l, message)

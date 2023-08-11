@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.production.z_head_mechanics_jig import widget_z_move_mechanics
+
 Builder.load_string(
     """
 <ZHeadMechanicsManualMove>:
@@ -156,56 +157,62 @@ Builder.load_string(
                             pos: self.pos
 
 """
-    )
+)
 
 
 class ZHeadMechanicsManualMove(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('sm')
-        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(ZHeadMechanicsManualMove, self).__init__(**kwargs)
-        z_move_widget = widget_z_move_mechanics.ZMoveMechanics(machine=self
-            .m, screen_manager=self.sm)
+        z_move_widget = widget_z_move_mechanics.ZMoveMechanics(
+            machine=self.m, screen_manager=self.sm
+        )
         self.z_move_container.add_widget(z_move_widget)
         Clock.schedule_interval(self.update_realtime_labels, 0.1)
 
     def set_phase_one_current(self):
         if self.phase_one_input.text:
-            self.sm.get_screen('mechanics').phase_one_current = int(self.
-                phase_one_input.text)
+            self.sm.get_screen("mechanics").phase_one_current = int(
+                self.phase_one_input.text
+            )
 
     def set_phase_two_current(self):
         if self.phase_two_input.text:
-            self.sm.get_screen('mechanics').phase_two_current = int(self.
-                phase_two_input.text)
+            self.sm.get_screen("mechanics").phase_two_current = int(
+                self.phase_two_input.text
+            )
 
     def set_power_high(self):
-        self.m.set_motor_current('Z', 25)
+        self.m.set_motor_current("Z", 25)
 
     def set_power_low(self):
-        self.m.set_motor_current('Z', 13)
+        self.m.set_motor_current("Z", 13)
 
     def energise_motor(self):
-        self.m.send_command_to_motor('ENABLE MOTOR DRIVERS', motor=TMC_Z,
-            command=SET_MOTOR_ENERGIZED, value=1)
+        self.m.send_command_to_motor(
+            "ENABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=1
+        )
 
     def de_energise_motor(self):
-        self.m.send_command_to_motor('DISABLE MOTOR DRIVERS', motor=TMC_Z,
-            command=SET_MOTOR_ENERGIZED, value=0)
+        self.m.send_command_to_motor(
+            "DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0
+        )
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('manual_move', 'manual_move')
+        self.m.request_homing_procedure("manual_move", "manual_move")
 
     def update_realtime_labels(self, dt):
-        if (self.m.s.stall_guard.z_motor_axis == -999 or self.m.s.
-            stall_guard.z_motor_axis == None):
-            self.load_label.text = '-'
+        if (
+            self.m.s.stall_guard.z_motor_axis == -999
+            or self.m.s.stall_guard.z_motor_axis == None
+        ):
+            self.load_label.text = "-"
         else:
             self.load_label.text = str(self.m.s.stall_guard.z_motor_axis)
         self.pos_label.text = str(self.m.mpos_z())
 
     def back(self):
-        self.sm.current = 'mechanics'
+        self.sm.current = "mechanics"

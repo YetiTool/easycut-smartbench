@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -81,18 +82,16 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class TouchplateOffsetWidget(Widget):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
         self.update_strings()
 
     def update_strings(self):
-        self.touchplate_offset_label.text = self.l.get_bold('TOUCHPLATE OFFSET'
-            )
+        self.touchplate_offset_label.text = self.l.get_bold("TOUCHPLATE OFFSET")

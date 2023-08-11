@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 <CurrentAdjustmentWidget>
@@ -57,19 +58,23 @@ Builder.load_string(
                     allow_stretch: True
 
 """
-    )
+)
 
 
 class CurrentAdjustmentWidget(Widget):
-
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('m')
-        self.motor = kwargs.pop('motor')
-        self.l = kwargs.pop('localization')
-        self.systemtools_sm = kwargs.pop('systemtools')
+        self.m = kwargs.pop("m")
+        self.motor = kwargs.pop("motor")
+        self.l = kwargs.pop("localization")
+        self.systemtools_sm = kwargs.pop("systemtools")
         super(CurrentAdjustmentWidget, self).__init__(**kwargs)
-        self.motor_name_dict = {TMC_X1: 'X1', TMC_X2: 'X2', TMC_Y1: 'Y1',
-            TMC_Y2: 'Y2', TMC_Z: 'Z'}
+        self.motor_name_dict = {
+            TMC_X1: "X1",
+            TMC_X2: "X2",
+            TMC_Y1: "Y1",
+            TMC_Y2: "Y2",
+            TMC_Z: "Z",
+        }
         self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
         self.motor_label.text = self.motor_name_dict[self.motor]
         self.current_current_label.text = str(self.current_current)
@@ -82,10 +87,11 @@ class CurrentAdjustmentWidget(Widget):
         self.set_current(self.current_current - 1)
 
     def reset_current(self):
-        if self.m.set_motor_current(self.motor_name_dict[self.motor], self.
-            m.TMC_motor[self.motor].ActiveCurrentScale):
-            self.current_current = self.m.TMC_motor[self.motor
-                ].ActiveCurrentScale
+        if self.m.set_motor_current(
+            self.motor_name_dict[self.motor],
+            self.m.TMC_motor[self.motor].ActiveCurrentScale,
+        ):
+            self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale
             self.current_current_label.text = str(self.current_current)
             return True
         return False
@@ -96,20 +102,22 @@ class CurrentAdjustmentWidget(Widget):
 
     def set_current(self, current):
         try:
-            if self.m.state().startswith('Idle'):
+            if self.m.state().startswith("Idle"):
                 if 0 <= int(current) <= 31:
                     self.current_current = int(current)
-                    self.m.set_motor_current(self.motor_name_dict[self.
-                        motor], self.current_current)
+                    self.m.set_motor_current(
+                        self.motor_name_dict[self.motor], self.current_current
+                    )
                 else:
-                    popup_info.PopupError(self.systemtools_sm, self.l,
-                        'Invalid current value!')
+                    popup_info.PopupError(
+                        self.systemtools_sm, self.l, "Invalid current value!"
+                    )
             else:
-                popup_info.PopupError(self.systemtools_sm, self.l,
-                    "Can't change current when not Idle!")
+                popup_info.PopupError(
+                    self.systemtools_sm, self.l, "Can't change current when not Idle!"
+                )
         except:
-            popup_info.PopupError(self.systemtools_sm, self.l,
-                'Issue setting current')
+            popup_info.PopupError(self.systemtools_sm, self.l, "Issue setting current")
             print(traceback.format_exc())
         self.current_current_label.text = str(self.current_current)
         self.current_current_label.focus = False

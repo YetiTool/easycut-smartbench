@@ -8,7 +8,11 @@ from datetime import datetime
 from kivy.clock import Clock
 import subprocess
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens.popup_system import PopupNoSSHFile, PopupFailedToSendSSHKey
+from asmcnc.apps.systemTools_app.screens.popup_system import (
+    PopupNoSSHFile,
+    PopupFailedToSendSSHKey,
+)
+
 Builder.load_string(
     """
 <UploadSerialNumbersScreen>:
@@ -161,45 +165,43 @@ Builder.load_string(
                 
 
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
 
 
 class UploadSerialNumbersScreen(Screen):
-    machine_serial_number = ''
-    fw_version = ''
-    sw_version = ''
+    machine_serial_number = ""
+    fw_version = ""
+    sw_version = ""
     poll_for_end_of_upload = None
     dev_mode = False
     already_in_database = False
 
     def __init__(self, **kwargs):
-        self.systemtools_sm = kwargs.pop('systemtools')
-        self.m = kwargs.pop('m')
-        self.calibration_db = kwargs.pop('calibration_db')
-        self.set = kwargs.pop('settings')
-        self.l = kwargs.pop('l')
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.m = kwargs.pop("m")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("l")
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
 
     def auto_generate_sns(self):
-        self.zhead_serial_input.text = 'zh0000'
-        self.lb_serial_input.text = 'xl0000'
-        self.ub_serial_input.text = 'xu0000'
-        self.console_serial_input.text = 'cs0000'
-        self.ybench_serial_input.text = 'yb0000'
-        self.spindle_serial_input.text = '123456Y'
-        self.squareness_input.text = '0.0'
+        self.zhead_serial_input.text = "zh0000"
+        self.lb_serial_input.text = "xl0000"
+        self.ub_serial_input.text = "xu0000"
+        self.console_serial_input.text = "cs0000"
+        self.ybench_serial_input.text = "yb0000"
+        self.spindle_serial_input.text = "123456Y"
+        self.squareness_input.text = "0.0"
 
     def on_enter(self):
-        self.machine_serial_number = 'ys6' + str(self.m.serial_number()).split(
-            '.')[0]
+        self.machine_serial_number = "ys6" + str(self.m.serial_number()).split(".")[0]
         self.get_software_version_before_release()
-        self.fw_version = self.get_truncated_fw_version(str(self.m.
-            firmware_version()))
+        self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
         self.already_in_database = self.check_for_duplicates_and_autofill()
         if self.dev_mode:
             self.auto_generate_sns()
@@ -209,14 +211,20 @@ class UploadSerialNumbersScreen(Screen):
 
     def check_for_duplicates_and_autofill(self):
         try:
-            (self.zhead_serial_input.text, self.lb_serial_input.text, self.
-                ub_serial_input.text, self.console_serial_input.text, self.
-                ybench_serial_input.text, self.spindle_serial_input.text,
-                self.squareness_input.text) = (self.calibration_db.
-                get_all_serials_by_machine_serial(self.machine_serial_number))
+            (
+                self.zhead_serial_input.text,
+                self.lb_serial_input.text,
+                self.ub_serial_input.text,
+                self.console_serial_input.text,
+                self.ybench_serial_input.text,
+                self.spindle_serial_input.text,
+                self.squareness_input.text,
+            ) = self.calibration_db.get_all_serials_by_machine_serial(
+                self.machine_serial_number
+            )
             message = (
-                'This serial number is already in the database! You cannot overwrite.'
-                )
+                "This serial number is already in the database! You cannot overwrite."
+            )
             log(message)
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
             return True
@@ -224,8 +232,11 @@ class UploadSerialNumbersScreen(Screen):
             return False
 
     def get_software_version_before_release(self):
-        if self.set.sw_branch.endswith('ft') or self.set.sw_branch.endswith(
-            'enterprise_sql_instance') or self.dev_mode:
+        if (
+            self.set.sw_branch.endswith("ft")
+            or self.set.sw_branch.endswith("enterprise_sql_instance")
+            or self.dev_mode
+        ):
             self.sw_version = self.set.latest_sw_version
         else:
             self.sw_version = self.set.sw_version
@@ -237,48 +248,54 @@ class UploadSerialNumbersScreen(Screen):
         if not regex_check or not valid_check or not version_check:
             return
         if not self.already_in_database:
-            all_serial_numbers = [self.machine_serial_number, self.
-                zhead_serial_input.text, self.lb_serial_input.text, self.
-                ub_serial_input.text, self.console_serial_input.text, self.
-                ybench_serial_input.text, self.spindle_serial_input.text,
-                self.sw_version, self.fw_version, self.squareness_input.text]
+            all_serial_numbers = [
+                self.machine_serial_number,
+                self.zhead_serial_input.text,
+                self.lb_serial_input.text,
+                self.ub_serial_input.text,
+                self.console_serial_input.text,
+                self.ybench_serial_input.text,
+                self.spindle_serial_input.text,
+                self.sw_version,
+                self.fw_version,
+                self.squareness_input.text,
+            ]
             self.calibration_db.insert_serial_numbers(*all_serial_numbers)
-        self.error_label.text = 'Getting LB data...'
-        Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data
-            (), 0.2)
+        self.error_label.text = "Getting LB data..."
+        Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data(), 0.2)
 
     def check_valid_inputs(self):
         validated = True
         if not 6 < len(self.spindle_serial_input.text) < 10:
-            self.error_label.text = 'Spindle serial invalid'
+            self.error_label.text = "Spindle serial invalid"
             validated = False
         if len(self.squareness_input.text) < 1:
-            self.error_label.text = 'Squareness invalid'
+            self.error_label.text = "Squareness invalid"
             validated = False
         return validated
 
     def check_versions_valid_regex(self):
-        fw_version_pattern = re.compile('\\d[.]\\d[.]\\d')
-        sw_version_pattern = re.compile('v\\d[.]\\d[.]\\d')
+        fw_version_pattern = re.compile("\\d[.]\\d[.]\\d")
+        sw_version_pattern = re.compile("v\\d[.]\\d[.]\\d")
         fw_match = bool(fw_version_pattern.match(self.fw_version))
         sw_match = bool(sw_version_pattern.match(self.sw_version))
         validated = True
         if not fw_match:
-            self.error_label.text = 'fw version invalid'
+            self.error_label.text = "fw version invalid"
             validated = False
         if not sw_match:
-            self.error_label.text = 'sw version invalid'
+            self.error_label.text = "sw version invalid"
             validated = False
         return validated
 
     def check_valid_inputs_regex(self):
-        regex = '^({start})\\d{4}$'
-        machine_expression = regex.replace('{start}', 'ys6')
-        zhead_expression = regex.replace('{start}', 'zh')
-        lb_expression = regex.replace('{start}', 'xl')
-        ub_expression = regex.replace('{start}', 'xu')
-        console_expression = regex.replace('{start}', 'cs')
-        ybench_expression = regex.replace('{start}', 'yb')
+        regex = "^({start})\\d{4}$"
+        machine_expression = regex.replace("{start}", "ys6")
+        zhead_expression = regex.replace("{start}", "zh")
+        lb_expression = regex.replace("{start}", "xl")
+        ub_expression = regex.replace("{start}", "xu")
+        console_expression = regex.replace("{start}", "cs")
+        ybench_expression = regex.replace("{start}", "yb")
         machine_pattern = re.compile(machine_expression)
         zhead_pattern = re.compile(zhead_expression)
         lb_pattern = re.compile(lb_expression)
@@ -289,66 +306,65 @@ class UploadSerialNumbersScreen(Screen):
         zhead_match = bool(zhead_pattern.match(self.zhead_serial_input.text))
         lb_match = bool(lb_pattern.match(self.lb_serial_input.text))
         ub_match = bool(ub_pattern.match(self.ub_serial_input.text))
-        console_match = bool(console_pattern.match(self.
-            console_serial_input.text))
-        ybench_match = bool(ybench_pattern.match(self.ybench_serial_input.text)
-            )
+        console_match = bool(console_pattern.match(self.console_serial_input.text))
+        ybench_match = bool(ybench_pattern.match(self.ybench_serial_input.text))
         validated = True
         if not machine_match:
-            self.error_label.text = 'Machine serial invalid'
+            self.error_label.text = "Machine serial invalid"
             validated = False
         if not zhead_match:
-            self.error_label.text = 'ZHead serial invalid'
+            self.error_label.text = "ZHead serial invalid"
             validated = False
         if not lb_match:
-            self.error_label.text = 'LB serial invalid'
+            self.error_label.text = "LB serial invalid"
             validated = False
         if not ub_match:
-            self.error_label.text = 'UB serial invalid'
+            self.error_label.text = "UB serial invalid"
             validated = False
         if not console_match:
-            self.error_label.text = 'Console serial invalid'
+            self.error_label.text = "Console serial invalid"
             validated = False
         if not ybench_match:
-            self.error_label.text = 'YBench serial invalid'
+            self.error_label.text = "YBench serial invalid"
             validated = False
         return validated
 
     def get_truncated_fw_version(self, version):
-        ver_lst = version.split('.')
-        truncated_fw_version = ver_lst[0] + '.' + ver_lst[1] + '.' + ver_lst[2]
+        ver_lst = version.split(".")
+        truncated_fw_version = ver_lst[0] + "." + ver_lst[1] + "." + ver_lst[2]
         return truncated_fw_version
 
     def download_and_upload_LB_cal_data(self):
         self.send_public_keys()
-        stage_id = self.calibration_db.get_stage_id_by_description(
-            'CalibrationQC')
+        stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
         try:
-            Y1_data = self.calibration_db.get_lower_beam_coefficents(self.
-                lb_serial_input.text.replace(' ', '').lower(), TMC_Y1, stage_id
-                )
-            Y2_data = self.calibration_db.get_lower_beam_coefficents(self.
-                lb_serial_input.text.replace(' ', '').lower(), TMC_Y2, stage_id
-                )
+            Y1_data = self.calibration_db.get_lower_beam_coefficents(
+                self.lb_serial_input.text.replace(" ", "").lower(), TMC_Y1, stage_id
+            )
+            Y2_data = self.calibration_db.get_lower_beam_coefficents(
+                self.lb_serial_input.text.replace(" ", "").lower(), TMC_Y2, stage_id
+            )
             self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
             self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
-            self.error_label.text = 'Uploading to ZH...'
-            Clock.schedule_once(lambda dt: self.m.
-                upload_Y_calibration_settings_from_motor_classes(), 1)
-            self.poll_for_end_of_upload = Clock.schedule_interval(self.
-                report_info_back_to_user_and_return, 3)
+            self.error_label.text = "Uploading to ZH..."
+            Clock.schedule_once(
+                lambda dt: self.m.upload_Y_calibration_settings_from_motor_classes(), 1
+            )
+            self.poll_for_end_of_upload = Clock.schedule_interval(
+                self.report_info_back_to_user_and_return, 3
+            )
         except:
-            self.error_label.text = 'Could not get data'
+            self.error_label.text = "Could not get data"
             print(traceback.format_exc())
 
     def save_calibration_data_to_motor(self, motor_index, data):
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[
-            'coefficients']
-        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data['cs'
-            ]
-        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data['sgt']
-        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data['toff']
-        self.m.TMC_motor[motor_index].calibrated_at_temperature = data['temp']
+            "coefficients"
+        ]
+        self.m.TMC_motor[motor_index].calibrated_at_current_setting = data["cs"]
+        self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data["sgt"]
+        self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data["toff"]
+        self.m.TMC_motor[motor_index].calibrated_at_temperature = data["temp"]
 
     def report_info_back_to_user_and_return(self, dt):
         if not self.m.calibration_upload_in_progress:
@@ -356,18 +372,17 @@ class UploadSerialNumbersScreen(Screen):
             if self.m.calibration_upload_fail_info:
                 self.error_label.text = self.m.calibration_upload_fail_info
             else:
-                self.error_label.text = 'Success!!'
+                self.error_label.text = "Success!!"
 
     def send_public_keys(self):
-        cmd = 'cat ../../.ssh/id_rsa.pub'
+        cmd = "cat ../../.ssh/id_rsa.pub"
         output = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
         response = output.communicate()[0]
         if len(response) == 0:
             PopupNoSSHFile()
             return
         try:
-            self.calibration_db.send_ssh_keys(self.console_serial_input.
-                text, response)
+            self.calibration_db.send_ssh_keys(self.console_serial_input.text, response)
         except:
             PopupFailedToSendSSHKey()
 

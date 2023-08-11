@@ -5,6 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <AlarmScreen5>:
@@ -173,28 +174,29 @@ Builder.load_string(
 							size: self.parent.width, self.parent.height
 							allow_stretch: True 
 """
-    )
+)
 
 
 class AlarmScreen5(Screen):
-    return_to_screen = 'alarm_1'
+    return_to_screen = "alarm_1"
     default_font_size = 30
 
     def __init__(self, **kwargs):
-        self.a = kwargs.pop('alarm_manager')
+        self.a = kwargs.pop("alarm_manager")
         super(AlarmScreen5, self).__init__(**kwargs)
-        self.alarm_title.text = self.a.l.get_bold('Alarm: Job cancelled.')
-        self.icon.source = './asmcnc/core_UI/sequence_alarm/img/alarm_icon.png'
+        self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
+        self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
         self.description_label.text = self.a.l.get_str(
-            'For safety reasons, SmartBench will now cancel the job.')
-        self.next_button.text = self.a.l.get_str('More info')
+            "For safety reasons, SmartBench will now cancel the job."
+        )
+        self.next_button.text = self.a.l.get_str("More info")
         self.update_font_size(self.next_button)
 
     def on_pre_enter(self):
         if self.a.support_sequence:
             self.next_button.opacity = 0
             self.next_button.disabled = True
-        elif self.return_to_screen == 'alarm_1':
+        elif self.return_to_screen == "alarm_1":
             self.next_button.opacity = 1
             self.next_button.disabled = False
         else:
@@ -206,13 +208,13 @@ class AlarmScreen5(Screen):
 
     def prev_screen(self):
         if self.a.support_sequence:
-            self.a.sm.current = 'alarm_4'
+            self.a.sm.current = "alarm_4"
         else:
             self.a.sm.current = self.return_to_screen
 
     def more_info(self):
-        self.a.sm.get_screen('alarm_3').for_support = False
-        self.a.sm.current = 'alarm_3'
+        self.a.sm.get_screen("alarm_3").for_support = False
+        self.a.sm.current = "alarm_3"
 
     def update_font_size(self, value):
         if len(value.text) < 12:

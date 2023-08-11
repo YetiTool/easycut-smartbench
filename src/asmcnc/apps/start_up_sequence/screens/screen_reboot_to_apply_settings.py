@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ApplySettingsScreen>:
@@ -130,31 +131,31 @@ Builder.load_string(
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
 """
-    )
+)
 
 
 class ApplySettingsScreen(Screen):
-
     def __init__(self, **kwargs):
-        self.start_seq = kwargs.pop('start_sequence')
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.start_seq = kwargs.pop("start_sequence")
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(ApplySettingsScreen, self).__init__(**kwargs)
         self.update_strings()
 
     def next_screen(self):
         self.start_seq.exit_sequence(False)
-        self.sm.current = 'rebooting'
+        self.sm.current = "rebooting"
 
     def prev_screen(self):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str('Reboot!')
+        self.title_label.text = self.l.get_str("Reboot!")
         self.success_label.text = self.l.get_str(
-            'Reboot to finish applying your settings, and get started!')
-        self.next_button.text = self.l.get_str('Reboot!')
+            "Reboot to finish applying your settings, and get started!"
+        )
+        self.next_button.text = self.l.get_str("Reboot!")
         self.update_font_size(self.next_button)
 
     def update_font_size(self, value):

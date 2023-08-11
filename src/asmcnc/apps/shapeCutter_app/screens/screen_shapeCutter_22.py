@@ -11,6 +11,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.switch import Switch
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -495,53 +496,54 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter22ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]22[/b]')
-    title_label = StringProperty('[b]Set tabs[/b]')
-    user_instructions = StringProperty('Are you using tabs?')
+    screen_number = StringProperty("[b]22[/b]")
+    title_label = StringProperty("[b]Set tabs[/b]")
+    user_instructions = StringProperty("Are you using tabs?")
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
-        self.j = kwargs.pop('job_parameters')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter22ScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
-        if self.j.shape_dict['shape'] == 'circle':
-            self.main_image.source = (
-                './asmcnc/apps/shapeCutter_app/img/tabs_circ.png')
-        elif self.j.shape_dict['shape'] == 'rectangle':
-            self.main_image.source = (
-                './asmcnc/apps/shapeCutter_app/img/tabs_rect.png')
-        if self.j.parameter_dict['tabs']['tabs?'] == 'True':
+        if self.j.shape_dict["shape"] == "circle":
+            self.main_image.source = "./asmcnc/apps/shapeCutter_app/img/tabs_circ.png"
+        elif self.j.shape_dict["shape"] == "rectangle":
+            self.main_image.source = "./asmcnc/apps/shapeCutter_app/img/tabs_rect.png"
+        if self.j.parameter_dict["tabs"]["tabs?"] == "True":
             self.tab_toggle.active = True
             self.td_dimension.disabled = False
             self.th_dimension.disabled = False
             self.tw_dimension.disabled = False
-            self.td_dimension.text = '{:.2f}'.format(float(self.j.
-                parameter_dict['tabs']['spacing']))
-            self.th_dimension.text = '{:.2f}'.format(float(self.j.
-                parameter_dict['tabs']['height']))
-            self.tw_dimension.text = '{:.2f}'.format(float(self.j.
-                parameter_dict['tabs']['width']))
+            self.td_dimension.text = "{:.2f}".format(
+                float(self.j.parameter_dict["tabs"]["spacing"])
+            )
+            self.th_dimension.text = "{:.2f}".format(
+                float(self.j.parameter_dict["tabs"]["height"])
+            )
+            self.tw_dimension.text = "{:.2f}".format(
+                float(self.j.parameter_dict["tabs"]["width"])
+            )
         else:
             self.tab_toggle.active = False
-            self.td_dimension.text = ''
+            self.td_dimension.text = ""
             self.td_dimension.disabled = True
-            self.th_dimension.text = ''
+            self.th_dimension.text = ""
             self.th_dimension.disabled = True
-            self.tw_dimension.text = ''
+            self.tw_dimension.text = ""
             self.tw_dimension.disabled = True
-            if self.j.parameter_dict['tabs']['units'] == 'mm':
+            if self.j.parameter_dict["tabs"]["units"] == "mm":
                 self.unit_toggle.active = False
             else:
                 self.unit_toggle.active = True
-        if self.j.parameter_dict['tabs']['units'] == 'inches':
+        if self.j.parameter_dict["tabs"]["units"] == "inches":
             self.unit_toggle.active = True
         else:
             self.unit_toggle.active = False
@@ -579,81 +581,108 @@ base/hardware-smartbench-workholding"""
 
     def toggle_units(self):
         if self.unit_toggle.active == True:
-            self.j.parameter_dict['tabs']['units'] = 'inches'
-            if not self.td_dimension.text == '':
-                self.td_dimension.text = '{:.2f}'.format(float(self.
-                    td_dimension.text) / 25.4)
-            if not self.th_dimension.text == '':
-                self.th_dimension.text = '{:.2f}'.format(float(self.
-                    th_dimension.text) / 25.4)
-            if not self.tw_dimension.text == '':
-                self.tw_dimension.text = '{:.2f}'.format(float(self.
-                    tw_dimension.text) / 25.4)
+            self.j.parameter_dict["tabs"]["units"] = "inches"
+            if not self.td_dimension.text == "":
+                self.td_dimension.text = "{:.2f}".format(
+                    float(self.td_dimension.text) / 25.4
+                )
+            if not self.th_dimension.text == "":
+                self.th_dimension.text = "{:.2f}".format(
+                    float(self.th_dimension.text) / 25.4
+                )
+            if not self.tw_dimension.text == "":
+                self.tw_dimension.text = "{:.2f}".format(
+                    float(self.tw_dimension.text) / 25.4
+                )
         elif self.unit_toggle.active == False:
-            self.j.parameter_dict['tabs']['units'] = 'mm'
-            if not self.td_dimension.text == '':
-                self.td_dimension.text = '{:.2f}'.format(float(self.
-                    td_dimension.text) * 25.4)
-            if not self.th_dimension.text == '':
-                self.th_dimension.text = '{:.2f}'.format(float(self.
-                    th_dimension.text) * 25.4)
-            if not self.tw_dimension.text == '':
-                self.tw_dimension.text = '{:.2f}'.format(float(self.
-                    tw_dimension.text) * 25.4)
+            self.j.parameter_dict["tabs"]["units"] = "mm"
+            if not self.td_dimension.text == "":
+                self.td_dimension.text = "{:.2f}".format(
+                    float(self.td_dimension.text) * 25.4
+                )
+            if not self.th_dimension.text == "":
+                self.th_dimension.text = "{:.2f}".format(
+                    float(self.th_dimension.text) * 25.4
+                )
+            if not self.tw_dimension.text == "":
+                self.tw_dimension.text = "{:.2f}".format(
+                    float(self.tw_dimension.text) * 25.4
+                )
 
     def toggle_tabs(self):
         if self.tab_toggle.active == True:
-            self.j.parameter_dict['tabs']['tabs?'] = True
+            self.j.parameter_dict["tabs"]["tabs?"] = True
             self.td_dimension.disabled = False
             self.th_dimension.disabled = False
             self.tw_dimension.disabled = False
         elif self.tab_toggle.active == False:
-            self.j.parameter_dict['tabs']['tabs?'] = False
-            self.td_dimension.text = ''
+            self.j.parameter_dict["tabs"]["tabs?"] = False
+            self.td_dimension.text = ""
             self.td_dimension.disabled = True
-            self.th_dimension.text = ''
+            self.th_dimension.text = ""
             self.th_dimension.disabled = True
-            self.tw_dimension.text = ''
+            self.tw_dimension.text = ""
             self.tw_dimension.disabled = True
 
     def check_dimensions(self):
         if self.tab_toggle.active == True:
-            self.j.parameter_dict['tabs']['tabs?'] = True
-            if (not self.td_dimension.text == '' and not self.th_dimension.
-                text == '' and not self.tw_dimension.text == ''):
+            self.j.parameter_dict["tabs"]["tabs?"] = True
+            if (
+                not self.td_dimension.text == ""
+                and not self.th_dimension.text == ""
+                and not self.tw_dimension.text == ""
+            ):
                 if self.unit_toggle.active == True:
-                    self.j.parameter_dict['tabs']['units'] = 'inches'
+                    self.j.parameter_dict["tabs"]["units"] = "inches"
                 elif self.unit_toggle.active == False:
-                    self.j.parameter_dict['tabs']['units'] = 'mm'
-                units = self.j.parameter_dict['tabs']['units']
-                input_dim_list = [('width', float(self.tw_dimension.text)),
-                    ('height', float(self.th_dimension.text)), ('spacing',
-                    float(self.td_dimension.text))]
+                    self.j.parameter_dict["tabs"]["units"] = "mm"
+                units = self.j.parameter_dict["tabs"]["units"]
+                input_dim_list = [
+                    ("width", float(self.tw_dimension.text)),
+                    ("height", float(self.th_dimension.text)),
+                    ("spacing", float(self.td_dimension.text)),
+                ]
                 for dim, input in input_dim_list:
                     setting = self.j.validate_tabs(dim, input)
                     if not setting == True:
-                        if dim == 'width' or dim == 'height':
-                            description = ('The tab ' + dim +
-                                """ dimension isn't valid.
+                        if dim == "width" or dim == "height":
+                            description = (
+                                "The tab "
+                                + dim
+                                + """ dimension isn't valid.
 
-""" +
-                                'The tab ' + dim +
-                                ' should be greater than 0 and less' +
-                                ' than ' + '{:.2f}'.format(setting) + ' ' +
-                                units + '.\n\n' +
-                                'Please re-enter your dimensions.')
+"""
+                                + "The tab "
+                                + dim
+                                + " should be greater than 0 and less"
+                                + " than "
+                                + "{:.2f}".format(setting)
+                                + " "
+                                + units
+                                + ".\n\n"
+                                + "Please re-enter your dimensions."
+                            )
                         else:
-                            description = ('The tab ' + dim +
-                                " dimension isn't valid.\n\n" + 'The tab ' +
-                                dim + ' value should be greater than ' +
-                                '{:.2f}'.format(setting) + ' ' + units +
-                                '.\n\n' + 'Please re-enter your dimensions.')
-                        popup_input_error.PopupInputError(self.
-                            shapecutter_sm, description)
+                            description = (
+                                "The tab "
+                                + dim
+                                + " dimension isn't valid.\n\n"
+                                + "The tab "
+                                + dim
+                                + " value should be greater than "
+                                + "{:.2f}".format(setting)
+                                + " "
+                                + units
+                                + ".\n\n"
+                                + "Please re-enter your dimensions."
+                            )
+                        popup_input_error.PopupInputError(
+                            self.shapecutter_sm, description
+                        )
                         return False
                 self.shapecutter_sm.next_screen()
             else:
                 pass
         elif self.tab_toggle.active == False:
-            self.j.parameter_dict['tabs']['tabs?'] = False
+            self.j.parameter_dict["tabs"]["tabs?"] = False
             self.shapecutter_sm.next_screen()

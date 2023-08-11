@@ -10,6 +10,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -59,46 +60,52 @@ Builder.load_string(
      
         
 """
-    )
+)
 
 
 class VirtualZ(Widget):
     WIDGET_REFRESH_INTERVAL = 0.1
 
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('machine')
-        self.sm = kwargs.pop('screen_manager')
-        self.jd = kwargs.pop('job')
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
         super(VirtualZ, self).__init__(**kwargs)
-        Clock.schedule_interval(self.refresh_widget, self.
-            WIDGET_REFRESH_INTERVAL)
+        Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)
 
     def refresh_widget(self, dt):
         self.setZones()
         self.setBitPos()
 
     def setZones(self):
-        z_max = self.sm.get_screen('home').job_box.range_z[1]
-        z_min = self.sm.get_screen('home').job_box.range_z[0]
+        z_max = self.sm.get_screen("home").job_box.range_z[1]
+        z_min = self.sm.get_screen("home").job_box.range_z[0]
         z0_machine_coords = self.m.z_wco()
-        self.z_clear.y = (self.z_clear.parent.y + self.z_clear.parent.size[
-            1] - -z0_machine_coords / self.m.grbl_z_max_travel * self.
-            z_clear.parent.size[1])
-        if self.jd.filename == '':
+        self.z_clear.y = (
+            self.z_clear.parent.y
+            + self.z_clear.parent.size[1]
+            - -z0_machine_coords
+            / self.m.grbl_z_max_travel
+            * self.z_clear.parent.size[1]
+        )
+        if self.jd.filename == "":
             if self.z_clear.size[1] == 0:
                 self.z_clear.size[1] = 4
             if self.z_cut.size[1] == 0:
                 self.z_cut.size[1] = 4
         else:
-            self.z_clear.size[1
-                ] = z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[
-                1]
-            self.z_cut.size[1
-                ] = -z_min / self.m.grbl_z_max_travel * self.z_clear.parent.size[
-                1]
+            self.z_clear.size[1] = (
+                z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
+            )
+            self.z_cut.size[1] = (
+                -z_min / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
+            )
         self.z_cut.y = self.z_clear.y - self.z_cut.height
 
     def setBitPos(self):
-        self.z_bit.y = self.z_bit.parent.y + self.z_bit.parent.size[1] - -(self
-            .m.mpos_z() / self.m.grbl_z_max_travel) * self.z_clear.parent.size[
-            1]
+        self.z_bit.y = (
+            self.z_bit.parent.y
+            + self.z_bit.parent.size[1]
+            - -(self.m.mpos_z() / self.m.grbl_z_max_travel)
+            * self.z_clear.parent.size[1]
+        )

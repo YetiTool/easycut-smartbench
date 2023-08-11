@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+
 Builder.load_string(
     """
 
@@ -288,21 +289,21 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter13ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]13[/b]')
-    title_label = StringProperty('[b]Secure the spoil board (optional)[/b]')
+    screen_number = StringProperty("[b]13[/b]")
+    title_label = StringProperty("[b]Secure the spoil board (optional)[/b]")
     user_instructions = StringProperty(
         """Fix the spoil board to the bench using either screws, clamps, or tape.
 For work holding techniques visit www.yetitool.com/support."""
-        )
+    )
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter13ScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):

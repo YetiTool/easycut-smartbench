@@ -12,6 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 import sys, os
 from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
+
 Builder.load_string(
     """
 
@@ -241,15 +242,14 @@ Builder.load_string(
 						on_press: root.quit_to_console()
 
 """
-    )
+)
 
 
 class WarrantyScreen1(Screen):
-
     def __init__(self, **kwargs):
-        self.start_seq = kwargs.pop('start_sequence')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen1, self).__init__(**kwargs)
         self.update_strings()
 
@@ -260,16 +260,16 @@ class WarrantyScreen1(Screen):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str(
-            'SmartBench Warranty Registration')
-        self.scan_qr_code.text = self.l.get_str('Scan the QR Code to start')
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+        self.scan_qr_code.text = self.l.get_str("Scan the QR Code to start")
         self.instructions_label.text = self.l.get_str(
-            'To submit your details and receive your activation code, go to')
-        self.cant_use_web_label.text = self.l.get_str("Can't use the web form?"
-            )
+            "To submit your details and receive your activation code, go to"
+        )
+        self.cant_use_web_label.text = self.l.get_str("Can't use the web form?")
         self.contact_us_at_support.text = self.l.get_str(
-            'Contact us at https://www.yetitool.com/support')
-        self.next_button.text = self.l.get_str('Next') + '...'
+            "Contact us at https://www.yetitool.com/support"
+        )
+        self.next_button.text = self.l.get_str("Next") + "..."
         self.update_contact_us_font_sizes()
 
     def update_contact_us_font_sizes(self):

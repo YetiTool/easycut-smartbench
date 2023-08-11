@@ -13,6 +13,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 import os
+
 Builder.load_string(
     """
 
@@ -191,20 +192,20 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class WarrantyScreen3(Screen):
     activationcode = ObjectProperty()
-    activation_code_filepath = '/home/pi/smartbench_activation_code.txt'
+    activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
     activation_code_from_file = 0
     check_activation_event = None
-    default_font_size = '20sp'
+    default_font_size = "20sp"
 
     def __init__(self, **kwargs):
-        self.start_seq = kwargs.pop('start_sequence')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen3, self).__init__(**kwargs)
         self.update_strings()
 
@@ -212,28 +213,29 @@ class WarrantyScreen3(Screen):
         self.read_in_activation_code()
 
     def on_enter(self):
-        self.check_activation_event = Clock.schedule_interval(lambda dt:
-            self.next_screen(), 2)
+        self.check_activation_event = Clock.schedule_interval(
+            lambda dt: self.next_screen(), 2
+        )
 
     def read_in_activation_code(self):
         try:
-            file = open(self.activation_code_filepath, 'r')
+            file = open(self.activation_code_filepath, "r")
             self.activation_code_from_file = int(str(file.read()))
             file.close()
-            if self.activation_code_from_file == '':
+            if self.activation_code_from_file == "":
                 self.backup_generate_activation_code()
         except:
             self.backup_generate_activation_code()
 
     def backup_generate_activation_code(self):
-        self.activation_code_from_file = self.generate_activation_code(self
-            .start_seq.sm.get_screen('warranty_2').serial_number_label.text)
+        self.activation_code_from_file = self.generate_activation_code(
+            self.start_seq.sm.get_screen("warranty_2").serial_number_label.text
+        )
         self.error_message_bottom.opacity = 1
 
     def check_activation_code(self):
-        if self.activation_code.text != '':
-            if int(self.activation_code.text
-                ) == self.activation_code_from_file:
+        if self.activation_code.text != "":
+            if int(self.activation_code.text) == self.activation_code_from_file:
                 if os.path.isfile(self.activation_code_filepath):
                     os.remove(self.activation_code_filepath)
                 return True
@@ -266,12 +268,12 @@ class WarrantyScreen3(Screen):
             Clock.unschedule(self.check_activation_event)
 
     def generate_activation_code(self, serial_number):
-        ActiveTempNoOnly = int(''.join(filter(str.isdigit, serial_number)))
-        print(str(ActiveTempNoOnly) + '\n')
+        ActiveTempNoOnly = int("".join(filter(str.isdigit, serial_number)))
+        print(str(ActiveTempNoOnly) + "\n")
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
-        print(ActiveTempStart + '\n')
+        print(ActiveTempStart + "\n")
         ActiveTempStartReduce = ActiveTempStart[0:15]
-        print(ActiveTempStartReduce + '\n')
+        print(ActiveTempStartReduce + "\n")
         Activation_Code_1 = int(ActiveTempStartReduce[0]) * 171350
         Activation_Code_2 = int(ActiveTempStartReduce[3]) * 152740
         Activation_Code_3 = int(ActiveTempStartReduce[5]) * 213431
@@ -286,31 +288,43 @@ class WarrantyScreen3(Screen):
         Activation_Code_12 = int(ActiveTempStartReduce[6]) * 67253489
         Activation_Code_13 = int(ActiveTempStartReduce[6]) * 53262890
         Activation_Code_14 = int(ActiveTempStartReduce[6]) * 89201233
-        Final_Activation_Code = (Activation_Code_1 + Activation_Code_2 +
-            Activation_Code_3 + Activation_Code_4 + Activation_Code_5 +
-            Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
-            Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
-            Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
-        print(str(Final_Activation_Code) + '\n')
+        Final_Activation_Code = (
+            Activation_Code_1
+            + Activation_Code_2
+            + Activation_Code_3
+            + Activation_Code_4
+            + Activation_Code_5
+            + Activation_Code_6
+            + Activation_Code_7
+            + Activation_Code_8
+            + Activation_Code_9
+            + Activation_Code_10
+            + Activation_Code_11
+            + Activation_Code_12
+            + Activation_Code_13
+            + Activation_Code_14
+        )
+        print(str(Final_Activation_Code) + "\n")
         return Final_Activation_Code
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str(
-            'SmartBench Warranty Registration')
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
         self.enter_your_activation_code_label.text = self.l.get_str(
-            'Enter your activation code:')
+            "Enter your activation code:"
+        )
         self.error_message_top.text = self.l.get_str(
-            'Please check your activation code.')
+            "Please check your activation code."
+        )
         self.error_message_bottom.text = self.l.get_str(
-            'Stuck on this screen? Contact us at https://www.yetitool.com/support'
-            )
-        self.next_button.text = self.l.get_str('Next') + '...'
+            "Stuck on this screen? Contact us at https://www.yetitool.com/support"
+        )
+        self.next_button.text = self.l.get_str("Next") + "..."
         self.update_font_size(self.error_message_bottom)
 
     def update_font_size(self, value):
         if len(value.text) < 85:
             value.font_size = self.default_font_size
         elif len(value.text) < 100:
-            value.font_size = '18sp'
+            value.font_size = "18sp"
         else:
-            value.font_size = '16sp'
+            value.font_size = "16sp"
