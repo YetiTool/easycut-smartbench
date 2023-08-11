@@ -109,10 +109,6 @@ class RouterMachine(object):
             self.l,
             self.jd,
             logging.Logger(name="__name__"),
-            logging.Logger(name="__name__"),
-            logging.Logger(name="__name__"),
-            logging.Logger(name="__name__"),
-            logging.Logger(name="__name__"),
         )
         self.s.connect()
         self.p = protocol.protocol_v2()
