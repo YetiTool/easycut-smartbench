@@ -1,15 +1,14 @@
-'''
+"""
 Created on 10 June 2020
 @author: Letty
 widget to hold laser datum on_off 
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <LaserOnOffWidget>
     
@@ -59,25 +58,25 @@ Builder.load_string("""
                     allow_stretch: True  
 
 
-""")
+"""
+    )
 
 
 class LaserOnOffWidget(Widget):
 
-
     def __init__(self, **kwargs):
-    
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(LaserOnOffWidget, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
 
     def toggle_laser(self):
         if self.laser_switch.active == True:
-            self.laser_image.source = "./asmcnc/apps/maintenance_app/img/laser_on.png"
+            self.laser_image.source = (
+                './asmcnc/apps/maintenance_app/img/laser_on.png')
             self.m.is_laser_enabled = True
             self.m.laser_on()
-
         else:
-            self.laser_image.source = "./asmcnc/apps/maintenance_app/img/laser_off.png"
+            self.laser_image.source = (
+                './asmcnc/apps/maintenance_app/img/laser_off.png')
             self.m.laser_off()
             self.m.is_laser_enabled = False

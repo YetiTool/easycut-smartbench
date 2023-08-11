@@ -1,7 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <LBCalibration3>:
     canvas:
         Color:
@@ -41,14 +41,16 @@ Builder.load_string("""
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+    )
+
 
 class LBCalibration3(Screen):
-    def __init__(self, **kwargs):
-        super(LBCalibration3, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
+    def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        super(LBCalibration3, self).__init__(**kwargs)
 
     def enter_prev_screen(self):
         self.sm.current = 'lbc2'

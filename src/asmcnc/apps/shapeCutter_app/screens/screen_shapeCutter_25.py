@@ -1,18 +1,16 @@
-'''
+"""
 Created on 4 March 2020
 Screen 25 for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter25ScreenClass>
 
@@ -352,66 +350,64 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter25ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
-    screen_number = StringProperty("[b]25[/b]")
-    title_label = StringProperty("[b]Would you like to save this as a new profile?[/b]")
+    screen_number = StringProperty('[b]25[/b]')
+    title_label = StringProperty(
+        '[b]Would you like to save this as a new profile?[/b]')
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutter25ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.display_profile = self.j.parameters_to_string()
         self.file_name.text = ''
-        self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
-        
-# Action buttons       
+        self.save_image.source = (
+            './asmcnc/apps/shapeCutter_app/img/save_file.png')
+
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.position_tab()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen commands    
+
     def save_file(self):
         if not self.file_name.text == '':
             self.j.save_parameters(self.file_name.text)
-            self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'
-    #         self.j.generate_gCode()
-    #         self.j.save_gCode()
+            self.save_image.source = (
+                './asmcnc/apps/shapeCutter_app/img/thumbs_up.png')
+        else:
+            description = """Filename input is empty.
 
-        else:            
-            description = "Filename input is empty.\n\nPlease enter a name for your parameter profile."
+Please enter a name for your parameter profile."""
             popup_input_error.PopupInputError(self.shapecutter_sm, description)

@@ -1,16 +1,16 @@
-'''
+"""
 Created on 4 March 2020
 Screen 35 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter35ScreenClass>
 
@@ -289,72 +289,69 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter35ScreenClass(Screen):
-    
     info_button = ObjectProperty()
     vacuum_toggle = ObjectProperty()
-    
-    screen_number = StringProperty("[b]35[/b]")
-    title_label = StringProperty("[b]Check spindle power[/b]")
-    user_instructions = StringProperty("Press the button. The spindle should come on for 2 seconds.\n\n" \
-                                       "If not, check that it\'s connected and switched on, then retry by pressing the button again.")
-    
+    screen_number = StringProperty('[b]35[/b]')
+    title_label = StringProperty('[b]Check spindle power[/b]')
+    user_instructions = StringProperty(
+        """Press the button. The spindle should come on for 2 seconds.
+
+If not, check that it's connected and switched on, then retry by pressing the button again."""
+        )
+
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutter35ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
     def get_info(self):
         pass
-    
+
     def go_back(self):
-        self.shapecutter_sm.previous_screen()    
-    
+        self.shapecutter_sm.previous_screen()
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
 
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal':
             self.next_button.disabled = False
             self.back_button.disabled = False
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
+            self.spindle_image.source = './asmcnc/skavaUI/img/spindle_off.png'
             self.m.spindle_off()
-        else: 
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+        else:
+            self.spindle_image.source = './asmcnc/skavaUI/img/spindle_on.png'
             self.next_button.disabled = True
             self.back_button.disabled = True
             self.m.spindle_on()
             Clock.schedule_once(self.reset_spindle, 2)
 
     def reset_spindle(self, dt):
-        #self.m.vac_on()
         self.spindle_toggle.state = 'normal'
         self.set_spindle()
