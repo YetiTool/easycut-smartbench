@@ -1,11 +1,11 @@
+import logging
 from kivy.config import Config
 from kivy.clock import Clock
-
-Config.set("kivy", "keyboard_mode", "systemanddock")
-Config.set("graphics", "width", "800")
-Config.set("graphics", "height", "480")
-Config.set("graphics", "maxfps", "60")
-Config.set("kivy", "KIVY_CLOCK", "interrupt")
+Config.set('kivy', 'keyboard_mode', 'systemanddock')
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '480')
+Config.set('graphics', 'maxfps', '60')
+Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 """
 ########################################################
@@ -20,7 +20,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.clock import Clock
-
 Builder.load_string(
     """
 <MenuScreen>:
@@ -39,7 +38,7 @@ Builder.load_string(
             text: 'Back to menu'
             on_press: root.manager.current = 'menu'
 """
-)
+    )
 
 
 class SettingsScreen(Screen):
@@ -47,28 +46,30 @@ class SettingsScreen(Screen):
 
 
 class MenuScreen(Screen):
+
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop("sm")
+        self.sm = kwargs.pop('sm')
         super(MenuScreen, self).__init__(**kwargs)
 
     def on_enter(self):
         Clock.schedule_once(self.go_to_settings, 1)
 
     def go_to_settings(self, dt):
-        self.sm.current = "settings"
+        self.sm.current = 'settings'
 
     def on_leave(self):
-        self.sm.current = "menu"
+        self.sm.current = 'menu'
 
 
 class TestApp(App):
+
     def build(self):
         sm = ScreenManager()
-        sm.add_widget(SettingsScreen(name="settings"))
-        sm.add_widget(MenuScreen(name="menu", sm=sm))
-        sm.current = "menu"
+        sm.add_widget(SettingsScreen(name='settings'))
+        sm.add_widget(MenuScreen(name='menu', sm=sm))
+        sm.current = 'menu'
         return sm
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     TestApp().run()

@@ -1,3 +1,4 @@
+import logging
 """
 ########################################################
 IMPORTANT!!
@@ -5,17 +6,15 @@ Run from easycut-smartbench folder, with
 python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 """
 import sys, os, subprocess
-
-sys.path.append("./src")
-os.chdir("./src")
+sys.path.append('./src')
+os.chdir('./src')
 from kivy.config import Config
 from kivy.clock import Clock
-
-Config.set("kivy", "keyboard_mode", "systemanddock")
-Config.set("graphics", "width", "800")
-Config.set("graphics", "height", "480")
-Config.set("graphics", "maxfps", "60")
-Config.set("kivy", "KIVY_CLOCK", "interrupt")
+Config.set('kivy', 'keyboard_mode', 'systemanddock')
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '480')
+Config.set('graphics', 'maxfps', '60')
+Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 import unittest
 from mock import Mock, MagicMock, patch
@@ -34,8 +33,7 @@ from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
-
-Cmport = "COM3"
+Cmport = 'COM3'
 Builder.load_string(
     """
 <TestScreen>:
@@ -134,7 +132,7 @@ Builder.load_string(
             size_hint_y: 0.08
             id: status_container
 """
-)
+    )
 
 
 class TestScreen(Screen):
@@ -142,13 +140,12 @@ class TestScreen(Screen):
     do_toggle = False
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop("sm")
-        self.m = kwargs.pop("m")
-        self.db = kwargs.pop("db")
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.db = kwargs.pop('db')
         super(TestScreen, self).__init__(**kwargs)
-        self.status_container.add_widget(
-            widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.sm)
-        )
+        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(
+            machine=self.m, screen_manager=self.sm))
 
     def check_all(self):
         self.m.check_x_y_z_calibration()
@@ -177,9 +174,8 @@ class TestScreen(Screen):
 
     def update_label(self):
         if self.m.TMC_registers_have_been_read_in():
-            self.register_label.text = "X1 threshold: " + str(
-                self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold
-            )
+            self.register_label.text = 'X1 threshold: ' + str(self.m.
+                TMC_motor[TMC_X1].stallGuardAlarmThreshold)
         else:
             Clock.schedule_once(lambda dt: self.update_label(), 1)
 
@@ -188,7 +184,7 @@ class TestScreen(Screen):
         self.update_label()
 
     def set_threshold(self):
-        self.m.set_threshold_for_axis("X", self.threshold_to_set.text)
+        self.m.set_threshold_for_axis('X', self.threshold_to_set.text)
 
     def grbl_reset(self):
         self.m.resume_from_alarm()
@@ -202,21 +198,22 @@ class TestScreen(Screen):
         self.test_fw_update()
 
     def fw_update_wo_comms_break(self):
-        cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-        proc = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
-        )
+        cmd = (
+            'grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
+            )
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
+            subprocess.STDOUT, shell=True)
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
         if exit_code == 0:
-            did_fw_update_succeed = "Success!"
+            did_fw_update_succeed = 'Success!'
         else:
-            did_fw_update_succeed = "Update failed."
+            did_fw_update_succeed = 'Update failed.'
         print(did_fw_update_succeed)
         print(str(stdout))
 
     def test_fw_update(self):
-        print("Updating")
+        print('Updating')
 
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -226,10 +223,11 @@ class TestScreen(Screen):
         def nested_do_fw_update(dt):
             if self.do_toggle:
                 self.m.set_mode_of_reset_pin()
-            cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-            proc = subprocess.Popen(
-                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
-            )
+            cmd = (
+                'grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
+                )
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
+                subprocess.STDOUT, shell=True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
             connect()
@@ -241,8 +239,7 @@ class TestScreen(Screen):
         def do_connection(dt):
             self.m.reconnect_serial_connection()
             self.poll_for_reconnection = Clock.schedule_interval(
-                try_start_services, 0.4
-            )
+                try_start_services, 0.4)
 
         def try_start_services(dt):
             if self.m.s.is_connected():
@@ -252,18 +249,18 @@ class TestScreen(Screen):
 
         def update_complete(dt):
             if self.exit_code == 0:
-                did_fw_update_succeed = "Success!"
+                did_fw_update_succeed = 'Success!'
             else:
-                did_fw_update_succeed = "Update failed."
+                did_fw_update_succeed = 'Update failed.'
             print(did_fw_update_succeed)
             print(str(self.stdout))
-
         disconnect_and_update()
 
 
 class ScreenTest(App):
+
     def build(self):
-        print("Starting App:")
+        print('Starting App:')
         sm = ScreenManager(transition=NoTransition())
         l = localization.Localization()
         sett = settings_manager.Settings(sm)
@@ -272,12 +269,12 @@ class ScreenTest(App):
         db = Mock()
         m.s.alarm.db = db
         m.s.alarm = Mock()
-        sm.add_widget(TestScreen(name="door", sm=sm, m=m, db=db))
-        sm.add_widget(TestScreen(name="home", sm=sm, m=m, db=db))
-        if "darwin" in sys.platform:
+        sm.add_widget(TestScreen(name='door', sm=sm, m=m, db=db))
+        sm.add_widget(TestScreen(name='home', sm=sm, m=m, db=db))
+        if 'darwin' in sys.platform:
             m.s.s = Mock()
         m.s.start_services(0)
-        sm.current = "door"
+        sm.current = 'door'
         return sm
 
 
