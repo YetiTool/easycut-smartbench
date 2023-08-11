@@ -103,7 +103,16 @@ class RouterMachine(object):
         self.set_jog_limits()
         self.win_serial_port = win_serial_port
         self.s = serial_connection.SerialConnection(
-            self, self.sm, self.sett, self.l, self.jd, logging.Logger(name="__name__")
+            self,
+            self.sm,
+            self.sett,
+            self.l,
+            self.jd,
+            logging.Logger(name="__name__"),
+            logging.Logger(name="__name__"),
+            logging.Logger(name="__name__"),
+            logging.Logger(name="__name__"),
+            logging.Logger(name="__name__"),
         )
         self.s.connect()
         self.p = protocol.protocol_v2()
@@ -1362,7 +1371,7 @@ class RouterMachine(object):
         return "SmartBench model detection failed"
 
     def get_dollar_setting(self, setting_num):
-        return getattr(self.s, "setting_" + str(setting_num), 0)
+        return getattr(self.s.settings, "s" + str(setting_num), 0)
 
     def x_pos_str(self):
         return self.s.machine_position.x

@@ -1,4 +1,5 @@
 import logging
+
 """
 Created on 4 Mar 2022
 @author: Letty
@@ -12,21 +13,21 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 from time import sleep
 import sys
-sys.path.append('./src')
+
+sys.path.append("./src")
 try:
     from asmcnc.comms import router_machine
     from asmcnc.comms import localization
 except:
     pass
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-Cmport = 'COM3'
+
+Cmport = "COM3"
 
 
 class MotorCommandsTest(unittest.TestCase):
-    status = (
-        '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>'
-        )
-    fw_version = '2.3.1'
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
+    fw_version = "2.3.1"
     TMC_X1 = 0
     TMC_X2 = 1
     TMC_Y1 = 2
@@ -44,20 +45,24 @@ class MotorCommandsTest(unittest.TestCase):
 """
 
     def give_me_a_PCB(outerSelf):
-
-
         class YETIPCB(MockSerial):
-            simple_queries = {'?': '', '\x18': '', 'request registers 0':
-                outerSelf.status_idx_0, 'request registers 1': outerSelf.
-                status_idx_1, 'request registers 2': outerSelf.status_idx_2,
-                'request registers 3': outerSelf.status_idx_3,
-                'request registers 4': outerSelf.status_idx_4}
+            simple_queries = {
+                "?": "",
+                "\x18": "",
+                "request registers 0": outerSelf.status_idx_0,
+                "request registers 1": outerSelf.status_idx_1,
+                "request registers 2": outerSelf.status_idx_2,
+                "request registers 3": outerSelf.status_idx_3,
+                "request registers 4": outerSelf.status_idx_4,
+            }
+
         return YETIPCB
 
-    def status_and_PCB_constructor(self, ver='2.3.1'):
+    def status_and_PCB_constructor(self, ver="2.3.1"):
         self.fw_version = ver
-        self.m = router_machine.RouterMachine(Cmport, self.sm, self.sett,
-            self.l, self.jd)
+        self.m = router_machine.RouterMachine(
+            Cmport, self.sm, self.sett, self.l, self.jd
+        )
         self.m.s.s = DummySerial(self.give_me_a_PCB())
         self.m.s.s.fd = 1
         self.m.s.versions.firmware = ver
@@ -67,7 +72,7 @@ class MotorCommandsTest(unittest.TestCase):
     def setUp(self):
         self.sm = Mock()
         self.sett = Mock()
-        self.sett.ip_address = ''
+        self.sett.ip_address = ""
         self.l = localization.Localization()
         self.jd = Mock()
 
@@ -77,15 +82,15 @@ class MotorCommandsTest(unittest.TestCase):
     def test_printing_tmc_registers(self):
         self.status_and_PCB_constructor()
         assert self.m.TMC_motor[1].got_registers == False
-        self.m.s.write_command('request registers 0')
+        self.m.s.write_command("request registers 0")
         sleep(0.01)
-        self.m.s.write_command('request registers 1')
+        self.m.s.write_command("request registers 1")
         sleep(0.01)
-        self.m.s.write_command('request registers 2')
+        self.m.s.write_command("request registers 2")
         sleep(0.01)
-        self.m.s.write_command('request registers 3')
+        self.m.s.write_command("request registers 3")
         sleep(0.01)
-        self.m.s.write_command('request registers 4')
+        self.m.s.write_command("request registers 4")
         sleep(0.01)
         self.m.print_tmc_registers(0)
         self.m.print_tmc_registers(1)
@@ -95,5 +100,5 @@ class MotorCommandsTest(unittest.TestCase):
         assert self.m.TMC_motor[1].got_registers == True
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,10 +1,12 @@
 import logging
+
 """
 Created on 18 Aug 2022
 @author: Letty
 """
 import sys
-sys.path.append('./src')
+
+sys.path.append("./src")
 try:
     import unittest
     import pytest
@@ -13,6 +15,7 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
+
 """
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
@@ -27,38 +30,79 @@ def m():
     screen_manager = Mock()
     settings_manager = Mock()
     job = Mock()
-    m = router_machine.RouterMachine('COM', screen_manager,
-        settings_manager, l, job)
+    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, job)
     m.s.s = MagicMock()
     m.temp_sg_array = []
     return m
 
 
-def build_tuning_array(machine, sg_z_motor_axis=None, sg_x_motor_axis=None,
-    sg_y_axis=None, sg_y1_motor=None, sg_y2_motor=None, sg_x1_motor=None,
-    sg_x2_motor=None):
-    sg_list = [sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor,
-        sg_y2_motor, sg_x1_motor, sg_x2_motor]
+def build_tuning_array(
+    machine,
+    sg_z_motor_axis=None,
+    sg_x_motor_axis=None,
+    sg_y_axis=None,
+    sg_y1_motor=None,
+    sg_y2_motor=None,
+    sg_x1_motor=None,
+    sg_x2_motor=None,
+):
+    sg_list = [
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        sg_x1_motor,
+        sg_x2_motor,
+    ]
     status = construct_status(*sg_list)
-    machine.s.record_sg_values_flag = True
+    machine.s.RECORD_SG_VALUES_FLAG = True
     machine.s.process_grbl_push(status)
 
 
-def construct_status(z_motor_axis=None, x_motor_axis=None, y_axis=None,
-    y1_motor=None, y2_motor=None, x1_motor=None, x2_motor=None):
+def construct_status(
+    z_motor_axis=None,
+    x_motor_axis=None,
+    y_axis=None,
+    y1_motor=None,
+    y2_motor=None,
+    x1_motor=None,
+    x2_motor=None,
+):
     if z_motor_axis == None:
-        status = (
-            '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>'
-            )
+        status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>"
     elif x1_motor == None:
-        status = ('<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:' +
-            str(z_motor_axis) + ',' + str(x_motor_axis) + ',' + str(y_axis) +
-            ',' + str(y1_motor) + ',' + str(y2_motor) + '|Sp:1,2,3,4,5,6,7>')
+        status = (
+            "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:"
+            + str(z_motor_axis)
+            + ","
+            + str(x_motor_axis)
+            + ","
+            + str(y_axis)
+            + ","
+            + str(y1_motor)
+            + ","
+            + str(y2_motor)
+            + "|Sp:1,2,3,4,5,6,7>"
+        )
     else:
-        status = ('<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:' +
-            str(z_motor_axis) + ',' + str(x_motor_axis) + ',' + str(y_axis) +
-            ',' + str(y1_motor) + ',' + str(y2_motor) + ',' + str(x1_motor) +
-            ',' + str(x2_motor) + '|Sp:1,2,3,4,5,6,7>')
+        status = (
+            "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:"
+            + str(z_motor_axis)
+            + ","
+            + str(x_motor_axis)
+            + ","
+            + str(y_axis)
+            + ","
+            + str(y1_motor)
+            + ","
+            + str(y2_motor)
+            + ","
+            + str(x1_motor)
+            + ","
+            + str(x2_motor)
+            + "|Sp:1,2,3,4,5,6,7>"
+        )
     return status
 
 
@@ -113,7 +157,7 @@ def test_are_sg_values_in_range_after_calibration_5_drivers(m):
     build_tuning_array(m, 1, 2, 3, 4000, 5, 6, 7)
     build_tuning_array(m, 3, 4, 5, 6, 7, 8000, 9)
     build_tuning_array(m, 2, 3, 4, 5, 6, 7, 8)
-    values = m.are_sg_values_in_range_after_calibration(['X', 'Y'])
+    values = m.are_sg_values_in_range_after_calibration(["X", "Y"])
     assert values[0] == 4
     assert values[1] == 5
     assert values[2] == None
@@ -124,7 +168,7 @@ def test_are_sg_values_in_range_after_calibration_4_drivers(m):
     build_tuning_array(m, 3, 4, 5, 6, 7)
     build_tuning_array(m, 1, 2, 3, 4000, 5)
     build_tuning_array(m, 2, 3, 4, 5, 6)
-    values = m.are_sg_values_in_range_after_calibration(['X', 'Y', 'Z'])
+    values = m.are_sg_values_in_range_after_calibration(["X", "Y", "Z"])
     assert values[0] == 4
     assert values[1] == 5
     assert values[2] == 3
@@ -135,8 +179,12 @@ def test_are_sg_values_in_range_after_calibration_fails_as_expected(m):
     build_tuning_array(m, 1, 2, 3, 4, 5, 1000, 7)
     build_tuning_array(m, 2000, 3, 4, 5, 6, 7, 8)
     build_tuning_array(m, 3, 4000, 5, 6, 7, 8, 9)
-    values = m.are_sg_values_in_range_after_calibration(['X', 'Y', 'Z'])
+    values = m.are_sg_values_in_range_after_calibration(["X", "Y", "Z"])
     assert values[0] == 4000
     assert values[1] == 5
     assert values[2] == 2000
-    assert m.checking_calibration_fail_info == 'X SG values out of expected range: 4000| ' + 'Z SG values out of expected range, max: 2000|'
+    assert (
+        m.checking_calibration_fail_info
+        == "X SG values out of expected range: 4000| "
+        + "Z SG values out of expected range, max: 2000|"
+    )

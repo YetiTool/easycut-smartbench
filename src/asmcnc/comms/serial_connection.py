@@ -146,6 +146,7 @@ class SerialConnection:
 
     VERBOSE_STATUS: bool = False
     VERBOSE_ALL_RESPONSE: bool = False
+    RECORD_SG_VALUES_FLAG: bool = False
 
     # LAST SENT VARIABLES
     last_sent_motion_mode: int = None
@@ -242,7 +243,12 @@ class SerialConnection:
             data = self.s.read(self.s.inWaiting())
 
             if data:
-                messages = data.decode("utf-8").split("\n")
+                messages = data
+
+                if isinstance(data, bytes):
+                    messages = data.decode("utf-8")
+
+                messages = messages.split("\n")
 
                 return any("SmartBench" in message for message in messages)
             else:
@@ -322,7 +328,11 @@ class SerialConnection:
             # If there is data in the input buffer, read it
             if self.s.inWaiting():
                 try:
-                    received = self.s.readline().decode("utf-8").strip()
+                    received = self.s.readline()
+
+                    if isinstance(received, bytes):
+                        received = received.decode("utf-8").strip()
+
                 except serial.SerialException as e:
                     self.logger.error(e)
                     continue
@@ -964,8 +974,11 @@ class SerialConnection:
 
         overrides = [int(i) for i in overrides]
 
+        print(overrides)
+
         self.feeds_and_speeds.feed_override = overrides[0]
-        self.feeds_and_speeds.speed_override = overrides[1]
+        rapid_override = overrides[1]
+        self.feeds_and_speeds.speed_override = overrides[2]
 
     def process_temps(self, temps):
         if len(temps) != 2 and len(temps) != 3:
@@ -982,15 +995,33 @@ class SerialConnection:
         if len(sg_values) < 5:
             raise ValueError(f"Invalid sg_values ({sg_values})")
 
-        self.stall_guard.z_motor_axis = int(sg_values[0])
-        self.stall_guard.x_motor_axis = int(sg_values[1])
-        self.stall_guard.y_axis = int(sg_values[2])
-        self.stall_guard.y1_motor = int(sg_values[3])
-        self.stall_guard.y2_motor = int(sg_values[4])
+        sg_values = [int(i) for i in sg_values]
+
+        self.stall_guard.z_motor_axis = sg_values[0]
+        self.stall_guard.x_motor_axis = sg_values[1]
+        self.stall_guard.y_axis = sg_values[2]
+        self.stall_guard.y1_motor = sg_values[3]
+        self.stall_guard.y2_motor = sg_values[4]
 
         if len(sg_values) == 7:
-            self.stall_guard.x1_motor = int(sg_values[5])
-            self.stall_guard.x2_motor = int(sg_values[6])
+            self.stall_guard.x1_motor = sg_values[5]
+            self.stall_guard.x2_motor = sg_values[6]
+        else:
+            self.stall_guard.x1_motor = None
+            self.stall_guard.x2_motor = None
+
+        if self.RECORD_SG_VALUES_FLAG:
+            self.m.temp_sg_array.append(
+                [
+                    self.stall_guard.z_motor_axis,
+                    self.stall_guard.x_motor_axis,
+                    self.stall_guard.y_axis,
+                    self.stall_guard.y1_motor,
+                    self.stall_guard.y2_motor,
+                    self.stall_guard.x1_motor,
+                    self.stall_guard.x2_motor,
+                ]
+            )
 
     def process_voltages(self, voltages):
         if len(voltages) != 4:
