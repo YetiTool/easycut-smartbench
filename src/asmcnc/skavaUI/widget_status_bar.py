@@ -154,7 +154,6 @@ class StatusBar(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
-        #Clock.schedule_interval(self.check_limit_switch, self.IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()
