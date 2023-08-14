@@ -154,7 +154,7 @@ class StatusBar(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
-        Clock.schedule_interval(self.check_limit_switch, self.IP_REPORT_INTERVAL)
+        #Clock.schedule_interval(self.check_limit_switch, self.IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()
@@ -183,9 +183,7 @@ class StatusBar(Widget):
         if self.m.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
             self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
-            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
-            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
+            self.check_limit_switch(dt)
             self.grbl_xw_label.text = 'wX:\n' + str(round(self.m.wpos_x(), 2))
             self.grbl_yw_label.text = 'wY:\n' + str(round(self.m.wpos_y(), 2))
             self.grbl_zw_label.text = 'wZ:\n' + str(round(self.m.wpos_z(), 2))
