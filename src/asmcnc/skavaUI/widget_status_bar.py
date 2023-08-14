@@ -164,20 +164,20 @@ class StatusBar(Widget):
             self.grbl_xm_label.text = 'm[color=ff0000]x[/color]:\n' + str(round(self.m.mpos_x(), 2))
         elif self.m.s.limit_X:
             self.grbl_xm_label.text = 'm[color=ff0000]X[/color]:\n' + str(round(self.m.mpos_x(), 2))
-        # else:
-        #     self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
+        else:
+            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
 
         if self.m.s.limit_y:
             self.grbl_ym_label.text = 'm[color=ff0000]y[/color]:\n' + str(round(self.m.mpos_y(), 2))
         elif self.m.s.limit_Y:
             self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
-        # else:
-        #     self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
+        else:
+            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
 
         if self.m.s.limit_z:
             self.grbl_zm_label.text = 'm[color=ff0000]Z[/color]:\n' + str(round(self.m.mpos_z(), 2))
-        # else:
-        #     self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
+        else:
+            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
