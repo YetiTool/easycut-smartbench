@@ -167,10 +167,12 @@ class StatusBar(Widget):
         else:
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
 
-        if self.m.s.limit_y:
-            self.grbl_ym_label.text = 'm[color=ff0000]y[/color]:\n' + str(round(self.m.mpos_y(), 2))
+        if self.m.s.limit_Y_axis:
+            self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
         elif self.m.s.limit_Y:
             self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
+        elif self.m.s.limit_Y:
+            self.grbl_ym_label.text = 'm[color=ff0000]y[/color]:\n' + str(round(self.m.mpos_y(), 2))
         else:
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
 
