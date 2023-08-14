@@ -83,6 +83,7 @@ Builder.load_string("""
             text_size: self.size
             halign: 'left'
             valign: 'middle'
+            markup: True
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
@@ -90,6 +91,7 @@ Builder.load_string("""
             text_size: self.size
             halign: 'left'
             valign: 'middle'
+            markup: True
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
@@ -97,6 +99,7 @@ Builder.load_string("""
             text_size: self.size
             halign: 'left'
             valign: 'middle'
+            markup: True
 
 
         Label:
@@ -151,10 +154,30 @@ class StatusBar(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
+        Clock.schedule_interval(self.check_limit_switch, self.IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()
 
+    def check_limit_switch(self, dt):
+        if self.m.s.limit_x:
+            self.grbl_xm_label.text = 'm[color=ff0000]x[/color]:\n' + str(round(self.m.mpos_x(), 2))
+        elif self.m.s.limit_X:
+            self.grbl_xm_label.text = 'm[color=ff0000]X[/color]:\n' + str(round(self.m.mpos_x(), 2))
+        else:
+            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
+
+        if self.m.s.limit_y:
+            self.grbl_ym_label.text = 'm[color=ff0000]y[/color]:\n' + str(round(self.m.mpos_y(), 2))
+        elif self.m.s.limit_Y:
+            self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
+        else:
+            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
+
+        if self.m.s.limit_z:
+            self.grbl_zm_label.text = 'm[color=ff0000]Z[/color]:\n' + str(round(self.m.mpos_z(), 2))
+        else:
+            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
