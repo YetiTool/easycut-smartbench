@@ -171,7 +171,7 @@ class StatusBar(Widget):
             self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
         elif self.m.s.limit_Y:
             self.grbl_ym_label.text = 'm[color=ff0000]Y[/color]:\n' + str(round(self.m.mpos_y(), 2))
-        elif self.m.s.limit_Y:
+        elif self.m.s.limit_y:
             self.grbl_ym_label.text = 'm[color=ff0000]y[/color]:\n' + str(round(self.m.mpos_y(), 2))
         else:
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
