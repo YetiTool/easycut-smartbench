@@ -36,14 +36,14 @@ class ConstructTMCCommandTest(unittest.TestCase):
     def testconstructTMCcommand1(self):
         """sending command to motor:4, cmd:101, val:128"""
         self.assertEqual(
-            self.p.constructTMCcommand(101, 128, 1), "^\x04\x00\x0c\x8f^\x06\x012e\x80W"
+            self.p.constructTMCcommand(101, 128, 1), b'^\x04\x00\x0c\x8f^\x06\x012e\x80W'
         )
 
     def testconstructTMCcommand2(self):
         """sending command to motor:4, cmd:101, val:128"""
         self.assertEqual(
             self.p.constructTMCcommand(109, 67109336, 1),
-            "^\x04\x00\x0c\x8f^\x06\x012mØp",
+            b'^\x04\x00\x0c\x8f^\x06\x012m\xd8p'
         )
 
 

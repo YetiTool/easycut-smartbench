@@ -101,10 +101,11 @@ def test_unschedule_all_events(stall_jig_screen):
     )
     stall_jig_screen.unschedule_all_events()
 
+from asmcnc.comms.serial_classes import LastStall
 
 def test_record_stall_event(stall_jig_screen, m):
     m.s.settings.s100 = 5
-    m.s.stall_guard.last_stall.motor_step_size = 5
+    m.s.stall_guard.last_stall = LastStall(0, 5, 0, 0, 0, 0, 1.0, 1.0, 1.0, 'Test')
     stall_jig_screen.record_stall_event()
     stall_jig_screen.record_stall_event()
     print(stall_jig_screen.stall_test_events)

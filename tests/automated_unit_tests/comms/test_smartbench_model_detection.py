@@ -34,6 +34,7 @@ def m():
 
 
 def test_initial_failure(m):
+    m.s.versions.firmware = "1.1.0"
     assert m.smartbench_model() == "SmartBench model detection failed"
 
 

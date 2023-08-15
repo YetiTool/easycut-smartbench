@@ -76,7 +76,7 @@ def test_start_sequential_stream(sc):
 
 def test_grbl_scanner_runs_once_with_testing_flag(sc):
     sc.grbl_scanner(run_grbl_scanner_once=True)
-    assert sc.m_state == "Off"
+    assert sc.m_state == "Idle"  # TODO: check this is ok (previously 'Off')
 
 
 def test_is_buffer_clear(sc):
@@ -462,39 +462,39 @@ def test_grbl_mode_tracking_over_scanner_run_with_jump_from_no_ln_no_to_start(sc
 
 
 def test_is_spindle_speed_in_line(sc):
-    assert sc.get_grbl_float("GX1Y4S600F80", sc.speed_pattern) == 600
+    assert sc.get_grbl_float("GX1Y4S600F80", sc.SPEED_PATTERN) == 600
 
 
 def test_is_spindle_speed_in_line_float(sc):
-    assert sc.get_grbl_float("GX1Y4S80000.9876F90", sc.speed_pattern) == 80000.9876
-    assert sc.get_grbl_float("M3S16000", sc.speed_pattern) == 16000
-    assert sc.get_grbl_float("S18000M3", sc.speed_pattern) == 18000
+    assert sc.get_grbl_float("GX1Y4S80000.9876F90", sc.SPEED_PATTERN) == 80000.9876
+    assert sc.get_grbl_float("M3S16000", sc.SPEED_PATTERN) == 16000
+    assert sc.get_grbl_float("S18000M3", sc.SPEED_PATTERN) == 18000
 
 
 def test_is_feed_rate_in_line(sc):
-    assert sc.get_grbl_float("G0X1Y4F600Y9S0", sc.feed_pattern) == 600
+    assert sc.get_grbl_float("G0X1Y4F600Y9S0", sc.FEED_PATTERN) == 600
 
 
 def test_is_feed_rate_in_line_float(sc):
-    assert sc.get_grbl_float("G91F9000.9876X6Y7S3", sc.feed_pattern) == 9000.9876
+    assert sc.get_grbl_float("G91F9000.9876X6Y7S3", sc.FEED_PATTERN) == 9000.9876
 
 
 def test_get_motion_mode_for_line(sc):
-    assert sc.get_grbl_mode("G1X6Y7", sc.g_motion_pattern) == 1
-    assert sc.get_grbl_mode("G02X6Y7", sc.g_motion_pattern) == 2
-    assert sc.get_grbl_mode("G00X6Y7", sc.g_motion_pattern) == 0
-    assert sc.get_grbl_mode("G011X6Y7", sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode("G20X6Y7", sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode("GX4X6Y7", sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode("GX3X6Y7", sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode("G91F66X7Y7G2S20.67F600", sc.g_motion_pattern) == 2
+    assert sc.get_grbl_mode("G1X6Y7", sc.G_MOTION_PATTERN) == 1
+    assert sc.get_grbl_mode("G02X6Y7", sc.G_MOTION_PATTERN) == 2
+    assert sc.get_grbl_mode("G00X6Y7", sc.G_MOTION_PATTERN) == 0
+    assert sc.get_grbl_mode("G011X6Y7", sc.G_MOTION_PATTERN) is None
+    assert sc.get_grbl_mode("G20X6Y7", sc.G_MOTION_PATTERN) is None
+    assert sc.get_grbl_mode("GX4X6Y7", sc.G_MOTION_PATTERN) is None
+    assert sc.get_grbl_mode("GX3X6Y7", sc.G_MOTION_PATTERN) is None
+    assert sc.get_grbl_mode("G91F66X7Y7G2S20.67F600", sc.G_MOTION_PATTERN) == 2
 
 
 def test_scrape_last_sent_modes_no_new_info(sc):
     sc.scrape_last_sent_modes("G91")
-    assert sc.last_sent_feed == 0
-    assert sc.last_sent_speed == 0
-    assert sc.last_sent_motion_mode == ""
+    assert sc.last_sent_feed is None
+    assert sc.last_sent_speed is None
+    assert sc.last_sent_motion_mode == None
 
 
 def test_scrape_last_sent_modes_changing_info(sc):

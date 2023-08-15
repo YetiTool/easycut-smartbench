@@ -193,8 +193,9 @@ def test_invalid_values_handled_for_4_drivers(sc):
     status = construct_status_with_sg_values(
         sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor
     )
-    sc.process_grbl_push(status)
-    assert sc.spindle_statistics.mains_frequency_hertz == None
+
+    with pytest.raises(ValueError):
+        sc.process_grbl_push(status)
 
 
 def test_invalid_values_handled_for_5_drivers(sc):
@@ -214,8 +215,9 @@ def test_invalid_values_handled_for_5_drivers(sc):
         sg_x1_motor,
         sg_x2_motor,
     )
-    sc.process_grbl_push(status)
-    assert sc.spindle_statistics.mains_frequency_hertz == None
+
+    with pytest.raises(ValueError):
+        sc.process_grbl_push(status)
 
 
 def test_temp_sg_array_append_5_drivers(m):
@@ -544,10 +546,9 @@ def test_not_feed_override_read_in(sc):
 def test_feed_override_read_in_fails_if_bad(sc):
     ov = ";"
     status = construct_status_with_override(feed_ov=ov)
-    sc.process_grbl_push(status)
-    assert sc.feeds_and_speeds.feed_override != ov
-    assert sc.temperatures.motor_driver != 1
-    assert sc.temperatures.pcb != 2
+
+    with pytest.raises(ValueError):
+        sc.process_grbl_push(status)
 
 
 def test_speed_override_read_in(sc):
@@ -569,10 +570,9 @@ def test_not_speed_override_read_in(sc):
 def test_speed_override_read_in_fails_if_bad(sc):
     ov = ";"
     status = construct_status_with_override(speed_ov=ov)
-    sc.process_grbl_push(status)
-    assert sc.feeds_and_speeds.feed_override != ov
-    assert sc.temperatures.motor_driver != 1
-    assert sc.temperatures.pcb != 2
+
+    with pytest.raises(ValueError):
+        sc.process_grbl_push(status)
 
 
 def construct_status_with_line_numbers(l=None):
@@ -594,10 +594,10 @@ def test_line_number_read_in(sc):
 
 def test_line_number_read_in_when_nonsense(sc):
     status = construct_status_with_line_numbers("nonsense")
-    sc.process_grbl_push(status)
+
+    with pytest.raises(ValueError):
+        sc.process_grbl_push(status)
     assert sc.grbl_ln == None
-    assert sc.temperatures.motor_driver != 1
-    assert sc.temperatures.pcb != 2
 
 
 def test_line_number_read_in_when_no_number(sc):

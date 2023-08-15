@@ -314,6 +314,8 @@ class StallJigScreen(Screen):
         self.l = kwargs.pop("localization")
         self.m = kwargs.pop("machine")
         self.calibration_db = kwargs.pop("calibration_db")
+        self.jd = kwargs.pop("job")
+        self.sett = kwargs.pop("settings")
         super(StallJigScreen, self).__init__(**kwargs)
         self.sn_for_db = "ys6" + str(self.m.serial_number()).split(".")[0]
         self.combined_id = (self.sn_for_db + str(self.stage_id))[2:]

@@ -87,6 +87,7 @@ class YetiPilot(object):
                 self.sm.get_screen("go").yp_widget.profile_selection.text = ""
             self.sm.get_screen("go").feedOverride.set_widget_visibility(True)
             self.sm.get_screen("go").speedOverride.set_widget_visibility(True)
+
         if self.m.s.feeds_and_speeds.feed_override > 100:
             self.m.feed_override_reset()
         self.m.speed_override_reset()

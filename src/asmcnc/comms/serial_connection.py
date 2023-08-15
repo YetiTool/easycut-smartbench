@@ -67,6 +67,7 @@ class SerialConnection:
     _dwell_time: float = 0.5
     _dwell_command: str = "G4 P" + str(_dwell_time)
     _micro_dwell_command = "G4 P" + str(0.01)
+    _reset_grbl_after_stream: bool = False
 
     is_sequential_streaming: bool = False
     is_job_streaming: bool = False
@@ -142,7 +143,7 @@ class SerialConnection:
     # DEBUG
     measurement_stage: int = None
     measure_running_data: bool = False
-    running_data: list = None
+    running_data: list = []
 
     VERBOSE_STATUS: bool = False
     VERBOSE_ALL_RESPONSE: bool = False
@@ -674,6 +675,8 @@ class SerialConnection:
                         else:
                             self.remove_from_g_mode_tracker(int(grbl_ln) - self.grbl_ln)
                         self.grbl_ln = int(grbl_ln)
+                    else:
+                        raise ValueError("Invalid line number received: " + grbl_ln)
                 elif part.startswith("Pn:"):
                     pin_info = part.split(":")[1]
 
@@ -995,6 +998,10 @@ class SerialConnection:
         if len(sg_values) < 5:
             raise ValueError(f"Invalid sg_values ({sg_values})")
 
+        for i in sg_values:
+            if not i.isdigit():
+                raise ValueError(f"Invalid sg_values ({sg_values})")
+
         sg_values = [int(i) for i in sg_values]
 
         self.stall_guard.z_motor_axis = sg_values[0]
@@ -1224,6 +1231,8 @@ class SerialConnection:
                 self.machine_position.z,
                 self.stall_guard.x_motor_axis,
                 self.stall_guard.y_axis,
+                self.stall_guard.y1_motor,
+                self.stall_guard.y2_motor,
                 self.stall_guard.z_motor_axis,
                 self.temperatures.motor_driver,
                 self.temperatures.pcb,
@@ -1271,8 +1280,14 @@ class SerialConnection:
             self.is_sequential_streaming = False
 
     def _after_grbl_settings_insert_dwell(self):
-        if self._sequential_stream_buffer:
-            if self._sequential_stream_buffer[0].startswith("$"):
+        if self._sequential_stream_buffer[0].startswith('$'):
+            if len(self._sequential_stream_buffer) > 1:
+                if (
+                        not self._sequential_stream_buffer[1].startswith('$') and
+                        not self._sequential_stream_buffer[1] == self._dwell_command
+                ):
+                    return True
+            else:
                 return True
         return False
 
@@ -1304,12 +1319,12 @@ class SerialConnection:
         )
 
     @staticmethod
-    def get_grbl_float(line_to_go, pattern, last_sent):
+    def get_grbl_float(line_to_go, pattern, last_sent=None):
         match_obj = re.search(pattern, line_to_go)
         return float(match_obj.group()[1:]) if match_obj else last_sent
 
     @staticmethod
-    def get_grbl_mode(line_to_go, pattern, last_sent):
+    def get_grbl_mode(line_to_go, pattern, last_sent=None):
         match_obj = re.search(pattern, line_to_go)
         return int(match_obj.group()) if match_obj else last_sent
 
@@ -1451,3 +1466,32 @@ class SerialConnection:
     def set_streaming_flags_to_true(self):
         self.is_stream_lines_remaining = True
         self.is_job_streaming = True
+
+    def cancel_stream(self):
+        self.is_job_streaming = False
+        self.is_stream_lines_remaining = False
+        self.m.set_pause(False)
+        self.jd.job_gcode_running = []
+        self.set_use_yp(False)
+        self.jd.grbl_mode_tracker = []
+        cancel_line = self.grbl_ln
+        self.grbl_ln = None
+
+        if self.m_state == "Check":
+            self.check_streaming_started = False
+            self.m.disable_check_mode()
+            self.suppress_error_screens = False
+            self.flush_flag = True
+            self._reset_counters()
+        else:
+            self.flush_flag = True
+            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            time.sleep(0.4)  # TODO: Look at this
+            time_taken_seconds = self.update_machine_runtime()
+
+            if not self.jd.job_recovery_skip_recovery:
+                self.jd.write_to_recovery_file_after_cancel(cancel_line, time_taken_seconds)
+
+        self.NOT_SKELETON_STUFF = True
+        self.logger.info("G-code streaming cancelled")

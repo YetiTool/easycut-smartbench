@@ -48,7 +48,9 @@ def test_start(yp):
 
 
 def test_stop(yp):
+    yp.m.s.feeds_and_speeds.feed_override = 110
     yp.disable()
+
     assert not yp.use_yp
 
 

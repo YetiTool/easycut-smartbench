@@ -159,7 +159,6 @@ def status_string(
         + str(m_y)
         + ","
         + str(m_z)
-        + ","
         + "|Bf:35,255"
         + "|FS:"
         + str(feed_rate)
