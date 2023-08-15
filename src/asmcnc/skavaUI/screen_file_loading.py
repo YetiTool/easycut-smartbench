@@ -313,12 +313,17 @@ class LoadingScreen(Screen):
                                 rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
 
                                 # Use opportunity to add min/max spindle speeds for job data module
-                                if rpm > self.jd.spindle_speed_max or self.jd.spindle_speed_max == None:
+                                if self.jd.spindle_speed_max is None:
                                     self.jd.spindle_speed_max = rpm
-                                if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
+                                elif rpm > self.jd.spindle_speed_max:
+                                    self.jd.spindle_speed_max = rpm
+
+                                if self.jd.spindle_speed_min is None:
+                                    self.jd.spindle_speed_min = rpm
+                                elif rpm < self.jd.spindle_speed_min:
                                     self.jd.spindle_speed_min = rpm
 
-                                # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
+                                # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle,
                                 # in order for the electronics to send the right voltage for the desired RPM
                                 if self.m.spindle_voltage == 110:
                                     rpm = self.m.convert_from_110_to_230(rpm)
@@ -343,9 +348,14 @@ class LoadingScreen(Screen):
                                 feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
                                 # Use opportunity to add min/max feedrates for job data module
-                                if int(feed_rate) > self.jd.feedrate_max or self.jd.feedrate_max == None:
+                                if self.jd.feedrate_max is None:
                                     self.jd.feedrate_max = int(feed_rate)
-                                if int(feed_rate) < self.jd.feedrate_min or self.jd.feedrate_min == None:
+                                elif int(feed_rate) > self.jd.feedrate_max:
+                                    self.jd.feedrate_max = int(feed_rate)
+
+                                if self.jd.feedrate_min is None:
+                                    self.jd.feedrate_min = int(feed_rate)
+                                elif int(feed_rate) < self.jd.feedrate_min:
                                     self.jd.feedrate_min = int(feed_rate)
 
                                 if float(feed_rate) < self.minimum_feed_rate:
