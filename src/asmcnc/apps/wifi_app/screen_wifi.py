@@ -53,6 +53,8 @@ Builder.load_string("""
 
     connection_instructions_rst : connection_instructions_rst
     
+    on_touch_down: root.on_touch()
+    
     BoxLayout:
         size_hint: (None, None)
         height: dp(480)
@@ -489,6 +491,9 @@ class WifiScreen(Screen):
         # Remove the custom SSID input field on startup
         self.network_name_input.remove_widget(self.custom_network_name_box)
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self._password, self.custom_network_name]
+
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
         if self.custom_ssid_button.state == 'normal':
@@ -507,7 +512,7 @@ class WifiScreen(Screen):
                 pass
             self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
-        kb = custom_keyboard.Keyboard([self._password, self.custom_network_name], localization=self.l)
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
@@ -527,6 +532,10 @@ class WifiScreen(Screen):
         self._password.text = ''
 
         self.update_strings()
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def check_credentials(self):
 

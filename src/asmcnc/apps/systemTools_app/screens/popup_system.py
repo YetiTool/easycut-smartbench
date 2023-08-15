@@ -20,7 +20,13 @@ from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.rst import RstDocument
+from asmcnc.keyboard import custom_keyboard
 
+
+def on_touch(popup, touch):
+    for child in popup.content.children:
+        if isinstance(child, TextInput):
+            child.focus = False
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
@@ -335,6 +341,8 @@ class PopupGRBLSettingsPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -354,7 +362,8 @@ class PopupGRBLSettingsPassword(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(500, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -386,6 +395,8 @@ class PopupFactorySettingsPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=1, text='', multiline=False)
 
+        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -408,6 +419,7 @@ class PopupFactorySettingsPassword(Widget):
                       auto_dismiss=False,
                       pos_hint={'x': 150.0 / 800.0,
                                 'y': 200.0 / 480.0},
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -447,6 +459,8 @@ class PopupUpdateTestingPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -466,7 +480,8 @@ class PopupUpdateTestingPassword(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(600, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -506,6 +521,8 @@ class PopupDeveloperPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -525,7 +542,8 @@ class PopupDeveloperPassword(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(600, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]

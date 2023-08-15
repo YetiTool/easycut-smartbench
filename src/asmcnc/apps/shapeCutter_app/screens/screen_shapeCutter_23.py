@@ -13,6 +13,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -26,6 +27,8 @@ Builder.load_string("""
     xy_feed: xy_feed
     z_feed: z_feed
     spindle_speed: spindle_speed
+    
+    on_touch_down: root.on_touch()
     
     BoxLayout:
         size_hint: (None,None)
@@ -512,7 +515,15 @@ class ShapeCutter23ScreenClass(Screen):
         self.j=kwargs['job_parameters']
         self.l=kwargs['localization']
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.xy_feed, self.z_feed, self.spindle_speed]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def on_pre_enter(self):
+        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.info_button.opacity = 1
 
         self.xy_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["xy feed rate"]))
