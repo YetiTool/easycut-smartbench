@@ -447,9 +447,9 @@ class SpindleSettingsWidget(Widget):
         self.update_font_size(self.cooldown_settings_label)
 
     def update_font_size(self, value):
-        len_without_markup = self.l.get_text_length(value.text)
+        text_length = self.l.get_text_length(value.text)
 
-        if len_without_markup > 33:
+        if text_length > 33:
             value.font_size = 22
         else: 
             value.font_size = 24

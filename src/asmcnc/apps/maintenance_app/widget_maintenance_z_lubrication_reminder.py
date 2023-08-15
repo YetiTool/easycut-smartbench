@@ -162,11 +162,11 @@ class ZLubricationReminderWidget(Widget):
             value.font_size = 50
 
     def update_label_font_size(self, value):
-        len_without_markup = self.l.get_text_length(value.text)
+        text_length = self.l.get_text_length(value.text)
 
-        if len_without_markup > 45:
+        if text_length > 45:
             value.font_size = 18
-        elif len_without_markup > 43:
+        elif text_length > 43:
             value.font_size = 22
         else:
             value.font_size = 24

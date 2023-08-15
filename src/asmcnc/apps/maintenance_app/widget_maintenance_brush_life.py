@@ -161,15 +161,15 @@ class BrushLifeWidget(Widget):
         self.update_font_size(self.brush_reminder_label)
 
     def update_font_size(self, value):
-        len_without_markup = self.l.get_text_length(value.text)
+        text_length = self.l.get_text_length(value.text)
 
-        if len_without_markup <= 18:
+        if text_length <= 18:
             value.font_size = self.default_font_size
-        if len_without_markup > 18:
+        if text_length > 18:
             value.font_size = self.default_font_size - 3
-        if len_without_markup > 23:
+        if text_length > 23:
             value.font_size = self.default_font_size - 6
-        if len_without_markup > 28:
+        if text_length > 28:
             value.font_size = self.default_font_size - 7
 
 

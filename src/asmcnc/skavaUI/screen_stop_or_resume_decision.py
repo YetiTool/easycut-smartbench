@@ -266,11 +266,11 @@ class StopOrResumeDecisionScreen(Screen):
         self.sm.current = self.return_screen
 
     def update_font_size(self, value):
-        len_without_markup = self.l.get_text_length(value.text)
+        text_length = self.l.get_text_length(value.text)
 
-        if len_without_markup > 700:
+        if text_length > 700:
             value.font_size = 16
-        elif len_without_markup > 500:
+        elif text_length > 500:
             value.font_size = 17
         else: 
             value.font_size = 18

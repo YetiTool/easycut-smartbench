@@ -707,14 +707,16 @@ class SWUpdateScreen(Screen):
         self.update_font_size(self.wifi_update_button)
 
     def update_font_size(self, value):
-        if len(value.text) < 9:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length < 9:
             value.font_size = self.default_font_size
-        elif len(value.text) > 8:
+        elif text_length > 8:
             value.font_size = self.default_font_size - 2
-        if len(value.text) > 9:
+        if text_length > 9:
             value.font_size = self.default_font_size - 4
-        if len(value.text) > 11:
+        if text_length > 11:
             value.font_size = self.default_font_size - 6
-        if len(value.text) > 12:
+        if text_length > 12:
             value.font_size = self.default_font_size - 8
 

@@ -156,7 +156,9 @@ class ApplySettingsScreen(Screen):
 		self.update_font_size(self.next_button)
 
 	def update_font_size(self, value):
-		if len(value.text) > 20:
+		text_length = self.l.get_text_length(value.text)
+
+		if text_length > 20:
 			value.font_size = 25
 		else:
 			value.font_size = 30

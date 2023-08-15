@@ -560,7 +560,9 @@ class JobRecoveryScreen(Screen):
         self.update_font_size(self.go_xy_button)
 
     def update_font_size(self, value):
-        if len(value.text) > 10:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 10:
             value.font_size = 25
         else: 
             value.font_size = 30

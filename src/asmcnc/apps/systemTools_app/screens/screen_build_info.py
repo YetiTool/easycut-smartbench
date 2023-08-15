@@ -728,7 +728,7 @@ class BuildInfoScreen(Screen):
         self.update_font_sizes()
 
     def update_font_sizes(self): # Update everything together so it looks nicer
-        if len(self.firmware_header.text) < 20:
+        if self.l.get_text_length(self.firmware_header.text) < 20:
             self.smartbench_model_header.font_size = 20
             self.serial_number_header.font_size = 20
             self.console_serial_number_header.font_size = 20
