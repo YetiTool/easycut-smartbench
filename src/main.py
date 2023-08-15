@@ -31,6 +31,7 @@ Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
+#dfghj
 
 import kivy
 from kivy.app import App
