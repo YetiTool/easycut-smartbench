@@ -104,20 +104,20 @@ Builder.load_string("""
                             font_size: dp(30)
                             multiline: False
 
-                Label:
-                    text: 'UB Serial'
-                    font_size: dp(25)
-                GridLayout:
-                        cols: 2
-                        rows: 1 
-                        Label: 
-                            text: 'xu'
-                            font_size: dp(30)
+            Label:
+                text: 'UB Serial'
+                font_size: dp(25)
+            GridLayout:
+                    cols: 2
+                    rows: 1 
+                    Label: 
+                        text: 'xu'
+                        font_size: dp(30)
 
-                        TextInput:
-                            id: ub_serial_input
-                            font_size: dp(30)
-                            multiline: False
+                    TextInput:
+                        id: ub_serial_input
+                        font_size: dp(30)
+                        multiline: False
 
             GridLayout:
                 cols: 1
@@ -144,13 +144,13 @@ Builder.load_string("""
                 Label:
                     text: 'YBench Serial'
                     font_size: dp(25)
+                
                 GridLayout:
                     cols: 2
                     rows: 1 
                         Label:
                             text: 'yb'
                             font_size: dp(30)
-                        
                         TextInput:
                             id: ybench_serial_input
                             font_size: dp(30)
