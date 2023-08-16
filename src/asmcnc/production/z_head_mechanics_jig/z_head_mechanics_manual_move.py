@@ -144,7 +144,6 @@ Builder.load_string("""
                     on_press: root.home()
 
             BoxLayout:
-                # padding: [dp(0), dp(50)]
                 orientation: 'vertical'
 
                 BoxLayout:
