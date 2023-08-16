@@ -70,7 +70,7 @@ class Localization(object):
         else: 
             return string
     
-    # Removes kivy markup tags to leave only text before returning length
+    # Removes kivy markup tags to leave only text before returning length, and decode to correctly count Korean characters
     def get_text_length(self, string):
         return len(re.sub(self.kivy_markup_regex, '', string).decode('utf-8'))
 
