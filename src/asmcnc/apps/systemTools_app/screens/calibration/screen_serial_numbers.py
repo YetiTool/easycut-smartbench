@@ -75,9 +75,9 @@ Builder.load_string("""
                     text: 'ZHead Serial'
                     font_size: dp(25) 
                     GridLayout:
-                    cols: 2
-                    rows: 1   
-                    Label:
+                        cols: 2
+                        rows: 1   
+                        Label:
                         text: 'zh'
                         font_size: dp(30)
                     
@@ -93,10 +93,10 @@ Builder.load_string("""
                 Label:
                     text: 'LB Serial'
                     font_size: dp(25)
-                GridLayout:
-                    cols: 2
-                    rows: 1 
-                    Label:
+                    GridLayout:
+                        cols: 2
+                        rows: 1 
+                        Label:
                         text: 'xl'
                         font_size: dp(30)
                 TextInput:
@@ -107,12 +107,10 @@ Builder.load_string("""
                 Label:
                     text: 'UB Serial'
                     font_size: dp(25)
-
-                GridLayout:
-                    cols: 2
-                    rows: 1 
-
-                    Label: 
+                    GridLayout:
+                        cols: 2
+                        rows: 1 
+                        Label: 
                         text: 'xu'
                         font_size: dp(30)
 
@@ -131,12 +129,10 @@ Builder.load_string("""
                 Label:
                     text: 'Console Serial'
                     font_size: dp(25)
-
-                GridLayout:
-                    cols: 2
-                    rows: 1 
-                    
-                    Label:
+                    GridLayout:
+                        cols: 2
+                        rows: 1 
+                        Label:
                         text: 'cs'
                         font_size dp(30)
                 TextInput:
@@ -151,10 +147,10 @@ Builder.load_string("""
                 Label:
                     text: 'YBench Serial'
                     font_size: dp(25)
-                GridLayout:
-                    cols: 2
-                    rows: 1 
-                    Label:
+                    GridLayout:
+                        cols: 2
+                        rows: 1 
+                        Label:
                         text: 'yb'
                         font_size: dp(30)
                         
