@@ -86,40 +86,40 @@ Builder.load_string("""
                             font_size: dp(30)
                             multiline: False
 
+            GridLayout:
+                cols: 2
+                rows: 1
+            
+                Label:
+                    text: 'LB Serial'
+                    font_size: dp(25)
                 GridLayout:
                     cols: 2
-                    rows: 1
-                
-                    Label:
-                        text: 'LB Serial'
-                        font_size: dp(25)
-                    GridLayout:
+                    rows: 1 
+                        Label:
+                            text: 'xl'
+                            font_size: dp(30)
+                        TextInput:
+                            id: lb_serial_input
+                            font_size: dp(30)
+                            multiline: False
+            GridLayout:
+                cols: 2
+                rows: 1
+                Label:
+                    text: 'UB Serial'
+                    font_size: dp(25)
+                GridLayout:
                         cols: 2
                         rows: 1 
-                            Label:
-                                text: 'xl'
-                                font_size: dp(30)
-                            TextInput:
-                                id: lb_serial_input
-                                font_size: dp(30)
-                                multiline: False
-                GridLayout:
-                    cols: 2
-                    rows: 1
-                    Label:
-                        text: 'UB Serial'
-                        font_size: dp(25)
-                    GridLayout:
-                            cols: 2
-                            rows: 1 
-                            Label: 
-                                text: 'xu'
-                                font_size: dp(30)
-                
-                            TextInput:
-                                id: ub_serial_input
-                                font_size: dp(30)
-                                multiline: False
+                        Label: 
+                            text: 'xu'
+                            font_size: dp(30)
+            
+                        TextInput:
+                            id: ub_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
             GridLayout:
                 cols: 1
