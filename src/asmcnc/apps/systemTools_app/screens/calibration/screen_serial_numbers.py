@@ -81,10 +81,10 @@ Builder.load_string("""
                             text: 'zh'
                             font_size: dp(30)
                     
-                    TextInput:
-                        id: zhead_serial_input
-                        font_size: dp(30)
-                        multiline: False
+                        TextInput:
+                            id: zhead_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
             GridLayout:
                 cols: 2
@@ -99,10 +99,10 @@ Builder.load_string("""
                         Label:
                             text: 'xl'
                             font_size: dp(30)
-                TextInput:
-                    id: lb_serial_input
-                    font_size: dp(30)
-                    multiline: False
+                        TextInput:
+                            id: lb_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
                 Label:
                     text: 'UB Serial'
@@ -114,13 +114,13 @@ Builder.load_string("""
                             text: 'xu'
                             font_size: dp(30)
 
-                GridLayout:
-                    cols: 2
-                    rows: 1 
-                TextInput:
-                    id: ub_serial_input
-                    font_size: dp(30)
-                    multiline: False
+                        GridLayout:
+                            cols: 2
+                            rows: 1 
+                        TextInput:
+                            id: ub_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
             GridLayout:
                 cols: 1
@@ -135,10 +135,10 @@ Builder.load_string("""
                         Label:
                             text: 'cs'
                             font_size: dp(30)
-                TextInput:
-                    id: console_serial_input
-                    font_size: dp(30)
-                    multiline: False
+                        TextInput:
+                            id: console_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
             GridLayout:
                 cols: 1
@@ -154,10 +154,10 @@ Builder.load_string("""
                             text: 'yb'
                             font_size: dp(30)
                         
-                TextInput:
-                    id: ybench_serial_input
-                    font_size: dp(30)
-                    multiline: False
+                        TextInput:
+                            id: ybench_serial_input
+                            font_size: dp(30)
+                            multiline: False
 
             GridLayout:
                 cols: 1
