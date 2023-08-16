@@ -210,7 +210,7 @@ class ZHeadMechanicsManualMove(Screen):
         self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
 
     def grbl_reset(self):
-        self.m._grbl_soft_reset()
+        self.m.resume_from_alarm()
 
     def pcb_reset(self):
         self.m.hard_reset_pcb_sequence()
