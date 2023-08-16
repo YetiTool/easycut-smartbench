@@ -78,8 +78,8 @@ Builder.load_string("""
                         cols: 2
                         rows: 1   
                         Label:
-                        text: 'zh'
-                        font_size: dp(30)
+                            text: 'zh'
+                            font_size: dp(30)
                     
                     TextInput:
                         id: zhead_serial_input
@@ -97,8 +97,8 @@ Builder.load_string("""
                         cols: 2
                         rows: 1 
                         Label:
-                        text: 'xl'
-                        font_size: dp(30)
+                            text: 'xl'
+                            font_size: dp(30)
                 TextInput:
                     id: lb_serial_input
                     font_size: dp(30)
@@ -111,8 +111,8 @@ Builder.load_string("""
                         cols: 2
                         rows: 1 
                         Label: 
-                        text: 'xu'
-                        font_size: dp(30)
+                            text: 'xu'
+                            font_size: dp(30)
 
                 GridLayout:
                     cols: 2
@@ -133,8 +133,8 @@ Builder.load_string("""
                         cols: 2
                         rows: 1 
                         Label:
-                        text: 'cs'
-                        font_size dp(30)
+                            text: 'cs'
+                            font_size dp(30)
                 TextInput:
                     id: console_serial_input
                     font_size: dp(30)
@@ -151,8 +151,8 @@ Builder.load_string("""
                         cols: 2
                         rows: 1 
                         Label:
-                        text: 'yb'
-                        font_size: dp(30)
+                            text: 'yb'
+                            font_size: dp(30)
                         
                 TextInput:
                     id: ybench_serial_input
