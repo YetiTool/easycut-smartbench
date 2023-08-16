@@ -28,6 +28,8 @@ Builder.load_string("""
     load_realtime:load_realtime
     current_realtime:current_realtime
 
+    status_container:status_container
+
     load_graph:load_graph
 
     BoxLayout:
