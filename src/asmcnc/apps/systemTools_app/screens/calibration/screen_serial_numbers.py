@@ -134,7 +134,7 @@ Builder.load_string("""
                         rows: 1 
                         Label:
                             text: 'cs'
-                            font_size dp(30)
+                            font_size: dp(30)
                 TextInput:
                     id: console_serial_input
                     font_size: dp(30)
