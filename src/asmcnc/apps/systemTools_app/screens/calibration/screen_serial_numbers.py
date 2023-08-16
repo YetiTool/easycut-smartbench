@@ -73,34 +73,52 @@ Builder.load_string("""
 
                 Label:
                     text: 'ZHead Serial'
-                    font_size: dp(25)
-
-                TextInput:
-                    id: zhead_serial_input
-                    font_size: dp(30)
-                    multiline: False
+                    font_size: dp(25) 
+                 GridLayout:
+                    cols: 2
+                    rows: 1   
+                    Label:
+                        text: 'zh'
+                        font_size: dp(30)
+                    
+                    TextInput:
+                        id: zhead_serial_input
+                        font_size: dp(30)
+                        multiline: False
 
             GridLayout:
-                cols: 1
-                rows: 2
+                cols: 2
+                rows: 1
 
                 Label:
                     text: 'LB Serial'
                     font_size: dp(25)
-
+                GridLayout:
+                    cols: 2
+                    rows: 1 
+                    Label:
+                        text: 'xl'
+                        font_size: dp(30)
                 TextInput:
                     id: lb_serial_input
                     font_size: dp(30)
                     multiline: False
 
-            GridLayout:
-                cols: 1
-                rows: 2
-
                 Label:
                     text: 'UB Serial'
                     font_size: dp(25)
 
+                GridLayout:
+                    cols: 2
+                    rows: 1 
+
+                    Label: 
+                        text: 'xu'
+                        font_size: dp(30)
+
+                GridLayout:
+                    cols: 2
+                    rows: 1 
                 TextInput:
                     id: ub_serial_input
                     font_size: dp(30)
@@ -109,11 +127,18 @@ Builder.load_string("""
             GridLayout:
                 cols: 1
                 rows: 2
-
+                
                 Label:
                     text: 'Console Serial'
                     font_size: dp(25)
 
+                GridLayout:
+                    cols: 2
+                    rows: 1 
+                    
+                    Label:
+                        text: 'cs'
+                        font_size dp(30)
                 TextInput:
                     id: console_serial_input
                     font_size: dp(30)
@@ -126,7 +151,13 @@ Builder.load_string("""
                 Label:
                     text: 'YBench Serial'
                     font_size: dp(25)
-
+                GridLayout:
+                    cols: 2
+                    rows: 1 
+                    Label:
+                        text: 'yb'
+                        font_size: dp(30)
+                        
                 TextInput:
                     id: ybench_serial_input
                     font_size: dp(30)
@@ -139,7 +170,7 @@ Builder.load_string("""
                 Label:
                     text: 'Spindle Serial'
                     font_size: dp(25)
-
+                           
                 TextInput:
                     id: spindle_serial_input
                     font_size: dp(30)
