@@ -74,7 +74,7 @@ Builder.load_string("""
                 Label:
                     text: 'ZHead Serial'
                     font_size: dp(25) 
-                 GridLayout:
+                    GridLayout:
                     cols: 2
                     rows: 1   
                     Label:
