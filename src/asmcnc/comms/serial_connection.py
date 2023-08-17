@@ -996,10 +996,6 @@ class SerialConnection:
         if len(sg_values) < 5:
             raise ValueError(f"Invalid sg_values ({sg_values})")
 
-        for i in sg_values:
-            if not i.isdigit():
-                raise ValueError(f"Invalid sg_values ({sg_values})")
-
         sg_values = [int(i) for i in sg_values]
 
         self.stall_guard.z_motor_axis = sg_values[0]
