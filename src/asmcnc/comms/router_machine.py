@@ -1043,6 +1043,9 @@ class RouterMachine(object):
                 if self.s.stream_paused_accumulated_time is None:
                     self.s.stream_paused_accumulated_time = 0
 
+                if self.s.stream_pause_start_time is None:
+                    self.s.stream_pause_start_time = 0
+
                 self.s.stream_paused_accumulated_time = (
                     self.s.stream_paused_accumulated_time
                     + (time.time() - self.s.stream_pause_start_time)
