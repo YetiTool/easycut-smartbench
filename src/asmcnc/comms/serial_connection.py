@@ -977,8 +977,6 @@ class SerialConnection:
 
         overrides = [int(i) for i in overrides]
 
-        print(overrides)
-
         self.feeds_and_speeds.feed_override = overrides[0]
         rapid_override = overrides[1]
         self.feeds_and_speeds.speed_override = overrides[2]
