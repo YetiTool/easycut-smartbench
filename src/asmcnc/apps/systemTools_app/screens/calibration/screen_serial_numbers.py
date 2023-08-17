@@ -87,8 +87,8 @@ Builder.load_string("""
                             multiline: False
 
             GridLayout:
-                cols: 2
-                rows: 1
+                cols: 1
+                rows: 2
             
                 Label:
                     text: 'LB Serial'
@@ -104,8 +104,8 @@ Builder.load_string("""
                             font_size: dp(30)
                             multiline: False
             GridLayout:
-                cols: 2
-                rows: 1
+                cols: 1
+                rows: 2
                 Label:
                     text: 'UB Serial'
                     font_size: dp(25)
