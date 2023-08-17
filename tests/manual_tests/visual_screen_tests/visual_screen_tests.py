@@ -80,6 +80,7 @@ class ScreenTest(App):
 
     lang_idx = 0
     cycle_languages = False
+    test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -116,6 +117,10 @@ class ScreenTest(App):
             m.s.yp = yp
             m.s.setting_27 = 1
 
+        # Arg-less version if you don't care about statuses
+        def set_up_dummy_serial_stateless():
+            set_up_dummy_serial("", "")
+
         # Call with list of screen names to run through multiple screens automatically
         def cycle_through_screens(screen_list):
             def show_next_screen(screen_list, index):
@@ -129,8 +134,7 @@ class ScreenTest(App):
 
             show_next_screen(screen_list, 0)
 
-        def cycle_through_languages():
-            test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
+        def cycle_through_languages(test_languages):
 
             def show_next_language(test_languages, index):
                 lang = test_languages[index]
@@ -164,8 +168,24 @@ class ScreenTest(App):
         # REGULAR SCREENS
 
         def maintenance_app_screen_test():
+            # Switch this between Idle and Alarm to test get data error message
+            m.state = Mock(return_value='Idle')
+
+            set_up_dummy_serial_stateless()
+
             m.is_using_sc2 = Mock(return_value=True)
             m.theateam = Mock(return_value=True)
+            m.smartbench_is_busy = Mock(return_value=False)
+
+            m.s.digital_spindle_ld_qdA = 0
+            m.s.spindle_serial_number = 0
+            m.s.spindle_serial_number = 0
+            m.s.spindle_production_year = 0
+            m.s.spindle_production_week = 0
+            m.s.spindle_firmware_version = 0
+            m.s.spindle_total_run_time_seconds = 0
+            m.s.spindle_brush_run_time_seconds = 0
+            m.s.spindle_mains_frequency_hertz = 0
 
             set_up_screens([[screen_home.HomeScreen, 'home'],
                             [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
@@ -617,7 +637,7 @@ class ScreenTest(App):
         eval(sys.argv[1] + "()")
 
         if self.cycle_languages:
-            cycle_through_languages()
+            cycle_through_languages(self.test_languages)
 
         return sm
 

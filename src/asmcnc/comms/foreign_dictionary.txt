@@ -486,7 +486,7 @@ NEW	NEU	NOUVEAU	NUOVO	UUSI	NIEUW	NOWOŚĆ	NYT	새로운
 LOW	NIEDRIG	FAIBLE	LOW	LOW	LAAG	NISKI	LAV	낮은
 SHUT-OFF	ABSCHALTUNG	ETEINDRE	SPEGNIMENTO	SHUT-OFF	UITSCHAKELEN	WYŁĄCZ	AFSLUTNING	멈춤
 Value:	Wert:	Valeur :	Valore:	Arvo:	Waarde:	Wartość:	Værdi:	값:
-Restore:	Wiederherstellen:	Restaurer :	Ripristino:	Palauta:	Herstellen:	Przywróć:	Gendan:	되돌리기
+Restore:	Wiederherstellen:	Restaurer :	Ripristino:	Palauta:	Herstellen:	Przywróć:	Gendan:	되돌리기:
 Reset:	Zurücksetzen:	Réinitialiser :	Reset:	Nollaa:	Opnieuw instellen:	Reset:	Nulstil:	초기화:
 Brush use:	Kohlebürsteneinsatz:	Utilisation des charbons	Uso delle spazzole:	Harjan käyttö:	Gebruik van de borstels:	Stopień użycia szczotek:	Brug af kul:	브러시 사용 :
 The running hours of the brushes.	Die Betriebsstunden der Bürsten.	heures de fonctionnement des charbons	Ore funzionamento spazzole	Harjojen käyttö: Harjojen käyttötunnit.	De bedrijfsuren van de borstels.	Godziny pracy szczotek.	Kullets driftstimer.	브러시의 사용 시간.
