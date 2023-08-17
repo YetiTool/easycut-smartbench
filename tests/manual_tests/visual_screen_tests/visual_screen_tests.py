@@ -78,7 +78,7 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
+    lang_idx = 7
     cycle_languages = False
     test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
 
