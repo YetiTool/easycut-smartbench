@@ -180,6 +180,11 @@ class SerialConnection:
             self.sm, self.sett, self.m, self.l, self.jd
         )
 
+    def __del__(self):
+        if self.s is not None:
+            self.logger.info("Closing serial connection")
+            self.s.close()
+
     def connect(self):
         self.get_ports_to_try()
         self.port = self.get_smartbench_port()
