@@ -627,7 +627,7 @@ class SerialConnection:
             status_parts = message.translate(trans_table).split("|")
 
             # Ensure valid status
-            if status_parts[0] not in self.VALID_GRBL_STATUSES or status_parts[0][:-2] not in self.VALID_GRBL_STATUSES:
+            if status_parts[0] not in self.VALID_GRBL_STATUSES and status_parts[0][:-2] not in self.VALID_GRBL_STATUSES:
                 self.logger.critical("Invalid status received: " + status_parts[0])
                 return
 
