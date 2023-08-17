@@ -102,13 +102,15 @@ class RouterMachine(object):
         self.jd = job
         self.set_jog_limits()
         self.win_serial_port = win_serial_port
+        logger = logging.getLogger(__name__)
+        logging.basicConfig(format="%(asctime)s :: %(levelname)-8s :: %(message)s", level=logging.DEBUG)
         self.s = serial_connection.SerialConnection(
             self,
             self.sm,
             self.sett,
             self.l,
             self.jd,
-            logging.Logger(name="__name__"),
+            logger,
         )
         self.s.connect()
         self.p = protocol.protocol_v2()
