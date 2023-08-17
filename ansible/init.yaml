@@ -193,3 +193,14 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: Upgrade raspberrypi-bootloader
+    become: true
+    tasks:
+      - name: Update apt cache
+        apt:
+          update_cache: yes
+
+      - name: Upgrade raspberrypi-bootloader
+        apt:
+          name: raspberrypi-bootloader
+          state: latest
