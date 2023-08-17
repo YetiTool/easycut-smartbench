@@ -212,6 +212,7 @@ class SystemMenuScreen(Screen):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
+        self.m = kwargs['machine']
 
         self.id_list = [
         self.button_system_info,
