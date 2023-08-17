@@ -826,7 +826,6 @@ class RouterMachine(object):
     ):
         try:
             machine_fw_parts = self.s.versions.firmware.split(".")[:3]
-            print("fw: " + self.s.versions.firmware)
             ref_version_parts = version_to_reference.split(".")[:3]
             machine_fw_parts = [int(i) for i in machine_fw_parts]
             ref_version_parts = [int(i) for i in ref_version_parts]
