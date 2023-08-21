@@ -415,6 +415,86 @@
           "Value": 24200.0
         }
       ]
+    },
+    {
+      "Material Type": "MFC",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute compression",
+      "Step Down": "5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 310.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MFC",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute straight",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 290.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "MFC",
+      "Cutter Diameter": "4 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 200
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "MFC",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 290.0
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200
+        }
+      ]
+    },
+    {
+      "Material Type": "MFC",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "4 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 400
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 24200.0
+        }
+      ]
     }
   ]
 }
