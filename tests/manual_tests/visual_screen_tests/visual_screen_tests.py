@@ -43,8 +43,9 @@ from asmcnc.comms import server_connection
 
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
-from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
+from asmcnc.skavaUI import screen_door
+from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
@@ -319,7 +320,7 @@ class ScreenTest(App):
             sm.current = 'lobby'
 
 
-        # ALARM/ERROR
+        # ALARM/ERROR/DOOR
 
         def alarm_screen_tests():
 
@@ -397,6 +398,21 @@ class ScreenTest(App):
 
             m.s.suppress_error_screens = False
 
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+        def door_screen_test():
+
+            door_message = "Door:0\n"
+
+            door_status = "<Door:0|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
+
+            set_up_dummy_serial(door_status, door_message)
+
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_door.DoorScreen, 'door']])
+
+            sm.current = 'home'
+        
             Clock.schedule_once(m.s.start_services, 0.1)
 
 
