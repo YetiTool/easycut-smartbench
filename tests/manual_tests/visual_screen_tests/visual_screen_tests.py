@@ -75,15 +75,15 @@ Cmport = 'COM3'
 
 class ScreenTest(App):
 
-    lang_idx = 0
+    lang_idx = 5
 
     # 0 - English (y)
     # 1 - Italian (y)
     # 2 - Finnish (y)
     # 3 - German (y)
     # 4 - French (y)
-    # 5 - Polish (y)
-    # 6 - Danish (y)
+    # 5 - Polish ()
+    # 6 - Danish ()
 
     fw_version = "2.4.2"
 
