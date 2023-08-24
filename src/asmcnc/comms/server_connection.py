@@ -84,7 +84,8 @@ class ServerConnection(object):
                     try:
                         self.get_smartbench_name()
                         conn.send(self.smartbench_name)
-                    except:
+                    except Exception as e:
+                        log(e)
                         log("Message not sent")
                     conn.close()
                 else:
