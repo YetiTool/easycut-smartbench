@@ -333,6 +333,9 @@ class ScreenTest(App):
             At some point it might be worth setting up all possible cases/setting up some kind of automated run through of cases. 
             '''
 
+            # For download popup
+            m.s.alarm.usb_stick.is_usb_mounted_flag = True
+
             # STALL ALARMS
             stall_pin = "z"
 
@@ -341,7 +344,7 @@ class ScreenTest(App):
 
             alarm_number = 1
 
-            stall_alarm_test = True
+            stall_alarm_test = False
 
             motor_id = 0
             step_size = 75
