@@ -322,6 +322,14 @@ class ScreenTest(App):
             sm.current = 'lobby'
 
         def upgrade_screen_test():
+            # This number needs to be entered for successful upgrade
+            unlock_code = 0
+
+            # Set this to -999 to get "no spindle detected"
+            m.s.digital_spindle_ld_qdA = 0
+            m.s.spindle_serial_number = 0
+
+            # Change this to decide whether to show "already upgraded" screen
             m.theateam = Mock(return_value=False)
             m.smartbench_model = Mock(return_value='V1.3')
             m.state = Mock(return_value='Idle')
@@ -332,7 +340,10 @@ class ScreenTest(App):
                             [screen_lobby.LobbyScreen, 'lobby'],
                             [screen_pro_plus_safety.ProPlusSafetyScreen, 'pro_plus_safety']])
 
+            sm.get_screen('upgrade').get_correct_unlock_code = Mock(return_value=str(unlock_code))
             sm.get_screen('lobby').carousel.index = 3
+
+            print(sm.get_screen('upgrade').get_correct_unlock_code())
 
             sm.current = 'lobby'
 
