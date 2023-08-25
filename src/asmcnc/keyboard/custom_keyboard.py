@@ -38,7 +38,7 @@ class Keyboard(VKeyboard):
 
         self.do_translation = False
         self.width = Window.width
-        self.height = 250
+        self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
 
@@ -66,7 +66,10 @@ class Keyboard(VKeyboard):
         if self.text_instance:
             if internal == None:
                 if keycode == "enter":
-                    self.text_instance.text = self.text_instance.text + "\n"
+                    if not self.text_instance.multiline:
+                        self.text_instance.dispatch("on_text_validate")
+                    else:
+                        self.text_instance.text = self.text_instance.text + "\n"
                 if keycode == "Han/Yeong":
                     #https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
