@@ -67,6 +67,7 @@ class Keyboard(VKeyboard):
             if internal == None:
                 if keycode == "enter":
                     if not self.text_instance.multiline:
+                        self.text_instance.focus = False
                         self.text_instance.dispatch("on_text_validate")
                     else:
                         self.text_instance.text = self.text_instance.text + "\n"
