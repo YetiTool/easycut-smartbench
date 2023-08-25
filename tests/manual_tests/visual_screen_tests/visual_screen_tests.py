@@ -48,8 +48,9 @@ from asmcnc.skavaUI import screen_door
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
-from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
+from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
 from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
 from asmcnc.production.z_head_qc_jig import z_head_qc_pcb_set_up_outcome, z_head_qc_pcb_set_up
 
@@ -135,6 +136,7 @@ class ScreenTest(App):
 
             show_next_screen(screen_list, 0)
 
+        # To use this, set the cycle_languages variable to True
         def cycle_through_languages(test_languages):
 
             def show_next_language(test_languages, index):
@@ -317,6 +319,21 @@ class ScreenTest(App):
             set_up_screens([[screen_lobby.LobbyScreen, 'lobby']])
             sm.get_screen('lobby').trigger_update_popup = True
             m.trigger_setup = False
+            sm.current = 'lobby'
+
+        def upgrade_screen_test():
+            m.theateam = Mock(return_value=False)
+            m.smartbench_model = Mock(return_value='V1.3')
+            m.state = Mock(return_value='Idle')
+
+            set_up_screens([[screen_upgrade.UpgradeScreen, 'upgrade'],
+                            [screen_upgrade_successful.UpgradeSuccessfulScreen, 'upgrade_successful'],
+                            [screen_already_upgraded.AlreadyUpgradedScreen, 'already_upgraded'],
+                            [screen_lobby.LobbyScreen, 'lobby'],
+                            [screen_pro_plus_safety.ProPlusSafetyScreen, 'pro_plus_safety']])
+
+            sm.get_screen('lobby').carousel.index = 3
+
             sm.current = 'lobby'
 
 
