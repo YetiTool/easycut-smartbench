@@ -44,7 +44,7 @@ from asmcnc.comms import server_connection
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
-from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_door, screen_mstate_warning
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -443,6 +443,16 @@ class ScreenTest(App):
                             [screen_door.DoorScreen, 'door']])
 
             sm.current = 'home'
+        
+            Clock.schedule_once(m.s.start_services, 0.1)
+
+        def mstate_warning_screen_test():
+            # The options are: Alarm, Check, Door, and one for anything else
+            m.state = Mock(return_value="Alarm")
+
+            set_up_screens([[screen_mstate_warning.WarningMState, 'mstate']])
+
+            sm.current = 'mstate'
         
             Clock.schedule_once(m.s.start_services, 0.1)
 
