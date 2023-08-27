@@ -44,7 +44,7 @@ from asmcnc.comms import server_connection
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
-from asmcnc.skavaUI import screen_door, screen_mstate_warning
+from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -455,6 +455,18 @@ class ScreenTest(App):
             sm.current = 'mstate'
         
             Clock.schedule_once(m.s.start_services, 0.1)
+
+        def serial_failure_screen_test():
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_serial_failure.SerialFailureClass, 'serialScreen']])
+
+            sm.current = 'home'
+
+            # Choose between these error messages
+            m.s.get_serial_screen('Could not establish a connection on startup.')
+            # m.s.get_serial_screen('Could not read line from serial buffer.')
+            # m.s.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
+            # m.s.get_serial_screen('Could not write last command to serial buffer.')
 
 
         # FACTORY/PRODUCTION SCREENS
