@@ -49,7 +49,6 @@ class Keyboard(VKeyboard):
             try:
                 text_input.keyboard_mode = 'managed'
                 text_input.bind(focus=self.on_focus)
-                text_input.multiline = False
             except:
                 print("setup failed")
 
