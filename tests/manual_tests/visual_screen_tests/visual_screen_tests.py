@@ -44,7 +44,7 @@ from asmcnc.comms import server_connection
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
-from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active
+from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -352,6 +352,22 @@ class ScreenTest(App):
             m.homing_interrupted = False
             m.homing_in_progress = True
             sm.current = 'squaring_active'
+
+        def go_screen_reminder_popup_test():
+            set_up_dummy_serial_stateless()
+
+            set_up_screens([[screen_go.GoScreen, 'go'],
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_home.HomeScreen, 'home'],
+                            [screen_jobstart_warning.JobstartWarningScreen, 'jobstart_warning']])
+
+            m.reminders_enabled = True
+
+            m.spindle_brush_use_seconds = m.spindle_brush_lifetime_seconds + 1
+            m.time_since_z_head_lubricated_seconds = m.time_to_remind_user_to_lube_z_seconds + 1
+            m.time_since_calibration_seconds = m.time_to_remind_user_to_calibrate_seconds + 1
+
+            sm.current = 'jobstart_warning'
 
         # ALARM/ERROR/DOOR
 
