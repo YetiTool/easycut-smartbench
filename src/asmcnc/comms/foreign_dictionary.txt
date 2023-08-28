@@ -635,7 +635,7 @@ Parts Made Per Job	Pro Auftrag hergestellte Teile	Pièces fabriquées par tâche
 Stock Material Type	Materialtyp	Type de matériau en stock	Tipo di materiale	Varastomateriaalin tyyppi	Voorraad Type materiaal	Rodzaj materiału obrabianego	Materialetype	자재 원료 분류
 Job Size X Axis	Auftragsgröße X-Achse	Taille de la tâche sur l'axe X	Dimensione lavoro Asse X	Työn koko X-akseli	Opdrachtgrootte X-as	Rozmiar w osi X	Jobstørrelse X-akse	X 축 작업 사이즈
 Job Size Y Axis	Auftragsgröße Y-Achse	Taille de la tâche sur l'axe Y	Dimensione lavoro Asse Y	Työn koko Y-akseli	Taakgrootte Y-as	Rozmiar w osi Y	Jobstørrelse Y-akse	Y 축 작업 사이즈
-Job Size Z Axis	Auftragsgröße Z-Achse	Taille de la tâche sur l'axe Z	Dimensione lavoro Asse Z	Työn koko Z-akseli	Taakgrootte Z-as	Rozmiar w osi Z	Jobstørrelse Z-akse	z 축 작업 사이즈
+Job Size Z Axis	Auftragsgröße Z-Achse	Taille de la tâche sur l'axe Z	Dimensione lavoro Asse Z	Työn koko Z-akseli	Taakgrootte Z-as	Rozmiar w osi Z	Jobstørrelse Z-akse	Z 축 작업 사이즈
 Stock Material Size	Größe des Rohmaterials	Taille du matériau en stock	Dimensione materiale grezzo	Varastomateriaalin koko	Voorraad materiaal maat	Rozmiar materiału obrabianego	Størrelse af materiale	재고 자재 사이즈
 Pre Production Notes	Anmerkungen zur Vorproduktion	Notes de pré-production	Note di pre-produzione	Tuotantoa edeltävät huomautukset	Opmerkingen voor productie	Uwagi przedprodukcyjne	Bemærkninger før produktion	사전 제작 참고사항
 Primary Operator	Primärer Bediener	Opérateur principal	Operatore primario	Ensisijainen operaattori	Eerste operator	Główny operator	Primær operatør	작업자 기본사항
@@ -644,7 +644,7 @@ End Effector	Endeffektor	Effecteur terminal	Strumento Utilizzato	Lopputyöstöla
 Tool Diameter And Type	Werkzeugdurchmesser und -typ	Diamètre et type d'outil	Diametro e tipo dell'utensile	Työkalun halkaisija ja tyyppi	Gereedschapsdiameter en -type	Średnica i typ narzędzia	Værktøjsdiameter og -type	공구 직경 및 유형
 Toolpath Name	Name des Werkzeugwegs	Nom de la course d'outil	Nome del percorso utensile	Työkaluradan nimi	Gereedschapspad naam	Nazwa operacji	Navn på værktøjsbane	공구 경로 이름
 XY Datum Position	XY-Bezugspunkt-Position	Position du point d'origine XY	Origine XY	XY-peruspisteen sijainti	XY Positie referentiepunt	Punkt odniesienia w płaszczyźnie XY	XY-dataposition	XY 기준점 위치
-Z Datum Position	Z-Bezugsposition	Position du point d'origine Z	Origine Z	Z-pisteen sijainti	Z coördinaatpositie	Punkt odniesienia w osi Z	Z-dataposition	z 기준점 위치
+Z Datum Position	Z-Bezugsposition	Position du point d'origine Z	Origine Z	Z-pisteen sijainti	Z coördinaatpositie	Punkt odniesienia w osi Z	Z-dataposition	Z 기준점 위치
 Maximum Feed Rate	Maximale Vorschubgeschwindigkeit	Vitesse d'avance maximale	Velocità di avanzamento massima	Suurin syöttönopeus	Maximale voedingssnelheid	Maksymalna prędkość posuwu	Maksimal fremdriftshastighed	최대 공급 속도
 Maximum Plunge Rate	Maximale Eintauchgeschwindigkeit	Vitesse de plongée maximale	Velocità massima di Affondamento	Suurin syöksynopeus	Maximale insteeksnelheid	Maksymalna prędkość zagłębiania (oś Z)	Maksimal nedføringshastighed	최대 급락 속도
 Maximum Spindle Speed	Maximale Spindeldrehzahl	Vitesse maximale de la broche	Velocità massima del mandrino	Suurin karan nopeus	Maximaal spiltoerental	Maksymalna prędkość obrotowa wrzeciona	Maksimal spindelhastighed	최대 스핀들 속도
@@ -668,7 +668,7 @@ X range:	X Bereich:	Plage X :	X range:	X-alue:	X bereik:	Zakres osi X:	X-område
 X min:	X min:	X min :	X min:	X min:	X min:	X min:	X min:	X 최소 :
 X max:	X max:	X max :	X max:	X max:	X max:	X max:	X max:	X 최대 :
 Y range:	Y-Bereich:	Plage Y :	Y range:	Y-alue:	Y-bereik:	Zakres osi Y:	Y-område:	Y 범위 :
-Y min:	Y min:	Y min :	Y min:	Y min:	Y min:	Y min:	Y min:	y 최소 :
+Y min:	Y min:	Y min :	Y min:	Y min:	Y min:	Y min:	Y min:	Y 최소 :
 Y max:	Y max:	Y max :	Y max:	Y max:	Y max:	Y max:	Y max:	Y 최대 :
 Z range:	Z Bereich:	Plage Z :	Z range:	Z-alue:	Z bereik:	Zakres osi Z:	Z-område:	Z 범위 :
 Z min:	Z min:	Z min :	Z min:	Z min:	Z min:	Z min:	Z min:	Z 최소 :
