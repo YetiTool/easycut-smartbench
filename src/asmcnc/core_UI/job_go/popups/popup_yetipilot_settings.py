@@ -282,8 +282,9 @@ class PopupYetiPilotSettings(Widget):
                                     )
 
             update_step_down(self.yp.get_active_step_down())
-    
-            unexpected_results_string = "   (!)  " + self.l.get_str("Exceeding this range may produce unexpected results.")
+
+            # Specifically roboto is required here, to line up the text with the image consistently
+            unexpected_results_string = "[font=Roboto]   (!)  [/font]" + self.l.get_str("Exceeding this range may produce unexpected results.")
             unexpected_results_label = Label(
                                     text_size=(advice_container_width, body_BL_height*0.4),
                                     markup=True,
