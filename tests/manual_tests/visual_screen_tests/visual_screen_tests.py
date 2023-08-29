@@ -382,6 +382,7 @@ class ScreenTest(App):
             m.state = Mock(return_value='Idle')
             # check_job_screen.check_gcode = Mock(side_effect=Exception)
             # m.is_connected = Mock(return_value=False)
+            # check_job_screen.is_job_within_bounds = Mock(return_value='job is within bounds')
             check_job_screen.error_log = ['error:34']
             jd.job_gcode = ['test']
             # check_job_screen.flag_spindle_off = False
