@@ -45,6 +45,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_e
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
+from asmcnc.skavaUI import screen_check_job
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -368,6 +369,27 @@ class ScreenTest(App):
             m.time_since_calibration_seconds = m.time_to_remind_user_to_calibrate_seconds + 1
 
             sm.current = 'jobstart_warning'
+
+        def check_job_screen_test():
+            set_up_screens([[screen_check_job.CheckingScreen, 'check_job'],
+                            [screen_home.HomeScreen, 'home']])
+
+            check_job_screen = sm.get_screen('check_job')
+
+            # Vary these lines to achieve different errors/states
+            check_job_screen.entry_screen = 'file_loading'
+            # check_job_screen.boundary_check = Mock(side_effect=Exception)
+            m.state = Mock(return_value='Idle')
+            # check_job_screen.check_gcode = Mock(side_effect=Exception)
+            # m.is_connected = Mock(return_value=False)
+            check_job_screen.error_log = ['error:34']
+            jd.job_gcode = ['test']
+            # check_job_screen.flag_spindle_off = False
+            # check_job_screen.flag_max_feed_rate = True
+            # check_job_screen.flag_min_feed_rate = True
+
+            sm.current = 'check_job'
+
 
         # ALARM/ERROR/DOOR
 

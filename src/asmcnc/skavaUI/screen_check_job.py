@@ -512,7 +512,7 @@ class CheckingScreen(Screen):
                     self.jd.checked = True
 
                 elif self.entry_screen == 'home':
-                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and reload your job before attempting to run it.')
+                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and re-load your job before attempting to run it.')
                     self.jd.check_warning = self.l.get_str('Errors found in G-code.')
                     self.jd.checked = True
 
