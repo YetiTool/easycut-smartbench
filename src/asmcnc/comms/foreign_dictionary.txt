@@ -891,3 +891,4 @@ Enter network name	Netzwerkname eingeben	Entrez le nom du réseau	Inserisci il n
 No network connection.	Keine Netzwerkverbindung.	Pas de connexion réseau.	Nessuna connessione di Rete.	Ei verkkoyhteyttä.	Geen netwerkverbinding.	Brak połączenia sieciowego.	Ingen netværksforbindelse.
 Please refresh the list and try again.	Bitte aktualisieren Sie die Liste und versuchen Sie es erneut.	Veuillez rafraichir la liste et essayez à nouveau.	Per favore aggiorna la lista e riprova.	Päivitä lista ja yritä uudestaan.	Vernieuw de lijst en probeer het opnieuw.	Proszę odśwież listę i spróbuj ponownie.	Opdater venligst listen, og prøv igen.
 1 flute straight	Einschneidiger Fräser	1 dent droite	Monotagliente Dritto	Suora 1-leikkuinen	1 spaangroeven recht	Frez prosty 1-piórowy	1 skær lige
+Aluminium	Aluminium	Aluminium	Alluminio	Alumiini	Aluminium	Aluminium	Aluminium
