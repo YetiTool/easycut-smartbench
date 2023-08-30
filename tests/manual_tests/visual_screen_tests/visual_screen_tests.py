@@ -45,7 +45,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_e
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
-from asmcnc.skavaUI import screen_check_job
+from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -390,6 +390,26 @@ class ScreenTest(App):
             # check_job_screen.flag_min_feed_rate = True
 
             sm.current = 'check_job'
+
+        def usb_error_popup_test():
+            set_up_screens([[BasicScreen, 'basic']])
+
+            popup_info.PopupUSBError(sm, l, None)
+
+            sm.current = 'basic'
+
+        def usb_info_popup_tests():
+            set_up_screens([[BasicScreen, 'basic']])
+
+            mode = "ejecting"
+
+            if mode == "connected": popup_mode = 'mounted'
+            elif mode == "ejected": popup_mode = True
+            elif mode == "ejecting": popup_mode = False
+
+            popup_info.PopupUSBInfo(sm, l, popup_mode)
+
+            sm.current = 'basic'
 
 
         # ALARM/ERROR/DOOR
