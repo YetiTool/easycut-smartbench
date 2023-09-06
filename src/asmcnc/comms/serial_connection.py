@@ -639,6 +639,9 @@ class SerialConnection(object):
 
         log("Ending stream...")
 
+        # Always switch to mm, in case the job put you in inches
+        self.write_command('G21')
+
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
