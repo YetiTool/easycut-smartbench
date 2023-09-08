@@ -1,22 +1,20 @@
-'''
+"""
 Created on 18 November 2020
 Update testing screen for system tools app
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
-
 import subprocess, sys, os
 import csv, threading, time, textwrap
 from time import sleep
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ScrollableLabelOSOutput>:
     scroll_y:1
@@ -224,27 +222,28 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-""")
-
+"""
+    )
 repo = 'easycut'
 version = 'update_func_testing'
-home_dir="/home/pi/"
-easycut_path = home_dir + "easycut-smartbench/"
+home_dir = '/home/pi/'
+easycut_path = home_dir + 'easycut-smartbench/'
+
 
 class ScrollableLabelOSOutput(ScrollView):
     text = StringProperty('')
 
-class UpdateTestingScreen(Screen):
 
+class UpdateTestingScreen(Screen):
     WIDGET_UPDATE_DELAY = 0.2
     output_view_buffer = []
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
         super(UpdateTestingScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-
-        Clock.schedule_interval(self.update_display_text, self.WIDGET_UPDATE_DELAY)
+        Clock.schedule_interval(self.update_display_text, self.
+            WIDGET_UPDATE_DELAY)
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -256,63 +255,47 @@ class UpdateTestingScreen(Screen):
         self.output_view_buffer.append(str(message))
         print(message)
 
-    def update_display_text(self, dt):   
+    def update_display_text(self, dt):
         self.output_view.text = '\n'.join(self.output_view_buffer)
         if len(self.output_view_buffer) > 61:
-            del self.monitor_text_buffer[0:len(self.output_view_buffer)-60]
+            del self.monitor_text_buffer[0:len(self.output_view_buffer) - 60]
 
     def run_in_shell(self, input_repo, cmd):
-
-        if input_repo == 'easycut': dir_path = easycut_path
-        elif input_repo == 'home': dir_path = home_dir
-
+        if input_repo == 'easycut':
+            dir_path = easycut_path
+        elif input_repo == 'home':
+            dir_path = home_dir
         full_cmd = cmd
-
-        print full_cmd 
-
-        proc = subprocess.Popen(full_cmd,
-            cwd = dir_path,
-            stdout = subprocess.PIPE,
-            stderr = subprocess.STDOUT,
-            shell = True
-        )
-
+        print(full_cmd)
+        proc = subprocess.Popen(full_cmd, cwd=dir_path, stdout=subprocess.
+            PIPE, stderr=subprocess.STDOUT, shell=True)
         stdout_buffer = []
-
         while True:
             line = proc.stdout.readline()
             stdout_buffer.append(line)
-            print line,
+            print(line, end=' ')
             if line == '' and proc.poll() != None:
                 break
-        # return ''.join(stdout_buffer)
-
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
-
         if exit_code == 0:
             bool_out = True
         else:
             bool_out = False
-
         self.add_to_user_friendly_buffer(bool_out)
         self.add_to_user_friendly_buffer(''.join(stdout_buffer))
         self.add_to_user_friendly_buffer(stderr)
-
         return [bool_out, stdout, stderr]
 
-
-
-# UPDATE FUNCTIONS
-
-    # I think some of these will freeze the SW, so will probably need putting on separate threads. But wanna test anyway. 
     def install_git_repair(self):
-        install_success = self.run_in_shell(repo, 'sudo aptitude install git-repair')
+        install_success = self.run_in_shell(repo,
+            'sudo aptitude install git-repair')
 
     def _repair_repo(self):
         initial_run_success = self.run_in_shell(repo, 'git-repair --force')
         if initial_run_success[0] != 0:
-            install_success = self.run_in_shell(repo, 'sudo aptitude install git-repair')
+            install_success = self.run_in_shell(repo,
+                'sudo aptitude install git-repair')
             if install_success[0] == 0:
                 return self.run_in_shell(repo, 'git-repair --force')
             else:
@@ -321,61 +304,41 @@ class UpdateTestingScreen(Screen):
             return initial_run_success
 
     def _git_fsck(self):
-        return self.run_in_shell(repo, 'git --no-pager ' + 'fsck --lost-found' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' +
+            'fsck --lost-found' + ' --progress')
 
-    # git prune
     def _prune_repo(self):
-        return self.run_in_shell(repo, 'git --no-pager ' + 'prune' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'prune' +
+            ' --progress')
 
-    # git gc --aggressive
     def _gc_repo(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'gc --aggressive')
 
     def _fetch_tags(self):
-        return self.run_in_shell(repo, 'git --no-pager ' + 'fetch --all -t' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'fetch --all -t' +
+            ' --progress')
 
     def _do_platform_ansible_run(self):
-        return self.run_in_shell('home', '/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh')
+        return self.run_in_shell('home',
+            '/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh')
 
     def _checkout_new_version(self):
-        return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' + version + ' -f' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' +
+            version + ' -f' + ' --progress')
 
     def _ansible_reset_test(self):
-        self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml')
+        self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml'
+            )
         if not self._do_platform_ansible_run()[0]:
-            reset_outcome = self.run_in_shell(repo, 'git --no-pager reset --hard')
-            print("Reset outcome")
+            reset_outcome = self.run_in_shell(repo,
+                'git --no-pager reset --hard')
+            print('Reset outcome')
             print(reset_outcome)
             if self._do_platform_ansible_run():
-                print("success!")
+                print('success!')
 
-
-    # these are less important because we already do them
     def add_remotes(self):
         pass
 
     def remove_remotes(self):
         pass
-
-# def _set_origin_URL(self, repo):
-#     origin_url = easycut_origin_url
-#     return self.run_in_shell(repo, 'git remote set-url origin ' + origin_url)
-
-# ## set up temporary repository from USB
-# # arguments: argument 1 is the repo we're setting up for, argument 2 is the usb filepath
-
-# def _set_up_usb_repo(self, repo, remote_path):
-#     return self.run_in_shell(repo, 'git remote add temp_repository ' + remote_path)
-
-# def _check_usb_repo(self, repo):
-#     output = self.run_in_shell(repo, 'git remote')
-#     if 'temp_repository' in str(output[1]):
-#         return self.run_in_shell(repo, 'git remote show temp_repository')
-#     else:
-#         return [True]
-
-# def _remove_usb_repo(self, repo, remote_path):
-#     return self.run_in_shell(repo, 'git remote remove temp_repository')
-
-# def unset_temp_remotes_if_they_exist(self):
-#     if not (self._check_usb_repo('easycut')[0]): self._remove_usb_repo('easycut', remote_cache_easycut)

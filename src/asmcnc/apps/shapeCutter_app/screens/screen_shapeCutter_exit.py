@@ -1,17 +1,15 @@
-'''
+"""
 Created on 5 March 2020
 Job Cancelled Screen for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterExitScreenClass>:
     
@@ -57,19 +55,20 @@ Builder.load_string("""
                     font_size: 26
                     markup: True
 
-""")
+"""
+    )
+
 
 class ShapeCutterExitScreenClass(Screen):
+    info_button = ObjectProperty()
 
-    info_button = ObjectProperty()   
-    
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutterExitScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1)
- 
+
     def exit_screen(self, dt):
         self.shapecutter_sm.return_to_EC()

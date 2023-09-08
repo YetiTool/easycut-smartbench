@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
-'''
+"""
 Created July 2020
 
 @author: Letty
 
 Spindle cooldown screen
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 from datetime import datetime
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <SpindleCooldownScreen>:
 
@@ -124,24 +121,23 @@ Builder.load_string("""
                         width: dp(100) 
 
 
-""")
+"""
+    )
 
 
 class SpindleCooldownScreen(Screen):
-
     return_screen = 'job_feedback'
     seconds = '10'
     update_timer_event = None
 
     def __init__(self, **kwargs):
-        
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SpindleCooldownScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
         self.seconds = self.m.spindle_cooldown_time_seconds
-
-        self.cool_down_label.text = self.l.get_str('Cooling down spindle') + '...'
+        self.cool_down_label.text = self.l.get_str('Cooling down spindle'
+            ) + '...'
 
     def on_pre_enter(self):
         self.m.cooldown_zUp_and_spindle_on()
@@ -151,7 +147,7 @@ class SpindleCooldownScreen(Screen):
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, self.seconds)
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
-    
+
     def exit_screen(self, dt):
         self.sm.current = self.return_screen
 
@@ -163,7 +159,7 @@ class SpindleCooldownScreen(Screen):
     def on_leave(self):
         self.m.spindle_off()
         self.m.vac_off()
-        if self.update_timer_event != None: Clock.unschedule(self.update_timer_event)
+        if self.update_timer_event != None:
+            Clock.unschedule(self.update_timer_event)
         self.seconds = self.m.spindle_cooldown_time_seconds
         self.countdown.text = str(self.seconds)
-        

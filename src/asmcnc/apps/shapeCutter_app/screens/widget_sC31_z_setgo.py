@@ -1,18 +1,16 @@
-'''
+"""
 Created on 5 March 2020
 @author: Letty
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <SC31ZSetGo>
@@ -96,36 +94,35 @@ Builder.load_string("""
         
          
         
-""")
-    
+"""
+    )
+
 
 class SC31ZSetGo(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(SC31ZSetGo, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
-        
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
-            
+
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
-            self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
+        if self.speed_toggle.state == 'normal':
+            self.speed_image.source = './asmcnc/skavaUI/img/slow.png'
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
-        else: 
-            self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
+        else:
+            self.speed_image.source = './asmcnc/skavaUI/img/fast.png'
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
 
     def set_jobstart_z(self):
         self.m.set_jobstart_z()
-     
+
     def go_to_jobstart_z(self):
         self.m.go_to_jobstart_z()
-

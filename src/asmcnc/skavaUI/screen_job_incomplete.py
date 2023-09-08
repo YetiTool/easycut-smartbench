@@ -1,17 +1,16 @@
-'''
+"""
 Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
-'''
+"""
 from datetime import datetime, timedelta
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 from kivy.metrics import dp
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <JobIncompleteScreen>
 
     job_incomplete_label : job_incomplete_label
@@ -274,53 +273,55 @@ Builder.load_string("""
                             width: dp(244.5)
                             padding: [193.5, 0, 0, 0]
  
-""")
+"""
+    )
+
 
 class JobIncompleteScreen(Screen):
-
     return_to_screen = StringProperty()
-    event_type = '' # alarm, error, cancelled, or unsuccessful
+    event_type = ''
     specific_event = ''
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
         super(JobIncompleteScreen, self).__init__(**kwargs)
-
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
 
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event
-        if event_number: self.specific_event = str(event_number.split(':')[1])
-        if not 'unsuccessful' in self.event_type: self.db.send_job_end(False)
+        if event_number:
+            self.specific_event = str(event_number.split(':')[1])
+        if not 'unsuccessful' in self.event_type:
+            self.db.send_job_end(False)
         self.send_job_status()
         self.sm.get_screen('go').is_job_started_already = False
 
     def on_pre_enter(self):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
- 
-    def press_ok(self):
 
+    def press_ok(self):
         if self.db.set.ip_address:
-            self.next_button.text = self.l.get_str("Processing")
+            self.next_button.text = self.l.get_str('Processing')
             self.next_button.disabled = True
             self.set_post_production_notes()
             Clock.schedule_once(self.send_end_of_job_updates, 0.1)
-
-        else: 
-            self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
+        else:
+            self.jd.post_job_data_update_pre_send(False,
+                extra_parts_completed=int(self.parts_completed_input.text))
             self.quit_to_return_screen()
 
     def send_end_of_job_updates(self, dt):
-        self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
+        self.jd.post_job_data_update_pre_send(False, extra_parts_completed=
+            int(self.parts_completed_input.text))
         self.db.send_job_summary(False)
         self.quit_to_return_screen()
 
     def on_leave(self):
-        self.next_button.text = self.l.get_str("Ok")
+        self.next_button.text = self.l.get_str('Ok')
         self.next_button.disabled = False
 
     def quit_to_return_screen(self):
@@ -332,93 +333,87 @@ class JobIncompleteScreen(Screen):
 
     def send_job_status(self):
         if 'cancelled' in self.event_type:
-            self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
-
+            self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' +
+                self.jd.job_name, 5)
         elif 'Alarm' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 1)
-
+            self.db.send_event(2, 'Job cancelled', 
+                'Cancelled job (Alarm): ' + self.jd.job_name, 1)
         elif 'Error' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 0)
-
+            self.db.send_event(2, 'Job cancelled', 
+                'Cancelled job (Error): ' + self.jd.job_name, 0)
         elif 'unsuccessful' in self.event_type:
-            self.db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' + self.jd.job_name, 8)
+            self.db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' +
+                self.jd.job_name, 8)
 
-
-    # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
-
-        self.next_button.text = self.l.get_str("Ok")
+        self.next_button.text = self.l.get_str('Ok')
         self.next_button.disabled = False
-
-        if "unsuccessful" in self.event_type:
-            self.job_incomplete_label.text = self.l.get_str("Job unsuccessful").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
-
+        if 'unsuccessful' in self.event_type:
+            self.job_incomplete_label.text = self.l.get_str('Job unsuccessful'
+                ).replace(self.l.get_str('Job'), self.jd.job_name) + '!'
         else:
-            self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
-
-
-        internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
-
+            self.job_incomplete_label.text = self.l.get_str('Job incomplete'
+                ).replace(self.l.get_str('Job'), self.jd.job_name) + '!'
+        internal_order_code = self.jd.metadata_dict.get('Internal Order Code',
+            '')
         if len(internal_order_code) > 23:
-            internal_order_code =  internal_order_code[:23] + "... | "
+            internal_order_code = internal_order_code[:23] + '... | '
         elif len(internal_order_code) > 0:
-            internal_order_code = internal_order_code + " | "
-
-
-        self.metadata_label.text = (
-            internal_order_code + self.jd.metadata_dict.get('Process Step', '') + \
-            "\n" + \
-            self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
-            "\n" + \
-            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
-            )
-
-
-        self.parts_completed_label.text = self.l.get_str("Parts completed:") + " "
-        self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*10.5)
-
+            internal_order_code = internal_order_code + ' | '
+        self.metadata_label.text = (internal_order_code + self.jd.
+            metadata_dict.get('Process Step', '') + '\n' + self.l.get_str(
+            'Job duration:') + ' ' + self.l.get_localized_days(self.jd.
+            actual_runtime) + '\n' + self.l.get_str('Pause duration:') +
+            ' ' + self.l.get_localized_days(self.jd.pause_duration))
+        self.parts_completed_label.text = self.l.get_str('Parts completed:'
+            ) + ' '
+        self.parts_completed_label.width = dp(len(self.
+            parts_completed_label.text) * 10.5)
         try:
-            self.parts_completed_input.text = str(int(self.jd.metadata_dict.get('Parts Made So Far', 0)))
-        
+            self.parts_completed_input.text = str(int(self.jd.metadata_dict
+                .get('Parts Made So Far', 0)))
         except:
             self.parts_completed_input.text = str(0)
-
         try:
-            self.out_of_total_parts_label.text = " / " + str(int(self.jd.metadata_dict.get('Total Parts Required', 1)))
-
+            self.out_of_total_parts_label.text = ' / ' + str(int(self.jd.
+                metadata_dict.get('Total Parts Required', 1)))
         except:
-            self.out_of_total_parts_label.text = " / " + str(1)
-
-        self.batch_number_label.text = self.l.get_str("Batch Number:") + " "
-        self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
+            self.out_of_total_parts_label.text = ' / ' + str(1)
+        self.batch_number_label.text = self.l.get_str('Batch Number:') + ' '
+        self.batch_number_label.width = dp(len(self.batch_number_label.text
+            ) * 10.5)
         self.batch_number_input.text = self.jd.batch_number
-
         self.post_production_notes.text = self.jd.post_production_notes
-        self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
-
-
-        if_loss = self.l.get_str("If SmartBench lost position, you will need to rehome SmartBench.")
-        may_loss = self.l.get_str("SmartBench may have lost position, so you will need to rehome SmartBench.")
-        recovery_msg = self.l.get_str("You should recover any finished parts from this job before starting a new job.")
-        percent_streamed = self.l.get_str("Percentage streamed:") + " " + str(self.jd.percent_thru_job) + " %"
-
-
+        self.post_production_notes_label.text = self.l.get_str(
+            'Post Production Notes:')
+        if_loss = self.l.get_str(
+            'If SmartBench lost position, you will need to rehome SmartBench.')
+        may_loss = self.l.get_str(
+            'SmartBench may have lost position, so you will need to rehome SmartBench.'
+            )
+        recovery_msg = self.l.get_str(
+            'You should recover any finished parts from this job before starting a new job.'
+            )
+        percent_streamed = self.l.get_str('Percentage streamed:') + ' ' + str(
+            self.jd.percent_thru_job) + ' %'
         if 'cancelled' in self.event_type:
-            self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
-            self.event_details_label.text = percent_streamed + "\n" + if_loss + "\n" + recovery_msg
-
-        elif "unsuccessful" in self.event_type:
-            self.job_cancelled_label.text = self.l.get_str("Job marked unsuccessful by the user.")
-            self.event_details_label.text = percent_streamed + "\n" + if_loss + "\n" + recovery_msg
-
+            self.job_cancelled_label.text = self.l.get_str(
+                'Job cancelled by the user.')
+            self.event_details_label.text = (percent_streamed + '\n' +
+                if_loss + '\n' + recovery_msg)
+        elif 'unsuccessful' in self.event_type:
+            self.job_cancelled_label.text = self.l.get_str(
+                'Job marked unsuccessful by the user.')
+            self.event_details_label.text = (percent_streamed + '\n' +
+                if_loss + '\n' + recovery_msg)
         else:
-            self.job_cancelled_label.text = (
-                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str((self.event_type).lower()) + \
-                ": " + self.specific_event)
-                )
-
-            self.event_details_label.text = percent_streamed + "\n" + may_loss + "\n" + recovery_msg
-        
+            self.job_cancelled_label.text = self.l.get_str(
+                'Job cancelled due to event').replace(self.l.get_str(
+                'event'), self.l.get_str(self.event_type.lower()) + ': ' +
+                self.specific_event)
+            self.event_details_label.text = (percent_streamed + '\n' +
+                may_loss + '\n' + recovery_msg)
             if 'Error' in self.event_type:
-                self.event_details_label.text = self.event_details_label.text + " " + self.l.get_str("Check your GCode file before re-running it.")
-
+                self.event_details_label.text = (self.event_details_label.
+                    text + ' ' + self.l.get_str(
+                    'Check your GCode file before re-running it.'))

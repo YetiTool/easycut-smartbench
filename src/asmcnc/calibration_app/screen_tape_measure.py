@@ -1,18 +1,15 @@
-'''
+"""
 Created on 17 January 2020
 Warning to remind user to remove their tape measure before homing the machine
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
-# from asmcnc.calibration_app import screen_prep_calibration
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <TapeMeasureScreenClass>:
     
     alert_label:alert_label
@@ -82,19 +79,21 @@ Builder.load_string("""
                             text: '[color=FFFFFF]Ok, continue...[/color]'
                             markup: 'True'
                 
-""")
+"""
+    )
+
 
 class TapeMeasureScreenClass(Screen):
-    
     return_to_screen = StringProperty()
     alert_label = ObjectProperty()
-    
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        
-        self.alert_label.text = '[color=455A64]\nTAPE MEASURE WARNING!\nPlease remove your tape measure from the machine now.[/color]'
+        self.alert_label.text = """[color=455A64]
+TAPE MEASURE WARNING!
+Please remove your tape measure from the machine now.[/color]"""
 
     def next_screen(self):
         self.sm.current = self.return_to_screen

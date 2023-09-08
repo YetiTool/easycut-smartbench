@@ -1,14 +1,12 @@
-'''
+"""
 Created on 31 March 2021
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 <AlarmScreen1>:
 	alarm_title : alarm_title
 	icon_container : icon_container
@@ -138,37 +136,38 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-""")
+"""
+    )
+
 
 class AlarmScreen1(Screen):
 
-	def __init__(self, **kwargs):
-		super(AlarmScreen1, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
+    def __init__(self, **kwargs):
+        self.a = kwargs.pop('alarm_manager')
+        super(AlarmScreen1, self).__init__(**kwargs)
+        self.alarm_title.text = self.a.l.get_bold('Alarm: Unexpected event!')
+        self.icon.source = './asmcnc/core_UI/sequence_alarm/img/alarm_icon.png'
+        self.next_button.text = self.a.l.get_str('Next') + '...'
 
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
-		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.next_button.text = self.a.l.get_str("Next") + "..."
+    def next_screen(self):
+        if self.a.support_sequence:
+            self.a.sm.current = 'alarm_2'
+        else:
+            self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
+            self.a.sm.current = 'alarm_5'
 
-	def next_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_2'
-		else:
-			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-			self.a.sm.current = 'alarm_5'
+    def prev_screen(self):
+        self.a.sm.current = 'alarm_1'
 
-	def prev_screen(self):
-		self.a.sm.current = 'alarm_1'
+    def on_pre_enter(self):
+        self.update_font_size(self.description_label)
 
-	def on_pre_enter(self):
-		self.update_font_size(self.description_label)
-
-	def update_font_size(self, value):
-		if len(value.text) > 330:
-			value.font_size = 16
-		elif len(value.text) > 280:
-			value.font_size = 17
-		elif len(value.text) > 270:
-			value.font_size = 18
-		else: 
-			value.font_size = 20
+    def update_font_size(self, value):
+        if len(value.text) > 330:
+            value.font_size = 16
+        elif len(value.text) > 280:
+            value.font_size = 17
+        elif len(value.text) > 270:
+            value.font_size = 18
+        else:
+            value.font_size = 20

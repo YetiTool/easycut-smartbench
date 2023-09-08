@@ -1,14 +1,12 @@
-'''
+"""
 Created on 31 March 2021
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 <AlarmScreen2>:
 	alarm_title : alarm_title
 	icon_container : icon_container
@@ -161,27 +159,32 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-""")
+"""
+    )
+
 
 class AlarmScreen2(Screen):
-	
-	def __init__(self, **kwargs):
-		super(AlarmScreen2, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Record details")
-		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
-		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
-		self.description_label.text = self.a.l.get_str("Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.")
-		self.next_button.text = self.a.l.get_str("Next") + "..."
+    def __init__(self, **kwargs):
+        self.a = kwargs.pop('alarm_manager')
+        super(AlarmScreen2, self).__init__(**kwargs)
+        self.alarm_title.text = self.a.l.get_bold('Alarm: Record details')
+        self.icon_left.source = (
+            './asmcnc/core_UI/sequence_alarm/img/camera_dark.png')
+        self.icon_right.source = (
+            './asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png')
+        self.description_label.text = self.a.l.get_str(
+            'Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.'
+            )
+        self.next_button.text = self.a.l.get_str('Next') + '...'
 
-	def next_screen(self):
-		self.a.sm.get_screen('alarm_3').for_support = True
-		self.a.sm.current = 'alarm_3'
+    def next_screen(self):
+        self.a.sm.get_screen('alarm_3').for_support = True
+        self.a.sm.current = 'alarm_3'
 
-	def prev_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_1'
-		else:
-			self.a.sm.get_screen('alarm_3').for_support = False
-			self.a.sm.current = 'alarm_3'
+    def prev_screen(self):
+        if self.a.support_sequence:
+            self.a.sm.current = 'alarm_1'
+        else:
+            self.a.sm.get_screen('alarm_3').for_support = False
+            self.a.sm.current = 'alarm_3'

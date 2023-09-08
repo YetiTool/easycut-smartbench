@@ -1,8 +1,7 @@
-'''
+"""
 Created on nov 2020
 @author: Ollie
-'''
-
+"""
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,10 +11,9 @@ from asmcnc.skavaUI import widget_status_bar
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 import sys, os
-
 from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <WarrantyScreen1>:
 
@@ -242,43 +240,48 @@ Builder.load_string("""
 						background_normal: ''
 						on_press: root.quit_to_console()
 
-""")
+"""
+    )
+
 
 class WarrantyScreen1(Screen):
 
-	def __init__(self, **kwargs):
-		super(WarrantyScreen1, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
-		self.update_strings()
+    def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        super(WarrantyScreen1, self).__init__(**kwargs)
+        self.update_strings()
 
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-	
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.scan_qr_code.text = self.l.get_str("Scan the QR Code to start")
-		self.instructions_label.text = self.l.get_str("To submit your details and receive your activation code, go to")
-		self.cant_use_web_label.text = self.l.get_str("Can't use the web form?")
-		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")
-		self.next_button.text = self.l.get_str("Next") + "..."
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-		self.update_contact_us_font_sizes()
+    def update_strings(self):
+        self.title_label.text = self.l.get_str(
+            'SmartBench Warranty Registration')
+        self.scan_qr_code.text = self.l.get_str('Scan the QR Code to start')
+        self.instructions_label.text = self.l.get_str(
+            'To submit your details and receive your activation code, go to')
+        self.cant_use_web_label.text = self.l.get_str("Can't use the web form?"
+            )
+        self.contact_us_at_support.text = self.l.get_str(
+            'Contact us at https://www.yetitool.com/support')
+        self.next_button.text = self.l.get_str('Next') + '...'
+        self.update_contact_us_font_sizes()
 
-	def update_contact_us_font_sizes(self): # Update both labels together to make it look nicer
-		if len(self.contact_us_at_support.text) > 70:
-			self.cant_use_web_label.font_size = 17
-			self.contact_us_at_support.font_size = 17
-		else:
-			self.cant_use_web_label.font_size = 20
-			self.contact_us_at_support.font_size = 20
+    def update_contact_us_font_sizes(self):
+        if len(self.contact_us_at_support.text) > 70:
+            self.cant_use_web_label.font_size = 17
+            self.contact_us_at_support.font_size = 17
+        else:
+            self.cant_use_web_label.font_size = 20
+            self.contact_us_at_support.font_size = 20
 
-	def go_to_factory_settings(self):
-		popup_warranty.PopupFactorySettingsPassword(self.start_seq.am)
+    def go_to_factory_settings(self):
+        popup_warranty.PopupFactorySettingsPassword(self.start_seq.am)
 
-	def quit_to_console(self):
-		popup_warranty.QuitToConsoleWarranty(self.start_seq.sm)
+    def quit_to_console(self):
+        popup_warranty.QuitToConsoleWarranty(self.start_seq.sm)

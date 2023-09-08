@@ -1,13 +1,13 @@
-'''
+"""
 Created on nov 2020
 @author: Ollie
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <WarrantyScreen2>:
 
@@ -147,41 +147,42 @@ Builder.load_string("""
 					height: dp(122)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
-""")
+"""
+    )
+
 
 class WarrantyScreen2(Screen):
 
-	def __init__(self, **kwargs):
-		super(WarrantyScreen2, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
+    def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        super(WarrantyScreen2, self).__init__(**kwargs)
+        self.serial_number_label.text = self.get_serial_number()
+        self.update_strings()
 
-		self.serial_number_label.text = self.get_serial_number()
+    def get_serial_number(self):
+        serial_number_filepath = '/home/pi/smartbench_serial_number.txt'
+        serial_number_from_file = ''
+        try:
+            file = open(serial_number_filepath, 'r')
+            serial_number_from_file = str(file.read())
+            file.close()
+        except:
+            print(
+                'Could not get serial number! Please contact YetiTool support!'
+                )
+        return str(serial_number_from_file)
 
-		self.update_strings()
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-	def get_serial_number(self):
-		serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
-		serial_number_from_file = ''
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-		try: 
-			file = open(serial_number_filepath, 'r')
-			serial_number_from_file  = str(file.read())
-			file.close()
-
-		except: 
-			print 'Could not get serial number! Please contact YetiTool support!'
-
-		return str(serial_number_from_file)
-
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
-
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-	
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.your_serial_number_label.text = self.l.get_str("Your serial number is")
-		self.next_button.text = self.l.get_str("Next") + "..."
+    def update_strings(self):
+        self.title_label.text = self.l.get_str(
+            'SmartBench Warranty Registration')
+        self.your_serial_number_label.text = self.l.get_str(
+            'Your serial number is')
+        self.next_button.text = self.l.get_str('Next') + '...'
