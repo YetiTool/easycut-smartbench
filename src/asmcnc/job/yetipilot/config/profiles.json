@@ -543,6 +543,54 @@
           "Value": 20400.0
         }
       ]
+    },
+    {
+      "Material Type": "ACM",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 110
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "ACM",
+      "Cutter Diameter": "5 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 300
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "ACM",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 350
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
     }
   ]
 }
