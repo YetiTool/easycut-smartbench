@@ -452,9 +452,6 @@ class SerialConnection:
                 self.write_to_serial(serial_command)
                 self.last_protocol_send_time = time.time()
 
-    def raise_error_screen(self):
-        self.sm.current = 'errorScreen'
-
     def raise_screen(self, screen_name):
         self.sm.current = screen_name
 
@@ -472,7 +469,7 @@ class SerialConnection:
                 else:
                     self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
 
-            Clock.schedule_once(lambda dt: self.raise_error_screen(), 0.1)
+            Clock.schedule_once(lambda dt: self.raise_screen('errorScreen'), 0.1)
 
         if self._process_oks_from_sequential_streaming:
             self._send_next_sequential_stream()
