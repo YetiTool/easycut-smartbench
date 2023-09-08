@@ -1,0 +1,14 @@
+.. _top:
+
+New YetiPilot profiles for ACM (Aluminum composite material)!
+================================================================
+
+YetiPilot has been updated with 3 new profiles to cut ACM.
+
+Due to the enthusiastic reception to YetiPilot, we’re committed to releasing new profiles as soon as we can. This means we’re putting out smaller and more frequent updates right now. 
+
+We are still continuously working on new features and improvements to benefit all users - watch this space!
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
