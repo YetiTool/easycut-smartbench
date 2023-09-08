@@ -621,7 +621,7 @@ class SerialConnection:
         elif message.startswith('ALARM:'):
             self.grbl_waiting_for_reset = True
 
-            self.alarm.alert_user(message)
+            Clock.schedule_once(self.alarm.alert_user(message))
         elif message.startswith('$'):
             setting, value = message.split('=', 1)
 
