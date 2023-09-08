@@ -592,21 +592,5 @@
         }
       ]
     },
-    {
-      "Material Type": "ACM",
-      "Cutter Diameter": "90 deg",
-      "Cutter Type": "v groove",
-      "Step Down": "3 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 320
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 24200.0
-        }
-      ]
-    }
   ]
 }
