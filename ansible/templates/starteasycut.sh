@@ -41,7 +41,7 @@ if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
 else
         
         # execute python
-        exec python main.py
+        exec python3 main.py
         sleep 5
 
         # check if running
@@ -50,7 +50,7 @@ else
         then
                 echo "no main instance found - trying git reset"
                 git reset --hard
-                exec python main.py
+                exec python3 main.py
                 if ! ps ax | grep "[p]ython main.py"
                 then
                         if [ -d  "/home/pi/easycut-smartbench-backup" ]
