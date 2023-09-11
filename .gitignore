@@ -11,3 +11,4 @@ src/asmcnc/job/job_recovery.txt
 .coverage
 htmlcov
 src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg
+src/asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc

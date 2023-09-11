@@ -258,6 +258,7 @@ class PanelWidget(Scatter):
 class GeberitCutterScreen(Screen):
 
     svg_output_filepath = './asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg'
+    raw_gcode_filepath = './asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc'
 
     panels_added = 0
     current_panel_selection = None
@@ -367,16 +368,37 @@ class GeberitCutterScreen(Screen):
             if sys.platform != "win32":
                 cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
                 # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
-                cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
+                cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text)
                 working_directory = '/home/pi/svg2gcode'
             else:
                 # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
                 cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
-                cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
+                cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd())
                 working_directory = os.getcwd() + '/../../svg2gcode'
 
             # This is required because command needs to be executed from svg2gcode folder
             subprocess.Popen(cmd.split(), cwd=working_directory).wait()
+
+            process_gcode()
+
+        def process_gcode():
+            # Anything that svg2gcode can't be forced to do, has to be done manually
+
+            with open(self.raw_gcode_filepath) as f:
+                raw_gcode = f.readlines()
+
+            def map_gcodes(line):
+                # Stop turning off spindle throughout file by deleting all M5 commands
+                if 'M5' in line:
+                    line = line.replace('M5', '')
+                return line
+
+            processed_gcode = map(map_gcodes, raw_gcode)
+            # Then turn spindle off at the end
+            processed_gcode.append('M5')
+
+            with open('./jobCache/' + self.filename_input.text, 'w+') as f:
+                f.write(''.join(processed_gcode))
 
             self.wait_popup.popup.dismiss()
             popup_info.PopupInfo(self.sm, self.l, 500, self.l.get_str("Gcode file saved to filechooser!"))
