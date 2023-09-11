@@ -83,8 +83,9 @@ class ServerConnection(object):
                     self.set.start_ssh()
                     try:
                         self.get_smartbench_name()
-                        conn.send(self.smartbench_name)
-                    except:
+                        conn.send(self.smartbench_name.encode("utf-8"))
+                    except Exception as e:
+                        log(e)
                         log("Message not sent")
                     conn.close()
                 else:
