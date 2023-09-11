@@ -292,89 +292,98 @@ class GeberitCutterScreen(Screen):
             popup_info.PopupError(self.sm, self.l, "Please ensure that the filename ends with a valid GCode file extension.")
 
     def convert_to_gcode(self):
-        # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
-        # The height and width are switched - this is necessary so that everything is drawn in full size but out of bounds, which is fixed by a reflection further down
-        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
-        for panel in self.editor_container.children:
-            # Position has to be converted to local coordinates of the container, as they are relative to the window
-            panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
+        def generate_svg():
+            # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
+            # The height and width are switched - this is necessary so that everything is drawn in full size but out of bounds, which is fixed by a reflection further down
+            dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
+            for panel in self.editor_container.children:
+                # Position has to be converted to local coordinates of the container, as they are relative to the window
+                panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
 
-            # The long side has to be drawn parallel to the y axis - to solve this, this matrix transformation performs a reflection in the line y=x
-            # This means that the long side can be drawn parallel to the x axis, directly from the kivy coords, instead of figuring out how to switch all the x/y coords
-            transformation = "matrix(0 1 1 0 0 0)"
-            # Additionally, when a panel is drawn, a scaling and translation is applied, which vertically flips the svg
-            # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
-            transformation += " scale(1,-1) translate(0,%s)" % -self.editor_container.height
+                # The long side has to be drawn parallel to the y axis - to solve this, this matrix transformation performs a reflection in the line y=x
+                # This means that the long side can be drawn parallel to the x axis, directly from the kivy coords, instead of figuring out how to switch all the x/y coords
+                transformation = "matrix(0 1 1 0 0 0)"
+                # Additionally, when a panel is drawn, a scaling and translation is applied, which vertically flips the svg
+                # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
+                transformation += " scale(1,-1) translate(0,%s)" % -self.editor_container.height
 
-            # Now rotate around the centre of the panel, which again needs the coord converted
-            panel_centre = self.editor_container.to_local(*panel.center, relative=True)
-            # Then add rotation
-            transformation += " rotate(%s,%s,%s)" % (panel.rotation, panel_centre[0], panel_centre[1])
+                # Now rotate around the centre of the panel, which again needs the coord converted
+                panel_centre = self.editor_container.to_local(*panel.center, relative=True)
+                # Then add rotation
+                transformation += " rotate(%s,%s,%s)" % (panel.rotation, panel_centre[0], panel_centre[1])
 
-            # If the panel is turned sideways
-            if int(panel.rotation) % 180 != 0:
-                # Then rotation will mess up its position so align centre first
-                # It is important to note that this has to be added after the rotation, because transformations are performed right to left
-                transformation += " translate(%s,%s)" % (panel.width/2, -panel.height/4)
+                # If the panel is turned sideways
+                if int(panel.rotation) % 180 != 0:
+                    # Then rotation will mess up its position so align centre first
+                    # It is important to note that this has to be added after the rotation, because transformations are performed right to left
+                    transformation += " translate(%s,%s)" % (panel.width/2, -panel.height/4)
 
-            panel_size = (panel.width, panel.height)
+                panel_size = (panel.width, panel.height)
 
-            # Create rectangle for panel background
-            dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
+                # Create rectangle for panel background
+                dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
 
-            # Set up objects for the detail of the panel as relative to rectangle position and size
-            # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
-            big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
-            big_circle_radius = panel.height / 10
-            dwg.add(dwg.circle(big_circle_centre, big_circle_radius, fill='white', stroke='black', transform=transformation))
+                # Set up objects for the detail of the panel as relative to rectangle position and size
+                # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
+                big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
+                big_circle_radius = panel.height / 10
+                dwg.add(dwg.circle(big_circle_centre, big_circle_radius, fill='white', stroke='black', transform=transformation))
 
-            small_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height * 0.45))
-            small_circle_radius = panel.height / 40
-            dwg.add(dwg.circle(small_circle_centre, small_circle_radius, fill='white', stroke='black', transform=transformation))
+                small_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height * 0.45))
+                small_circle_radius = panel.height / 40
+                dwg.add(dwg.circle(small_circle_centre, small_circle_radius, fill='white', stroke='black', transform=transformation))
 
-            small_rect_pos = (panel_pos[0] + (panel.width / 4), panel_pos[1] + (panel.height * 0.78))
-            small_rect_size = (panel.width / 2, panel.width / 4)
-            dwg.add(dwg.rect(small_rect_pos, small_rect_size, fill='white', stroke='black', transform=transformation))
+                small_rect_pos = (panel_pos[0] + (panel.width / 4), panel_pos[1] + (panel.height * 0.78))
+                small_rect_size = (panel.width / 2, panel.width / 4)
+                dwg.add(dwg.rect(small_rect_pos, small_rect_size, fill='white', stroke='black', transform=transformation))
 
-            rounded_rect_size = (panel.width / 6, panel.width / 16)
-            roundedness = rounded_rect_size[0] / 10
+                rounded_rect_size = (panel.width / 6, panel.width / 16)
+                roundedness = rounded_rect_size[0] / 10
 
-            rounded_rect_left_pos = (panel_pos[0] + (panel.width * 0.18), panel_pos[1] + (panel.height * 0.37))
-            dwg.add(dwg.rect(rounded_rect_left_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+                rounded_rect_left_pos = (panel_pos[0] + (panel.width * 0.18), panel_pos[1] + (panel.height * 0.37))
+                dwg.add(dwg.rect(rounded_rect_left_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
 
-            rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
-            dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
-        dwg.save()
+                rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
+                dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+            dwg.save()
 
-        # The svg now has to be converted to paths, as required by the gcode converter
-        paths, attributes = svg2paths(self.svg_output_filepath)
-        dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
-        for i, path in enumerate(paths):
-            # Recover attributes of current path, or else transformation is lost
-            path_attributes = attributes[i]
-            # Convert from svgpathtools path to svgwrite path using shared attribute d
-            dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
-        dwg.save()
+            convert_svg_to_paths()
 
-        # Now, convert to gcode
-        if sys.platform != "win32":
-            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
-            # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
-            cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
-            working_directory = '/home/pi/svg2gcode'
-        else:
-            # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
-            cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
-            cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
-            working_directory = os.getcwd() + '/../../svg2gcode'
+        def convert_svg_to_paths():
+            # The svg now has to be converted to paths, as required by the gcode converter
+            paths, attributes = svg2paths(self.svg_output_filepath)
+            dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
+            for i, path in enumerate(paths):
+                # Recover attributes of current path, or else transformation is lost
+                path_attributes = attributes[i]
+                # Convert from svgpathtools path to svgwrite path using shared attribute d
+                dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
+            dwg.save()
 
-        # This is required because command needs to be executed from svg2gcode folder
-        subprocess.Popen(cmd.split(), cwd=working_directory).wait()
+            convert_svg_to_gcode()
 
-        self.wait_popup.popup.dismiss()
-        popup_info.PopupInfo(self.sm, self.l, 500, self.l.get_str("Gcode file saved to filechooser!"))
+        def convert_svg_to_gcode():
+            # Now, convert to gcode
+            if sys.platform != "win32":
+                cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
+                # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
+                cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, self.filename_input.text)
+                working_directory = '/home/pi/svg2gcode'
+            else:
+                # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
+                cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
+                cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/jobCache/%s" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd(), self.filename_input.text)
+                working_directory = os.getcwd() + '/../../svg2gcode'
 
-        self.reset_editor()
+            # This is required because command needs to be executed from svg2gcode folder
+            subprocess.Popen(cmd.split(), cwd=working_directory).wait()
+
+            self.wait_popup.popup.dismiss()
+            popup_info.PopupInfo(self.sm, self.l, 500, self.l.get_str("Gcode file saved to filechooser!"))
+
+            self.reset_editor()
+
+        generate_svg()
 
     def reset_editor(self):
         self.editor_container.clear_widgets()
