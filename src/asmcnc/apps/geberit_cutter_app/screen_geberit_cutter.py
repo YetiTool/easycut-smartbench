@@ -323,7 +323,8 @@ class GeberitCutterScreen(Screen):
 
                 # Create rectangle for panel background
                 dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
-
+                
+                '''
                 # Set up objects for the detail of the panel as relative to rectangle position and size
                 # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
                 big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
@@ -346,6 +347,7 @@ class GeberitCutterScreen(Screen):
 
                 rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
                 dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+                '''
             dwg.save()
 
             convert_svg_to_paths()
