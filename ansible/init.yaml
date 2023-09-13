@@ -198,8 +198,7 @@
       update_cache: yes
     when: ansible_distribution_major_version == '11'
   - name: upgrade bootloader
-      - name: Upgrade raspberrypi-bootloader
-        apt:
-          name: raspberrypi-bootloader
-          state: latest
+    apt:
+      name: raspberrypi-bootloader
+      state: latest
     when: ansible_distribution_major_version == '11'
