@@ -60,7 +60,6 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                padding: [dp(15), dp(0)]
 
                 Button:
                     background_color: [0,0,0,0]
@@ -74,9 +73,21 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
+                    
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.change_shape()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/geberit_cutter_app/img/shape_toggle_button.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
 
             BoxLayout:
-                padding: [dp(15), dp(0)]
 
                 Button:
                     background_color: [0,0,0,0]
@@ -86,6 +97,19 @@ Builder.load_string("""
                         pos: self.parent.pos
                         Image:
                             source: "./asmcnc/apps/maintenance_app/img/save_button_132.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+                    
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.clear_all()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/geberit_cutter_app/img/clear_all_button.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -150,7 +174,7 @@ Builder.load_string("""
                             id: depth_input
                             font_size: dp(20)
                             multiline: False
-                            hint_text: 'Pass depth'
+                            hint_text: 'Material Thickness'
                             input_filter: 'int'
 
                         # TextInput:
@@ -282,6 +306,12 @@ class GeberitCutterScreen(Screen):
     def rotate_panel(self):
         if self.current_panel_selection:
             self.current_panel_selection.rotate_clockwise()
+
+    def change_shape(self):
+        print("Change shape")
+
+    def clear_all(self):
+        print("Clear all")
 
     def save(self):
         if not (self.filename_input.text and self.feed_input.text and self.speed_input.text and self.depth_input.text):
