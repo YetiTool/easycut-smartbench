@@ -15,7 +15,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 
-import sys, os, textwrap
+import sys, os, textwrap, subprocess
 from os.path import expanduser
 from shutil import copy
 
@@ -576,6 +576,16 @@ class LobbyScreen(Screen):
         Clock.schedule_once(lambda dt: self.install_geberit_packages(), 0.5)
 
     def install_geberit_packages(self):
+        subprocess.Popen('git clone https://github.com/sameer/svg2gcode'.split(), cwd='/home/pi').wait()
+        subprocess.Popen("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh".split(), cwd='/home/pi').wait()
+        subprocess.Popen('source "$HOME/.cargo/env"'.split(), cwd='/home/pi').wait()
+        subprocess.Popen('sudo ln -s /home/pi/.cargo/bin/cargo /usr/bin/cargo'.split(), cwd='/home/pi').wait()
+        subprocess.Popen('cargo add svg2gcode'.split(), cwd='/home/pi/svg2gcode').wait()
+        subprocess.Popen('cargo run --release -- examples/Vanderbilt_Commodores_logo.svg --off M3 --on M5 -o out.gcode'.split(), cwd='/home/pi/svg2gcode').wait()
+
+        self.geberit_installation_complete()
+
+    def geberit_installation_complete(self):
         geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
         if not geberit_setup_complete:
             os.system("sudo sed -i -e '$ageberit_setup_complete=True' /home/pi/easycut-smartbench/src/config.txt")
