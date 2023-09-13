@@ -571,7 +571,7 @@ class LobbyScreen(Screen):
 
         self.am.start_geberit_cutter_app()
 
-    def install_geberit_packages():
+    def install_geberit_packages(self):
         geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
 
         if not geberit_setup_complete:
