@@ -38,10 +38,10 @@ Builder.load_string("""
             padding: dp(10)
                     
             Label:
-                size_hint_y: 0.3
+                size_hint_y: 0.28
                 text: 'Rectangle cutter'
                 color: 0,0,0,1
-                font_size: dp(28)
+                font_size: dp(24)
 
             BoxLayout:
                 size_hint_y: 1.3
