@@ -1274,7 +1274,7 @@ class PopupGeberitInstallation(Widget):
         no_string = self.l.get_bold('No, go back')
 
         def install_packages(*args):
-            self.sm.get_screen('lobby').install_geberit_packages()
+            self.sm.get_screen('lobby').set_up_geberit_cutter()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description,

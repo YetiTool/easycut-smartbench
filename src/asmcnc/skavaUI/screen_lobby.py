@@ -571,14 +571,20 @@ class LobbyScreen(Screen):
 
         self.am.start_geberit_cutter_app()
 
+    def set_up_geberit_cutter(self):
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        Clock.schedule_once(lambda dt: self.install_geberit_packages(), 0.5)
+
     def install_geberit_packages(self):
         geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
-
         if not geberit_setup_complete:
             os.system("sudo sed -i -e '$ageberit_setup_complete=True' /home/pi/easycut-smartbench/src/config.txt")
-
         elif 'False' in geberit_setup_complete:
             os.system('sudo sed -i "s/geberit_setup_complete=False/geberit_setup_complete=True/" /home/pi/easycut-smartbench/src/config.txt')
+
+        self.wait_popup.popup.dismiss()
+        popup_info.PopupInfo(self.sm, self.l, 500, "Installation complete!")
+        self.am.start_geberit_cutter_app()
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
