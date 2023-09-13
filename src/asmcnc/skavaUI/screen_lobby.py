@@ -562,7 +562,23 @@ class LobbyScreen(Screen):
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
     def geberit_cutter_app(self):
+        if sys.platform != 'win32':
+            geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
+            
+            if 'False' in geberit_setup_complete or not geberit_setup_complete:
+                popup_info.PopupGeberitInstallation(self.sm, self.l)
+                return
+
         self.am.start_geberit_cutter_app()
+
+    def install_geberit_packages():
+        geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
+
+        if not geberit_setup_complete:
+            os.system("sudo sed -i -e '$ageberit_setup_complete=True' /home/pi/easycut-smartbench/src/config.txt")
+
+        elif 'False' in geberit_setup_complete:
+            os.system('sudo sed -i "s/geberit_setup_complete=False/geberit_setup_complete=True/" /home/pi/easycut-smartbench/src/config.txt')
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
