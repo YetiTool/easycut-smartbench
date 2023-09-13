@@ -193,16 +193,10 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
-  - name: upgrade bootloader
-    become: yes
-    become_user: pi
-    tasks:
-      - name: Update apt cache
-        apt:
-          update_cache: yes
+  - name: Upgrade raspberrypi-bootloader
+    become: true
 
-      - name: Upgrade raspberrypi-bootloader
-        apt:
-          name: raspberrypi-bootloader
-          state: latest
+    apt:
+      name: raspberrypi-bootloader
+      state: latest
     when: ansible_distribution_major_version == '11'
