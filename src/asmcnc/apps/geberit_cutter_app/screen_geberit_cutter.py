@@ -220,7 +220,7 @@ def log(message):
 class PanelWidget(Scatter):
 
     panel_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png"
-    panel_selected_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel_selected.png"
+    panel_selected_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel_selected.png"   
 
     def __init__(self, panel_height, pos, **kwargs):
         super(PanelWidget, self).__init__(**kwargs)
@@ -262,6 +262,8 @@ class GeberitCutterScreen(Screen):
 
     panels_added = 0
     current_panel_selection = None
+
+    z_lift_height = 5 #mm
 
     def __init__(self, **kwargs):
         super(GeberitCutterScreen, self).__init__(**kwargs)
@@ -394,9 +396,17 @@ class GeberitCutterScreen(Screen):
                 if 'M5' in line:
                     line = line.replace('M5', '')
                 return line
-
+        
             processed_gcode = map(map_gcodes, raw_gcode)
+            #Lift Z axis after each shape
+            
+            for i in range(len(processed_gcode)):
+                if 'svg > path' in processed_gcode[i]:
+                    processed_gcode.insert(i+2, 'G0 Z' + str(self.z_lift_height) + '\n')
+            # Lift the Z axis at end of job
+            processed_gcode.insert(-1, 'G90 G0 Z' + str(self.z_lift_height) + '\n')
             # Then turn spindle off at the end
+            
             processed_gcode.append('M5')
 
             with open('./jobCache/' + self.filename_input.text, 'w+') as f:
