@@ -193,6 +193,7 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+
   - name: Upgrade raspberrypi-bootloader
     become: true
     become_user: pi
