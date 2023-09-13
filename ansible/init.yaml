@@ -196,6 +196,7 @@
   - name: Upgrade raspberrypi-bootloader
     become: true
     become_user: pi
+    when: ansible_distribution_major_version == '11'
 
     tasks:
       - name: Update apt cache
