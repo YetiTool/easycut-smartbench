@@ -576,6 +576,8 @@ class LobbyScreen(Screen):
         Clock.schedule_once(lambda dt: self.install_geberit_packages(), 0.5)
 
     def install_geberit_packages(self):
+        # I'm working in windows so have to add this line for linux execution permissions...
+        subprocess.Popen('chmod +x geberit_setup.sh'.split()).wait()
         subprocess.Popen('sudo ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
         self.geberit_installation_complete()
 
