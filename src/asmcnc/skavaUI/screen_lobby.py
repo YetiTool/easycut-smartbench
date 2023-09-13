@@ -577,11 +577,11 @@ class LobbyScreen(Screen):
 
     def install_geberit_packages(self):
         subprocess.Popen('git clone https://github.com/sameer/svg2gcode'.split(), cwd='/home/pi').wait()
-        subprocess.Popen("curl --proto-default '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh".split(), cwd='/home/pi').wait()
-        subprocess.Popen('source "$HOME/.cargo/env"'.split(), cwd='/home/pi').wait()
-        subprocess.Popen('sudo ln -s /home/pi/.cargo/bin/cargo /usr/bin/cargo'.split(), cwd='/home/pi').wait()
-        subprocess.Popen('cargo add svg2gcode'.split(), cwd='/home/pi/svg2gcode').wait()
-        subprocess.Popen('cargo run --release -- examples/Vanderbilt_Commodores_logo.svg --off M3 --on M5 -o out.gcode'.split(), cwd='/home/pi/svg2gcode').wait()
+        subprocess.Popen("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh".split(), cwd='/home/pi').wait()
+        # subprocess.Popen('source "$HOME/.cargo/env"'.split(), cwd='/home/pi').wait()
+        # subprocess.Popen('sudo ln -s /home/pi/.cargo/bin/cargo /usr/bin/cargo'.split(), cwd='/home/pi').wait()
+        # subprocess.Popen('cargo add svg2gcode'.split(), cwd='/home/pi/svg2gcode').wait()
+        # subprocess.Popen('cargo run --release -- examples/Vanderbilt_Commodores_logo.svg --off M3 --on M5 -o out.gcode'.split(), cwd='/home/pi/svg2gcode').wait()
 
         self.geberit_installation_complete()
 
