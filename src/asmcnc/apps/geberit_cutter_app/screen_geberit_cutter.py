@@ -39,7 +39,7 @@ Builder.load_string("""
                     
             Label:
                 size_hint_y: 0.3
-                text: 'Geberit cutter'
+                text: 'Rectangle cutter'
                 color: 0,0,0,1
                 font_size: dp(28)
 
