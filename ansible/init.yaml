@@ -157,19 +157,6 @@
       name: proftpd.service
       state: restarted
     ignore_errors: yes
-  - name: Upgrade raspberrypi bootloader
-    become: yes
-    become_user: pi
-    tasks:
-      - name: Update apt cache
-        apt:
-          update_cache: yes
-
-      - name: Upgrade raspberrypi-bootloader
-        apt:
-          name: raspberrypi-bootloader
-          state: latest
-    when: ansible_distribution_major_version == '11'
   - name: Generate /home/pi/.ssh/ RSA host key
     command : ssh-keygen -q -t rsa -b 4096 -f /home/pi/.ssh/id_rsa -N ""
     become: true
@@ -206,3 +193,16 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
+  - name: upgrade bootloader
+    become: yes
+    become_user: pi
+    tasks:
+      - name: Update apt cache
+        apt:
+          update_cache: yes
+
+      - name: Upgrade raspberrypi-bootloader
+        apt:
+          name: raspberrypi-bootloader
+          state: latest
+    when: ansible_distribution_major_version == '11'
