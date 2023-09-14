@@ -21,6 +21,8 @@ Builder.load_string("""
     feed_input:feed_input
     speed_input:speed_input
     depth_input:depth_input
+                    
+    add_shape_button_image:add_shape_button_image
 
     BoxLayout:
         orientation: 'horizontal'
@@ -39,7 +41,7 @@ Builder.load_string("""
                     
             Label:
                 size_hint_y: 0.28
-                text: 'Rectangle cutter'
+                text: 'Shape cutter'
                 color: 0,0,0,1
                 font_size: dp(24)
 
@@ -53,7 +55,8 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/apps/geberit_cutter_app/img/add_panel_button.png"
+                            id: add_shape_button_image
+                            source: "./asmcnc/apps/geberit_cutter_app/img/rectangle_shape_button.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -174,7 +177,7 @@ Builder.load_string("""
                             id: depth_input
                             font_size: dp(20)
                             multiline: False
-                            hint_text: 'Material Thickness'
+                            hint_text: 'Material thickness'
                             input_filter: 'int'
 
                         # TextInput:
@@ -287,6 +290,8 @@ class GeberitCutterScreen(Screen):
     panels_added = 0
     current_panel_selection = None
 
+    image_index = 0
+
     z_lift_height = 5 #mm
 
     def __init__(self, **kwargs):
@@ -303,14 +308,29 @@ class GeberitCutterScreen(Screen):
             new_panel.select_panel()
             self.editor_container.add_widget(new_panel)
 
+    def cycle_button_image(self):
+        image_sources = [
+            "./asmcnc/apps/geberit_cutter_app/img/rectangle_shape_button.png",
+            "./asmcnc/apps/geberit_cutter_app/img/circle_shape_button.png",
+            "./asmcnc/apps/geberit_cutter_app/img/line_shape_button.png",
+        ]
+
+        button_image = self.add_shape_button_image
+        current_image_source = button_image.source
+        current_image_index = image_sources.index(current_image_source)
+        next_image_index = (current_image_index + 1) % len(image_sources)
+        button_image.source = image_sources[next_image_index]
+
     def rotate_panel(self):
         if self.current_panel_selection:
             self.current_panel_selection.rotate_clockwise()
 
     def change_shape(self):
         print("Change shape")
+        self.cycle_button_image()
 
     def clear_all(self):
+        self.editor_container.clear_widgets()
         print("Clear all")
 
     def save(self):
@@ -428,15 +448,15 @@ class GeberitCutterScreen(Screen):
                 return line
         
             processed_gcode = map(map_gcodes, raw_gcode)
-            #Lift Z axis after each shape
             
+            #Lift Z axis after each shape            
             for i in range(len(processed_gcode)):
                 if 'svg > path' in processed_gcode[i]:
                     processed_gcode.insert(i+2, 'G0 Z' + str(self.z_lift_height) + '\n')
+
             # Lift the Z axis at end of job
             processed_gcode.insert(-1, 'G90 G0 Z' + str(self.z_lift_height) + '\n')
-            # Then turn spindle off at the end
-            
+            # Then turn spindle off at the end            
             processed_gcode.append('M5')
 
             with open('./jobCache/' + self.filename_input.text, 'w+') as f:
