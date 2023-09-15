@@ -577,7 +577,7 @@ class LobbyScreen(Screen):
 
     def install_geberit_packages(self):
         # Run it from /home/pi to clone svg2gcode to the correct location
-        subprocess.Popen('sudo bash ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
+        subprocess.Popen('bash ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
         self.geberit_installation_complete()
 
     def geberit_installation_complete(self):
