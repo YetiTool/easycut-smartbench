@@ -1,9 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
 import os
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ProPlusSafetyScreen>:
 
     title_label:title_label
@@ -157,51 +156,65 @@ Builder.load_string("""
                     width: dp(244.5)
                     padding: [193.5, 0, 0, 0]
 
-""")
+"""
+    )
+
 
 class ProPlusSafetyScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ProPlusSafetyScreen, self).__init__(**kwargs)
-
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
-        self.start_seq=kwargs['start_sequence']
-
+        self.start_seq = kwargs['start_sequence']
         self.update_strings()
 
     def next_screen(self):
         self.update_seen()
-        try: 
+        try:
             self.start_seq.next_in_sequence()
-        except: 
+        except:
             self.sm.current = 'lobby'
 
     def prev_screen(self):
         try:
             self.start_seq.prev_in_sequence()
         except:
-            if self.sm.has_screen('already_upgraded'): self.sm.current='already_upgraded'
-            elif self.sm.has_screen('upgrade_successful'): self.sm.current='upgrade_successful'
+            if self.sm.has_screen('already_upgraded'):
+                self.sm.current = 'already_upgraded'
+            elif self.sm.has_screen('upgrade_successful'):
+                self.sm.current = 'upgrade_successful'
 
     def update_seen(self):
-        user_has_seen_pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt').read())
-        
+        user_has_seen_pro_plus_safety = os.popen(
+            'grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt'
+            ).read()
         if not user_has_seen_pro_plus_safety:
-            os.system("sudo sed -i -e '$auser_has_seen_pro_plus_safety=True' /home/pi/easycut-smartbench/src/config.txt")
-
+            os.system(
+                "sudo sed -i -e '$auser_has_seen_pro_plus_safety=True' /home/pi/easycut-smartbench/src/config.txt"
+                )
         elif 'False' in user_has_seen_pro_plus_safety:
-            os.system('sudo sed -i "s/user_has_seen_pro_plus_safety=False/user_has_seen_pro_plus_safety=True/" /home/pi/easycut-smartbench/src/config.txt')
+            os.system(
+                'sudo sed -i "s/user_has_seen_pro_plus_safety=False/user_has_seen_pro_plus_safety=True/" /home/pi/easycut-smartbench/src/config.txt'
+                )
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str('Safety Information: PrecisionPro +')
-        self.context.text = \
-            self.l.get_str("PrecisionPro + reads data from the smart SC2 Spindle motor.") + "\n\n" + \
-            self.l.get_str("You can disable and enable PrecisionPro + features at any time in the maintenance app.") + "\n\n" + \
-            self.l.get_str("In order to read and analyse the data, SmartBench must be able to turn the Spindle motor on safely.").replace(
-                self.l.get_str("SmartBench must be able to turn the Spindle motor on safely"), self.l.get_bold("SmartBench must be able to turn the Spindle motor on safely")
-                )
-        self.continue_button.text = self.l.get_str("I understand")
-
-        self.clamp_warning_label.text = self.l.get_str("The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables.")
-        self.rpm_warning_label.text = self.l.get_str("If you start any job with the Spindle motor health check enabled, your tool MUST be rated up to 24,000 RPM.")
+        self.title_label.text = self.l.get_str(
+            'Safety Information: PrecisionPro +')
+        self.context.text = self.l.get_str(
+            'PrecisionPro + reads data from the smart SC2 Spindle motor.'
+            ) + '\n\n' + self.l.get_str(
+            'You can disable and enable PrecisionPro + features at any time in the maintenance app.'
+            ) + '\n\n' + self.l.get_str(
+            'In order to read and analyse the data, SmartBench must be able to turn the Spindle motor on safely.'
+            ).replace(self.l.get_str(
+            'SmartBench must be able to turn the Spindle motor on safely'),
+            self.l.get_bold(
+            'SmartBench must be able to turn the Spindle motor on safely'))
+        self.continue_button.text = self.l.get_str('I understand')
+        self.clamp_warning_label.text = self.l.get_str(
+            'The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables.'
+            )
+        self.rpm_warning_label.text = self.l.get_str(
+            'If you start any job with the Spindle motor health check enabled, your tool MUST be rated up to 24,000 RPM.'
+            )

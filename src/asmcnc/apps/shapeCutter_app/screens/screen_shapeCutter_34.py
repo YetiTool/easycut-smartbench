@@ -1,16 +1,16 @@
-'''
+"""
 Created on 4 March 2020
 Screen 34 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter34ScreenClass>
 
@@ -289,78 +289,72 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter34ScreenClass(Screen):
-    
     info_button = ObjectProperty()
     vacuum_toggle = ObjectProperty()
-    #vacuum_image = ObjectProperty()
-    
-    screen_number = StringProperty("[b]34[/b]")
-    title_label = StringProperty("[b]Check extractor power (if powered by SmartBench)[/b]")
-    user_instructions = StringProperty("Press the button. The extractor should come on for 2 seconds.\n\n" \
-                                       "If not, check that it\'s connected and switched on, then retry by pressing the button again.")
-    
+    screen_number = StringProperty('[b]34[/b]')
+    title_label = StringProperty(
+        '[b]Check extractor power (if powered by SmartBench)[/b]')
+    user_instructions = StringProperty(
+        """Press the button. The extractor should come on for 2 seconds.
+
+If not, check that it's connected and switched on, then retry by pressing the button again."""
+        )
+
     def __init__(self, **kwargs):
         super(ShapeCutter34ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
+        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
-
     def get_info(self):
         pass
-    
+
     def go_back(self):
-        self.shapecutter_sm.previous_screen() 
-    
+        self.shapecutter_sm.previous_screen()
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
 
     def set_vacuum(self):
-        if self.vacuum_toggle.state == 'normal': 
+        if self.vacuum_toggle.state == 'normal':
             self.next_button.disabled = False
             self.back_button.disabled = False
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            print ("vac off")
+            self.vacuum_image.source = './asmcnc/skavaUI/img/vac_off.png'
+            print('vac off')
             self.m.vac_off()
         else:
-            print ("vac on")
+            print('vac on')
             self.next_button.disabled = True
             self.back_button.disabled = True
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
+            self.vacuum_image.source = './asmcnc/skavaUI/img/vac_on.png'
             self.m.vac_on()
             Clock.schedule_once(self.reset_vacuum, 2)
 
     def reset_vacuum(self, dt):
-        #self.m.vac_on()
         self.vacuum_toggle.state = 'normal'
         self.set_vacuum()
-            
-        

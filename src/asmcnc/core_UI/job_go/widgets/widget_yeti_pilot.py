@@ -1,10 +1,8 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
-
 from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <YetiPilotWidget>:
     
@@ -121,10 +119,11 @@ Builder.load_string("""
 
 
                 
-""")
+"""
+    )
+
 
 class YetiPilotWidget(Widget):
-
     yp_settings_popup = None
 
     def __init__(self, **kwargs):
@@ -134,46 +133,48 @@ class YetiPilotWidget(Widget):
         self.m = kwargs['machine']
         self.db = kwargs['database']
         self.yp = kwargs['yetipilot']
-
         self.disable_yeti_pilot()
-        # self.yetipilot_two_tone.text = '[b][color=2196f3ff]YetiPilot[/b][/color]' # [/color][color=333333ff]
-        self.yetipilot_two_tone.text = '[b][color=1976d2ff]YetiPilot[/b][/color]' # [/color][color=333333ff] 
-        self.profile_label.text = self.l.get_str("Profile")
+        self.yetipilot_two_tone.text = (
+            '[b][color=1976d2ff]YetiPilot[/b][/color]')
+        self.profile_label.text = self.l.get_str('Profile')
 
     def toggle_button_img(self, state):
-        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (('on' if state=="down" else 'off'))
+        self.yp_toggle_img.source = (
+            './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
+            'down' else 'off'))
 
     def switch_reflects_yp(self):
-        self.switch.state = "down" if self.yp.use_yp else "normal"
+        self.switch.state = 'down' if self.yp.use_yp else 'normal'
         self.toggle_button_img(self.switch.state)
 
     def toggle_yeti_pilot(self, switch):
-        if switch.state=="down":
+        if switch.state == 'down':
             self.yp.enable()
             self.open_yp_settings()
-        else: 
+        else:
             self.yp.disable()
-
         self.toggle_button_img(switch.state)
 
     def disable_yeti_pilot(self):
-        self.switch.state = "normal"
+        self.switch.state = 'normal'
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        self.yp_settings_popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
+        self.yp_settings_popup = PopupYetiPilotSettings(self.sm, self.l,
+            self.m, self.db, self.yp, version=not self.yp.
+            using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
         if self.yp.using_basic_profile:
             if self.yp.active_profile is None:
                 self.disable_yeti_pilot()
                 return
-
-            self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
-            
+            self.profile_selection.text = self.yp.get_active_material_type(
+                ) + '; ' + self.yp.get_active_cutter_diameter(
+                ) + ', ' + self.yp.get_active_cutter_type()
         elif self.yp.using_advanced_profile:
             if not self.m.has_spindle_health_check_passed():
                 self.disable_yeti_pilot()
                 return
-
-            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_total_target_power())) + " W"
+            self.profile_selection.text = self.l.get_str('Advanced profile'
+                ) + ': ' + str(int(self.yp.get_total_target_power())) + ' W'

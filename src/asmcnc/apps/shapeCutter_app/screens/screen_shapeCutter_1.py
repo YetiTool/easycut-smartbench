@@ -1,16 +1,15 @@
-'''
+"""
 Created on 20 February 2020
 Screen 1 for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter1ScreenClass>
 
@@ -301,59 +300,58 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter1ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
-    screen_number = StringProperty("[b]1[/b]")
-    title_label = StringProperty("[b]Do you need to calibrate SmartBench?[/b]")
-    user_instructions = StringProperty("You might want to calibrate the machine if high accuracy is required.\n\n" \
-                                       "Accuracy may be have been affected by transit, maintenance or a change in ambient temperature.\n\n" \
-                                       "Click the button below if you want to calibrate SmartBench.\n\n")
-    
+    screen_number = StringProperty('[b]1[/b]')
+    title_label = StringProperty('[b]Do you need to calibrate SmartBench?[/b]')
+    user_instructions = StringProperty(
+        """You might want to calibrate the machine if high accuracy is required.
+
+Accuracy may be have been affected by transit, maintenance or a change in ambient temperature.
+
+Click the button below if you want to calibrate SmartBench.
+
+"""
+        )
+
     def __init__(self, **kwargs):
         super(ShapeCutter1ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        
-        
+        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
+
     def calibrate(self):
         self.shapecutter_sm.am.start_calibration_app('sC1')
-        

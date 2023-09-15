@@ -1,24 +1,20 @@
-'''
+"""
 Created on 8 April 2019
 
 Screen to tell user that machine is not Idle (before running a job). 
 
 @author: Letty
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
 from kivy.uix.widget import Widget
-
 import sys, os
 from kivy.utils import get_color_from_hex
-
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <WarningMState>:
 
@@ -103,60 +99,52 @@ Builder.load_string("""
                         
   
             
-""")
+"""
+    )
+
 
 class WarningMState(Screen):
-
-    # define error description to make kivy happy
     button_text = StringProperty()
     user_instruction = StringProperty()
-    
+
     def __init__(self, **kwargs):
         super(WarningMState, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']
+        self.l = kwargs['localization']
         self.update_strings()
-
 
     def on_enter(self):
-        
         if self.m.state().startswith('Alarm'):
-            self.user_instruction = self.l.get_str("SmartBench is in an Alarm state. Please clear the machine, and then reset it.")
-        
-        elif self.m.state().startswith('Check'):
-            self.user_instruction = ((self.l.get_str("SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.")).replace(self.l.get_str("Check"), self.l.get_bold("Check"))).replace("$C", "[b]$C[/b]")
-            
-        elif self.m.state().startswith('Door') or self.m.state().startswith('Hold'):
-            self.user_instruction = self.l.get_str("SmartBench is paused. Please resume by entering ~ into the G-code console.").replace("~", "[b]~[/b]")
-            
-        else:
-            self.user_instruction = (
-                    self.l.get_str("SmartBench is still carrying out a command.") + \
-                    " " + \
-                    self.l.get_str("Please wait for SmartBench to finish before attempting to start a job.")
+            self.user_instruction = self.l.get_str(
+                'SmartBench is in an Alarm state. Please clear the machine, and then reset it.'
                 )
-            
+        elif self.m.state().startswith('Check'):
+            self.user_instruction = self.l.get_str(
+                'SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.'
+                ).replace(self.l.get_str('Check'), self.l.get_bold('Check')
+                ).replace('$C', '[b]$C[/b]')
+        elif self.m.state().startswith('Door') or self.m.state().startswith(
+            'Hold'):
+            self.user_instruction = self.l.get_str(
+                'SmartBench is paused. Please resume by entering ~ into the G-code console.'
+                ).replace('~', '[b]~[/b]')
+        else:
+            self.user_instruction = self.l.get_str(
+                'SmartBench is still carrying out a command.'
+                ) + ' ' + self.l.get_str(
+                'Please wait for SmartBench to finish before attempting to start a job.'
+                )
         self.update_strings()
 
-    
     def button_press(self):
         self.getout_button.background_color = get_color_from_hex('#c43c00')
-              
-    
+
     def button_release(self):
-        self.sm.current = 'home' 
-                      
+        self.sm.current = 'home'
+
     def update_strings(self):
-
-        self.title_label.text = (
-                self.l.get_bold("WARNING") + \
-                "\n" + \
-                self.l.get_str("SmartBench is not in an idle state.")
-            )
-        self.cannot_start_job.text = self.l.get_str("Cannot start job.")
-
-        self.return_label.text = self.l.get_str("Return")
-        
- 
+        self.title_label.text = self.l.get_bold('WARNING'
+            ) + '\n' + self.l.get_str('SmartBench is not in an idle state.')
+        self.cannot_start_job.text = self.l.get_str('Cannot start job.')
+        self.return_label.text = self.l.get_str('Return')

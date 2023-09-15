@@ -1,17 +1,15 @@
-'''
+"""
 Created on 4 March 2020
 Screen 17 for the Shape Cutter App
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter17ScreenClass>
 
@@ -314,22 +312,23 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+    )
+
 
 class ShapeCutter17ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
-    screen_number = StringProperty("[b]17[/b]")
-    title_label = StringProperty("[b]Would you like to choose an existing cut profile?[/b]")
-    display_profile = StringProperty("No file loaded")
-    profile_name = StringProperty("No file loaded")
-        
+    screen_number = StringProperty('[b]17[/b]')
+    title_label = StringProperty(
+        '[b]Would you like to choose an existing cut profile?[/b]')
+    display_profile = StringProperty('No file loaded')
+    profile_name = StringProperty('No file loaded')
+
     def __init__(self, **kwargs):
         super(ShapeCutter17ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
+        self.m = kwargs['machine']
+        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -338,39 +337,33 @@ class ShapeCutter17ScreenClass(Screen):
         if not self.j.parameter_string == '':
             self.display_profile = self.j.parameter_string
             self.profile_name = self.j.profile_filename
-        
-# Action buttons       
+
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen commands
-    
+
     def load_file(self):
         self.shapecutter_sm.filechooser_screen()
-        
