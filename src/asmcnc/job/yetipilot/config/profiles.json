@@ -594,8 +594,8 @@
     },
     {
       "Material Type": "ACM",
-      "Cutter Diameter": "90 deg",
-      "Cutter Type": "v groove",
+      "Cutter Diameter": "90°",
+      "Cutter Type": "V-groove",
       "Step Down": "3 mm",
       "Parameters": [
         {
