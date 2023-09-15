@@ -92,12 +92,12 @@ class SpindleShutdownScreen(Screen):
     z_rest_poll = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
+        self.l = kwargs.pop('localization')
         super(SpindleShutdownScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l = kwargs['localization']
         self.label_wait.text = self.l.get_str('Please wait') + '.'
 
     def on_pre_enter(self):

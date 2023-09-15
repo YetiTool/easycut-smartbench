@@ -185,10 +185,10 @@ class FinalTestScreen(Screen):
     x_neg_command = ''
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(FinalTestScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.systemtools_sm.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.
@@ -269,7 +269,7 @@ class FinalTestScreen(Screen):
             x_overstep = float(self.x_over_count.text
                 ) * self.x_calibration_scale_factor
             print(x_overstep)
-            self.m.write_dollar_setting(100, float(self.m.s.setting_100) -
+            self.m.write_dollar_setting(100, float(self.m.s.settings.s100) -
                 x_overstep, reset_grbl_after_stream=False)
             self.x_over_count.text = ''
         except:
@@ -280,7 +280,7 @@ class FinalTestScreen(Screen):
             y_overstep = float(self.y_over_count.text
                 ) * self.y_calibration_scale_factor
             print(y_overstep)
-            self.m.write_dollar_setting(101, float(self.m.s.setting_101) -
+            self.m.write_dollar_setting(101, float(self.m.s.settings.s101) -
                 y_overstep, reset_grbl_after_stream=False)
             self.y_over_count.text = ''
         except:

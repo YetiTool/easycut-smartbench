@@ -1,3 +1,4 @@
+import logging
 """
 ########################################################
 IMPORTANT!!
@@ -139,10 +140,10 @@ class TestScreen(Screen):
     do_toggle = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.db = kwargs.pop('db')
         super(TestScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.db = kwargs['db']
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(
             machine=self.m, screen_manager=self.sm))
 

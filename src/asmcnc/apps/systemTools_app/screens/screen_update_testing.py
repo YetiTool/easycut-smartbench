@@ -239,9 +239,9 @@ class UpdateTestingScreen(Screen):
     output_view_buffer = []
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
         super(UpdateTestingScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
         Clock.schedule_interval(self.update_display_text, self.
             WIDGET_UPDATE_DELAY)
 

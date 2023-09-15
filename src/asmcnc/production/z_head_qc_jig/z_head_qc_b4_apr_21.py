@@ -306,10 +306,10 @@ class ScrollableLabelStatus(ScrollView):
 class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop('sm')
+        self.l = kwargs.pop('l')
         super(ZHeadQCWarrantyBeforeApr21, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
         self.z_limit_set = False
         self.spindle_pass_fail = True
         self.string_overload_summary = ''
@@ -333,8 +333,8 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.s.write_command('$21 = 1')
 
     def scrape_fw_version(self, dt):
-        self.fw_version_label.text = str(str(self.m.s.fw_version).split(
-            '; HW')[0])
+        self.fw_version_label.text = str(str(self.m.s.versions.firmware).
+            split('; HW')[0])
 
     def bake_grbl_settings(self):
         grbl_settings = ['$0=10', '$1=255', '$2=4', '$3=1', '$4=0', '$5=1',
@@ -407,7 +407,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.probe()
 
     def x_home_switch(self):
-        if self.m.s.limit_x:
+        if self.m.s.pin_info.limit_x:
             self.x_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -415,7 +415,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def x_max_switch(self):
-        if self.m.s.limit_X:
+        if self.m.s.pin_info.limit_X:
             self.x_max_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -423,7 +423,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def z_home_switch(self):
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             self.z_home_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -431,7 +431,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def probe(self):
-        if self.m.s.probe:
+        if self.m.s.pin_info.probe:
             self.probe_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         else:
@@ -439,7 +439,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
                 './asmcnc/skavaUI/img/checkbox_inactive.png')
 
     def cycle_limit_switch(self):
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             self.cycle_limit_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
             self.z_limit_set = True

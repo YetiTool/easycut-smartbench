@@ -178,12 +178,12 @@ class UploadSerialNumbersScreen(Screen):
     already_in_database = False
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('systemtools')
+        self.m = kwargs.pop('m')
+        self.calibration_db = kwargs.pop('calibration_db')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('l')
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['systemtools']
-        self.m = kwargs['m']
-        self.calibration_db = kwargs['calibration_db']
-        self.set = kwargs['settings']
-        self.l = kwargs['l']
 
     def auto_generate_sns(self):
         self.zhead_serial_input.text = 'zh0000'

@@ -59,9 +59,9 @@ Builder.load_string(
 class RestartSmartbenchScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(RestartSmartbenchScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
         self.restart_label.text = self.l.get_str(
             'Please restart SmartBench now.')
 

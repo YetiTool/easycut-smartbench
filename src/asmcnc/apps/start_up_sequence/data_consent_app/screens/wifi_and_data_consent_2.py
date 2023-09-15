@@ -132,10 +132,10 @@ Builder.load_string(
 class WiFiAndDataConsentScreen2(Screen):
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.c = kwargs.pop('consent_manager')
+        self.l = kwargs.pop('localization')
         super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.c = kwargs['consent_manager']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def next_screen(self):
@@ -157,11 +157,11 @@ class WiFiAndDataConsentScreen2(Screen):
             ) + '\n\n' + self.l.get_bold(
             'This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.'
             ) + '\n\n' + self.l.get_str('You will need Wi-Fi to:'
-            ) + '\n\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
+            ) + '\n\n' + '[b]â\x80¢[/b] ' + self.l.get_str(
             'Automatically receive software updates'
-            ) + '\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
+            ) + '\n' + '[b]â\x80¢[/b] ' + self.l.get_str(
             'Remotely transfer files (e.g. with SmartTransfer)'
-            ) + '\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
+            ) + '\n' + '[b]â\x80¢[/b] ' + self.l.get_str(
             'Remotely manage and monitor SmartBench (e.g. with SmartManager)'
             ) + '\n\n' + self.l.get_str(
             'You can come back to this data policy at any time, and enable or disable Wi-Fi.'

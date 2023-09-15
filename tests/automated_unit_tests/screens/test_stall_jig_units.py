@@ -1,3 +1,4 @@
+import logging
 """
 @author: Letty
 """
@@ -93,8 +94,8 @@ def test_unschedule_all_events(stall_jig_screen):
 
 
 def test_record_stall_event(stall_jig_screen, m):
-    m.s.setting_100 = 5
-    m.s.last_stall_motor_step_size = 5
+    m.s.settings.s100 = 5
+    m.s.stall_guard.last_stall.motor_step_size = 5
     stall_jig_screen.record_stall_event()
     stall_jig_screen.record_stall_event()
     print(stall_jig_screen.stall_test_events)

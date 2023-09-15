@@ -109,10 +109,10 @@ class SCStencilBox2(StencilView, BoxLayout):
 class SCVirtualBed(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.j = kwargs.pop('job_parameters')
         super(SCVirtualBed, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.j = kwargs['job_parameters']
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)
 
     def refresh_widget(self, dt):

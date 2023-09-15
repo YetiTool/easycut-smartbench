@@ -1,6 +1,9 @@
+import logging
 import sys, os
 if len(sys.argv) != 2:
-    print('Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>')
+    print(
+        'Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>'
+        )
     sys.exit(0)
 from kivy.config import Config
 from kivy.clock import Clock
@@ -79,10 +82,10 @@ class ScreenTest(App):
         def set_up_dummy_serial(status, alarm_message):
             m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
             m.s.s.fd = 1
-            m.s.fw_version = self.fw_version
-            m.s.setting_50 = 0.03
+            m.s.versions.firmware = self.fw_version
+            m.s.settings.s50 = 0.03
             m.s.yp = yp
-            m.s.setting_27 = 1
+            m.s.settings.s27 = 1
 
         def cycle_through_screens(screen_list):
 
@@ -200,7 +203,7 @@ class ScreenTest(App):
             """
             These parameters can be modified to check that the outcome screen shows passes/fails correctly, and correctly shows values
             """
-            m.s.fw_version = '2.5.5; HW: 35'
+            m.s.versions.firmware = '2.5.5; HW: 35'
             sm.current = 'qcpcbsetupoutcome'
             zhqc_pcb_set_up_outcome.x_current_correct *= (zhqc_pcb_set_up.
                 check_current(TMC_X1, 0))
@@ -224,7 +227,7 @@ class ScreenTest(App):
                 zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0))
 
         def z_head_qc_pcb_set_up_screen_test():
-            m.s.fw_version = '2.5.5; HW: 35'
+            m.s.versions.firmware = '2.5.5; HW: 35'
             sm.current = 'qcpcbsetup'
 
         def go_screen_sc2_overload_test():

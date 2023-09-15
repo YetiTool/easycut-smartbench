@@ -454,11 +454,11 @@ class LobbyScreen(Screen):
     upgrade_app_hidden = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.am = kwargs.pop('app_manager')
+        self.l = kwargs.pop('localization')
         super(LobbyScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.am = kwargs['app_manager']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def on_pre_enter(self):

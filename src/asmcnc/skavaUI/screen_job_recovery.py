@@ -331,11 +331,11 @@ class JobRecoveryScreen(Screen):
     scroll_down_event = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(JobRecoveryScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
         self.line_input.bind(text=self.jump_to_line)
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.sm))

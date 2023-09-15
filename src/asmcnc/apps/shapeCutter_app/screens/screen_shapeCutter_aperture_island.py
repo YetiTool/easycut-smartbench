@@ -232,10 +232,10 @@ class ShapeCutterApIsScreenClass(Screen):
     shape = 'circle'
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutterApIsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         if self.j.shape_dict['shape'] == 'circle':

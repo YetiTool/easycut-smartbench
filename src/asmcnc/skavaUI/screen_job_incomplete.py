@@ -283,12 +283,12 @@ class JobIncompleteScreen(Screen):
     specific_event = ''
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
         super(JobIncompleteScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
 
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event

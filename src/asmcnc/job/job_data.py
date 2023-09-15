@@ -15,7 +15,7 @@ decode_and_encode = lambda x: str(x, detect(x)['encoding']).encode('utf-8')
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
         return ' '
-    gcode_line = decode_and_encode(gcode_line).strip('\n\r')
+    gcode_line = gcode_line.strip('\n\r')
     return gcode_line
 
 
@@ -65,8 +65,8 @@ class JobData(object):
     job_recovery_skip_recovery = False
 
     def __init__(self, **kwargs):
-        self.l = kwargs['localization']
-        self.set = kwargs['settings_manager']
+        self.l = kwargs.pop('localization')
+        self.set = kwargs.pop('settings_manager')
         self.metadata_order = {self.l.get_bold('Last Updated Time'): 0,
             self.l.get_bold('Last Updated By'): 1, self.l.get_bold(
             'Internal Order Code'): 2, self.l.get_bold('Process Step'): 3,
@@ -316,9 +316,9 @@ class JobData(object):
                 first_line = previewed_file.readline()
                 if '(YetiTool SmartBench MES-Data)' in first_line:
                     all_lines = [first_line] + previewed_file.readlines()
-                    metadata = list(map(replace_metadata, [decode_and_encode(i).
-                        strip('\n\r()') for i in takewhile(
-                        not_end_of_metadata, all_lines[1:])]))
+                    metadata = list(map(replace_metadata, [
+                        decode_and_encode(i).strip('\n\r()') for i in
+                        takewhile(not_end_of_metadata, all_lines[1:])]))
                     all_lines[1:len(metadata) + 1] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)

@@ -206,9 +206,9 @@ class DistanceScreen2xClass(Screen):
     x_cal_measure_1 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen2xClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)

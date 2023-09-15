@@ -44,17 +44,17 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message))
+    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[
+        :12] + ' ' + str(message))
 
 
 class ZHeadQCConnecting(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.usb = kwargs.pop('usb')
         super(ZHeadQCConnecting, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.usb = kwargs['usb']
         self.connecting_label.text = 'Connecting to Z Head...'
         self.z_current = 25
         self.x_current = 26
@@ -66,14 +66,14 @@ class ZHeadQCConnecting(Screen):
             self.progress_to_next_screen()
 
     def ensure_hw_version_and_registers_are_loaded_in(self):
-        if not self.m.s.fw_version:
+        if not self.m.s.versions.firmware:
             log('Waiting to get FW version')
             self.connecting_label.text = 'Waiting to get FW version'
             Clock.schedule_once(lambda dt: self.
                 ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
         if not self.m.TMC_registers_have_been_read_in(
-            ) and self.m.s.fw_version.startswith('2'):
+            ) and self.m.s.versions.firmware.startswith('2'):
             log('Waiting to get TMC registers')
             self.connecting_label.text = 'Waiting to get TMC registers'
             Clock.schedule_once(lambda dt: self.

@@ -390,14 +390,14 @@ class GoScreen(Screen):
     total_runtime_seconds = 0
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.am = kwargs.pop('app_manager')
+        self.l = kwargs.pop('localization')
+        self.database = kwargs.pop('database')
+        self.yp = kwargs.pop('yetipilot')
         super(GoScreen, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.am = kwargs['app_manager']
-        self.l = kwargs['localization']
-        self.database = kwargs['database']
-        self.yp = kwargs['yetipilot']
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.
             m, screen_manager=self.sm, database=self.database)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=
@@ -530,10 +530,10 @@ class GoScreen(Screen):
     def read_spindle_info(self, dt):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        if self.m.s.spindle_production_year != 99:
+        if self.m.s.spindle_statistics.production_year != 99:
             try:
                 self.check_brush_use_and_lifetime(self.m.s.
-                    spindle_brush_run_time_seconds, self.m.
+                    spindle_statistics.brush_run_time_seconds, self.m.
                     spindle_brush_lifetime_seconds)
                 return
             except:

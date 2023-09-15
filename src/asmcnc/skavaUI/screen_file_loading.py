@@ -166,11 +166,11 @@ class LoadingScreen(Screen):
     continuing_to_recovery = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(LoadingScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
 
     def on_pre_enter(self):
         self.filename_label.text = self.jd.job_name
@@ -314,7 +314,9 @@ class LoadingScreen(Screen):
                                         self.sm.get_screen('check_job'
                                             ).as_high_as = float(feed_rate)
                             except:
-                                print('Failed to extract feed rate. Probable G-code error!')
+                                print(
+                                    'Failed to extract feed rate. Probable G-code error!'
+                                    )
                         if 'N' in l_block:
                             l_block = self.jd.remove_line_number(l_block)
                         self.preloaded_job_gcode.append(l_block)

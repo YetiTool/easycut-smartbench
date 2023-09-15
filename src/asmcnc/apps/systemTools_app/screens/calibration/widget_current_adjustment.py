@@ -63,11 +63,11 @@ Builder.load_string(
 class CurrentAdjustmentWidget(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('m')
+        self.motor = kwargs.pop('motor')
+        self.l = kwargs.pop('localization')
+        self.systemtools_sm = kwargs.pop('systemtools')
         super(CurrentAdjustmentWidget, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.motor = kwargs['motor']
-        self.l = kwargs['localization']
-        self.systemtools_sm = kwargs['systemtools']
         self.motor_name_dict = {TMC_X1: 'X1', TMC_X2: 'X2', TMC_Y1: 'Y1',
             TMC_Y2: 'Y2', TMC_Z: 'Z'}
         self.current_current = self.m.TMC_motor[self.motor].ActiveCurrentScale

@@ -710,10 +710,10 @@ class PopupWait(Widget):
 class PopupDeleteFile(Widget):
 
     def __init__(self, **kwargs):
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.function = kwargs['function']
-        self.file_selection = kwargs['file_selection']
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
+        self.function = kwargs.pop('function')
+        self.file_selection = kwargs.pop('file_selection')
         if self.file_selection == 'all':
             description = self.l.get_str(
                 'Are you sure you want to delete these files?')

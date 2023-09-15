@@ -1,3 +1,4 @@
+import logging
 """
 Created on 1 Feb 2022
 @author: Letty
@@ -39,7 +40,7 @@ class ConstructTMCCommandTest(unittest.TestCase):
     def testconstructTMCcommand2(self):
         """sending command to motor:4, cmd:101, val:128"""
         self.assertEqual(self.p.constructTMCcommand(109, 67109336, 1),
-            '^\x04\x00\x0c\x8f^\x06\x012m\xd8p')
+            '^\x04\x00\x0c\x8f^\x06\x012mØp')
 
 
 if __name__ == '__main__':

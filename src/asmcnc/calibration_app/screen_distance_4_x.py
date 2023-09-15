@@ -209,9 +209,9 @@ class DistanceScreen4xClass(Screen):
     expected_steps = 56.7
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen4xClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         old_steps = str(self.old_x_steps)

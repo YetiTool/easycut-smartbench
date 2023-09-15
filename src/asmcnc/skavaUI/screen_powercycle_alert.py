@@ -75,9 +75,9 @@ Builder.load_string(
 class PowerCycleScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(PowerCycleScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
         self.finishing_install_label.text = self.l.get_str(
             'Finishing install... please wait')
         self.warning_label.text = self.l.get_str('DO NOT POWER OFF SMARTBENCH')

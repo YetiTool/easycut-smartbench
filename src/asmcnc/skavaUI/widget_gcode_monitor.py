@@ -221,10 +221,10 @@ class GCodeMonitor(Widget):
     status_report_buffer = []
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(GCodeMonitor, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)
         self.popup_flag = True

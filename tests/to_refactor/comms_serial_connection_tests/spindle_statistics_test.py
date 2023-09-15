@@ -1,3 +1,4 @@
+import logging
 """
 Created on 4 Feb 2022
 @author: Letty
@@ -70,7 +71,8 @@ class SpindleStatisticsTest(unittest.TestCase):
         self.l = localization.Localization()
         self.jd = Mock()
         self.serial_module = serial_connection.SerialConnection(self.m,
-            self.sm, self.sett, self.l, self.jd)
+            self.sm, self.sett, self.l, self.jd, logging.Logger(name=
+            '__name__'))
 
     def tearDown(self):
         self.serial_module.__del__()

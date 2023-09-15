@@ -463,10 +463,10 @@ class WifiScreen(Screen):
     refresh_ip_label_value_event = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.set = kwargs.pop('settings_manager')
+        self.l = kwargs.pop('localization')
         super(WifiScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.set = kwargs['settings_manager']
-        self.l = kwargs['localization']
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
         self.update_strings()
@@ -762,7 +762,7 @@ class WifiScreen(Screen):
                 wifi_documentation_path + self.l.lang + '.rst')
         except:
             try:
-                if self.l.lang == 'Fran\xc3\xa7ais (FR)':
+                if self.l.lang == 'FranÃ§ais (FR)':
                     self.connection_instructions_rst.source = (self.
                         wifi_documentation_path + 'Francais (FR).rst')
             except:

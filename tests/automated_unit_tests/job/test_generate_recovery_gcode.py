@@ -1,3 +1,4 @@
+import logging
 import sys, os
 sys.path.append('./src')
 try:

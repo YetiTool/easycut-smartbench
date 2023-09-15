@@ -1,3 +1,4 @@
+import logging
 """
 Created on 1 Aug 2022
 @author: Letty
@@ -166,8 +167,8 @@ def make_smartbench_not_busy(m):
     m.s.write_command_buffer = []
     m.s.write_realtime_buffer = []
     m.s.write_protocol_buffer = []
-    m.s.serial_blocks_available = m.s.GRBL_BLOCK_SIZE
-    m.s.serial_chars_available = m.s.RX_BUFFER_SIZE
+    m.s.buffer_info.serial_blocks_available = m.s.GRBL_BLOCK_SIZE
+    m.s.buffer_info.serial_chars_available = m.s.RX_BUFFER_SIZE
     m.s.grbl_waiting_for_reset = False
     m.is_machine_paused = False
 
@@ -203,12 +204,12 @@ def test_smartbench_is_busy_if_protocol_buffer_full(m):
 
 
 def test_smartbench_is_busy_if_serial_blocks_not_empty(m):
-    m.s.serial_blocks_available = str('14')
+    m.s.buffer_info.serial_blocks_available = str('14')
     assert m.smartbench_is_busy()
 
 
 def test_smartbench_is_busy_if_serial_chars_not_empty(m):
-    m.s.serial_chars_available = str('20')
+    m.s.buffer_info.serial_chars_available = str('20')
     assert m.smartbench_is_busy()
 
 
@@ -252,12 +253,12 @@ def test_get_setting_53_when_does_not_exist(m):
 
 
 def test_get_setting_53_when_1(m):
-    m.s.setting_53 = 1
+    m.s.settings.s53 = 1
     assert m.get_dollar_setting(53) == 1
 
 
 def test_get_setting_53_when_0(m):
-    m.s.setting_53 = 0
+    m.s.settings.s53 = 0
     assert m.get_dollar_setting(53) == 0
 
 

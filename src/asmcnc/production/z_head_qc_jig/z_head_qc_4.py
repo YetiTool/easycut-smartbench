@@ -38,9 +38,9 @@ class ZHeadQC4(Screen):
     poll_for_calibration_completion = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadQC4, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def on_enter(self):
         if not self.m.run_calibration and not self.m.tuning_in_progress:

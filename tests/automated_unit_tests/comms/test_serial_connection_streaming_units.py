@@ -1,3 +1,4 @@
+import logging
 """
 Created Aug 2022
 @author: Letty
@@ -29,7 +30,7 @@ def sc():
     settings_manager = Mock()
     jd = job_data.JobData(localization=l, settings_manager=settings_manager)
     sc_obj = serial_connection.SerialConnection(machine, screen_manager,
-        settings_manager, l, jd)
+        settings_manager, l, jd, logging.Logger(name='__name__'))
     sc_obj.next_poll_time = 0
     sc_obj.write_direct = Mock()
     sc_obj.s = MagicMock()
@@ -204,7 +205,7 @@ def sc_write_spy():
     settings_manager = Mock()
     jd = job_data.JobData(localization=l, settings_manager=settings_manager)
     sc_obj = serial_connection.SerialConnection(machine, screen_manager,
-        settings_manager, l, jd)
+        settings_manager, l, jd, logging.Logger(name='__name__'))
     sc_obj.next_poll_time = 0
     sc_obj.write_direct = Mock(side_effect=write_direct_spy)
     sc_obj.s = MagicMock()
@@ -264,7 +265,7 @@ def sc_test_index_error():
     settings_manager = Mock()
     jd = job_data.JobData(localization=l, settings_manager=settings_manager)
     sc_obj = serial_connection.SerialConnection(machine, screen_manager,
-        settings_manager, l, jd)
+        settings_manager, l, jd, logging.Logger(name='__name__'))
     sc_obj.next_poll_time = 0
 
     def write_direct_mock(gcode, realtime=True, show_in_sys=False,
@@ -401,34 +402,34 @@ def test_grbl_mode_tracking_over_scanner_run_with_jump_from_no_ln_no_to_start(
 
 
 def test_is_spindle_speed_in_line(sc):
-    assert sc.get_grbl_float('GX1Y4S600F80', sc.speed_pattern) == 600
+    assert sc.get_grbl_float('GX1Y4S600F80', sc.SPEED_PATTERN) == 600
 
 
 def test_is_spindle_speed_in_line_float(sc):
-    assert sc.get_grbl_float('GX1Y4S80000.9876F90', sc.speed_pattern
+    assert sc.get_grbl_float('GX1Y4S80000.9876F90', sc.SPEED_PATTERN
         ) == 80000.9876
-    assert sc.get_grbl_float('M3S16000', sc.speed_pattern) == 16000
-    assert sc.get_grbl_float('S18000M3', sc.speed_pattern) == 18000
+    assert sc.get_grbl_float('M3S16000', sc.SPEED_PATTERN) == 16000
+    assert sc.get_grbl_float('S18000M3', sc.SPEED_PATTERN) == 18000
 
 
 def test_is_feed_rate_in_line(sc):
-    assert sc.get_grbl_float('G0X1Y4F600Y9S0', sc.feed_pattern) == 600
+    assert sc.get_grbl_float('G0X1Y4F600Y9S0', sc.FEED_PATTERN) == 600
 
 
 def test_is_feed_rate_in_line_float(sc):
-    assert sc.get_grbl_float('G91F9000.9876X6Y7S3', sc.feed_pattern
+    assert sc.get_grbl_float('G91F9000.9876X6Y7S3', sc.FEED_PATTERN
         ) == 9000.9876
 
 
 def test_get_motion_mode_for_line(sc):
-    assert sc.get_grbl_mode('G1X6Y7', sc.g_motion_pattern) == 1
-    assert sc.get_grbl_mode('G02X6Y7', sc.g_motion_pattern) == 2
-    assert sc.get_grbl_mode('G00X6Y7', sc.g_motion_pattern) == 0
-    assert sc.get_grbl_mode('G011X6Y7', sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode('G20X6Y7', sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode('GX4X6Y7', sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode('GX3X6Y7', sc.g_motion_pattern) == None
-    assert sc.get_grbl_mode('G91F66X7Y7G2S20.67F600', sc.g_motion_pattern) == 2
+    assert sc.get_grbl_mode('G1X6Y7', sc.G_MOTION_PATTERN) == 1
+    assert sc.get_grbl_mode('G02X6Y7', sc.G_MOTION_PATTERN) == 2
+    assert sc.get_grbl_mode('G00X6Y7', sc.G_MOTION_PATTERN) == 0
+    assert sc.get_grbl_mode('G011X6Y7', sc.G_MOTION_PATTERN) == None
+    assert sc.get_grbl_mode('G20X6Y7', sc.G_MOTION_PATTERN) == None
+    assert sc.get_grbl_mode('GX4X6Y7', sc.G_MOTION_PATTERN) == None
+    assert sc.get_grbl_mode('GX3X6Y7', sc.G_MOTION_PATTERN) == None
+    assert sc.get_grbl_mode('G91F66X7Y7G2S20.67F600', sc.G_MOTION_PATTERN) == 2
 
 
 def test_scrape_last_sent_modes_no_new_info(sc):

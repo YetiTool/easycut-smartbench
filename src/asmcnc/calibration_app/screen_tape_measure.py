@@ -88,9 +88,9 @@ class TapeMeasureScreenClass(Screen):
     alert_label = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
         self.alert_label.text = """[color=455A64]
 TAPE MEASURE WARNING!
 Please remove your tape measure from the machine now.[/color]"""

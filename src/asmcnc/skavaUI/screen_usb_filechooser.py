@@ -238,8 +238,8 @@ def name_order_sort_reverse(files, filesystem):
         f in files if not filesystem.is_dir(f)), reverse=True)
 
 
-decode_and_encode = lambda x: str(x, detect(x)['encoding'] or 'utf-8'
-    ).encode('utf-8')
+decode_and_encode = lambda x: str(x, detect(x)['encoding'] or 'utf-8').encode(
+    'utf-8')
 
 
 class USBFileChooser(Screen):
@@ -250,10 +250,10 @@ class USBFileChooser(Screen):
     is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(USBFileChooser, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
             scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.
@@ -446,9 +446,10 @@ class USBFileChooser(Screen):
                 try:
                     if ('(YetiTool SmartBench MES-Data)' in previewed_file.
                         readline()):
-                        metadata_or_gcode_preview = list(map(format_metadata, [
-                            decode_and_encode(i).strip('\n\r()') for i in
-                            takewhile(not_end_of_metadata, previewed_file) if
+                        metadata_or_gcode_preview = list(map(
+                            format_metadata, [decode_and_encode(i).strip(
+                            '\n\r()') for i in takewhile(
+                            not_end_of_metadata, previewed_file) if
                             decode_and_encode(i).split(':', 1)[1].strip(
                             '\n\r() ')]))
                     else:

@@ -274,11 +274,11 @@ class SafetyScreen(Screen):
     user_has_confirmed = False
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SafetyScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)

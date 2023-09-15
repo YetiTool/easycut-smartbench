@@ -30,7 +30,7 @@ Builder.load_string(
 
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
+            orientation: 'lr-tb'
             spacing: 0
             size_hint_y: None
             height: self.width
@@ -161,9 +161,9 @@ Builder.load_string(
 class LowerBeamQCXYMove(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(LowerBeamQCXYMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
     feedSpeedJogX = 1200
     feedSpeedJogY = 1200
     jogMode = 'free'

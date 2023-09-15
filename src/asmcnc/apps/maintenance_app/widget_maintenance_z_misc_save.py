@@ -58,10 +58,10 @@ Builder.load_string(
 class ZMiscSaveWidget(Widget):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(ZMiscSaveWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
 
     def get_info(self):
         z_misc_settings_info = self.l.get_bold('Touchplate offset'

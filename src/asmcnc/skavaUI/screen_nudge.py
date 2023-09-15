@@ -191,11 +191,11 @@ class NudgeScreen(Screen):
     display_list = []
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(NudgeScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.sm))
         self.z_move_container.add_widget(widget_z_move_nudge.ZMoveNudge(
@@ -211,8 +211,8 @@ class NudgeScreen(Screen):
     def on_pre_enter(self):
         self.initial_x = self.m.mpos_x()
         self.initial_y = self.m.mpos_y()
-        self.initial_g54_x = self.m.s.g54_x
-        self.initial_g54_y = self.m.s.g54_y
+        self.initial_g54_x = self.m.s.g54.x
+        self.initial_g54_y = self.m.s.g54.y
 
     def get_info(self):
         info = self.l.get_str(

@@ -179,12 +179,12 @@ class ErrorScreenClass(Screen):
     return_to_screen = 'home'
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.jd = kwargs.pop('job')
+        self.db = kwargs.pop('database')
+        self.l = kwargs.pop('localization')
         super(ErrorScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def on_enter(self):

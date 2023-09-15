@@ -200,10 +200,10 @@ def log(message):
 class ZHeadQC2(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(ZHeadQC2, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
         self.test_successful_image = (
             './asmcnc/skavaUI/img/file_select_select.png')
         self.test_unsuccessful_image = (
@@ -239,7 +239,7 @@ class ZHeadQC2(Screen):
         self.probe()
 
     def probe(self):
-        if self.m.s.probe:
+        if self.m.s.pin_info.probe:
             self.probe_check.source = self.test_successful_image
         else:
             self.probe_check.source = self.test_unsuccessful_image
@@ -266,7 +266,8 @@ class ZHeadQC2(Screen):
             Clock.schedule_once(get_info, 1)
 
         def get_info(dt):
-            self.initial_run_time = self.m.s.spindle_brush_run_time_seconds
+            self.initial_run_time = (self.m.s.spindle_statistics.
+                brush_run_time_seconds)
             if self.initial_run_time == 0:
                 fail_report.append('Spindle brush run time was 0 before reset.'
                     )
@@ -280,12 +281,12 @@ class ZHeadQC2(Screen):
             Clock.schedule_once(compare_info, 1)
 
         def compare_info(dt):
-            if self.m.s.spindle_brush_run_time_seconds == 0:
+            if self.m.s.spindle_statistics.brush_run_time_seconds == 0:
                 self.m.s.write_command('M5')
                 self.test_rpm(fail_report)
             else:
                 fail_report.append('Spindle brush time after reset was ' +
-                    str(self.m.s.spindle_brush_run_time_seconds) +
+                    str(self.m.s.spindle_statistics.brush_run_time_seconds) +
                     '. Should be 0')
                 self.m.s.write_command('M5')
                 self.test_rpm(fail_report)
@@ -297,7 +298,7 @@ class ZHeadQC2(Screen):
     def test_rpm(self, fail_report):
 
         def read_rpm(dt):
-            spindle_rpm = int(self.m.s.spindle_speed)
+            spindle_rpm = int(self.m.s.feeds_and_speeds.spindle_speed)
             log('Spindle RPM: %s' % spindle_rpm)
             if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append('Spindle RPM was ' + str(spindle_rpm) +
@@ -310,22 +311,22 @@ class ZHeadQC2(Screen):
         Clock.schedule_once(read_rpm, 3)
 
     def continue_digital_spindle_test(self, fail_report):
-        temperature = self.m.s.digital_spindle_temperature
+        temperature = self.m.s.digital_spindle.temperature
         log('Digital Spindle Temperature: %s' % temperature)
         if temperature < 0 or temperature > 50:
             fail_report.append('Temperature was ' + str(temperature) +
                 '. Should be 0-50')
-        load = self.m.s.digital_spindle_ld_qdA
+        load = self.m.s.digital_spindle.ld_qdA
         log('Digital Spindle Load: %s' % load)
         if load < 50 or load > 10000:
             fail_report.append('Load was ' + str(load) + '. Should be 50-10000'
                 )
-        killtime = self.m.s.digital_spindle_kill_time
+        killtime = self.m.s.digital_spindle.kill_time
         log('Digital Spindle KillTime: %s' % killtime)
         if killtime != 255:
             fail_report.append('KillTime was ' + str(killtime) +
                 '. Should be 255')
-        voltage = self.m.s.digital_spindle_mains_voltage
+        voltage = self.m.s.digital_spindle.mains_voltage
         log('Digital Spindle Voltage: %s' % voltage)
         if voltage < 100 or voltage > 255:
             fail_report.append('Voltage was ' + str(voltage) +
@@ -335,7 +336,7 @@ class ZHeadQC2(Screen):
             self.digital_spindle_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         elif self.brush_reset_test_count < 5 and (self.initial_run_time == 
-            0 or self.m.s.spindle_brush_run_time_seconds != 0):
+            0 or self.m.s.spindle_statistics.brush_run_time_seconds != 0):
             self.spindle_brush_reset()
         else:
             log('Test failed')
@@ -400,8 +401,8 @@ class ZHeadQC2(Screen):
                     )
             elif self.spindle_test_counter > 3:
                 return
-            overload_value = self.m.s.spindle_load_voltage
-            spindle_speed_value = self.m.s.spindle_speed_monitor_mV
+            overload_value = self.m.s.analog_spindle.load_voltage
+            spindle_speed_value = self.m.s.voltages.spindle_speed_monitor_mV
             self.string_overload_summary = (self.string_overload_summary +
                 '\n' + 'Test ' + str(self.spindle_test_counter) +
                 ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +

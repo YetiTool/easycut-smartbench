@@ -305,9 +305,9 @@ If not, check that it's connected and switched on, then retry by pressing the bu
         )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutter35ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0

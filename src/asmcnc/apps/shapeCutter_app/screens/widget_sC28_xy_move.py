@@ -34,7 +34,7 @@ Builder.load_string(
         
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
+            orientation: 'lr-tb'
             spacing: 0
             size_hint_y: None
             height: self.width
@@ -293,11 +293,11 @@ Builder.load_string(
 class SC28XYMove(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop('screen_manager')
+        self.j = kwargs.pop('job_parameters')
         super(SC28XYMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.sm = kwargs['screen_manager']
-        self.j = kwargs['job_parameters']
     jogMode = 'free'
     jog_mode_button_press_counter = 0
     fast_x_speed = 6000

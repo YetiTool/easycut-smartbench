@@ -1,3 +1,4 @@
+import logging
 try:
     import unittest
 except:

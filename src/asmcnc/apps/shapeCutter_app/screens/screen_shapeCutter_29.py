@@ -280,9 +280,9 @@ class ShapeCutter29ScreenClass(Screen):
     user_instructions = StringProperty('')
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
         super(ShapeCutter29ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0

@@ -18,10 +18,10 @@ Builder.load_string(
 class ZHeadQCDB2(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.calibration_db = kwargs.pop('calibration_db')
         super(ZHeadQCDB2, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.calibration_db = kwargs['calibration_db']
 
     def send_calibration_payload(self, motor_index):
         self.calibration_db.set_up_connection()

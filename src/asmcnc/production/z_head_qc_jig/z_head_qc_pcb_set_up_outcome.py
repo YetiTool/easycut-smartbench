@@ -143,8 +143,8 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message))
+    print('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[
+        :12] + ' ' + str(message))
 
 
 class ZHeadPCBSetUpOutcome(Screen):
@@ -158,9 +158,9 @@ class ZHeadPCBSetUpOutcome(Screen):
     thermal_coefficients_correct = True
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadPCBSetUpOutcome, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
@@ -172,7 +172,8 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.sm.current = 'qcpcbsetup'
 
     def on_enter(self):
-        self.fw_update_label.text = 'Firmware: ' + str(self.m.s.fw_version)
+        self.fw_update_label.text = 'Firmware: ' + str(self.m.s.versions.
+            firmware)
         self.z_current_label.text = 'Z Current: ' + 'active ' + str(self.m.
             TMC_motor[TMC_Z].ActiveCurrentScale) + '; ' + 'idle ' + str(self
             .m.TMC_motor[TMC_Z].standStillCurrentScale) + ';'
@@ -208,7 +209,7 @@ class ZHeadPCBSetUpOutcome(Screen):
     def update_images(self, correct, image):
         if correct:
             image.source = self.success_image
-        elif str(self.m.s.fw_version).startswith('1'):
+        elif str(self.m.s.versions.firmware).startswith('1'):
             image.source = self.undetermined_image
         else:
             image.source = self.fail_image

@@ -36,10 +36,10 @@ Builder.load_string(
 class ZHeadMechanicsMonitor(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(ZHeadMechanicsMonitor, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.
             GCodeMonitor(machine=self.m, screen_manager=self.sm,
             localization=self.l))

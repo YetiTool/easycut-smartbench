@@ -128,8 +128,8 @@ class AlarmScreen3(Screen):
     default_font_size = 30
 
     def __init__(self, **kwargs):
+        self.a = kwargs.pop('alarm_manager')
         super(AlarmScreen3, self).__init__(**kwargs)
-        self.a = kwargs['alarm_manager']
         self.status_bar_widget = widget_status_bar.StatusBar(screen_manager
             =self.a.sm, machine=self.a.m)
         self.status_container.add_widget(self.status_bar_widget)

@@ -1,3 +1,4 @@
+import logging
 """
 Created August 2022
 @author: Letty
@@ -32,7 +33,7 @@ def sc():
     settings_manager = Mock()
     job = Mock()
     sc_obj = serial_connection.SerialConnection(machine, screen_manager,
-        settings_manager, l, job)
+        settings_manager, l, job, logging.Logger(name='__name__'))
     sc_obj.next_poll_time = 0
     sc_obj.write_direct = Mock()
     sc_obj.s = MagicMock()

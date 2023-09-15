@@ -290,9 +290,9 @@ class DistanceScreen3yClass(Screen):
     y_cal_measure_2 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(DistanceScreen3yClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
         if self.m.bench_is_standard():
             self.initial_y_cal_move = 2000
         elif self.m.bench_is_short():
@@ -325,7 +325,7 @@ Nudging will move the Z head away from Y-home."""
         self.final_y_cal_move = self.initial_y_cal_move + self.nudge_total
         self.measured_y_cal_move = self.y_cal_measure_2 - self.y_cal_measure_1
         self.m.get_grbl_settings()
-        self.existing_y_steps_per_mm = self.m.s.setting_101
+        self.existing_y_steps_per_mm = self.m.s.settings.s101
         self.new_y_steps_per_mm = self.existing_y_steps_per_mm * (self.
             final_y_cal_move / self.measured_y_cal_move)
         self.next_screen()

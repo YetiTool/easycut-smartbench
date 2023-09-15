@@ -1,3 +1,4 @@
+import logging
 """
 Created on 14 Feb 2022
 @author: Letty
@@ -74,7 +75,7 @@ class MotorCommandsTest(unittest.TestCase):
         self.m.s.s = DummySerial(self.give_me_a_PCB())
         self.m.s.s.fd = 1
         self.m.s.start_services(1)
-        self.m.s.setting_27 = ''
+        self.m.s.settings.s27 = ''
         sleep(0.01)
 
     def tearDown(self):

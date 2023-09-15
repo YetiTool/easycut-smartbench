@@ -59,9 +59,9 @@ Builder.load_string(
 class ZHeadQC8(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadQC8, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)

@@ -336,10 +336,10 @@ class LanguageSelectScreen(Screen):
     update_welcome_header = None
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop('start_sequence')
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(LanguageSelectScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
         self.row_1_col_1.text = self.l.approved_languages[0]
         self.row_1_col_2.text = self.l.approved_languages[1]
         self.row_1_col_3.text = self.l.approved_languages[2]
@@ -363,7 +363,7 @@ class LanguageSelectScreen(Screen):
             row_3_col_1)
 
     def get_image_filename(self, value):
-        if value.text == 'Fran\xc3\xa7ais (FR)':
+        if value.text == 'FranÃ§ais (FR)':
             return self.flag_img_path + 'Francais (FR)' + '.png'
         return self.flag_img_path + value.text + '.png'
 

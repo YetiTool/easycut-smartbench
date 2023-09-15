@@ -43,9 +43,9 @@ Builder.load_string(
 class ZHeadQCDBSuccess(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(ZHeadQCDBSuccess, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def enter_next_screen(self):
         self.sm.current = 'qc6'

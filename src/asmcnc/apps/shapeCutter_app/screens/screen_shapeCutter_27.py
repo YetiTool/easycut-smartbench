@@ -323,10 +323,10 @@ class ShapeCutter27ScreenClass(Screen):
         './asmcnc/apps/shapeCutter_app/img/27_rect.png')
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutter27ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 1

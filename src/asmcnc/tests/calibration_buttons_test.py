@@ -83,9 +83,9 @@ class TestScreen(Screen):
     test_label = 'TEST'
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
         super(TestScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
 
     def tune_X_Z(self):
         self.m.tune_X_and_Z_for_calibration()

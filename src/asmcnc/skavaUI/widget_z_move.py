@@ -160,10 +160,10 @@ Builder.load_string(
 class ZMove(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
         super(ZMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
         self.virtual_z_container.add_widget(widget_z_height.VirtualZ(
             machine=self.m, screen_manager=self.sm, job=self.jd))
 

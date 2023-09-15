@@ -97,10 +97,10 @@ class SquaringScreenActive(Screen):
     expected_next_screen = 'homing_active'
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SquaringScreenActive, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.update_strings()
 
     def on_pre_enter(self):

@@ -127,12 +127,12 @@ class YetiPilotWidget(Widget):
     yp_settings_popup = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
+        self.m = kwargs.pop('machine')
+        self.db = kwargs.pop('database')
+        self.yp = kwargs.pop('yetipilot')
         super(YetiPilotWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.m = kwargs['machine']
-        self.db = kwargs['database']
-        self.yp = kwargs['yetipilot']
         self.disable_yeti_pilot()
         self.yetipilot_two_tone.text = (
             '[b][color=1976d2ff]YetiPilot[/b][/color]')

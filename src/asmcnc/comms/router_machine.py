@@ -101,8 +101,8 @@ class RouterMachine(object):
         self.set_jog_limits()
         self.win_serial_port = win_serial_port
         self.s = serial_connection.SerialConnection(self, self.sm, self.
-            sett, self.l, self.jd)
-        self.s.establish_connection(win_serial_port)
+            sett, self.l, self.jd, logging.Logger(name='__name__'))
+        self.s.connect()
         self.p = protocol.protocol_v2()
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
@@ -116,15 +116,15 @@ class RouterMachine(object):
         self.starting_serial_connection = True
         self.close_serial_connection(0)
         log('Reconnect serial connection')
-        self.s.establish_connection(self.win_serial_port)
+        self.s.connect()
 
     def close_serial_connection(self, dt):
         if self.s.is_connected():
             log('Closing serial connection')
             self.s.s.close()
         self.clear_motor_registers()
-        self.s.fw_version = ''
-        self.s.hw_version = ''
+        self.s.versions.firmware = ''
+        self.s.versions.hardware = ''
 
     def check_presence_of_sb_values_files(self):
         if not path.exists(self.smartbench_values_dir):
@@ -620,33 +620,34 @@ class RouterMachine(object):
     def save_grbl_settings(self):
         self.send_any_gcode_command('$$')
         self.send_any_gcode_command('$#')
-        grbl_settings_and_params = ['$0=' + str(self.s.setting_0), '$1=' +
-            str(self.s.setting_1), '$2=' + str(self.s.setting_2), '$3=' +
-            str(self.s.setting_3), '$4=' + str(self.s.setting_4), '$5=' +
-            str(self.s.setting_5), '$6=' + str(self.s.setting_6), '$10=' +
-            str(self.s.setting_10), '$11=' + str(self.s.setting_11), '$12=' +
-            str(self.s.setting_12), '$13=' + str(self.s.setting_13), '$22=' +
-            str(self.s.setting_22), '$20=' + str(self.s.setting_20), '$21=' +
-            str(self.s.setting_21), '$23=' + str(self.s.setting_23), '$24=' +
-            str(self.s.setting_24), '$25=' + str(self.s.setting_25), '$26=' +
-            str(self.s.setting_26), '$27=' + str(self.s.setting_27), '$30=' +
-            str(self.s.setting_30), '$31=' + str(self.s.setting_31), '$32=' +
-            str(self.s.setting_32)]
+        grbl_settings_and_params = ['$0=' + str(self.s.settings.s0), '$1=' +
+            str(self.s.settings.s1), '$2=' + str(self.s.settings.s2), '$3=' +
+            str(self.s.settings.s3), '$4=' + str(self.s.settings.s4), '$5=' +
+            str(self.s.settings.s5), '$6=' + str(self.s.settings.s6), 
+            '$10=' + str(self.s.settings.s10), '$11=' + str(self.s.settings
+            .s11), '$12=' + str(self.s.settings.s12), '$13=' + str(self.s.
+            settings.s13), '$22=' + str(self.s.settings.s22), '$20=' + str(
+            self.s.settings.s20), '$21=' + str(self.s.settings.s21), '$23=' +
+            str(self.s.settings.s23), '$24=' + str(self.s.settings.s24), 
+            '$25=' + str(self.s.settings.s25), '$26=' + str(self.s.settings
+            .s26), '$27=' + str(self.s.settings.s27), '$30=' + str(self.s.
+            settings.s30), '$31=' + str(self.s.settings.s31), '$32=' + str(
+            self.s.settings.s32)]
         try:
-            grbl_settings_and_params.append('$50=' + str(self.s.setting_50))
-            grbl_settings_and_params.append('$51=' + str(self.s.setting_51))
-            grbl_settings_and_params.append('$53=' + str(self.s.setting_53))
-            grbl_settings_and_params.append('$54=' + str(self.s.setting_54))
+            grbl_settings_and_params.append('$50=' + str(self.s.settings.s50))
+            grbl_settings_and_params.append('$51=' + str(self.s.settings.s51))
+            grbl_settings_and_params.append('$53=' + str(self.s.settings.s53))
+            grbl_settings_and_params.append('$54=' + str(self.s.settings.s54))
         except:
             pass
-        grbl_settings_and_params += ['$100=' + str(self.s.setting_100), 
-            '$101=' + str(self.s.setting_101), '$102=' + str(self.s.
-            setting_102), '$110=' + str(self.s.setting_110), '$111=' + str(
-            self.s.setting_111), '$112=' + str(self.s.setting_112), '$120=' +
-            str(self.s.setting_120), '$121=' + str(self.s.setting_121), 
-            '$122=' + str(self.s.setting_122), '$130=' + str(self.s.
-            setting_130), '$131=' + str(self.s.setting_131), '$132=' + str(
-            self.s.setting_132)]
+        grbl_settings_and_params += ['$100=' + str(self.s.settings.s100), 
+            '$101=' + str(self.s.settings.s101), '$102=' + str(self.s.
+            settings.s102), '$110=' + str(self.s.settings.s110), '$111=' +
+            str(self.s.settings.s111), '$112=' + str(self.s.settings.s112),
+            '$120=' + str(self.s.settings.s120), '$121=' + str(self.s.
+            settings.s121), '$122=' + str(self.s.settings.s122), '$130=' +
+            str(self.s.settings.s130), '$131=' + str(self.s.settings.s131),
+            '$132=' + str(self.s.settings.s132)]
         f = open(
             '/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'
             , 'w')
@@ -723,7 +724,7 @@ class RouterMachine(object):
     def is_machines_fw_version_equal_to_or_greater_than_version(self,
         version_to_reference, capability_decription):
         try:
-            machine_fw_parts = self.s.fw_version.split('.')[:3]
+            machine_fw_parts = self.s.versions.firmware.split('.')[:3]
             ref_version_parts = version_to_reference.split('.')[:3]
             machine_fw_parts = [int(i) for i in machine_fw_parts]
             ref_version_parts = [int(i) for i in ref_version_parts]
@@ -751,7 +752,7 @@ class RouterMachine(object):
     def is_machines_hw_version_equal_to_or_greater_than_version(self,
         version_to_reference, capability_decription):
         try:
-            if float(self.s.hw_version) >= version_to_reference:
+            if float(self.s.versions.hardware) >= version_to_reference:
                 return True
             else:
                 return False
@@ -811,7 +812,7 @@ class RouterMachine(object):
 
     def tmc_handshake(self):
         self.clear_motor_registers()
-        if self.s.fw_version and self.state().startswith('Idle'):
+        if self.s.versions.firmware and self.state().startswith('Idle'):
             if self.handshake_event:
                 Clock.unschedule(self.handshake_event)
             if self.is_machines_fw_version_equal_to_or_greater_than_version(
@@ -995,10 +996,10 @@ class RouterMachine(object):
         return self.s.is_job_streaming
 
     def state(self):
-        return self.s.m_state
+        return self.s.m_state if self.s.m_state else 'Unknown'
 
     def buffer_capacity(self):
-        return self.s.serial_blocks_available
+        return self.s.buffer_info.serial_blocks_available
 
     def is_grbl_waiting_for_reset(self):
         return self.s.grbl_waiting_for_reset
@@ -1022,9 +1023,11 @@ class RouterMachine(object):
             return True
         if self.s.write_protocol_buffer:
             return True
-        if int(self.s.serial_blocks_available) != self.s.GRBL_BLOCK_SIZE:
+        if int(self.s.buffer_info.serial_blocks_available
+            ) != self.s.GRBL_BLOCK_SIZE:
             return True
-        if int(self.s.serial_chars_available) != self.s.RX_BUFFER_SIZE:
+        if int(self.s.buffer_info.serial_chars_available
+            ) != self.s.RX_BUFFER_SIZE:
             return True
         if self.s.grbl_waiting_for_reset:
             return True
@@ -1062,21 +1065,21 @@ class RouterMachine(object):
 
     def get_switch_states(self):
         switch_states = []
-        if self.s.limit_x == True:
+        if self.s.pin_info.limit_x == True:
             switch_states.append('limit_x')
-        if self.s.limit_X == True:
+        if self.s.pin_info.limit_X == True:
             switch_states.append('limit_X')
-        if self.s.limit_y == True:
+        if self.s.pin_info.limit_y == True:
             switch_states.append('limit_y')
-        if self.s.limit_Y == True:
+        if self.s.pin_info.limit_Y == True:
             switch_states.append('limit_Y')
-        if self.s.limit_z == True:
+        if self.s.pin_info.limit_z == True:
             switch_states.append('limit_z')
-        if self.s.probe == True:
+        if self.s.pin_info.probe == True:
             switch_states.append('probe')
-        if self.s.dust_shoe_cover == True:
+        if self.s.pin_info.dust_shoe_cover == True:
             switch_states.append('dust_shoe_cover')
-        if self.s.spare_door == True:
+        if self.s.pin_info.spare_door == True:
             switch_states.append('spare_door')
         return switch_states
 
@@ -1169,27 +1172,27 @@ class RouterMachine(object):
 
     def serial_number(self):
         try:
-            self.s.setting_50
+            self.s.settings.s50
         except:
             return 0
         else:
-            return self.s.setting_50
+            return self.s.settings.s50
 
     def z_head_version(self):
         try:
-            self.s.setting_50
+            self.s.settings.s50
         except:
             return 0
         else:
-            return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+            return str(self.s.settings.s50)[-2] + str(self.s.settings.s50)[-1]
 
     def firmware_version(self):
         try:
-            self.s.fw_version
+            self.s.versions.firmware
         except:
             return 0
         else:
-            return self.s.fw_version
+            return self.s.versions.firmware
 
     def smartbench_model(self):
         if self.bench_is_short():
@@ -1217,55 +1220,55 @@ class RouterMachine(object):
         return 'SmartBench model detection failed'
 
     def get_dollar_setting(self, setting_num):
-        return getattr(self.s, 'setting_' + str(setting_num), 0)
+        return getattr(self.s.settings, 'setting_' + str(setting_num), 0)
 
     def x_pos_str(self):
-        return self.s.m_x
+        return self.s.machine_position.x
 
     def y_pos_str(self):
-        return self.s.m_y
+        return self.s.machine_position.y
 
     def z_pos_str(self):
-        return self.s.m_z
+        return self.s.machine_position.z
 
     def mpos_x(self):
-        return float(self.s.m_x)
+        return float(self.s.machine_position.x)
 
     def mpos_y(self):
-        return float(self.s.m_y)
+        return float(self.s.machine_position.y)
 
     def mpos_z(self):
-        return float(self.s.m_z)
+        return float(self.s.machine_position.z)
 
     def wpos_x(self):
-        return float(self.s.m_x) - self.x_wco()
+        return float(self.s.machine_position.x) - self.x_wco()
 
     def wpos_y(self):
-        return float(self.s.m_y) - self.y_wco()
+        return float(self.s.machine_position.y) - self.y_wco()
 
     def wpos_z(self):
-        return float(self.s.m_z) - self.z_wco()
+        return float(self.s.machine_position.z) - self.z_wco()
 
     def x_wco(self):
-        return float(self.s.wco_x)
+        return float(self.s.wco.x)
 
     def y_wco(self):
-        return float(self.s.wco_y)
+        return float(self.s.wco.y)
 
     def z_wco(self):
-        return float(self.s.wco_z)
+        return float(self.s.wco.z)
 
     def g28_x(self):
-        return float(self.s.g28_x)
+        return float(self.s.g28.x)
 
     def g28_y(self):
-        return float(self.s.g28_y)
+        return float(self.s.g28.y)
 
     def g28_z(self):
-        return float(self.s.g28_z)
+        return float(self.s.g28.z)
 
     def feed_rate(self):
-        return int(self.s.feed_rate)
+        return int(self.s.feeds_and_speeds.feed_rate)
 
     def get_is_constant_feed_rate(self, last_modal_feed_rate,
         feed_override_percentage, current_feed_rate,
@@ -1277,38 +1280,38 @@ class RouterMachine(object):
 
     def spindle_speed(self):
         if self.spindle_voltage == 110:
-            converted_speed = self.convert_from_230_to_110(self.s.spindle_speed
-                )
+            converted_speed = self.convert_from_230_to_110(self.s.
+                feeds_and_speeds.spindle_speed)
             return int(converted_speed)
         else:
-            return int(self.s.spindle_speed)
+            return int(self.s.feeds_and_speeds.spindle_speed)
 
     def spindle_load(self):
         try:
-            return int(self.s.spindle_load_voltage)
+            return int(self.s.analog_spindle.load_voltage)
         except:
             return ''
 
     def x_sg(self):
-        return self.s.sg_x_motor_axis
+        return self.s.stall_guard.x_motor_axis
 
     def y_sg(self):
-        return self.s.sg_y_axis
+        return self.s.stall_guard.y_axis
 
     def y1_sg(self):
-        return self.s.sg_y1_motor
+        return self.s.stall_guard.y1_motor
 
     def y2_sg(self):
-        return self.s.sg_y2_motor
+        return self.s.stall_guard.y2_motor
 
     def z_sg(self):
-        return self.s.sg_z_motor_axis
+        return self.s.stall_guard.z_motor_axis
 
     def x1_sg(self):
-        return self.s.sg_x1_motor
+        return self.s.stall_guard.x1_motor
 
     def x2_sg(self):
-        return self.s.sg_x2_motor
+        return self.s.stall_guard.x2_motor
 
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
@@ -1462,7 +1465,7 @@ class RouterMachine(object):
         self.s.write_command('G0 G54 Z0')
 
     def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.s.setting_27))
+        self.s.write_command('G0 G53 Z-' + str(self.s.settings.s27))
 
     def vac_on(self):
         self.s.write_command('AE')
@@ -2236,11 +2239,11 @@ class RouterMachine(object):
         False, Z=False):
         SG_to_check = None
         if Z:
-            SG_to_check = self.s.sg_z_motor_axis
+            SG_to_check = self.s.stall_guard.z_motor_axis
         elif X:
-            SG_to_check = self.s.sg_x_motor_axis
+            SG_to_check = self.s.stall_guard.x_motor_axis
         elif Y:
-            SG_to_check = self.s.sg_y1_motor
+            SG_to_check = self.s.stall_guard.y1_motor
         if 200 < SG_to_check < 950:
             self.quit_jog()
             log('SG values in range - re-zero')
@@ -2267,18 +2270,19 @@ class RouterMachine(object):
 
     def check_temps_and_then_go_to_idle_check_then_tune(self, X=False, Y=
         False, Z=False):
-        if self.motor_driver_temp_in_range(self.s.motor_driver_temp):
+        if self.motor_driver_temp_in_range(self.s.temperatures.motor_driver):
             log('Temperature reads valid, check machine is Idle...')
             self.time_to_check_for_tuning_prep = time.time()
             Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(
                 X=X, Y=Y, Z=Z), 2)
         elif self.time_to_check_for_tuning_prep + 15 < time.time():
-            log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
+            log("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.temperatures.
+                motor_driver))
             self.calibration_tuning_fail_info = (
                 "Temps aren't in expected range" + '(' + str(int(self.
                 lower_temp_limit)) + '-' + str(int(self.upper_temp_limit)) +
-                '), ' + 'motor_driver_temp is: ' + str(self.s.
-                motor_driver_temp))
+                '), ' + 'motor_driver_temp is: ' + str(self.s.temperatures.
+                motor_driver))
             Clock.schedule_once(self.finish_tuning, 0.1)
         else:
             Clock.schedule_once(lambda dt: self.
@@ -2359,7 +2363,8 @@ class RouterMachine(object):
             if X:
                 X_target_SG = self.get_target_SG_from_current_temperature('X',
                     current_temp)
-                if self.s.sg_x1_motor != None and self.s.sg_x2_motor != None:
+                if (self.s.stall_guard.x1_motor != None and self.s.
+                    stall_guard.x2_motor != None):
                     self.x1_toff_tuned, self.x1_sgt_tuned = (self.
                         find_best_combo_per_motor_or_axis(tuning_array,
                         X_target_SG, 5))
@@ -2464,7 +2469,7 @@ class RouterMachine(object):
                 self.temp_sg_array = []
                 log('SWEPT TOFF AND SGT: ' + str(self.temp_toff) + ', ' +
                     str(self.temp_sgt))
-                temperature_list.append(self.s.motor_driver_temp)
+                temperature_list.append(self.s.temperatures.motor_driver)
                 self.temp_sgt = self.temp_sgt + 1
             self.temp_sgt = self.sgt_min
             self.temp_toff = self.temp_toff + 1
@@ -2928,7 +2933,7 @@ class RouterMachine(object):
             return
         if not self.state().startswith('Idle'
             ) or not self.TMC_registers_have_been_read_in(
-            ) or self.s.is_sequential_streaming or not self.s.setting_132:
+            ) or self.s.is_sequential_streaming or not self.s.settings.s132:
             Clock.schedule_once(lambda dt: self.do_calibration_check(axes,
                 do_reset, assembled), 0.5)
             return
@@ -2968,10 +2973,10 @@ class RouterMachine(object):
         free_travel_seq = []
         if 'X' in axes:
             free_travel_seq.append('G53 ' + 'X' + str(float(-1 * self.s.
-                setting_130) + float(self.limit_switch_safety_distance)))
+                settings.s130) + float(self.limit_switch_safety_distance)))
         if 'Y' in axes:
             free_travel_seq.append('G53 ' + 'Y' + str(float(-1 * self.s.
-                setting_131) + float(self.limit_switch_safety_distance)))
+                settings.s131) + float(self.limit_switch_safety_distance)))
         if 'Z' in axes:
             free_travel_seq.append('G53 ' + 'Z' + str(-1))
         self.s.start_sequential_stream(free_travel_seq)

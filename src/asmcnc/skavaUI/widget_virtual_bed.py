@@ -114,9 +114,9 @@ class VirtualBed(Widget):
     x_pos_modifier = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(VirtualBed, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.set_up_virtual_bed()
 
     def set_up_virtual_bed(self, dt=0):

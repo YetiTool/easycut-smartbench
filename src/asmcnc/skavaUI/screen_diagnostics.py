@@ -138,9 +138,9 @@ Builder.load_string(
 class DiagnosticsScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(DiagnosticsScreen, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.sm))
         Clock.schedule_interval(self.limit_switch_check, 0.2)

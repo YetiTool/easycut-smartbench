@@ -296,9 +296,9 @@ class ScrollableLabelCommandView(ScrollView):
 class DeveloperTempScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
         super(DeveloperTempScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()

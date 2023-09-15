@@ -58,10 +58,10 @@ Builder.load_string(
 class SpindleSaveWidget(Widget):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SpindleSaveWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
 
     def get_info(self):
         popup_maintenance.PopupSpindleSettingsInfo(self.sm, self.l)

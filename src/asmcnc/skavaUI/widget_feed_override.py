@@ -111,20 +111,20 @@ class FeedOverride(Widget):
     enable_button_time = 0.36
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.db = kwargs.pop('database')
         super(FeedOverride, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.db = kwargs['database']
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
 
     def update_feed_percentage_override_label(self):
-        self.feed_rate_label.text = str(self.m.s.feed_override_percentage
+        self.feed_rate_label.text = str(self.m.s.feeds_and_speeds.feed_override
             ) + '%'
 
     def feed_up(self):
-        if self.m.s.feed_override_percentage >= 200:
+        if self.m.s.feeds_and_speeds.feed_override >= 200:
             return
         self.disable_buttons()
         for i in range(5):
@@ -139,7 +139,7 @@ class FeedOverride(Widget):
         Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
 
     def feed_down(self):
-        if self.m.s.feed_override_percentage <= 10:
+        if self.m.s.feeds_and_speeds.feed_override <= 10:
             return
         self.disable_buttons()
         for i in range(5):

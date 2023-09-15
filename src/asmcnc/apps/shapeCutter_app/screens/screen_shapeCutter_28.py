@@ -293,11 +293,11 @@ class ShapeCutter28ScreenClass(Screen):
     user_instructions = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop('shapecutter')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
+        self.j = kwargs.pop('job_parameters')
         super(ShapeCutter28ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.j = kwargs['job_parameters']
         self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m,
             localization=self.l, screen_manager=self.shapecutter_sm.sm,
             job_parameters=self.j)

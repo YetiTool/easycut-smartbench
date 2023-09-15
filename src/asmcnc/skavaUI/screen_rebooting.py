@@ -50,9 +50,9 @@ Builder.load_string(
 class RebootingScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(RebootingScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
         self.reboot_label.text = self.l.get_str('Rebooting') + '...'
 
     def on_pre_enter(self):

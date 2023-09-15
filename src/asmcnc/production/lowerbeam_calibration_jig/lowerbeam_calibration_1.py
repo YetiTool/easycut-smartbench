@@ -38,9 +38,9 @@ class LBCalibration1(Screen):
     formatted_max = str(datetime.timedelta(seconds=seconds))
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
         super(LBCalibration1, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
 
     def on_enter(self):
         if self.seconds < 1:

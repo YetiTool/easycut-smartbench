@@ -141,10 +141,10 @@ Builder.load_string(
 class LaserDatumButtons(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.l = kwargs.pop('localization')
         super(LaserDatumButtons, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
 
     def reset_button_press(self):
         popup_maintenance.PopupResetOffset(self.sm, self.l)

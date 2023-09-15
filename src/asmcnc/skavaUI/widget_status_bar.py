@@ -142,9 +142,9 @@ class StatusBar(Widget):
     wifi_warning = './asmcnc/skavaUI/img/wifi_warning.png'
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
         super(StatusBar, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.
             GRBL_REPORT_INTERVAL)
         Clock.schedule_interval(self.refresh_ip_label_value, self.
@@ -154,26 +154,26 @@ class StatusBar(Widget):
         self.refresh_ip_label_value()
 
     def check_limit_switch(self):
-        if self.m.s.limit_x:
+        if self.m.s.pin_info.limit_x:
             self.grbl_xm_label.text = ('m[b][color=ff0000]x[/color][/b]:\n' +
                 str(round(self.m.mpos_x(), 2)))
-        elif self.m.s.limit_X:
+        elif self.m.s.pin_info.limit_X:
             self.grbl_xm_label.text = ('m[b][color=ff0000]X[/color][/b]:\n' +
                 str(round(self.m.mpos_x(), 2)))
         else:
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
-        if self.m.s.limit_Y_axis:
+        if self.m.s.pin_info.limit_Y_axis:
             self.grbl_ym_label.text = ('m[b][color=ff0000]Y[/color][/b]:\n' +
                 str(round(self.m.mpos_y(), 2)))
-        elif self.m.s.limit_Y:
+        elif self.m.s.pin_info.limit_Y:
             self.grbl_ym_label.text = ('m[b][color=ff0000]Y[/color][/b]:\n' +
                 str(round(self.m.mpos_y(), 2)))
-        elif self.m.s.limit_y:
+        elif self.m.s.pin_info.limit_y:
             self.grbl_ym_label.text = ('m[b][color=ff0000]y[/color][/b]:\n' +
                 str(round(self.m.mpos_y(), 2)))
         else:
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
-        if self.m.s.limit_z:
+        if self.m.s.pin_info.limit_z:
             self.grbl_zm_label.text = ('m[b][color=ff0000]Z[/color][/b]:\n' +
                 str(round(self.m.mpos_z(), 2)))
         else:

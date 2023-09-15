@@ -212,10 +212,10 @@ class ZHeadMechanics(Screen):
     phase_two_current = 13
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('sm')
+        self.m = kwargs.pop('m')
+        self.l = kwargs.pop('l')
         super(ZHeadMechanics, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
         Clock.schedule_interval(self.update_realtime_load, 0.1)
 
     def prepare_for_test(self):
@@ -267,8 +267,9 @@ class ZHeadMechanics(Screen):
                     z_axis_max_speed / 5)
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
-                if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_down.append(self.m.s.sg_z_motor_axis)
+                if self.m.s.stall_guard.z_motor_axis != -999:
+                    self.sg_values_down.append(self.m.s.stall_guard.
+                        z_motor_axis)
                     self.z_pos_values_down.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_down_values, 0.1)
 
@@ -277,8 +278,8 @@ class ZHeadMechanics(Screen):
             if self.m.state().startswith('Idle'):
                 PopupPhaseTwo(self.sm, self.l)
             else:
-                if self.m.s.sg_z_motor_axis != -999:
-                    self.sg_values_up.append(self.m.s.sg_z_motor_axis)
+                if self.m.s.stall_guard.z_motor_axis != -999:
+                    self.sg_values_up.append(self.m.s.stall_guard.z_motor_axis)
                     self.z_pos_values_up.append(self.m.mpos_z())
                 Clock.schedule_once(self.record_up_values, 0.1)
 
@@ -385,11 +386,11 @@ class ZHeadMechanics(Screen):
             Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def update_realtime_load(self, dt):
-        if (self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis ==
-            None):
+        if (self.m.s.stall_guard.z_motor_axis == -999 or self.m.s.
+            stall_guard.z_motor_axis == None):
             self.load_realtime.text = '-'
         else:
-            self.load_realtime.text = str(self.m.s.sg_z_motor_axis)
+            self.load_realtime.text = str(self.m.s.stall_guard.z_motor_axis)
 
     def go_to_monitor(self):
         self.sm.current = 'monitor'

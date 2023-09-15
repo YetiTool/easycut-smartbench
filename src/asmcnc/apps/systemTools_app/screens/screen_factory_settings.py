@@ -533,12 +533,12 @@ class FactorySettingsScreen(Screen):
     poll_for_creds_file = None
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.set = kwargs.pop('settings')
+        self.l = kwargs.pop('localization')
+        self.usb_stick = kwargs.pop('usb_stick')
         super(FactorySettingsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
-        self.usb_stick = kwargs['usb_stick']
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
         self.latest_software_version.text = self.set.latest_sw_version
@@ -608,7 +608,7 @@ class FactorySettingsScreen(Screen):
             os.mkdir(csv_path)
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version(
             '2.5.0', 'Get $54 state'):
-            if self.m.s.setting_54:
+            if self.m.s.settings.s54:
                 self.setting_54_label.text = '$54 = 1'
                 self.setting_54_toggle.state = 'down'
                 self.setting_54_toggle.text = 'Set $54=0'
@@ -771,7 +771,7 @@ class FactorySettingsScreen(Screen):
                 Clock.schedule_once(self.close_sw, 5)
         else:
             try:
-                if self.m.s.setting_54:
+                if self.m.s.settings.s54:
                     warning_message = (
                         'Please ensure $54 is set to 0 before doing a factory reset.'
                         )
@@ -835,7 +835,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 
     def full_console_update(self):
         try:
-            if self.m.s.setting_54:
+            if self.m.s.settings.s54:
                 warning_message = (
                     'Please ensure $54 is set to 0 before doing an update.')
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
@@ -967,7 +967,7 @@ $51 is currently set to """
 
 $51 is currently set to """
             try:
-                message += str(int(self.m.s.setting_51))
+                message += str(int(self.m.s.settings.s51))
             except:
                 message += 'N/A'
             popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm,
@@ -1034,7 +1034,9 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print('Could not get serial number! Please contact YetiTool support!')
+            print(
+                'Could not get serial number! Please contact YetiTool support!'
+                )
         return str(serial_number_from_file)
 
     def final_test(self, board):

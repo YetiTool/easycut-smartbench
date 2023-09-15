@@ -291,7 +291,7 @@ class CalibrationDatabase(object):
     def get_ambient_temperature(self):
         try:
             query = (
-                'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE             ("device_ID" = \'\u201ceDGE-2\u201d\') AND time > now() - 2m ORDER BY DESC LIMIT 1 '
+                'SELECT "temperature" FROM "last_three_months"."environment_data" WHERE             ("device_ID" = \'“eDGE-2”\') AND time > now() - 2m ORDER BY DESC LIMIT 1 '
                 )
             return self.influx_client.query(query).raw['series'][0]['values'][0
                 ][1]

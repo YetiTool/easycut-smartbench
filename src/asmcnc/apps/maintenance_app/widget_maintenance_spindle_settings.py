@@ -335,10 +335,10 @@ class SpindleSettingsWidget(Widget):
         ] + brand_list_sc1
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(SpindleSettingsWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
         self.rpm_override = self.m.spindle_cooldown_rpm_override
         self.cooldown_speed_slider.bind(value=self.cooldown_speed_updated)
         self.cooldown_time_slider.bind(value=self.cooldown_time_updated)
@@ -410,9 +410,9 @@ class SpindleSettingsWidget(Widget):
 
     def check_spindle_info(self, dt):
         self.check_info_count += 1
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.
-            spindle_serial_number not in [None, -999, 999] or self.
-            check_info_count > 10):
+        if (self.m.s.digital_spindle.ld_qdA != -999 and self.m.s.
+            spindle_statistics.serial_number not in [None, -999, 999] or 
+            self.check_info_count > 10):
             self.read_restore_info()
         else:
             Clock.schedule_once(self.check_spindle_info, 0.3)
@@ -420,8 +420,8 @@ class SpindleSettingsWidget(Widget):
     def read_restore_info(self):
         self.m.s.write_command('M5')
         self.wait_popup.popup.dismiss()
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.
-            spindle_serial_number not in [None, -999, 999]):
+        if (self.m.s.digital_spindle.ld_qdA != -999 and self.m.s.
+            spindle_statistics.serial_number not in [None, -999, 999]):
             popup_maintenance.PopupDisplaySpindleData(self.sm, self.l, self.m.s
                 )
         else:

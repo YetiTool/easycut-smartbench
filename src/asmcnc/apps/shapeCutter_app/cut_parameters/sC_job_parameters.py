@@ -50,9 +50,9 @@ class ShapeCutterJobParameters(object):
         else:
             multiplier = 1
             self.tabs_in_mm()
-        max_X = self.m.s.setting_130 * multiplier
-        max_Y = self.m.s.setting_131 * multiplier
-        max_Z = self.m.s.setting_132 * multiplier
+        max_X = self.m.s.settings.s130 * multiplier
+        max_Y = self.m.s.settings.s131 * multiplier
+        max_Z = self.m.s.settings.s132 * multiplier
         if dim == 'X':
             if not input < max_X:
                 return max_X

@@ -182,10 +182,10 @@ Builder.load_string(
 class GRBLSettingsScreen(Screen):
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop('system_tools')
+        self.m = kwargs.pop('machine')
+        self.l = kwargs.pop('localization')
         super(GRBLSettingsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()

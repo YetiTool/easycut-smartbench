@@ -66,10 +66,10 @@ class VirtualZ31(Widget):
     WIDGET_REFRESH_INTERVAL = 0.1
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.j = kwargs.pop('job_parameters')
         super(VirtualZ31, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.j = kwargs['job_parameters']
         Clock.schedule_interval(self.refresh_widget, self.
             WIDGET_REFRESH_INTERVAL)
 

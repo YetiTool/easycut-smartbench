@@ -439,11 +439,11 @@ class MaintenanceScreenClass(Screen):
     landing_tab = StringProperty()
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop('screen_manager')
+        self.jd = kwargs.pop('job')
+        self.l = kwargs.pop('localization')
         super(MaintenanceScreenClass, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(
             machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
@@ -538,7 +538,7 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_brand.values = (self.
             spindle_settings_widget.brand_list_sc1)
         try:
-            self.m.s.setting_51
+            self.m.s.settings.s51
             if self.m.theateam():
                 self.spindle_settings_widget.spindle_brand.values = (self.
                     spindle_settings_widget.brand_list_sc2)
