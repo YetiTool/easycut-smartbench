@@ -348,7 +348,7 @@ class GeberitCutterScreen(Screen):
                 dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
             dwg.save()
 
-            Clock.schedule_once(lambda dt: self.convert_svg_to_paths(), 0.5)
+            Clock.schedule_once(lambda dt: convert_svg_to_paths(), 0.5)
 
         def convert_svg_to_paths():
             # The svg now has to be converted to paths, as required by the gcode converter
@@ -361,7 +361,7 @@ class GeberitCutterScreen(Screen):
                 dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
             dwg.save()
 
-            Clock.schedule_once(lambda dt: self.convert_svg_to_gcode(), 0.5)
+            Clock.schedule_once(lambda dt: convert_svg_to_gcode(), 0.5)
 
         def convert_svg_to_gcode():
             # Now, convert to gcode
@@ -379,7 +379,7 @@ class GeberitCutterScreen(Screen):
             # This is required because command needs to be executed from svg2gcode folder
             subprocess.Popen(cmd.split(), cwd=working_directory).wait()
 
-            Clock.schedule_once(lambda dt: self.process_gcode(), 0.5)
+            Clock.schedule_once(lambda dt: process_gcode(), 0.5)
 
         def process_gcode():
             # Anything that svg2gcode can't be forced to do, has to be done manually
