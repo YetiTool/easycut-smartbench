@@ -52,7 +52,7 @@
     ignore_errors: yes
 
     # This is very important before the pip run
-  - name: Install apt packages and one python package
+  - name: Install apt packages and two python packages
     package:
       name: "{{ item }}"
       state: present
