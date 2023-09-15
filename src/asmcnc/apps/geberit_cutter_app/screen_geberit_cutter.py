@@ -1,3 +1,4 @@
+from curses.textpad import rectangle
 import os, sys, subprocess
 from datetime import datetime
 
@@ -21,7 +22,9 @@ Builder.load_string("""
     feed_input:feed_input
     speed_input:speed_input
     depth_input:depth_input
+    shape_label:shape_label
                     
+    add_shape_button:add_shape_button
     add_shape_button_image:add_shape_button_image
 
     BoxLayout:
@@ -40,7 +43,7 @@ Builder.load_string("""
             padding: dp(10)
                     
             Label:
-                size_hint_y: 0.28
+                size_hint_y: 0.3
                 text: 'Shape cutter'
                 color: 0,0,0,1
                 font_size: dp(24)
@@ -49,8 +52,9 @@ Builder.load_string("""
                 size_hint_y: 1.3
 
                 Button:
+                    id: add_shape_button
                     background_color: [0,0,0,0]
-                    on_press: root.add_panel()
+                    on_press: root.add_shape()
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -61,12 +65,42 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
+                    
+            GridLayout:
+                cols: 1
+                rows: 2
+                
+                Label:
+                    size_hint_y: 0.3
+                    text: 'Draw:'
+                    color: 0,0,0,1
+                    font_size: dp(20)  
+
+                Label:
+                    id: shape_label
+                    size_hint_y: 0.3
+                    text: 'Rectangle'
+                    color: 0,0,0,1
+                    font_size: dp(20)  
 
             BoxLayout:
-
+                    
                 Button:
                     background_color: [0,0,0,0]
-                    on_press: root.rotate_panel()
+                    on_press: root.toggle_change_shape()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/geberit_cutter_app/img/shape_toggle_button.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+                    
+                Button:
+                    background_color: [0,0,0,0]
+                    on_press: root.rotate_shape()
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -77,19 +111,6 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
                     
-                Button:
-                    background_color: [0,0,0,0]
-                    on_press: root.change_shape()
-                    BoxLayout:
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/apps/geberit_cutter_app/img/shape_toggle_button.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
             BoxLayout:
 
                 Button:
@@ -190,7 +211,14 @@ Builder.load_string("""
                         id: filename_input
                         font_size: dp(20)
                         multiline: False
-                        hint_text: 'Enter filename'
+                        text = 'rectangle.gcode'
+                        hint_text: 'Enter filename'                        
+                    
+                    Label:
+                        size_hint_y: 0.3
+                        text: 'Canvas'
+                        color: 0,0,0,1
+                        font_size: dp(20)
 
                 Button:
                     size_hint_x: 0.2
@@ -244,40 +272,44 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
-class PanelWidget(Scatter):
+class shapeWidget(Scatter):
 
-    panel_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png"
-    panel_selected_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel_selected.png"   
+    shape_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel.png"
 
-    def __init__(self, panel_height, pos, **kwargs):
-        super(PanelWidget, self).__init__(**kwargs)
+    shape_selected_image_filepath = "./asmcnc/apps/geberit_cutter_app/img/geberit_panel_selected.png"
+
+    shape_index = 0
+    shape_type = "None" 
+
+    def __init__(self, shape_height, pos, **kwargs):
+        super(shapeWidget, self).__init__(**kwargs)
 
         self.sm = kwargs['screen_manager']
 
-        panel_width = panel_height / 2
+        shape_width = shape_height / 2
         self.size_hint = (None, None)
-        self.size = (panel_width, panel_height)
+        self.size = (shape_width, shape_height)
         self.pos = pos
         self.do_rotation=False
         self.do_scale=False
 
-        self.panel_image = Image(source=self.panel_image_filepath, size_hint=(None,None), size=(panel_width,panel_height))
-        self.add_widget(self.panel_image)
+        self.shape_image = Image(source=self.shape_image_filepath, size_hint=(None,None), size=(shape_width,shape_height))
+        self.add_widget(self.shape_image)
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.x, touch.y):
-            self.select_panel()
+            self.select_shape()
 
-        return super(PanelWidget, self).on_touch_down(touch)
+        return super(shapeWidget, self).on_touch_down(touch)
 
-    def select_panel(self):
-        # When clicked, show that the panel is selected by changing its colour
-        current_panel_selection = self.sm.get_screen('geberit_cutter').current_panel_selection
-        if current_panel_selection:
-            current_panel_selection.panel_image.source = self.panel_image_filepath
+    def select_shape(self):
+        # When clicked, show that the shape is selected by changing its colour
+        current_shape_selection = self.sm.get_screen('geberit_cutter').current_shape_selection
+        if current_shape_selection:
+            current_shape_selection.shape_image.source = self.shape_image_filepath
 
-        self.panel_image.source = self.panel_selected_image_filepath
-        self.sm.get_screen('geberit_cutter').current_panel_selection = self
+        self.shape_image.source = self.shape_selected_image_filepath
+        self.sm.get_screen('geberit_cutter').current_shape_selection = self
 
     def rotate_clockwise(self):
         self.rotation -= 90
@@ -287,10 +319,13 @@ class GeberitCutterScreen(Screen):
     svg_output_filepath = './asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg'
     raw_gcode_filepath = './asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc'
 
-    panels_added = 0
-    current_panel_selection = None
+    shapes_added = 0
+    current_shape_selection = None
 
     image_index = 0
+
+    current_shape = 'RECTANGLE'
+    max_shapes = 4
 
     z_lift_height = 5 #mm
 
@@ -301,37 +336,63 @@ class GeberitCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
-    def add_panel(self):
-        if self.panels_added < 4:
-            self.panels_added += 1
-            new_panel = PanelWidget(self.editor_container.height, self.editor_container.pos, screen_manager=self.sm)
-            new_panel.select_panel()
-            self.editor_container.add_widget(new_panel)
+    def add_shape(self):
+        if self.shapes_added < self.max_shapes:
+            self.shapes_added += 1
+            new_shape = shapeWidget(self.editor_container.height, self.editor_container.pos, screen_manager=self.sm)
+            new_shape.shape_type = self.current_shape
+            new_shape.shape_index = self.image_index
+            print("Setting shape type to:", self.current_shape)
+            new_shape.select_shape()
+            self.editor_container.add_widget(new_shape)
 
     def cycle_button_image(self):
         image_sources = [
             "./asmcnc/apps/geberit_cutter_app/img/rectangle_shape_button.png",
             "./asmcnc/apps/geberit_cutter_app/img/circle_shape_button.png",
-            "./asmcnc/apps/geberit_cutter_app/img/line_shape_button.png",
+            "./asmcnc/apps/geberit_cutter_app/img/line_shape_button.png"
         ]
+        self.shapes = [
+            'Rectangle',
+            'Circle',
+            'Line'
+        ]
+
+        #Rotate list by 1 element (bug correction)
+        if len(self.shapes) > 1:
+            first_element = self.shapes.pop(0)  # Remove and store the first element
+            self.shapes.append(first_element)  # Append the first element to the end
 
         button_image = self.add_shape_button_image
         current_image_source = button_image.source
         current_image_index = image_sources.index(current_image_source)
+        current_shape = self.shapes[current_image_index]
         next_image_index = (current_image_index + 1) % len(image_sources)
         button_image.source = image_sources[next_image_index]
 
-    def rotate_panel(self):
-        if self.current_panel_selection:
-            self.current_panel_selection.rotate_clockwise()
+        if 'rectangle' in current_shape.lower():
+            self.add_shape_button.disabled = False
+            print("Button enabled")
+        else:
+            self.add_shape_button.disabled = True
+            print("Button disabled")
 
-    def change_shape(self):
-        print("Change shape")
-        self.cycle_button_image()
+        return current_shape, current_image_index
+    
+
+    def rotate_shape(self):
+        if self.current_shape_selection:
+            self.current_shape_selection.rotate_clockwise()
+
+    def update_shape_label(self, shape):
+        self.shape_label.text = shape
+
+    def toggle_change_shape(self):
+        self.current_shape, self.image_index = self.cycle_button_image()
+        self.update_shape_label(self.current_shape)
 
     def clear_all(self):
         self.editor_container.clear_widgets()
-        print("Clear all")
 
     def save(self):
         if not (self.filename_input.text and self.feed_input.text and self.speed_input.text and self.depth_input.text):
@@ -349,55 +410,66 @@ class GeberitCutterScreen(Screen):
             # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
             # The height and width are switched - this is necessary so that everything is drawn in full size but out of bounds, which is fixed by a reflection further down
             dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
-            for panel in self.editor_container.children:
+            for shape in self.editor_container.children:
+
                 # Position has to be converted to local coordinates of the container, as they are relative to the window
-                panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
+                shape_pos = self.editor_container.to_local(shape.x, shape.y, relative=True)
 
                 # The long side has to be drawn parallel to the y axis - to solve this, this matrix transformation performs a reflection in the line y=x
                 # This means that the long side can be drawn parallel to the x axis, directly from the kivy coords, instead of figuring out how to switch all the x/y coords
                 transformation = "matrix(0 1 1 0 0 0)"
-                # Additionally, when a panel is drawn, a scaling and translation is applied, which vertically flips the svg
+                # Additionally, when a shape is drawn, a scaling and translation is applied, which vertically flips the svg
                 # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
                 transformation += " scale(1,-1) translate(0,%s)" % -self.editor_container.height
 
-                # Now rotate around the centre of the panel, which again needs the coord converted
-                panel_centre = self.editor_container.to_local(*panel.center, relative=True)
+                # Now rotate around the centre of the shape, which again needs the coord converted
+                shape_centre = self.editor_container.to_local(*shape.center, relative=True)
                 # Then add rotation
-                transformation += " rotate(%s,%s,%s)" % (panel.rotation, panel_centre[0], panel_centre[1])
+                transformation += " rotate(%s,%s,%s)" % (shape.rotation, shape_centre[0], shape_centre[1])
 
-                # If the panel is turned sideways
-                if int(panel.rotation) % 180 != 0:
+                # If the shape is turned sideways
+                if int(shape.rotation) % 180 != 0:
                     # Then rotation will mess up its position so align centre first
                     # It is important to note that this has to be added after the rotation, because transformations are performed right to left
-                    transformation += " translate(%s,%s)" % (panel.width/2, -panel.height/4)
+                    transformation += " translate(%s,%s)" % (shape.width/2, -shape.height/4)
 
-                panel_size = (panel.width, panel.height)
+                shape_size = (shape.width, shape.height)
 
-                # Create rectangle for panel background
-                dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
+                shape_type = shape.shape_type
+
+                print("shape.shape_type:", shape_type)
+
+                if shape_type.lower() == "rectangle":
+                    # Create rectangle 
+                    dwg.add(dwg.rect(shape_pos, shape_size, fill='white', stroke='black', transform=transformation))
+                elif shape_type.lower() == "circle":
+                    # Create circle
+                    circle_centre = (shape_pos[0] + (shape.width / 2), shape_pos[1] + (shape.height / 4))
+                    circle_radius = shape.width / 2
+                    dwg.add(dwg.circle(circle_centre, circle_radius, fill='white', stroke='black', transform=transformation))
                 
                 '''
-                # Set up objects for the detail of the panel as relative to rectangle position and size
-                # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
-                big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
-                big_circle_radius = panel.height / 10
+                # Set up objects for the detail of the shape as relative to rectangle position and size
+                # The same transform can be used as the rectangle transform as it is done relative to the centre of the shape
+                big_circle_centre = (shape_pos[0] + (shape.width / 2), shape_pos[1] + (shape.height / 4))
+                big_circle_radius = shape.height / 10
                 dwg.add(dwg.circle(big_circle_centre, big_circle_radius, fill='white', stroke='black', transform=transformation))
 
-                small_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height * 0.45))
-                small_circle_radius = panel.height / 40
+                small_circle_centre = (shape_pos[0] + (shape.width / 2), shape_pos[1] + (shape.height * 0.45))
+                small_circle_radius = shape.height / 40
                 dwg.add(dwg.circle(small_circle_centre, small_circle_radius, fill='white', stroke='black', transform=transformation))
 
-                small_rect_pos = (panel_pos[0] + (panel.width / 4), panel_pos[1] + (panel.height * 0.78))
-                small_rect_size = (panel.width / 2, panel.width / 4)
+                small_rect_pos = (shape_pos[0] + (shape.width / 4), shape_pos[1] + (shape.height * 0.78))
+                small_rect_size = (shape.width / 2, shape.width / 4)
                 dwg.add(dwg.rect(small_rect_pos, small_rect_size, fill='white', stroke='black', transform=transformation))
 
-                rounded_rect_size = (panel.width / 6, panel.width / 16)
+                rounded_rect_size = (shape.width / 6, shape.width / 16)
                 roundedness = rounded_rect_size[0] / 10
 
-                rounded_rect_left_pos = (panel_pos[0] + (panel.width * 0.18), panel_pos[1] + (panel.height * 0.37))
+                rounded_rect_left_pos = (shape_pos[0] + (shape.width * 0.18), shape_pos[1] + (shape.height * 0.37))
                 dwg.add(dwg.rect(rounded_rect_left_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
 
-                rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
+                rounded_rect_right_pos = (shape_pos[0] + (shape.width * 0.82) - rounded_rect_size[0], shape_pos[1] + (shape.height * 0.37))
                 dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
                 '''
             dwg.save()
@@ -471,8 +543,8 @@ class GeberitCutterScreen(Screen):
 
     def reset_editor(self):
         self.editor_container.clear_widgets()
-        self.panels_added = 0
-        self.current_panel_selection = None
+        self.shapes_added = 0
+        self.current_shape_selection = None
         self.filename_input.text = ""
         self.feed_input.text = ""
         self.speed_input.text = ""
