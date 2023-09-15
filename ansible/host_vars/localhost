@@ -12,6 +12,7 @@ apt_pkgs:
 - unixodbc-dev
 - pigpio
 - python-pigpio
+- python-scipy
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
