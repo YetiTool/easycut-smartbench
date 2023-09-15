@@ -2,6 +2,7 @@ git clone https://github.com/sameer/svg2gcode
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 export PATH="$HOME/.cargo/bin:$PATH"
 . "$HOME/.cargo/env"
+source $HOME/.cargo/env
 sudo ln -s /home/pi/.cargo/bin/cargo /usr/bin/cargo
 cd svg2gcode
 cargo add svg2gcode
