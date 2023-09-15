@@ -1,9 +1,9 @@
 .. _top:
 
-New YetiPilot profiles for ACM (aluminium composite material)!
+New YetiPilot profiles for extruded acrylic! 
 ================================================================
 
-YetiPilot has been updated with 3 new profiles to cut ACM.
+YetiPilot has been updated with 4 new profiles to cut extruded acrylic, and 1 new profile to cut ACM with a V-groove cutter.
 
 Due to the enthusiastic reception to YetiPilot, we’re committed to releasing new profiles as soon as we can. This means we’re putting out smaller and more frequent updates right now. 
 
