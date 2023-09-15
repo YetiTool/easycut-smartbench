@@ -576,6 +576,7 @@ class LobbyScreen(Screen):
         Clock.schedule_once(lambda dt: self.install_geberit_packages(), 0.5)
 
     def install_geberit_packages(self):
+        # Run it from /home/pi to clone svg2gcode to the correct location
         subprocess.Popen('bash ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
         self.geberit_installation_complete()
 
