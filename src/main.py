@@ -26,8 +26,10 @@ from os import path
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
+Config.set('graphics', 'width', '1280')
+Config.set('graphics', 'height', '800')
+# Config.set('graphics', 'width', '800')
+# Config.set('graphics', 'height', '480')
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
@@ -142,6 +144,9 @@ class SkavaUI(App):
     def build(self):
 
         log("Starting App:")
+
+        self.width = Window.width
+        self.height = Window.height
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())

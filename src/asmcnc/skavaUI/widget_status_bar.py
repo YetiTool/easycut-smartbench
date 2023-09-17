@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+from kivy.core.window import Window
 
 import os, sys
 import socket
@@ -151,6 +152,7 @@ class StatusBar(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
+        self.update_font_size()
 
     def on_enter(self):
         self.refresh_ip_label_value()
@@ -183,3 +185,12 @@ class StatusBar(Widget):
         else: 
             self.wifi_image.source = self.wifi_warning
 
+    def update_font_size(self):
+        self.grbl_status_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_xm_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_ym_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_zm_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_xw_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_yw_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.grbl_zw_label.font_size = str(0.01875*Window.width) + 'sp'
+        self.ip_status_label.font_size = str(0.01875*Window.width) + 'sp'

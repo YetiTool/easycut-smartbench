@@ -9,6 +9,7 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
@@ -58,7 +59,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
-            padding: [dp(40), dp(40), dp(40), dp(20)]
+            padding: [dp(0.05*app.width), dp(0.08334*app.height), dp(0.05*app.width), dp(0.04167*app.height)]
             size: self.parent.size
             pos: self.parent.pos
       
@@ -83,13 +84,13 @@ Builder.load_string("""
             BoxLayout:
                 size_hint_y: 4.1
     
-                padding: [15,0]
+                padding: [0.01875*app.width,0] # [15,0]
                 orientation: 'vertical'
                 BoxLayout:
                     orientation: 'horizontal'    
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -109,7 +110,7 @@ Builder.load_string("""
                             
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -130,7 +131,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -149,7 +150,7 @@ Builder.load_string("""
     
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -171,7 +172,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -189,7 +190,7 @@ Builder.load_string("""
                             color: hex('#333333ff')
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -210,7 +211,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -228,7 +229,7 @@ Builder.load_string("""
                             color: hex('#333333ff')
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing: 0.025*app.width
                         Image:
                             size_hint_x: 1
                             keep_ratio: True
@@ -252,8 +253,10 @@ Builder.load_string("""
 
                 Button:
                     id: confirm_button
-                    width: dp(700)
-                    height: dp(90)
+                    # width: dp(700)
+                    # height: dp(90)
+                    # width: dp(0.875*app.width)
+                    # height: dp(0.1875*app.height)
                     on_press: root.next_screen()
                     markup: True
                     font_size: '24sp'
@@ -262,7 +265,7 @@ Builder.load_string("""
                     halign: "center"
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    border: [dp(30)]*4
+                    border: [dp(0.0375*app.width)]*4
               
 
 """)
@@ -290,6 +293,7 @@ class SafetyScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
         self.update_strings()
+        self.update_font_size()
 
     def on_enter(self):
         log('Safety screen UP')        
@@ -313,3 +317,16 @@ class SafetyScreen(Screen):
         self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
         self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
 
+    def update_font_size(self):
+        self.header_label.font_size = str(0.03625 * Window.width) + 'sp'
+
+        self.confirm_button.font_size = str(0.03 * Window.width) + 'sp'
+
+        self.label_r1_c1.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r2_c1.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r3_c1.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r4_c1.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r1_c2.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r2_c2.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r3_c2.font_size = str(0.01875*Window.width) + 'sp'
+        self.label_r4_c2.font_size = str(0.01875*Window.width) + 'sp'
