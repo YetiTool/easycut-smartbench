@@ -118,6 +118,8 @@ class SupportMenuScreen(Screen):
     def __init__(self, **kwargs):
         self.systemtools_sm = kwargs.pop('system_tools')
         self.l = kwargs.pop('localization')
+        self.m = kwargs.pop('machine')
+        self.sett = kwargs.pop('settings')
         super(SupportMenuScreen, self).__init__(**kwargs)
         self.id_list = [self.button_download_logs, self.
             button_reinstall_pika, self.button_git_fsck, self.button_go_back]
