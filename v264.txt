@@ -1,0 +1,14 @@
+.. _top:
+
+New YetiPilot profiles for extruded acrylic! 
+================================================================
+
+YetiPilot has been updated with 4 new profiles to cut extruded acrylic, and 1 new profile to cut ACM with a V-groove cutter.
+
+Due to the enthusiastic reception to YetiPilot, we’re committed to releasing new profiles as soon as we can. This means we’re putting out smaller and more frequent updates right now. 
+
+We are still continuously working on new features and improvements to benefit all users - watch this space!
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
