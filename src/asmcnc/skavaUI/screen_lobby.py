@@ -375,13 +375,13 @@ Builder.load_string("""
                                     size: self.parent.size
                                     pos: self.parent.pos
                             Label:
-                                text: 'Geberit cutter'
+                                text: 'Demo'
                                 color: 0,0,0,1
                     Label:
                         id: geberit_cutter_app_label
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Geberit cutter'
+                        text: 'Shape cutter demo'
                         markup: True
 
         BoxLayout:
