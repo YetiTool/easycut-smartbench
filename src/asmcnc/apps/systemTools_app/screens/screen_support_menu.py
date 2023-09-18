@@ -121,6 +121,8 @@ class SupportMenuScreen(Screen):
         super(SupportMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
+        self.m = kwargs['machine']
+        self.sett = kwargs['settings']
 
         self.id_list = [
         self.button_download_logs,
