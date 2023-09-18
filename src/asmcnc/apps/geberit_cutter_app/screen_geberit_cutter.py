@@ -211,7 +211,7 @@ Builder.load_string("""
                         id: filename_input
                         font_size: dp(20)
                         multiline: False
-                        text = 'rectangle.gcode'
+                        text: 'rectangle.gcode'
                         hint_text: 'Enter filename'                        
                     
                     Label:
@@ -337,7 +337,10 @@ class GeberitCutterScreen(Screen):
         self.l = kwargs['localization']
 
     def add_shape(self):
+        print("add shape")
+        print('shapes_added:', str(self.shapes_added))
         if self.shapes_added < self.max_shapes:
+            print('Condition met')
             self.shapes_added += 1
             new_shape = shapeWidget(self.editor_container.height, self.editor_container.pos, screen_manager=self.sm)
             new_shape.shape_type = self.current_shape
@@ -392,7 +395,9 @@ class GeberitCutterScreen(Screen):
         self.update_shape_label(self.current_shape)
 
     def clear_all(self):
+        print("clear all")
         self.editor_container.clear_widgets()
+        self.shapes_added = 0
 
     def save(self):
         if not (self.filename_input.text and self.feed_input.text and self.speed_input.text and self.depth_input.text):
@@ -545,7 +550,7 @@ class GeberitCutterScreen(Screen):
         self.editor_container.clear_widgets()
         self.shapes_added = 0
         self.current_shape_selection = None
-        self.filename_input.text = ""
+        self.filename_input.text = "rectange.gcode"
         self.feed_input.text = ""
         self.speed_input.text = ""
         self.depth_input.text = ""
