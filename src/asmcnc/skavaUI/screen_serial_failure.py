@@ -116,6 +116,7 @@ class SerialFailureClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
         self.l=kwargs['localization']
+        self.win_port = kwargs['win_port']
 
         self.update_strings()
 
