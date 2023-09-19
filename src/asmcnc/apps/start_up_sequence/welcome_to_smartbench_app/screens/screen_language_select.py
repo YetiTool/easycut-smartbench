@@ -360,8 +360,8 @@ class LanguageSelectScreen(Screen):
 		self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
 		self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
 		self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
-		self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
-		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
+		self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
+		# self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
 
 	def get_image_filename(self, value):
 		# If french flag needs to be shown, then filename will not match language name due to special character
