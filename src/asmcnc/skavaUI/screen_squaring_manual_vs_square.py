@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 from kivy.clock import Clock
 
 Builder.load_string("""
@@ -32,15 +33,15 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding: [0.05*app.width, 0.08333*app.height]
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
-            height: dp(20)
-            padding: (20,0,20,0)
-            spacing: 680
+            height: dp(0.04167*app.height)
+            padding: (0.025*app.width, 0, 0.025*app.width, 0)
+            spacing: 0.85*app.width
             orientation: 'horizontal'
             pos: self.parent.pos
 
@@ -49,8 +50,8 @@ Builder.load_string("""
 
             Button:
                 size_hint: (None,None)
-                height: dp(50)
-                width: dp(50)
+                height: dp(0.10416*app.height)
+                width: dp(0.0625*app.width)
                 background_color: hex('#FFFFFF00')
                 opacity: 1
                 on_press: root.cancel()
@@ -70,8 +71,8 @@ Builder.load_string("""
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: 10
-            padding: (0,20,0,20)
+            spacing: 0.02083 * app.height
+            padding: (0, 0.04166*app.height, 0, 0.04166*app.height)
             size_hint_y: 3
             
 
@@ -79,7 +80,7 @@ Builder.load_string("""
                 id: header_label
                 size_hint_y: 2
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'sp'
                 valign: 'bottom'
                 halign: 'center'
                 size:self.texture_size
@@ -90,7 +91,7 @@ Builder.load_string("""
                 id: subtitle_label
                 size_hint_y: 1
                 markup: True
-                font_size: '18px' 
+                font_size: str(0.0225*app.width) + 'sp'
                 valign: 'top'
                 halign: 'center'
                 size:self.texture_size
@@ -99,7 +100,7 @@ Builder.load_string("""
      
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 30
+            spacing: 0.0375*app.width
             size_hint_y: 3
 
             Button:
@@ -113,8 +114,8 @@ Builder.load_string("""
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding: [20, 20]
+                border: [dp(0.0625*app.height), dp(0.0375*app.width), dp(0.0625*app.height), dp(0.0375*app.width)]
+                padding: [0.025*app.width, 0.04167*app.height]
                         
             Button:
                 size_hint_x: 0.3
@@ -140,8 +141,8 @@ Builder.load_string("""
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding: [20, 20]
+                border: [dp(0.0625*app.height), dp(0.0375*app.width), dp(0.0625*app.height), dp(0.0375*app.width)]
+                padding: [0.025*app.width, 0.04167*app.height]
                         
         Label:
             size_hint_y: .5                
@@ -155,7 +156,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'
     
-    default_font_size = 30
+    default_font_size = 0.0375 * Window.width
     
     def __init__(self, **kwargs):
         
@@ -221,10 +222,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         if len(value.text) < 35:
             value.font_size = self.default_font_size
         elif len(value.text) > 38: 
-            value.font_size = self.default_font_size - 2
+            value.font_size = self.default_font_size - (0.0025*Window.width)
         if len(value.text) > 42: 
-            value.font_size = self.default_font_size - 4
+            value.font_size = self.default_font_size - (0.005*Window.width)
         if len(value.text) > 44: 
-            value.font_size = self.default_font_size - 5
+            value.font_size = self.default_font_size - (0.00625*Window.width)
         if len(value.text) > 50:
-            value.font_size = self.default_font_size - 7
+            value.font_size = self.default_font_size - (0.00875*Window.width)
