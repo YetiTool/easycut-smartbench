@@ -15,7 +15,8 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 
-import sys, os, textwrap, subprocess, datetime
+import sys, os, textwrap, subprocess
+from datetime import datetime
 from os.path import expanduser
 from shutil import copy
 
@@ -565,12 +566,12 @@ class LobbyScreen(Screen):
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
     def geberit_cutter_app(self):
-        if sys.platform != 'win32':
-            geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
-            
-            if 'False' in geberit_setup_complete or not geberit_setup_complete:
-                popup_info.PopupGeberitInstallation(self.sm, self.l)
-                return
+        # if sys.platform != 'win32':
+        geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if 'False' in geberit_setup_complete or not geberit_setup_complete:
+            popup_info.PopupGeberitInstallation(self.sm, self.l)
+            return
 
         self.am.start_geberit_cutter_app()
 
