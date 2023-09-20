@@ -366,7 +366,7 @@ class GeberitCutterScreen(Screen):
         def convert_svg_to_gcode():
             # Now, convert to gcode
             if sys.platform != "win32":
-                cmd = "sudo cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
+                cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg"
                 # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
                 cmd += " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o /home/pi/easycut-smartbench/src/asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text)
                 working_directory = '/home/pi/svg2gcode'
