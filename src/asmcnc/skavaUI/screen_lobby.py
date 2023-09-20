@@ -566,12 +566,12 @@ class LobbyScreen(Screen):
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
     def geberit_cutter_app(self):
-        # if sys.platform != 'win32':
-        geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
-        
-        if 'False' in geberit_setup_complete or not geberit_setup_complete:
-            popup_info.PopupGeberitInstallation(self.sm, self.l)
-            return
+        if sys.platform != 'win32':
+            geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
+            
+            if 'False' in geberit_setup_complete or not geberit_setup_complete:
+                popup_info.PopupGeberitInstallation(self.sm, self.l)
+                return
 
         self.am.start_geberit_cutter_app()
 
@@ -587,6 +587,7 @@ class LobbyScreen(Screen):
         except Exception as e:
             log('Geberit installation error:\n' + str(e))
             popup_info.PopupError(self.sm, self.l, "Installation failed! Check your internet connection and try again.")
+            self.wait_popup.popup.dismiss()
 
     def geberit_installation_complete(self):
         geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())
