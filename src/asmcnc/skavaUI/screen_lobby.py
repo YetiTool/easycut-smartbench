@@ -15,7 +15,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 
-import sys, os, textwrap, subprocess
+import sys, os, textwrap, subprocess, datetime
 from os.path import expanduser
 from shutil import copy
 
@@ -488,6 +488,9 @@ Builder.load_string("""
                 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
@@ -576,9 +579,13 @@ class LobbyScreen(Screen):
         Clock.schedule_once(lambda dt: self.install_geberit_packages(), 0.5)
 
     def install_geberit_packages(self):
-        # Run it from /home/pi to clone svg2gcode to the correct location
-        subprocess.Popen('bash ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
-        self.geberit_installation_complete()
+        try:
+            # Run it from /home/pi to clone svg2gcode to the correct location
+            subprocess.Popen('bash ./easycut-smartbench/src/geberit_setup.sh'.split(), cwd='/home/pi').wait()
+            self.geberit_installation_complete()
+        except Exception as e:
+            log('Geberit installation error:\n' + str(e))
+            popup_info.PopupError(self.sm, self.l, "Installation failed! Check your internet connection and try again.")
 
     def geberit_installation_complete(self):
         geberit_setup_complete = (os.popen('grep "geberit_setup_complete" /home/pi/easycut-smartbench/src/config.txt').read())

@@ -1266,7 +1266,7 @@ class PopupGeberitInstallation(Widget):
 
         description = (
                 'To use Geberit cutter, SmartBench needs to perform an additional installation.' + '\n\n' + \
-                'This may take up to 15 minutes.' + '\n\n' +  \
+                'This may take up to 15 minutes, and requires an internet connection.' + '\n\n' +  \
                 'Would you like to install now?'
         )
         title_string = self.l.get_str('Information')
