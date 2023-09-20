@@ -1,10 +1,12 @@
 import logging
+
 """
 Created on 22 Feb 2023
 @author: Letty
 """
 import sys
-sys.path.append('./src')
+
+sys.path.append("./src")
 try:
     import unittest
     import pytest
@@ -13,6 +15,7 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 from asmcnc.comms import localization
 from asmcnc.job.yetipilot import yetipilot
+
 """
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
@@ -27,8 +30,9 @@ def yp():
     sm = Mock()
     jd = Mock()
     l = localization.Localization()
-    yp = yetipilot.YetiPilot(machine=m, screen_manager=sm, job_data=jd,
-        localization=l, test=True)
+    yp = yetipilot.YetiPilot(
+        machine=m, screen_manager=sm, job_data=jd, localization=l, test=True
+    )
     return yp
 
 
@@ -55,7 +59,7 @@ def test_load_parameters_from_json(yp):
 def test_feed_override_wrapper(yp):
     test_func = Mock()
     yp.use_yp = True
-    yp.m.state = Mock(return_value='Idle')
+    yp.m.state = Mock(return_value="Idle")
     yp.m.s.is_job_streaming = True
     yp.m.is_machine_paused = False
     yp.feed_override_wrapper(test_func)
@@ -67,16 +71,24 @@ def test_get_feed_adjustment_percentage(yp):
     yp.use_profile(yp.available_profiles[0])
     feed_up_args = True, 1, False
     no_feed_up_args = False, 0, True
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
-        feed_multiplier=-45) == -40
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
-        feed_multiplier=45) == 0
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args,
-        feed_multiplier=17) == 0
-    assert yp.get_feed_adjustment_percentage(950, *feed_up_args,
-        feed_multiplier=45) == 20
-    assert yp.get_feed_adjustment_percentage(950, *feed_up_args,
-        feed_multiplier=17) == 17
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=-45)
+        == -40
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=45)
+        == 0
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=17)
+        == 0
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=45) == 20
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=17) == 17
+    )
 
 
 def test_get_multiplier(yp):

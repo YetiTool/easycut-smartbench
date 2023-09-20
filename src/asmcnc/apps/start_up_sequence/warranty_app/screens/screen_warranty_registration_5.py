@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <WarrantyScreen5>:
@@ -179,15 +180,14 @@ Builder.load_string(
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
 """
-    )
+)
 
 
 class WarrantyScreen5(Screen):
-
     def __init__(self, **kwargs):
-        self.start_seq = kwargs.pop('start_sequence')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen5, self).__init__(**kwargs)
         self.update_strings()
 
@@ -198,9 +198,9 @@ class WarrantyScreen5(Screen):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str('CNC Academy')
+        self.title_label.text = self.l.get_str("CNC Academy")
         self.cnc_academy_info.text = self.l.get_str(
-            'Visit Yeti Tool CNC Academy for video tutorials on how to get started.'
-            )
-        self.url_label.text = 'https://academy.yetitool.com'
-        self.next_button.text = self.l.get_str('Next') + '...'
+            "Visit Yeti Tool CNC Academy for video tutorials on how to get started."
+        )
+        self.url_label.text = "https://academy.yetitool.com"
+        self.next_button.text = self.l.get_str("Next") + "..."

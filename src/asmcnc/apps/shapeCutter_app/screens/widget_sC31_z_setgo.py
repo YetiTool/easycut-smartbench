@@ -9,6 +9,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
+
 Builder.load_string(
     """
 
@@ -95,28 +96,28 @@ Builder.load_string(
          
         
 """
-    )
+)
 
 
 class SC31ZSetGo(Widget):
-
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('machine')
-        self.sm = kwargs.pop('screen_manager')
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(SC31ZSetGo, self).__init__(**kwargs)
         self.set_jog_speeds()
+
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal':
-            self.speed_image.source = './asmcnc/skavaUI/img/slow.png'
+        if self.speed_toggle.state == "normal":
+            self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
         else:
-            self.speed_image.source = './asmcnc/skavaUI/img/fast.png'
+            self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed

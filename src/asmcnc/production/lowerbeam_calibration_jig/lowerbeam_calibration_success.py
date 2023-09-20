@@ -3,6 +3,7 @@ import sys
 from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <LBCalibrationSuccess>:
@@ -48,22 +49,21 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class LBCalibrationSuccess(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('sm')
-        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(LBCalibrationSuccess, self).__init__(**kwargs)
 
     def enter_prev_screen(self):
-        self.sm.current = 'lbc4'
+        self.sm.current = "lbc4"
 
     def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system('sudo shutdown -h now')
+        if sys.platform != "win32" and sys.platform != "darwin":
+            os.system("sudo shutdown -h now")
 
     def set_serial_no(self, serial_no):
-        self.success_label.text = 'Database updated for: ' + serial_no
+        self.success_label.text = "Database updated for: " + serial_no

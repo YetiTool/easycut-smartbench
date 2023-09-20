@@ -7,6 +7,7 @@ Feedback Screen for the Shape Cutter App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
+
 Builder.load_string(
     """
 
@@ -124,15 +125,15 @@ Builder.load_string(
                 orientation: 'horizontal'
                 pos: self.parent.pos
 """
-    )
+)
 
 
 class ShapeCutterFeedbackScreenClass(Screen):
     info_button = ObjectProperty()
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterFeedbackScreenClass, self).__init__(**kwargs)
 
     def thumbs_up(self):

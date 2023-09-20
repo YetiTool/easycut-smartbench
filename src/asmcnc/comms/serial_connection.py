@@ -627,7 +627,10 @@ class SerialConnection:
             status_parts = message.translate(trans_table).split("|")
 
             # Ensure valid status
-            if status_parts[0] not in self.VALID_GRBL_STATUSES and status_parts[0][:-2] not in self.VALID_GRBL_STATUSES:
+            if (
+                status_parts[0] not in self.VALID_GRBL_STATUSES
+                and status_parts[0][:-2] not in self.VALID_GRBL_STATUSES
+            ):
                 self.logger.critical("Invalid status received: " + status_parts[0])
                 return
 
@@ -1279,11 +1282,11 @@ class SerialConnection:
             self.is_sequential_streaming = False
 
     def _after_grbl_settings_insert_dwell(self):
-        if self._sequential_stream_buffer[0].startswith('$'):
+        if self._sequential_stream_buffer[0].startswith("$"):
             if len(self._sequential_stream_buffer) > 1:
                 if (
-                        not self._sequential_stream_buffer[1].startswith('$') and
-                        not self._sequential_stream_buffer[1] == self._dwell_command
+                    not self._sequential_stream_buffer[1].startswith("$")
+                    and not self._sequential_stream_buffer[1] == self._dwell_command
                 ):
                     return True
             else:
@@ -1490,7 +1493,9 @@ class SerialConnection:
             time_taken_seconds = self.update_machine_runtime()
 
             if not self.jd.job_recovery_skip_recovery:
-                self.jd.write_to_recovery_file_after_cancel(cancel_line, time_taken_seconds)
+                self.jd.write_to_recovery_file_after_cancel(
+                    cancel_line, time_taken_seconds
+                )
 
         self.NOT_SKELETON_STUFF = True
         self.logger.info("G-code streaming cancelled")

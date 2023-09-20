@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <DistanceScreen4yClass>:
@@ -179,7 +180,7 @@ Builder.load_string(
                                 halign: 'center'
                                 markup: True          
 """
-    )
+)
 
 
 class DistanceScreen4yClass(Screen):
@@ -193,36 +194,53 @@ class DistanceScreen4yClass(Screen):
     expected_steps = 56.7
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen4yClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
-        self.title_label.text = '[color=000000]Y Distance:[/color]'
+        self.title_label.text = "[color=000000]Y Distance:[/color]"
         old_steps = str(self.old_y_steps)
         new_steps = str(self.new_y_steps)
         if self.new_y_steps < self.expected_steps - 2:
-            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + """[/b] 
+            self.user_instructions_text.text = (
+                "The old number of steps per mm was : [b]"
+                + old_steps
+                + """[/b] 
 
-The new number of steps per mm is: [b]""" + new_steps + """[/b] 
+The new number of steps per mm is: [b]"""
+                + new_steps
+                + """[/b] 
 
 [color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] 
 
 If you get this result again, please contact customer support for help."""
+            )
             self.right_button_id.disabled = True
         elif self.new_y_steps > self.expected_steps + 2:
-            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + """[/b] 
+            self.user_instructions_text.text = (
+                "The old number of steps per mm was : [b]"
+                + old_steps
+                + """[/b] 
 
-The new number of steps per mm is: [b]""" + new_steps + """[/b] 
+The new number of steps per mm is: [b]"""
+                + new_steps
+                + """[/b] 
 
 [color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] 
 
 If you get this result again, please contact customer support for help."""
+            )
             self.right_button_id.disabled = True
         else:
-            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + """[/b] 
+            self.user_instructions_text.text = (
+                "The old number of steps per mm was : [b]"
+                + old_steps
+                + """[/b] 
 
-The new number of steps per mm is: [b]""" + new_steps + """[/b] 
+The new number of steps per mm is: [b]"""
+                + new_steps
+                + """[/b] 
 
 You will need to home the machine, and then repeat steps 1 and 2 to verify your results. 
 
@@ -232,55 +250,60 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
 [color=000000]Would you like to set the new number of steps?[/color] 
 
 [color=ff0000][b]REMOVE YOUR TAPE MEASURE BEFORE HOMING THE MACHINE[/b][/color]"""
+            )
             self.right_button_id.disabled = False
 
     def left_button(self):
         self.repeat_section()
 
     def right_button(self):
-        set_new_steps_sequence = ['$101 =' + str(self.new_y_steps), '$$']
+        set_new_steps_sequence = ["$101 =" + str(self.new_y_steps), "$$"]
         self.m.s.start_sequential_stream(set_new_steps_sequence)
-        self.poll_for_success = Clock.schedule_interval(self.
-            check_for_successful_completion, 1)
+        self.poll_for_success = Clock.schedule_interval(
+            self.check_for_successful_completion, 1
+        )
 
     def check_for_successful_completion(self, dt):
         if self.m.s.is_sequential_streaming == False:
-            print('New steps have been set: $101 = ' + str(self.new_y_steps))
+            print("New steps have been set: $101 = " + str(self.new_y_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y
-        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name=
-            'distance1y', screen_manager=self.sm, machine=self.m)
+
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
+            name="distance1y", screen_manager=self.sm, machine=self.m
+        )
         self.sm.add_widget(distance_screen1y)
-        self.sm.current = 'distance1y'
+        self.sm.current = "distance1y"
 
     def skip_section(self):
-        self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
-        self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'tape_measure_alert'
+        self.sm.get_screen(
+            "tape_measure_alert"
+        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("calibration_complete").calibration_cancelled = True
+        self.sm.current = "tape_measure_alert"
 
     def quit_calibration(self):
-        self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
-        self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'tape_measure_alert'
+        self.sm.get_screen(
+            "tape_measure_alert"
+        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("calibration_complete").calibration_cancelled = True
+        self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
         from asmcnc.calibration_app import screen_distance_1_y
-        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name=
-            'distance1y', screen_manager=self.sm, machine=self.m)
+
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
+            name="distance1y", screen_manager=self.sm, machine=self.m
+        )
         self.sm.add_widget(distance_screen1y)
-        self.sm.get_screen('prepare_to_home').return_to_screen = 'distance1y'
-        self.sm.get_screen('prepare_to_home'
-            ).cancel_to_screen = 'calibration_complete'
-        self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'prepare_to_home'
-        self.sm.current = 'tape_measure_alert'
+        self.sm.get_screen("prepare_to_home").return_to_screen = "distance1y"
+        self.sm.get_screen("prepare_to_home").cancel_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = "prepare_to_home"
+        self.sm.current = "tape_measure_alert"
 
     def on_leave(self):
-        if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
-            self.sm.remove_widget(self.sm.get_screen('distance4y'))
+        if self.sm.current != "alarmScreen" and self.sm.current != "errorScreen":
+            self.sm.remove_widget(self.sm.get_screen("distance4y"))

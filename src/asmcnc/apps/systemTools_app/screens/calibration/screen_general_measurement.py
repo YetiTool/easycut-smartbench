@@ -3,9 +3,11 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
+
 try:
     import matplotlib
-    matplotlib.use('Agg')
+
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     import matplotlib.ticker as plticker
 except:
@@ -118,26 +120,35 @@ Builder.load_string(
                 on_press: root.display_results()
 
 """
-    )
+)
 
 
 class GeneralMeasurementScreen(Screen):
     x_idx = 0
     y_idx = 0
-    descriptors = {(1): 'x pos', (2): 'y pos', (3): 'z pos', (4): 'SG X', (
-        5): 'SG Y', (6): 'SG Y1', (7): 'SG Y2', (8): 'SG Z', (12): 't', (13
-        ): 'F'}
+    descriptors = {
+        (1): "x pos",
+        (2): "y pos",
+        (3): "z pos",
+        (4): "SG X",
+        (5): "SG Y",
+        (6): "SG Y1",
+        (7): "SG Y2",
+        (8): "SG Z",
+        (12): "t",
+        (13): "F",
+    }
 
     def __init__(self, **kwargs):
-        self.systemtools_sm = kwargs.pop('systemtools')
-        self.m = kwargs.pop('machine')
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.m = kwargs.pop("machine")
         super(GeneralMeasurementScreen, self).__init__(**kwargs)
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
 
     def start_measurement(self):
-        self.m.start_measuring_running_data('999')
+        self.m.start_measuring_running_data("999")
 
     def stop_measurement(self):
         self.m.stop_measuring_running_data()
@@ -154,34 +165,41 @@ class GeneralMeasurementScreen(Screen):
         return new_list
 
     def set_index(self, axis, label):
-        value = [i for i in self.descriptors if self.descriptors[i] ==
-            label.text][0]
-        if axis == 'X':
+        value = [i for i in self.descriptors if self.descriptors[i] == label.text][0]
+        if axis == "X":
             self.x_idx = value
-        if axis == 'Y':
+        if axis == "Y":
             self.y_idx = value
 
     def display_results(self):
         try:
-            plt.rcParams['figure.figsize'] = 7, 3.55
-            xVar, yVar = list(zip(*((x, y) for x, y in zip(self.get_x_axis(
-                ), self.get_y_axis()) if y != -999 and y != None)))
-            plt.plot(xVar, yVar, 'bx')
+            plt.rcParams["figure.figsize"] = 7, 3.55
+            xVar, yVar = list(
+                zip(
+                    *(
+                        (x, y)
+                        for x, y in zip(self.get_x_axis(), self.get_y_axis())
+                        if y != -999 and y != None
+                    )
+                )
+            )
+            plt.plot(xVar, yVar, "bx")
             plt.xlabel(self.descriptors[self.x_idx])
             plt.ylabel(self.descriptors[self.y_idx])
-            plt.title(self.descriptors[self.x_idx] + 'vs' + self.
-                descriptors[self.y_idx])
+            plt.title(
+                self.descriptors[self.x_idx] + "vs" + self.descriptors[self.y_idx]
+            )
             plt.tight_layout()
             plt.grid()
             plt.savefig(
-                './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
-                )
+                "./asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png"
+            )
             plt.close()
             self.load_graph.source = (
-                './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
-                )
+                "./asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png"
+            )
             self.load_graph.reload()
             self.load_graph.opacity = 1
-            self.plot_title.text = ''
+            self.plot_title.text = ""
         except:
             self.plot_title.text = "Can't plot :("

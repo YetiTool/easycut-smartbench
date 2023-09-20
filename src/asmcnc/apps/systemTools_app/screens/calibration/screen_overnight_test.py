@@ -21,6 +21,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from asmcnc.comms.logging import log_exporter
+
 Builder.load_string(
     """
 <OvernightTesting>:
@@ -698,12 +699,12 @@ Builder.load_string(
             id: status_container
 
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
 
 
 class OvernightTesting(Screen):
@@ -724,12 +725,12 @@ class OvernightTesting(Screen):
     run_event_after_datum_set = None
     start_tuning_event = None
     _stream_overnight_file_event = None
-    checkbox_inactive = './asmcnc/skavaUI/img/checkbox_inactive.png'
-    red_cross = './asmcnc/skavaUI/img/template_cancel.png'
-    green_tick = './asmcnc/skavaUI/img/file_select_select.png'
+    checkbox_inactive = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    red_cross = "./asmcnc/skavaUI/img/template_cancel.png"
+    green_tick = "./asmcnc/skavaUI/img/file_select_select.png"
     mini_run_dev_mode = False
     do_tune = True
-    sn_for_db = ''
+    sn_for_db = ""
     x_wear_in_min_pos = None
     y_wear_in_min_pos = None
     y1_wear_in_min_pos = None
@@ -762,26 +763,30 @@ class OvernightTesting(Screen):
     z_fully_calibrated_min_neg = None
 
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('m')
-        self.systemtools_sm = kwargs.pop('systemtools')
-        self.calibration_db = kwargs.pop('calibration_db')
-        self.sm = kwargs.pop('sm')
-        self.l = kwargs.pop('l')
+        self.m = kwargs.pop("m")
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.sm = kwargs.pop("sm")
+        self.l = kwargs.pop("l")
         super(OvernightTesting, self).__init__(**kwargs)
         self.setup_arrays()
         self.overnight_running = False
         self.statuses = []
-        self.stage = 'OvernightWearIn'
+        self.stage = "OvernightWearIn"
         self.stage_id = 0
-        self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(
-            machine=self.m, screen_manager=self.systemtools_sm.sm))
-        self.status_data_dict = {'OvernightWearIn': {'Table':
-            'FinalTestStatuses', 'Statuses': []}, 'FullyCalibratedTest': {
-            'Table': 'FinalTestStatuses', 'Statuses': []}}
-        self.statistics_data_dict = {'OvernightWearIn': [],
-            'FullyCalibratedTest': []}
-        self.calibration_stage_id = (self.calibration_db.
-            get_stage_id_by_description('CalibrationOT'))
+        self.status_container.add_widget(
+            widget_sg_status_bar.SGStatusBar(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
+        self.status_data_dict = {
+            "OvernightWearIn": {"Table": "FinalTestStatuses", "Statuses": []},
+            "FullyCalibratedTest": {"Table": "FinalTestStatuses", "Statuses": []},
+        }
+        self.statistics_data_dict = {"OvernightWearIn": [], "FullyCalibratedTest": []}
+        self.calibration_stage_id = self.calibration_db.get_stage_id_by_description(
+            "CalibrationOT"
+        )
 
     def setup_arrays(self):
         self.raw_x_pos_vals = []
@@ -808,64 +813,81 @@ class OvernightTesting(Screen):
 
     def get_sub_serials_from_database(self):
         try:
-            self.sn_for_db = 'ys6' + str(self.m.serial_number()).split('.')[0]
-            [self.zh_serial, self.xl_serial
-                ] = self.calibration_db.get_serials_by_machine_serial(self.
-                sn_for_db)
+            self.sn_for_db = "ys6" + str(self.m.serial_number()).split(".")[0]
+            [
+                self.zh_serial,
+                self.xl_serial,
+            ] = self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
         except:
             message = (
                 "Can't get subassembly serials from database, have you entered serial numbers yet?"
-                 + '\n' +
-                "Check connection and serial number entry, and don't continue unless absolutely necessary."
-                )
+                + "\n"
+                + "Check connection and serial number entry, and don't continue unless absolutely necessary."
+            )
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
 
     def set_stage(self, stage):
         self.stage = stage
-        self.stage_id = self.calibration_db.get_stage_id_by_description(self
-            .stage)
+        self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
         try:
-            self.calibration_db.insert_final_test_stage(self.sn_for_db,
-                self.stage_id)
+            self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
         except:
-            log('Could not insert final test stage into DB!!')
+            log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
-        self.status_data_dict[self.stage]['Statuses'] = []
-        log('Overnight test, stage: ' + str(self.stage))
+        self.status_data_dict[self.stage]["Statuses"] = []
+        log("Overnight test, stage: " + str(self.stage))
 
     def measure(self):
         if not self.overnight_running:
             return
         if self.m.is_machine_paused:
             return
-        if len(self.status_data_dict[self.stage]['Statuses']) > 0:
-            if self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['XCoordinate'
-                ] < self.m.mpos_x():
+        if len(self.status_data_dict[self.stage]["Statuses"]) > 0:
+            if (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["XCoordinate"]
+                < self.m.mpos_x()
+            ):
                 x_dir = -1
-            elif self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['XCoordinate'
-                ] > self.m.mpos_x():
+            elif (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["XCoordinate"]
+                > self.m.mpos_x()
+            ):
                 x_dir = 1
             else:
                 x_dir = 0
-            if self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['YCoordinate'
-                ] < self.m.mpos_y():
+            if (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["YCoordinate"]
+                < self.m.mpos_y()
+            ):
                 y_dir = -1
-            elif self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['YCoordinate'
-                ] > self.m.mpos_y():
+            elif (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["YCoordinate"]
+                > self.m.mpos_y()
+            ):
                 y_dir = 1
             else:
                 y_dir = 0
-            if self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['ZCoordinate'
-                ] < self.m.mpos_z():
+            if (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["ZCoordinate"]
+                < self.m.mpos_z()
+            ):
                 z_dir = 1
-            elif self.status_data_dict[self.stage]['Statuses'][len(self.
-                status_data_dict[self.stage]['Statuses']) - 1]['ZCoordinate'
-                ] > self.m.mpos_z():
+            elif (
+                self.status_data_dict[self.stage]["Statuses"][
+                    len(self.status_data_dict[self.stage]["Statuses"]) - 1
+                ]["ZCoordinate"]
+                > self.m.mpos_z()
+            ):
                 z_dir = -1
             else:
                 z_dir = 0
@@ -873,20 +895,30 @@ class OvernightTesting(Screen):
             x_dir = 0
             y_dir = 0
             z_dir = 0
-        status = {'Id': '', 'FTID': int(self.sn_for_db[2:] + str(self.
-            stage_id)), 'XCoordinate': self.m.mpos_x(), 'YCoordinate': self
-            .m.mpos_y(), 'ZCoordinate': self.m.mpos_z(), 'XDirection':
-            x_dir, 'YDirection': y_dir, 'ZDirection': z_dir, 'XSG': int(
-            self.m.s.stall_guard.x_motor_axis), 'YSG': int(self.m.s.
-            stall_guard.y_axis), 'Y1SG': int(self.m.s.stall_guard.y1_motor),
-            'Y2SG': int(self.m.s.stall_guard.y2_motor), 'ZSG': int(self.m.s
-            .stall_guard.z_motor_axis), 'TMCTemperature': int(self.m.s.
-            temperatures.motor_driver), 'PCBTemperature': int(self.m.s.
-            temperatures.pcb), 'MOTTemperature': int(self.m.s.temperatures.
-            transistor_heatsink), 'Timestamp': datetime.now().strftime(
-            '%Y-%m-%d %H:%M:%S'), 'Feedrate': self.m.feed_rate(), 'XWeight':
-            0, 'YWeight': 0, 'ZWeight': 2}
-        self.status_data_dict[self.stage]['Statuses'].append(status)
+        status = {
+            "Id": "",
+            "FTID": int(self.sn_for_db[2:] + str(self.stage_id)),
+            "XCoordinate": self.m.mpos_x(),
+            "YCoordinate": self.m.mpos_y(),
+            "ZCoordinate": self.m.mpos_z(),
+            "XDirection": x_dir,
+            "YDirection": y_dir,
+            "ZDirection": z_dir,
+            "XSG": int(self.m.s.stall_guard.x_motor_axis),
+            "YSG": int(self.m.s.stall_guard.y_axis),
+            "Y1SG": int(self.m.s.stall_guard.y1_motor),
+            "Y2SG": int(self.m.s.stall_guard.y2_motor),
+            "ZSG": int(self.m.s.stall_guard.z_motor_axis),
+            "TMCTemperature": int(self.m.s.temperatures.motor_driver),
+            "PCBTemperature": int(self.m.s.temperatures.pcb),
+            "MOTTemperature": int(self.m.s.temperatures.transistor_heatsink),
+            "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "Feedrate": self.m.feed_rate(),
+            "XWeight": 0,
+            "YWeight": 0,
+            "ZWeight": 2,
+        }
+        self.status_data_dict[self.stage]["Statuses"].append(status)
         if -999 < self.m.s.stall_guard.x_motor_axis < 1023:
             if x_dir > 0:
                 self.raw_x_pos_vals.append(self.m.s.stall_guard.x_motor_axis)
@@ -915,49 +947,49 @@ class OvernightTesting(Screen):
         self.update_peaks()
 
     def update_peaks(self):
-        if self.stage == 'OvernightWearIn':
-            self.get_peak_as_string(self.x_wear_in_peak_pos, self.
-                raw_x_pos_vals)
-            self.get_peak_as_string(self.y_wear_in_peak_pos, self.
-                raw_y_pos_vals)
-            self.get_peak_as_string(self.y1_wear_in_peak_pos, self.
-                raw_y1_pos_vals)
-            self.get_peak_as_string(self.y2_wear_in_peak_pos, self.
-                raw_y2_pos_vals)
-            self.get_peak_as_string(self.z_wear_in_peak_pos, self.
-                raw_z_pos_vals)
-            self.get_peak_as_string(self.x_wear_in_peak_neg, self.
-                raw_x_neg_vals)
-            self.get_peak_as_string(self.y_wear_in_peak_neg, self.
-                raw_y_neg_vals)
-            self.get_peak_as_string(self.y1_wear_in_peak_neg, self.
-                raw_y1_neg_vals)
-            self.get_peak_as_string(self.y2_wear_in_peak_neg, self.
-                raw_y2_neg_vals)
-            self.get_peak_as_string(self.z_wear_in_peak_neg, self.
-                raw_z_neg_vals)
+        if self.stage == "OvernightWearIn":
+            self.get_peak_as_string(self.x_wear_in_peak_pos, self.raw_x_pos_vals)
+            self.get_peak_as_string(self.y_wear_in_peak_pos, self.raw_y_pos_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak_pos, self.raw_y1_pos_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak_pos, self.raw_y2_pos_vals)
+            self.get_peak_as_string(self.z_wear_in_peak_pos, self.raw_z_pos_vals)
+            self.get_peak_as_string(self.x_wear_in_peak_neg, self.raw_x_neg_vals)
+            self.get_peak_as_string(self.y_wear_in_peak_neg, self.raw_y_neg_vals)
+            self.get_peak_as_string(self.y1_wear_in_peak_neg, self.raw_y1_neg_vals)
+            self.get_peak_as_string(self.y2_wear_in_peak_neg, self.raw_y2_neg_vals)
+            self.get_peak_as_string(self.z_wear_in_peak_neg, self.raw_z_neg_vals)
             return
-        if self.stage == 'FullyCalibratedTest':
-            self.get_peak_as_string(self.x_fully_calibrated_peak_pos, self.
-                raw_x_pos_vals)
-            self.get_peak_as_string(self.y_fully_calibrated_peak_pos, self.
-                raw_y_pos_vals)
-            self.get_peak_as_string(self.y1_fully_calibrated_peak_pos, self
-                .raw_y1_pos_vals)
-            self.get_peak_as_string(self.y2_fully_calibrated_peak_pos, self
-                .raw_y2_pos_vals)
-            self.get_peak_as_string(self.z_fully_calibrated_peak_pos, self.
-                raw_z_pos_vals)
-            self.get_peak_as_string(self.x_fully_calibrated_peak_neg, self.
-                raw_x_neg_vals)
-            self.get_peak_as_string(self.y_fully_calibrated_peak_neg, self.
-                raw_y_neg_vals)
-            self.get_peak_as_string(self.y1_fully_calibrated_peak_neg, self
-                .raw_y1_neg_vals)
-            self.get_peak_as_string(self.y2_fully_calibrated_peak_neg, self
-                .raw_y2_neg_vals)
-            self.get_peak_as_string(self.z_fully_calibrated_peak_neg, self.
-                raw_z_neg_vals)
+        if self.stage == "FullyCalibratedTest":
+            self.get_peak_as_string(
+                self.x_fully_calibrated_peak_pos, self.raw_x_pos_vals
+            )
+            self.get_peak_as_string(
+                self.y_fully_calibrated_peak_pos, self.raw_y_pos_vals
+            )
+            self.get_peak_as_string(
+                self.y1_fully_calibrated_peak_pos, self.raw_y1_pos_vals
+            )
+            self.get_peak_as_string(
+                self.y2_fully_calibrated_peak_pos, self.raw_y2_pos_vals
+            )
+            self.get_peak_as_string(
+                self.z_fully_calibrated_peak_pos, self.raw_z_pos_vals
+            )
+            self.get_peak_as_string(
+                self.x_fully_calibrated_peak_neg, self.raw_x_neg_vals
+            )
+            self.get_peak_as_string(
+                self.y_fully_calibrated_peak_neg, self.raw_y_neg_vals
+            )
+            self.get_peak_as_string(
+                self.y1_fully_calibrated_peak_neg, self.raw_y1_neg_vals
+            )
+            self.get_peak_as_string(
+                self.y2_fully_calibrated_peak_neg, self.raw_y2_neg_vals
+            )
+            self.get_peak_as_string(
+                self.z_fully_calibrated_peak_neg, self.raw_z_neg_vals
+            )
             return
 
     def get_peak_as_string(self, label_id, raw_vals):
@@ -967,7 +999,7 @@ class OvernightTesting(Screen):
             pass
 
     def record_min_peaks(self):
-        if self.stage == 'OvernightWearIn':
+        if self.stage == "OvernightWearIn":
             self.x_wear_in_min_pos = self.get_min_peak(self.raw_x_pos_vals)
             self.y_wear_in_min_pos = self.get_min_peak(self.raw_y_pos_vals)
             self.y1_wear_in_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
@@ -979,78 +1011,83 @@ class OvernightTesting(Screen):
             self.y2_wear_in_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
             self.z_wear_in_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return
-        if self.stage == 'FullyCalibratedTest':
-            self.x_fully_calibrated_min_pos = self.get_min_peak(self.
-                raw_x_pos_vals)
-            self.y_fully_calibrated_min_pos = self.get_min_peak(self.
-                raw_y_pos_vals)
-            self.y1_fully_calibrated_min_pos = self.get_min_peak(self.
-                raw_y1_pos_vals)
-            self.y2_fully_calibrated_min_pos = self.get_min_peak(self.
-                raw_y2_pos_vals)
-            self.z_fully_calibrated_min_pos = self.get_min_peak(self.
-                raw_z_pos_vals)
-            self.x_fully_calibrated_min_neg = self.get_min_peak(self.
-                raw_x_neg_vals)
-            self.y_fully_calibrated_min_neg = self.get_min_peak(self.
-                raw_y_neg_vals)
-            self.y1_fully_calibrated_min_neg = self.get_min_peak(self.
-                raw_y1_neg_vals)
-            self.y2_fully_calibrated_min_neg = self.get_min_peak(self.
-                raw_y2_neg_vals)
-            self.z_fully_calibrated_min_neg = self.get_min_peak(self.
-                raw_z_neg_vals)
+        if self.stage == "FullyCalibratedTest":
+            self.x_fully_calibrated_min_pos = self.get_min_peak(self.raw_x_pos_vals)
+            self.y_fully_calibrated_min_pos = self.get_min_peak(self.raw_y_pos_vals)
+            self.y1_fully_calibrated_min_pos = self.get_min_peak(self.raw_y1_pos_vals)
+            self.y2_fully_calibrated_min_pos = self.get_min_peak(self.raw_y2_pos_vals)
+            self.z_fully_calibrated_min_pos = self.get_min_peak(self.raw_z_pos_vals)
+            self.x_fully_calibrated_min_neg = self.get_min_peak(self.raw_x_neg_vals)
+            self.y_fully_calibrated_min_neg = self.get_min_peak(self.raw_y_neg_vals)
+            self.y1_fully_calibrated_min_neg = self.get_min_peak(self.raw_y1_neg_vals)
+            self.y2_fully_calibrated_min_neg = self.get_min_peak(self.raw_y2_neg_vals)
+            self.z_fully_calibrated_min_neg = self.get_min_peak(self.raw_z_neg_vals)
             return
 
     def get_min_peak(self, raw_vals):
         try:
             return min(raw_vals)
         except:
-            print('Min peak error:')
+            print("Min peak error:")
             print(traceback.format_exc())
             return None
 
     def read_out_peaks(self, stage):
-        if stage == 'OvernightWearIn':
-            peak_list = [int(self.x_wear_in_peak_pos.text), int(self.
-                x_wear_in_peak_neg.text), int(self.y_wear_in_peak_pos.text),
-                int(self.y_wear_in_peak_neg.text), int(self.
-                y1_wear_in_peak_pos.text), int(self.y1_wear_in_peak_neg.
-                text), int(self.y2_wear_in_peak_pos.text), int(self.
-                y2_wear_in_peak_neg.text), int(self.z_wear_in_peak_neg.text
-                ), int(self.z_wear_in_peak_pos.text)]
+        if stage == "OvernightWearIn":
+            peak_list = [
+                int(self.x_wear_in_peak_pos.text),
+                int(self.x_wear_in_peak_neg.text),
+                int(self.y_wear_in_peak_pos.text),
+                int(self.y_wear_in_peak_neg.text),
+                int(self.y1_wear_in_peak_pos.text),
+                int(self.y1_wear_in_peak_neg.text),
+                int(self.y2_wear_in_peak_pos.text),
+                int(self.y2_wear_in_peak_neg.text),
+                int(self.z_wear_in_peak_neg.text),
+                int(self.z_wear_in_peak_pos.text),
+            ]
             return peak_list
-        if stage == 'FullyCalibratedTest':
-            peak_list = [int(self.x_fully_calibrated_peak_pos.text), int(
-                self.x_fully_calibrated_peak_neg.text), int(self.
-                y_fully_calibrated_peak_pos.text), int(self.
-                y_fully_calibrated_peak_neg.text), int(self.
-                y1_fully_calibrated_peak_pos.text), int(self.
-                y1_fully_calibrated_peak_neg.text), int(self.
-                y2_fully_calibrated_peak_pos.text), int(self.
-                y2_fully_calibrated_peak_neg.text), int(self.
-                z_fully_calibrated_peak_neg.text), int(self.
-                z_fully_calibrated_peak_pos.text)]
+        if stage == "FullyCalibratedTest":
+            peak_list = [
+                int(self.x_fully_calibrated_peak_pos.text),
+                int(self.x_fully_calibrated_peak_neg.text),
+                int(self.y_fully_calibrated_peak_pos.text),
+                int(self.y_fully_calibrated_peak_neg.text),
+                int(self.y1_fully_calibrated_peak_pos.text),
+                int(self.y1_fully_calibrated_peak_neg.text),
+                int(self.y2_fully_calibrated_peak_pos.text),
+                int(self.y2_fully_calibrated_peak_neg.text),
+                int(self.z_fully_calibrated_peak_neg.text),
+                int(self.z_fully_calibrated_peak_pos.text),
+            ]
             return peak_list
 
     def get_statistics(self):
-        log('Getting statistics...')
+        log("Getting statistics...")
         try:
             peak_list = self.read_out_peaks(self.stage)
-            self.statistics_data_dict[self.stage] = [sum(self.
-                raw_x_pos_vals) / len(self.raw_x_pos_vals), peak_list[0], 
+            self.statistics_data_dict[self.stage] = [
+                sum(self.raw_x_pos_vals) / len(self.raw_x_pos_vals),
+                peak_list[0],
                 sum(self.raw_x_neg_vals) / len(self.raw_x_neg_vals),
-                peak_list[1], sum(self.raw_y_pos_vals) / len(self.
-                raw_y_pos_vals), peak_list[2], sum(self.raw_y_neg_vals) /
-                len(self.raw_y_neg_vals), peak_list[3], sum(self.
-                raw_y1_pos_vals) / len(self.raw_y1_pos_vals), peak_list[4],
+                peak_list[1],
+                sum(self.raw_y_pos_vals) / len(self.raw_y_pos_vals),
+                peak_list[2],
+                sum(self.raw_y_neg_vals) / len(self.raw_y_neg_vals),
+                peak_list[3],
+                sum(self.raw_y1_pos_vals) / len(self.raw_y1_pos_vals),
+                peak_list[4],
                 sum(self.raw_y1_neg_vals) / len(self.raw_y1_neg_vals),
-                peak_list[5], sum(self.raw_y2_pos_vals) / len(self.
-                raw_y2_pos_vals), peak_list[6], sum(self.raw_y2_neg_vals) /
-                len(self.raw_y2_neg_vals), peak_list[7], sum(self.
-                raw_z_pos_vals) / len(self.raw_z_pos_vals), peak_list[8], 
+                peak_list[5],
+                sum(self.raw_y2_pos_vals) / len(self.raw_y2_pos_vals),
+                peak_list[6],
+                sum(self.raw_y2_neg_vals) / len(self.raw_y2_neg_vals),
+                peak_list[7],
+                sum(self.raw_z_pos_vals) / len(self.raw_z_pos_vals),
+                peak_list[8],
                 sum(self.raw_z_neg_vals) / len(self.raw_z_neg_vals),
-                peak_list[9]]
+                peak_list[9],
+            ]
         except:
             print(traceback.format_exc())
 
@@ -1060,8 +1097,7 @@ class OvernightTesting(Screen):
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('overnight_testing',
-            'overnight_testing')
+        self.m.request_homing_procedure("overnight_testing", "overnight_testing")
 
     def stop(self):
         PopupStopOvernightTest(self.m, self.sm, self.l, self)
@@ -1104,21 +1140,25 @@ class OvernightTesting(Screen):
     def start_full_overnight_test(self):
         self.buttons_disabled(True)
         self.setup_arrays()
-        log('Start full overnight test')
-        self.poll_for_recalibration_stage = Clock.schedule_interval(self.
-            ready_for_recalibration, 10)
-        self.poll_for_fully_calibrated_final_run_stage = (Clock.
-            schedule_interval(self.ready_for_fully_calibrated_final_run, 10))
+        log("Start full overnight test")
+        self.poll_for_recalibration_stage = Clock.schedule_interval(
+            self.ready_for_recalibration, 10
+        )
+        self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(
+            self.ready_for_fully_calibrated_final_run, 10
+        )
         self.poll_for_completion_of_overnight_test = Clock.schedule_interval(
-            self.overnight_test_completed, 120)
+            self.overnight_test_completed, 120
+        )
         self.start_six_hour_wear_in()
 
     def start_cal_and_post_cal(self):
         self.buttons_disabled(True)
         self.setup_arrays()
-        log('Start cal and post cal')
-        self.poll_for_fully_calibrated_final_run_stage = (Clock.
-            schedule_interval(self.ready_for_fully_calibrated_final_run, 10))
+        log("Start cal and post cal")
+        self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(
+            self.ready_for_fully_calibrated_final_run, 10
+        )
         self.start_recalibration()
 
     def start_six_hour_wear_in(self):
@@ -1131,28 +1171,32 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.z_wear_in_checkbox)
         self.reset_checkbox(self.sent_six_hour_wear_in_data)
         self.setup_arrays()
-        log('Start 6 hour wear-in')
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.
-            y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-        self.start_six_hour_wear_in_event = Clock.schedule_once(self.
-            run_six_hour_wear_in, 5)
+        log("Start 6 hour wear-in")
+        self.m.jog_absolute_xy(
+            self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000
+        )
+        self.m.jog_absolute_single_axis("Z", self.m.z_max_jog_abs_limit, 750)
+        self.start_six_hour_wear_in_event = Clock.schedule_once(
+            self.run_six_hour_wear_in, 5
+        )
 
     def run_six_hour_wear_in(self, dt):
         if self._not_ready_to_stream():
-            self.start_six_hour_wear_in_event = Clock.schedule_once(self.
-                run_six_hour_wear_in, 3)
+            self.start_six_hour_wear_in_event = Clock.schedule_once(
+                self.run_six_hour_wear_in, 3
+            )
             return
-        self.set_stage('OvernightWearIn')
-        self._stream_overnight_file('two_hour_rectangle')
-        self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(self.
-            post_six_hour_wear_in, 60)
-        log('Running six hour wear-in...')
+        self.set_stage("OvernightWearIn")
+        self._stream_overnight_file("two_hour_rectangle")
+        self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(
+            self.post_six_hour_wear_in, 60
+        )
+        log("Running six hour wear-in...")
 
     def post_six_hour_wear_in(self, dt):
         if self._not_finished_streaming(self.poll_end_of_six_hour_wear_in):
             return
-        log('Six hour wear-in completed')
+        log("Six hour wear-in completed")
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.six_hour_wear_in_checkbox, True)
         self.get_statistics()
@@ -1162,11 +1206,12 @@ class OvernightTesting(Screen):
             self.buttons_disabled(False)
 
     def ready_for_recalibration(self, dt):
-        if self.is_step_ticked(self.six_hour_wear_in_checkbox
-            ) and self.is_step_complete(self.sent_six_hour_wear_in_data):
+        if self.is_step_ticked(
+            self.six_hour_wear_in_checkbox
+        ) and self.is_step_complete(self.sent_six_hour_wear_in_data):
             if self.poll_for_recalibration_stage != None:
                 Clock.unschedule(self.poll_for_recalibration_stage)
-            log('Start recalibration...')
+            log("Start recalibration...")
             self.start_recalibration()
 
     def start_recalibration(self):
@@ -1174,17 +1219,18 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.recalibration_checkbox)
         self.reset_checkbox(self.sent_recalibration_data)
         if self._not_ready_to_stream():
-            self.start_recalibration_event = Clock.schedule_once(lambda dt:
-                self.start_recalibration(), 3)
+            self.start_recalibration_event = Clock.schedule_once(
+                lambda dt: self.start_recalibration(), 3
+            )
             return
-        log('Starting recalibration...')
+        log("Starting recalibration...")
         self.setup_arrays()
         self.overnight_running = False
-        self.stage = ''
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 10, self.m.
-            y_min_jog_abs_limit + 10, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit - 
-            10, 750)
+        self.stage = ""
+        self.m.jog_absolute_xy(
+            self.m.x_min_jog_abs_limit + 10, self.m.y_min_jog_abs_limit + 10, 6000
+        )
+        self.m.jog_absolute_single_axis("Z", self.m.z_max_jog_abs_limit - 10, 750)
         self.stop_button.disabled = True
         self.start_tuning_event = Clock.schedule_once(self.do_tuning, 2)
 
@@ -1195,8 +1241,9 @@ class OvernightTesting(Screen):
         if not self.m.run_calibration and not self.m.tuning_in_progress:
             if self.do_tune:
                 self.m.tune_X_Y_Z_for_calibration()
-            self.poll_for_tuning_completion = Clock.schedule_interval(self.
-                do_calibration, 5)
+            self.poll_for_tuning_completion = Clock.schedule_interval(
+                self.do_calibration, 5
+            )
 
     def do_calibration(self, dt):
         if self._not_ready_to_stream():
@@ -1205,8 +1252,9 @@ class OvernightTesting(Screen):
             Clock.unschedule(self.poll_for_tuning_completion)
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_X_Y_and_Z()
-                self.poll_for_recalibration_completion = (Clock.
-                    schedule_interval(self.post_recalibration, 5))
+                self.poll_for_recalibration_completion = Clock.schedule_interval(
+                    self.post_recalibration, 5
+                )
             else:
                 self.cancel_active_polls()
                 self.tick_checkbox(self.recalibration_checkbox, False)
@@ -1218,29 +1266,29 @@ class OvernightTesting(Screen):
         if self.poll_for_recalibration_completion != None:
             Clock.unschedule(self.poll_for_recalibration_completion)
         self.overnight_running = False
-        self.m.send_any_gcode_command('M5')
+        self.m.send_any_gcode_command("M5")
         if not self.m.calibration_tuning_fail_info:
             self.tick_checkbox(self.recalibration_checkbox, True)
             self.send_recalibration_data()
             self.setup_arrays()
             self.stop_button.disabled = False
-            log('Recalibration complete...')
+            log("Recalibration complete...")
         else:
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.setup_arrays()
             self.cancel_active_polls()
             self.buttons_disabled(False)
-            log('Recalibration did not complete, cancelling further tests')
+            log("Recalibration did not complete, cancelling further tests")
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
     def ready_for_fully_calibrated_final_run(self, dt):
-        if self.is_step_ticked(self.recalibration_checkbox
-            ) and self.is_step_complete(self.sent_recalibration_data):
+        if self.is_step_ticked(self.recalibration_checkbox) and self.is_step_complete(
+            self.sent_recalibration_data
+        ):
             if self.poll_for_fully_calibrated_final_run_stage != None:
-                Clock.unschedule(self.poll_for_fully_calibrated_final_run_stage
-                    )
-            log('Start fully calibrated final run...')
+                Clock.unschedule(self.poll_for_fully_calibrated_final_run_stage)
+            log("Start fully calibrated final run...")
             self.start_fully_calibrated_final_run()
 
     def start_fully_calibrated_final_run(self):
@@ -1252,54 +1300,59 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.x_fully_calibrated_checkbox)
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
         self.reset_checkbox(self.sent_fully_recalibrated_run_data)
-        log('SB fully calibrated, start final run')
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit + 1, self.m.
-            y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', -25, 750)
-        self.start_fully_calibrated_final_run_event = Clock.schedule_once(self
-            .run_spiral_file, 5)
+        log("SB fully calibrated, start final run")
+        self.m.jog_absolute_xy(
+            self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit, 6000
+        )
+        self.m.jog_absolute_single_axis("Z", -25, 750)
+        self.start_fully_calibrated_final_run_event = Clock.schedule_once(
+            self.run_spiral_file, 5
+        )
 
     def run_spiral_file(self, dt):
         if self._not_ready_to_stream():
             self.start_fully_calibrated_final_run_event = Clock.schedule_once(
-                self.run_spiral_file, 3)
+                self.run_spiral_file, 3
+            )
             return
         self.setup_arrays()
         self._set_datums_in_xyz_without_leds()
-        self.set_stage('FullyCalibratedTest')
-        self.run_event_after_datum_set = Clock.schedule_once(lambda dt:
-            self._stream_overnight_file('spiral_file'), 3)
-        log('Running fully calibrated final run...')
-        log('Running spiral file...')
-        self.poll_end_of_spiral = Clock.schedule_interval(self.
-            finish_spiral_file_reset_for_rectangle, 60)
+        self.set_stage("FullyCalibratedTest")
+        self.run_event_after_datum_set = Clock.schedule_once(
+            lambda dt: self._stream_overnight_file("spiral_file"), 3
+        )
+        log("Running fully calibrated final run...")
+        log("Running spiral file...")
+        self.poll_end_of_spiral = Clock.schedule_interval(
+            self.finish_spiral_file_reset_for_rectangle, 60
+        )
 
     def finish_spiral_file_reset_for_rectangle(self, dt):
         if self._not_finished_streaming(self.poll_end_of_spiral):
             return
-        self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.
-            y_min_jog_abs_limit, 6000)
-        self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
-        self.start_last_rectangle = Clock.schedule_once(self.
-            run_last_rectangle, 5)
+        self.m.jog_absolute_xy(
+            self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000
+        )
+        self.m.jog_absolute_single_axis("Z", self.m.z_max_jog_abs_limit, 750)
+        self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 5)
 
     def run_last_rectangle(self, dt):
         if self._not_ready_to_stream():
-            self.start_last_rectangle = Clock.schedule_once(self.
-                run_last_rectangle, 3)
+            self.start_last_rectangle = Clock.schedule_once(self.run_last_rectangle, 3)
             return
         self._set_datums_in_xyz_without_leds()
-        self.run_event_after_datum_set = Clock.schedule_once(lambda dt:
-            self._stream_overnight_file('five_rectangles'), 3)
-        log('Running last rectangle')
+        self.run_event_after_datum_set = Clock.schedule_once(
+            lambda dt: self._stream_overnight_file("five_rectangles"), 3
+        )
+        log("Running last rectangle")
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(
-            self.post_fully_calibrated_final_run, 60)
+            self.post_fully_calibrated_final_run, 60
+        )
 
     def post_fully_calibrated_final_run(self, dt):
-        if self._not_finished_streaming(self.
-            poll_end_of_fully_calibrated_final_run):
+        if self._not_finished_streaming(self.poll_end_of_fully_calibrated_final_run):
             return
-        log('Fully calibrated final run complete')
+        log("Fully calibrated final run complete")
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.fully_calibrated_run_checkbox, True)
         self.get_statistics()
@@ -1317,60 +1370,66 @@ class OvernightTesting(Screen):
             return
         if not self.is_step_complete(self.fully_calibrated_run_checkbox):
             return
-        log('Overnight test completed')
+        log("Overnight test completed")
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
         self.cancel_active_polls()
         self.setup_arrays()
-        self.stage = ''
+        self.stage = ""
         self.buttons_disabled(False)
 
     def _not_ready_to_stream(self):
-        if (self.m.state().startswith('Idle') and not self.
-            overnight_running and not self.m.s.is_sequential_streaming):
+        if (
+            self.m.state().startswith("Idle")
+            and not self.overnight_running
+            and not self.m.s.is_sequential_streaming
+        ):
             return False
         else:
             return True
 
     def _stream_overnight_file(self, filename_end):
         if self._not_ready_to_stream():
-            self._stream_overnight_file_event = Clock.schedule_once(lambda
-                dt: self._stream_overnight_file(filename_end), 2)
+            self._stream_overnight_file_event = Clock.schedule_once(
+                lambda dt: self._stream_overnight_file(filename_end), 2
+            )
         self.overnight_running = True
         if self.mini_run_dev_mode:
-            filename_end = 'super_mini_run'
+            filename_end = "super_mini_run"
         elif self.m.bench_is_short():
-            filename_end += '_shortbench'
-        filename = ('./asmcnc/apps/systemTools_app/files/' + filename_end +
-            '.gc')
+            filename_end += "_shortbench"
+        filename = "./asmcnc/apps/systemTools_app/files/" + filename_end + ".gc"
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
-        if 'rectangle' in filename_end and int(self.m.get_dollar_setting(132)
-            ) == 130:
-            gcode = [self.m.quick_scrub(line).replace('14', '12') for line in
-                gcode_prescrubbed]
+        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130:
+            gcode = [
+                self.m.quick_scrub(line).replace("14", "12")
+                for line in gcode_prescrubbed
+            ]
         else:
             gcode = [self.m.quick_scrub(line) for line in gcode_prescrubbed]
         self.m.s.run_skeleton_buffer_stuffer(gcode)
 
     def _not_finished_streaming(self, poll_to_unschedule):
-        if not self.m.state().startswith('Idle'):
+        if not self.m.state().startswith("Idle"):
             return True
-        if (self.m.s.NOT_SKELETON_STUFF and not self.m.s.is_job_streaming and
-            not self.m.s.is_stream_lines_remaining and not self.m.
-            is_machine_paused):
+        if (
+            self.m.s.NOT_SKELETON_STUFF
+            and not self.m.s.is_job_streaming
+            and not self.m.s.is_stream_lines_remaining
+            and not self.m.is_machine_paused
+        ):
             self._unschedule_event(poll_to_unschedule)
             self.overnight_running = False
             return False
         return True
 
     def _set_datums_in_xyz_without_leds(self):
-        list_to_stream = ['G10 L20 P1 X0 Y0', 'G10 L20 P1 Z0', '$#']
+        list_to_stream = ["G10 L20 P1 X0 Y0", "G10 L20 P1 Z0", "$#"]
         self.m.s.start_sequential_stream(list_to_stream)
 
     def send_six_hour_wear_in_data(self):
-        log('Sending six hour wear-in data')
-        self._has_data_been_sent('OvernightWearIn', self.
-            sent_six_hour_wear_in_data)
+        log("Sending six hour wear-in data")
+        self._has_data_been_sent("OvernightWearIn", self.sent_six_hour_wear_in_data)
 
     def send_recalibration_data(self):
         if self.send_all_calibration_coefficients():
@@ -1379,22 +1438,23 @@ class OvernightTesting(Screen):
             self.tick_checkbox(self.sent_recalibration_data, False)
 
     def send_fully_calibrated_final_run_data(self):
-        self._has_data_been_sent('FullyCalibratedTest', self.
-            sent_fully_recalibrated_run_data)
+        self._has_data_been_sent(
+            "FullyCalibratedTest", self.sent_fully_recalibrated_run_data
+        )
 
     def get_most_recent_csv(self):
-        CSV_PATH = './asmcnc/production/database/csvs/'
-        list_of_files = glob.glob(CSV_PATH + '*.csv')
+        CSV_PATH = "./asmcnc/production/database/csvs/"
+        list_of_files = glob.glob(CSV_PATH + "*.csv")
         latest_file = max(list_of_files, key=os.path.getctime)
         return latest_file
 
     def show_failed_send_popup(self, csv_name):
-        log('Transferring file failed, copying to USB stick')
-        if os.path.exists('/media/usb'):
-            os.system('sudo cp ' + csv_name + ' /media/usb/')
+        log("Transferring file failed, copying to USB stick")
+        if os.path.exists("/media/usb"):
+            os.system("sudo cp " + csv_name + " /media/usb/")
             PopupCSVOnUSB()
         else:
-            log('USB stick not found')
+            log("USB stick not found")
 
     def _has_data_been_sent(self, stage, checkbox_id):
         sent_data = self.send_data(stage)
@@ -1404,22 +1464,22 @@ class OvernightTesting(Screen):
 
     def send_data(self, stage):
         try:
-            log('Doing data send...')
+            log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             publisher = DataPublisher(self.sn_for_db)
             j_obj = self.status_data_dict[stage]
-            statuses = j_obj['Statuses']
-            table = j_obj['Table']
+            statuses = j_obj["Statuses"]
+            table = j_obj["Table"]
             done_send = publisher.run_data_send(statuses, table, stage)
-            log('Data send status: ' + str(done_send))
+            log("Data send status: " + str(done_send))
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
-            log('Finished statistics data send')
+            log("Finished statistics data send")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
         except:
-            log('Failed to send data to DB!!')
+            log("Failed to send data to DB!!")
             print(traceback.format_exc())
             log_exporter.create_and_send_logs(self.sn_for_db)
             return False
@@ -1433,28 +1493,34 @@ class OvernightTesting(Screen):
             self.send_calibration_coefficients_for_one_motor(self.zh_serial, 4)
             return True
         except:
-            log('Failed to send calibration coefficients to DB!!')
+            log("Failed to send calibration coefficients to DB!!")
             print(traceback.format_exc())
             return False
 
-    def send_calibration_coefficients_for_one_motor(self, sub_serial,
-        motor_index):
+    def send_calibration_coefficients_for_one_motor(self, sub_serial, motor_index):
         all_coefficients = []
-        all_coefficients.extend(self.m.TMC_motor[motor_index].
-            calibration_dataset_SG_values)
-        all_coefficients.extend([self.m.TMC_motor[motor_index].
-            calibrated_at_current_setting, self.m.TMC_motor[motor_index].
-            calibrated_at_sgt_setting, self.m.TMC_motor[motor_index].
-            calibrated_at_toff_setting, self.m.TMC_motor[motor_index].
-            calibrated_at_temperature])
-        if sub_serial.startswith('zh'):
-            self.calibration_db.setup_z_head_coefficients(sub_serial,
-                motor_index, self.calibration_stage_id)
-        if sub_serial.startswith('xl'):
-            self.calibration_db.setup_lower_beam_coefficients(sub_serial,
-                motor_index, self.calibration_stage_id)
-        self.calibration_db.insert_calibration_coefficients(sub_serial,
-            motor_index, self.calibration_stage_id, all_coefficients)
+        all_coefficients.extend(
+            self.m.TMC_motor[motor_index].calibration_dataset_SG_values
+        )
+        all_coefficients.extend(
+            [
+                self.m.TMC_motor[motor_index].calibrated_at_current_setting,
+                self.m.TMC_motor[motor_index].calibrated_at_sgt_setting,
+                self.m.TMC_motor[motor_index].calibrated_at_toff_setting,
+                self.m.TMC_motor[motor_index].calibrated_at_temperature,
+            ]
+        )
+        if sub_serial.startswith("zh"):
+            self.calibration_db.setup_z_head_coefficients(
+                sub_serial, motor_index, self.calibration_stage_id
+            )
+        if sub_serial.startswith("xl"):
+            self.calibration_db.setup_lower_beam_coefficients(
+                sub_serial, motor_index, self.calibration_stage_id
+            )
+        self.calibration_db.insert_calibration_coefficients(
+            sub_serial, motor_index, self.calibration_stage_id, all_coefficients
+        )
 
     def tick_checkbox(self, checkbox_id, tick):
         if tick:
@@ -1479,69 +1545,126 @@ class OvernightTesting(Screen):
 
     def pass_or_fail_peak_loads(self):
         self.record_min_peaks()
-        if self.stage == 'OvernightWearIn':
+        if self.stage == "OvernightWearIn":
             within_plus_minus = 400
-            self.tick_checkbox(self.y_wear_in_checkbox, self.check_in_range
-                (self.y_wear_in_peak_pos, self.y_wear_in_peak_neg, self.
-                y_wear_in_min_pos, self.y_wear_in_min_neg, within_plus_minus))
-            self.tick_checkbox(self.y1_wear_in_checkbox, self.
-                check_in_range(self.y1_wear_in_peak_pos, self.
-                y1_wear_in_peak_neg, self.y1_wear_in_min_pos, self.
-                y1_wear_in_min_neg, 500))
-            self.tick_checkbox(self.y2_wear_in_checkbox, self.
-                check_in_range(self.y2_wear_in_peak_pos, self.
-                y2_wear_in_peak_neg, self.y2_wear_in_min_pos, self.
-                y2_wear_in_min_neg, 500))
-            self.tick_checkbox(self.x_wear_in_checkbox, self.check_in_range
-                (self.x_wear_in_peak_pos, self.x_wear_in_peak_neg, self.
-                x_wear_in_min_pos, self.x_wear_in_min_neg, within_plus_minus))
-            self.tick_checkbox(self.z_wear_in_checkbox, self.check_in_range
-                (self.z_wear_in_peak_pos, self.z_wear_in_peak_neg, self.
-                z_wear_in_min_pos, self.z_wear_in_min_neg, within_plus_minus))
+            self.tick_checkbox(
+                self.y_wear_in_checkbox,
+                self.check_in_range(
+                    self.y_wear_in_peak_pos,
+                    self.y_wear_in_peak_neg,
+                    self.y_wear_in_min_pos,
+                    self.y_wear_in_min_neg,
+                    within_plus_minus,
+                ),
+            )
+            self.tick_checkbox(
+                self.y1_wear_in_checkbox,
+                self.check_in_range(
+                    self.y1_wear_in_peak_pos,
+                    self.y1_wear_in_peak_neg,
+                    self.y1_wear_in_min_pos,
+                    self.y1_wear_in_min_neg,
+                    500,
+                ),
+            )
+            self.tick_checkbox(
+                self.y2_wear_in_checkbox,
+                self.check_in_range(
+                    self.y2_wear_in_peak_pos,
+                    self.y2_wear_in_peak_neg,
+                    self.y2_wear_in_min_pos,
+                    self.y2_wear_in_min_neg,
+                    500,
+                ),
+            )
+            self.tick_checkbox(
+                self.x_wear_in_checkbox,
+                self.check_in_range(
+                    self.x_wear_in_peak_pos,
+                    self.x_wear_in_peak_neg,
+                    self.x_wear_in_min_pos,
+                    self.x_wear_in_min_neg,
+                    within_plus_minus,
+                ),
+            )
+            self.tick_checkbox(
+                self.z_wear_in_checkbox,
+                self.check_in_range(
+                    self.z_wear_in_peak_pos,
+                    self.z_wear_in_peak_neg,
+                    self.z_wear_in_min_pos,
+                    self.z_wear_in_min_neg,
+                    within_plus_minus,
+                ),
+            )
             return
-        if self.stage == 'FullyCalibratedTest':
+        if self.stage == "FullyCalibratedTest":
             within_plus_minus = 100
-            self.tick_checkbox(self.y_fully_calibrated_checkbox, self.
-                check_in_range(self.y_fully_calibrated_peak_pos, self.
-                y_fully_calibrated_peak_neg, self.
-                y_fully_calibrated_min_pos, self.y_fully_calibrated_min_neg,
-                150))
-            self.tick_checkbox(self.y1_fully_calibrated_checkbox, self.
-                check_in_range(self.y1_fully_calibrated_peak_pos, self.
-                y1_fully_calibrated_peak_neg, self.
-                y1_fully_calibrated_min_pos, self.
-                y1_fully_calibrated_min_neg, 500))
-            self.tick_checkbox(self.y2_fully_calibrated_checkbox, self.
-                check_in_range(self.y2_fully_calibrated_peak_pos, self.
-                y2_fully_calibrated_peak_neg, self.
-                y2_fully_calibrated_min_pos, self.
-                y2_fully_calibrated_min_neg, 500))
-            self.tick_checkbox(self.x_fully_calibrated_checkbox, self.
-                check_in_range(self.x_fully_calibrated_peak_pos, self.
-                x_fully_calibrated_peak_neg, self.
-                x_fully_calibrated_min_pos, self.x_fully_calibrated_min_neg,
-                200))
-            self.tick_checkbox(self.z_fully_calibrated_checkbox, self.
-                check_in_range(self.z_fully_calibrated_peak_pos, self.
-                z_fully_calibrated_peak_neg, self.
-                z_fully_calibrated_min_pos, self.z_fully_calibrated_min_neg,
-                150))
+            self.tick_checkbox(
+                self.y_fully_calibrated_checkbox,
+                self.check_in_range(
+                    self.y_fully_calibrated_peak_pos,
+                    self.y_fully_calibrated_peak_neg,
+                    self.y_fully_calibrated_min_pos,
+                    self.y_fully_calibrated_min_neg,
+                    150,
+                ),
+            )
+            self.tick_checkbox(
+                self.y1_fully_calibrated_checkbox,
+                self.check_in_range(
+                    self.y1_fully_calibrated_peak_pos,
+                    self.y1_fully_calibrated_peak_neg,
+                    self.y1_fully_calibrated_min_pos,
+                    self.y1_fully_calibrated_min_neg,
+                    500,
+                ),
+            )
+            self.tick_checkbox(
+                self.y2_fully_calibrated_checkbox,
+                self.check_in_range(
+                    self.y2_fully_calibrated_peak_pos,
+                    self.y2_fully_calibrated_peak_neg,
+                    self.y2_fully_calibrated_min_pos,
+                    self.y2_fully_calibrated_min_neg,
+                    500,
+                ),
+            )
+            self.tick_checkbox(
+                self.x_fully_calibrated_checkbox,
+                self.check_in_range(
+                    self.x_fully_calibrated_peak_pos,
+                    self.x_fully_calibrated_peak_neg,
+                    self.x_fully_calibrated_min_pos,
+                    self.x_fully_calibrated_min_neg,
+                    200,
+                ),
+            )
+            self.tick_checkbox(
+                self.z_fully_calibrated_checkbox,
+                self.check_in_range(
+                    self.z_fully_calibrated_peak_pos,
+                    self.z_fully_calibrated_peak_neg,
+                    self.z_fully_calibrated_min_pos,
+                    self.z_fully_calibrated_min_neg,
+                    150,
+                ),
+            )
             return
 
-    def check_in_range(self, peak_id_pos, peak_id_neg, min_pos, min_neg,
-        within_plus_minus):
-        print('Lower bound: ' + str(-1 * within_plus_minus))
-        print('Upper bound: ' + str(within_plus_minus))
-        print('Peak pos: ' + str(peak_id_pos.text))
-        print('Peak neg: ' + str(peak_id_neg.text))
-        print('Min pos: ' + str(min_pos))
-        print('Min neg: ' + str(min_neg))
+    def check_in_range(
+        self, peak_id_pos, peak_id_neg, min_pos, min_neg, within_plus_minus
+    ):
+        print("Lower bound: " + str(-1 * within_plus_minus))
+        print("Upper bound: " + str(within_plus_minus))
+        print("Peak pos: " + str(peak_id_pos.text))
+        print("Peak neg: " + str(peak_id_neg.text))
+        print("Min pos: " + str(min_pos))
+        print("Min neg: " + str(min_neg))
         try:
-            if not -1 * within_plus_minus < int(peak_id_pos.text
-                ) < within_plus_minus:
+            if not -1 * within_plus_minus < int(peak_id_pos.text) < within_plus_minus:
                 return False
-            if not -1 * within_plus_minus < int(peak_id_neg.text
-                ) < within_plus_minus:
+            if not -1 * within_plus_minus < int(peak_id_neg.text) < within_plus_minus:
                 return False
             if not -1 * within_plus_minus < int(min_pos) < within_plus_minus:
                 return False

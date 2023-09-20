@@ -5,6 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <AlarmScreen4>:
@@ -154,25 +155,27 @@ Builder.load_string(
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
 """
-    )
+)
 
 
 class AlarmScreen4(Screen):
-
     def __init__(self, **kwargs):
-        self.a = kwargs.pop('alarm_manager')
+        self.a = kwargs.pop("alarm_manager")
         super(AlarmScreen4, self).__init__(**kwargs)
-        self.alarm_title.text = self.a.l.get_bold('Alarm: Learn more...')
-        self.icon.source = './asmcnc/core_UI/sequence_alarm/img/qr-code.png'
-        self.description_label.text = (self.a.l.get_str(
-            'Learn more about the cause of the alarm by visiting our knowledge base at'
-            ) + '\n' +
-            'https://www.yetitool.com/support/knowledge-base/alarm-screens')
-        self.next_button.text = self.a.l.get_str('Next') + '...'
+        self.alarm_title.text = self.a.l.get_bold("Alarm: Learn more...")
+        self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/qr-code.png"
+        self.description_label.text = (
+            self.a.l.get_str(
+                "Learn more about the cause of the alarm by visiting our knowledge base at"
+            )
+            + "\n"
+            + "https://www.yetitool.com/support/knowledge-base/alarm-screens"
+        )
+        self.next_button.text = self.a.l.get_str("Next") + "..."
 
     def next_screen(self):
-        self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_4'
-        self.a.sm.current = 'alarm_5'
+        self.a.sm.get_screen("alarm_5").return_to_screen = "alarm_4"
+        self.a.sm.current = "alarm_5"
 
     def prev_screen(self):
-        self.a.sm.current = 'alarm_3'
+        self.a.sm.current = "alarm_3"

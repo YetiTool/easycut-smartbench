@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+
 Builder.load_string(
     """
 <UpgradeSuccessfulScreen>:
@@ -70,28 +71,29 @@ Builder.load_string(
                     valign: "middle"
 
 """
-    )
+)
 
 
 class UpgradeSuccessfulScreen(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(UpgradeSuccessfulScreen, self).__init__(**kwargs)
         self.update_strings()
 
     def next_screen(self):
-        if not self.sm.has_screen('pro_plus_safety'):
-            pro_plus_safety_screen = (screen_pro_plus_safety.
-                ProPlusSafetyScreen(name='pro_plus_safety', start_sequence=
-                None, screen_manager=self.sm, localization=self.l))
+        if not self.sm.has_screen("pro_plus_safety"):
+            pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(
+                name="pro_plus_safety",
+                start_sequence=None,
+                screen_manager=self.sm,
+                localization=self.l,
+            )
             self.sm.add_widget(pro_plus_safety_screen)
-        self.sm.current = 'pro_plus_safety'
+        self.sm.current = "pro_plus_safety"
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str(
-            'Upgrade SB V1.3 to PrecisionPro +')
-        self.success_label.text = self.l.get_str('Upgrade successful!')
-        self.continue_button.text = self.l.get_str('Continue')
+        self.title_label.text = self.l.get_str("Upgrade SB V1.3 to PrecisionPro +")
+        self.success_label.text = self.l.get_str("Upgrade successful!")
+        self.continue_button.text = self.l.get_str("Continue")

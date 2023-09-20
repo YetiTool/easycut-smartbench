@@ -13,6 +13,7 @@ from kivy.clock import Clock
 import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -443,7 +444,7 @@ Builder.load_string(
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
 """
-    )
+)
 
 
 class WifiScreen(Screen):
@@ -454,190 +455,226 @@ class WifiScreen(Screen):
     _password = ObjectProperty()
     country = ObjectProperty()
     SSID_list = []
-    wifi_documentation_path = './asmcnc/apps/wifi_app/wifi_documentation/'
-    wifi_on = './asmcnc/skavaUI/img/wifi_on.png'
-    wifi_off = './asmcnc/skavaUI/img/wifi_off.png'
-    wifi_warning = './asmcnc/skavaUI/img/wifi_warning.png'
+    wifi_documentation_path = "./asmcnc/apps/wifi_app/wifi_documentation/"
+    wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
+    wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
+    wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
     dismiss_wait_popup_event = None
     wifi_error_timeout_event = None
     refresh_ip_label_value_event = None
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.set = kwargs.pop('settings_manager')
-        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop("screen_manager")
+        self.set = kwargs.pop("settings_manager")
+        self.l = kwargs.pop("localization")
         super(WifiScreen, self).__init__(**kwargs)
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+        if sys.platform != "win32" and sys.platform != "darwin":
             self.network_name.values = self.get_available_networks()
         self.update_strings()
         self.get_rst_source()
-        self.refs = [self.network_name.__self__, self.
-            custom_network_name_box.__self__]
+        self.refs = [self.network_name.__self__, self.custom_network_name_box.__self__]
         self.network_name_input.remove_widget(self.custom_network_name_box)
 
     def custom_ssid_input(self):
-        if self.custom_ssid_button.state == 'normal':
+        if self.custom_ssid_button.state == "normal":
             try:
-                self.network_name_input.remove_widget(self.
-                    custom_network_name_box)
+                self.network_name_input.remove_widget(self.custom_network_name_box)
                 self.network_name_input.add_widget(self.network_name_box)
             except:
                 pass
-            self.custom_ssid_button.text = self.l.get_str('Other network')
+            self.custom_ssid_button.text = self.l.get_str("Other network")
         else:
             try:
                 self.network_name_input.remove_widget(self.network_name_box)
-                self.network_name_input.add_widget(self.custom_network_name_box
-                    )
+                self.network_name_input.add_widget(self.custom_network_name_box)
                 self.custom_network_name.focus = True
             except:
                 pass
-            self.custom_ssid_button.text = self.l.get_str('Select network')
+            self.custom_ssid_button.text = self.l.get_str("Select network")
 
     def on_enter(self):
-        self.refresh_ip_label_value_event = Clock.schedule_interval(self.
-            refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+        self.refresh_ip_label_value_event = Clock.schedule_interval(
+            self.refresh_ip_label_value, self.IP_REPORT_INTERVAL
+        )
         self.refresh_ip_label_value(1)
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+        if sys.platform != "win32" and sys.platform != "darwin":
             if self.is_wlan0_connected():
                 try:
-                    self.network_name.text = str(os.popen(
-                        'grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf'
-                        ).read()).split('=')[1].strip('\n').strip('"')
+                    self.network_name.text = (
+                        str(
+                            os.popen(
+                                'grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf'
+                            ).read()
+                        )
+                        .split("=")[1]
+                        .strip("\n")
+                        .strip('"')
+                    )
                 except:
-                    self.network_name.text = ''
+                    self.network_name.text = ""
             else:
-                self.network_name.text = ''
+                self.network_name.text = ""
                 wifi_connected_before = os.popen(
                     'grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt'
-                    ).read()
-                if 'True' in wifi_connected_before:
-                    message = self.l.get_str('No network connection.'
-                        ) + '\n' + self.l.get_str(
-                        'Please refresh the list and try again.')
+                ).read()
+                if "True" in wifi_connected_before:
+                    message = (
+                        self.l.get_str("No network connection.")
+                        + "\n"
+                        + self.l.get_str("Please refresh the list and try again.")
+                    )
                     popup_info.PopupWarning(self.sm, self.l, message)
             try:
-                self.country.text = str(os.popen(
-                    'grep "country" /etc/wpa_supplicant/wpa_supplicant.conf'
-                    ).read()).split('=')[1].strip('\n').strip('"')
+                self.country.text = (
+                    str(
+                        os.popen(
+                            'grep "country" /etc/wpa_supplicant/wpa_supplicant.conf'
+                        ).read()
+                    )
+                    .split("=")[1]
+                    .strip("\n")
+                    .strip('"')
+                )
             except:
-                self.country.text = 'GB'
-        self._password.text = ''
+                self.country.text = "GB"
+        self._password.text = ""
         self.update_strings()
 
     def check_credentials(self):
-        if self.custom_ssid_button.state == 'normal':
+        if self.custom_ssid_button.state == "normal":
             self.netname = self.network_name.text
         else:
             self.netname = self.custom_network_name.text
         self.password = self._password.text
         if len(self.netname) < 1:
-            message = self.l.get_str('Please enter a valid network name.')
+            message = self.l.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
         elif len(self.password) < 8 or len(self.password) > 63:
             message = self.l.get_str(
-                'Please enter a password between 8 and 63 characters.')
+                "Please enter a password between 8 and 63 characters."
+            )
             popup_info.PopupWarning(self.sm, self.l, message)
         else:
             self.connect_wifi()
 
     def is_wlan0_connected(self):
         state_raw = os.popen(
-            'ip addr show | grep "wlan0" | grep -oP "state\\s\\w+"').read()
-        state = state_raw.split(' ')[1].strip('\n')
-        return state == 'UP'
+            'ip addr show | grep "wlan0" | grep -oP "state\\s\\w+"'
+        ).read()
+        state = state_raw.split(" ")[1].strip("\n")
+        return state == "UP"
 
     def connect_wifi(self):
-        self._password.text = ''
+        self._password.text = ""
         wait_popup = popup_info.PopupWait(self.sm, self.l)
-        self.wpanetpass = ('wpa_passphrase "' + self.netname + '" "' + self
-            .password +
-            '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf')
-        self.wpanetpasswlan0 = ('wpa_passphrase "' + self.netname + '" "' +
-            self.password +
-            '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-            )
+        self.wpanetpass = (
+            'wpa_passphrase "'
+            + self.netname
+            + '" "'
+            + self.password
+            + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+        )
+        self.wpanetpasswlan0 = (
+            'wpa_passphrase "'
+            + self.netname
+            + '" "'
+            + self.password
+            + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+        )
         try:
             os.system(self.wpanetpass)
             os.system(
                 'echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                )
-            os.system('echo "country="' + self.country.text +
-                '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+            )
+            os.system(
+                'echo "country="'
+                + self.country.text
+                + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf"
+            )
             os.system(
                 'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                )
+            )
             os.system(self.wpanetpasswlan0)
             os.system(
                 'echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                )
+            )
             os.system(
                 'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                )
-            os.system('echo "country="' + self.country.text +
-                '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                )
+            )
+            os.system(
+                'echo "country="'
+                + self.country.text
+                + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+            )
         except:
             try:
-                self.wpanetpass = ('wpa_passphrase "' + self.netname +
-                    '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
-                os.system(self.wpanetpass)
-                os.system(
-                    'echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
-                os.system('echo "country="' + self.country.text +
-                    '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
-                os.system(
-                    'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
-                self.wpanetpasswlan0 = ('wpa_passphrase "' + self.netname +
-                    '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
-                os.system(self.wpanetpasswlan0)
-                os.system(
-                    'echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
-                os.system(
-                    'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
-                os.system('echo "country="' + self.country.text +
-                    '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
-            except:
                 self.wpanetpass = (
-                    'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
+                    'wpa_passphrase "'
+                    + self.netname
+                    + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+                )
                 os.system(self.wpanetpass)
                 os.system(
                     'echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
-                os.system('echo "country="' + self.country.text +
-                    '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
+                )
+                os.system(
+                    'echo "country="'
+                    + self.country.text
+                    + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf"
+                )
                 os.system(
                     'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
-                    )
+                )
                 self.wpanetpasswlan0 = (
-                    'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
+                    'wpa_passphrase "'
+                    + self.netname
+                    + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+                )
                 os.system(self.wpanetpasswlan0)
                 os.system(
                     'echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
+                )
                 os.system(
                     'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
-                os.system('echo "country="' + self.country.text +
-                    '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-                    )
+                )
+                os.system(
+                    'echo "country="'
+                    + self.country.text
+                    + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+                )
+            except:
+                self.wpanetpass = 'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+                os.system(self.wpanetpass)
+                os.system(
+                    'echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
+                )
+                os.system(
+                    'echo "country="'
+                    + self.country.text
+                    + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf"
+                )
+                os.system(
+                    'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf'
+                )
+                self.wpanetpasswlan0 = 'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+                os.system(self.wpanetpasswlan0)
+                os.system(
+                    'echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+                )
+                os.system(
+                    'echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+                )
+                os.system(
+                    'echo "country="'
+                    + self.country.text
+                    + "| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+                )
         os.system(
             'sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt'
-            )
-        os.system('sudo ip addr flush dev wlan0')
-        os.system('sudo wpa_cli -i wlan0 reconfigure')
-        os.system('sudo systemctl restart dhcpcd')
+        )
+        os.system("sudo ip addr flush dev wlan0")
+        os.system("sudo wpa_cli -i wlan0 reconfigure")
+        os.system("sudo systemctl restart dhcpcd")
 
         def dismiss_wait_popup(dt):
             if self.set.wifi_available:
@@ -648,8 +685,7 @@ class WifiScreen(Screen):
                 except:
                     pass
                 return
-            self.dismiss_wait_popup_event = Clock.schedule_once(
-                dismiss_wait_popup, 0.5)
+            self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 0.5)
 
         def wifi_error_timeout(dt):
             if not self.set.wifi_available:
@@ -659,12 +695,11 @@ class WifiScreen(Screen):
                     wait_popup.popup.dismiss()
                 except:
                     pass
-                message = self.l.get_str('No WiFi connection!')
+                message = self.l.get_str("No WiFi connection!")
                 popup_info.PopupWarning(self.sm, self.l, message)
-        self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup,
-            5)
-        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout,
-            30)
+
+        self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
+        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
 
     def refresh_ip_label_value(self, dt):
         self.ip_status_label.text = self.set.ip_address
@@ -679,16 +714,16 @@ class WifiScreen(Screen):
             self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
     def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.sm.current = "lobby"
 
     def get_available_networks(self):
         raw_SSID_list = os.popen(
             'sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"'
-            ).read()
-        SSID_list = raw_SSID_list.replace('"', '').strip().split('\n')
-        if '' in SSID_list:
-            SSID_list.remove('')
-        SSID_list = {x for x in SSID_list if not set(x) <= set('\\x00')}
+        ).read()
+        SSID_list = raw_SSID_list.replace('"', "").strip().split("\n")
+        if "" in SSID_list:
+            SSID_list.remove("")
+        SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
         return SSID_list
 
     def refresh_available_networks(self):
@@ -697,44 +732,273 @@ class WifiScreen(Screen):
 
         def get_networks():
             self.network_name.values = self.get_available_networks()
+
         Clock.schedule_once(lambda dt: get_networks(), 0.2)
 
     def open_network_spinner(self):
         self.network_name.is_open = True
         self.network_name.focus = True
-    values = ['GB', 'US', 'AF', 'AX', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI',
-        'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BH', 'BS', 'BD',
-        'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BQ', 'BA', 'BW',
-        'BV', 'BR', 'IO', 'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CA', 'CV',
-        'KY', 'CF', 'TD', 'CL', 'CN', 'CX', 'CC', 'CO', 'KM', 'CG', 'CD',
-        'CK', 'CR', 'CI', 'HR', 'CU', 'CW', 'CY', 'CZ', 'DK', 'DJ', 'DM',
-        'DO', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ',
-        'FI', 'FR', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI',
-        'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GG', 'GN', 'GW', 'GY', 'HT',
-        'HM', 'VA', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE',
-        'IM', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO', 'KZ', 'KE', 'KI', 'KP',
-        'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT',
-        'LU', 'MO', 'MK', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ',
-        'MR', 'MU', 'YT', 'MX', 'FM', 'MD', 'MC', 'MN', 'ME', 'MS', 'MA',
-        'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'NC', 'NZ', 'NI', 'NE', 'NG',
-        'NU', 'NF', 'MP', 'NO', 'OM', 'PK', 'PW', 'PS', 'PA', 'PG', 'PY',
-        'PE', 'PH', 'PN', 'PL', 'PT', 'PR', 'QA', 'RE', 'RO', 'RU', 'RW',
-        'BL', 'SH', 'KN', 'LC', 'MF', 'PM', 'VC', 'WS', 'SM', 'ST', 'SA',
-        'SN', 'RS', 'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO', 'ZA',
-        'GS', 'SS', 'ES', 'LK', 'SD', 'SR', 'SJ', 'SZ', 'SE', 'CH', 'SY',
-        'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TK', 'TO', 'TT', 'TN', 'TR',
-        'TM', 'TC', 'TV', 'UG', 'UA', 'AE', 'UM', 'UY', 'UZ', 'VU', 'VE',
-        'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
+
+    values = [
+        "GB",
+        "US",
+        "AF",
+        "AX",
+        "AL",
+        "DZ",
+        "AS",
+        "AD",
+        "AO",
+        "AI",
+        "AQ",
+        "AG",
+        "AR",
+        "AM",
+        "AW",
+        "AU",
+        "AT",
+        "AZ",
+        "BH",
+        "BS",
+        "BD",
+        "BB",
+        "BY",
+        "BE",
+        "BZ",
+        "BJ",
+        "BM",
+        "BT",
+        "BO",
+        "BQ",
+        "BA",
+        "BW",
+        "BV",
+        "BR",
+        "IO",
+        "BN",
+        "BG",
+        "BF",
+        "BI",
+        "KH",
+        "CM",
+        "CA",
+        "CV",
+        "KY",
+        "CF",
+        "TD",
+        "CL",
+        "CN",
+        "CX",
+        "CC",
+        "CO",
+        "KM",
+        "CG",
+        "CD",
+        "CK",
+        "CR",
+        "CI",
+        "HR",
+        "CU",
+        "CW",
+        "CY",
+        "CZ",
+        "DK",
+        "DJ",
+        "DM",
+        "DO",
+        "EC",
+        "EG",
+        "SV",
+        "GQ",
+        "ER",
+        "EE",
+        "ET",
+        "FK",
+        "FO",
+        "FJ",
+        "FI",
+        "FR",
+        "GF",
+        "PF",
+        "TF",
+        "GA",
+        "GM",
+        "GE",
+        "DE",
+        "GH",
+        "GI",
+        "GR",
+        "GL",
+        "GD",
+        "GP",
+        "GU",
+        "GT",
+        "GG",
+        "GN",
+        "GW",
+        "GY",
+        "HT",
+        "HM",
+        "VA",
+        "HN",
+        "HK",
+        "HU",
+        "IS",
+        "IN",
+        "ID",
+        "IR",
+        "IQ",
+        "IE",
+        "IM",
+        "IL",
+        "IT",
+        "JM",
+        "JP",
+        "JE",
+        "JO",
+        "KZ",
+        "KE",
+        "KI",
+        "KP",
+        "KR",
+        "KW",
+        "KG",
+        "LA",
+        "LV",
+        "LB",
+        "LS",
+        "LR",
+        "LY",
+        "LI",
+        "LT",
+        "LU",
+        "MO",
+        "MK",
+        "MG",
+        "MW",
+        "MY",
+        "MV",
+        "ML",
+        "MT",
+        "MH",
+        "MQ",
+        "MR",
+        "MU",
+        "YT",
+        "MX",
+        "FM",
+        "MD",
+        "MC",
+        "MN",
+        "ME",
+        "MS",
+        "MA",
+        "MZ",
+        "MM",
+        "NA",
+        "NR",
+        "NP",
+        "NL",
+        "NC",
+        "NZ",
+        "NI",
+        "NE",
+        "NG",
+        "NU",
+        "NF",
+        "MP",
+        "NO",
+        "OM",
+        "PK",
+        "PW",
+        "PS",
+        "PA",
+        "PG",
+        "PY",
+        "PE",
+        "PH",
+        "PN",
+        "PL",
+        "PT",
+        "PR",
+        "QA",
+        "RE",
+        "RO",
+        "RU",
+        "RW",
+        "BL",
+        "SH",
+        "KN",
+        "LC",
+        "MF",
+        "PM",
+        "VC",
+        "WS",
+        "SM",
+        "ST",
+        "SA",
+        "SN",
+        "RS",
+        "SC",
+        "SL",
+        "SG",
+        "SX",
+        "SK",
+        "SI",
+        "SB",
+        "SO",
+        "ZA",
+        "GS",
+        "SS",
+        "ES",
+        "LK",
+        "SD",
+        "SR",
+        "SJ",
+        "SZ",
+        "SE",
+        "CH",
+        "SY",
+        "TW",
+        "TJ",
+        "TZ",
+        "TH",
+        "TL",
+        "TG",
+        "TK",
+        "TO",
+        "TT",
+        "TN",
+        "TR",
+        "TM",
+        "TC",
+        "TV",
+        "UG",
+        "UA",
+        "AE",
+        "UM",
+        "UY",
+        "UZ",
+        "VU",
+        "VE",
+        "VN",
+        "VG",
+        "VI",
+        "WF",
+        "EH",
+        "YE",
+        "ZM",
+        "ZW",
+    ]
 
     def update_strings(self):
-        self.ip_address_label.text = self.l.get_str('IP address:')
-        self.network_name_label.text = self.l.get_bold('Network Name')
-        self.password_label.text = self.l.get_bold('Password')
-        self.country_label.text = self.l.get_bold('Country')
-        self.connect_button.text = self.l.get_str('Connect')
+        self.ip_address_label.text = self.l.get_str("IP address:")
+        self.network_name_label.text = self.l.get_bold("Network Name")
+        self.password_label.text = self.l.get_bold("Password")
+        self.country_label.text = self.l.get_bold("Country")
+        self.connect_button.text = self.l.get_str("Connect")
         self.custom_ssid_input()
-        self.custom_network_name.hint_text = self.l.get_str(
-            'Enter network name')
+        self.custom_network_name.hint_text = self.l.get_str("Enter network name")
         self.update_font_size(self.country_label)
         self.update_hint_font_size(self.custom_network_name)
         self.update_button_font_size(self.connect_button, 28, 10)
@@ -758,16 +1022,19 @@ class WifiScreen(Screen):
 
     def get_rst_source(self):
         try:
-            self.connection_instructions_rst.source = (self.
-                wifi_documentation_path + self.l.lang + '.rst')
+            self.connection_instructions_rst.source = (
+                self.wifi_documentation_path + self.l.lang + ".rst"
+            )
         except:
             try:
-                if self.l.lang == 'FranÃ§ais (FR)':
-                    self.connection_instructions_rst.source = (self.
-                        wifi_documentation_path + 'Francais (FR).rst')
+                if self.l.lang == "FranÃ§ais (FR)":
+                    self.connection_instructions_rst.source = (
+                        self.wifi_documentation_path + "Francais (FR).rst"
+                    )
             except:
-                self.connection_instructions_rst.source = (self.
-                    wifi_documentation_path + self.l.default_lang + '.rst')
+                self.connection_instructions_rst.source = (
+                    self.wifi_documentation_path + self.l.default_lang + ".rst"
+                )
 
     def on_leave(self):
         if self.wifi_error_timeout_event:

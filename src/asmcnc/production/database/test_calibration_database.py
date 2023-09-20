@@ -1,4 +1,5 @@
 from . import calibration_database
+
 db = calibration_database.CalibrationDatabase()
 db.set_up_connection()
 

@@ -6,9 +6,9 @@ TODO: This all looks a bit lonely. Reintegrate back with the other UI widgets e.
 
 
 class BoundingBox(object):
-
     def __init__(self):
         pass
+
     range_x = [0, 0]
     range_y = [0, 0]
     range_z = [0, 0]
@@ -17,16 +17,16 @@ class BoundingBox(object):
         x_values = []
         y_values = []
         z_values = []
-        file = open(gcode_file_path, 'r')
+        file = open(gcode_file_path, "r")
         for line in file:
-            blocks = line.strip().split(' ')
+            blocks = line.strip().split(" ")
             for part in blocks:
                 try:
-                    if part.startswith('X'):
+                    if part.startswith("X"):
                         x_values.append(float(part[1:]))
-                    if part.startswith('Y'):
+                    if part.startswith("Y"):
                         y_values.append(float(part[1:]))
-                    if part.startswith('Z'):
+                    if part.startswith("Z"):
                         z_values.append(float(part[1:]))
                 except:
                     print("Envelope calculator: skipped '" + part + "'")

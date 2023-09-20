@@ -11,6 +11,7 @@ import sys, os
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -282,22 +283,21 @@ Builder.load_string(
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
 """
-    )
+)
 
 
 class ScrollableLabelLogsView(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
 
 
 class ScrollableLabelCommandView(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
 
 
 class DeveloperTempScreen(Screen):
-
     def __init__(self, **kwargs):
-        self.systemtools_sm = kwargs.pop('system_tools')
-        self.m = kwargs.pop('machine')
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.m = kwargs.pop("machine")
         super(DeveloperTempScreen, self).__init__(**kwargs)
 
     def go_back(self):

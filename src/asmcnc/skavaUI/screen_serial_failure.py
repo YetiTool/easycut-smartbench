@@ -11,9 +11,15 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
+from kivy.properties import (
+    ObjectProperty,
+    ListProperty,
+    NumericProperty,
+    StringProperty,
+)
 from kivy.uix.widget import Widget
 import sys, os
+
 Builder.load_string(
     """
 
@@ -99,7 +105,7 @@ Builder.load_string(
                             text_size: self.size
                             font_size: '30sp'
 """
-    )
+)
 
 
 class SerialFailureClass(Screen):
@@ -108,10 +114,10 @@ class SerialFailureClass(Screen):
     user_instruction = StringProperty()
 
     def __init__(self, **kwargs):
-        self.win_port = kwargs.pop('win_port')
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.win_port = kwargs.pop("win_port")
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SerialFailureClass, self).__init__(**kwargs)
         self.update_strings()
 
@@ -119,26 +125,28 @@ class SerialFailureClass(Screen):
         self.update_strings()
 
     def reboot_button_press(self):
-        self.sm.current = 'rebooting'
+        self.sm.current = "rebooting"
 
     def return_to_go_screen(self):
-        self.sm.current = 'go'
+        self.sm.current = "go"
 
     def quit_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = "home"
 
     def update_strings(self):
-        self.title_string.text = self.l.get_bold('SERIAL CONNECTION ERROR'
-            ) + '\n' + self.l.get_str(
-            'There is a problem communicating with SmartBench.')
+        self.title_string.text = (
+            self.l.get_bold("SERIAL CONNECTION ERROR")
+            + "\n"
+            + self.l.get_str("There is a problem communicating with SmartBench.")
+        )
         self.user_instruction = self.l.get_str(
-            'Please check that Z head is connected, and then reboot the console.'
-            )
-        self.reboot_string.text = self.l.get_str('Reboot')
+            "Please check that Z head is connected, and then reboot the console."
+        )
+        self.reboot_string.text = self.l.get_str("Reboot")
         self.update_font_size(self.reboot_string)
 
     def update_font_size(self, value):
         if len(value.text) >= 20:
-            value.font_size = '25sp'
+            value.font_size = "25sp"
         else:
-            value.font_size = '30sp'
+            value.font_size = "30sp"

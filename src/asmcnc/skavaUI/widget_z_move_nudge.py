@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.skavaUI import widget_z_height
+
 Builder.load_string(
     """
 
@@ -80,55 +81,59 @@ Builder.load_string(
             font_size: dp(20)
 
 """
-    )
+)
 
 
 class ZMoveNudge(Widget):
-
     def __init__(self, **kwargs):
-        self.m = kwargs.pop('machine')
-        self.sm = kwargs.pop('screen_manager')
-        self.jd = kwargs.pop('job')
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
         super(ZMoveNudge, self).__init__(**kwargs)
-        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(
-            machine=self.m, screen_manager=self.sm, job=self.jd))
-    jogMode = 'free'
+        self.virtual_z_container.add_widget(
+            widget_z_height.VirtualZ(
+                machine=self.m, screen_manager=self.sm, job=self.jd
+            )
+        )
+
+    jogMode = "free"
 
     def jog_z(self, case):
-        self.m.set_led_colour('WHITE')
-        feed_speed = self.sm.get_screen('nudge'
-            ).nudge_speed_widget.feedSpeedJogZ
-        self.jogMode = self.sm.get_screen('nudge').xy_move_widget.jogMode
-        if self.jogMode == 'free':
-            if case == 'Z-':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
-            if case == 'Z+':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
-        elif self.jogMode == 'plus_0-01':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 0.01, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -0.01, feed_speed)
-        elif self.jogMode == 'plus_0-1':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 0.1, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -0.1, feed_speed)
-        elif self.jogMode == 'plus_1':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 1, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -1, feed_speed)
-        elif self.jogMode == 'plus_10':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 10, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -10, feed_speed)
+        self.m.set_led_colour("WHITE")
+        feed_speed = self.sm.get_screen("nudge").nudge_speed_widget.feedSpeedJogZ
+        self.jogMode = self.sm.get_screen("nudge").xy_move_widget.jogMode
+        if self.jogMode == "free":
+            if case == "Z-":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_min_jog_abs_limit, feed_speed
+                )
+            if case == "Z+":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_max_jog_abs_limit, feed_speed
+                )
+        elif self.jogMode == "plus_0-01":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.01, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.01, feed_speed)
+        elif self.jogMode == "plus_0-1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.1, feed_speed)
+        elif self.jogMode == "plus_1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -1, feed_speed)
+        elif self.jogMode == "plus_10":
+            if case == "Z+":
+                self.m.jog_relative("Z", 10, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -10, feed_speed)
 
     def quit_jog_z(self):
-        if self.jogMode == 'free':
+        if self.jogMode == "free":
             self.m.quit_jog()
-        elif self.jogMode == 'job':
+        elif self.jogMode == "job":
             self.m.quit_jog()

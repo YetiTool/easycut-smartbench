@@ -1,10 +1,12 @@
 import logging
+
 """
 Created on 17 Aug 2022
 @author: Letty
 """
 import sys
-sys.path.append('./src')
+
+sys.path.append("./src")
 try:
     import unittest
     import pytest
@@ -14,6 +16,7 @@ except:
 from asmcnc.comms import serial_connection
 from asmcnc.comms import router_machine
 from asmcnc.comms import localization
+
 """
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
@@ -30,8 +33,14 @@ def sc():
     screen_manager = Mock()
     settings_manager = Mock()
     job = Mock()
-    sc_obj = serial_connection.SerialConnection(machine, screen_manager,
-        settings_manager, l, job, logging.Logger(name='__name__'))
+    sc_obj = serial_connection.SerialConnection(
+        machine,
+        screen_manager,
+        settings_manager,
+        l,
+        job,
+        logging.Logger(name="__name__"),
+    )
     sc_obj.s = MagicMock()
     return sc_obj
 
@@ -42,34 +51,68 @@ def m():
     screen_manager = Mock()
     settings_manager = Mock()
     job = Mock()
-    m = router_machine.RouterMachine('COM', screen_manager,
-        settings_manager, l, job)
+    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, job)
     m.s.s = MagicMock()
     m.temp_sg_array = []
     return m
 
 
-def construct_status_with_sg_values(z_motor_axis=None, x_motor_axis=None,
-    y_axis=None, y1_motor=None, y2_motor=None, x1_motor=None, x2_motor=None):
+def construct_status_with_sg_values(
+    z_motor_axis=None,
+    x_motor_axis=None,
+    y_axis=None,
+    y1_motor=None,
+    y2_motor=None,
+    x1_motor=None,
+    x2_motor=None,
+):
     if z_motor_axis == None:
-        status = (
-            '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>'
-            )
+        status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>"
     elif x1_motor == None:
-        status = ('<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:' +
-            str(z_motor_axis) + ',' + str(x_motor_axis) + ',' + str(y_axis) +
-            ',' + str(y1_motor) + ',' + str(y2_motor) + '|Sp:1,2,3,4,5,6,7>')
+        status = (
+            "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:"
+            + str(z_motor_axis)
+            + ","
+            + str(x_motor_axis)
+            + ","
+            + str(y_axis)
+            + ","
+            + str(y1_motor)
+            + ","
+            + str(y2_motor)
+            + "|Sp:1,2,3,4,5,6,7>"
+        )
     else:
-        status = ('<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:' +
-            str(z_motor_axis) + ',' + str(x_motor_axis) + ',' + str(y_axis) +
-            ',' + str(y1_motor) + ',' + str(y2_motor) + ',' + str(x1_motor) +
-            ',' + str(x2_motor) + '|Sp:1,2,3,4,5,6,7>')
+        status = (
+            "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:"
+            + str(z_motor_axis)
+            + ","
+            + str(x_motor_axis)
+            + ","
+            + str(y_axis)
+            + ","
+            + str(y1_motor)
+            + ","
+            + str(y2_motor)
+            + ","
+            + str(x1_motor)
+            + ","
+            + str(x2_motor)
+            + "|Sp:1,2,3,4,5,6,7>"
+        )
     return status
 
 
-def assert_all_sg_values_equal(serial_comms, z_motor_axis=None,
-    x_motor_axis=None, y_axis=None, y1_motor=None, y2_motor=None, x1_motor=
-    None, x2_motor=None):
+def assert_all_sg_values_equal(
+    serial_comms,
+    z_motor_axis=None,
+    x_motor_axis=None,
+    y_axis=None,
+    y1_motor=None,
+    y2_motor=None,
+    x1_motor=None,
+    x2_motor=None,
+):
     if z_motor_axis:
         assert serial_comms.stall_guard.z_motor_axis == z_motor_axis
     if x_motor_axis:
@@ -99,11 +142,13 @@ def test_read_in_SG_values_upto_y_motors(sc):
     sg_y_axis = 42
     sg_y1_motor = 43
     sg_y2_motor = 44
-    status = construct_status_with_sg_values(sg_z_motor_axis,
-        sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor)
+    status = construct_status_with_sg_values(
+        sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor
+    )
     sc.process_grbl_push(status)
-    assert_all_sg_values_equal(sc, sg_z_motor_axis, sg_x_motor_axis,
-        sg_y_axis, sg_y1_motor, sg_y2_motor)
+    assert_all_sg_values_equal(
+        sc, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor
+    )
     assert sc.spindle_statistics.mains_frequency_hertz == 7
 
 
@@ -115,12 +160,26 @@ def test_read_in_SG_values_for_dual_x_drivers(sc):
     sg_y2_motor = 54
     sg_x1_motor = 55
     sg_x2_motor = 56
-    status = construct_status_with_sg_values(sg_z_motor_axis,
-        sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor,
-        sg_x2_motor)
+    status = construct_status_with_sg_values(
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        sg_x1_motor,
+        sg_x2_motor,
+    )
     sc.process_grbl_push(status)
-    assert_all_sg_values_equal(sc, sg_z_motor_axis, sg_x_motor_axis,
-        sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor)
+    assert_all_sg_values_equal(
+        sc,
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        sg_x1_motor,
+        sg_x2_motor,
+    )
     assert sc.spindle_statistics.mains_frequency_hertz == 7
 
 
@@ -129,9 +188,10 @@ def test_invalid_values_handled_for_4_drivers(sc):
     sg_x_motor_axis = 31
     sg_y_axis = 32
     sg_y1_motor = 33
-    sg_y2_motor = 'boop'
-    status = construct_status_with_sg_values(sg_z_motor_axis,
-        sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor)
+    sg_y2_motor = "boop"
+    status = construct_status_with_sg_values(
+        sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor
+    )
     sc.process_grbl_push(status)
     assert sc.spindle_statistics.mains_frequency_hertz == None
 
@@ -142,11 +202,17 @@ def test_invalid_values_handled_for_5_drivers(sc):
     sg_y_axis = 72
     sg_y1_motor = 73
     sg_y2_motor = 71
-    sg_x1_motor = 'BOOP'
+    sg_x1_motor = "BOOP"
     sg_x2_motor = 76
-    status = construct_status_with_sg_values(sg_z_motor_axis,
-        sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor,
-        sg_x2_motor)
+    status = construct_status_with_sg_values(
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        sg_x1_motor,
+        sg_x2_motor,
+    )
     sc.process_grbl_push(status)
     assert sc.spindle_statistics.mains_frequency_hertz == None
 
@@ -159,8 +225,15 @@ def test_temp_sg_array_append_5_drivers(m):
     sg_y2_motor = 84
     sg_x1_motor = 88
     sg_x2_motor = 86
-    five_driver_list = [sg_z_motor_axis, sg_x_motor_axis, sg_y_axis,
-        sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor]
+    five_driver_list = [
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        sg_x1_motor,
+        sg_x2_motor,
+    ]
     status = construct_status_with_sg_values(*five_driver_list)
     m.s.record_sg_values_flag = True
     m.s.process_grbl_push(status)
@@ -173,8 +246,15 @@ def test_temp_sg_array_append_4_drivers(m):
     sg_y_axis = 64
     sg_y1_motor = 65
     sg_y2_motor = 66
-    four_driver_list = [sg_z_motor_axis, sg_x_motor_axis, sg_y_axis,
-        sg_y1_motor, sg_y2_motor, None, None]
+    four_driver_list = [
+        sg_z_motor_axis,
+        sg_x_motor_axis,
+        sg_y_axis,
+        sg_y1_motor,
+        sg_y2_motor,
+        None,
+        None,
+    ]
     status = construct_status_with_sg_values(*four_driver_list)
     m.s.record_sg_values_flag = True
     m.s.process_grbl_push(status)
@@ -185,15 +265,14 @@ def default_pos_values(serial_comms):
     serial_comms.machine_position.x_change = False
     serial_comms.machine_position.y_change = False
     serial_comms.machine_position.z_change = False
-    serial_comms.machine_position.x = '0.000'
-    serial_comms.machine_position.y = '0.000'
-    serial_comms.machine_position.z = '0.000'
+    serial_comms.machine_position.x = "0.000"
+    serial_comms.machine_position.y = "0.000"
+    serial_comms.machine_position.z = "0.000"
 
 
 def test_value_change_x(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:4.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:4.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.machine_position.x_change
     assert not sc.machine_position.y_change
     assert not sc.machine_position.z_change
@@ -201,8 +280,7 @@ def test_value_change_x(sc):
 
 def test_value_change_y(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:0.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:0.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.machine_position.x_change
     assert sc.machine_position.y_change
     assert not sc.machine_position.z_change
@@ -210,8 +288,7 @@ def test_value_change_y(sc):
 
 def test_value_change_z(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:0.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:0.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.machine_position.x_change
     assert not sc.machine_position.y_change
     assert sc.machine_position.z_change
@@ -219,8 +296,7 @@ def test_value_change_z(sc):
 
 def test_value_no_change_x(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:0.000,7.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:0.000,7.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.machine_position.x_change
     assert sc.machine_position.y_change
     assert sc.machine_position.z_change
@@ -228,8 +304,7 @@ def test_value_no_change_x(sc):
 
 def test_value_no_change_y(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:5.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:5.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.machine_position.x_change
     assert not sc.machine_position.y_change
     assert sc.machine_position.z_change
@@ -237,50 +312,47 @@ def test_value_no_change_y(sc):
 
 def test_value_no_change_z(sc):
     default_pos_values(sc)
-    sc.process_grbl_push(
-        '<Idle|MPos:2.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.machine_position.x_change
     assert sc.machine_position.y_change
     assert not sc.machine_position.z_change
-    sc.process_grbl_push(
-        '<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.machine_position.z_change
-    sc.process_grbl_push(
-        '<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>')
+    sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.machine_position.z_change
 
 
 def construct_status_with_pns(pins=None):
-    status = '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0'
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0"
     if pins:
-        pin_appendage = '|Pn:' + pins
+        pin_appendage = "|Pn:" + pins
         status += pin_appendage
-    status += '>'
+    status += ">"
     return status
 
 
 def assert_pns_neutral(serial_comms, pns):
-    if 'x' in pns:
+    if "x" in pns:
         assert serial_comms.pin_info.limit_x
     else:
         assert not serial_comms.pin_info.limit_x
-    if 'X' in pns:
+    if "X" in pns:
         assert serial_comms.pin_info.limit_X
     else:
         assert not serial_comms.pin_info.limit_X
-    if 'Z' in pns:
+    if "Z" in pns:
         assert serial_comms.pin_info.limit_z
     else:
         assert not serial_comms.pin_info.limit_z
-    if 'P' in pns:
+    if "P" in pns:
         assert serial_comms.pin_info.probe
     else:
         assert not serial_comms.pin_info.probe
-    if 'G' in pns:
+    if "G" in pns:
         assert serial_comms.pin_info.dust_shoe_cover
     else:
         assert not serial_comms.pin_info.dust_shoe_cover
-    if 'g' in pns:
+    if "g" in pns:
         assert serial_comms.pin_info.spare_door
     else:
         assert not serial_comms.pin_info.spare_door
@@ -288,9 +360,9 @@ def assert_pns_neutral(serial_comms, pns):
 
 def assert_pns_v12(serial_comms, pns):
     assert_pns_neutral(serial_comms, pns)
-    if 'y' in pns:
+    if "y" in pns:
         assert serial_comms.pin_info.limit_y
-    if 'Y' in pns:
+    if "Y" in pns:
         assert serial_comms.pin_info.limit_Y
     assert not serial_comms.pin_info.limit_Y_axis
     assert not serial_comms.pin_info.stall_X
@@ -300,138 +372,138 @@ def assert_pns_v12(serial_comms, pns):
 
 def assert_pns_v13(serial_comms, pns):
     assert_pns_neutral(serial_comms, pns)
-    if 'y' in pns:
+    if "y" in pns:
         assert serial_comms.pin_info.limit_Y_axis
     else:
         assert not serial_comms.pin_info.limit_Y_axis
-    if 'Y' in pns:
+    if "Y" in pns:
         assert serial_comms.pin_info.stall_Y
     else:
         assert not serial_comms.pin_info.stall_Y
-    if 'S' in pns:
+    if "S" in pns:
         assert serial_comms.pin_info.stall_X
     else:
         assert not serial_comms.pin_info.stall_X
-    if 'z' in pns:
+    if "z" in pns:
         assert serial_comms.stall_guard.stall_Z
     else:
         assert not serial_comms.stall_guard.stall_Z
 
 
 def test_pin_selection_together_v12(sc):
-    sc.versions.firmware = '1.4.0'
-    pins = 'xXZPGgyY'
+    sc.versions.firmware = "1.4.0"
+    pins = "xXZPGgyY"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = ''
+    pins = ""
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
 
 
 def test_pin_selection_together_v13(sc):
-    sc.versions.firmware = '2.4.0'
-    pins = 'xXZPGgyYSz'
+    sc.versions.firmware = "2.4.0"
+    pins = "xXZPGgyYSz"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = ''
+    pins = ""
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
 
 
 def test_pin_selection_singles_v12(sc):
-    sc.versions.firmware = '1.4.0'
-    pins = 'x'
+    sc.versions.firmware = "1.4.0"
+    pins = "x"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'X'
+    pins = "X"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'Z'
+    pins = "Z"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'P'
+    pins = "P"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'G'
+    pins = "G"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'g'
+    pins = "g"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'y'
+    pins = "y"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = 'Y'
+    pins = "Y"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
-    pins = ''
+    pins = ""
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
 
 
 def test_pin_selection_singles_v13(sc):
-    sc.versions.firmware = '2.4.0'
-    pins = 'x'
+    sc.versions.firmware = "2.4.0"
+    pins = "x"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'X'
+    pins = "X"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'Z'
+    pins = "Z"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'P'
+    pins = "P"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'G'
+    pins = "G"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'g'
+    pins = "g"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'y'
+    pins = "y"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'Y'
+    pins = "Y"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'S'
+    pins = "S"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = 'z'
+    pins = "z"
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
-    pins = ''
+    pins = ""
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
 
 
 def construct_status_with_override(feed_ov=None, rapid_ov=None, speed_ov=None):
-    status = '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0'
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0"
     if feed_ov or rapid_ov or speed_ov:
         if feed_ov == None:
             feed_ov = 100
@@ -439,10 +511,11 @@ def construct_status_with_override(feed_ov=None, rapid_ov=None, speed_ov=None):
             rapid_ov = 100
         if speed_ov == None:
             speed_ov = 100
-        override_appendage = '|Ov:' + str(feed_ov) + ',' + str(rapid_ov
-            ) + ',' + str(speed_ov)
+        override_appendage = (
+            "|Ov:" + str(feed_ov) + "," + str(rapid_ov) + "," + str(speed_ov)
+        )
         status += override_appendage
-    status += '|TC:1,2>'
+    status += "|TC:1,2>"
     return status
 
 
@@ -468,7 +541,7 @@ def test_not_feed_override_read_in(sc):
 
 
 def test_feed_override_read_in_fails_if_bad(sc):
-    ov = ';'
+    ov = ";"
     status = construct_status_with_override(feed_ov=ov)
     sc.process_grbl_push(status)
     assert sc.feeds_and_speeds.feed_override != ov
@@ -493,7 +566,7 @@ def test_not_speed_override_read_in(sc):
 
 
 def test_speed_override_read_in_fails_if_bad(sc):
-    ov = ';'
+    ov = ";"
     status = construct_status_with_override(speed_ov=ov)
     sc.process_grbl_push(status)
     assert sc.feeds_and_speeds.feed_override != ov
@@ -502,11 +575,11 @@ def test_speed_override_read_in_fails_if_bad(sc):
 
 
 def construct_status_with_line_numbers(l=None):
-    status = '<Idle|MPos:0.000,0.000,0.000|Bf:35,255'
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255"
     if l:
-        line_appendage = '|Ln:' + str(l)
+        line_appendage = "|Ln:" + str(l)
         status += line_appendage
-    status += '|FS:0,0|Ld:0|TC:1,2>'
+    status += "|FS:0,0|Ld:0|TC:1,2>"
     return status
 
 
@@ -519,7 +592,7 @@ def test_line_number_read_in(sc):
 
 
 def test_line_number_read_in_when_nonsense(sc):
-    status = construct_status_with_line_numbers('nonsense')
+    status = construct_status_with_line_numbers("nonsense")
     sc.process_grbl_push(status)
     assert sc.grbl_ln == None
     assert sc.temperatures.motor_driver != 1
@@ -533,9 +606,9 @@ def test_line_number_read_in_when_no_number(sc):
     assert_status_end_processed(sc)
 
 
-def construct_status_with_load_string(load_string=''):
-    status = '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0' + load_string
-    status += '|TC:1,2>'
+def construct_status_with_load_string(load_string=""):
+    status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0" + load_string
+    status += "|TC:1,2>"
     return status
 
 
@@ -547,14 +620,14 @@ def test_inrush_counter_0_when_no_load(sc):
 
 def test_inrush_counter_1_when_1_load(sc):
     sc.digital_spindle.inrush_counter == 0
-    status = construct_status_with_load_string('|Ld:12,11,1,3')
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
     sc.process_grbl_push(status)
     assert sc.digital_spindle.inrush_counter == 1
 
 
 def test_inrush_counter_increases_to_max_and_stops(sc):
     sc.digital_spindle.inrush_counter = 0
-    status = construct_status_with_load_string('|Ld:12,11,1,3')
+    status = construct_status_with_load_string("|Ld:12,11,1,3")
     for _ in range(sc.digital_spindle.inrush_max):
         sc.process_grbl_push(status)
     assert sc.digital_spindle.inrush_counter == sc.digital_spindle.inrush_max

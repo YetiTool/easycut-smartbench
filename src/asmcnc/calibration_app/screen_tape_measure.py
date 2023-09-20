@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <TapeMeasureScreenClass>:
@@ -80,7 +81,7 @@ Builder.load_string(
                             markup: 'True'
                 
 """
-    )
+)
 
 
 class TapeMeasureScreenClass(Screen):
@@ -88,8 +89,8 @@ class TapeMeasureScreenClass(Screen):
     alert_label = ObjectProperty()
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
         self.alert_label.text = """[color=455A64]
 TAPE MEASURE WARNING!

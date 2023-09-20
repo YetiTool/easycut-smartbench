@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+
 Builder.load_string(
     """
 
@@ -420,21 +421,22 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter10ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]10[/b]')
-    title_label = StringProperty('[b]Load checklist[/b]')
+    screen_number = StringProperty("[b]10[/b]")
+    title_label = StringProperty("[b]Load checklist[/b]")
     user_instructions = StringProperty(
         """Step through this section for illustrations of each check:
 
-""")
+"""
+    )
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter10ScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):

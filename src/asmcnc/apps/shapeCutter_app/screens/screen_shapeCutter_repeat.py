@@ -7,6 +7,7 @@ Repeat? Screen for the Shape Cutter App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
+
 Builder.load_string(
     """
 
@@ -150,15 +151,15 @@ Builder.load_string(
                 orientation: 'horizontal'
                 pos: self.parent.pos
 """
-    )
+)
 
 
 class ShapeCutterRepeatScreenClass(Screen):
     exiting = False
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterRepeatScreenClass, self).__init__(**kwargs)
 
     def repeat(self):

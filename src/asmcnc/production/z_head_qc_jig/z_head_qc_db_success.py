@@ -1,6 +1,7 @@
 from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQCDBSuccess>:
@@ -37,18 +38,17 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class ZHeadQCDBSuccess(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('sm')
-        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(ZHeadQCDBSuccess, self).__init__(**kwargs)
 
     def enter_next_screen(self):
-        self.sm.current = 'qc6'
+        self.sm.current = "qc6"
 
     def set_serial_no(self, serial_no):
-        self.success_label.text = 'Database updated for:\n' + serial_no
+        self.success_label.text = "Database updated for:\n" + serial_no

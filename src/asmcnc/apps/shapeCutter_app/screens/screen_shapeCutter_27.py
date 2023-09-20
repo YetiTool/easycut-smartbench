@@ -9,6 +9,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -307,46 +308,39 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter27ScreenClass(Screen):
-    shape = 'circle'
+    shape = "circle"
     info_button = ObjectProperty()
     image_box = ObjectProperty()
-    screen_number = StringProperty('[b]27[/b]')
-    title_label = StringProperty('[b]Set job XY datum[/b]')
+    screen_number = StringProperty("[b]27[/b]")
+    title_label = StringProperty("[b]Set job XY datum[/b]")
     user_instructions = StringProperty(
         "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
-        )
-    image_source = StringProperty(
-        './asmcnc/apps/shapeCutter_app/img/27_rect.png')
+    )
+    image_source = StringProperty("./asmcnc/apps/shapeCutter_app/img/27_rect.png")
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
-        self.j = kwargs.pop('job_parameters')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter27ScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
-        if self.j.shape_dict['shape'] == 'circle':
-            self.user_instructions = (
-                "Mark the shape's datum position on the material. This is always in the centre of your circle. "
-                )
-            self.image_source = './asmcnc/apps/shapeCutter_app/img/27_circ.png'
+        if self.j.shape_dict["shape"] == "circle":
+            self.user_instructions = "Mark the shape's datum position on the material. This is always in the centre of your circle. "
+            self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_circ.png"
             self.image_box.padding = 120, 0, 0, 0
-        elif self.j.shape_dict['shape'] == 'rectangle':
-            self.user_instructions = (
-                "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
-                )
-            self.image_source = './asmcnc/apps/shapeCutter_app/img/27_rect.png'
+        elif self.j.shape_dict["shape"] == "rectangle":
+            self.user_instructions = "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
+            self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_rect.png"
             self.image_box.padding = 25, 0, 0, 0
 
     def get_info(self):
-        info = (
-            "The X-Y datum is SmartBench's reference point for the job coordinates."
-            )
+        info = "The X-Y datum is SmartBench's reference point for the job coordinates."
         popup_info.PopupInfo(self.shapecutter_sm, info)
 
     def go_back(self):

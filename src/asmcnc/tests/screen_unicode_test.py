@@ -5,6 +5,7 @@ Unicode test screen
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
+
 Builder.load_string(
     """
 
@@ -36,13 +37,13 @@ Builder.load_string(
                 markup: 'True'
                 color: [0,0,0,1]
 """
-    )
+)
 
 
 class ScreenClass(Screen):
-    string_test = ''
+    string_test = ""
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(ScreenClass, self).__init__(**kwargs)

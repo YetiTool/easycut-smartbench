@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -203,7 +204,7 @@ Builder.load_string(
                                 allow_stretch: True               
                     
 """
-    )
+)
 
 
 class ShapeCutterSaveJobScreenClass(Screen):
@@ -212,26 +213,24 @@ class ShapeCutterSaveJobScreenClass(Screen):
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
-        self.shapecutter_sm = kwargs.pop('shapecutter')
-        self.m = kwargs.pop('machine')
-        self.j = kwargs.pop('job_parameters')
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
 
     def on_pre_enter(self):
         self.display_profile = self.j.parameters_to_string()
         self.file_name.text = str(self.j.profile_filename)
-        self.save_image.source = (
-            './asmcnc/apps/shapeCutter_app/img/save_file.png')
+        self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/save_file.png"
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
     def save_file(self):
-        if not self.file_name.text == '':
+        if not self.file_name.text == "":
             self.j.save_parameters(self.file_name.text)
             self.j.save_gCode()
-            self.save_image.source = (
-                './asmcnc/apps/shapeCutter_app/img/thumbs_up.png')
+            self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
         else:
             description = """Filename input is empty.
 

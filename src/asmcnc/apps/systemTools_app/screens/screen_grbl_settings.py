@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -176,15 +177,14 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class GRBLSettingsScreen(Screen):
-
     def __init__(self, **kwargs):
-        self.systemtools_sm = kwargs.pop('system_tools')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(GRBLSettingsScreen, self).__init__(**kwargs)
 
     def go_back(self):
@@ -207,14 +207,17 @@ class GRBLSettingsScreen(Screen):
 
     def bake_default_settings(self):
         if not self.m.bake_default_grbl_settings():
-            popup_info.PopupError(self.systemtools_sm.sm, self.l,
-                "X current read in as 0! Can't set correct Z travel.")
+            popup_info.PopupError(
+                self.systemtools_sm.sm,
+                self.l,
+                "X current read in as 0! Can't set correct Z travel.",
+            )
 
     def send_rst_dollar(self):
-        self.m.send_any_gcode_command('$RST=$')
+        self.m.send_any_gcode_command("$RST=$")
 
     def send_rst_star(self):
-        self.m.send_any_gcode_command('$RST=*')
+        self.m.send_any_gcode_command("$RST=*")
 
     def send_rst_hash(self):
-        self.m.send_any_gcode_command('$RST=#')
+        self.m.send_any_gcode_command("$RST=#")

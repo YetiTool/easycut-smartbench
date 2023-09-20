@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -131,16 +132,16 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BrushUseWidget(Widget):
     default_font_size = 24
 
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('screen_manager')
-        self.m = kwargs.pop('machine')
-        self.l = kwargs.pop('localization')
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(BrushUseWidget, self).__init__(**kwargs)
         self.update_strings()
 
@@ -148,11 +149,11 @@ class BrushUseWidget(Widget):
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds / 3600))
 
     def reset_to_0(self):
-        self.brush_use.text = '0'
+        self.brush_use.text = "0"
 
     def update_strings(self):
-        self.brush_use_label.text = self.l.get_bold('BRUSH USE')
-        self.hours_label.text = self.l.get_str('hours')
+        self.brush_use_label.text = self.l.get_bold("BRUSH USE")
+        self.hours_label.text = self.l.get_str("hours")
         self.update_font_size(self.brush_use_label)
 
     def update_font_size(self, value):

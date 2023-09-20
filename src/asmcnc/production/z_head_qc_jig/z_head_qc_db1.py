@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 import re
+
 Builder.load_string(
     """
 <ZHeadQCDB1>:
@@ -46,29 +47,28 @@ Builder.load_string(
                 size_hint_y: 0.6
 
 """
-    )
+)
 
 
 class ZHeadQCDB1(Screen):
-
     def __init__(self, **kwargs):
-        self.sm = kwargs.pop('sm')
-        self.m = kwargs.pop('m')
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(ZHeadQCDB1, self).__init__(**kwargs)
 
     def validate_serial_number(self, serial):
-        expression = '(zh)\\d{4}'
+        expression = "(zh)\\d{4}"
         pattern = re.compile(expression)
         match = bool(pattern.match(serial))
         return match
 
     def enter_next_screen(self):
-        serial_number = self.serial_no_input.text.lower().replace(' ', '')
+        serial_number = self.serial_no_input.text.lower().replace(" ", "")
         validated = self.validate_serial_number(serial_number)
         if not validated:
-            self.error_label.text = 'Serial number invalid'
+            self.error_label.text = "Serial number invalid"
             return
-        self.sm.get_screen('qcDB3').set_serial_no(serial_number)
-        self.sm.get_screen('qcDB4').set_serial_no(serial_number)
-        self.sm.get_screen('qcDB2').set_serial_no(serial_number)
-        self.sm.current = 'qcDB2'
+        self.sm.get_screen("qcDB3").set_serial_no(serial_number)
+        self.sm.get_screen("qcDB4").set_serial_no(serial_number)
+        self.sm.get_screen("qcDB2").set_serial_no(serial_number)
+        self.sm.current = "qcDB2"
