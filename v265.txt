@@ -1,0 +1,10 @@
+.. _top:
+
+Reduction in spindle motor toggle RPM
+============================================
+
+The speed that spindles run at when spindle motor toggle buttons are pressed has been reduced to 12,000 RPM, down from 25,000 RPM. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
