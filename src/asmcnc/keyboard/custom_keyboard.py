@@ -135,3 +135,11 @@ class Keyboard(VKeyboard):
     def remove_children(self, child):
         if isinstance(child, Keyboard):
             Window.remove_widget(child)
+
+    def defocus_all_text_inputs(self, text_inputs):
+        self.generic_for_loop_alternative(self.defocus_text_input, text_inputs)
+
+    def defocus_text_input(self, text_input):
+        text_input.focus = False
+
+
