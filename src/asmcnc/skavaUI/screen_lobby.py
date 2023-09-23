@@ -55,7 +55,7 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint_y: 70
-            padding: [10, 10, 734, 0]
+            padding: [0.0125*app.width, 0.85416*app.height, 0.9175*app.width, 0]
             orientation: 'horizontal'
 
         Carousel:
@@ -65,13 +65,13 @@ Builder.load_string("""
                             
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding: [0.125*app.width, 0.04167*app.height, 0.125*app.width, 0.10416*app.height]
+                spacing: 0.025*app.width
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
     
                     Button:
                         size_hint_y: 8
@@ -96,7 +96,7 @@ Builder.load_string("""
                     Label:
                         id: pro_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'CAD / CAM'
 
 
@@ -104,7 +104,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
                                              
                     Button:
                         
@@ -130,19 +130,19 @@ Builder.load_string("""
                     Label:
                         id: shapecutter_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Shape Cutter'
                         
             # Carousel pane 2
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding: [0.125*app.width, 0.04167*app.height, 0.125*app.width, 0.10416*app.height]
+                spacing: 0.025*app.width
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
     
                     Button:
                         size_hint_y: 8
@@ -167,14 +167,14 @@ Builder.load_string("""
                     Label:
                         id: wifi_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Wi-Fi'
                 
                 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
     
                     Button:
                         size_hint_y: 8
@@ -199,20 +199,20 @@ Builder.load_string("""
                     Label:
                         id: calibrate_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Calibrate'
                         markup: True
 
             # Carousel pane 3
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding: [0.125*app.width, 0.04167*app.height, 0.125*app.width, 0.10416*app.height]
+                spacing: 0.025*app.width
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
     
                     Button:
                         size_hint_y: 8
@@ -237,14 +237,14 @@ Builder.load_string("""
                     Label:
                         id: update_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Update'
                 
                 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
     
                     Button:
                         size_hint_y: 8
@@ -269,20 +269,20 @@ Builder.load_string("""
                     Label:
                         id: maintenance_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Maintenance'
 
             # Carousel pane 4
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding: [0.125*app.width, 0.04167*app.height, 0.125*app.width, 0.10416*app.height]
+                spacing: 0.025*app.width
 
                 BoxLayout:
                     id: upgrade_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
 
                     Button:
                         size_hint_y: 8
@@ -307,14 +307,14 @@ Builder.load_string("""
                     Label:
                         id: upgrade_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Upgrade'
                         markup: True
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing: 0.04167*app.height
                 
                     Button:
                         size_hint_y: 8
@@ -339,7 +339,7 @@ Builder.load_string("""
                     Label:
                         id: system_tools_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'System Tools'
                         markup: True
                        
@@ -357,9 +357,9 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_x: None
-                width: 720
+                width: 0.9*app.width
                 height: self.parent.height
-                padding: [80, 40, 0, 40]
+                padding: [0.1*app.width, 0.08333*app.height, 0, 0.08333*app.height]
                 orientation: 'horizontal'
                 
                 Button:
@@ -427,9 +427,9 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None, None)
-                size: (80,80)
+                size: (0.1*app.width,0.16666*app.height)
                 orientation: 'horizontal'
-                padding: [29,29,10,10]
+                padding: [0.03625*app.width,0.06041*app.height,0.0125*app.width,0.02083*app.height]
                 Button:
                     disabled: False
                     background_color: hex('#FFFFFF00')
