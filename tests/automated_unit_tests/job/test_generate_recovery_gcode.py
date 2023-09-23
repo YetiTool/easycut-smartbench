@@ -1312,3 +1312,22 @@ def test_random_gibberish(jd):
     success, message = jd.generate_recovery_gcode()
     assert not success
     assert message == 'This job cannot be recovered! Please check your job for errors.'
+
+def test_ignore_comments(jd):
+    jd.job_gcode = [
+        "S5000",
+        "M3;Start",
+        "M5"
+    ]
+
+    jd.job_recovery_selected_line = 2
+    success, message = jd.generate_recovery_gcode()
+    assert success
+    assert jd.job_recovery_gcode == [
+        "S5000",
+        "G0 X0.000 Y0.000",
+        "M3",
+        "G0 Z0.000",
+        "M5"
+    ]
+    assert jd.job_recovery_offset == 2
