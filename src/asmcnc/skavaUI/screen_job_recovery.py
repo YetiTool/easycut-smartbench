@@ -326,6 +326,7 @@ class JobRecoveryScreen(Screen):
     initial_line_index = 0
     selected_line_index = 0
     display_list = []
+    gcode_without_comments = []
 
     scroll_up_event = None
     scroll_down_event = None
@@ -350,6 +351,12 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
+
+        def remove_comments(line):
+            # Comments are anything contained in parentheses, or anything after a semicolon
+            return re.sub('\(.*?\)|;.*', '', line)
+
+        self.gcode_without_comments = map(remove_comments, self.jd.job_gcode)
 
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
@@ -440,7 +447,7 @@ class JobRecoveryScreen(Screen):
         self.gcode_label.text = "\n".join(self.display_list[self.selected_line_index:self.selected_line_index + 13])
 
         # Recover most recent spindle speed
-        spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'S' in s), None)
+        spindle_speed_line = next((s for s in reversed(self.gcode_without_comments[:self.selected_line_index + 1]) if 'S' in s), None)
         try:
             if spindle_speed_line:
                 self.speed = spindle_speed_line[spindle_speed_line.find("S")+1:].split("M")[0]
@@ -450,7 +457,7 @@ class JobRecoveryScreen(Screen):
             self.speed = self.l.get_str("Undefined")
 
         # Recover most recent feedrate
-        feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'F' in s), None)
+        feedrate_line = next((s for s in reversed(self.gcode_without_comments[:self.selected_line_index + 1]) if 'F' in s), None)
         try:
             if feedrate_line:
                 self.feed = re.match('\d+(\.\d+)?',feedrate_line[feedrate_line.find("F")+1:]).group()
@@ -460,17 +467,17 @@ class JobRecoveryScreen(Screen):
             self.feed = self.l.get_str("Undefined")
 
         # Recover most recent position
-        x_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'X' in s), None)
+        x_line = next((s for s in reversed(self.gcode_without_comments[:self.selected_line_index + 1]) if 'X' in s), None)
         if x_line:
             self.pos_x = float(re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1])
         else:
             self.pos_x = 0.0
-        y_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'Y' in s), None)
+        y_line = next((s for s in reversed(self.gcode_without_comments[:self.selected_line_index + 1]) if 'Y' in s), None)
         if y_line:
             self.pos_y = float(re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1])
         else:
             self.pos_y = 0.0
-        z_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if 'Z' in s), None)
+        z_line = next((s for s in reversed(self.gcode_without_comments[:self.selected_line_index + 1]) if 'Z' in s), None)
         if z_line:
             self.pos_z = float(re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1])
         else:
