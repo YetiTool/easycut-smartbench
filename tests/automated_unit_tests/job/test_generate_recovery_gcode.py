@@ -1316,11 +1316,12 @@ def test_random_gibberish(jd):
 def test_ignore_comments(jd):
     jd.job_gcode = [
         "S5000",
-        "M3;Start",
+        "M3;S100",
+        "(S100)",
         "M5"
     ]
 
-    jd.job_recovery_selected_line = 2
+    jd.job_recovery_selected_line = 3
     success, message = jd.generate_recovery_gcode()
     assert success
     assert jd.job_recovery_gcode == [
@@ -1330,4 +1331,4 @@ def test_ignore_comments(jd):
         "G0 Z0.000",
         "M5"
     ]
-    assert jd.job_recovery_offset == 2
+    assert jd.job_recovery_offset == 1
