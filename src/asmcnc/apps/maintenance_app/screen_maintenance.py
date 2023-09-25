@@ -17,7 +17,6 @@ from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maint
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
 widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
 widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -453,6 +452,7 @@ class MaintenanceScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.l=kwargs['localization']
+        self.kb=kwargs['keyboard']
 
         # LASER DATUM WIDGETS
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
@@ -580,7 +580,7 @@ class MaintenanceScreenClass(Screen):
             self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
+        self.kb.setup_text_inputs(self.text_inputs)
 
         # TAB TO LAND ON
         if self.landing_tab == 'brush_tab':

@@ -16,7 +16,6 @@ import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.skavaUI import popup_info
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -477,6 +476,7 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -512,7 +512,7 @@ class WifiScreen(Screen):
                 pass
             self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
+        self.kb.setup_text_inputs(self.text_inputs)
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)

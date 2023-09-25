@@ -5,7 +5,6 @@ from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import widget_z_move_recovery
 from asmcnc.skavaUI import popup_info
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 <JobRecoveryScreen>:
@@ -340,6 +339,7 @@ class JobRecoveryScreen(Screen):
         self.m = kwargs['machine']
         self.jd = kwargs['job']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.line_input.bind(text = self.jump_to_line)
 
@@ -358,7 +358,6 @@ class JobRecoveryScreen(Screen):
             text_input.focus = False
 
     def on_pre_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         self.m.set_led_colour("WHITE")
         # Force gcode label font to show roboto because korean font has different spacing
         self.gcode_label.font_name = 'Roboto'
@@ -379,6 +378,9 @@ class JobRecoveryScreen(Screen):
             self.arc_movement_error_label.opacity = 1
         else:
             self.arc_movement_error_label.opacity = 0
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def start_scrolling_up(self):
         self.scrolling_up = True
@@ -435,6 +437,10 @@ class JobRecoveryScreen(Screen):
             Clock.unschedule(self.scroll_down_event)
 
     def jump_to_line(self, instance, value):
+
+        try: int(value)
+        except: return
+
         if value:
             if value.startswith("-"):
                 # Stop user inputting negative values

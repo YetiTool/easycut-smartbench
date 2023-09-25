@@ -23,9 +23,7 @@ from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move,
 from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
-from asmcnc.keyboard import custom_keyboard
 from time import sleep
-
 
 
 Builder.load_string("""
@@ -292,6 +290,7 @@ class HomeScreen(Screen):
         self.jd = kwargs['job']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
@@ -327,7 +326,7 @@ class HomeScreen(Screen):
         self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
     def on_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
+        self.kb.setup_text_inputs(self.text_inputs)
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):

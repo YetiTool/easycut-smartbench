@@ -20,7 +20,6 @@ from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.rst import RstDocument
-from asmcnc.keyboard import custom_keyboard
 
 
 def on_touch(popup, touch):
@@ -317,9 +316,10 @@ class PopupBetaTesting(Widget):
 
 ## GRBL settings and password
 class PopupGRBLSettingsPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("Changing the GRBL settings will change how SmartBench behaves.") + \
@@ -341,7 +341,7 @@ class PopupGRBLSettingsPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
-        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+        self.kb.setup_text_inputs([textinput])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
@@ -378,9 +378,10 @@ class PopupGRBLSettingsPassword(Widget):
 
 ### Factory settings and password
 class PopupFactorySettingsPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = self.l.get_str("Please enter the password to use the factory settings.")
         title_string = self.l.get_str('Warning!')
@@ -395,7 +396,7 @@ class PopupFactorySettingsPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=1, text='', multiline=False)
 
-        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+        self.kb.setup_text_inputs([textinput])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
@@ -434,9 +435,10 @@ class PopupFactorySettingsPassword(Widget):
 
 ### Update testing and password
 class PopupUpdateTestingPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("Update testing allows our engineers to try out full system updates " + \
@@ -459,7 +461,7 @@ class PopupUpdateTestingPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
-        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+        self.kb.setup_text_inputs([textinput])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
@@ -496,9 +498,10 @@ class PopupUpdateTestingPassword(Widget):
 
 ### Developer and password
 class PopupDeveloperPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("The developer app is to help our engineers access extra settings and " + \
@@ -521,7 +524,7 @@ class PopupDeveloperPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
-        kb = custom_keyboard.Keyboard([textinput], localization=self.l)
+        self.kb.setup_text_inputs([textinput])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''

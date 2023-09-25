@@ -11,7 +11,6 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -370,6 +369,7 @@ class ShapeCutter25ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.file_name]
@@ -379,11 +379,13 @@ class ShapeCutter25ScreenClass(Screen):
             text_input.focus = False
 
     def on_pre_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.info_button.opacity = 0
         self.display_profile = self.j.parameters_to_string()
         self.file_name.text = ''
         self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         
 # Action buttons       
     def get_info(self):

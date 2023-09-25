@@ -9,24 +9,25 @@ screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_dev
 
 class ScreenManagerSystemTools(object):
 
-    def __init__(self, app_manager, screen_manager, machine, settings, localization):
+    def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard):
 
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
         self.set = settings
         self.l = localization
+        self.kb = keyboard
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
 
     def open_system_tools(self):
         if not self.sm.has_screen('system_menu'): 
-            system_menu_screen = screen_system_menu.SystemMenuScreen(name = 'system_menu', machine = self.m, system_tools = self, localization = self.l)
+            system_menu_screen = screen_system_menu.SystemMenuScreen(name = 'system_menu', machine = self.m, system_tools = self, localization = self.l, keyboard = self.kb)
             self.sm.add_widget(system_menu_screen)
         self.sm.current = 'system_menu'
 
     def open_build_info_screen(self):
        if not self.sm.has_screen('build_info'):
-           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self, settings = self.set, localization = self.l)
+           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self, settings = self.set, localization = self.l, keyboard = self.kb)
            self.sm.add_widget(build_info_screen)
        self.sm.current = 'build_info'
 

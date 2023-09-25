@@ -5,7 +5,6 @@ from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 <UpgradeScreen>:
@@ -166,6 +165,7 @@ class UpgradeScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.upgrade_code_input]
@@ -175,11 +175,13 @@ class UpgradeScreen(Screen):
             text_input.focus = False
 
     def on_pre_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         # Reset app
         self.update_strings()
         self.hide_error_message()
         self.m.write_dollar_setting(51, 1)
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

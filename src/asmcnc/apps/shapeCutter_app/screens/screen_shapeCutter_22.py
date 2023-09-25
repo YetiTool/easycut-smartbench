@@ -13,7 +13,6 @@ from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from asmcnc.keyboard import custom_keyboard
 from __builtin__ import False
 
 Builder.load_string("""
@@ -516,6 +515,7 @@ class ShapeCutter22ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.td_dimension, self.th_dimension, self.tw_dimension]
@@ -524,7 +524,6 @@ class ShapeCutter22ScreenClass(Screen):
         for text_input in self.text_inputs:
             text_input.focus = False
     def on_pre_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.info_button.opacity = 1
 
         if self.j.shape_dict["shape"] == 'circle':
@@ -558,6 +557,9 @@ class ShapeCutter22ScreenClass(Screen):
             self.unit_toggle.active = True
         else:
             self.unit_toggle.active = False
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
             
 # Action buttons       
 
