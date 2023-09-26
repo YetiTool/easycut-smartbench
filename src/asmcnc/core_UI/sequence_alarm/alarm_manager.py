@@ -193,7 +193,7 @@ class AlarmSequenceManager(object):
             stall_list.append("X")
         if self.m.s.pin_info.stall_Y:
             stall_list.append("Y")
-        if self.m.s.stall_guard.stall_Z:
+        if self.m.s.pin_info.stall_Z:
             stall_list.append("Z")
         self.stall_axis = ", ".join(stall_list)
         self.sm.get_screen("alarm_1").description_label.text = (
