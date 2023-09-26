@@ -79,7 +79,7 @@ class Keyboard(VKeyboard):
                     self.text_instance.text = self.text_instance.text[:-1]
                 return
 
-            self.text_instance.text = self.text_instance.text + internal
+            self.text_instance.insert_text(internal)
 
     def on_focus(self,instance,value):
         if value:
