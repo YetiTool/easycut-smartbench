@@ -47,9 +47,27 @@ class Keyboard(VKeyboard):
         self.setup_text_inputs(text_inputs)
 
 
-    # This is a wrapper function to make the "func" argument get called recursively, scheduled before the next frame. 
-    # If the same callback is called more than 10 times before the next frame, kivy will issue a warning but won't freeze :). 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
+
+        '''
+        This alternative to using for loops prevents the UI from locking up while the "loop" continues in the background.
+
+        This is a wrapper function to make the "func" argument get called recursively, scheduled before the next frame. 
+        If the same callback is called more than 10 times before the next frame, kivy will issue a warning but won't freeze :).
+        This means it will scale even if there's a long list of things to get through. 
+
+        func: function that you would call from within the loop; if this returns true the "loop" will break
+        list_of_items and i: imagine you were using 'for x in list_of_items:', list_of_items[i] is x
+        end_func: the function that would be called when the loop ended
+
+        e.g.
+            for x in list_of_items:
+                if func(x): return 
+
+            if end_func: end_func()
+
+        '''
+
         try: 
             # if the given function returns True, exit the "loop" :)
             if func(list_of_items[i]): return
