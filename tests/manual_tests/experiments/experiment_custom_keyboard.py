@@ -28,6 +28,15 @@ except:
 
 
 Builder.load_string("""
+
+<FormattedButton@Button>:
+
+    text_size: self.size
+    valign: "top"
+    halign: "center"
+    padding: [0,20]
+
+
 <BasicScreen>:
 
     t1:t1
@@ -38,45 +47,29 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'horizontal'
-        Button: 
+        FormattedButton: 
             text: "Test generic for loop alternative"
             on_press: root.test_generic_for_loop_alternative()
-            text_size: self.size
-            valign: "top"
-            halign: "center"
-            padding: [0,20]
 
-        Button: 
+        FormattedButton: 
+            text: "Test generic for loop alternative with end func"
+            on_press: root.test_generic_for_loop_alternative_with_end_func()
+
+        FormattedButton: 
             text: 'Add keyboard'
             on_press: root.add_keyboard_instance()
-            text_size: self.size
-            valign: "top"
-            halign: "center"
-            padding: [0,20]
 
-        Button:
+        FormattedButton:
             text: "Does keyboard exist?"
             on_press: root.does_keyboard_exist()
-            text_size: self.size
-            valign: "top"
-            halign: "center"
-            padding: [0,20]
 
-        Button: 
+        FormattedButton: 
             text: "Remove children"
             on_press: root.remove_keyboard()
-            text_size: self.size
-            valign: "top"
-            halign: "center"
-            padding: [0,20]
 
-        Button: 
+        FormattedButton: 
             text: "Raise keyboard with mocks (this will break stuff)"
             on_press: root.raise_keyboard_if_none_exists_with_mocks()
-            text_size: self.size
-            valign: "top"
-            halign: "center"
-            padding: [0,20]
 
         BoxLayout: 
             orientation: "vertical"
@@ -98,6 +91,9 @@ Builder.load_string("""
 """)
 
 class BasicScreen(Screen):
+
+    list_of_items = list(range(0, 101))
+
     def __init__(self, **kwargs):
         super(BasicScreen, self).__init__(**kwargs)
         self.l = localization.Localization()
@@ -107,13 +103,17 @@ class BasicScreen(Screen):
     def on_touch(self):
         self.kb.defocus_all_text_inputs(self.text_inputs)
 
+    def func(self, x):
+        print(x)
+
+    def end_func(self):
+        print("YAY")
+
     def test_generic_for_loop_alternative(self):
+        self.kb.generic_for_loop_alternative(self.func, self.list_of_items)
 
-        def func(x):
-            print(x)
-
-        list_of_items = list(range(0, 101))
-        self.kb.generic_for_loop_alternative(func, list_of_items)
+    def test_generic_for_loop_alternative_with_end_func(self):
+        self.kb.generic_for_loop_alternative(self.func, self.list_of_items, end_func=self.end_func)
 
     def add_keyboard_instance(self):
         self.kb.add_keyboard_instance()
