@@ -2,6 +2,8 @@
 import sys
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
+import traceback
+from kivy.clock import Clock
 
 try:
     import hgtk
@@ -44,14 +46,50 @@ class Keyboard(VKeyboard):
 
         # self.setup_text_inputs(text_inputs)
 
-    def setup_text_inputs(self, text_inputs):
-        for text_input in text_inputs:
-            try:
-                text_input.keyboard_mode = 'managed'
-                text_input.bind(focus=self.on_focus)
-            except:
-                print("setup failed")
 
+    def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
+
+        '''
+        This alternative to using for loops prevents the UI from locking up while the "loop" continues in the background.
+
+        This is a wrapper function to make the "func" argument get called recursively, scheduled before the next frame. 
+        If the same callback is called more than 10 times before the next frame, kivy will issue a warning but won't freeze :).
+        This means it will scale even if there's a long list of things to get through. 
+
+        func: function that you would call from within the loop; if this returns true the "loop" will break
+        list_of_items and i: imagine you were using 'for x in list_of_items:', list_of_items[i] is x
+        end_func: the function that would be called when the loop ended
+
+        e.g.
+            for x in list_of_items:
+                if func(x): return 
+
+            if end_func: end_func()
+
+        '''
+
+        try: 
+            # if the given function returns True, exit the "loop" :)
+            if func(list_of_items[i]): return
+
+            # passing "-1" as the time argument schedules the call before the next frame if possible
+            Clock.schedule_once(lambda dt: self.generic_for_loop_alternative(func, list_of_items, i+1, end_func), -1)
+
+        except IndexError as e:
+            # When we get to the end of the list of things, call a final function if it exists
+            if end_func:
+                end_func()
+
+
+    # Set up text input fields to raise the custom keyboard
+    def setup_text_inputs(self, text_inputs):
+        self.generic_for_loop_alternative(self.setup_single_text_input, text_inputs)
+
+    def setup_single_text_input(self, text_input):
+        text_input.keyboard_mode = 'managed'
+        text_input.bind(focus=self.on_focus_raise_keyboard)
+
+    # This function dictates what happens when a user presses a keyboard key
     def key_up(self, keycode, internal, modifiers):
         try:
             if "kr" in self.layout.lower():
@@ -81,7 +119,8 @@ class Keyboard(VKeyboard):
 
             self.text_instance.insert_text(internal)
 
-    def on_focus(self,instance,value):
+    # On focus behaviour is bound to all text inputs
+    def on_focus_raise_keyboard(self,instance,value):
         if value:
             try:
                 instance.get_focus_previous().focus = False
@@ -89,20 +128,36 @@ class Keyboard(VKeyboard):
                 pass
             instance.focus = True
             self.text_instance = instance
-            try:
-                for child in Window.children:
-                    if isinstance(child,Keyboard):
-                        print("Keyboard instance")
-                        return
-                else:
-                    Window.add_widget(self)
-
-            except:
-                pass
+            self.raise_keyboard_if_none_exists()
         else:
-            try:
-                for child in Window.children:
-                    if isinstance(child, Keyboard):
-                        Window.remove_widget(child)
-            except:
-                pass
+            self.lower_keyboard_if_not_focused()
+
+    # Functions to raise keyboard
+    def raise_keyboard_if_none_exists(self):
+        self.generic_for_loop_alternative(self.return_if_keyboard_exists, Window.children, i=0, end_func=self.add_keyboard_instance)
+
+    def return_if_keyboard_exists(self, child):
+        if isinstance(child, Keyboard):
+            return True
+
+    def add_keyboard_instance(self):
+        try: 
+            Window.add_widget(self)
+        except:
+            print(traceback.format_exc())
+
+    # Functions to lower keyboard
+    def lower_keyboard_if_not_focused(self):
+        self.generic_for_loop_alternative(self.remove_children, Window.children)
+
+    def remove_children(self, child):
+        if isinstance(child, Keyboard):
+            Window.remove_widget(child)
+
+    def defocus_all_text_inputs(self, text_inputs):
+        self.generic_for_loop_alternative(self.defocus_text_input, text_inputs)
+
+    def defocus_text_input(self, text_input):
+        text_input.focus = False
+
+
