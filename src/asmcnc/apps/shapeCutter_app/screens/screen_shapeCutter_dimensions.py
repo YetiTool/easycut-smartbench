@@ -12,7 +12,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -420,6 +419,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.input_dim1, self.input_dim2, self.input_dim3, self.input_dim4]
@@ -429,7 +429,6 @@ class ShapeCutterDimensionsScreenClass(Screen):
             text_input.focus = False
         
     def on_pre_enter(self):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=None)
         self.info_button.opacity = 0
         
         if self.j.shape_dict["units"] == 'mm':
@@ -490,6 +489,9 @@ class ShapeCutterDimensionsScreenClass(Screen):
 
             elif self.j.shape_dict["cut_type"] == 'aperture':
                 self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_rect.png")
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def get_info(self):
         pass

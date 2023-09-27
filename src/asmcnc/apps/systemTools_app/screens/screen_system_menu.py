@@ -212,6 +212,7 @@ class SystemMenuScreen(Screen):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.id_list = [
         self.button_system_info,
@@ -251,16 +252,16 @@ class SystemMenuScreen(Screen):
         popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
 
     def grbl_settings(self):
-        popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
+        popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l, self.kb)
 
     def factory_settings(self):
-        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
+        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l, self.kb)
 
     # def update_testing(self):
-    #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
+    #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l, self.kb)
 
     def developer(self):
-        popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
+        popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l, self.kb)
 
     def update_strings(self):
         self.button_system_info.text = self.l.get_str('System Info')

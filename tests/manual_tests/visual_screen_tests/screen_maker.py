@@ -35,10 +35,11 @@ class ScreenMaker(object):
 
     }
 
-    def __init__(self, sm, l, sett, jd, m, yp, db, am, sc, systemtools_sm, start_seq):
+    def __init__(self, sm, l, kb, sett, jd, m, yp, db, am, sc, systemtools_sm, start_seq):
         self.param_map['screen_manager'] = sm
         self.param_map['sm'] = sm
         self.param_map['localization'] = l
+        self.param_map['keyboard'] = kb
         self.param_map['settings'] = sett
         self.param_map['job'] = jd
         self.param_map['machine'] = m

@@ -34,6 +34,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from asmcnc.comms import localization
+from asmcnc.keyboard import custom_keyboard
 from asmcnc.comms import router_machine
 from settings import settings_manager
 from asmcnc.comms import smartbench_flurry_database_connection
@@ -733,6 +734,8 @@ class ScreenTest(App):
         l = localization.Localization()
         l.load_in_new_language(l.approved_languages[self.lang_idx])
 
+        kb = custom_keyboard.Keyboard(localization=l)
+
         # Initialise settings object
         sett = settings_manager.Settings(sm)
         # sett.ip_address = ''
@@ -757,14 +760,14 @@ class ScreenTest(App):
         # App manager object
         config_flag = False
         initial_version = 'v2.6.0'
-        am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
+        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
 
         start_seq = Mock()
 
-        screen_maker = ScreenMaker(sm, l, sett, jd, m, yp, db, am, sc, systemtools_sm, start_seq)
+        screen_maker = ScreenMaker(sm, l, kb, sett, jd, m, yp, db, am, sc, systemtools_sm, start_seq)
 
         # Function for test to run is passed as argument
         eval(sys.argv[1] + "()")

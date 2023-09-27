@@ -10,7 +10,7 @@ except:
 
 
 class Keyboard(VKeyboard):
-    def __init__(self, text_inputs, **kwargs):
+    def __init__(self, **kwargs):
         super(Keyboard, self).__init__(**kwargs)
 
         self.l = kwargs['localization']
@@ -42,7 +42,7 @@ class Keyboard(VKeyboard):
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
 
-        self.setup_text_inputs(text_inputs)
+        # self.setup_text_inputs(text_inputs)
 
     def setup_text_inputs(self, text_inputs):
         for text_input in text_inputs:

@@ -18,7 +18,6 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
-from asmcnc.keyboard import custom_keyboard
 
 Builder.load_string("""
 
@@ -596,6 +595,7 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.smartbench_location_unformatted = self.l.get_str('SmartBench Location')
         self.smartbench_location_formatted = self.l.get_str('SmartBench Location')
@@ -642,8 +642,8 @@ class BuildInfoScreen(Screen):
         self.m.send_any_gcode_command('$I')
 
     def on_enter(self, *args):
-        kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
         self.scrape_fw_version()
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def on_touch(self):
         for text_input in self.text_inputs:
