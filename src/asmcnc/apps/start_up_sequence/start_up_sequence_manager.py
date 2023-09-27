@@ -5,7 +5,8 @@ screen_reboot_to_apply_settings, \
 screen_release_notes, \
 screen_pro_plus_safety, \
 screen_starting_smartbench, \
-screen_safety_warning
+screen_safety_warning, \
+screen_incorrect_shutdown
 
 from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
@@ -26,6 +27,7 @@ class StartUpSequence(object):
 	starting_smartbench_screen = None
 	warranty_sm = None
 	reboot_to_apply_settings_screen = None
+	incorrect_shutdown_screen = None
 	safety_screen = None
 
 	def __init__(self, app_manager, screen_manager, machine, settings, localization, job, database, config_check, version):
@@ -69,6 +71,8 @@ class StartUpSequence(object):
 
 		else:
 			self.prep_starting_smartbench_screen()
+			if self.show_incorrect_shutdown_screen():
+				self.prep_incorrect_shutdown_screen()
 			self.prep_safety_screen()
 
 	## BASIC SEQUENCE NAVIGATION FUNCTIONS
@@ -122,6 +126,11 @@ class StartUpSequence(object):
 		if ('False' in pro_plus_safety or not pro_plus_safety) and os.path.exists(self.m.theateam_path): return True
 		else: return False
 
+	def show_incorrect_shutdown_screen(self):
+		correct_shutdown = (os.popen('grep "correct_shutdown" config.txt').read())
+		if ('False' in correct_shutdown): return True
+		else: return False
+
 	## FUNCTIONS TO PREP APPS AND SCREENS
 
 	def prep_welcome_app(self):
@@ -167,6 +176,13 @@ class StartUpSequence(object):
 
 		if 'starting_smartbench' not in self.screen_sequence:
 			self.screen_sequence.append('starting_smartbench')
+	def prep_incorrect_shutdown_screen(self):
+		if not self.incorrect_shutdown_screen:
+			self.incorrect_shutdown_screen = screen_incorrect_shutdown.IncorrectShutdownScreen(name = 'incorrect_shutdown', start_sequence = self, localization = self.l, screen_manager = self.sm)
+			self.sm.add_widget(self.incorrect_shutdown_screen)
+
+		if 'incorrect_shutdown' not in self.screen_sequence:
+			self.screen_sequence.append('incorrect_shutdown')
 
 	def prep_safety_screen(self):
 		if not self.safety_screen:    		
