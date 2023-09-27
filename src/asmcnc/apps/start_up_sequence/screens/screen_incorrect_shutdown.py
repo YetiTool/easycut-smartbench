@@ -161,7 +161,6 @@ class IncorrectShutdownScreen(Screen):
         self.update_strings()
 
     def next(self):
-        print("next screen")
         self.start_seq.next_in_sequence()
 
     def update_strings(self):
