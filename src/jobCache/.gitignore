@@ -1,1 +1,4 @@
 *.nc
+*.gcode
+*.GCode
+*.NC
