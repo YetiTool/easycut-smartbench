@@ -620,7 +620,7 @@ class WifiScreen(Screen):
                     Clock.unschedule(self.wifi_error_timeout_event)
                 try:
                     wait_popup.popup.dismiss()
-                    message = self.l.get_str("Wifi connected succesfully!")
+                    message = self.l.get_str("Wifi connected successfully!")
                     popup_info.PopupMiniInfo(self.sm, self.l, message)
                 except:
                     pass
