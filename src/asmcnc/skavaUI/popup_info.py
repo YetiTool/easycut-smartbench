@@ -1125,6 +1125,7 @@ class PopupShutdown(Widget):
             os.system('sudo shutdown -c')
 
         def shutdown_now(*args):
+            os.system('sudo sed -i "s/correct_shutdown=False/correct_shutdown=True/" config.txt')
             os.system('sudo shutdown -h now')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)

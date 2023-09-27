@@ -129,7 +129,12 @@ class StartUpSequence(object):
 	def show_incorrect_shutdown_screen(self):
 		correct_shutdown = (os.popen('grep "correct_shutdown" config.txt').read())
 		if ('False' in correct_shutdown): return True
-		else: return False
+		else:
+			if not correct_shutdown:
+				os.system("sudo sed -i -e '$acorrect_shutdown=False' /home/pi/easycut-smartbench/src/config.txt")
+			elif 'True' in correct_shutdown:
+				os.system('sudo sed -i "s/correct_shutdown=True/correct_shutdown=False/" config.txt')
+			return False
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
 
