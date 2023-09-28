@@ -23,15 +23,15 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos   
         padding: 0
-        spacing: 20
+        spacing: 0.025*app.width
         orientation: "horizontal"
 
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: [0.00625*app.width, 0.01041*app.height]
+            spacing: 0.00625*app.width
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -45,7 +45,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20
+                font_size: str(0.025*app.width) + 'sp'
 
             Button:
                 background_color: hex('#F4433600')
@@ -103,8 +103,8 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: [0.00625*app.width, 0.01041*app.height]
+            spacing: 0.00625*app.width
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -117,7 +117,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20        
+                font_size: str(0.025*app.width) + 'sp'       
             Button:
                 background_color: hex('#F4433600')
                 on_release: 

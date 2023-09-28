@@ -28,8 +28,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding: [0.0125*app.width, 0.02083*app.height]
+        spacing: 0.02083*app.height
         
         GridLayout:
             cols: 3
@@ -41,7 +41,7 @@ Builder.load_string("""
 
             # go x datum
             BoxLayout:
-                padding: 10
+                padding: [0.0125*app.width, 0.02083*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -85,7 +85,7 @@ Builder.load_string("""
 
             # go y datum
             BoxLayout:
-                padding: 10
+                padding: [0.0125*app.width, 0.02083*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -164,7 +164,7 @@ Builder.load_string("""
 
             # set x datum
             BoxLayout:
-                padding: 10
+                padding: [0.0125*app.width, 0.02083*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -208,7 +208,7 @@ Builder.load_string("""
 
             # set y datum
             BoxLayout:
-                padding: 10
+                padding: [0.0125*app.width, 0.02083*app.height]
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -231,7 +231,7 @@ Builder.load_string("""
                 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 10
+            spacing: 0.0125*app.width
 
             Button:
                 background_color: hex('#F4433600')
@@ -241,7 +241,7 @@ Builder.load_string("""
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: [0, 20, 40, 20]
+                    padding: [0, 0.04166*app.height, 0.05*app.width, 0.04166*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -259,7 +259,7 @@ Builder.load_string("""
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: [40, 20, 0, 20]
+                    padding: [0.05*app.width, 0.04166*app.height, 0, 0.04166*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

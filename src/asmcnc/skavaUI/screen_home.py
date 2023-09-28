@@ -54,13 +54,13 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: 0.02083*app.height
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
             padding: 0
-            spacing: 10
+            spacing: 0.0125*app.width
             orientation: "horizontal"
 
             BoxLayout:
@@ -72,16 +72,16 @@ Builder.load_string("""
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 90
-                    tab_width: 90
+                    tab_height: 0.1875*app.height
+                    tab_width: 0.1125*app.width
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding: 20
-                            spacing: 20
+                            padding: [0.025*app.width, 0.04167*app.height]
+                            spacing: 0.025*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -100,8 +100,8 @@ Builder.load_string("""
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 20
-                            spacing: 20
+                            padding: [0.025*app.width, 0.04167*app.height]
+                            spacing: 0.025*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -141,8 +141,8 @@ Builder.load_string("""
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding: [0.025*app.width, 0.04167*app.height]
+                            spacing: 0.04167*app.height
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -152,7 +152,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding: 10
+                                padding: [0.0125*app.width, 0.02083*app.height]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -173,8 +173,8 @@ Builder.load_string("""
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding: [0.025*app.width, 0.04167*app.height]
+                            spacing: 0.04167*app.height
                             id: job_container
                             canvas:
                                 Color:
@@ -185,8 +185,8 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding: 10
-                                spacing: 10
+                                padding: [0.0125*app.width, 0.02083*app.height]
+                                spacing: 0.0125*app.width
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -233,7 +233,7 @@ Builder.load_string("""
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
-                                    font_size: '20sp'
+                                    font_size: str(0.025*app.width) + 'sp'
                                     markup: True
                                     text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
@@ -241,7 +241,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding: 20
+                                padding: [0.025*app.width, 0.04167*app.height]
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:

@@ -33,6 +33,7 @@ Builder.load_string("""
         text_size: self.width, None
         text: root.text
         max_lines: 60
+        font_size: str(0.01875*app.width) + 'sp'
         
 <ScrollableLabelStatus>:
     scroll_y:1
@@ -48,7 +49,7 @@ Builder.load_string("""
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
-        font_size: '12sp'
+        font_size: str(0.015*app.width) + 'sp'
         text: root.text
         max_lines: 3
 
@@ -73,8 +74,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         orientation: "vertical"
-        padding: 5
-        spacing: 5
+        padding: [0.00625*app.width, 0.01041*app.height]
+        spacing: 0.00625*app.width
         
         canvas:
             Color:
@@ -86,18 +87,18 @@ Builder.load_string("""
         BoxLayout:      
             size: self.parent.size
             pos: self.parent.pos      
-            spacing: 5
+            spacing: 0.00625*app.width
             orientation: "horizontal"    
             
             BoxLayout:
                 padding_horizontal: 5
-                spacing: 5
+                spacing: 0.01041*app.height
                 orientation: "vertical"
                 size_hint_x: 0.9
                 
                 BoxLayout:
                     padding: 0
-                    spacing: 2
+                    spacing: 0.0025*app.width
                     orientation: 'horizontal'
                     size_hint_y: 0.1
      
@@ -113,14 +114,15 @@ Builder.load_string("""
                         on_press: root.send_gcode_textinput()
                         size_hint_x:0.3
                         background_color: .6, 1, 0.6, 1
+                        font_size: str(0.01875*app.width) + 'sp'
       
                 ScrollableLabelCommands:
                     size_hint_y: 0.8                     
                     id: consoleScrollText
                                          
             BoxLayout:
-                padding_horizontal: 5
-                spacing: 5
+                padding_horizontal: 0.00625*app.width
+                spacing: 0.01041*app.height
                 orientation: "vertical"
                 size_hint_x: 0.24
         
@@ -131,6 +133,7 @@ Builder.load_string("""
                     text: 'Hide oks'
                     on_state: root.hide_received_ok = self.state               
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
 
 # FOR USER
                     
@@ -139,31 +142,37 @@ Builder.load_string("""
                     text: "Settings"
                     on_press: root.send_gcode_preset("$$")
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
                 Button:
                     id: params_button
                     text: "Params"
                     on_press: root.send_gcode_preset("$#")
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
                 Button:
                     id: state_button
                     text: "State"
                     on_press: root.send_gcode_preset("$G")
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
                 Button:
                     id: build_button
                     text: "Build"
                     size_hint_y:0.1
                     on_press: root.send_gcode_preset("$I")
+                    font_size: str(0.01875*app.width) + 'sp'
                 Button:
                     id: check_button
                     text: "Check $C"
                     on_press: root.toggle_check_mode()
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
                 Button:
                     id: help_button
                     text: "Help"
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
+                    font_size: str(0.01875*app.width) + 'sp'
 
 ######### END ############
  
@@ -173,9 +182,10 @@ Builder.load_string("""
                     on_press: root.clear_monitor()
                     size_hint_y:0.1
                     background_color: 1, .8, 0, 1
+                    font_size: str(0.01875*app.width) + 'sp'
         
         BoxLayout:
-            padding: 5
+            padding: [0.00625*app.width, 0.01041*app.height]
             spacing: 0
             orientation: 'horizontal'
             size_hint_y: 0.09
@@ -194,6 +204,7 @@ Builder.load_string("""
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
+                font_size: str(0.01875*app.width) + 'sp'
                     
     
         ScrollableLabelStatus:
@@ -341,9 +352,9 @@ class GCodeMonitor(Widget):
     def update_strings(self):
         self.enter_button.text = self.l.get_str('Enter')
         self.hide_ok_button.text = self.l.get_str('Hide oks')
-        self.settings_button.text = self.l.get_str('Settings') 
-        self.params_button.text = self.l.get_str('Params') 
-        self.state_button.text = self.l.get_str('State') 
+        self.settings_button.text = self.l.get_str('Settings')
+        self.params_button.text = self.l.get_str('Params')
+        self.state_button.text = self.l.get_str('State')
         self.build_button.text = self.l.get_str('Build')
         self.check_button.text = self.l.get_str('Check') + ' $C'
         self.help_button.text = self.l.get_str('Help')

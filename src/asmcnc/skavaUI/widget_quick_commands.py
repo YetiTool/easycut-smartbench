@@ -30,7 +30,7 @@ Builder.load_string("""
         pos: self.parent.pos      
 
         padding: 0
-        spacing: 10
+        spacing: 0.02083*app.height
         orientation: "vertical"
 
         Button:

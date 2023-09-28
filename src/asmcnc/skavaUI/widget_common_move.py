@@ -28,7 +28,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing: 20
+        spacing: 0.04166*app.height
         
         orientation: "vertical"
         
@@ -49,7 +49,7 @@ Builder.load_string("""
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding: [0.0125*app.width, 0.02083*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -77,7 +77,7 @@ Builder.load_string("""
                 on_press: root.set_vacuum()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding: [0.0125*app.width, 0.02083*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -94,7 +94,7 @@ Builder.load_string("""
                 on_press: root.set_spindle()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding: [0.0125*app.width, 0.02083*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

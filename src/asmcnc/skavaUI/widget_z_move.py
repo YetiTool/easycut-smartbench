@@ -25,12 +25,12 @@ Builder.load_string("""
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding: 20
-        spacing: 10
+        padding: [0.025*app.width, 0.04167*app.height]
+        spacing: 0.0125*app.width
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing: 10
+            spacing: 0.02083*app.height
             orientation: "vertical"
             
             BoxLayout:
@@ -60,7 +60,7 @@ Builder.load_string("""
     
     
         BoxLayout:
-            spacing: 10
+            spacing: 0.02083*app.height
             orientation: "vertical"
             
             Button:
@@ -145,16 +145,16 @@ Builder.load_string("""
     FloatLayout:
         
         Label:
-            x: 662
-            y: 420
+            x: 0.8275*app.width
+            y: 0.875*app.width
             size_hint: None, None            
-            height: 30
-            width: 30
+            height: 0.0625*app.height
+            width: 0.0375*app.width
             text: 'Z'
             markup: True
             bold: True
             color: 0,0,0,0.2
-            font_size: 20     
+            font_size: str(0.025*app.width) + 'sp'   
         
 """)
     
