@@ -98,7 +98,8 @@ class BasicScreen(Screen):
         super(BasicScreen, self).__init__(**kwargs)
         self.l = localization.Localization()
         self.text_inputs = [self.t1, self.t2, self.t3]
-        self.kb = custom_keyboard.Keyboard(self.text_inputs, localization=self.l)
+        self.kb = custom_keyboard.Keyboard(localization=self.l)
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def on_touch(self):
         self.kb.defocus_all_text_inputs(self.text_inputs)
