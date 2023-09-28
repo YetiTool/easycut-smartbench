@@ -313,7 +313,7 @@ class YetiPilot(object):
         for profile_json in profiles_json["Profiles"]:
             self.available_profiles.append(
                 YetiPilotProfile(
-                    cutter_diameter=profile_json["Cutter Diameter"],
+                    cutter_diameter=profile_json["Cutter Diameter"].encode('utf-8'),
                     cutter_type=self.l.get_str(profile_json["Cutter Type"]),
                     material_type=self.l.get_str(profile_json["Material Type"]),
                     step_down=profile_json["Step Down"],
