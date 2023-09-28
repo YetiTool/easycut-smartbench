@@ -80,6 +80,7 @@ Builder.load_string("""
             TextInput:
                 id: t1
                 text: ""
+                multiline: False
 
             TextInput:
                 id: t2
