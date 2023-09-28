@@ -107,6 +107,7 @@ Builder.load_string("""
                         multiline: False
                         text: ''
                         on_text_validate: root.send_gcode_textinput()
+                        font_size: str(0.01875*app.width) + 'sp'
                     
                     Button:
                         id: enter_button
