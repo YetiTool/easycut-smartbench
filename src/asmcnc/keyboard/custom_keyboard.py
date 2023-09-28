@@ -44,8 +44,6 @@ class Keyboard(VKeyboard):
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
 
-        # self.setup_text_inputs(text_inputs)
-
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
 
@@ -104,20 +102,22 @@ class Keyboard(VKeyboard):
             if internal == None:
                 if keycode == "enter":
                     if not self.text_instance.multiline:
-                        self.text_instance.focus = False
                         self.text_instance.dispatch("on_text_validate")
+                        if self.text_instance.text_validate_unfocus:
+                            self.text_instance.focus = False
                     else:
-                        self.text_instance.text = self.text_instance.text + "\n"
+                        self.text_instance.insert_text(u'\n')
                 if keycode == "Han/Yeong":
                     #https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
                 if keycode == "escape":
                     self.text_instance.focus = False
                 if keycode == "backspace":
-                    self.text_instance.text = self.text_instance.text[:-1]
+                    self.text_instance.do_backspace()
                 return
 
             self.text_instance.insert_text(internal)
+
 
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
