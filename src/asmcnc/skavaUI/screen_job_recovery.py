@@ -437,10 +437,6 @@ class JobRecoveryScreen(Screen):
             Clock.unschedule(self.scroll_down_event)
 
     def jump_to_line(self, instance, value):
-
-        try: int(value)
-        except: return
-
         if value:
             if value.startswith("-"):
                 # Stop user inputting negative values
