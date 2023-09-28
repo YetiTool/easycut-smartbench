@@ -891,3 +891,5 @@ No network connection.	Keine Netzwerkverbindung.	Pas de connexion réseau.	Nessu
 Please refresh the list and try again.	Bitte aktualisieren Sie die Liste und versuchen Sie es erneut.	Veuillez rafraichir la liste et essayez à nouveau.	Per favore aggiorna la lista e riprova.	Päivitä lista ja yritä uudestaan.	Vernieuw de lijst en probeer het opnieuw.	Proszę odśwież listę i spróbuj ponownie.	Opdater venligst listen, og prøv igen.	목록을 새로고침하고 다시 시도하세요.
 1 flute straight	Einschneidiger Fräser	1 dent droite	Monotagliente Dritto	Suora 1-leikkuinen	1 spaangroeven recht	Frez prosty 1-piórowy	1 skær lige	플루트 스트레이트 1개
 Aluminium	Aluminium	Aluminium	Alluminio	Alumiini	Aluminium	Aluminium	Aluminium	알루미늄
+Acrylic	Acryl	Acrylique	Acrilico	Akryyli	Acryl	Akryl	Akryl	아크릴
+V-groove	V-Nutfräser	fraise en V	Fresa a V	V-ura	V-groef	Frez grawerski typ V	V-rille	V-그루브
