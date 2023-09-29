@@ -235,7 +235,7 @@ Builder.load_string("""
                                     size_hint: (None,None)
                                     height: dp(32)
                                     width: dp(595)
-                                    padding: (342,0,220,0)
+                                    padding: (392,0,120,0)
                                     orientation: "horizontal"
                                                     
                       
