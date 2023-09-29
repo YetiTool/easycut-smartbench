@@ -1673,7 +1673,7 @@ class RouterMachine(object):
         self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
 
     def spindle_on(self):
-        self.s.write_command('M3 S25000')
+        self.s.write_command('M3 S12000')
     
     def spindle_off(self):
         self.s.write_command('M5')
