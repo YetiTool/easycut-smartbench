@@ -195,7 +195,7 @@ Builder.load_string("""
                     
                         BoxLayout: #text box
                             size_hint: (None,None)
-                            height: dp(40)
+                            height: dp(50)
                             width: dp(675)
                             padding: 80,0,0,0
                             orientation: "vertical"                       
@@ -212,7 +212,7 @@ Builder.load_string("""
 
                         BoxLayout: #image box
                             size_hint: (None,None)
-                            height: dp(270)
+                            height: dp(260)
                             width: dp(675)
                             padding:40,0,0,15      
                             Image:

@@ -235,7 +235,7 @@ Builder.load_string("""
                                     size_hint: (None,None)
                                     height: dp(32)
                                     width: dp(595)
-                                    padding: (392,0,120,0)
+                                    padding: (382,0,130,0)
                                     orientation: "horizontal"
                                                     
                       
@@ -302,7 +302,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(100)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: xy_feed_units
@@ -352,7 +352,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(100)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: z_feed_units
@@ -401,7 +401,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(100)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             text: "RPM"
