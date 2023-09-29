@@ -193,7 +193,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(310)
                         width: dp(675)
-                        padding: 80,0,0,80
+                        padding: 80,0,0,90
                         orientation: "vertical"
                         
                         Label:
