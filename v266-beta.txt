@@ -1,0 +1,10 @@
+.. _top:
+
+Beta release to prevent update issues
+============================================
+
+This release is functionally the same as v2.6.5, but required for early software versions to be able to update.
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
