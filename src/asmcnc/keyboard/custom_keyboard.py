@@ -29,7 +29,7 @@ class Keyboard(VKeyboard):
         self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
 
         try:
-            if self.l.lang == "Korean (KO)":
+            if self.l.lang == self.l.ko:
                 self.font = self.l.korean_font
                 self.layout = self.kr_layout
             else:
