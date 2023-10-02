@@ -295,6 +295,7 @@ class BetaTestingScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.user_branch.text = (self.set.sw_branch).strip('* ')
         self.beta_version.text = self.set.latest_sw_beta
@@ -303,6 +304,8 @@ class BetaTestingScreen(Screen):
 
         self.language_button.values = self.l.supported_languages
         self.language_button.text = self.l.lang
+
+        self.text_inputs = [self.user_branch]
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -313,6 +316,7 @@ class BetaTestingScreen(Screen):
     def on_enter(self):
         self.language_button.text = self.l.lang
         self.usb_stick.enable()
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def checkout_branch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':

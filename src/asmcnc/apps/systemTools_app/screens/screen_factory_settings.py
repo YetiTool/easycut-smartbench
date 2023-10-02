@@ -546,6 +546,7 @@ class FactorySettingsScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
         self.usb_stick = kwargs['usb_stick']
 
         self.software_version_label.text = self.set.sw_version
@@ -585,6 +586,12 @@ class FactorySettingsScreen(Screen):
             self.sc2_compatability_toggle.state = 'down'
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
 
+        self.text_inputs = [
+                            self.z_touch_plate_entry, 
+                            self.serial_prefix,
+                            self.serial_number_input,
+                            self.product_number_input,
+                            ]
 
     def connect_to_db_when_creds_loaded(self, dt):
 
@@ -621,6 +628,7 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
+        self.kb.setup_text_inputs(self.text_inputs)
 
         csv_path = './asmcnc/production/database/csvs'
 
