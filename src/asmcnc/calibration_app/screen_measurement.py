@@ -130,11 +130,10 @@ Builder.load_string("""
                  
                 Label:
                     id: instruction_top
-                    size_hint_y: 0.2
+                    size_hint_y: 0.3
                     size: self.texture_size
                     text_size: self.size
                     markup: True
-                    valign: 'top'
 
                 Image:
                     id: image_select
@@ -218,21 +217,21 @@ class MeasurementScreenClass(Screen):
     def screen_x_2(self):
         self.instruction_top.text = '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
         self.instruction_left.text = ''
-        self.instruction_top.size_hint_y = 0.2
+        self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0        
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.png"
         
     def screen_x_3(self):
         self.instruction_top.text = '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
         self.instruction_left.text = ''
-        self.instruction_top.size_hint_y = 0.2
+        self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0       
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.png"
         
     def screen_x_4(self):
         self.instruction_top.text = '[color=000000]Make sure you make your measurement in line with the reference face.[/color]'
         self.instruction_left.text = ''
-        self.instruction_top.size_hint_y = 0.2
+        self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0       
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_4.png"
         
@@ -242,7 +241,7 @@ class MeasurementScreenClass(Screen):
         self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. ' \
                             'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
         self.instruction_left.text = ''
-        self.instruction_top.size_hint_y = 0.2
+        self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
         self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_1.png"
     
