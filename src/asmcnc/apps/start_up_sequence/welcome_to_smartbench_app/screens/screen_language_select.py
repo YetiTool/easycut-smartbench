@@ -379,7 +379,11 @@ class LanguageSelectScreen(Screen):
 		if self.welcome_i < 6:
 			self.welcome_i += 1
 
+		elif self.welcome_i == 7:
+			self.header_label.font_name = self.l.korean_font
+
 		else:
+			self.header_label.font_name = self.l.standard_font
 			self.welcome_i = 0
 
 	def select_language(self, radio_button, language_label):
@@ -411,6 +415,10 @@ class LanguageSelectScreen(Screen):
 		self.start_seq.next_in_sequence()
 
 	def update_strings(self):
+		if self.l.lang == self.l.ko: 
+			self.header_label.font_name = self.l.korean_font
+			self.next_button.font_name = self.l.korean_font
+
 		self.header_label.text = self.l.get_str("Welcome to SmartBench")
 		self.next_button.text = self.l.get_str("Next") + "..."
 		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
