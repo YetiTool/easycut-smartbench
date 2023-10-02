@@ -594,8 +594,8 @@
     },
     {
       "Material Type": "ACM",
-      "Cutter Diameter": "90°",
-      "Cutter Type": "V-groove",
+      "Cutter Diameter": "90 deg",
+      "Cutter Type": "v groove",
       "Step Down": "3 mm",
       "Parameters": [
         {
@@ -665,6 +665,54 @@
         {
           "Name": "spindle_tool_load_watts",
           "Value": 150
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Solid Surface",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 220
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Solid Surface",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 170
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Solid Surface",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 450
         },
         {
           "Name": "target_spindle_speed",
