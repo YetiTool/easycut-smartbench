@@ -134,6 +134,7 @@ Builder.load_string("""
                     size: self.texture_size
                     text_size: self.size
                     markup: True
+                    valign: 'top'
 
                 Image:
                     id: image_select
