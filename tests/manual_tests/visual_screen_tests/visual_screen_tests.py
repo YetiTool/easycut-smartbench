@@ -255,7 +255,7 @@ class ScreenTest(App):
 
             am.start_up.welcome_user = Mock(return_value=True)
             am.start_up.show_user_data_consent = Mock(return_value=True)
-            am.start_up.show_warranty_app = Mock(return_value=True)
+            am.start_up.show_warranty_app = Mock(return_value=False)
             am.start_up.show_user_pro_plus_safety = Mock(return_value=True)
             am.start_up.reboot_in_sequence = True
 
@@ -265,9 +265,9 @@ class ScreenTest(App):
             am.start_up.start_sequence()
 
             # Automatically place activation code in text input
-            serial_number = sm.get_screen('warranty_2').serial_number_label.text
-            activation_code = sm.get_screen('warranty_3').generate_activation_code(serial_number)
-            sm.get_screen('warranty_3').activation_code.text = str(activation_code)
+            # serial_number = sm.get_screen('warranty_2').serial_number_label.text
+            # activation_code = sm.get_screen('warranty_3').generate_activation_code(serial_number)
+            # sm.get_screen('warranty_3').activation_code.text = str(activation_code)
 
             set_up_screens([[screen_rebooting.RebootingScreen, 'rebooting']])
 
@@ -779,7 +779,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.0'
+        initial_version = 'v2.6.5'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object

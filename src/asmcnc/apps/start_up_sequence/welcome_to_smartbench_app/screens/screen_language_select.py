@@ -364,9 +364,6 @@ class LanguageSelectScreen(Screen):
 		# self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
 
 	def get_image_filename(self, value):
-		# If french flag needs to be shown, then filename will not match language name due to special character
-		if value.text == "Français (FR)":
-			return self.flag_img_path + "Francais (FR)" + ".png"
 		return self.flag_img_path + value.text + ".png"
 
 	def on_enter(self):
@@ -394,7 +391,7 @@ class LanguageSelectScreen(Screen):
 			# If korean is selected, the startup sequence needs font updated to display it correctly
 			if current_font != self.l.font_regular:
 				# I know this is a nested for loop, but it executes very quickly
-				for screen in self.start_seq.screen_sequence + ['rebooting']:
+				for screen in self.start_seq.screen_sequence[1:] + ['rebooting']:
 					for widget in self.sm.get_screen(screen).walk():
 						if isinstance(widget, Label):
 							widget.font_name = self.l.font_regular
