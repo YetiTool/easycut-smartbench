@@ -363,6 +363,9 @@ class LanguageSelectScreen(Screen):
 		self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
 		# self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
 
+		# Need specific font to show korean characters
+		self.row_3_col_2.font_name = self.l.korean_font
+
 	def get_image_filename(self, value):
 		return self.flag_img_path + value.text + ".png"
 
