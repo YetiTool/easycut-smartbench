@@ -331,7 +331,8 @@ class LanguageSelectScreen(Screen):
 		"Benvenuti in Smartbench",
 		"Tervetuloa Smartbenchiin",
 		"Witamy w SmartBench",
-		"Velkommen til SmartBench"
+		"Velkommen til SmartBench",
+		"SmartBench에 오신 것을 환영합니다"
 	]
 
 	welcome_i = 0
@@ -374,16 +375,16 @@ class LanguageSelectScreen(Screen):
 
 	def change_welcome_label(self, dt):
 
+		if self.welcome_i == 7:
+			self.header_label.font_name = self.l.korean_font
+		else: 
+			self.header_label.font_name = self.l.standard_font
+
 		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
 
-		if self.welcome_i < 6:
+		if self.welcome_i < 7:
 			self.welcome_i += 1
-
-		elif self.welcome_i == 6:
-			self.header_label.font_name = self.l.korean_font
-
 		else:
-			self.header_label.font_name = self.l.standard_font
 			self.welcome_i = 0
 
 	def select_language(self, radio_button, language_label):
