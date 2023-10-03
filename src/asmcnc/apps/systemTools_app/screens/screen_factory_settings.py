@@ -49,6 +49,8 @@ Builder.load_string("""
     console_update_button: console_update_button
     sc2_compatability_toggle:sc2_compatability_toggle
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -647,6 +649,10 @@ class FactorySettingsScreen(Screen):
         else:
             self.setting_54_label.text = '$54 = N/A'
 
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
@@ -1075,7 +1081,7 @@ class FactorySettingsScreen(Screen):
     def enter_serial_number_screen(self):
         if self.calibration_db.conn != None:
             if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
-                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l)
+                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l, keyboard = self.kb)
                 self.systemtools_sm.sm.add_widget(serial_input_screen)
             
             self.systemtools_sm.sm.current = 'serial_input_screen'
@@ -1112,7 +1118,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):
-            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l)
+            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l, keyboard = self.kb)
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
@@ -1134,7 +1140,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_set_thresholds(self):
         if not self.systemtools_sm.sm.has_screen('set_thresholds'):
-            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l, keyboard = self.kb)
             self.systemtools_sm.sm.add_widget(set_thresholds_screen)
         
         self.systemtools_sm.sm.current = 'set_thresholds'

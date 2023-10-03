@@ -169,7 +169,7 @@ class ScreenManagerSystemTools(object):
 
     def open_final_test_screen(self, board):
       if not self.sm.has_screen('final_test'):
-        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self, localization = self.l)
+        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self, localization = self.l, keyboard = self.kb)
         self.sm.add_widget(final_test_screen)
 
     # SET VALUES FOR BOARD

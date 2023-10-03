@@ -38,6 +38,8 @@ Builder.load_string("""
     usb_toggle: usb_toggle
     wifi_toggle: wifi_toggle
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -317,6 +319,10 @@ class BetaTestingScreen(Screen):
         self.language_button.text = self.l.lang
         self.usb_stick.enable()
         self.kb.setup_text_inputs(self.text_inputs)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def checkout_branch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':
