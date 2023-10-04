@@ -721,13 +721,8 @@ class WifiScreen(Screen):
     def get_rst_source(self):
         try:
             self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
-        except: 
-            # Can't seem to use non english letters for file source so filename is different
-            try:
-                if self.l.lang == 'Français (FR)':
-                    self.connection_instructions_rst.source = self.wifi_documentation_path + 'Francais (FR).rst'
-            except:
-                self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
+        except:
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
     def on_leave(self):
         if self.wifi_error_timeout_event:

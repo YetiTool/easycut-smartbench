@@ -84,7 +84,27 @@ class ScreenTest(App):
 
     lang_idx = 7
     cycle_languages = False
-    test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)", "Korean (KO)"]
+
+    gb = "English (GB)"
+    it = "Italiano (IT)"
+    fi = "Suomalainen (FI)"
+    de = "Deutsch (DE)"
+    fr = "Français (FR)"
+    pl = "Polski (PL)"
+    dk = "Dansk (DK)"
+    ko = "한국어 (KO)"
+    nl = "Nederlands (NL)"
+
+    test_languages = [
+                        gb,
+                        it, 
+                        fi, 
+                        de,
+                        fr,
+                        pl,
+                        dk,
+                        ko
+                    ]
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -759,7 +779,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.0'
+        initial_version = 'v2.6.5'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object

@@ -29,6 +29,7 @@ Builder.load_string("""
     halign: 'left'
     markup: 'True'
     font_size: 18
+    font_name: 'KRFont'
 
 <BetaTestingScreen>
 

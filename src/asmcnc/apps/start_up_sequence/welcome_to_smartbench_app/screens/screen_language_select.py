@@ -331,7 +331,8 @@ class LanguageSelectScreen(Screen):
 		"Benvenuti in Smartbench",
 		"Tervetuloa Smartbenchiin",
 		"Witamy w SmartBench",
-		"Velkommen til SmartBench"
+		"Velkommen til SmartBench",
+		"SmartBench에 오신 것을 환영합니다"
 	]
 
 	welcome_i = 0
@@ -363,10 +364,10 @@ class LanguageSelectScreen(Screen):
 		self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
 		# self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
 
+		# Need specific font to show korean characters
+		self.row_3_col_2.font_name = self.l.korean_font
+
 	def get_image_filename(self, value):
-		# If french flag needs to be shown, then filename will not match language name due to special character
-		if value.text == "Français (FR)":
-			return self.flag_img_path + "Francais (FR)" + ".png"
 		return self.flag_img_path + value.text + ".png"
 
 	def on_enter(self):
@@ -374,11 +375,15 @@ class LanguageSelectScreen(Screen):
 
 	def change_welcome_label(self, dt):
 
+		if self.welcome_i == 7:
+			self.header_label.font_name = self.l.korean_font
+		else: 
+			self.header_label.font_name = self.l.standard_font
+
 		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
 
-		if self.welcome_i < 6:
+		if self.welcome_i < 7:
 			self.welcome_i += 1
-
 		else:
 			self.welcome_i = 0
 
@@ -394,7 +399,7 @@ class LanguageSelectScreen(Screen):
 			# If korean is selected, the startup sequence needs font updated to display it correctly
 			if current_font != self.l.font_regular:
 				# I know this is a nested for loop, but it executes very quickly
-				for screen in self.start_seq.screen_sequence + ['rebooting']:
+				for screen in self.start_seq.screen_sequence[1:] + ['rebooting']:
 					for widget in self.sm.get_screen(screen).walk():
 						if isinstance(widget, Label):
 							widget.font_name = self.l.font_regular
@@ -411,6 +416,14 @@ class LanguageSelectScreen(Screen):
 		self.start_seq.next_in_sequence()
 
 	def update_strings(self):
+		if self.l.lang == self.l.ko:
+			self.header_label.font_name = self.l.korean_font
+			self.next_button.font_name = self.l.korean_font
+
+		else: 
+			self.header_label.font_name = self.l.standard_font
+			self.next_button.font_name = self.l.standard_font
+
 		self.header_label.text = self.l.get_str("Welcome to SmartBench")
 		self.next_button.text = self.l.get_str("Next") + "..."
 		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
