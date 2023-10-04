@@ -21,6 +21,7 @@ class ScreenManagerWarranty(object):
         self.sm = screen_manager
         self.m = machine
         self.l = localization
+        self.kb = keyboard
 
         self.load_warranty_app()
 
@@ -39,7 +40,7 @@ class ScreenManagerWarranty(object):
             self.sm.get_screen('warranty_2').update_strings()
 
         if not self.sm.has_screen('warranty_3'):
-            warranty_registration_3_screen = screen_warranty_registration_3.WarrantyScreen3(name = 'warranty_3', start_sequence = self.start_seq, machine = self.m, localization = self.l)
+            warranty_registration_3_screen = screen_warranty_registration_3.WarrantyScreen3(name = 'warranty_3', start_sequence = self.start_seq, machine = self.m, localization = self.l, keyboard = self.kb)
             self.sm.add_widget(warranty_registration_3_screen)
         else:
             self.sm.get_screen('warranty_3').update_strings()
