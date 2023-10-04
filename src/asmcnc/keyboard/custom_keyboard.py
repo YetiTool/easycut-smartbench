@@ -38,11 +38,12 @@ class Keyboard(VKeyboard):
         except:
             pass
 
-        self.do_translation = False
+        self.do_translation = True
         self.width = Window.width
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
+        self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
 
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
@@ -114,8 +115,26 @@ class Keyboard(VKeyboard):
                     self.text_instance.focus = False
                 if keycode == "backspace":
                     self.text_instance.do_backspace()
-                return
 
+                if keycode == "layout":
+                    # self.layout = self.numeric_layout if self.layout == self.kr_layout or self.layout == self.qwertyKR_layout else self.kr_layout
+                    self.layout = self.numeric_layout if self.layout == self.qwerty_layout else self.qwerty_layout
+
+                    if self.layout == self.numeric_layout:
+                        self.width = Window.width/3
+                    else:
+                        self.width = Window.width
+
+                    # Make sure keyboard never goes off-screen and becomes unusable/unreachable
+                    if self.pos[0] + self.width > Window.width:
+                        self.pos = (Window.width-self.width, self.pos[1])
+                    if self.pos[1] < 0:
+                        self.pos = (self.pos[0], 0)
+                    if self.pos[0] < 0:
+                        self.pos = (0, self.pos[1])
+                    if self.pos[1] + self.height > Window.height:
+                        self.pos = (self.pos[0], Window.height - self.height)
+                return
             self.text_instance.insert_text(internal)
 
 
