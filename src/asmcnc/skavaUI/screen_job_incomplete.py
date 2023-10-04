@@ -32,6 +32,8 @@ Builder.load_string("""
     # event_details_input : event_details_input
     next_button : next_button
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
