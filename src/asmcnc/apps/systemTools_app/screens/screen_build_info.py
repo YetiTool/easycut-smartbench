@@ -33,6 +33,7 @@ Builder.load_string("""
     halign: 'left'
     markup: 'True'
     font_size: 18
+    font_name: 'KRFont'
 
 <BuildInfoScreen>
 
@@ -66,6 +67,8 @@ Builder.load_string("""
     show_more_info: show_more_info
     console_serial_number: console_serial_number
     toggle_ssh_button:toggle_ssh_button
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -593,6 +596,7 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.smartbench_location_unformatted = self.l.get_str('SmartBench Location')
         self.smartbench_location_formatted = self.l.get_str('SmartBench Location')
@@ -619,6 +623,9 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_name()
         self.get_smartbench_location()
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -637,6 +644,11 @@ class BuildInfoScreen(Screen):
 
     def on_enter(self, *args):
         self.scrape_fw_version()
+        self.kb.setup_text_inputs(self.text_inputs)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
@@ -717,7 +729,7 @@ class BuildInfoScreen(Screen):
         self.update_font_sizes()
 
     def update_font_sizes(self): # Update everything together so it looks nicer
-        if len(self.firmware_header.text) < 20:
+        if self.l.get_text_length(self.firmware_header.text) < 20:
             self.smartbench_model_header.font_size = 20
             self.serial_number_header.font_size = 20
             self.console_serial_number_header.font_size = 20

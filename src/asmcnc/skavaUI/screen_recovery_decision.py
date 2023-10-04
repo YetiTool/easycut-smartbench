@@ -192,7 +192,9 @@ class RecoveryDecisionScreen(Screen):
         self.recover_job_button.text = self.l.get_str('Recover job')
 
     def update_font_size(self, value):
-        if len(value.text) > 50:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 50:
             value.font_size = 28
         else: 
             value.font_size = 30

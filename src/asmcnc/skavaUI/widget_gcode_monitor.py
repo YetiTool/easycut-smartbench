@@ -164,6 +164,9 @@ Builder.load_string("""
                     text: "Help"
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
 
 ######### END ############
  

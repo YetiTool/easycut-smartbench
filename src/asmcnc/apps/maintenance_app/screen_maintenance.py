@@ -452,6 +452,7 @@ class MaintenanceScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.l=kwargs['localization']
+        self.kb=kwargs['keyboard']
 
         # LASER DATUM WIDGETS
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
@@ -508,7 +509,11 @@ class MaintenanceScreenClass(Screen):
 
         self.update_strings()
 
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.brush_use_widget.brush_use, self.brush_life_widget.brush_life, self.touchplate_offset_widget.touchplate_offset]
+
     def quit_to_lobby(self):
+        self.on_tab_switch()
         self.sm.current = 'lobby'
         
     def on_pre_enter(self):
@@ -575,6 +580,7 @@ class MaintenanceScreenClass(Screen):
             self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
         # TAB TO LAND ON
         if self.landing_tab == 'brush_tab':
@@ -634,12 +640,16 @@ class MaintenanceScreenClass(Screen):
         self.update_font_size(self.brush_monitor_label)
 
     def update_font_size(self, value):
-        if len(value.text) > 25:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 18:
             value.font_size = 19
         else: 
             value.font_size = 22
 
     def on_tab_switch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
         # Save button disabled upon switching tabs
         if self.tab_panel.current_tab != self.laser_tab:
             self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"

@@ -26,6 +26,8 @@ Builder.load_string("""
     stock_bottom_offset: stock_bottom_offset
     step_down: step_down 
     
+    on_touch_down: root.on_touch()
+    
 
     BoxLayout:
         size_hint: (None,None)
@@ -233,7 +235,7 @@ Builder.load_string("""
                                     size_hint: (None,None)
                                     height: dp(32)
                                     width: dp(595)
-                                    padding: (342,0,170,0)                
+                                    padding: (382,0,130,0)      
                                     orientation: "horizontal"
                                                     
 #                                     ToggleButton:
@@ -328,7 +330,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: stock_bottom_offset_units
@@ -379,7 +381,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: step_down_units
@@ -428,7 +430,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             text: "passes"
@@ -540,6 +542,14 @@ class ShapeCutter24ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.stock_bottom_offset, self.step_down, self.finishing_passes]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         self.counter = 0
@@ -558,6 +568,9 @@ class ShapeCutter24ScreenClass(Screen):
             self.unit_toggle.active = False
             self.stock_bottom_offset_units.text = "mm"
             self.step_down_units.text = "mm"
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
 # Action buttons       
 

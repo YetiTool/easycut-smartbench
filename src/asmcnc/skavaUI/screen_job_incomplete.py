@@ -32,6 +32,8 @@ Builder.load_string("""
     # event_details_input : event_details_input
     next_button : next_button
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -290,6 +292,14 @@ class JobIncompleteScreen(Screen):
         self.l = kwargs['localization']
         self.jd = kwargs['job']
         self.db = kwargs['database']
+        self.kb=kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.parts_completed_input, self.batch_number_input, self.post_production_notes]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event
@@ -301,6 +311,7 @@ class JobIncompleteScreen(Screen):
     def on_pre_enter(self):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
+        self.kb.setup_text_inputs(self.text_inputs)
  
     def press_ok(self):
 

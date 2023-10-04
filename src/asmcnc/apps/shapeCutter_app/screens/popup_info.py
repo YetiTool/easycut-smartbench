@@ -51,7 +51,6 @@ class PopupInfo(Widget):
         popup = Popup(title='Information',
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -100,7 +99,6 @@ class PopupTutorial(Widget):
         
         popup = Popup(title='Information',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -146,7 +144,6 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         popup = Popup(title='Information',
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -186,7 +183,6 @@ class PopupWait(Widget):
         
         popup = Popup(title='Please Wait...',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

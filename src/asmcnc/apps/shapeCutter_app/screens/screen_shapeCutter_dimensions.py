@@ -33,6 +33,8 @@ Builder.load_string("""
     back_button:back_button
     info_button:info_button
     #switch_rectangle:switch_rectangle
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -417,8 +419,16 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.input_dim1, self.input_dim2, self.input_dim3, self.input_dim4]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
         
-    def on_pre_enter(self):        
+    def on_pre_enter(self):
         self.info_button.opacity = 0
         
         if self.j.shape_dict["units"] == 'mm':
@@ -479,6 +489,9 @@ class ShapeCutterDimensionsScreenClass(Screen):
 
             elif self.j.shape_dict["cut_type"] == 'aperture':
                 self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_rect.png")
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def get_info(self):
         pass
