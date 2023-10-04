@@ -46,7 +46,7 @@ class AppManagerClass(object):
         self.sm.add_widget(maintenance_screen)
 
         # Start start up sequence
-        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
+        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.kb, self.jd, self.db, self.cc, self.v)
 
 
     # here are all the functions that might be called in the lobby e.g. 

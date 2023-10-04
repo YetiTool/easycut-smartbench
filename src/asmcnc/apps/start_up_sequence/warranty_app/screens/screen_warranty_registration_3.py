@@ -26,6 +26,8 @@ Builder.load_string("""
 	error_message_bottom : error_message_bottom
 	next_button : next_button
 
+	on_touch_down: root.on_touch()
+
 	BoxLayout: 
 		size_hint: (None,None)
 		width: dp(800)
@@ -206,14 +208,22 @@ class WarrantyScreen3(Screen):
 		self.start_seq=kwargs['start_sequence']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
+		self.kb = kwargs['keyboard']
 
 		self.update_strings()
+
+		self.text_inputs = [self.activation_code]
 
 	def on_pre_enter(self):
 		self.read_in_activation_code()
 
 	def on_enter(self):
 		self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
+		self.kb.setup_text_inputs(self.text_inputs)
+
+	def on_touch(self):
+		for text_input in self.text_inputs:
+			text_input.focus = False
 
 	def read_in_activation_code(self):
 		try: 
