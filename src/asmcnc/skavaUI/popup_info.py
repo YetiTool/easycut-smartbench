@@ -21,6 +21,7 @@ from kivy.uix.rst import RstDocument
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from datetime import datetime
+from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
 
 def log(message):
@@ -45,23 +46,26 @@ class PopupWelcome(Widget):
         def set_trigger_to_true(*args):
             self.m.write_set_up_options(True)
 
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(420, None), markup=True, halign='center', valign='middle',
-                      text=description, color=[0, 0, 0, 1], padding=[0, 0])
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=True, pos=self.pos)
+        print(img.size)
+        label = Label(size_hint_y=2, text_size=(0.525*Window.width, None), markup=True, halign='center', valign='middle',
+                      text=description, font_size=0.01875*Window.width, color=[0, 0, 0, 1], padding=[0, 0])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.font_size=0.01875*Window.width
 
         remind_me_button = Button(text=remind_string, markup=True)
         remind_me_button.background_normal = ''
         remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        remind_me_button.font_size=0.01875*Window.width
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[20, 10, 20, 0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=0.01875*Window.width, padding=[0.025*Window.width, 0.02083*Window.height, 0.025*Window.width, 0])
         btn_layout.add_widget(remind_me_button)
         btn_layout.add_widget(ok_button)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10, 10, 10, 10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=0.02083*Window.height, padding=[0.0125*Window.width, 0.02083*Window.height, 0.0125*Window.width, 0.02083*Window.height])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
@@ -70,16 +74,16 @@ class PopupWelcome(Widget):
                       #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
                       title_font='Roboto-Bold',
-                      title_size='20sp',
+                      title_size=str(0.025*Window.width)+'sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 440),
+                      size=(0.625*Window.width, 0.91666*Window.height),
                       auto_dismiss=False
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
-        popup.separator_height = '4dp'
+        popup.separator_height = str(0.00833*Window.height) + 'dp'
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=set_trigger_to_false)
@@ -138,31 +142,33 @@ class PopupDatum(Widget):
                 return True
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description,
-                      color=[0, 0, 0, 1], padding=[40, 20], markup=True)
+        label = Label(size_hint_y=1, text_size=(0.45*Window.width, None), halign='center', valign='middle', text=description,
+                      color=[0, 0, 0, 1], padding=[0.05*Window.width, 0.04166*Window.height], markup=True)
 
         ok_button = Button(text=yes_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.font_size=0.01875*Window.width
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.font_size=0.01875*Window.width
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=0.0125*Window.width, padding=[0, 0, 0, 0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
         if self.m.is_laser_enabled == True:
             chk_label = Label(size_hint_y=1, size_hint_x=0.8, halign='center', valign='middle', text=chk_message,
-                              text_size=[200, 100], color=[0, 0, 0, 1], padding=[0, 20], markup=True)
+                              text_size=[0.25*Window.width, 0.20833*Window.height], color=[0, 0, 0, 1], padding=[0, 0.04166*Window.height], markup=True)
             checkbox = CheckBox(size_hint_x=0.2,
                                 background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png",
                                 active=set_checkbox_default())
-            chk_layout = BoxLayout(orientation='horizontal', spacing=0, padding=[5, 0, 5, 0])
+            chk_layout = BoxLayout(orientation='horizontal', spacing=0, padding=[0.00625*Window.width, 0, 0.00625, 0])
             chk_layout.add_widget(chk_label)
             chk_layout.add_widget(checkbox)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20, 20, 20, 20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=0.02083*Window.height, padding=[0.025*Window.width, 0.04166*Window.height, 0.025*Window.width, 0.04166*Window.height])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
@@ -171,15 +177,15 @@ class PopupDatum(Widget):
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font='Roboto-Bold',
-                      title_size='20sp',
+                      title_size=str(0.025*Window.width) + 'sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 350),
+                      size=(0.375*Window.width, 0.72916*Window.height),
                       auto_dismiss=False
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-        popup.separator_height = '4dp'
+        popup.separator_height = str(0.00833*Window.height) + 'dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
         if self.m.is_laser_enabled == True: checkbox.bind(active=on_checkbox_active)
