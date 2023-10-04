@@ -893,3 +893,4 @@ Please refresh the list and try again.	Bitte aktualisieren Sie die Liste und ver
 Aluminium	Aluminium	Aluminium	Alluminio	Alumiini	Aluminium	Aluminium	Aluminium	알루미늄
 Acrylic	Acryl	Acrylique	Acrilico	Akryyli	Acryl	Akryl	Akryl	아크릴
 V-groove	V-Nutfräser	fraise en V	Fresa a V	V-ura	V-groef	Frez grawerski typ V	V-rille	V-그루브
+Solid Surface	Feste Oberflächen	Solid Surface	Compositi	Massiivimuovi	Stevige ondergrond	Solid Surface	Solid overflade	솔리드 표면
