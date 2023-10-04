@@ -1,4 +1,4 @@
-import os, sys, subprocess
+import os, sys, subprocess, re
 from datetime import datetime
 
 from kivy.lang import Builder
@@ -372,7 +372,7 @@ class GeberitCutterScreen(Screen):
                 working_directory = '/home/pi/svg2gcode'
             else:
                 # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
-                cmd = "%s/../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
+                cmd = "%s/../../../../.cargo/bin/cargo.exe run --release -- %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_app_output.svg" % (os.getcwd(), os.getcwd())
                 cmd +=  " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o %s/asmcnc/apps/geberit_cutter_app/geberit_cutter_raw_gcode.nc" % (self.speed_input.text, "-" + self.depth_input.text, self.feed_input.text, self.feed_input.text, os.getcwd())
                 working_directory = os.getcwd() + '/../../svg2gcode'
 
@@ -391,6 +391,11 @@ class GeberitCutterScreen(Screen):
                 # Stop turning off spindle throughout file by deleting all M5 commands
                 if 'M5' in line:
                     line = line.replace('M5', '')
+
+                # This rounds every decimal to 2dp
+                # The regex matches all decimals with 3+dp, then the lambda function rounds it by casting to 2dp float
+                line = re.sub(r"\d+\.\d{3,}", lambda x: "{:.2f}".format(float(x.group())), line)
+
                 return line
 
             processed_gcode = map(map_gcodes, raw_gcode)
