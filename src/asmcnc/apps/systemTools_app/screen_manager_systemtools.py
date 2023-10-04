@@ -88,7 +88,7 @@ class ScreenManagerSystemTools(object):
 
     def open_beta_testing_screen(self):
        if not self.sm.has_screen('beta_testing'):
-           beta_testing_screen = screen_beta_testing.BetaTestingScreen(name = 'beta_testing', system_tools = self, settings = self.set, localization = self.l)
+           beta_testing_screen = screen_beta_testing.BetaTestingScreen(name = 'beta_testing', system_tools = self, settings = self.set, localization = self.l, keyboard = self.kb)
            self.sm.add_widget(beta_testing_screen)
        self.sm.current = 'beta_testing'
 
@@ -157,7 +157,7 @@ class ScreenManagerSystemTools(object):
 
     def open_factory_settings_screen(self):
        if not self.sm.has_screen('factory_settings'):
-           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self, settings = self.set, localization = self.l, usb_stick = self.usb_stick)
+           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self, settings = self.set, localization = self.l, keyboard = self.kb, usb_stick = self.usb_stick)
            self.sm.add_widget(factory_settings_screen)
        self.sm.current = 'factory_settings'
 
@@ -169,7 +169,7 @@ class ScreenManagerSystemTools(object):
 
     def open_final_test_screen(self, board):
       if not self.sm.has_screen('final_test'):
-        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self, localization = self.l)
+        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self, localization = self.l, keyboard = self.kb)
         self.sm.add_widget(final_test_screen)
 
     # SET VALUES FOR BOARD

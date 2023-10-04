@@ -24,6 +24,8 @@ Builder.load_string("""
     main_button:main_button
     error_label:error_label
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         orientation: 'vertical'
         size_hint_y: 1.00
@@ -187,6 +189,17 @@ class UploadSerialNumbersScreen(Screen):
         self.calibration_db = kwargs['calibration_db']
         self.set = kwargs['settings']
         self.l = kwargs['l']
+        self.kb = kwargs['keyboard']
+
+        self.text_inputs = [
+                            self.zhead_serial_input,
+                            self.lb_serial_input,
+                            self.ub_serial_input,
+                            self.console_serial_input,
+                            self.ybench_serial_input,
+                            self.spindle_serial_input,
+                            self.squareness_input
+                            ]
 
     def auto_generate_sns(self):
 
@@ -204,9 +217,14 @@ class UploadSerialNumbersScreen(Screen):
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.firmware_version()))
         self.already_in_database = self.check_for_duplicates_and_autofill()
+        self.kb.setup_text_inputs(self.text_inputs)
 
         if self.dev_mode:
             self.auto_generate_sns()
+    
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
     
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
