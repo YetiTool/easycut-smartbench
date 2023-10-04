@@ -15,7 +15,7 @@ class ScreenManagerWarranty(object):
 
 
 
-    def __init__(self, start_sequence, screen_manager, machine, localization):
+    def __init__(self, start_sequence, screen_manager, machine, localization, keyboard):
 
         self.start_seq = start_sequence
         self.sm = screen_manager
