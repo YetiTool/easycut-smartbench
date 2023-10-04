@@ -155,12 +155,15 @@ class Localization(object):
             if self.lang == self.ko:
                 self.font_regular = self.korean_font
                 self.font_bold = self.korean_font_bold
+            
+                # Only do this load for Korean, as it prevents some spinner weirdness
+                Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
+
             else:
                 # Roboto is the standard kivy font
                 self.font_regular = self.standard_font
                 self.font_bold = self.standard_font_bold
 
-            Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
 
         except:
             log("Could not load in from full dictionary")
