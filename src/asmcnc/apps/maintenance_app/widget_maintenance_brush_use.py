@@ -161,13 +161,15 @@ class BrushUseWidget(Widget):
         self.update_font_size(self.brush_use_label)
 
     def update_font_size(self, value):
-        if len(value.text) <= 27:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length <= 20:
             value.font_size = self.default_font_size
-        if len(value.text) > 27:
+        if text_length > 20:
             value.font_size = self.default_font_size - 3
-        if len(value.text) > 30:
+        if text_length > 23:
             value.font_size = self.default_font_size - 6
-        if len(value.text) > 35:
+        if text_length > 28:
             value.font_size = self.default_font_size - 7
 
 

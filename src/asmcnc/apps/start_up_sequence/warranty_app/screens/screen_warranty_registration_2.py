@@ -72,7 +72,6 @@ Builder.load_string("""
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 
 				BoxLayout:
@@ -183,5 +182,5 @@ class WarrantyScreen2(Screen):
 	
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.your_serial_number_label.text = self.l.get_str("Your serial number is")
+		self.your_serial_number_label.text = self.l.get_bold("Your serial number is")
 		self.next_button.text = self.l.get_str("Next") + "..."

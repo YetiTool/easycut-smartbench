@@ -1,8 +1,22 @@
 # -*- coding: utf-8 -*-
 import time
-import os, csv
+import os, csv, re
 from datetime import datetime
+from kivy.lang import Builder
+from kivy.core.text import LabelBase
 
+LabelBase.register(name='KRFont',
+                   fn_regular='./asmcnc/keyboard/fonts/KRFont.ttf',
+                   fn_bold='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
+
+LabelBase.register(name='KRFont-Bold',
+                   fn_regular='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
+
+builder_font_string = """
+<Widget>:
+    font_name: "%s"
+    title_font: "%s"
+"""
 
 def log(message):
     timestamp = datetime.now()
@@ -11,8 +25,30 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
-    approved_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)", "Deutsch (DE)",  "Français (FR)", "Polski (PL)", "Dansk (DK)"]
-    supported_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polski (PL)", "Dansk (DK)"]
+
+    gb = "English (GB)"
+    it = "Italiano (IT)"
+    fi = "Suomalainen (FI)"
+    de = "Deutsch (DE)"
+    fr = "Français (FR)"
+    pl = "Polski (PL)"
+    dk = "Dansk (DK)"
+    ko = "한국어 (KO)"
+    nl = "Nederlands (NL)"
+
+    approved_languages = [
+                            gb,
+                            it, 
+                            fi, 
+                            de,
+                            fr,
+                            pl,
+                            dk,
+                            ko
+                        ]
+
+    supported_languages = approved_languages + [nl]
+
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -20,6 +56,13 @@ class Localization(object):
 
     default_lang = 'English (GB)'
     lang = default_lang
+
+    standard_font = 'Roboto'
+    standard_font_bold = 'Roboto-Bold'
+    korean_font = 'KRFont'
+    korean_font_bold = 'KRFont-Bold'
+
+    kivy_markup_regex = re.compile('\[.*?\]')
 
     def __init__(self):
 
@@ -48,6 +91,12 @@ class Localization(object):
 
         else: 
             return string
+    
+    # Removes kivy markup tags to leave only text before returning length, and decode to correctly count Korean characters
+    def get_text_length(self, string):
+        if self.lang == self.ko:
+            string = string.decode('utf-8')
+        return len(re.sub(self.kivy_markup_regex, '', string))
 
 
     ## DEBUGGING (forces KeyErrors)
@@ -101,6 +150,20 @@ class Localization(object):
                 for lines in csv_reader:
                     self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
             log("Loaded language in from full dictionary")
+
+            # For Korean characters to show up, an external font is required
+            if self.lang == self.ko:
+                self.font_regular = self.korean_font
+                self.font_bold = self.korean_font_bold
+            
+                # Only do this load for Korean, as it prevents some spinner weirdness
+                Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
+
+            else:
+                # Roboto is the standard kivy font
+                self.font_regular = self.standard_font
+                self.font_bold = self.standard_font_bold
+
 
         except:
             log("Could not load in from full dictionary")

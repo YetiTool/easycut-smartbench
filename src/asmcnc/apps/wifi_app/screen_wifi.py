@@ -52,6 +52,8 @@ Builder.load_string("""
 
     connection_instructions_rst : connection_instructions_rst
     
+    on_touch_down: root.on_touch()
+    
     BoxLayout:
         size_hint: (None, None)
         height: dp(480)
@@ -474,6 +476,7 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -487,6 +490,9 @@ class WifiScreen(Screen):
 
         # Remove the custom SSID input field on startup
         self.network_name_input.remove_widget(self.custom_network_name_box)
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self._password, self.custom_network_name]
 
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
@@ -506,6 +512,7 @@ class WifiScreen(Screen):
                 pass
             self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
@@ -525,6 +532,10 @@ class WifiScreen(Screen):
         self._password.text = ''
 
         self.update_strings()
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def check_credentials(self):
 
@@ -693,16 +704,9 @@ class WifiScreen(Screen):
         self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
-        self.update_font_size(self.country_label)
         self.update_hint_font_size(self.custom_network_name)
         self.update_button_font_size(self.connect_button, 28, 10)
         self.update_button_font_size(self.custom_ssid_button, 20, 20)
-
-    def update_font_size(self, value):
-        if len(value.text) < 8:
-            value.font_size = self.default_font_size
-        elif len(value.text) > 7: 
-            value.font_size = self.default_font_size - 2
 
     def update_hint_font_size(self, value):
         if value.hint_text:
@@ -717,13 +721,8 @@ class WifiScreen(Screen):
     def get_rst_source(self):
         try:
             self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
-        except: 
-            # Can't seem to use non english letters for file source so filename is different
-            try:
-                if self.l.lang == 'Français (FR)':
-                    self.connection_instructions_rst.source = self.wifi_documentation_path + 'Francais (FR).rst'
-            except:
-                self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
+        except:
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
     def on_leave(self):
         if self.wifi_error_timeout_event:

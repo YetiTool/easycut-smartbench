@@ -57,7 +57,6 @@ class PopupResetOffset(Widget):
 
         popup = Popup(title=reset_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -117,7 +116,6 @@ class PopupSaveOffset(Widget):
 
         popup = Popup(title=save_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -164,6 +162,8 @@ class PopupBrushInfo(Widget):
                 "  " + self.l.get_bold("Reset:") + " " + self.l.get_str("Sets the brush reminder to 120 hours.")
             )
 
+        title_string = self.l.get_str('Information')
+
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label_top = Label(size_hint_y=1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=476)
@@ -172,8 +172,8 @@ class PopupBrushInfo(Widget):
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=(68,99))
         label_full_brush_top = Label(text=self.l.get_bold("NEW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_length = Label(text="[b]16mm[/b]", text_size=(68, self.height),  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_length = Label(text="[b]16mm[/b]", text_size=(70, self.height),  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
 
         example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_full_length.add_widget(label_full_brush_top)
@@ -183,8 +183,8 @@ class PopupBrushInfo(Widget):
 
         img_med_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_med_img.png", allow_stretch=False, size=(68,99))
         label_med_brush_top = Label(text=self.l.get_bold("LOW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_length = Label(text="[b]10mm[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_length = Label(text="[b]10mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_med_length.add_widget(label_med_brush_top)
@@ -194,8 +194,8 @@ class PopupBrushInfo(Widget):
 
         img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False, size=(68,99))
         label_short_brush_top = Label(text=self.l.get_bold("SHUT-OFF"), text_size=(88, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=88)
-        label_short_brush_length = Label(text="[b]9.5mm[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_short_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_length = Label(text="[b]9.5mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=80)
         example_short_length.add_widget(label_short_brush_top)
@@ -232,9 +232,8 @@ class PopupBrushInfo(Widget):
         layout_plan.add_widget(reminder_layout)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -299,7 +298,6 @@ class PopupGetSpindleData(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -384,7 +382,6 @@ class PopupDisplaySpindleData(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -515,7 +512,6 @@ class PopupSpindleSettingsInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
