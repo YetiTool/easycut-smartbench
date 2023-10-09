@@ -951,12 +951,13 @@ class GoScreen(Screen):
         self.update_font_size(self.spindle_label)
 
     def update_font_size(self, value):
+        text_length = self.l.get_text_length(value.text)
 
-        if len(value.text) < 20:
+        if text_length < 20:
             value.font_size = '16px'
 
-        if len(value.text) >= 20:
+        if text_length >= 20:
             value.font_size = '12px'
 
-        if len(value.text) >= 25:
+        if text_length >= 25:
             value.font_size = '11px'

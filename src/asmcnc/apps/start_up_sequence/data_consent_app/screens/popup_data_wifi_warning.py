@@ -60,7 +60,6 @@ class PopupDataAndWiFiDisableWarning(Widget):
         
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

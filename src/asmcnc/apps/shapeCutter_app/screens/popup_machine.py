@@ -50,7 +50,6 @@ class PopupMachineError(Widget):
         
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -92,7 +91,6 @@ class PopupWait(Widget):
         
         self.popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
