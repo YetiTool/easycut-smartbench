@@ -25,6 +25,8 @@ Builder.load_string("""
     post_production_notes : post_production_notes
     success_question : success_question
     sending_label : sending_label
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         height: dp(800)
@@ -265,6 +267,14 @@ class JobFeedbackScreen(Screen):
         self.l = kwargs['localization']
         self.jd = kwargs['job']
         self.db = kwargs['database']
+        self.kb = kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.batch_number_input, self.post_production_notes]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         self.update_strings()
@@ -274,6 +284,7 @@ class JobFeedbackScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         self.db.send_job_end(True)
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def on_leave(self):
         self.sending_label.text = ""

@@ -24,6 +24,8 @@ Builder.load_string("""
     line_input:line_input
 
     go_xy_button:go_xy_button
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         orientation: 'vertical'
@@ -337,6 +339,7 @@ class JobRecoveryScreen(Screen):
         self.m = kwargs['machine']
         self.jd = kwargs['job']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         self.line_input.bind(text = self.jump_to_line)
 
@@ -347,9 +350,17 @@ class JobRecoveryScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm))
 
         self.update_strings()
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.line_input]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
+        # Force gcode label font to show roboto because korean font has different spacing
+        self.gcode_label.font_name = 'Roboto'
 
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
@@ -367,6 +378,9 @@ class JobRecoveryScreen(Screen):
             self.arc_movement_error_label.opacity = 1
         else:
             self.arc_movement_error_label.opacity = 0
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def start_scrolling_up(self):
         self.scrolling_up = True
@@ -548,7 +562,9 @@ class JobRecoveryScreen(Screen):
         self.update_font_size(self.go_xy_button)
 
     def update_font_size(self, value):
-        if len(value.text) > 10:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 10:
             value.font_size = 25
         else: 
             value.font_size = 30

@@ -218,13 +218,15 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.update_font_size(self.yes_button)
 
     def update_font_size(self, value):
-        if len(value.text) < 35:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length < 35:
             value.font_size = self.default_font_size
-        elif len(value.text) > 38: 
+        elif text_length > 38: 
             value.font_size = self.default_font_size - 2
-        if len(value.text) > 42: 
+        if text_length > 42: 
             value.font_size = self.default_font_size - 4
-        if len(value.text) > 44: 
+        if text_length > 44: 
             value.font_size = self.default_font_size - 5
-        if len(value.text) > 50:
+        if text_length > 50:
             value.font_size = self.default_font_size - 7

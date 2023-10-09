@@ -72,7 +72,6 @@ Builder.load_string("""
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 					size: self.texture_size
 
@@ -198,6 +197,6 @@ class WarrantyScreen5(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("CNC Academy")
-		self.cnc_academy_info.text = self.l.get_str("Visit Yeti Tool CNC Academy for video tutorials on how to get started.")
+		self.cnc_academy_info.text = self.l.get_bold("Visit Yeti Tool CNC Academy for video tutorials on how to get started.")
 		self.url_label.text = "https://academy.yetitool.com"
 		self.next_button.text = self.l.get_str("Next") + "..."

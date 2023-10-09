@@ -22,6 +22,11 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.rst import RstDocument
 
 
+def on_touch(popup, touch):
+    for child in popup.content.children:
+        if isinstance(child, TextInput):
+            child.focus = False
+
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
     def __init__(self, screen_manager, localization):
@@ -58,7 +63,6 @@ class PopupDownloadLogs(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -113,7 +117,6 @@ class RebootConsole(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -168,7 +171,6 @@ class QuitToConsole(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -229,7 +231,6 @@ class PopupUSBFirstAid(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -295,7 +296,6 @@ class PopupBetaTesting(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -316,9 +316,10 @@ class PopupBetaTesting(Widget):
 
 ## GRBL settings and password
 class PopupGRBLSettingsPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("Changing the GRBL settings will change how SmartBench behaves.") + \
@@ -340,6 +341,8 @@ class PopupGRBLSettingsPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        self.kb.setup_text_inputs([textinput])
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -355,12 +358,12 @@ class PopupGRBLSettingsPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(500, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -375,9 +378,10 @@ class PopupGRBLSettingsPassword(Widget):
 
 ### Factory settings and password
 class PopupFactorySettingsPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = self.l.get_str("Please enter the password to use the factory settings.")
         title_string = self.l.get_str('Warning!')
@@ -391,6 +395,8 @@ class PopupFactorySettingsPassword(Widget):
         label = Label(size_hint_y=0.7, text_size=(450, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=1, text='', multiline=False)
+
+        self.kb.setup_text_inputs([textinput])
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
@@ -407,7 +413,6 @@ class PopupFactorySettingsPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -415,6 +420,7 @@ class PopupFactorySettingsPassword(Widget):
                       auto_dismiss=False,
                       pos_hint={'x': 150.0 / 800.0,
                                 'y': 200.0 / 480.0},
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -429,9 +435,10 @@ class PopupFactorySettingsPassword(Widget):
 
 ### Update testing and password
 class PopupUpdateTestingPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("Update testing allows our engineers to try out full system updates " + \
@@ -454,6 +461,8 @@ class PopupUpdateTestingPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        self.kb.setup_text_inputs([textinput])
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -469,12 +478,12 @@ class PopupUpdateTestingPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(600, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -489,9 +498,10 @@ class PopupUpdateTestingPassword(Widget):
 
 ### Developer and password
 class PopupDeveloperPassword(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
+        self.kb = keyboard
 
         description = (
                 self.l.get_str("The developer app is to help our engineers access extra settings and " + \
@@ -514,6 +524,8 @@ class PopupDeveloperPassword(Widget):
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
         textinput = TextInput(size_hint_y=0.7, text='')
 
+        self.kb.setup_text_inputs([textinput])
+
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -529,12 +541,12 @@ class PopupDeveloperPassword(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(600, 400),
-                      auto_dismiss=False
+                      auto_dismiss=False,
+                      on_touch_down=on_touch
                       )
 
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -583,7 +595,6 @@ class RebootAfterLanguageChange(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -628,7 +639,6 @@ class PopupSSHToggleFailed(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -669,7 +679,6 @@ class PopupFailedToSendSSHKey(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -710,7 +719,6 @@ class PopupNoSSHFile(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -752,7 +760,6 @@ class PopupCSVOnUSB(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -817,7 +824,6 @@ class PopupStopOvernightTest(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -876,7 +882,6 @@ class PopupFSCKGood(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -934,7 +939,6 @@ class PopupFSCKErrors(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -985,7 +989,6 @@ class PopupFSCKInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1055,7 +1058,6 @@ class PopupStopStallJig(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1115,7 +1117,6 @@ class PopupConfirmStoreCurrentValues(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1171,7 +1172,6 @@ class PopupConfirmSpindleTest(Widget):
 
         self.popup = Popup(title=title_string,
                            title_color=[0, 0, 0, 1],
-                           title_font='Roboto-Bold',
                            title_size='20sp',
                            content=layout_plan,
                            size_hint=(None, None),

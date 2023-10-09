@@ -109,6 +109,14 @@
       name: PyMySQL==0.10.1
     ignore_errors: yes 
     when: ansible_distribution_major_version == '11'
+  - name: Pip install hgtk
+    pip:
+      name: hgtk==0.2.0
+    ignore_errors: yes
+  - name: Pip install six
+    pip:
+      name: six==1.16.0
+    ignore_errors: yes
 
   - name: Copying the odbcinst ini script
     template:
