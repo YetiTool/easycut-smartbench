@@ -269,6 +269,7 @@ class GeberitCutterScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.gtg = kwargs['geometry_to_gcode']
 
     def add_panel(self):
         if self.panels_added < 4:
@@ -294,58 +295,13 @@ class GeberitCutterScreen(Screen):
 
     def convert_to_gcode(self):
         def generate_svg():
-            # Viewbox can be set to the container size, so that positions can then be defined in pixels rather than relative to actual size of the SVG
-            # The height and width are switched - this is necessary so that everything is drawn in full size but out of bounds, which is fixed by a reflection further down
-            dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
+            dwg = self.gtg.create_empty_svg(self.svg_output_filepath, '1200mm', '2400mm', self.editor_container.height, self.editor_container.width)
             for panel in self.editor_container.children:
                 # Position has to be converted to local coordinates of the container, as they are relative to the window
                 panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
-
-                # The long side has to be drawn parallel to the y axis - to solve this, this matrix transformation performs a reflection in the line y=x
-                # This means that the long side can be drawn parallel to the x axis, directly from the kivy coords, instead of figuring out how to switch all the x/y coords
-                transformation = "matrix(0 1 1 0 0 0)"
-                # Additionally, when a panel is drawn, a scaling and translation is applied, which vertically flips the svg
-                # This is needed because kivy measures Y coords from the opposite end of the screen and draws stuff upside down
-                transformation += " scale(1,-1) translate(0,%s)" % -self.editor_container.height
-
-                # Now rotate around the centre of the panel, which again needs the coord converted
                 panel_centre = self.editor_container.to_local(*panel.center, relative=True)
-                # Then add rotation
-                transformation += " rotate(%s,%s,%s)" % (panel.rotation, panel_centre[0], panel_centre[1])
 
-                # If the panel is turned sideways
-                if int(panel.rotation) % 180 != 0:
-                    # Then rotation will mess up its position so align centre first
-                    # It is important to note that this has to be added after the rotation, because transformations are performed right to left
-                    transformation += " translate(%s,%s)" % (panel.width/2, -panel.height/4)
-
-                panel_size = (panel.width, panel.height)
-
-                # Create rectangle for panel background
-                dwg.add(dwg.rect(panel_pos, panel_size, fill='white', stroke='black', transform=transformation))
-
-                # Set up objects for the detail of the panel as relative to rectangle position and size
-                # The same transform can be used as the rectangle transform as it is done relative to the centre of the panel
-                big_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height / 4))
-                big_circle_radius = panel.height / 10
-                dwg.add(dwg.circle(big_circle_centre, big_circle_radius, fill='white', stroke='black', transform=transformation))
-
-                small_circle_centre = (panel_pos[0] + (panel.width / 2), panel_pos[1] + (panel.height * 0.45))
-                small_circle_radius = panel.height / 40
-                dwg.add(dwg.circle(small_circle_centre, small_circle_radius, fill='white', stroke='black', transform=transformation))
-
-                small_rect_pos = (panel_pos[0] + (panel.width / 4), panel_pos[1] + (panel.height * 0.78))
-                small_rect_size = (panel.width / 2, panel.width / 4)
-                dwg.add(dwg.rect(small_rect_pos, small_rect_size, fill='white', stroke='black', transform=transformation))
-
-                rounded_rect_size = (panel.width / 6, panel.width / 16)
-                roundedness = rounded_rect_size[0] / 10
-
-                rounded_rect_left_pos = (panel_pos[0] + (panel.width * 0.18), panel_pos[1] + (panel.height * 0.37))
-                dwg.add(dwg.rect(rounded_rect_left_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
-
-                rounded_rect_right_pos = (panel_pos[0] + (panel.width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel.height * 0.37))
-                dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+                self.gtg.create_geberit_panel(dwg, self.editor_container.height, panel_pos, panel_centre, panel.rotation, panel.width, panel.height)
             dwg.save()
 
             Clock.schedule_once(lambda dt: convert_svg_to_paths(), 0.5)
@@ -353,7 +309,7 @@ class GeberitCutterScreen(Screen):
         def convert_svg_to_paths():
             # The svg now has to be converted to paths, as required by the gcode converter
             paths, attributes = svg2paths(self.svg_output_filepath)
-            dwg = svgwrite.Drawing(filename=self.svg_output_filepath, size=('1200mm','2400mm'), viewBox='0 0 %s %s' % (self.editor_container.height, self.editor_container.width))
+            dwg = self.gtg.create_empty_svg(self.svg_output_filepath, '1200mm', '2400mm', self.editor_container.height, self.editor_container.width)
             for i, path in enumerate(paths):
                 # Recover attributes of current path, or else transformation is lost
                 path_attributes = attributes[i]
@@ -387,20 +343,7 @@ class GeberitCutterScreen(Screen):
             with open(self.raw_gcode_filepath) as f:
                 raw_gcode = f.readlines()
 
-            def map_gcodes(line):
-                # Stop turning off spindle throughout file by deleting all M5 commands
-                if 'M5' in line:
-                    line = line.replace('M5', '')
-
-                # This rounds every decimal to 2dp
-                # The regex matches all decimals with 3+dp, then the lambda function rounds it by casting to 2dp float
-                line = re.sub(r"\d+\.\d{3,}", lambda x: "{:.2f}".format(float(x.group())), line)
-
-                return line
-
-            processed_gcode = map(map_gcodes, raw_gcode)
-            # Then turn spindle off at the end
-            processed_gcode.append('M5')
+            processed_gcode = self.gtg.post_process_gcode(raw_gcode)
 
             with open('./jobCache/' + self.filename_input.text, 'w+') as f:
                 f.write(''.join(processed_gcode))

@@ -47,6 +47,7 @@ from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 from asmcnc.comms import localization
+from asmcnc.studio import geometry_to_gcode
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
@@ -164,8 +165,11 @@ class SkavaUI(App):
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
+        # Geometry to gcode object
+        gtg = geometry_to_gcode.GeometryToGcode()
+
         # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
+        am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version, gtg)
 
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
@@ -177,7 +181,7 @@ class SkavaUI(App):
         sc = server_connection.ServerConnection(sett)
         
         # initialise the screens (legacy)
-        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
+        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l, geometry_to_gcode = gtg)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd, localization = l)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd, localization = l)

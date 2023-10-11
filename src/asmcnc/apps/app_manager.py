@@ -23,7 +23,7 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version):
+    def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version, geometry_to_gcode):
 
         self.sm = screen_manager
         self.m = machine
@@ -33,6 +33,7 @@ class AppManagerClass(object):
         self.db = database
         self.cc = config_check
         self.v = version
+        self.gtg = geometry_to_gcode
 
         
         # initialise app screen_manager classes     
@@ -45,7 +46,7 @@ class AppManagerClass(object):
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd)
         self.sm.add_widget(maintenance_screen)
 
-        geberit_cutter_screen = screen_geberit_cutter.GeberitCutterScreen(name = 'geberit_cutter', screen_manager = self.sm, machine = self.m, localization = self.l)
+        geberit_cutter_screen = screen_geberit_cutter.GeberitCutterScreen(name = 'geberit_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, geometry_to_gcode = self.gtg)
         self.sm.add_widget(geberit_cutter_screen)
 
         # Start start up sequence
