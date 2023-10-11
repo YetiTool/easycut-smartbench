@@ -45,7 +45,6 @@ class Keyboard(VKeyboard):
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
-        self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
         self.set_keyboard_background()
 
 
@@ -150,7 +149,7 @@ class Keyboard(VKeyboard):
             else:
                 self.background = "./asmcnc/keyboard/images/background_" + str(Window.width) + ".png"
         else:
-            self.margin_hint = [.05, .06, .05, .06]
+            self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
     # On focus behaviour is bound to all text inputs
