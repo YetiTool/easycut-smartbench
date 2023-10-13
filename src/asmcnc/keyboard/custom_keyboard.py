@@ -40,7 +40,7 @@ class Keyboard(VKeyboard):
 
         self.previous_layout = self.layout
 
-        self.do_translation = False
+        self.do_translation = True
         self.width = Window.width
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
