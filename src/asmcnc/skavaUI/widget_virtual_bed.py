@@ -48,8 +48,8 @@ Builder.load_string(
                     opacity: 0
                     allow_stretch: True
                     keep_ratio: False
-                    size: self.parent.size[0]-root.width_modifier, self.parent.size[1]-60
-                    pos:self.parent.pos[0]+root.x_pos_modifier,self.parent.pos[0.00125*app.width]+30
+                    size: self.parent.size[0]-root.width_modifier, self.parent.size[1]-((60/800)*app.height)
+                    self.parent.pos[0]+root.x_pos_modifier,self.parent.pos[1]+((30/800)*app.height)
 
                 Image:
                     id: xBar
