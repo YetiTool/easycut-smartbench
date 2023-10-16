@@ -91,7 +91,7 @@ from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.6.0'
+initial_version = 'v2.6.2'
 
 config_flag = False
         

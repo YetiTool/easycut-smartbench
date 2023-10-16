@@ -266,8 +266,8 @@ Builder.load_string("""
                             font_size: str(0.025*app.width) + 'sp'
                             color: hex('#f9f9f9ff')
                             markup: True
-                            background_normal: "./asmcnc/apps/wifi_app/img/customSSID_blank.png"
-                            background_down: "./asmcnc/apps/wifi_app/img/customSSID_blank.png"
+                            background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
+                            background_down: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
 
                 #Password
                 BoxLayout: 
