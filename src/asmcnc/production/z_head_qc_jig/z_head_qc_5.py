@@ -1,10 +1,9 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
-
 import datetime
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQC5>:
     canvas:
         Color:
@@ -22,22 +21,26 @@ Builder.load_string("""
             rows: 2
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Calibration complete!'
-                font_size: dp(50)
+                font_size: dp(0.0625*app.width)
             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+    )
+
 
 class ZHeadQC5(Screen):
+
     def __init__(self, **kwargs):
         super(ZHeadQC5, self).__init__(**kwargs)
-
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 

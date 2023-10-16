@@ -1,8 +1,8 @@
 from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCDBSuccess>:
     success_label:success_label
 
@@ -22,26 +22,30 @@ Builder.load_string("""
             rows: 2
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: success_label
                 text: 'Database updated for '
-                font_size: dp(50)
+                font_size: dp(0.0625*app.width)
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'
             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+    )
+
 
 class ZHeadQCDBSuccess(Screen):
+
     def __init__(self, **kwargs):
         super(ZHeadQCDBSuccess, self).__init__(**kwargs)
-
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 

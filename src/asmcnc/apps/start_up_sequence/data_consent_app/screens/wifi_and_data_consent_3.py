@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
-
 from asmcnc.skavaUI import popup_info
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <ScrollPrivacyNotice>:
@@ -29,8 +27,8 @@ Builder.load_string("""
 	accept_button : accept_button
 
     BoxLayout:
-        height: dp(800)
-        width: dp(480)
+        height: dp(1.66666666667*app.height)
+        width: dp(0.6*app.width)
         canvas.before:
             Color: 
                 rgba: hex('#e5e5e5ff')
@@ -54,14 +52,15 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                 	id: header_label
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
+                    height: dp(0.125*app.height)
+                    width: dp(1.0*app.width)
                     text: "Wi-Fi and Data Consent"
                     color: hex('#f9f9f9ff')
                     # color: hex('#333333ff') #grey
-                    font_size: dp(30)
+                    font_size: dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -69,10 +68,10 @@ Builder.load_string("""
             # BODY
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(288)
-                padding: [dp(15), dp(5), dp(15), dp(5)]
-                spacing: 5
+                width: dp(1.0*app.width)
+                height: dp(0.6*app.height)
+                padding: [0.01875*app.width,0.0104166666667*app.height,0.01875*app.width,0.0104166666667*app.height]
+                spacing: 0.0104166666667*app.height
                 orientation: 'vertical'
 
                 BoxLayout: 
@@ -83,14 +82,14 @@ Builder.load_string("""
 	                    Rectangle:
 	                        pos: self.pos
 	                        size: self.size
-					padding: dp(1)
+					padding: dp(0.00125*app.width)
 	            	ScrollPrivacyNotice:
 	                	id: scroll_privacy_notice
 
                 BoxLayout: 
                 	size_hint: (1,1)
                 	orientation: 'horizontal'
-                	padding: [dp(20), dp(0)]
+                	padding: [0.025*app.width,0.0*app.height]
 	                # canvas:
 	                #	# Test to see box
 	                #     Color:
@@ -100,11 +99,12 @@ Builder.load_string("""
 	                #         size: self.size
 
 	                Label: 
+	                    font_size: str(0.01875 * app.width) + 'sp'
 	                	id: user_info
 						size_hint: (0.7,1)
 	                    # color: hex('#f9f9f9ff') # white
 	                    color: hex('#333333ff') #grey
-	                    font_size: dp(18)
+	                    font_size: dp(0.0225*app.width)
 	                    halign: "center"
 	                    valign: "middle"
 	                    markup: True
@@ -120,20 +120,20 @@ Builder.load_string("""
 
             # FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding: [0.0125*app.width,0,0.0125*app.width,0.0208333333333*app.height]
 				size_hint: (None, None)
-				height: dp(132)
-				width: dp(800)
+				height: dp(0.275*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(60)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.075*app.width)
 					# padding: [0, 0, 184.5, 0]
 					Button:
 						size_hint: (None,None)
-						height: dp(52)
-						width: dp(60)
+						height: dp(0.108333333333*app.height)
+						width: dp(0.075*app.width)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -150,10 +150,10 @@ Builder.load_string("""
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(660)
-					padding: [dp(6),0,dp(6),dp(42)]
-					spacing: dp(66)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.825*app.width)
+					padding: [0.0075*app.width,0,0.0075*app.width,0.0875*app.height]
+					spacing: dp(0.0825*app.width)
 					Button:
 						id: decline_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -161,10 +161,10 @@ Builder.load_string("""
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.decline_terms()
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -177,10 +177,10 @@ Builder.load_string("""
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.accept_terms()
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -188,71 +188,68 @@ Builder.load_string("""
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(60)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.075*app.width)
 					# padding: [193.5, 0, 0, 0]
 
-""")
+"""
+    )
+
 
 class ScrollPrivacyNotice(ScrollView):
     text = StringProperty('')
-
-    color_dict = DictProperty({
-                    'background': 'e5e5e5ff',
-                    'link': '1976d2ff',
-                    'paragraph': '333333ff',
-                    'title': '333333ff',
-                    'bullet': '333333ff'})
+    color_dict = DictProperty({'background': 'e5e5e5ff', 'link': '1976d2ff',
+        'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
 
 
 class WiFiAndDataConsentScreen3(Screen):
+    checkbox_checked = False
+    privacy_notice_path = (
+        './asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/')
 
-	checkbox_checked = False
-	privacy_notice_path = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
+    def __init__(self, **kwargs):
+        super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
+        self.start_seq = kwargs['start_sequence']
+        self.c = kwargs['consent_manager']
+        self.l = kwargs['localization']
+        self.update_strings()
+        self.set_checkbox_default()
 
-	def __init__(self, **kwargs):
-		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.c=kwargs['consent_manager']
-		self.l = kwargs['localization']
-		self.update_strings()
-		self.set_checkbox_default()
+    def on_pre_leave(self):
+        self.set_checkbox_default()
 
-	def on_pre_leave(self):
-		self.set_checkbox_default()
+    def prev_screen(self):
+        try:
+            self.start_seq.prev_in_sequence()
+        except:
+            self.c.sm.current = 'consent_2'
 
-	def prev_screen(self):
+    def update_strings(self):
+        self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
+        self.scroll_privacy_notice.privacy_notice.source = (self.
+            privacy_notice_path + self.l.lang + '.rst')
+        self.user_info.text = self.l.get_str(
+            'I have read and understood the privacy notice')
+        self.decline_button.text = self.l.get_str('Decline')
+        self.accept_button.text = self.l.get_str('Accept')
 
-		try:
-			self.start_seq.prev_in_sequence()
+    def accept_terms(self):
+        if self.terms_checkbox.active:
+            self.c.accept_terms_and_enable_wifi()
 
-		except:
-			self.c.sm.current='consent_2'
+    def decline_terms(self):
+        if self.terms_checkbox.active:
+            self.c.warn_user_before_accepting_decline()
 
-	def update_strings(self):
-		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
-		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
-		self.decline_button.text = self.l.get_str("Decline")
-		self.accept_button.text = self.l.get_str("Accept")
+    def on_checkbox_active(self):
+        if self.terms_checkbox.active:
+            self.decline_button.disabled = False
+            self.accept_button.disabled = False
+        else:
+            self.decline_button.disabled = True
+            self.accept_button.disabled = True
 
-	def accept_terms(self):
-		if self.terms_checkbox.active: 
-			self.c.accept_terms_and_enable_wifi()
-
-	def decline_terms(self):
-		if self.terms_checkbox.active: 
-			self.c.warn_user_before_accepting_decline()
-
-	def on_checkbox_active(self):
-		if self.terms_checkbox.active: 
-			self.decline_button.disabled = False
-			self.accept_button.disabled = False
-		else:
-			self.decline_button.disabled = True
-			self.accept_button.disabled = True
-
-	def set_checkbox_default(self):
-		self.terms_checkbox.active = False
-		self.decline_button.disabled = True
-		self.accept_button.disabled = True
+    def set_checkbox_default(self):
+        self.terms_checkbox.active = False
+        self.decline_button.disabled = True
+        self.accept_button.disabled = True
