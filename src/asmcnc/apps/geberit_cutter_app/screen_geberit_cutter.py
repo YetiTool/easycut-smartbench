@@ -1,4 +1,3 @@
-import os, sys, subprocess, re
 from datetime import datetime
 
 from kivy.lang import Builder
@@ -8,9 +7,6 @@ from kivy.uix.scatter import Scatter
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
-
-import svgwrite
-from svgpathtools import svg2paths, parse_path
 
 Builder.load_string("""
 <GeberitCutterScreen>:
@@ -307,15 +303,8 @@ class GeberitCutterScreen(Screen):
             Clock.schedule_once(lambda dt: convert_svg_to_paths(), 0.5)
 
         def convert_svg_to_paths():
-            # The svg now has to be converted to paths, as required by the gcode converter
-            paths, attributes = svg2paths(self.svg_output_filepath)
-            dwg = self.gtg.create_empty_svg(self.svg_output_filepath, '1200mm', '2400mm', self.editor_container.height, self.editor_container.width)
-            for i, path in enumerate(paths):
-                # Recover attributes of current path, or else transformation is lost
-                path_attributes = attributes[i]
-                # Convert from svgpathtools path to svgwrite path using shared attribute d
-                dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
-            dwg.save()
+            # Need to convert to paths for gcode conversion to work
+            self.gtg.convert_svg_to_paths(self.svg_output_filepath, '1200mm', '2400mm', self.editor_container.height, self.editor_container.width)
 
             Clock.schedule_once(lambda dt: convert_svg_to_gcode(), 0.5)
 

@@ -1,4 +1,5 @@
 import re, svgwrite, sys, os, subprocess
+from svgpathtools import svg2paths
 
 class GeometryToGcode(object):
 
@@ -58,6 +59,17 @@ class GeometryToGcode(object):
 
         rounded_rect_right_pos = (panel_pos[0] + (panel_width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel_height * 0.37))
         dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+
+    def convert_svg_to_paths(self, svg_filepath, svg_width, svg_height, editor_height, editor_width):
+        # The svg has to be converted to paths, as it is required by the gcode converter
+        paths, attributes = svg2paths(svg_filepath)
+        dwg = self.create_empty_svg(svg_filepath, svg_width, svg_height, editor_height, editor_width)
+        for i, path in enumerate(paths):
+            # Recover attributes of current path, or else transformation is lost
+            path_attributes = attributes[i]
+            # Convert from svgpathtools path to svgwrite path using shared attribute d
+            dwg.add(svgwrite.path.Path(path.d(), fill=path_attributes['fill'], stroke=path_attributes['stroke'], transform=path_attributes['transform']))
+        dwg.save()
 
     def convert_svg_to_gcode(self, svg_filepath, gcode_filepath, speed, depth, feed):
         gcode_arguments = " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o" % (str(speed), "-" + str(depth), str(feed), str(feed))
