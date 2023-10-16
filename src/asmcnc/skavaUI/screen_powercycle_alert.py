@@ -1,17 +1,20 @@
-"""
+# -*- coding: utf-8 -*-
+'''
 Created March 2020
 
 @author: Letty
 
 Basic screen 
-"""
+'''
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
-Builder.load_string(
-    """
+
+
+# Kivy UI builder:
+Builder.load_string("""
 
 <PowerCycleScreen>:
 
@@ -28,8 +31,8 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 0.0875*app.width
-        spacing: 0.145833333333*app.height
+        padding: 70
+        spacing: 70
         size_hint_x: 1
 
         BoxLayout:
@@ -37,57 +40,51 @@ Builder.load_string(
             size_hint_x: 1
                 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: finishing_install_label
                 text_size: self.size
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: str(0.05*app.width) + 'sp'   
+                font_size: '40sp'   
                 valign: 'middle'
                 halign: 'center'
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: dots_label
                 text_size: self.size
                 size_hint_y: 0.33
                 text: "..."
                 color: hex('1976d2ff')
                 markup: True
-                font_size: str(0.25*app.width) + 'sp'   
+                font_size: '200sp'   
                 valign: 'bottom'
                 halign: 'center'
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: warning_label
                 text_size: self.size
                 size: self.texture_size
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: str(0.05*app.width) + 'sp'
+                font_size: '40sp'
                 valign: 'middle'
                 halign: 'center'
 
-"""
-    )
-
+""")
 
 class PowerCycleScreen(Screen):
-
+    
     def __init__(self, **kwargs):
         super(PowerCycleScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.finishing_install_label.text = self.l.get_str(
-            'Finishing install... please wait')
-        self.warning_label.text = self.l.get_str('DO NOT POWER OFF SMARTBENCH')
+        self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
+
+        self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
+        self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
 
     def on_enter(self):
-        self.wait_for_install = Clock.schedule_once(self.
-            finished_installing, 30)
+        self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
         self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
 
     def update_label(self, dt):

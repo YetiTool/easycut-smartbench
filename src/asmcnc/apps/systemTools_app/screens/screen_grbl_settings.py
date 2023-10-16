@@ -1,20 +1,21 @@
-"""
+'''
 Created on 18 November 2020
 GRBL settings screen for system tools app
 
 @author: Letty
-"""
+'''
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.skavaUI import popup_info
-Builder.load_string(
-    """
+
+Builder.load_string("""
 
 <GRBLSettingsScreen>
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(800)
+        width: dp(480)
         canvas.before:
             Color: 
                 rgba: hex('#f9f9f9ff')
@@ -24,7 +25,7 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-            spacing: 0.0208333333333*app.height
+            spacing: 10
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -36,22 +37,21 @@ Builder.load_string(
                         pos: self.pos
                         size: self.size
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(60)
+                    width: dp(800)
                     text: "GRBL settings"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size: 30
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.666666666667*app.height)
-                padding: 0.025*app.width
+                width: dp(800)
+                height: dp(320)
+                padding: 20
                 spacing: 0
                 orientation: 'vertical'
 
@@ -99,29 +99,28 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
+                width: dp(800)
+                height: dp(80)
                 padding: 0
-                spacing: 0.0125*app.width
+                spacing: 10
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding: [0.0125*app.width,0.0208333333333*app.height,0.0125*app.width,0.0208333333333*app.height]
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [10, 10, 10, 10]
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(0.108333333333*app.height)
-                            width: dp(0.075*app.width)
+                            height: dp(52)
+                            width: dp(60)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -139,29 +138,28 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.775*app.width)
-                    height: dp(0.166666666667*app.height)
-                    padding: 0.0125*app.width
+                    width: dp(620)
+                    height: dp(80)
+                    padding: 10
                     spacing: 0
                     orientation: 'vertical'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding: [0.02375*app.width,0.0208333333333*app.height,0.0125*app.width,0.0208333333333*app.height]
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [19, 10, 10, 10]
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(0.125*app.height)
-                            width: dp(0.06375*app.width)
+                            height: dp(60)
+                            width: dp(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -178,9 +176,7 @@ Builder.load_string(
                                     allow_stretch: True
 
 
-"""
-    )
-
+""")
 
 class GRBLSettingsScreen(Screen):
 
@@ -196,6 +192,9 @@ class GRBLSettingsScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+# ADD A BUNCH OF WARNING POPUPS 
+
+
     def download_grbl_settings(self):
         self.systemtools_sm.download_grbl_settings_to_usb()
 
@@ -206,18 +205,48 @@ class GRBLSettingsScreen(Screen):
         self.systemtools_sm.restore_grbl_settings_from_usb()
 
     def restore_grbl_settings_from_file(self):
-        self.systemtools_sm.restore_grbl_settings_from_file()
+        self.systemtools_sm.restore_grbl_settings_from_file()    
 
     def bake_default_settings(self):
         if not self.m.bake_default_grbl_settings():
-            popup_info.PopupError(self.systemtools_sm.sm, self.l,
-                "X current read in as 0! Can't set correct Z travel.")
+            popup_info.PopupError(self.systemtools_sm.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
 
     def send_rst_dollar(self):
-        self.m.send_any_gcode_command('$RST=$')
+        self.m.send_any_gcode_command("$RST=$")
 
     def send_rst_star(self):
-        self.m.send_any_gcode_command('$RST=*')
+        self.m.send_any_gcode_command("$RST=*")
 
     def send_rst_hash(self):
-        self.m.send_any_gcode_command('$RST=#')
+        self.m.send_any_gcode_command("$RST=#")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

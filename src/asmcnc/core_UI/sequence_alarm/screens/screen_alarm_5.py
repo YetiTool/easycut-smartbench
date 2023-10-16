@@ -1,12 +1,14 @@
-"""
+'''
 Created on 31 March 2021
 @author: Letty
-"""
+'''
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-Builder.load_string(
-    """
+
+
+# Kivy UI builder:
+Builder.load_string("""
 <AlarmScreen5>:
 	alarm_title : alarm_title
 	icon_container : icon_container
@@ -24,33 +26,33 @@ Builder.load_string(
 		padding: 0
 		spacing: 0
 		size_hint: (None, None)
-		height: dp(1.0*app.height)
-		width: dp(1.0*app.width)
+		height: dp(480)
+		width: dp(800)
 		# Alarm header
 		BoxLayout: 
-			padding: [0.01875*app.width,0,0.01875*app.width,0]
+			padding: [15,0,15,0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(0.104166666667*app.height)
-			width: dp(1.0*app.width)
+			height: dp(50)
+			width: dp(800)
 			orientation: 'horizontal'
 			Label:
 				id: alarm_title
 				size_hint: (None, None)
-				font_size: str(0.0375*app.width) + 'sp'
+				font_size: '30sp'
 				color: [0,0,0,1]
 				markup: True
 				halign: 'left'
-				height: dp(0.104166666667*app.height)
-				width: dp(0.9625*app.width)
+				height: dp(50)
+				width: dp(770)
 				text_size: self.size
 		# Red underline
 		BoxLayout: 
-			padding: [0.0125*app.width,0,0.0125*app.width,0]
+			padding: [10,0,10,0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(0.0104166666667*app.height)
-			width: dp(1.0*app.width)
+			height: dp(5)
+			width: dp(800)
 			Image:
 				id: red_underline
 				source: "./asmcnc/skavaUI/img/red_underline.png"
@@ -60,18 +62,18 @@ Builder.load_string(
 				allow_stretch: True
 		# Image and text
 		BoxLayout: 
-			padding: [0,0.0729166666667*app.height,0,0]
+			padding: [0,35,0,0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(0.589583333333*app.height)
-			width: dp(1.0*app.width)
+			height: dp(283)
+			width: dp(800)
 			orientation: 'vertical'
 			BoxLayout: 
 				id: icon_container
-				padding: [0.41875*app.width,0,0,0]
+				padding: [335,0,0,0]
 				size_hint: (None, None)
-				height: dp(0.270833333333*app.height)
-				width: dp(1.0*app.width)       
+				height: dp(130)
+				width: dp(800)       
 				Image:
 					id: icon
 					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
@@ -80,18 +82,18 @@ Builder.load_string(
 					size: self.parent.width, self.parent.height
 					allow_stretch: True
 					size_hint: (None, None)
-					height: dp(0.270833333333*app.height)
-					width: dp(0.1625*app.width)
+					height: dp(130)
+					width: dp(130)
 			BoxLayout:
 				id: description container
-				padding: [0.0375*app.width,0,0.0375*app.width,0]
+				padding: [30,0,30,0]
 				spacing: 0
 				size_hint: (None, None)
-				height: dp(0.245833333333*app.height)
-				width: dp(1.0*app.width)
+				height: dp(118)
+				width: dp(800)
 				Label:
 					id: description_label
-					font_size: str(0.025*app.width) + 'sp'
+					font_size: '20sp'
 					color: [0,0,0,1]
 					markup: True
 					halign: 'center'
@@ -100,20 +102,20 @@ Builder.load_string(
 					size: self.parent.size
 		# Buttons
 		BoxLayout: 
-			padding: [0.0125*app.width,0,0.0125*app.width,0.0208333333333*app.height]
+			padding: [10,0,10,10]
 			size_hint: (None, None)
-			height: dp(0.295833333333*app.height)
-			width: dp(1.0*app.width)
+			height: dp(142)
+			width: dp(800)
 			orientation: 'horizontal'
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(0.275*app.height)
-				width: dp(0.305625*app.width)
-				padding: [0, 0,0.230625*app.width, 0]
+				height: dp(132)
+				width: dp(244.5)
+				padding: [0, 0, 184.5, 0]
 				Button:
 					size_hint: (None,None)
-					height: dp(0.108333333333*app.height)
-					width: dp(0.075*app.width)
+					height: dp(52)
+					width: dp(60)
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
@@ -130,17 +132,17 @@ Builder.load_string(
 							allow_stretch: True
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(0.275*app.height)
-				width: dp(0.36375*app.width)
-				padding: [0,0,0,0.108333333333*app.height]
+				height: dp(132)
+				width: dp(291)
+				padding: [0,0,0,52]
 				Button:
 					id: next_button
 					background_normal: "./asmcnc/skavaUI/img/next.png"
 					background_down: "./asmcnc/skavaUI/img/next.png"
 					border: [dp(14.5)]*4
 					size_hint: (None,None)
-					width: dp(0.36375*app.width)
-					height: dp(0.164583333333*app.height)
+					width: dp(291)
+					height: dp(79)
 					on_press: root.more_info()
 					font_size: root.default_font_size
 					color: hex('#f9f9f9ff')
@@ -151,13 +153,13 @@ Builder.load_string(
 
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(0.275*app.height)
-				width: dp(0.305625*app.width)
-				padding: [0.241875*app.width, 0, 0, 0]
+				height: dp(132)
+				width: dp(244.5)
+				padding: [193.5, 0, 0, 0]
 				Button:
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(0.06375*app.width)
+					height: dp(60)
+					width: dp(51)
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
@@ -172,55 +174,58 @@ Builder.load_string(
 							y: self.parent.y
 							size: self.parent.width, self.parent.height
 							allow_stretch: True 
-"""
-    )
-
+""")
 
 class AlarmScreen5(Screen):
-    return_to_screen = 'alarm_1'
-    default_font_size = 30
 
-    def __init__(self, **kwargs):
-        super(AlarmScreen5, self).__init__(**kwargs)
-        self.a = kwargs['alarm_manager']
-        self.alarm_title.text = self.a.l.get_bold('Alarm: Job cancelled.')
-        self.icon.source = './asmcnc/core_UI/sequence_alarm/img/alarm_icon.png'
-        self.description_label.text = self.a.l.get_str(
-            'For safety reasons, SmartBench will now cancel the job.')
-        self.next_button.text = self.a.l.get_str('More info')
-        self.update_font_size(self.next_button)
+	return_to_screen = 'alarm_1'
+	default_font_size = 30
+	
+	def __init__(self, **kwargs):
+		super(AlarmScreen5, self).__init__(**kwargs)
+		self.a=kwargs['alarm_manager']
 
-    def on_pre_enter(self):
-        if self.a.support_sequence:
-            self.next_button.opacity = 0
-            self.next_button.disabled = True
-        elif self.return_to_screen == 'alarm_1':
-            self.next_button.opacity = 1
-            self.next_button.disabled = False
-        else:
-            self.next_button.opacity = 0
-            self.next_button.disabled = True
+		self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
+		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
+		self.next_button.text = self.a.l.get_str("More info")
+		self.update_font_size(self.next_button)
 
-    def next_screen(self):
-        self.a.exit_sequence()
+	def on_pre_enter(self):
 
-    def prev_screen(self):
-        if self.a.support_sequence:
-            self.a.sm.current = 'alarm_4'
-        else:
-            self.a.sm.current = self.return_to_screen
+		if self.a.support_sequence:
+			self.next_button.opacity = 0
+			self.next_button.disabled = True
+		else:
+			if self.return_to_screen == 'alarm_1':
+				self.next_button.opacity = 1
+				self.next_button.disabled = False
+			else: 
+				self.next_button.opacity = 0
+				self.next_button.disabled = True	
 
-    def more_info(self):
-        self.a.sm.get_screen('alarm_3').for_support = False
-        self.a.sm.current = 'alarm_3'
+	def next_screen(self):
+		self.a.exit_sequence()
 
-    def update_font_size(self, value):
-        text_length = self.a.l.get_text_length(value.text)
-        if text_length < 12:
-            value.font_size = self.default_font_size
-        elif text_length > 15:
-            value.font_size = self.default_font_size - 2
-        if text_length > 20:
-            value.font_size = self.default_font_size - 4
-        if text_length > 22:
-            value.font_size = self.default_font_size - 5
+	def prev_screen(self):
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = self.return_to_screen
+
+	def more_info(self):
+		self.a.sm.get_screen('alarm_3').for_support = False
+		self.a.sm.current = 'alarm_3'
+
+
+	def update_font_size(self, value):
+		text_length = self.a.l.get_text_length(value.text)
+
+		if text_length < 12:
+			value.font_size = self.default_font_size
+		elif text_length > 15: 
+			value.font_size = self.default_font_size - 2
+		if text_length > 20: 
+			value.font_size = self.default_font_size - 4
+		if text_length > 22: 
+			value.font_size = self.default_font_size - 5

@@ -1,25 +1,33 @@
-"""
+'''
 Created on 03 August 2020
 @author: Letty
-"""
+'''
+
+## Renumber all items after vac
+
 import os, sys, subprocess
 from datetime import datetime
-try:
+
+try: 
     import pigpio
+
 except:
     pass
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
+
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string(
-    """
+
+Builder.load_string("""
 <ZHeadQCWarrantyBeforeApr21>:
     fw_version_label : fw_version_label
     consoleStatusText : consoleStatusText
@@ -49,7 +57,6 @@ Builder.load_string(
                 GridLayout:
                     cols: 2
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
                         text: '  1. FW Version: '
                         color: 1,1,1,1
                         text_size: self.size
@@ -57,14 +64,12 @@ Builder.load_string(
                         halign: 'left'
                         valign: 'middle'
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
                         id: fw_version_label
                         text: 'fw version 1.etc.'
                         color: 1,1,1,1
                 GridLayout:
                     cols: 4
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
                         text: '  9. Dust Shoe'
                         color: 1,1,1,1
                         text_size: self.size
@@ -72,20 +77,16 @@ Builder.load_string(
                         halign: 'left'
                         valign: 'middle'
                     Button: 
-                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'R'
                         on_press: root.dust_shoe_red()
                     Button: 
-                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'G'
                         on_press: root.dust_shoe_green()
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'B'
                         on_press: root.dust_shoe_blue()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '  STOP'
                     text_size: self.size
                     markup: 'True'
@@ -96,7 +97,6 @@ Builder.load_string(
                     background_normal: ''
         # Row 2
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '  2. Bake GRBL Settings'
                     text_size: self.size
                     markup: 'True'
@@ -104,7 +104,6 @@ Builder.load_string(
                     valign: 'middle'
                     on_press: root.bake_grbl_settings()
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '  10. DISABLE ALARMS'
                     text_size: self.size
                     markup: 'True'
@@ -113,14 +112,13 @@ Builder.load_string(
                     on_press: root.disable_alarms()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '15. ENABLE ALARMS'
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
                     on_press: root.enable_alarms()
-                    padding: [0.0125*app.width,0]
+                    padding: [dp(10),0]
 
 
         # Row 3
@@ -158,7 +156,6 @@ Builder.load_string(
                         allow_stretch: True
 
                 Button: 
-                    font_size: str(0.01875 * app.width) + 'sp'
                     id: do_cycle
                     text: '  16. Cycle'
                     on_press: root.do_cycle()
@@ -198,7 +195,6 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                 Button: 
-                    font_size: str(0.01875 * app.width) + 'sp'
                     id: test_fw_update_button
                     text: '  17. Test FW Update'
                     on_press: root.test_fw_update()
@@ -241,7 +237,6 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                 Button: 
-                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '  <<< Back'
                     on_press: root.back_to_choice()
                     color: 1,1,1,1
@@ -254,7 +249,6 @@ Builder.load_string(
                 GridLayout:
                     cols: 3
                     ToggleButton: 
-                    Toggle    font_size: str(0.01875 * app.width) + 'sp'
                         id: spindle_toggle
                         text: '  6. Spindle'
                         text_size: self.size
@@ -263,7 +257,6 @@ Builder.load_string(
                         valign: 'middle'
                         on_press: root.set_spindle()
                     ToggleButton: 
-                    Toggle    font_size: str(0.01875 * app.width) + 'sp'
                         id: laser_toggle
                         text: '  7. Laser'
                         text_size: self.size
@@ -272,7 +265,6 @@ Builder.load_string(
                         valign: 'middle'
                         on_press: root.set_laser()
                     ToggleButton: 
-                    Toggle    font_size: str(0.01875 * app.width) + 'sp'
                         id: vac_toggle
                         text: '  8. Vac'
                         text_size: self.size
@@ -304,44 +296,43 @@ Builder.load_string(
             size_hint_y: 0.08
             id: status_container 
             pos: self.pos
-"""
-    )
+""")
+
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
-
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
-
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
 
-
 class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def __init__(self, **kwargs):
+
         super(ZHeadQCWarrantyBeforeApr21, self).__init__(**kwargs)
-        self.m = kwargs['m']
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
+        self.m=kwargs['m']
+        self.sm=kwargs['sm']
+        self.l=kwargs['l']
+
         self.z_limit_set = False
         self.spindle_pass_fail = True
         self.string_overload_summary = ''
         self.spindle_test_counter = 0
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+
+        # Status bar
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
+        # self.status_bar_widget.cheeky_color = '#1976d2'
 
     def on_enter(self, *args):
         self.string_overload_summary = ''
         Clock.schedule_interval(self.scrape_fw_version, 1)
         self.m.is_laser_enabled = True
-        self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, STATUS_UPDATE_DELAY)
-        self.poll_for_limits = Clock.schedule_interval(self.
-            update_checkboxes, STATUS_UPDATE_DELAY)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for limit switches being triggered
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
@@ -349,24 +340,54 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.s.write_command('$21 = 1')
 
     def scrape_fw_version(self, dt):
-        self.fw_version_label.text = str(str(self.m.s.fw_version).split(
-            '; HW')[0])
+        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def bake_grbl_settings(self):
-        grbl_settings = ['$0=10', '$1=255', '$2=4', '$3=1', '$4=0', '$5=1',
-            '$6=0', '$10=3', '$11=0.010', '$12=0.002', '$13=0', '$20=1',
-            '$22=1', '$23=3', '$24=600.0', '$25=3000.0', '$26=250',
-            '$27=15.000', '$30=25000.0', '$31=0.0', '$32=0', '$110=8000.0',
-            '$111=6000.0', '$112=750.0', '$120=130.0', '$121=130.0',
-            '$122=200.0', '$130=1300.0', '$131=2503.0', '$132=150.0', '$$',
-            '$#']
-        self.m.s.start_sequential_stream(grbl_settings,
-            reset_grbl_after_stream=True)
+        grbl_settings = [
+                    '$0=10',          #Step pulse, microseconds
+                    '$1=255',         #Step idle delay, milliseconds
+                    '$2=4',           #Step port invert, mask
+                    '$3=1',           #Direction port invert, mask
+                    '$4=0',           #Step enable invert, boolean
+                    '$5=1',           #Limit pins invert, boolean
+                    '$6=0',           #Probe pin invert, boolean
+                    '$10=3',          #Status report, mask <----------------------
+                    '$11=0.010',      #Junction deviation, mm
+                    '$12=0.002',      #Arc tolerance, mm
+                    '$13=0',          #Report inches, boolean
+                    '$20=1',          #Soft limits, boolean <-------------------
+                    # '$21=1',          #Hard limits, boolean <------------------
+                    '$22=1',          #Homing cycle, boolean <------------------------
+                    '$23=3',          #Homing dir invert, mask
+                    '$24=600.0',      #Homing feed, mm/min
+                    '$25=3000.0',     #Homing seek, mm/min
+                    '$26=250',        #Homing debounce, milliseconds
+                    '$27=15.000',     #Homing pull-off, mm
+                    '$30=25000.0',    #Max spindle speed, RPM
+                    '$31=0.0',        #Min spindle speed, RPM
+                    '$32=0',          #Laser mode, boolean
+                    # '$100=56.649',    #X steps/mm
+                    # '$101=56.665',    #Y steps/mm
+                    # '$102=1066.667',  #Z steps/mm
+                    '$110=8000.0',    #X Max rate, mm/min
+                    '$111=6000.0',    #Y Max rate, mm/min
+                    '$112=750.0',     #Z Max rate, mm/min
+                    '$120=130.0',     #X Acceleration, mm/sec^2
+                    '$121=130.0',     #Y Acceleration, mm/sec^2
+                    '$122=200.0',     #Z Acceleration, mm/sec^2
+                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
+                    '$131=2503.0',    #Y Max travel, mm
+                    '$132=150.0',     #Z Max travel, mm
+                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+            ]
+
+        self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('qcW112', 'qcW112')
+        self.m.request_homing_procedure('qcW112','qcW112')
 
     def resume_from_alarm(self):
         self.m.resume_from_alarm()
@@ -384,21 +405,21 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.jog_relative('Z', -20, 750)
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal':
+        if self.spindle_toggle.state == 'normal': 
             self.m.spindle_off()
-        else:
+        else: 
             self.m.spindle_on()
 
     def set_laser(self):
-        if self.laser_toggle.state == 'normal':
+        if self.laser_toggle.state == 'normal': 
             self.m.laser_off()
-        else:
+        else: 
             self.m.laser_on()
 
     def set_vac(self):
-        if self.vac_toggle.state == 'normal':
+        if self.vac_toggle.state == 'normal': 
             self.m.vac_off()
-        else:
+        else: 
             self.m.vac_on()
 
     def dust_shoe_red(self):
@@ -417,51 +438,48 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.s.write_command('$21 = 1')
 
     def update_checkboxes(self, dt):
+        # self.dust_shoe_switch()
         self.x_home_switch()
         self.x_max_switch()
         self.z_home_switch()
         self.probe()
 
+    # def dust_shoe_switch(self):
+    #     if self.m.s.dust_shoe_cover:
+    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+    #     else:
+    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
     def x_home_switch(self):
         if self.m.s.limit_x:
-            self.x_home_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.x_home_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def x_max_switch(self):
         if self.m.s.limit_X:
-            self.x_max_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.x_max_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def z_home_switch(self):
         if self.m.s.limit_z:
-            self.z_home_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.z_home_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def probe(self):
         if self.m.s.probe:
-            self.probe_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.probe_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def cycle_limit_switch(self):
         if self.m.s.limit_z:
-            self.cycle_limit_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.z_limit_set = True
         else:
-            self.cycle_limit_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
@@ -470,6 +488,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.quit_jog()
 
     def do_cycle(self):
+
         self.m.s.write_command('G53 G0 Z-150')
         self.m.s.write_command('G53 G0 Z-1')
         self.m.s.write_command('G53 G0 Z-150')
@@ -491,8 +510,11 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.s.write_command('G53 G0 Z-150')
         self.m.s.write_command('G53 G0 Z-1')
 
+
+    # TEST FIRMWARE UPDATE
     def test_fw_update(self):
-        self.test_fw_update_button.text = '  Updating...'
+
+        self.test_fw_update_button.text = "  Updating..."
 
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -502,15 +524,14 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print pi.get_mode(17)
+            print(pi.get_mode(17))
             pi.stop()
-            cmd = (
-                'grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
-                )
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
-                subprocess.STDOUT, shell=True)
+
+            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
+
             connect()
 
         def connect():
@@ -519,43 +540,46 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
         def do_connection(dt):
             self.m.reconnect_serial_connection()
-            self.poll_for_reconnection = Clock.schedule_interval(
-                try_start_services, 0.4)
+            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
 
         def try_start_services(dt):
             if self.m.s.is_connected():
                 Clock.unschedule(self.poll_for_reconnection)
                 Clock.schedule_once(self.m.s.start_services, 1)
+                # hopefully 1 second should always be enough to start services
                 Clock.schedule_once(update_complete, 2)
 
         def update_complete(dt):
-            if self.exit_code == 0:
-                did_fw_update_succeed = 'Success!'
-            else:
-                did_fw_update_succeed = 'Update failed.'
-            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm,
-                did_fw_update_succeed, str(self.stdout))
+            if self.exit_code == 0: 
+                did_fw_update_succeed = "Success!"
+
+            else: 
+                did_fw_update_succeed = "Update failed."
+
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
             self.test_fw_update_button.text = '  17. Test FW Update'
+
             self.sm.get_screen('qc1').reset_checkboxes()
             self.sm.get_screen('qc2').reset_checkboxes()
             self.sm.get_screen('qcW136').reset_checkboxes()
             self.sm.get_screen('qcW112').reset_checkboxes()
             self.sm.get_screen('qc3').reset_timer()
+
         disconnect_and_update()
 
+
     def update_status_text(self, dt):
-        self.consoleStatusText.text = self.sm.get_screen('home'
-            ).gcode_monitor_widget.consoleStatusText.text
+        self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
 
     def do_reboot(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system('sudo reboot')
+            os.system("sudo reboot")
 
     def back_to_choice(self):
         self.sm.current = 'qcWC'
 
     def reset_checkboxes(self):
-        self.x_home_check.source = './asmcnc/skavaUI/img/checkbox_inactive.png'
-        self.x_max_check.source = './asmcnc/skavaUI/img/checkbox_inactive.png'
-        self.z_home_check.source = './asmcnc/skavaUI/img/checkbox_inactive.png'
-        self.probe_check.source = './asmcnc/skavaUI/img/checkbox_inactive.png'
+        self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"

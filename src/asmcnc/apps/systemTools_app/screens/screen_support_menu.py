@@ -1,18 +1,21 @@
-"""
+# -*- coding: utf-8 -*-
+'''
 Created on 18 November 2020
 Menu screen for system tools app
 
 @author: Letty
-"""
+'''
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 import traceback
+
 from asmcnc.apps.systemTools_app.screens import popup_system
-Builder.load_string(
-    """
+
+Builder.load_string("""
 
 <SupportMenuScreen>
 
@@ -31,8 +34,8 @@ Builder.load_string(
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding: [0.0104125*app.width,0.125*app.height]
-        spacing: [0.0104125*app.width,0.125*app.height]
+        padding: [dp(8.33), dp(60)]
+        spacing: [dp(8.33), dp(60)]
         cols: 5
         rows: 2
 
@@ -41,7 +44,6 @@ Builder.load_string(
 
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
             id: button_download_logs
             text: 'Download Logs'
             on_press: root.download_logs()
@@ -56,7 +58,6 @@ Builder.load_string(
             padding_y: 5
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
             id: button_reinstall_pika
             text: 'Get pika'
             on_press: root.get_pika()
@@ -71,7 +72,6 @@ Builder.load_string(
             padding_y: 5
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
             id: button_git_fsck
             text: 'Git FSCK'
             on_press: root.check_easycut_repo()
@@ -99,7 +99,6 @@ Builder.load_string(
             padding: 0
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
             id: button_go_back
             text: 'Go Back'
             on_press: root.go_back()
@@ -112,19 +111,24 @@ Builder.load_string(
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             border: [dp(25)]*4
             padding_y: 5
-"""
-    )
-
+""")
 
 class SupportMenuScreen(Screen):
+
     default_font_size = 16
 
     def __init__(self, **kwargs):
         super(SupportMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
-        self.id_list = [self.button_download_logs, self.
-            button_reinstall_pika, self.button_git_fsck, self.button_go_back]
+
+        self.id_list = [
+        self.button_download_logs,
+        self.button_reinstall_pika,
+        self.button_git_fsck,
+        self.button_go_back
+        ]
+
         self.update_strings()
 
     def go_back(self):
@@ -148,16 +152,18 @@ class SupportMenuScreen(Screen):
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
         self.button_reinstall_pika.text = self.l.get_str('Get Pika')
-        self.button_git_fsck.txt = self.l.get_str('Git FSCK')
+        self.button_git_fsck.txt = self.l.get_str("Git FSCK")
         self.button_go_back.text = self.l.get_str('Go Back')
+
         for id_object in self.id_list:
             self.update_font_size(id_object)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
+
         if text_length < 16:
             value.font_size = self.default_font_size
-        elif text_length > 15:
+        elif text_length > 15: 
             value.font_size = self.default_font_size - 2
-        if text_length > 19:
+        if text_length > 19: 
             value.font_size = self.default_font_size - 3

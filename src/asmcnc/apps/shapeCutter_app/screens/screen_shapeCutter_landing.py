@@ -1,22 +1,24 @@
-"""
+'''
 Created on 19 February 2020
 Landing Screen for the Shape Cutter App
 
 @author: Letty
-"""
+'''
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-Builder.load_string(
-    """
+
+Builder.load_string("""
 
 <ShapeCutterLandingScreenClass>:
     
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(800)
+        width: dp(480)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -29,12 +31,11 @@ Builder.load_string(
             orientation: "vertical"       
                 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(0.1875*app.height)
-                width: dp(1.0*app.width)
+                height: dp(90)
+                width: dp(800)
                 text: "Welcome to Shape Cutter"
-                font_size: 0.0375*app.width
+                font_size: 30
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -42,42 +43,42 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.291666666667*app.height)
+                width: dp(800)
+                height: dp(140)
                 padding: 0
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.354166666667*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(170)
+                    width: dp(800)
                     halign: "center"
                     valign: "middle"
                     text: "Select a shape to cut..."
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size: 26
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.354166666667*app.height)
-                padding: (0.225*app.width,0,0.225*app.width,30)
+                width: dp(800)
+                height: dp(170)
+                padding: (180,0,180,30)
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.275*app.width)
-                    height: dp(0.354166666667*app.height)
-                    padding: (0.03125*app.width,0,27,0)
+                    width: dp(220)
+                    height: dp(170)
+                    padding: (25,0,27,0)
                     pos: self.parent.pos
                     
                     # Circle button
                     Button:
                         size_hint: (None,None)
-                        height: dp(0.35*app.height)
-                        width: dp(0.21*app.width)
+                        height: dp(168)
+                        width: dp(168)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -94,16 +95,16 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.275*app.width)
-                    height: dp(0.354166666667*app.height)
-                    padding: (0.03375*app.width,0,25,0)
+                    width: dp(220)
+                    height: dp(170)
+                    padding: (27,0,25,0)
                     pos: self.parent.pos
                     
                     # rectangle button
                     Button:
                         size_hint: (None,None)
-                        height: dp(0.35*app.height)
-                        width: dp(0.21*app.width)
+                        height: dp(168)
+                        width: dp(168)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -121,17 +122,17 @@ Builder.load_string(
             # Info button
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
-                padding: (0.025*app.width,0,0,0.025*app.width)
-                spacing: 0.85*app.width
+                width: dp(800)
+                height: dp(80)
+                padding: (20,0,0,20)
+                spacing: 680
                 orientation: 'horizontal'
                 pos: self.parent.pos
                 Button:
                     id: info_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: dp(40)
+                    width: dp(40)
                     background_color: hex('#F4433600')
                     opacity: 1
                     on_press: root.get_info()
@@ -148,8 +149,8 @@ Builder.load_string(
                 Button:
                     id: exit_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: dp(40)
+                    width: dp(40)
                     background_color: hex('#F4433600')
                     opacity: 1
                     on_press: root.exit()
@@ -163,33 +164,34 @@ Builder.load_string(
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True                             
-"""
-    )
-
+""")
 
 class ShapeCutterLandingScreenClass(Screen):
-    info_button = ObjectProperty()
 
+    info_button = ObjectProperty()   
+#     user_instruction = ObjectProperty()
+    
     def __init__(self, **kwargs):
         super(ShapeCutterLandingScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
+        self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.m.get_grbl_settings()
 
     def get_info(self):
+
         popup_info.PopupTutorial(self.shapecutter_sm)
-
+      
     def cut_rectangle(self):
-        self.j.shape_dict['shape'] = 'rectangle'
+        self.j.shape_dict["shape"] = "rectangle"
         self.next_screen()
-
+    
     def cut_circle(self):
-        self.j.shape_dict['shape'] = 'circle'
+        self.j.shape_dict["shape"] = "circle"
         self.next_screen()
-
+    
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 

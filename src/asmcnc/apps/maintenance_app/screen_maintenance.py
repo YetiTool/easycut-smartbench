@@ -1,18 +1,24 @@
-"""
+'''
 Created on 8 June 2020
 Tabbed maintenance screen, for setting the laser datum; monitoring brush life. 
 
 @author: Letty
-"""
+'''
+
 import os
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
-Builder.load_string(
-    """
+
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
+widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
+widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
+
+Builder.load_string("""
 
 <MaintenanceScreenClass>:
 
@@ -54,15 +60,15 @@ Builder.load_string(
     TabbedPanel:
         id: tab_panel
         size_hint: (None,None)
-        height: dp(1.0*app.height)
-        width: dp(1.005*app.width)
+        height: dp(480)
+        width: dp(804)
         pos: (0, 0)
-        padding: [0.0025*app.width,0.00416666666667*app.height,0.0025*app.width,0.0*app.height]
-        spacing: [0,0.00833333333333*app.height]
+        padding: [dp(-2),dp(-2),dp(-2),dp(0)]
+        spacing: [0,dp(-4)]
         do_default_tab: False
         tab_pos: 'top_left'
-        tab_height: dp(0.1875*app.height)
-        tab_width: dp(0.1775*app.width)
+        tab_height: dp(90)
+        tab_width: dp(142)
         on_touch_down: root.on_tab_switch()
 
 
@@ -75,11 +81,11 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(804)
+                height: dp(390)
                 orientation: "horizontal" 
-                padding: (0.015*app.width, 10, 0.015*app.width, 20)
-                spacing: (0.0125*app.width)
+                padding: (12, 10, 12, 20)
+                spacing: (10)
                 canvas:
                     Color:
                         rgba: hex('#E5E5E5FF')
@@ -89,15 +95,15 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.35*app.width)
-                    spacing: 0.0208333333333*app.height
+                    height: dp(360)
+                    width: dp(280)
+                    spacing: 10
                     orientation: "vertical"
                     id: left_panel
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.145833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(70)
+                        width: dp(280)
                         id: title
                         canvas:
                             Color:
@@ -107,15 +113,15 @@ Builder.load_string(
                                 pos: self.pos
                         BoxLayout: 
                             size_hint: (None, None)
-                            height: dp(0.145833333333*app.height)
-                            width: dp(0.35*app.width)
-                            padding: [0.025*app.width,0,0.025*app.width,0]
+                            height: dp(70)
+                            width: dp(280)
+                            padding: [dp(20),0,dp(20),0]
                             orientation: 'horizontal'
 
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-                                font_size: dp(0.0325*app.width)
+                                font_size: dp(26)
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
@@ -126,14 +132,14 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint: (None,None)
-                                height: dp(0.145833333333*app.height)
-                                width: dp(0.1875*app.width)
+                                height: dp(70)
+                                width: dp(150)
                                 id: switch_container
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.583333333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(280)
+                        width: dp(280)
                         id: laser_button_container
                         canvas:
                             Color:
@@ -144,16 +150,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.3375*app.width)
-                    spacing: 0.0208333333333*app.height
+                    height: dp(360)
+                    width: dp(270)
+                    spacing: 10
                     orientation: "vertical"
                     id: middle_panel
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.75*app.height)
-                        width: dp(0.3375*app.width)
+                        height: dp(360)
+                        width: dp(270)
                         id: xy_move_container
                         canvas:
                             Color:
@@ -164,8 +170,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.2625*app.width)
+                    height: dp(360)
+                    width: dp(210)
                     id: z_move_container
                     canvas:
                         Color:
@@ -183,11 +189,11 @@ Builder.load_string(
             background_down: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_grey.png'
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(804)
+                height: dp(390)
                 orientation: "vertical" 
-                padding: (0.0275*app.width, 20, 0.0275*app.width, 20)
-                spacing: (0.0416666666667*app.height)
+                padding: (22, 20, 22, 20)
+                spacing: (20)
                 canvas:
                     Color:
                         rgba: hex('#E5E5E5FF')
@@ -197,16 +203,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.95*app.width)
-                    height: dp(0.520833333333*app.height)
+                    width: dp(760)
+                    height: dp(250)
                     orientation: "horizontal" 
                     padding: 0
-                    spacing: (0.025*app.width)
+                    spacing: (20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(250)
+                        width: dp(280)
                         id: brush_use_container
                         canvas:
                             Color:
@@ -217,8 +223,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(250)
+                        width: dp(280)
                         id: brush_life_container
                         canvas:
                             Color:
@@ -229,8 +235,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.2*app.width)
+                        height: dp(250)
+                        width: dp(160)
                         id: brush_save_container
                         canvas:
                             Color:
@@ -241,8 +247,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.166666666667*app.height)
-                    width: dp(0.95*app.width)
+                    height: dp(80)
+                    width: dp(760)
                     id: monitor_strip
                     canvas:
                         Color:
@@ -252,15 +258,14 @@ Builder.load_string(
                             pos: self.pos
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.95*app.width)
-                        padding: [0.0125*app.width,0.0104166666667*app.height,0.00625*app.width,0.0104166666667*app.height]
+                        height: dp(80)
+                        width: dp(760)
+                        padding: [dp(10),dp(5),dp(5),dp(5)]
                         orientation: 'horizontal'
                         Label: 
-                            font_size: str(0.01875 * app.width) + 'sp'
                             id: brush_monitor_label
                             color: 0,0,0,1
-                            font_size: dp(0.0275*app.width)
+                            font_size: dp(22)
                             markup: True
                             halign: "left"
                             valign: "middle"
@@ -270,8 +275,8 @@ Builder.load_string(
 
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(0.145833333333*app.height)
-                            width: dp(0.75*app.width)
+                            height: dp(70)
+                            width: dp(600)
                             id: brush_monitor_container
 
         # Spindle cooldown settings
@@ -283,11 +288,11 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(804)
+                height: dp(390)
                 orientation: "vertical" 
-                padding: (0.0275*app.width, 20, 0.0275*app.width, 20)
-                spacing: (0.0416666666667*app.height)
+                padding: (22, 20, 22, 20)
+                spacing: (20)
                 canvas:
                     Color:
                         rgba: hex('#E5E5E5FF')
@@ -297,16 +302,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.95*app.width)
-                    height: dp(0.729166666667*app.height)
+                    width: dp(760)
+                    height: dp(350)
                     orientation: "horizontal" 
                     padding: dp(0)
-                    spacing: dp(0.025*app.width)
+                    spacing: dp(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.729166666667*app.height)
-                        width: dp(0.95*app.width)
+                        height: dp(350)
+                        width: dp(760)
                         id: spindle_settings_container
 
         # Z Misc settings (probe plate and time since lead screw lubrication)
@@ -317,11 +322,11 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(804)
+                height: dp(390)
                 orientation: "horizontal" 
-                padding: (0.0275*app.width, 20, 0.0275*app.width, 20)
-                spacing: (0.025*app.width)
+                padding: (22, 20, 22, 20)
+                spacing: (20)
                 canvas:
                     Color:
                         rgba: hex('#E5E5E5FF')
@@ -331,16 +336,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.725*app.width)
-                    height: dp(0.729166666667*app.height)
+                    width: dp(580)
+                    height: dp(350)
                     orientation: "vertical" 
                     padding: dp(0)
-                    spacing: dp(0.0416666666667*app.height)
+                    spacing: dp(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.270833333333*app.height)
-                        width: dp(0.725*app.width)
+                        height: dp(130)
+                        width: dp(580)
                         id: touchplate_offset_container
                         canvas:
                             Color:
@@ -351,8 +356,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.416666666667*app.height)
-                        width: dp(0.725*app.width)
+                        height: dp(200)
+                        width: dp(580)
                         id: z_lubrication_reminder_container
                         canvas:
                             Color:
@@ -363,8 +368,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.729166666667*app.height)
-                    width: dp(0.2*app.width)
+                    height: dp(350)
+                    width: dp(160)
                     id: z_misc_save_container
                     canvas:
                         Color:
@@ -385,11 +390,11 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(804)
+                height: dp(390)
                 orientation: "vertical" 
-                padding: (0.0275*app.width, 20, 0.0275*app.width, 20)
-                spacing: (0.0416666666667*app.height)
+                padding: (22, 20, 22, 20)
+                spacing: (20)
                 canvas:
                     Color:
                         rgba: hex('#E5E5E5FF')
@@ -399,8 +404,8 @@ Builder.load_string(
 
                 BoxLayout: 
                     id: spindle_health_check_container
-                    height: dp(0.729166666667*app.height)
-                    width: dp(0.95*app.width)
+                    height: dp(350)
+                    width: dp(760)
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -412,10 +417,9 @@ Builder.load_string(
         size_hint: (None,None)
         pos: (dp(710), dp(390))
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
             size_hint: (None,None)
-            height: dp(0.1875*app.height)
-            width: dp(0.1125*app.width)
+            height: dp(90)
+            width: dp(90)
             background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos
@@ -431,201 +435,222 @@ Builder.load_string(
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
-"""
-    )
-
+""")
 
 class MaintenanceScreenClass(Screen):
+
+
+    # LASER DATUM OFFSET
     laser_datum_reset_coordinate_x = 0
     laser_datum_reset_coordinate_y = 0
+
     landing_tab = StringProperty()
 
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
+        self.m=kwargs['machine']
+        self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
-        self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(
-            machine=self.m, screen_manager=self.sm)
+        self.l=kwargs['localization']
+        self.kb=kwargs['keyboard']
+
+        # LASER DATUM WIDGETS
+        self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
-        self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine
-            =self.m, screen_manager=self.sm, localization=self.l, job=self.jd)
+
+        self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm, localization=self.l, job = self.jd)
         self.z_move_container.add_widget(self.z_move_widget)
-        self.laser_datum_buttons_widget = (widget_maintenance_laser_buttons
-            .LaserDatumButtons(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+
+        self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.laser_button_container.add_widget(self.laser_datum_buttons_widget)
-        self.laser_switch_widget = (widget_maintenance_laser_switch.
-            LaserOnOffWidget(machine=self.m, screen_manager=self.sm))
+
+        self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
         self.switch_container.add_widget(self.laser_switch_widget)
-        self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(
-            machine=self.m, screen_manager=self.sm, localization=self.l)
+
+
+        # BRUSH MONITOR WIDGETS
+        self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_use_container.add_widget(self.brush_use_widget)
-        self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(
-            machine=self.m, screen_manager=self.sm, localization=self.l)
+
+        self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_life_container.add_widget(self.brush_life_widget)
-        self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(
-            machine=self.m, screen_manager=self.sm, localization=self.l)
+
+        self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_save_container.add_widget(self.brush_save_widget)
-        self.monitor_percentage = (1 - self.m.spindle_brush_use_seconds /
-            self.m.spindle_brush_lifetime_seconds)
-        self.brush_monitor_widget = (widget_maintenance_brush_monitor.
-            BrushMonitorWidget(machine=self.m, screen_manager=self.sm,
-            input_percentage=self.monitor_percentage))
+
+        self.monitor_percentage = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        self.brush_monitor_widget = widget_maintenance_brush_monitor.BrushMonitorWidget(machine=self.m, screen_manager=self.sm, input_percentage = self.monitor_percentage)
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
-        self.spindle_settings_widget = (widget_maintenance_spindle_settings
-            .SpindleSettingsWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
-        self.spindle_settings_container.add_widget(self.spindle_settings_widget
-            )
-        self.z_misc_save_widget = (widget_maintenance_z_misc_save.
-            ZMiscSaveWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+
+
+        # SPINDLE SETTINGS WIDGET   
+
+        self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_settings_container.add_widget(self.spindle_settings_widget)
+
+
+        # Z TOUCHPLATE OFFSET AND LEAD SCREW REMINDER WIDGETS
+
+        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_misc_save_container.add_widget(self.z_misc_save_widget)
-        self.touchplate_offset_widget = (widget_maintenance_touchplate_offset
-            .TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
-        self.touchplate_offset_container.add_widget(self.
-            touchplate_offset_widget)
-        self.z_lubrication_reminder_widget = (
-            widget_maintenance_z_lubrication_reminder.
-            ZLubricationReminderWidget(machine=self.m, screen_manager=self.
-            sm, localization=self.l))
-        self.z_lubrication_reminder_container.add_widget(self.
-            z_lubrication_reminder_widget)
+
+        self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.touchplate_offset_container.add_widget(self.touchplate_offset_widget)
+
+        self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
+
+        # OPTIONAL + TAB AND WIDGETS
+
+        ## Enable tab
+
         if self.m.theateam():
             self.add_plus_tab()
+
         self.update_strings()
-        self.text_inputs = [self.brush_use_widget.brush_use, self.
-            brush_life_widget.brush_life, self.touchplate_offset_widget.
-            touchplate_offset]
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.brush_use_widget.brush_use, self.brush_life_widget.brush_life, self.touchplate_offset_widget.touchplate_offset]
 
     def quit_to_lobby(self):
         self.on_tab_switch()
         self.sm.current = 'lobby'
-
+        
     def on_pre_enter(self):
+
+        # LASER
         if self.m.is_laser_enabled == True:
             self.laser_switch_widget.laser_switch.active = True
-        else:
+        else: 
             self.laser_switch_widget.laser_switch.active = False
+
         self.laser_switch_widget.toggle_laser()
-        self.brush_use_widget.brush_use.text = str(int(self.m.
-            spindle_brush_use_seconds / 3600))
-        self.brush_life_widget.brush_life.text = str(int(self.m.
-            spindle_brush_lifetime_seconds / 3600))
-        value = (1 - self.m.spindle_brush_use_seconds / self.m.
-            spindle_brush_lifetime_seconds)
+
+        # BRUSHES
+        self.brush_use_widget.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600))
+        self.brush_life_widget.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
+
+        value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
         self.brush_monitor_widget.set_percentage(value)
-        if self.m.spindle_digital:
+
+        # SPINDLE
+        if self.m.spindle_digital: 
             string_digital = 'digital'
             self.spindle_settings_widget.cooldown_speed_slider.disabled = False
-        else:
+        else: 
             string_digital = 'manual'
             self.spindle_settings_widget.cooldown_speed_slider.disabled = True
+
         if self.m.is_stylus_enabled:
             self.spindle_settings_widget.stylus_switch.active = True
         else:
             self.spindle_settings_widget.stylus_switch.active = False
-        self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.
-            spindle_brand) + ' ' + string_digital + ' ' + str(self.m.
-            spindle_voltage) + 'V'
-        if 'SC2' in self.m.spindle_brand:
+
+        self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
+        if "SC2" in self.m.spindle_brand:
             self.spindle_settings_widget.show_spindle_data_container()
         else:
             self.spindle_settings_widget.hide_spindle_data_container()
-        self.spindle_settings_widget.cooldown_time_slider.value = (self.m.
-            spindle_cooldown_time_seconds)
-        self.spindle_settings_widget.cooldown_speed_slider.value = (self.m.
-            spindle_cooldown_rpm)
-        self.spindle_settings_widget.rpm_override = (self.m.
-            spindle_cooldown_rpm_override)
-        self.spindle_settings_widget.spindle_brand.values = (self.
-            spindle_settings_widget.brand_list_sc1)
+        self.spindle_settings_widget.cooldown_time_slider.value = self.m.spindle_cooldown_time_seconds
+        self.spindle_settings_widget.cooldown_speed_slider.value = self.m.spindle_cooldown_rpm
+        self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
+
+        # if self.m.theateam() and self.m.get_dollar_setting(51):
+        #     self.spindle_settings_widget.uptime_label.text = self.l.get_str("Turn on spindle to read")
+        # else:
+        #     self.spindle_settings_widget.uptime_label.text = "Uptime: " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours"
+
+        # Only show SC2 options if machine supports it
+        self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc1
         try:
+            # Check if $51 exists
             self.m.s.setting_51
             if self.m.theateam():
-                self.spindle_settings_widget.spindle_brand.values = (self.
-                    spindle_settings_widget.brand_list_sc2)
+                self.spindle_settings_widget.spindle_brand.values = self.spindle_settings_widget.brand_list_sc2
         except:
             pass
-        self.touchplate_offset_widget.touchplate_offset.text = str(self.m.
-            z_touch_plate_thickness)
+
+        # Z MISC
+        self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
+
+        # IN CASE OF UPGRADES
         if self.m.theateam() and self.plus_tab.disabled:
             self.add_plus_tab()
             self.spindle_health_check_widget.update_strings()
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
+
+        # TAB TO LAND ON
         if self.landing_tab == 'brush_tab':
             self.tab_panel.switch_to(self.brush_tab)
         elif self.landing_tab == 'laser_tab':
             self.tab_panel.switch_to(self.laser_tab)
         elif self.landing_tab == 'spindle_tab':
             self.tab_panel.switch_to(self.spindle_tab)
-        elif self.m.theateam(
-            ) and self.landing_tab == 'spindle_health_check_tab':
+        elif self.m.theateam() and self.landing_tab == 'spindle_health_check_tab':
             self.tab_panel.switch_to(self.plus_tab)
-        else:
-            try:
+        else: 
+            try: 
                 self.landing_tab = self.tab_panel.current
-            except:
+            except: 
                 self.tab_panel.switch_to(self.laser_tab)
 
+
     def on_pre_leave(self):
-        self.laser_datum_buttons_widget.save_button_image.source = (
-            './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png')
+
+        # Save button disabled upon exiting app
+        self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
         self.laser_datum_buttons_widget.save_button.disabled = True
-        self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled,
-            self.m.laser_offset_x_value, self.m.laser_offset_y_value)
-        if self.m.is_laser_enabled == True:
-            self.sm.get_screen('home').default_datum_choice = 'laser'
-        else:
-            self.sm.get_screen('home').default_datum_choice = 'spindle'
+
+        # LASER DATUM
+        self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
+
+        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        else: self.sm.get_screen('home').default_datum_choice = 'spindle'
+
         self.m.laser_off()
 
     def add_plus_tab(self):
+
+        ## + TAB WIDGETS
+
         self.plus_tab.disabled = False
-        self.plus_tab.background_normal = (
-            'asmcnc/apps/maintenance_app/img/pro_plus_tab.png')
-        self.plus_tab.background_down = (
-            'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png')
-        self.spindle_health_check_widget = (
-            widget_maintenance_spindle_health_check.
-            WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
-        self.spindle_health_check_container.add_widget(self.
-            spindle_health_check_widget)
+        self.plus_tab.background_normal = 'asmcnc/apps/maintenance_app/img/pro_plus_tab.png'
+        self.plus_tab.background_down = 'asmcnc/apps/maintenance_app/img/pro_plus_tab_active.png'
+
+        self.spindle_health_check_widget = widget_maintenance_spindle_health_check.WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_health_check_container.add_widget(self.spindle_health_check_widget)
 
     def update_strings(self):
-        self.laser_datum_label.text = self.l.get_bold('LASER')
-        self.brush_monitor_label.text = self.l.get_bold('BRUSH MONITOR')
+
+        self.laser_datum_label.text = self.l.get_bold("LASER")
+        self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.brush_use_widget.update_strings()
         self.brush_life_widget.update_strings()
         self.spindle_settings_widget.update_strings()
         self.z_lubrication_reminder_widget.update_strings()
         self.touchplate_offset_widget.update_strings()
-        try:
+        try: 
             self.spindle_health_check_widget.update_strings()
-        except:
+        except: 
             pass
+
         self.update_font_size(self.brush_monitor_label)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
+
         if text_length > 18:
             value.font_size = 19
-        else:
+        else: 
             value.font_size = 22
 
     def on_tab_switch(self):
         for text_input in self.text_inputs:
             text_input.focus = False
+        # Save button disabled upon switching tabs
         if self.tab_panel.current_tab != self.laser_tab:
-            self.laser_datum_buttons_widget.save_button_image.source = (
-                './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png'
-                )
+            self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
             self.laser_datum_buttons_widget.save_button.disabled = True

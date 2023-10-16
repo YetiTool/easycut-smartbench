@@ -1,26 +1,32 @@
-"""
+# -*- coding: utf-8 -*-
+'''
 Created on 19 Aug 2017
 
 @author: Ed
-"""
+'''
+# config
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from __builtin__ import file
 from kivy.clock import Clock
+
 import os, sys, threading
 from datetime import datetime
 from multiprocessing import Process, Manager
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands
-from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view
+
+from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
-from asmcnc.geometry import job_envelope
+from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
-Builder.load_string(
-    """
+
+
+Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
@@ -49,13 +55,13 @@ Builder.load_string(
 
     BoxLayout:
         padding: 0
-        spacing: 0.0208333333333*app.height
+        spacing: 10
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
             padding: 0
-            spacing: 0.0125*app.width
+            spacing: 10
             orientation: "horizontal"
 
             BoxLayout:
@@ -68,15 +74,15 @@ Builder.load_string(
                     do_default_tab: False
                     tab_pos: 'left_top'
                     tab_height: 90
-                    tab_width: 0.1125*app.width
+                    tab_width: 90
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding: 0.025*app.width
-                            spacing: 0.025*app.width
+                            padding: 20
+                            spacing: 20
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -95,8 +101,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 0.025*app.width
-                            spacing: 0.025*app.width
+                            padding: 20
+                            spacing: 20
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -136,8 +142,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 0.025*app.width
-                            spacing: 0.0416666666667*app.height
+                            padding: 20
+                            spacing: 20
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -147,7 +153,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding: 0.0125*app.width
+                                padding: 10
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -168,8 +174,8 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 0.025*app.width
-                            spacing: 0.0416666666667*app.height
+                            padding: 20
+                            spacing: 20
                             id: job_container
                             canvas:
                                 Color:
@@ -180,8 +186,8 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding: 0.0125*app.width
-                                spacing: 0.0125*app.width
+                                padding: 10
+                                spacing: 10
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -191,7 +197,6 @@ Builder.load_string(
                                         pos: self.pos
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
@@ -208,7 +213,6 @@ Builder.load_string(
                                             allow_stretch: True
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: job_recovery_button
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
@@ -227,11 +231,10 @@ Builder.load_string(
                                             allow_stretch: True
 
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
-                                    font_size: str(0.025*app.width) + 'sp'
+                                    font_size: '20sp'
                                     markup: True
                                     text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
@@ -239,7 +242,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding: 0.025*app.width
+                                padding: 20
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -261,16 +264,14 @@ Builder.load_string(
             size_hint_y: 0.08
             id: status_container
 
-"""
-    )
-
+""")
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message
-
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class HomeScreen(Screen):
+
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     gcode_has_been_checked_and_its_ok = False
     non_modal_gcode_list = []
@@ -280,110 +281,134 @@ class HomeScreen(Screen):
     has_datum_been_reset = False
 
     def __init__(self, **kwargs):
+
         super(HomeScreen, self).__init__(**kwargs)
-        Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.
-            home_tab))
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
+        Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.home_tab))
+
+        self.m=kwargs['machine']
+        self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
-        self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=
-            self.jd)
+
+        # Job tab
+        self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
-        self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
+
+        self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.jd)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
-        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed
-            (machine=self.m, screen_manager=self.sm))
-        self.status_container.add_widget(widget_status_bar.StatusBar(
-            machine=self.m, screen_manager=self.sm))
-        self.virtual_bed_control_container.add_widget(
-            widget_virtual_bed_control.VirtualBedControl(machine=self.m,
-            screen_manager=self.sm, localization=self.l), index=100)
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m,
-            screen_manager=self.sm, localization=self.l)
-        self.common_move_widget = widget_common_move.CommonMove(machine=
-            self.m, screen_manager=self.sm)
+
+        # Position tab
+        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm))
+
+        # Status bar
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
+
+        # Bed tab
+        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm, localization=self.l), index=100)
+
+        # Move tab
+        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
-        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m,
-            screen_manager=self.sm, job=self.jd))
-        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine
-            =self.m, screen_manager=self.sm, localization=self.l)
+        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd))
+
+        # Settings tab
+        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
-        self.quick_commands_container.add_widget(widget_quick_commands.
-            QuickCommands(machine=self.m, screen_manager=self.sm, job=self.
-            jd, localization=self.l))
+        
+        # Quick commands
+        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
+
+        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
         self.m.stylus_router_choice = 'router'
-        if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.
-            current_tab == self.pos_tab):
+
+        if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
-        else:
+        else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
+
         if self.jd.job_gcode != []:
+
             self.gcode_summary_widget.display_summary()
-            try:
+
+            # Preview file as drawing
+            try: 
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
                 log('Unable to preview file')
 
     def on_pre_enter(self):
+
         if self.jd.job_gcode == []:
-            self.file_data_label.text = '[color=333333]' + self.l.get_str(
-                'Load a file') + '...' + '[/color]'
+
+            # File label at the top
+            self.file_data_label.text = ('[color=333333]' + \
+                self.l.get_str('Load a file') + '...' + '[/color]'
+                )
             self.job_filename = ''
+
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
             self.job_box.range_y[0] = 0
             self.job_box.range_y[1] = 0
             self.job_box.range_z[0] = 0
             self.job_box.range_z[1] = 0
-            try:
+            
+            # Hack to clear any previous job files
+            try:            
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print 'No G-code loaded.'
+                print('No G-code loaded.')
+
             self.gcode_summary_widget.hide_summary()
+
         else:
-            self.file_data_label.text = ('[color=333333]' + self.jd.
-                job_name + '[/color]')
+            # File label at the top
+            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
+
+        # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line != None:
+
+            # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
-                self.job_recovery_button_image.source = (
-                    './asmcnc/skavaUI/img/recover_job_disabled.png')
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
+
             else:
-                self.job_recovery_button_image.source = (
-                    './asmcnc/skavaUI/img/recover_job.png')
+                self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job.png"
+
+            # Line -1 being selected represents no selected line
             if self.jd.job_recovery_selected_line == -1:
                 if self.jd.job_recovery_from_beginning:
-                    self.file_data_label.text += ('\n[color=FF0000]' + self
-                        .l.get_str('Restart from beginning') + '[/color]')
+                    self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("Restart from beginning") + "[/color]"
             else:
-                self.file_data_label.text += ('\n[color=FF0000]' + self.l.
-                    get_str('From line N').replace('N', str(self.jd.
-                    job_recovery_selected_line)) + '[/color]')
+                self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("From line N").replace("N", str(self.jd.job_recovery_selected_line)) + "[/color]"
         else:
-            self.job_recovery_button_image.source = (
-                './asmcnc/skavaUI/img/recover_job_disabled.png')
+            self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
 
     def on_touch(self):
         for text_input in self.text_inputs:
             text_input.focus = False
 
     def preview_job_file(self, dt):
+
+        # Draw gcode preview 
         try:
-            log('> draw_file_in_xy_plane')
-            self.gcode_preview_widget.draw_file_in_xy_plane(self.
-                non_modal_gcode_list)
-            log('< draw_file_in_xy_plane')
+            log ('> draw_file_in_xy_plane')
+            self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
+            log ('< draw_file_in_xy_plane')
         except:
-            print 'Unable to draw gcode'
+            print('Unable to draw gcode')
+
         log('DONE')
 
     def on_pre_leave(self):
         self.m.laser_off()
+    

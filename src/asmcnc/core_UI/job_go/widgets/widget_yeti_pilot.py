@@ -1,8 +1,10 @@
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
+
 from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
-Builder.load_string(
-    """
+
+
+Builder.load_string("""
 
 <YetiPilotWidget>:
     
@@ -18,31 +20,29 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding: [0.0125*app.width,0.0166666666667*app.height,0.0125*app.width,0.0166666666667*app.height]
+        padding: [10,8,10,8]
 
         
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.25
-            spacing: 0.0208333333333*app.height
+            spacing: 10
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: yetipilot_two_tone
                 size_hint_y: 0.5
                 markup: True
                 halign: 'center'
                 text_size: self.size
-                font_size: str(0.025*app.width) + 'sp'
+                font_size: '20sp'
                 valign: "bottom"
 
             BoxLayout: 
                 id: bl
                 size_hint_y: 0.5
-                padding: [0.017620614025*app.width,0]
+                padding: [14.09649122,0]
 
                 ToggleButton:
-                Toggle    font_size: str(0.01875 * app.width) + 'sp'
                     id: switch
                     size_hint: (None, None)
                     size: ('64dp', '29dp')
@@ -66,7 +66,7 @@ Builder.load_string(
             
             BoxLayout:
                 size_hint_x: None
-                width: 0.0025*app.width
+                width: '2dp'
                 canvas:
                     Color:
                         rgba: hex('#ccccccff')
@@ -77,10 +77,9 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding: [0.0025*app.width,0,0.00625*app.width,0]
+            padding: [2,0,5,0]
             spacing: 0
             Label: 
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: profile_label
                 size_hint_y: 0.4
                 color: hex('#333333ff')
@@ -88,25 +87,23 @@ Builder.load_string(
                 halign: 'left'
                 text_size: self.size
                 bold: True
-                font_size: str(0.0225*app.width) + 'sp'
+                font_size: '18sp'
                 valign: "bottom"
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: profile_selection
                 size_hint_y: 0.6
                 color: hex('#333333ff')
                 markup: True
                 halign: 'left'
                 text_size: self.size
-                font_size: str(0.0175*app.width) + 'sp'
+                font_size: '14sp'
                 valign: "middle"
 
         BoxLayout: 
             size_hint_x: 0.1
-            padding: [0,0,0.0125*app.width,0]
+            padding: [0,0,10,0]
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
                 id: yp_cog_button
                 background_normal: ''
                 on_press: root.open_yp_settings()
@@ -123,11 +120,10 @@ Builder.load_string(
 
 
                 
-"""
-    )
-
+""")
 
 class YetiPilotWidget(Widget):
+
     yp_settings_popup = None
 
     def __init__(self, **kwargs):
@@ -137,48 +133,46 @@ class YetiPilotWidget(Widget):
         self.m = kwargs['machine']
         self.db = kwargs['database']
         self.yp = kwargs['yetipilot']
+
         self.disable_yeti_pilot()
-        self.yetipilot_two_tone.text = (
-            '[b][color=1976d2ff]YetiPilot[/b][/color]')
-        self.profile_label.text = self.l.get_str('Profile')
+        # self.yetipilot_two_tone.text = '[b][color=2196f3ff]YetiPilot[/b][/color]' # [/color][color=333333ff]
+        self.yetipilot_two_tone.text = '[b][color=1976d2ff]YetiPilot[/b][/color]' # [/color][color=333333ff] 
+        self.profile_label.text = self.l.get_str("Profile")
 
     def toggle_button_img(self, state):
-        self.yp_toggle_img.source = (
-            './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
-            'down' else 'off'))
+        self.yp_toggle_img.source = './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % (('on' if state=="down" else 'off'))
 
     def switch_reflects_yp(self):
-        self.switch.state = 'down' if self.yp.use_yp else 'normal'
+        self.switch.state = "down" if self.yp.use_yp else "normal"
         self.toggle_button_img(self.switch.state)
 
     def toggle_yeti_pilot(self, switch):
-        if switch.state == 'down':
+        if switch.state=="down":
             self.yp.enable()
             self.open_yp_settings()
-        else:
+        else: 
             self.yp.disable()
+
         self.toggle_button_img(switch.state)
 
     def disable_yeti_pilot(self):
-        self.switch.state = 'normal'
+        self.switch.state = "normal"
         self.toggle_yeti_pilot(self.switch)
 
     def open_yp_settings(self):
-        self.yp_settings_popup = PopupYetiPilotSettings(self.sm, self.l,
-            self.m, self.db, self.yp, version=not self.yp.
-            using_advanced_profile, closing_func=self.update_profile_selection)
+        self.yp_settings_popup = PopupYetiPilotSettings(self.sm, self.l, self.m, self.db, self.yp, version=not self.yp.using_advanced_profile, closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
         if self.yp.using_basic_profile:
             if self.yp.active_profile is None:
                 self.disable_yeti_pilot()
                 return
-            self.profile_selection.text = self.yp.get_active_material_type(
-                ) + '; ' + self.yp.get_active_cutter_diameter(
-                ) + ', ' + self.yp.get_active_cutter_type()
+
+            self.profile_selection.text = self.yp.get_active_material_type() + "; " + self.yp.get_active_cutter_diameter() + ", " + self.yp.get_active_cutter_type()
+            
         elif self.yp.using_advanced_profile:
             if not self.m.has_spindle_health_check_passed():
                 self.disable_yeti_pilot()
                 return
-            self.profile_selection.text = self.l.get_str('Advanced profile'
-                ) + ': ' + str(int(self.yp.get_total_target_power())) + ' W'
+
+            self.profile_selection.text = self.l.get_str("Advanced profile") + ": " + str(int(self.yp.get_total_target_power())) + " W"
