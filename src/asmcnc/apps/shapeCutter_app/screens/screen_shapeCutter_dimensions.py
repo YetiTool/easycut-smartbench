@@ -140,7 +140,7 @@ Builder.load_string(
                                         center: self.parent.center
                                         pos:self.parent.pos
                                         on_active: root.toggle_units()
-                                        active_norm_pos:max(0., min(0.00208333333333*app.height., (int(self.active) + self.touch_distance / sp(0.0854166666667*app.height))))
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
                                         canvas.after:
                                             Color:
                                                 rgb: 1,1,1
