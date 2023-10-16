@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+
 from asmcnc.skavaUI import popup_info
-Builder.load_string(
-    """
+
+Builder.load_string("""
 
 <WiFiAndDataConsentScreen2>
 
@@ -12,8 +15,8 @@ Builder.load_string(
 	next_button : next_button
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(800)
+        width: dp(480)
         canvas.before:
             Color: 
                 rgba: hex('#e5e5e5ff')
@@ -39,12 +42,12 @@ Builder.load_string(
                 Label:
                 	id: header_label
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(60)
+                    width: dp(800)
                     text: "Wi-Fi and Data Consent"
                     color: hex('#f9f9f9ff')
                     # color: hex('#333333ff') #grey
-                    font_size: dp(0.0375*app.width)
+                    font_size: dp(30)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -52,9 +55,9 @@ Builder.load_string(
             # BODY
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.620833333333*app.height)
-                padding:[dp(0.025*app.width), dp(0.0208333333333*app.height), dp(0.025*app.width), dp(0)]
+                width: dp(800)
+                height: dp(298)
+                padding: [dp(20), dp(10), dp(20), dp(0)]
                 spacing: 0
                 orientation: 'horizontal'
                 Label: 
@@ -62,7 +65,7 @@ Builder.load_string(
 					size_hint: (1,1)
                     # color: hex('#f9f9f9ff') # white
                     color: hex('#333333ff') #grey
-                    font_size: dp(0.0225*app.width)
+                    font_size: dp(18)
                     halign: "left"
                     valign: "top"
                     markup: True
@@ -71,21 +74,20 @@ Builder.load_string(
 
             # FOOTER
 			BoxLayout: 
-				padding:[0.0125*app.width,0,0.0125*app.width,0.0208333333333*app.height]
+				padding: [10,0,10,10]
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: dp(122)
+				width: dp(800)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, 0.230625*app.width, 0]
+					height: dp(122)
+					width: dp(244.5)
+					padding: [0, 0, 184.5, 0]
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: dp(52)
+						width: dp(60)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -102,69 +104,72 @@ Builder.load_string(
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0,0,0,0.0666666666667*app.height]
+					height: dp(122)
+					width: dp(291)
+					padding: [0,0,0,32]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: dp(291)
+						height: dp(79)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0.241875*app.width, 0, 0, 0]
+					height: dp(122)
+					width: dp(244.5)
+					padding: [193.5, 0, 0, 0]
 
-"""
-    )
-
+""")
 
 class WiFiAndDataConsentScreen2(Screen):
 
-    def __init__(self, **kwargs):
-        super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.c = kwargs['consent_manager']
-        self.l = kwargs['localization']
-        self.update_strings()
+	def __init__(self, **kwargs):
+		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
+		self.c=kwargs['consent_manager']
+		self.l = kwargs['localization']
+		self.update_strings()
 
-    def next_screen(self):
-        try:
-            self.start_seq.next_in_sequence()
-        except:
-            self.c.sm.current = 'consent_3'
+	def next_screen(self):
 
-    def prev_screen(self):
-        try:
-            self.start_seq.prev_in_sequence()
-        except:
-            self.c.sm.current = 'consent_1'
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_3'
 
-    def update_strings(self):
-        self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
-        self.user_info.text = self.l.get_str(
-            'If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.'
-            ) + '\n\n' + self.l.get_bold(
-            'This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.'
-            ) + '\n\n' + self.l.get_str('You will need Wi-Fi to:'
-            ) + '\n\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
-            'Automatically receive software updates'
-            ) + '\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
-            'Remotely transfer files (e.g. with SmartTransfer)'
-            ) + '\n' + '[b]\xe2\x80\xa2[/b] ' + self.l.get_str(
-            'Remotely manage and monitor SmartBench (e.g. with SmartManager)'
-            ) + '\n\n' + self.l.get_str(
-            'You can come back to this data policy at any time, and enable or disable Wi-Fi.'
-            )
-        self.next_button.text = self.l.get_str('Next') + '...'
+	def prev_screen(self):
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.sm.current='consent_1'
+
+	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+		self.user_info.text = (
+			self.l.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
+			"\n\n" + \
+			self.l.get_bold("This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.") + \
+			"\n\n" + \
+			self.l.get_str("You will need Wi-Fi to:") + \
+			"\n\n" + \
+			"[b]•[/b] " + self.l.get_str("Automatically receive software updates") + \
+			"\n" + \
+			"[b]•[/b] " + self.l.get_str("Remotely transfer files (e.g. with SmartTransfer)") + \
+			"\n" + \
+			"[b]•[/b] " + self.l.get_str("Remotely manage and monitor SmartBench (e.g. with SmartManager)") + \
+			"\n\n" + \
+			self.l.get_str("You can come back to this data policy at any time, and enable or disable Wi-Fi.")
+
+		)
+		self.next_button.text = self.l.get_str("Next") + "..."

@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+
 from asmcnc.skavaUI import popup_info
-Builder.load_string(
-    """
+
+Builder.load_string("""
 
 <WiFiAndDataConsentScreen1>
 
@@ -21,8 +24,8 @@ Builder.load_string(
 	next_button : next_button
 
 	BoxLayout:
-		height: dp(1.66666666667*app.height)
-		width: dp(0.6*app.width)
+		height: dp(800)
+		width: dp(480)
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -48,11 +51,11 @@ Builder.load_string(
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: dp(60)
+					width: dp(800)
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: dp(30)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -60,20 +63,20 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.620833333333*app.height)
-				padding:[dp(0.025*app.width), dp(0.0208333333333*app.height), dp(0.025*app.width), dp(0.0375*app.height)]
-				spacing: dp(0.0208333333333*app.height)
+				width: dp(800)
+				height: dp(298)
+				padding: [dp(20), dp(10), dp(20), dp(18)]
+				spacing: dp(10)
 				orientation: 'vertical'
 
 				Label: 
 					id: we_will_collect
 					size_hint: (None, None)
-					height: dp(0.104166666667*app.height)
-					width: dp(0.925*app.width)
+					height: dp(50)
+					width: dp(740)
 					# color: hex('#f9f9f9ff') # white
 					color: hex('#333333ff') #grey
-					font_size: dp(0.0225*app.width)
+					font_size: dp(18)
 					halign: "left"
 					valign: "top"
 					markup: True
@@ -83,18 +86,18 @@ Builder.load_string(
 					cols: 2
 					rows: 2
 					size_hint: (None, None)
-					height: dp(0.166666666667*app.height)
-					width: dp(0.925*app.width)
+					height: dp(80)
+					width: dp(740)
 
 					# Row 1 Col 1
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -103,7 +106,7 @@ Builder.load_string(
 	                    	id: job_critical_events
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -111,13 +114,13 @@ Builder.load_string(
 
 					# Row 1 Col 2
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -126,7 +129,7 @@ Builder.load_string(
 	                    	id: maintenance_data
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -134,13 +137,13 @@ Builder.load_string(
 
 					# Row 2 Col 1
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -149,7 +152,7 @@ Builder.load_string(
 	                    	id: ip_address
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -157,13 +160,13 @@ Builder.load_string(
 
 					# Row 2 Col 2
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -172,7 +175,7 @@ Builder.load_string(
 	                    	id: console_hostname
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -180,18 +183,18 @@ Builder.load_string(
 
 	            BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.0625*app.height)
-					width: dp(0.925*app.width)
-					padding:[dp(0), dp(0), dp(0), dp(0)]
+					height: dp(30)
+					width: dp(740)
+					padding: [dp(0), dp(0), dp(0), dp(0)]
 
 					Label: 
 						id: we_wont_collect
 						size_hint: (None, None)
-						height: dp(0.0625*app.height)
-						width: dp(0.925*app.width)
+						height: dp(30)
+						width: dp(740)
 						# color: hex('#f9f9f9ff') # white
 						color: hex('#333333ff') #grey
-						font_size: dp(0.0225*app.width)
+						font_size: dp(18)
 						halign: "left"
 						valign: "bottom"
 						markup: True
@@ -201,18 +204,18 @@ Builder.load_string(
 					cols: 2
 					rows: 2
 					size_hint: (None, None)
-					height: dp(0.166666666667*app.height)
-					width: dp(0.925*app.width)
+					height: dp(80)
+					width: dp(740)
 
 					# Row 1 Col 1
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -221,7 +224,7 @@ Builder.load_string(
 	                    	id: g_code_files
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -229,13 +232,13 @@ Builder.load_string(
 
 					# Row 1 Col 2
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -244,7 +247,7 @@ Builder.load_string(
 	                    	id: wifi_network_details
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -252,13 +255,13 @@ Builder.load_string(
 
 					# Row 2 Col 1
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: dp(30)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -267,7 +270,7 @@ Builder.load_string(
 	                    	id: serial_numbers
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: dp(18)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -275,30 +278,29 @@ Builder.load_string(
 
 					# Row 2 Col 2
 					BoxLayout: 
-						padding:dp(0.0125*app.width), dp(0)
-						spacing: dp(0.0125*app.width)
+						padding: dp(10), dp(0)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 
 
 			# FOOTER
 			BoxLayout: 
-				padding:[0.0125*app.width,0,0.0125*app.width,0.0208333333333*app.height]
+				padding: [10,0,10,10]
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: dp(122)
+				width: dp(800)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, 0.230625*app.width, 0]
+					height: dp(122)
+					width: dp(244.5)
+					padding: [0, 0, 184.5, 0]
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
 						id: prev_screen_button
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: dp(52)
+						width: dp(60)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -315,68 +317,69 @@ Builder.load_string(
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0,0,0,0.0666666666667*app.height]
+					height: dp(122)
+					width: dp(291)
+					padding: [0,0,0,32]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: dp(291)
+						height: dp(79)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0.241875*app.width, 0, 0, 0]
+					height: dp(122)
+					width: dp(244.5)
+					padding: [193.5, 0, 0, 0]
 
-"""
-    )
-
+""")
 
 class WiFiAndDataConsentScreen1(Screen):
 
-    def __init__(self, **kwargs):
-        super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.c = kwargs['consent_manager']
-        self.l = kwargs['localization']
-        self.update_strings()
+	def __init__(self, **kwargs):
+		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
+		self.c=kwargs['consent_manager']
+		self.l = kwargs['localization']
+		self.update_strings()
 
-    def next_screen(self):
-        try:
-            self.start_seq.next_in_sequence()
-        except:
-            self.c.sm.current = 'consent_2'
 
-    def prev_screen(self):
-        try:
-            self.start_seq.prev_in_sequence()
-        except:
-            self.c.back_to_previous_screen()
+	def next_screen(self):
 
-    def update_strings(self):
-        self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
-        self.we_will_collect.text = self.l.get_bold(
-            'To keep improving our services, we want to collect data from your SmartBench. '
-             + 'With your consent, we will collect the following data:')
-        self.we_wont_collect.text = self.l.get_bold(
-            'We will NEVER collect the following from your Console:')
-        self.job_critical_events.text = self.l.get_str('Job critical events')
-        self.maintenance_data.text = self.l.get_str('Maintenance data')
-        self.ip_address.text = self.l.get_str('IP address')
-        self.console_hostname.text = self.l.get_str('Console hostname')
-        self.g_code_files.text = self.l.get_str('G-Code files')
-        self.wifi_network_details.text = self.l.get_str('Wi-Fi network details'
-            )
-        self.serial_numbers.text = self.l.get_str('Serial numbers')
-        self.next_button.text = self.l.get_str('Next') + '...'
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_2'
+
+	def prev_screen(self):
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.back_to_previous_screen()
+		
+
+	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \
+			"With your consent, we will collect the following data:")
+		self.we_wont_collect.text = self.l.get_bold("We will NEVER collect the following from your Console:")
+		self.job_critical_events.text = self.l.get_str("Job critical events")
+		self.maintenance_data.text = self.l.get_str("Maintenance data")
+		self.ip_address.text = self.l.get_str("IP address")
+		self.console_hostname.text = self.l.get_str("Console hostname")
+		self.g_code_files.text = self.l.get_str("G-Code files")
+		self.wifi_network_details.text = self.l.get_str("Wi-Fi network details")
+		self.serial_numbers.text = self.l.get_str("Serial numbers")
+
+		self.next_button.text = self.l.get_str("Next") + "..."
