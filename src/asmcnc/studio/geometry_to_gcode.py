@@ -20,8 +20,8 @@ class GeometryToGcode(object):
         transformation += " scale(1,-1) translate(0,%s)" % -editor_height
         return transformation
 
-    def create_geberit_panel(self, dwg, editor_height, panel_pos, panel_centre, panel_rotation, panel_width, panel_height):
-        transformation = self.get_global_transformation(editor_height)
+    def create_geberit_panel(self, dwg, panel_pos, panel_centre, panel_rotation, panel_width, panel_height):
+        transformation = self.get_global_transformation(float(dwg.attribs['viewBox'].split()[2]))
 
         # Now rotate around the centre of the panel
         transformation += " rotate(%s,%s,%s)" % (panel_rotation, panel_centre[0], panel_centre[1])

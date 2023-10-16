@@ -297,7 +297,7 @@ class GeberitCutterScreen(Screen):
                 panel_pos = self.editor_container.to_local(panel.x, panel.y, relative=True)
                 panel_centre = self.editor_container.to_local(*panel.center, relative=True)
 
-                self.gtg.create_geberit_panel(dwg, self.editor_container.height, panel_pos, panel_centre, panel.rotation, panel.width, panel.height)
+                self.gtg.create_geberit_panel(dwg, panel_pos, panel_centre, panel.rotation, panel.width, panel.height)
             dwg.save()
 
             Clock.schedule_once(lambda dt: convert_svg_to_paths(), 0.5)
