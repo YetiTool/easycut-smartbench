@@ -499,7 +499,7 @@ class SerialConnection(object):
     def initialise_job(self):
 
         if self.m_state != "Check":
-            self.m.set_led_colour('GREEN')
+            self.m.set_led_colour('WHITE')
             self.m.zUp()
 
         self.FLUSH_FLAG = True
