@@ -1,4 +1,4 @@
-import re, svgwrite
+import re, svgwrite, sys, os, subprocess
 
 class GeometryToGcode(object):
 
@@ -58,6 +58,23 @@ class GeometryToGcode(object):
 
         rounded_rect_right_pos = (panel_pos[0] + (panel_width * 0.82) - rounded_rect_size[0], panel_pos[1] + (panel_height * 0.37))
         dwg.add(dwg.rect(rounded_rect_right_pos, rounded_rect_size, roundedness, roundedness, fill='white', stroke='black', transform=transformation))
+
+    def convert_svg_to_gcode(self, svg_filepath, gcode_filepath, speed, depth, feed):
+        gcode_arguments = " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o" % (str(speed), "-" + str(depth), str(feed), str(feed))
+
+        if sys.platform != "win32":
+            cmd = "cargo run --release -- /home/pi/easycut-smartbench/src/" + svg_filepath
+            # As svg2gcode does not allow for spindle speed or depth to be set, both of those are included in the spindle on command
+            cmd += gcode_arguments + " /home/pi/easycut-smartbench/src/" + gcode_filepath
+            working_directory = '/home/pi/svg2gcode'
+        else:
+            # For this to work on windows, cargo and svg2gcode need to be installed in the right places relative to easycut
+            cmd = "%s/../../../../.cargo/bin/cargo.exe run --release -- %s" % (os.getcwd(), os.getcwd() + '/' + svg_filepath)
+            cmd += gcode_arguments + " " + (os.getcwd() + '/' + gcode_filepath)
+            working_directory = os.getcwd() + '/../../svg2gcode'
+
+        # This is required because command needs to be executed from svg2gcode folder
+        subprocess.Popen(cmd.split(), cwd=working_directory).wait()
 
     def post_process_gcode(self, raw_gcode):
 
