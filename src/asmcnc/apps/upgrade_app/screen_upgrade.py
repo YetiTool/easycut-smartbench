@@ -32,7 +32,7 @@ Builder.load_string(
                     rgba: hex('#1976d2')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             BoxLayout:
                 padding:[dp(0.075*app.width),0,0,0]
@@ -61,7 +61,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/shapeCutter_app/img/exit_icon.png"
                             center_x: self.parent.center_x
@@ -79,7 +79,7 @@ Builder.load_string(
                     rgba: hex('e5e5e5ff')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             BoxLayout:
                 orientation: 'vertical'

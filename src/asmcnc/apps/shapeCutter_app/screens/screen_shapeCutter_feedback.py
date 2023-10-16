@@ -17,7 +17,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas:
             Rectangle: 
-                pos: self.pos
+                pos:self.pos
                 size: self.size
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
@@ -61,14 +61,14 @@ Builder.load_string(
                 padding:(0.225*app.width,0,0.225*app.width,0.0625*app.height)
                 spacing: 0
                 orientation: 'horizontal'
-                pos: self.parent.pos                
+                pos:self.parent.pos
                 
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(0.275*app.width)
                     height: dp(0.35625*app.height)
                     padding:(0.035*app.width,0,0.025*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # thumbs up button
                     Button:
@@ -78,12 +78,12 @@ Builder.load_string(
                         width: dp(0.215*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.thumbs_up()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
                                 center_x: self.parent.center_x
@@ -95,7 +95,7 @@ Builder.load_string(
                     width: dp(0.275*app.width)
                     height: dp(0.35625*app.height)
                     padding:(0.025*app.width,0,0.035*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # thumbs down button
                     Button:
@@ -105,12 +105,12 @@ Builder.load_string(
                         width: dp(0.215*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.thumbs_down()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/thumbs_down.png"
                                 center_x: self.parent.center_x
@@ -124,7 +124,7 @@ Builder.load_string(
                 padding:(0.925*app.width,0,0,0.0416666666667*app.height)
                 spacing: 0
                 orientation: 'horizontal'
-                pos: self.parent.pos
+                pos:self.parent.pos
 """
     )
 

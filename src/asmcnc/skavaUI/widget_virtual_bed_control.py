@@ -19,7 +19,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos   
+        pos:self.parent.pos
         padding: 0
         spacing: 0.025*app.width
         orientation: "horizontal"
@@ -27,7 +27,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
-            pos: self.parent.pos   
+            pos:self.parent.pos
             padding: 0.00625*app.width
             spacing: 0.00625*app.width
             orientation: "horizontal"
@@ -36,7 +36,7 @@ Builder.load_string(
                     rgba: hex('FFFFFFFF')
                 RoundedRectangle: 
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             Label:
                 text: 'SET:'
@@ -56,7 +56,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/park.png"
                         center_x: self.parent.center_x
@@ -75,7 +75,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/jobstart.png"
                         center_x: self.parent.center_x
@@ -87,7 +87,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
-            pos: self.parent.pos   
+            pos:self.parent.pos
 #             padding: 5
 #             spacing: 5
 #             orientation: "horizontal"
@@ -102,7 +102,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
-            pos: self.parent.pos   
+            pos:self.parent.pos
             padding: 0.00625*app.width
             spacing: 0.00625*app.width
             orientation: "horizontal"
@@ -111,7 +111,7 @@ Builder.load_string(
                     rgba: hex('FFFFFFFF')
                 RoundedRectangle: 
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
             Label:
                 text: ' GO:'
                 size_hint_x: 1 
@@ -129,7 +129,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/park.png"
                         center_x: self.parent.center_x
@@ -147,7 +147,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/jobstart.png"
                         center_x: self.parent.center_x

@@ -26,7 +26,7 @@ Builder.load_string(
         allow_stretch: True
         keep_ratio: False
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
     Image:
         id: fuel_bar
         source: "./asmcnc/apps/maintenance_app/img/green_bar.png"

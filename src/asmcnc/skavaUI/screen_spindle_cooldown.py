@@ -31,7 +31,7 @@ Builder.load_string(
                 rgba: hex('#E5E5E5FF')
             Rectangle: 
                 size: self.size
-                pos: self.pos         
+                pos:self.pos
 
         BoxLayout: 
             spacing: 0
@@ -42,7 +42,7 @@ Builder.load_string(
                     rgba: [1,1,1,1]
                 RoundedRectangle:
                     size: self.size
-                    pos: self.pos    
+                    pos:self.pos
             
             Label:
                 id: cool_down_label
@@ -63,7 +63,7 @@ Builder.load_string(
                 size_hint: (None, None)
                 height: 251
                 width: 1.0*app.width
-                pos: self.parent.pos
+                pos:self.parent.pos
 
 
                 BoxLayout: 

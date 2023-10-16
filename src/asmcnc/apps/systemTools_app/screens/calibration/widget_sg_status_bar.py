@@ -52,7 +52,7 @@ Builder.load_string(
         spacing: 0.0075*app.width
         orientation: "horizontal"
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
 
 
         Image:

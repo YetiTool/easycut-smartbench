@@ -39,7 +39,7 @@ Builder.load_string(
                     rgba: hex('#E2E2E2FF')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             BoxLayout:
                 padding:[dp(0.01875*app.width), dp(0.03125*app.height), dp(0), dp(0.03125*app.height)]
@@ -70,7 +70,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
                                 TextInput:
                                     id: line_input
@@ -99,7 +99,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         source: "./asmcnc/skavaUI/img/arrow_up.png"
                                         center_x: self.parent.center_x
@@ -119,7 +119,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         source: "./asmcnc/skavaUI/img/arrow_down.png"
                                         center_x: self.parent.center_x
@@ -157,7 +157,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         FloatLayout:
                             Label:
@@ -168,7 +168,7 @@ Builder.load_string(
                                 valign: "top"
                                 text_size: self.size[0] * 2, self.size[1]
                                 size: self.parent.size
-                                pos: self.parent.pos[0] + self.size[0]/2, self.parent.pos[1]
+                                pos:self.parent.pos[0] + self.size[0]/2, self.parent.pos[0.00125*app.width]
                                 markup: True
 
                                 canvas.before:
@@ -176,7 +176,7 @@ Builder.load_string(
                                         rgba: hex('#A7D5FAFF')
                                     Rectangle:
                                         size: self.parent.parent.size[0], dp(20)
-                                        pos: self.parent.parent.pos[0], self.center_y - dp(3)
+                                        pos:self.parent.parent.pos[0], self.center_y - dp(0.00375*app.width)
 
                         Label:
                             id: stopped_on_label
@@ -187,7 +187,7 @@ Builder.load_string(
                             valign: "top"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -198,7 +198,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label:
                             id: pos_label_header
@@ -244,7 +244,7 @@ Builder.load_string(
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                                     center_x: self.parent.center_x
@@ -258,7 +258,7 @@ Builder.load_string(
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
-                            pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
+                            pos:self.parent.pos[0], self.parent.pos[0.00125*app.width] + dp(0.00125*app.width)
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                                 center_x: self.parent.center_x
@@ -280,7 +280,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                     BoxLayout:
 
@@ -295,7 +295,7 @@ Builder.load_string(
                             width: dp(0.11*app.width)
                             BoxLayout:
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
                                     center_x: self.parent.center_x
@@ -311,7 +311,7 @@ Builder.load_string(
 
     FloatLayout:
         BoxLayout:
-            pos: gcode_container.pos
+            pos:gcode_container.pos
             size: gcode_container.size
             padding: gcode_container.padding
             size_hint: None, None
@@ -324,7 +324,7 @@ Builder.load_string(
                 valign: "top"
                 text_size: self.size
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 
 """
     )

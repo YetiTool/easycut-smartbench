@@ -33,11 +33,11 @@ Builder.load_string(
             rgba: hex('#e5e5e5ff')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     GridLayout:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding:[dp(0.0104125*app.width), dp(0.125*app.height)]
         spacing: [0.0104125*app.width,0.125*app.height]
         cols: 5

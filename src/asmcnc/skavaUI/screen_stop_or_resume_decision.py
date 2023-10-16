@@ -24,7 +24,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
-            pos: self.pos         
+            pos:self.pos
 
     BoxLayout: 
         spacing: 0
@@ -73,7 +73,7 @@ Builder.load_string(
                 on_press: root.cancel_job()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/cancel_from_pause.png"
                         size: self.parent.width, self.parent.height
@@ -86,7 +86,7 @@ Builder.load_string(
                 on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/help_btn_yellow_round.png"
                         size: self.parent.width, self.parent.height
@@ -99,7 +99,7 @@ Builder.load_string(
                 on_press: root.resume_job()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/resume_from_pause.png"
                         size: self.parent.width, self.parent.height

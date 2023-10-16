@@ -18,7 +18,7 @@ Builder.load_string(
             rgba: hex('#FFFFFF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
              
     BoxLayout:
         orientation: 'horizontal'
@@ -73,7 +73,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.00625*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         
                         Label:
                             font_size: str(0.0325*app.width) + 'sp'

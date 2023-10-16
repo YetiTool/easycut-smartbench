@@ -43,7 +43,7 @@ Builder.load_string(
             orientation: 'vertical'
             GridLayout:
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 cols: 3
                 rows: 6
                 cols_minimum: {0: 250, 1: 250, 2: 300}
@@ -341,7 +341,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
-            pos: self.pos
+            pos:self.pos
 """
     )
 STATUS_UPDATE_DELAY = 0.4

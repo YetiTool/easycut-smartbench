@@ -18,7 +18,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas:
             Rectangle: 
-                pos: self.pos
+                pos:self.pos
                 size: self.size
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 

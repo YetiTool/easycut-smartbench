@@ -17,7 +17,7 @@ Builder.load_string(
     BoxLayout:
         orientation: 'horizontal'
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding:[0.0125*app.width,0.0166666666667*app.height,0.0125*app.width,0.0166666666667*app.height]
 
         
@@ -51,7 +51,7 @@ Builder.load_string(
 
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: yp_toggle_img
                             center_x: self.parent.center_x
@@ -70,7 +70,7 @@ Builder.load_string(
                     Color:
                         rgba: hex('#ccccccff')
                     Rectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
 
         BoxLayout:
@@ -109,7 +109,7 @@ Builder.load_string(
                 on_press: root.open_yp_settings()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/core_UI/job_go/img/yp_profiles_cog.png"
                         center_x: self.parent.center_x

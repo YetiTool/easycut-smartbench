@@ -41,7 +41,7 @@ Builder.load_string(
         Color:
             rgba: hex('#e5e5e5ff')
         Rectangle:
-            pos: self.pos
+            pos:self.pos
             size: self.size
 
 
@@ -58,7 +58,7 @@ Builder.load_string(
         Color:
             rgba: hex('ccccccff')
         RoundedRectangle:
-            pos: self.pos
+            pos:self.pos
             size: self.size
             radius: [dp(5), dp(5)]
 
@@ -69,7 +69,7 @@ Builder.load_string(
         Color:
             rgba: hex('#2196f3ff')
         RoundedRectangle:
-            pos: self.pos
+            pos:self.pos
             size: self.size
             radius: [dp(10), dp(10)]
 
@@ -81,7 +81,7 @@ Builder.load_string(
     BoxLayout:
         padding: 0
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         Image:
             source: "./asmcnc/core_UI/job_go/img/health_check_button_big.png"
             center_x: self.parent.center_x

@@ -17,7 +17,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas:
             Rectangle: 
-                pos: self.pos
+                pos:self.pos
                 size: self.size
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
@@ -61,14 +61,14 @@ Builder.load_string(
                 padding:(0.125*app.width,0,0.125*app.width,0.0625*app.height)
                 spacing: 0
                 orientation: 'horizontal'
-                pos: self.parent.pos                
+                pos:self.parent.pos
                 
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
                     padding:(0.02*app.width,0,0.02*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # Repeat
                     Button:
@@ -78,12 +78,12 @@ Builder.load_string(
                         width: dp(0.21*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.repeat()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/button_repeat.png"
                                 center_x: self.parent.center_x
@@ -95,7 +95,7 @@ Builder.load_string(
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
                     padding:(0.02*app.width,0,0.02*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # New
                     Button:
@@ -105,12 +105,12 @@ Builder.load_string(
                         width: dp(0.21*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.new_cut()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/button_new.png"
                                 center_x: self.parent.center_x
@@ -122,7 +122,7 @@ Builder.load_string(
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
                     padding:(0.02*app.width,0,0.02*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # Next
                     Button:
@@ -132,12 +132,12 @@ Builder.load_string(
                         width: dp(0.21*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.exit()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/button_exit.png"
                                 center_x: self.parent.center_x
@@ -151,7 +151,7 @@ Builder.load_string(
                 padding:(0.925*app.width,0,0,0.0416666666667*app.height)
                 spacing: 0
                 orientation: 'horizontal'
-                pos: self.parent.pos
+                pos:self.parent.pos
 """
     )
 

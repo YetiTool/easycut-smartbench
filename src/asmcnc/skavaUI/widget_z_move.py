@@ -21,7 +21,7 @@ Builder.load_string(
     BoxLayout:
 
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
         padding: 0.025*app.width
         spacing: 0.0125*app.width
         orientation: 'horizontal'
@@ -46,7 +46,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_set_0.png"
                         center_x: self.parent.center_x
@@ -74,7 +74,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
                         center_x: self.parent.center_x
@@ -95,7 +95,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
@@ -116,7 +116,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_probe.png"
                         center_x: self.parent.center_x
@@ -136,7 +136,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_goto_0.png"
                         center_x: self.parent.center_x

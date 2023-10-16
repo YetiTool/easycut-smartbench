@@ -19,7 +19,7 @@ Builder.load_string(
             rgba: hex('#DCEDC8')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
              
     BoxLayout:
         orientation: 'horizontal'

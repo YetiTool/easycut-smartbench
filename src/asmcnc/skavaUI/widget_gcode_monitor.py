@@ -23,7 +23,7 @@ Builder.load_string(
             rgba: 0,0,0,1
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
     
     Label:
         font_size: str(0.01875 * app.width) + 'sp'
@@ -41,7 +41,7 @@ Builder.load_string(
             rgba: 0,0,0,1
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
     
     Label:
         size_hint_y: None
@@ -70,7 +70,7 @@ Builder.load_string(
     
     BoxLayout: 
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: "vertical"
         padding: 0.00625*app.width
         spacing: 0.0104166666667*app.height
@@ -80,11 +80,11 @@ Builder.load_string(
                 rgba: 0,0,0,0.2
             Rectangle:
                 size: self.size
-                pos: self.pos            
+                pos:self.pos
 
         BoxLayout:      
             size: self.parent.size
-            pos: self.parent.pos      
+            pos:self.parent.pos
             spacing: 0.00625*app.width
             orientation: "horizontal"    
             
@@ -196,7 +196,7 @@ Builder.load_string(
                     rgba: 0,0,0,0.2
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
                     
                       
             Label:

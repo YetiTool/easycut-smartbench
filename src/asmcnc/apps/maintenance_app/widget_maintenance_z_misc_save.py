@@ -15,7 +15,7 @@ Builder.load_string(
 <ZMiscSaveWidget>
 
     BoxLayout:
-        pos: self.parent.pos
+        pos:self.parent.pos
         size: self.parent.size
         orientation: 'vertical'
 
@@ -27,7 +27,7 @@ Builder.load_string(
 	            background_color: [0,0,0,0]
 	            BoxLayout:
                     size: self.parent.size
-	                pos: self.parent.pos
+	                pos:self.parent.pos
 	                Image:
 	                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
 	                    center_x: self.parent.center_x
@@ -44,7 +44,7 @@ Builder.load_string(
                 background_color: [0,0,0,0]
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: save_image
                         source: "./asmcnc/apps/maintenance_app/img/save_button_132.png"

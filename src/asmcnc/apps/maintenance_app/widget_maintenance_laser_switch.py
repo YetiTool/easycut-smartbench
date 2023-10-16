@@ -20,7 +20,7 @@ Builder.load_string(
         size_hint: (None,None)
         height: dp(0.145833333333*app.height)
         width: dp(0.1875*app.width)
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding:(dp(0), dp(0), dp(0), dp(0))
         
         GridLayout:
@@ -33,7 +33,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size_hint: (None, None)
-                pos: self.parent.pos
+                pos:self.parent.pos
                 height: dp(0.145833333333*app.height)
                 width: dp(0.10625*app.width)
                 Switch:
@@ -41,11 +41,11 @@ Builder.load_string(
                     background_color: [0,0,0,0]
                     center_x: self.parent.center_x
                     y: self.parent.y
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     on_active: root.toggle_laser()
             BoxLayout: 
                 size_hint: (None, None)
-                pos: self.parent.pos
+                pos:self.parent.pos
                 height: dp(0.145833333333*app.height)
                 width: dp(0.06875*app.width)
                 padding: dp(0.00625*app.width)

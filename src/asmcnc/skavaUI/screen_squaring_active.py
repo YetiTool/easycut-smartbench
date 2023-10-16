@@ -23,7 +23,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
-            pos: self.pos         
+            pos:self.pos
 
     BoxLayout: 
         spacing: 0
@@ -47,7 +47,7 @@ Builder.load_string(
                 on_press: root.windows_cheat_to_procede()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/squaring_icon_big.png"
                         size: self.parent.width, self.parent.height
@@ -71,7 +71,7 @@ Builder.load_string(
                 on_press: root.stop_button_press()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/stop_big.png"
                         size: self.parent.width, self.parent.height

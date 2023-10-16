@@ -23,7 +23,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         spacing: 0
@@ -37,7 +37,7 @@ Builder.load_string(
             padding:(0.025*app.width,0,0.025*app.width,0)
             spacing: 0.85*app.width
             orientation: 'horizontal'
-            pos: self.parent.pos
+            pos:self.parent.pos
 
             Label:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -54,7 +54,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/cancel_btn_decision_context.png"
                         center_x: self.parent.center_x
@@ -121,7 +121,7 @@ Builder.load_string(
                 on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/help_btn_orange_round.png"
                         size: self.parent.width, self.parent.height

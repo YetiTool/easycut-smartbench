@@ -19,7 +19,7 @@ Builder.load_string(
                     rgba: hex('#1976d2')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             Label:
                 id: title_label
@@ -38,7 +38,7 @@ Builder.load_string(
                     rgba: hex('e5e5e5ff')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             Label:
                 id: already_upgraded_label
@@ -64,7 +64,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     color: hex('#f9f9f9ff')
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     text_size: self.size
                     halign: "center"
                     valign: "middle"

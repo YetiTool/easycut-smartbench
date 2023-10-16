@@ -27,7 +27,7 @@ Builder.load_string(
                     rgba: hex('#E5E5E5FF')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
 """
     )

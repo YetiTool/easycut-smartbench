@@ -22,7 +22,7 @@ Builder.load_string(
             rgba: 0,0,0,1
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
     
     Label:
         size_hint_y: None
@@ -41,7 +41,7 @@ Builder.load_string(
             rgba: 0,0,0,1
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
     
     Label:
         size_hint_y: None
@@ -65,7 +65,7 @@ Builder.load_string(
                 rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
             Rectangle: 
                 size: self.size
-                pos: self.pos
+                pos:self.pos
 
         BoxLayout:
             padding: 0.0125*app.width
@@ -78,7 +78,7 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
@@ -110,12 +110,12 @@ Builder.load_string(
                         Color:
                             rgba: [1,1,1,1]
                         RoundedRectangle:
-                            pos: self.pos
+                            pos:self.pos
                             size: self.size
 
                     GridLayout: 
                         size: self.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         cols: 4
                         rows: 4
 
@@ -195,7 +195,7 @@ Builder.load_string(
                         Color:
                             rgba: [1,1,1,1]
                         RoundedRectangle:
-                            pos: self.pos
+                            pos:self.pos
                             size: self.size
 
                     TextInput:                      
@@ -221,7 +221,7 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
 
                 BoxLayout:
@@ -243,12 +243,12 @@ Builder.load_string(
                             width: dp(0.11*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                                     center_x: self.parent.center_x
@@ -287,12 +287,12 @@ Builder.load_string(
                             width: dp(0.14*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
                                     center_x: self.parent.center_x

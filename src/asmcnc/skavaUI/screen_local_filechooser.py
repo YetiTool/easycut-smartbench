@@ -53,13 +53,13 @@ Builder.load_string(
         padding: 0
         spacing: 0.0208333333333*app.height
         size: root.size
-        pos: root.pos
+        pos:root.pos
         orientation: "vertical"
 
         BoxLayout:
             orientation: 'vertical'
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             spacing: 0
 
             Label:
@@ -70,7 +70,7 @@ Builder.load_string(
                         rgba: hex('#333333FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
                 size_hint_y: 0.7
                 markup: True
                 font_size: str(0.0225*app.width) + 'sp'   
@@ -86,7 +86,7 @@ Builder.load_string(
                         rgba: hex('#333333FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
                 id: file_selected_label
                 size_hint_y: 1
                 text: root.filename_selected_label_text
@@ -142,7 +142,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_view
                         source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
@@ -160,7 +160,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_sort
                         source: "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
@@ -183,7 +183,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_usb
                         source: "./asmcnc/skavaUI/img/file_select_usb_disabled.png"
@@ -205,7 +205,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_refresh
                         source: "./asmcnc/skavaUI/img/file_select_refresh.png"
@@ -227,7 +227,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_delete
                         source: "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
@@ -249,7 +249,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_delete_all
                         source: "./asmcnc/skavaUI/img/file_select_delete_all.png"
@@ -270,7 +270,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_cancel
                         source: "./asmcnc/skavaUI/img/file_select_cancel.png"
@@ -291,7 +291,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_select
                         source: "./asmcnc/skavaUI/img/file_select_select_disabled.png"

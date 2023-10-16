@@ -34,30 +34,30 @@ Builder.load_string(
             rgba: [1, 1, 1, 1]
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     FloatLayout:
         size_hint: (None, None)
         height: dp(351)
         width: dp(0.62*app.width)
-        pos: (dp(148), dp(80))
+        pos:(dp(0.185*app.width), dp(0.1*app.width))
         Image:
             id: x_beam
             source: "./asmcnc/skavaUI/img/door_x_beam.png"
             size: self.parent.width, self.parent.height
-            pos: self.parent.pos
+            pos:self.parent.pos
             allow_stretch: True
 
     FloatLayout:
         size_hint: (None, None)
         height: dp(55)
         width: dp(0.06875*app.width)
-        pos: (dp(270), dp(240))
+        pos:(dp(0.3375*app.width), dp(0.3*app.width))
         Image:
             id: stop_img
             source: "./asmcnc/skavaUI/img/stop.png"
             size: self.parent.width, self.parent.height
-            pos: self.parent.pos
+            pos:self.parent.pos
             allow_stretch: True
             opacity: 0
 
@@ -87,7 +87,7 @@ Builder.load_string(
                 width: dp(0.9875*app.width)
                 text_size: self.size
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 
         BoxLayout: 
             padding:[0.0125*app.width,0,0.0125*app.width,0]
@@ -127,14 +127,14 @@ Builder.load_string(
                 height: dp(50)
                 width: dp(1.0*app.width)
                 orientation: 'vertical'
-                pos: (dp(0),dp(130))
+                pos:(dp(0),dp(0.270833333333*app.height))
 
                 canvas:
                     Color: 
                         rgba: [1, 1, 1, 0]
                     Rectangle: 
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 Label:
                     id: spindle_raise_label
@@ -180,7 +180,7 @@ Builder.load_string(
                 disabled: True
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/cancel_from_pause.png"
                         size: self.parent.width, self.parent.height
@@ -194,7 +194,7 @@ Builder.load_string(
                 disabled: True
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/resume_from_pause.png"
                         size: self.parent.width, self.parent.height

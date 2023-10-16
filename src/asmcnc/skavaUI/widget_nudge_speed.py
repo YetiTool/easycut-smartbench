@@ -10,7 +10,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: 'vertical'
         spacing: 0.0208333333333*app.height
         padding: 0.0125*app.width
@@ -22,7 +22,7 @@ Builder.load_string(
             background_color: 1, 1, 1, 0
             BoxLayout:
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     id: speed_image
                     source: "./asmcnc/skavaUI/img/slow.png"
@@ -42,7 +42,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.00625*app.width
                 size: self.parent.size
-                pos: self.parent.pos      
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/skavaUI/img/set_jobstart.png"
                     center_x: self.parent.center_x

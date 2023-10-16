@@ -25,7 +25,7 @@ Builder.load_string(
         size_hint: (None, None)
         height: dp(0.520833333333*app.height)
         width: dp(0.35*app.width)
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: 'vertical'
         padding:[0.016625*app.width,0.0208333333333*app.height,0.016625*app.width,0.0208333333333*app.height]
         spacing: 0.0208333333333*app.height
@@ -85,7 +85,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: restore_button
@@ -95,10 +95,10 @@ Builder.load_string(
                     width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: restore_image
                             source: "./asmcnc/apps/maintenance_app/img/restore.png"
@@ -109,7 +109,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: reset_120
@@ -119,10 +119,10 @@ Builder.load_string(
                     width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos      
+                        pos:self.parent.pos
                         Image:
                             id: reset_0_image
                             source: "./asmcnc/apps/maintenance_app/img/reset_120.png"

@@ -37,12 +37,12 @@ Builder.load_string(
             rgba: hex('#0d47a1FF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         orientation: 'vertical'
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding: 0
         spacing: 0
 
@@ -79,7 +79,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_pro.png"
@@ -114,7 +114,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_app_shapecutter.png"
@@ -152,7 +152,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_app_wifi.png"
@@ -185,7 +185,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_app_calibrate.png"
@@ -224,7 +224,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_update.png"
@@ -257,7 +257,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/apps/maintenance_app/img/lobby_maintenance.png"
@@ -296,7 +296,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/apps/upgrade_app/img/lobby_upgrade.png"
@@ -329,7 +329,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 id: image_select
                                 source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
@@ -347,7 +347,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 6
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
           
             Image:
                 source: "./asmcnc/skavaUI/img/lobby_separator.png"
@@ -375,7 +375,7 @@ Builder.load_string(
                         self.background_color = hex('#FFFFFF00')
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_cancel
                             source: "./asmcnc/skavaUI/img/lobby_scrollleft.png"
@@ -396,7 +396,7 @@ Builder.load_string(
 
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_select
                             source: "./asmcnc/skavaUI/img/shutdown.png"
@@ -422,7 +422,7 @@ Builder.load_string(
                         self.background_color = hex('#FFFFFF00')
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_select
                             source: "./asmcnc/skavaUI/img/lobby_scrollright.png"
@@ -443,7 +443,7 @@ Builder.load_string(
                     on_press: root.help_popup()
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_select
                             source: "./asmcnc/skavaUI/img/lobby_help.png"

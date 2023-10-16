@@ -98,7 +98,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         orientation: 'vertical'
@@ -172,7 +172,7 @@ Builder.load_string(
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
             
             BoxLayout:
                 size_hint_x: 1
@@ -202,7 +202,7 @@ Builder.load_string(
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         height: self.parent.height
                         on_press: root.load_file_now()
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
@@ -215,7 +215,7 @@ Builder.load_string(
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         height: self.parent.height
                         on_press: root.check_gcode()
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"

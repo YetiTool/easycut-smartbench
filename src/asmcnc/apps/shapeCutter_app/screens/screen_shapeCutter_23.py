@@ -52,7 +52,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/prepare_tab_blue.png"
                         size: self.parent.size
@@ -66,7 +66,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/load_tab_blue.png"
                         size: self.parent.size
@@ -80,7 +80,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/define_job_tab_grey.png"
                         center_x: self.parent.center_x
@@ -96,7 +96,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/position_tab_blue.png"
                         center_x: self.parent.center_x
@@ -112,7 +112,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/check_tab_blue.png"
                         center_x: self.parent.center_x
@@ -128,7 +128,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                         center_x: self.parent.center_x
@@ -143,7 +143,7 @@ Builder.load_string(
             width: dp(1.0*app.width)
             canvas:
                 Rectangle: 
-                    pos: self.pos
+                    pos:self.pos
                     size: self.size
                     source: "./asmcnc/apps/shapeCutter_app/img/background.png"
             
@@ -166,7 +166,7 @@ Builder.load_string(
                         width: dp(0.05*app.width)
                         canvas:
                             Rectangle: 
-                                pos: self.pos
+                                pos:self.pos
                                 size: self.size
                                 source: "./asmcnc/apps/shapeCutter_app/img/number_box.png"
                         Label:
@@ -193,7 +193,7 @@ Builder.load_string(
                             valign: "bottom"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                         
                     
                 BoxLayout: #Body
@@ -231,7 +231,7 @@ Builder.load_string(
                                 height: dp(0.53125*app.height)
                                 padding:(0,0,0,0.104166666667*app.height)
                                 spacing: 0.0416666666667*app.height
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 
                                 # BL horizontal
                                     # Toggle button
@@ -250,9 +250,9 @@ Builder.load_string(
                                         width: dp(0.10375*app.width)
                                         background_color: hex('#F4433600')
                                         center: self.parent.center
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                         on_active: root.toggle_units()
-                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        active_norm_pos:max(0., min(0.00125*app.width., (int(self.active) + self.touch_distance / sp(0.05125*app.width))))
                                         canvas.after:
                                             Color:
                                                 rgb: 1,1,1
@@ -260,14 +260,14 @@ Builder.load_string(
                                                 source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
                                                 # make or download your background jpg
                                                 size: sp(83), sp(32)
-                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                                pos:int(self.center_x - sp(0.05125*app.width)), int(self.center_y - sp(0.02*app.width))
                                          
                                             Rectangle:
                                                 #id: switch_rectangle
                                                 source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
                                                 # make or download your slider jpg
                                                 size: sp(43), sp(32)
-                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
+                                                pos:int(self.center_x - sp(0.0854166666667*app.height) + self.active_norm_pos * sp(0.0854166666667*app.height)), int(self.center_y - sp(0.0333333333333*app.height))
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
@@ -285,7 +285,7 @@ Builder.load_string(
                                         valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
@@ -317,7 +317,7 @@ Builder.load_string(
                                             valign: "middle"
                                             text_size: self.size
                                             size: self.parent.size
-                                            pos: self.parent.pos                      
+                                            pos:self.parent.pos
                                 
                                 BoxLayout: #dimension 2
                                     size_hint: (None,None)
@@ -335,7 +335,7 @@ Builder.load_string(
                                         valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
@@ -367,7 +367,7 @@ Builder.load_string(
                                             valign: "middle"
                                             text_size: self.size
                                             size: self.parent.size
-                                            pos: self.parent.pos
+                                            pos:self.parent.pos
                                 BoxLayout: #dimension 3
                                     size_hint: (None,None)
                                     height: dp(0.0729166666667*app.height)
@@ -384,7 +384,7 @@ Builder.load_string(
                                         valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
@@ -416,7 +416,7 @@ Builder.load_string(
                                             valign: "middle"
                                             text_size: self.size
                                             size: self.parent.size
-                                            pos: self.parent.pos
+                                            pos:self.parent.pos
 
                                 BoxLayout: # reminder
                                     size_hint: (None,None)
@@ -434,7 +434,7 @@ Builder.load_string(
                                         valign: "top"
                                         text_size: self.size
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
 
                     BoxLayout: #action box
                         size_hint: (None,None)
@@ -461,7 +461,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                                         center_x: self.parent.center_x
@@ -479,7 +479,7 @@ Builder.load_string(
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
                                     center_x: self.parent.center_x
@@ -496,7 +496,7 @@ Builder.load_string(
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
                                     center_x: self.parent.center_x

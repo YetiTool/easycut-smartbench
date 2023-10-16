@@ -60,7 +60,7 @@ Builder.load_string(
             Color:
                 rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
             Rectangle:
-                pos: self.pos
+                pos:self.pos
                 size: self.size
         
         BoxLayout:
@@ -83,7 +83,7 @@ Builder.load_string(
                     Color:
                         rgba: root.status_color
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 BoxLayout: 
                     size_hint: (None, None)
@@ -111,7 +111,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
 
                     Label:
                         id: ip_status_label
@@ -122,7 +122,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         text: ''
             # Text Entry Area
             BoxLayout: 
@@ -135,7 +135,7 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 # SSID
                 BoxLayout: 
@@ -165,7 +165,7 @@ Builder.load_string(
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
 
                         BoxLayout: 
                             size_hint: (None, None) 
@@ -180,12 +180,12 @@ Builder.load_string(
                                 width: dp(0.03625*app.width)
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 on_press: root.refresh_available_networks()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
                                         center_x: self.parent.center_x
@@ -211,7 +211,7 @@ Builder.load_string(
                             
                             canvas:
                                 Rectangle:
-                                    pos: self.pos
+                                    pos:self.pos
                                     size: self.size
                                     source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
     
@@ -285,7 +285,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -321,7 +321,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -331,7 +331,7 @@ Builder.load_string(
                         orientation: 'horizontal'
                         canvas:
                             Rectangle:
-                                pos: self.pos
+                                pos:self.pos
                                 size: self.size
                                 source: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
                         Spinner:
@@ -366,12 +366,12 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                         
                 ScrollView:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
                     do_scroll_x: True
                     do_scroll_y: True
                     scroll_type: ['content']
@@ -391,7 +391,7 @@ Builder.load_string(
                     Color:
                         rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 BoxLayout: 
                     size_hint: (None, None)
@@ -402,7 +402,7 @@ Builder.load_string(
                         Color:
                             rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
                         RoundedRectangle:
-                            pos: self.pos
+                            pos:self.pos
                             size: self.size
 
                     Button:
@@ -419,7 +419,7 @@ Builder.load_string(
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         opacity: 1 if self.state == 'normal' else .5
 
                 BoxLayout: 
@@ -434,12 +434,12 @@ Builder.load_string(
                         width: dp(0.14*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.quit_to_lobby()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/wifi_app/img/quit.png"
                                 center_x: self.parent.center_x

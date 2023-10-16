@@ -18,7 +18,7 @@ Builder.load_string(
     BoxLayout:
         orientation: 'horizontal'
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding:[0.0125*app.width,0.0166666666667*app.height,0.0125*app.width,0.0166666666667*app.height]
 
         BoxLayout:
@@ -64,7 +64,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: health_check_button_img
                         # source: "./asmcnc/core_UI/job_go/img/spindle_check_silver.png"

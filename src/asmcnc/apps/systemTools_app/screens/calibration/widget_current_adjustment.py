@@ -12,7 +12,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
         
         orientation: "vertical"
         
@@ -23,7 +23,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0025*app.width
                 size: self.parent.size
-                pos: self.parent.pos      
+                pos:self.parent.pos
                 Image:
                     id: speed_image
                     source: "./asmcnc/skavaUI/img/feed_speed_up.png"
@@ -50,7 +50,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0025*app.width
                 size: self.parent.size
-                pos: self.parent.pos      
+                pos:self.parent.pos
                 Image:
                     id: speed_image
                     source: "./asmcnc/skavaUI/img/feed_speed_down.png"

@@ -40,7 +40,7 @@ Builder.load_string(
                 rgba: hex('#E5E5E5FF')
             Rectangle:
                 size: self.size
-                pos: self.pos
+                pos:self.pos
         BoxLayout:
             size_hint_y: 0.92
             padding: 0
@@ -49,7 +49,7 @@ Builder.load_string(
 
             GridLayout: 
                 height: self.parent.height
-                pos: self.parent.pos
+                pos:self.parent.pos
                 rows: 6
                 cols: 1
                 spacing: 0
@@ -110,7 +110,7 @@ Builder.load_string(
                 size_hint_x: 0.33
 
                 GridLayout: 
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     size_hint_y: 0.33
                     rows: 2
                     cols: 2
@@ -164,7 +164,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container

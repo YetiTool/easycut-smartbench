@@ -41,7 +41,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         orientation: 'vertical'
@@ -49,21 +49,21 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
-            pos: self.pos  
+            pos:self.pos
                 
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
             padding:[dp(0.05*app.width), dp(0.0833333333333*app.height), dp(0.05*app.width), dp(0.0416666666667*app.height)]
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
       
             BoxLayout:
                 size_hint_y: .7
     
                 orientation: 'vertical'
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
             
                 Label:
                     id: header_label

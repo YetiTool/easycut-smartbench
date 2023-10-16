@@ -24,7 +24,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
-            pos: self.pos         
+            pos:self.pos
 
     BoxLayout: 
         spacing: 0
@@ -67,7 +67,7 @@ Builder.load_string(
             background_color: hex('#FFFFFF00')
             BoxLayout:
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
                     size: self.parent.width, self.parent.height

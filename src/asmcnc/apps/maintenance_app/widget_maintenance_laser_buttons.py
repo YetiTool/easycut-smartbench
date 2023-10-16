@@ -25,7 +25,7 @@ Builder.load_string(
     BoxLayout:
     
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: 'vertical'
         padding: 0.0125*app.width
         spacing: 0.0208333333333*app.height
@@ -39,7 +39,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size: self.parent.size
-                pos: self.parent.pos 
+                pos:self.parent.pos
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: vacuum_toggle
@@ -49,11 +49,11 @@ Builder.load_string(
                     width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     BoxLayout:
                         padding: 0.0125*app.width
                         size: self.parent.size
-                        pos: self.parent.pos      
+                        pos:self.parent.pos
                         Image:
                             id: vacuum_image
                             source: "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
@@ -64,7 +64,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size: self.parent.size
-                pos: self.parent.pos 
+                pos:self.parent.pos
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: spindle_toggle
@@ -74,11 +74,11 @@ Builder.load_string(
                     width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     BoxLayout:
                         padding: 0.0125*app.width
                         size: self.parent.size
-                        pos: self.parent.pos      
+                        pos:self.parent.pos
                         Image:
                             id: spindle_image
                             source: "./asmcnc/apps/maintenance_app/img/spindle_off_120.png"
@@ -89,7 +89,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size: self.parent.size
-                pos: self.parent.pos 
+                pos:self.parent.pos
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: reset_button
@@ -98,12 +98,12 @@ Builder.load_string(
                     width: dp(0.165*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     on_press: root.reset_button_press()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/maintenance_app/img/reset_button_132.png"
                             center_x: self.parent.center_x
@@ -113,7 +113,7 @@ Builder.load_string(
 
             BoxLayout: 
 				size: self.parent.size
-                pos: self.parent.pos 
+                pos:self.parent.pos
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: save_button
@@ -122,13 +122,13 @@ Builder.load_string(
                     width: dp(0.165*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     on_press: root.save_button_press()
                     disabled: True
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: save_button_image
                             source: "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"

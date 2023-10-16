@@ -21,7 +21,7 @@ Builder.load_string(
 
         GridLayout:
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             cols: 1
             rows: 3
 

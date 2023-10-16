@@ -44,7 +44,7 @@ Builder.load_string(
             Color:
                 rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
             Rectangle:
-                pos: self.pos
+                pos:self.pos
                 size: self.size
         
         # Header box    
@@ -71,7 +71,7 @@ Builder.load_string(
                         Color:
                             rgba: [1,1,1,1]
                         RoundedRectangle:
-                            pos: self.pos
+                            pos:self.pos
                             size: self.size
 
                     # Version labels:
@@ -129,12 +129,12 @@ Builder.load_string(
                                 width: dp(0.03625*app.width)
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 on_press: root.refresh_latest_software_version()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
                                         center_x: self.parent.center_x
@@ -151,7 +151,7 @@ Builder.load_string(
                             valign: "center"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
                                 
             # Exit button
@@ -166,12 +166,12 @@ Builder.load_string(
                     width: dp(0.14*app.width)
                     background_color: hex('#F4433600')
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     on_press: root.quit_to_lobby()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/wifi_app/img/quit.png"
                             center_x: self.parent.center_x
@@ -199,7 +199,7 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                         
                 BoxLayout: 
@@ -216,7 +216,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos            
+                        pos:self.parent.pos
                     
                 BoxLayout: 
                     size_hint: (None, None)
@@ -232,7 +232,7 @@ Builder.load_string(
                         valign: "top"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
 
                 BoxLayout: 
                     size_hint: (None, None)
@@ -269,7 +269,7 @@ Builder.load_string(
                             color: hex('#f9f9f9ff')
                             markup: True
                             center: self.parent.center
-                            pos: self.parent.pos           
+                            pos:self.parent.pos
                         
             BoxLayout: 
                 size_hint: (None, None)
@@ -282,7 +282,7 @@ Builder.load_string(
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
 
                 BoxLayout: 
@@ -298,7 +298,7 @@ Builder.load_string(
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos              
+                        pos:self.parent.pos
                     
                 BoxLayout: 
                     size_hint: (None, None)
@@ -313,7 +313,7 @@ Builder.load_string(
                         valign: "top"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
 
                 BoxLayout: 
                     size_hint: (None, None)
@@ -351,7 +351,7 @@ Builder.load_string(
                             color: hex('#f9f9f9ff')
                             markup: True
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
 """
     )

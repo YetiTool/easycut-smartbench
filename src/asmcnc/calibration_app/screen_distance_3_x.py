@@ -31,7 +31,7 @@ Builder.load_string(
             rgba: hex('#FFFFFF')
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         orientation: 'vertical'
@@ -60,7 +60,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
 
                     Label:
                         font_size: str(0.025*app.width) + 'sp'
@@ -83,7 +83,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
 
                     Label:
                         #size_hint_y: 1
@@ -107,7 +107,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
 
                     Label:
                         font_size: str(0.025*app.width) + 'sp'
@@ -165,7 +165,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0.00625*app.width
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             
                             Label:
                                 font_size: str(0.025*app.width) + 'sp'
@@ -188,7 +188,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0.00625*app.width
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             
                             Label:
                                 font_size: str(0.025*app.width) + 'sp'
@@ -262,7 +262,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0.00625*app.width
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
                             Label:
                                 id: set_move_label

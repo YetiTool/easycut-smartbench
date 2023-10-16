@@ -99,7 +99,7 @@ Builder.load_string(
                                 rgba: hex('#566573')
                             Rectangle: 
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
@@ -196,7 +196,7 @@ Builder.load_string(
                                 rgba: hex('#566573')
                             Rectangle: 
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
@@ -288,7 +288,7 @@ Builder.load_string(
                                 rgba: hex('#566573')
                             Rectangle: 
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
@@ -362,7 +362,7 @@ Builder.load_string(
                                 rgba: hex('#566573')
                             Rectangle: 
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
@@ -432,7 +432,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
-            pos: self.pos
+            pos:self.pos
 """
     )
 

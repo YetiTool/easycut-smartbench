@@ -24,7 +24,7 @@ Builder.load_string(
             rgba: hex('#FFFFFF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
              
     BoxLayout:
         orientation: 'vertical'
@@ -52,7 +52,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     Label:
                         font_size: str(0.025*app.width) + 'sp'
@@ -74,7 +74,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     Label:
                         font_size: str(0.025*app.width) + 'sp'
@@ -97,7 +97,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.00625*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     Label:
                         font_size: str(0.025*app.width) + 'sp'
@@ -151,7 +151,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0.00625*app.width
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             
                             Label:
                                 id: improve_button_label
@@ -173,7 +173,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0.00625*app.width
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             
                             Label:
                                 id: continue_button_label

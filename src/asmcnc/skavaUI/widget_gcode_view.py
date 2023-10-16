@@ -20,7 +20,7 @@ Builder.load_string(
     gCodePreview:gCodePreview
     StencilBox:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         Scatter:
 #             canvas.after:
 #                 Color:

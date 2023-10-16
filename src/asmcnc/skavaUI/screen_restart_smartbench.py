@@ -18,7 +18,7 @@ Builder.load_string(
             rgba: hex('#e5e5e5')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     Label:
         id: restart_label
@@ -45,7 +45,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                     center_x: self.parent.center_x

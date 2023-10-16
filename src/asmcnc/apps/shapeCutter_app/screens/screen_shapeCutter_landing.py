@@ -19,7 +19,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas:
             Rectangle: 
-                pos: self.pos
+                pos:self.pos
                 size: self.size
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
@@ -63,14 +63,14 @@ Builder.load_string(
                 padding:(0.225*app.width,0,0.225*app.width,0.0625*app.height)
                 spacing: 0
                 orientation: 'horizontal'
-                pos: self.parent.pos                
+                pos:self.parent.pos
                 
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(0.275*app.width)
                     height: dp(0.354166666667*app.height)
                     padding:(0.03125*app.width,0,0.03375*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # Circle button
                     Button:
@@ -80,12 +80,12 @@ Builder.load_string(
                         width: dp(0.21*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.cut_circle()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/cut_circle.png"
                                 center_x: self.parent.center_x
@@ -97,7 +97,7 @@ Builder.load_string(
                     width: dp(0.275*app.width)
                     height: dp(0.354166666667*app.height)
                     padding:(0.03375*app.width,0,0.03125*app.width,0)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     
                     # rectangle button
                     Button:
@@ -107,12 +107,12 @@ Builder.load_string(
                         width: dp(0.21*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.cut_rectangle()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/cut_rectangle.png"
                                 center_x: self.parent.center_x
@@ -127,7 +127,7 @@ Builder.load_string(
                 padding:(0.025*app.width,0,0,0.0416666666667*app.height)
                 spacing: 0.85*app.width
                 orientation: 'horizontal'
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: info_button
@@ -140,7 +140,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                             center_x: self.parent.center_x
@@ -159,7 +159,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/shapeCutter_app/img/exit_icon.png"
                             center_x: self.parent.center_x

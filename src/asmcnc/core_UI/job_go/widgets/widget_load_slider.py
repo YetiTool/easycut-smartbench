@@ -12,7 +12,7 @@ Builder.load_string(
         Color:
             rgba: hex('#ccccccff')
         RoundedRectangle:
-            pos: self.pos
+            pos:self.pos
             size: self.size
             radius: [dp(10), dp(10)]
 
@@ -26,7 +26,7 @@ Builder.load_string(
     BoxLayout:
         orientation: 'vertical'
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         padding: 0
         Label:
             id: load_label

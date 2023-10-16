@@ -19,7 +19,7 @@ Builder.load_string(
 			rgba: [1, 1, 1, 1]
 		Rectangle: 
 			size: self.size
-			pos: self.pos
+			pos:self.pos
 	BoxLayout:
 		orientation: 'vertical'
 		padding: 0
@@ -117,12 +117,12 @@ Builder.load_string(
 					width: dp(0.075*app.width)
 					background_color: hex('#F4433600')
 					center: self.parent.center
-					pos: self.parent.pos
+					pos:self.parent.pos
 					on_press: root.prev_screen()
 					BoxLayout:
 						padding: 0
 						size: self.parent.size
-						pos: self.parent.pos
+						pos:self.parent.pos
 						Image:
 							source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
 							center_x: self.parent.center_x
@@ -148,7 +148,7 @@ Builder.load_string(
 					color: hex('#f9f9f9ff')
 					markup: True
 					center: self.parent.center
-					pos: self.parent.pos
+					pos:self.parent.pos
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(0.275*app.height)

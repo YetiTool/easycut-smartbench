@@ -25,7 +25,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
 
         padding: 0
         spacing: 0.0208333333333*app.height
@@ -39,7 +39,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/skavaUI/img/quit_to_lobby_btn.png"
                     center_x: self.parent.center_x
@@ -51,7 +51,7 @@ Builder.load_string(
             size_hint_y: 1
             center: self.parent.center
             size: self.parent.size
-            pos: self.parent.pos             
+            pos:self.parent.pos
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id:home_button
@@ -63,7 +63,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: home_image
                         source: "./asmcnc/skavaUI/img/home.png"
@@ -80,7 +80,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/skavaUI/img/reset.png"
                     center_x: self.parent.center_x
@@ -97,7 +97,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/skavaUI/img/resume.png"
                     center_x: self.parent.center_x
@@ -113,7 +113,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     id: stop_reset_button_image
                     source: "./asmcnc/skavaUI/img/stop.png"

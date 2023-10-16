@@ -25,7 +25,7 @@ Builder.load_string(
    
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
         orientation: 'horizontal'
         padding: 0
         spacing: 0
@@ -42,7 +42,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.0125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos      
+                    pos:self.parent.pos
                     Image:
                         id: speed_image
                         source: "./asmcnc/skavaUI/img/slow.png"
@@ -63,7 +63,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos                 
+                pos:self.parent.pos
 #                 Button:
 #                     background_color: hex('#F4433600')
 #                     on_release: 
@@ -96,7 +96,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
                         center_x: self.parent.center_x
@@ -108,7 +108,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos                 
+                pos:self.parent.pos
 #                 Button:
 #                     background_color: hex('#F4433600')
 #                     on_release: 
@@ -139,7 +139,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_left.png"
                         center_x: self.parent.center_x
@@ -157,7 +157,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: jogModeButtonImage
                         source: "./asmcnc/skavaUI/img/jog_mode_infinity.png"
@@ -178,7 +178,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos  
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_right.png"
                         center_x: self.parent.center_x
@@ -190,7 +190,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos                 
+                pos:self.parent.pos
 #                 Button:
 #                     background_color: hex('#F4433600')
 #                     on_release: 
@@ -223,7 +223,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos      
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
@@ -234,7 +234,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos 
+                pos:self.parent.pos
 #                 ToggleButton:
 #                     id: speed_toggle
 #                     on_press: root.set_jog_speeds()

@@ -42,7 +42,7 @@ Builder.load_string(
             rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
              
     BoxLayout:
         orientation: 'vertical'
@@ -58,7 +58,7 @@ Builder.load_string(
                     rgba: hex('#333333FF')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
             size_hint_y: 0.7
             markup: True
             font_size: str(0.0225*app.width) + 'sp'   

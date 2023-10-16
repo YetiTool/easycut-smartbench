@@ -20,7 +20,7 @@ Builder.load_string(
                 rgba: hex('#f9f9f9ff')
             Rectangle: 
                 size: self.size
-                pos: self.pos
+                pos:self.pos
 
         BoxLayout:
             padding: 0
@@ -33,7 +33,7 @@ Builder.load_string(
                     Color:
                         rgba: hex('#1976d2ff')
                     Rectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
@@ -56,7 +56,7 @@ Builder.load_string(
 
                 GridLayout: 
                     size: self.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     cols: 3
                     rows: 3
                     size_hint_y: 0.67
@@ -132,12 +132,12 @@ Builder.load_string(
                             width: dp(0.075*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                                     center_x: self.parent.center_x
@@ -172,12 +172,12 @@ Builder.load_string(
                             width: dp(0.06375*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
                                     center_x: self.parent.center_x

@@ -42,7 +42,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        pos: self.parent.pos
+        pos:self.parent.pos
         size: self.parent.size
         spacing: dp(0.03125*app.height)
 
@@ -56,7 +56,7 @@ Builder.load_string(
                     rgba: 1,1,1,1
                 RoundedRectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             Image:
                 size_hint_x: 0.2
@@ -88,7 +88,7 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            pos: self.parent.pos
+            pos:self.parent.pos
             size: self.parent.size
             spacing: dp(0.0416666666667*app.height)
 
@@ -106,7 +106,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
                     Label:
                         id: cooldown_settings_label
@@ -149,7 +149,7 @@ Builder.load_string(
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             text: "RPM"
 
                     BoxLayout:
@@ -183,7 +183,7 @@ Builder.load_string(
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -198,7 +198,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Image:
                             size_hint_x: 0.3
@@ -231,7 +231,7 @@ Builder.load_string(
                                 background_color: [0,0,0,0]
                                 center_x: self.parent.center_x
                                 y: self.parent.y
-                                pos: self.parent.pos
+                                pos:self.parent.pos
 
                     BoxLayout:
                         id: spindle_data_container
@@ -244,7 +244,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                         Label:
                             id: get_data_label
@@ -280,7 +280,7 @@ Builder.load_string(
                         rgba: 1,1,1,1
                     RoundedRectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
     FloatLayout:
         Label:

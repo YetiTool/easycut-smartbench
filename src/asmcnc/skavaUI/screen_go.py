@@ -76,7 +76,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -91,7 +91,7 @@ Builder.load_string(
                                 rgba: hex('#FFFFFFFF')
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 0
@@ -106,7 +106,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         id: btn_back_img
                                         # source: "./asmcnc/skavaUI/img/back.png"
@@ -138,7 +138,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         id: start_or_pause_button_image
                                         # source: "./asmcnc/skavaUI/img/go.png"
@@ -164,7 +164,7 @@ Builder.load_string(
                                     rgba: hex('#FFFFFFFF')
                                 RoundedRectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 size_hint_y: 1.8
@@ -176,7 +176,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
                                 Label:
                                     id: feed_label
                                     markup: True
@@ -196,7 +196,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
     
 
                         BoxLayout:
@@ -210,7 +210,7 @@ Builder.load_string(
                                     rgba: hex('#FFFFFFFF')
                                 RoundedRectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 size_hint_y: 1.8
@@ -222,7 +222,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
                                 Label:
                                     id: spindle_label
                                     markup: True
@@ -242,7 +242,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
     
                         BoxLayout:
                             size_hint_x: 0.8
@@ -259,7 +259,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
                             BoxLayout:
                                 id: job_progress_container
@@ -273,7 +273,7 @@ Builder.load_string(
                                         rgba: hex('#FFFFFFFF')
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
                                 Label:
                                     id: file_lines_streamed_label
@@ -330,7 +330,7 @@ Builder.load_string(
                             rgba: hex('#FFFFFFFF')
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
                     BoxLayout:
                         size_hint_y: 0.95

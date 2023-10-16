@@ -23,7 +23,7 @@ Builder.load_string(
 
     StencilView:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
 
         Image:
             id: z_range
@@ -31,14 +31,14 @@ Builder.load_string(
             allow_stretch: True
             keep_ratio: False
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
         Image:
             id:z_cut
             source: './asmcnc/skavaUI/img/zCut.png'
             allow_stretch: True
             keep_ratio: False
             size: self.parent.width, 0
-            pos: self.parent.pos
+            pos:self.parent.pos
             opacity: 1
         Image:
             id:z_clear
@@ -46,7 +46,7 @@ Builder.load_string(
             allow_stretch: True
             keep_ratio: False
             size: self.parent.width, 0
-            pos: self.parent.pos
+            pos:self.parent.pos
             opacity: 1
         Image:
             id: z_bit

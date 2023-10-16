@@ -19,7 +19,7 @@ Builder.load_string(
 			rgba: [1, 1, 1, 1]
 		Rectangle: 
 			size: self.size
-			pos: self.pos
+			pos:self.pos
 	BoxLayout:
 		orientation: 'vertical'
 		padding: 0
@@ -130,7 +130,7 @@ Builder.load_string(
 					color: hex('#f9f9f9ff')
 					markup: True
 					center: self.parent.center
-					pos: self.parent.pos
+					pos:self.parent.pos
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(0.275*app.height)

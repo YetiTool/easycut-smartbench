@@ -22,7 +22,7 @@ Builder.load_string(
                 rgba: hex('#E2E2E2FF')
             Rectangle:
                 size: self.size
-                pos: self.pos
+                pos:self.pos
 
         BoxLayout:
             size_hint_y: 0.75
@@ -34,7 +34,7 @@ Builder.load_string(
                 on_press: root.back_to_home()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
+                    pos:self.parent.pos[0], self.parent.pos[0.00208333333333*app.height] + dp(0.00208333333333*app.height)
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                         center_x: self.parent.center_x

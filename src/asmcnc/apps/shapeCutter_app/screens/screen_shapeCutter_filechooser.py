@@ -33,12 +33,12 @@ Builder.load_string(
         padding: 0
         spacing: 0.0208333333333*app.height
         size: root.size
-        pos: root.pos
+        pos:root.pos
         orientation: "vertical"
         BoxLayout:
             orientation: 'horizontal'
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             spacing: 0.0125*app.width
             FileChooser:
                 size_hint_x: 5
@@ -64,7 +64,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_view
                         source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
@@ -86,7 +86,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_refresh
                         source: "./asmcnc/skavaUI/img/file_select_refresh.png"
@@ -109,7 +109,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_delete
                         source: "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
@@ -131,7 +131,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_delete_all
                         source: "./asmcnc/skavaUI/img/file_select_delete_all.png"
@@ -152,7 +152,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_cancel
                         source: "./asmcnc/skavaUI/img/file_select_cancel.png"
@@ -173,7 +173,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.03125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_select
                         source: "./asmcnc/skavaUI/img/file_select_select_disabled.png"

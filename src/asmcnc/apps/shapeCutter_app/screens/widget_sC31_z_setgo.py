@@ -20,7 +20,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
 
         spacing: 0.0416666666667*app.height
         
@@ -36,7 +36,7 @@ Builder.load_string(
                     rgba: 1,1,1,1
                 RoundedRectangle: 
                     size: self.size
-                    pos: self.pos 
+                    pos:self.pos
 
             ToggleButton:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -46,7 +46,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.0125*app.width
                     size: self.parent.size
-                    pos: self.parent.pos      
+                    pos:self.parent.pos
                     Image:
                         id: speed_image
                         source: "./asmcnc/skavaUI/img/slow.png"
@@ -67,7 +67,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_set_0.png"
                         center_x: self.parent.center_x
@@ -87,7 +87,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_goto_0.png"
                         center_x: self.parent.center_x

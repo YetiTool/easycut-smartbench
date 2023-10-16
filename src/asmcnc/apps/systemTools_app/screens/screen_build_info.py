@@ -75,7 +75,7 @@ Builder.load_string(
                 rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
-                pos: self.pos
+                pos:self.pos
 
         BoxLayout:
             padding: 0
@@ -88,7 +88,7 @@ Builder.load_string(
                     Color:
                         rgba: hex('#1976d2ff')
                     Rectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 Label:
                     id: header
@@ -132,7 +132,7 @@ Builder.load_string(
                         height: dp(0.0833333333333*app.height)
 
                         BoxLayout:
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
                             spacing: dp(0.025*app.width)
@@ -146,7 +146,7 @@ Builder.load_string(
                                     Color:
                                         rgba: hex('#f9f9f9ff')
                                     Rectangle:
-                                        pos: self.pos
+                                        pos:self.pos
                                         size: self.size
 
                                 Label:
@@ -204,7 +204,7 @@ Builder.load_string(
                         focus_next: smartbench_location_input
 
                         BoxLayout:
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
                             spacing: dp(0.025*app.width)
@@ -218,7 +218,7 @@ Builder.load_string(
                                     Color:
                                         rgba: hex('#f9f9f9ff')
                                     Rectangle:
-                                        pos: self.pos
+                                        pos:self.pos
                                         size: self.size
                                 Label:
                                     id: smartbench_location_label
@@ -262,7 +262,7 @@ Builder.load_string(
 
                     GridLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         cols: 2
                         rows: 9
                         size_hint: (None, None)
@@ -440,7 +440,7 @@ Builder.load_string(
                         background_down: ""
                         border: [dp(7.5)]*4
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         text: 'Choose language...'
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -457,7 +457,7 @@ Builder.load_string(
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.open_data_consent_app()
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -472,7 +472,7 @@ Builder.load_string(
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.toggle_ssh()
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -487,7 +487,7 @@ Builder.load_string(
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
                         center: self.parent.center
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         on_press: root.do_show_more_info()
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -532,12 +532,12 @@ Builder.load_string(
                             width: dp(0.075*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                                     center_x: self.parent.center_x
@@ -572,12 +572,12 @@ Builder.load_string(
                             width: dp(0.06375*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
                                     center_x: self.parent.center_x

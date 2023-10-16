@@ -155,7 +155,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
 """
     )

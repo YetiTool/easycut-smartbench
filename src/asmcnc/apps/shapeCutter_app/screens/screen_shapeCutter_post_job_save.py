@@ -23,7 +23,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas:
             Rectangle: 
-                pos: self.pos
+                pos:self.pos
                 size: self.size
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
@@ -80,7 +80,7 @@ Builder.load_string(
                                 valign: "top"
                                 text_size: self.size
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 
                             BoxLayout: 
                                 size_hint: (None,None)
@@ -113,7 +113,7 @@ Builder.load_string(
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
-                                    pos: self.parent.pos
+                                    pos:self.parent.pos
                                     Image:
                                         id: save_image
                                         source: "./asmcnc/apps/shapeCutter_app/img/save_file.png"
@@ -133,7 +133,7 @@ Builder.load_string(
                         ScrollView:
                             size_hint: (None, None)
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             do_scroll_x: True
                             do_scroll_y: True
                             scroll_type: ['content']
@@ -165,7 +165,7 @@ Builder.load_string(
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                                     center_x: self.parent.center_x
@@ -183,7 +183,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
                                 center_x: self.parent.center_x
@@ -200,7 +200,7 @@ Builder.load_string(
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
                                 center_x: self.parent.center_x

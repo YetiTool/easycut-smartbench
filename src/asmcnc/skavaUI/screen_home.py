@@ -66,7 +66,7 @@ Builder.load_string(
                     size_hint: 1, 1
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
-                    tab_pos: 'left_top'
+                    tab_pos:'left_top'
                     tab_height: 90
                     tab_width: 0.1125*app.width
 
@@ -82,7 +82,7 @@ Builder.load_string(
                                     rgba: hex('#E5E5E5FF')
                                 Rectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 id: gcode_monitor_container
@@ -102,7 +102,7 @@ Builder.load_string(
                                     rgba: hex('#E5E5E5FF')
                                 Rectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 size_hint_x: 3
@@ -112,7 +112,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
                             BoxLayout:
                                 size_hint_x: 1
@@ -126,7 +126,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
 
                     TabbedPanelItem:
@@ -143,7 +143,7 @@ Builder.load_string(
                                     rgba: hex('#E5E5E5FF')
                                 Rectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 size_hint_y: 5
@@ -153,7 +153,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
                                 id: virtual_bed_container
 
                             BoxLayout:
@@ -176,7 +176,7 @@ Builder.load_string(
                                     rgba: hex('#E5E5E5FF')
                                 Rectangle:
                                     size: self.size
-                                    pos: self.pos
+                                    pos:self.pos
 
                             BoxLayout:
                                 size_hint_y: 1
@@ -188,7 +188,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
 
                                 Button:
                                     font_size: str(0.01875 * app.width) + 'sp'
@@ -199,7 +199,7 @@ Builder.load_string(
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                         Image:
                                             source: "./asmcnc/skavaUI/img/load_file.png"
                                             center_x: self.parent.center_x
@@ -217,7 +217,7 @@ Builder.load_string(
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
-                                        pos: self.parent.pos
+                                        pos:self.parent.pos
                                         Image:
                                             id: job_recovery_button_image
                                             source: "./asmcnc/skavaUI/img/recover_job_disabled.png"
@@ -245,7 +245,7 @@ Builder.load_string(
                                         rgba: 1,1,1,1
                                     RoundedRectangle:
                                         size: self.size
-                                        pos: self.pos
+                                        pos:self.pos
                                 BoxLayout:
                                     id: gcode_preview_container
                                     size_hint_x: 1

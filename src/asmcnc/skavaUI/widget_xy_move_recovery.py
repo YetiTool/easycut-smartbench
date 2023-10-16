@@ -10,7 +10,7 @@ Builder.load_string(
     BoxLayout:
 
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: 'vertical'
         padding: 0.0125*app.width
         spacing: 0.0208333333333*app.height
@@ -26,7 +26,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -41,7 +41,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
                         center_x: self.parent.center_x
@@ -52,7 +52,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -67,7 +67,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_left.png"
                         center_x: self.parent.center_x
@@ -85,7 +85,7 @@ Builder.load_string(
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: jogModeButtonImage
                         source: "./asmcnc/skavaUI/img/jog_mode_infinity.png"
@@ -107,7 +107,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_right.png"
                         center_x: self.parent.center_x
@@ -118,7 +118,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -135,7 +135,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
@@ -146,7 +146,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0125*app.width
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
 """
     )
 

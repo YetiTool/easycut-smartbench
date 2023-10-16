@@ -35,7 +35,7 @@ Builder.load_string(
                 rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
-                pos: self.pos
+                pos:self.pos
         BoxLayout:
             padding: 0
             spacing: 0
@@ -47,7 +47,7 @@ Builder.load_string(
                     Color:
                         rgba: hex('#1976d2ff')
                     Rectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
 
                 # HEADER
@@ -213,7 +213,7 @@ Builder.load_string(
                             on_press: root.confirm_job_unsuccessful()
                             BoxLayout:
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/skavaUI/img/thumbs_down.png"
                                     # center_x: self.parent.center_x
@@ -231,7 +231,7 @@ Builder.load_string(
                             on_press: root.confirm_job_successful()
                             BoxLayout:
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/skavaUI/img/thumbs_up.png"
                                     # center_x: self.parent.center_x

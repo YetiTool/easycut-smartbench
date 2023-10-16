@@ -22,7 +22,7 @@ Builder.load_string(
         size_hint: (None, None)
         height: dp(0.416666666667*app.height)
         width: dp(0.725*app.width)
-        pos: self.parent.pos
+        pos:self.parent.pos
         orientation: 'vertical'
         padding: 0.025*app.width
         spacing: 0.0208333333333*app.height      
@@ -89,7 +89,7 @@ Builder.load_string(
                     background_color: [0,0,0,0]
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos      
+                        pos:self.parent.pos
                         Image:
                             id: reset_0_image
                             source: "./asmcnc/apps/maintenance_app/img/reset_0.png"

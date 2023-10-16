@@ -101,7 +101,7 @@ Builder.load_string(
             rgba: hex('#ebbc00FF')
         Rectangle: 
             size: self.size
-            pos: self.pos
+            pos:self.pos
              
     BoxLayout:
         orientation: 'horizontal'
@@ -159,7 +159,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.00625*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         
                         Label:
                             id: return_label

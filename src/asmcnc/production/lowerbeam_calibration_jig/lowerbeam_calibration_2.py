@@ -14,7 +14,7 @@ Builder.load_string(
 
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos:self.pos
 
     BoxLayout:
         orientation: 'vertical'

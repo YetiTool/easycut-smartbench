@@ -30,7 +30,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
 
         ScrollViewGCode:
             id: gcode_scrollview

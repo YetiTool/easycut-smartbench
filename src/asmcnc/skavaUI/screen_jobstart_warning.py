@@ -20,7 +20,7 @@ Builder.load_string(
         Color:
             rgba: hex('#1976d2ff')
         RoundedRectangle:
-            pos: self.pos
+            pos:self.pos
             size: self.size
             radius: [dp(15), dp(15)]
 
@@ -41,7 +41,7 @@ Builder.load_string(
                 rgba: hex('#E5E5E5FF')
             Rectangle: 
                 size: self.size
-                pos: self.pos
+                pos:self.pos
 
         BoxLayout:
             padding: 0
@@ -55,7 +55,7 @@ Builder.load_string(
                     Color:
                         rgba: hex('#1976d2ff')
                     Rectangle:
-                        pos: self.pos
+                        pos:self.pos
                         size: self.size
                 Label:
                     id: header_label
@@ -194,7 +194,7 @@ Builder.load_string(
                     color: hex('#f9f9f9ff')
                     markup: True
                     center: self.parent.center
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                   
 
 """

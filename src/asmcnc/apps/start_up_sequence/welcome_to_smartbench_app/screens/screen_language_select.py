@@ -46,7 +46,7 @@ Builder.load_string(
 				rgba: hex('#e5e5e5ff')
 			Rectangle: 
 				size: self.size
-				pos: self.pos
+				pos:self.pos
 
 		BoxLayout:
 			padding: 0
@@ -61,7 +61,7 @@ Builder.load_string(
 					Color:
 						rgba: hex('#1976d2ff')
 					Rectangle:
-						pos: self.pos
+						pos:self.pos
 						size: self.size
 				Label:
 					id: header_label
@@ -86,7 +86,7 @@ Builder.load_string(
 				orientation: 'vertical'
 
 	            GridLayout:
-	                pos: self.parent.pos
+	                pos:self.parent.pos
 	                cols: 9
 	                rows: 3
 	                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(170), 3: dp(15), 4: dp(50), 5: dp(170), 6: dp(15), 7: dp(50), 8: dp(170)}
@@ -305,7 +305,7 @@ Builder.load_string(
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
-						pos: self.parent.pos
+						pos:self.parent.pos
 						opacity: 0
 						disabled: True
 				BoxLayout: 

@@ -56,11 +56,11 @@ Builder.load_string(
         size_hint: (None,None)
         height: dp(1.0*app.height)
         width: dp(1.005*app.width)
-        pos: (0, 0)
+        pos:(0, 0)
         padding:[dp(-0.0025*app.width),dp(-0.00416666666667*app.height),dp(-0.0025*app.width),dp(0)]
         spacing: [0,0.00833333333333*app.height]
         do_default_tab: False
-        tab_pos: 'top_left'
+        tab_pos:'top_left'
         tab_height: dp(0.1875*app.height)
         tab_width: dp(0.1775*app.width)
         on_touch_down: root.on_tab_switch()
@@ -85,7 +85,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -104,7 +104,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
                         BoxLayout: 
                             size_hint: (None, None)
                             height: dp(0.145833333333*app.height)
@@ -121,7 +121,7 @@ Builder.load_string(
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 text: "[b]LASER[/b]"
 
                             BoxLayout:
@@ -140,7 +140,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -160,7 +160,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -172,7 +172,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
         
 
         # BRUSH MONITOR
@@ -193,7 +193,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -213,7 +213,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -225,7 +225,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -237,7 +237,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -249,7 +249,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
@@ -265,7 +265,7 @@ Builder.load_string(
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos:self.parent.pos
 
                         BoxLayout:
                             size_hint: (None,None)
@@ -292,7 +292,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -326,7 +326,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -346,7 +346,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -358,7 +358,7 @@ Builder.load_string(
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos
+                                pos:self.pos
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -370,7 +370,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
         # + Tab
 
@@ -394,7 +394,7 @@ Builder.load_string(
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 BoxLayout: 
                     id: spindle_health_check_container
@@ -405,11 +405,11 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(710), dp(390))
+        pos:(dp(1.47916666667*app.height), dp(0.8125*app.height))
         Button:
             font_size: str(0.01875 * app.width) + 'sp'
             size_hint: (None,None)
@@ -417,12 +417,12 @@ Builder.load_string(
             width: dp(0.1125*app.width)
             background_color: [0,0,0,0]
             center: self.parent.center
-            pos: self.parent.pos
+            pos:self.parent.pos
             on_press: root.quit_to_lobby()
             BoxLayout:
                 padding: 0
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 Image:
                     source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                     center_x: self.parent.center_x

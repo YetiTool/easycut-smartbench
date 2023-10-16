@@ -19,14 +19,14 @@ Builder.load_string(
         padding: 0.025*app.width
         spacing: 0.0416666666667*app.height
         size: root.size
-        pos: root.pos
+        pos:root.pos
         orientation: "vertical"
         
         BoxLayout:
             size_hint_y: 1
             orientation: 'horizontal'
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             padding: 0.01875*app.width
 
             canvas.before:
@@ -34,7 +34,7 @@ Builder.load_string(
                     rgba: 1,1,1,1
                 RoundedRectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             Label:
                 text: 'Bit dia:'
@@ -102,14 +102,14 @@ Builder.load_string(
             size_hint_y: 5
             orientation: 'horizontal'
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             padding: 0
             spacing: 0.025*app.width
             
             BoxLayout:
                 size_hint_x: 6
                 size: self.parent.size
-                pos: self.parent.pos
+                pos:self.parent.pos
                 padding: 0.025*app.width
 
                 canvas:
@@ -117,7 +117,7 @@ Builder.load_string(
                         rgba: 1,1,1,1
                     RoundedRectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
                     Color:
                         rgba: 1,0.5,1,1
                     Line:
@@ -135,7 +135,7 @@ Builder.load_string(
                         rgba: 1,1,1,1
                     RoundedRectangle:
                         size: self.size
-                        pos: self.pos
+                        pos:self.pos
 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -153,7 +153,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.025*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_select
                             source: "./asmcnc/skavaUI/img/file_select_select.png"
@@ -179,7 +179,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.025*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_cancel
                             source: "./asmcnc/skavaUI/img/template_cancel.png"
@@ -204,7 +204,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.0125*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_select
                             source: "./asmcnc/skavaUI/img/xy_arrow_left.png"
@@ -228,7 +228,7 @@ Builder.load_string(
                     BoxLayout:
                         padding: 0.0125*app.width
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             id: image_cancel
                             source: "./asmcnc/skavaUI/img/xy_arrow_right.png"

@@ -19,7 +19,7 @@ Builder.load_string(
 
         GridLayout:
             size: self.parent.size
-            pos: self.parent.pos
+            pos:self.parent.pos
             cols: 1
             rows: 3
 
@@ -94,7 +94,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
-            pos: self.pos
+            pos:self.pos
 
 """
     )

@@ -27,7 +27,7 @@ Builder.load_string(
     
     SCStencilBox2:
         size: self.parent.size
-        pos: self.parent.pos
+        pos:self.parent.pos
         
         Scatter:
             do_rotation: False
@@ -48,26 +48,26 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: False
                     size: self.parent.size[0]-80, self.parent.size[1]-60
-                    pos: self.parent.pos[0]+40,self.parent.pos[1]+30
+                    pos:self.parent.pos[0]+40,self.parent.pos[0.00208333333333*app.height]+30
                 Image:
                     id: xBar
                     source: './asmcnc/skavaUI/img/virtual_x_bar.png'
                     allow_stretch: True
                     keep_ratio: True
                     height: self.parent.height
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                 Image:
                     id: carriage
                     source: './asmcnc/skavaUI/img/virtual_carriage.png'
                     allow_stretch: True
                     keep_ratio: True
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
                     allow_stretch: True
                     keep_ratio: False
-                    pos: self.parent.pos   
+                    pos:self.parent.pos
                     opacity: 0.7     
                 Image:
                     id: g28Marker
@@ -75,14 +75,14 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: True
                     width: 0.025*app.width
-                    pos: self.parent.pos    
+                    pos:self.parent.pos
                 Image:
                     id: g54_marker
                     source: './asmcnc/skavaUI/img/jobstart.png'
                     allow_stretch: True
                     keep_ratio: True
                     width: 0.0125*app.width
-                    pos: self.parent.pos  
+                    pos:self.parent.pos
                     
 """
     )

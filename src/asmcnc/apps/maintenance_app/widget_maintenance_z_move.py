@@ -22,7 +22,7 @@ Builder.load_string(
     BoxLayout:
 
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
         padding: 0.025*app.width
         spacing: 0.025*app.width
         orientation: 'horizontal'
@@ -52,7 +52,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
 #                         source: "./asmcnc/skavaUI/img/z_jog_up.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
@@ -74,7 +74,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
@@ -92,7 +92,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.208333333333*app.height)
                     width: dp(0.125*app.width)
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                         center_x: self.parent.center_x

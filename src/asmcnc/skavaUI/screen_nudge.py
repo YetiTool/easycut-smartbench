@@ -30,7 +30,7 @@ Builder.load_string(
                     rgba: hex('#E2E2E2FF')
                 Rectangle:
                     size: self.size
-                    pos: self.pos
+                    pos:self.pos
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -59,7 +59,7 @@ Builder.load_string(
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
-                                pos: self.parent.pos
+                                pos:self.parent.pos
                                 Image:
                                     source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
                                     center_x: self.parent.center_x
@@ -73,7 +73,7 @@ Builder.load_string(
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
-                            pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
+                            pos:self.parent.pos[0], self.parent.pos[0.00125*app.width] + dp(0.00125*app.width)
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                                 center_x: self.parent.center_x
@@ -95,7 +95,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
                     BoxLayout:
                         id: xy_move_container
@@ -110,7 +110,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
                 BoxLayout:
                     id: z_move_container
@@ -120,7 +120,7 @@ Builder.load_string(
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos:self.pos
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -136,7 +136,7 @@ Builder.load_string(
                     width: dp(0.11*app.width)
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
                             center_x: self.parent.center_x
@@ -158,7 +158,7 @@ Builder.load_string(
                     width: dp(0.11*app.width)
                     BoxLayout:
                         size: self.parent.size
-                        pos: self.parent.pos
+                        pos:self.parent.pos
                         Image:
                             source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
                             center_x: self.parent.center_x

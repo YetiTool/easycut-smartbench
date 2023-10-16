@@ -82,7 +82,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
-            pos: self.pos
+            pos:self.pos
 
 """
     )

@@ -24,7 +24,7 @@ Builder.load_string(
 
     BoxLayout:
         size: self.parent.size
-        pos: self.parent.pos      
+        pos:self.parent.pos
 
         spacing: 0.0*app.height
         
@@ -38,7 +38,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0025*app.width
                 size: self.parent.size
-                pos: self.parent.pos      
+                pos:self.parent.pos
                 Image:
                     id: speed_image
                     source: "./asmcnc/skavaUI/img/feed_speed_up.png"
@@ -49,7 +49,7 @@ Builder.load_string(
        
         FloatLayout:
             size: self.parent.size
-            pos: self.parent.pos  
+            pos:self.parent.pos
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: norm_button
@@ -77,7 +77,7 @@ Builder.load_string(
             BoxLayout:
                 padding: 0.0025*app.width
                 size: self.parent.size
-                pos: self.parent.pos      
+                pos:self.parent.pos
                 Image:
                     id: speed_image
                     source: "./asmcnc/skavaUI/img/feed_speed_down.png"

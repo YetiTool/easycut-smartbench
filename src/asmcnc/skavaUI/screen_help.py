@@ -49,7 +49,7 @@ Builder.load_string(
                 BoxLayout:
                     padding: 0.01875*app.width
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos:self.parent.pos
                     Image:
                         id: image_cancel
                         source: "./asmcnc/skavaUI/img/file_select_cancel.png"
