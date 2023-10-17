@@ -454,6 +454,7 @@ class PopupInfo(Widget):
     def __init__(self, screen_manager, localization, popup_width, description):
         self.sm = screen_manager
         self.l = localization
+        popup_width = int((popup_width / float(800)) * Window.width)
         label_width = popup_width - (0.05*Window.width)
 
         title_string = self.l.get_str('Information')
@@ -1224,6 +1225,7 @@ class PopupScrollableInfo(Widget):
         
         self.sm = screen_manager
         self.l = localization
+        popup_width = int((popup_width / float(800)) * Window.width)
         label_width = popup_width - (0.025*Window.width)
         
         title_string = self.l.get_str('Information')
@@ -1233,7 +1235,7 @@ class PopupScrollableInfo(Widget):
                     size_hint=(None,None), size=(0.05*Window.width,0.08333*Window.height), pos_hint={'center_x': 0.5})
         scrollview = ScrollView(size_hint_y=4, padding=[0.0125*Window.width,0.02083*Window.height])
         label = RstDocument(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description,
-                            font_size=0.01875*Window.width, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+                            base_font_size=0.03875*Window.width, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         scrollview.add_widget(label)
         
         ok_button = Button(text=ok_string, markup = True)
@@ -1272,6 +1274,7 @@ class PopupQRInfo(Widget):
     def __init__(self, screen_manager, localization, popup_width, description, qr_source):
         self.sm = screen_manager
         self.l = localization
+        popup_width = int((popup_width / float(800)) * Window.width)
         label_width = popup_width - (0.05*Window.width)
 
         title_string = self.l.get_str('Information')
