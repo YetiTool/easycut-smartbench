@@ -355,7 +355,7 @@ Builder.load_string("""
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing: 20
-                    padding: [215, 0]
+                    padding: [60, 0]
 
                     Button:
                         size_hint_y: 8
@@ -383,6 +383,39 @@ Builder.load_string("""
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Geberit cutter'
+                        markup: True
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                    padding: [60, 0]
+
+                    Button:
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release:
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.drywall_cutter_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                            Label:
+                                text: 'Drywall cutter'
+                                color: 0,0,0,1
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Drywall cutter'
                         markup: True
 
         BoxLayout:
@@ -599,6 +632,9 @@ class LobbyScreen(Screen):
         self.wait_popup.popup.dismiss()
         popup_info.PopupInfo(self.sm, self.l, 500, "Installation complete!")
         self.am.start_geberit_cutter_app()
+
+    def drywall_cutter_app(self):
+        self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 

@@ -16,6 +16,7 @@ from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
 from asmcnc.apps.geberit_cutter_app import screen_geberit_cutter
+from asmcnc.apps.drywall_cutter_app import screen_drywall_cutter
 
 # import shape cutter managing object
 
@@ -48,6 +49,9 @@ class AppManagerClass(object):
 
         geberit_cutter_screen = screen_geberit_cutter.GeberitCutterScreen(name = 'geberit_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, geometry_to_gcode = self.gtg)
         self.sm.add_widget(geberit_cutter_screen)
+
+        drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(name = 'drywall_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, geometry_to_gcode = self.gtg)
+        self.sm.add_widget(drywall_cutter_screen)
 
         # Start start up sequence
         self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
@@ -117,3 +121,7 @@ class AppManagerClass(object):
     def start_geberit_cutter_app(self):
         self.current_app = 'geberit_cutter'
         self.sm.current = 'geberit_cutter'
+
+    def start_drywall_cutter_app(self):
+        self.current_app = 'drywall_cutter'
+        self.sm.current = 'drywall_cutter'
