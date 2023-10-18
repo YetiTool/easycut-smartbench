@@ -88,7 +88,7 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint_x: 2.5
-                    padding: padding: [(self.size[0] - dp(0.34375*app.width)) / 2, (self.size[1] - dp(0.57291666666*app.height)) / 2]
+                    padding: [(self.size[0] - dp(0.34375*app.width)) / 2, (self.size[1] - dp(0.57291666666*app.height)) / 2]
                     canvas:
                         Color:
                             rgba: 1,1,1,1
