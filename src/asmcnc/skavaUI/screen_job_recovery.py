@@ -280,7 +280,7 @@ Builder.load_string("""
 
                     BoxLayout:
 
-                        padding: [(self.size[0] - dp(88)) / 2, (self.size[1] - dp(67)) / 2]
+                        padding: padding: [(self.size[0] - dp(0.11*app.width)) / 2, (self.size[1] - dp(0.13958333333*app.height)) / 2]
 
                         Button:
                             background_color: [0,0,0,0]
