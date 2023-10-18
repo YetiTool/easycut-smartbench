@@ -1,22 +1,25 @@
-'''
+"""
 Created on 1 Feb 2018
 @author: Ed
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.properties import (
+    ObjectProperty,
+    ListProperty,
+    NumericProperty,
+    StringProperty,
+)
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
-
 import os, sys
 import socket
 
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import hex kivy.utils.get_color_from_hex
 
@@ -51,8 +54,8 @@ Builder.load_string("""
             size: self.size
 
     BoxLayout:
-        padding: 1
-        spacing: 6
+        padding: 0.00125*app.width
+        spacing: 0.0075*app.width
         orientation: "horizontal"
         size: self.parent.size
         pos: self.parent.pos
@@ -68,6 +71,7 @@ Builder.load_string("""
             allow_stretch: True
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.2
             id: ip_status_label
             text_size: self.size
@@ -77,6 +81,7 @@ Builder.load_string("""
 
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_xm_label
             text: 'mX:\\n-9999.99'
@@ -84,6 +89,7 @@ Builder.load_string("""
             halign: 'left'
             valign: 'middle'
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_ym_label
             text: 'mY:\\n-9999.99'
@@ -91,6 +97,7 @@ Builder.load_string("""
             halign: 'left'
             valign: 'middle'
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_zm_label
             text: 'mZ:\\n-9999.99'
@@ -100,6 +107,7 @@ Builder.load_string("""
 
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_X_ld_label
             text: 'sgX:\\n0'
@@ -108,6 +116,7 @@ Builder.load_string("""
             valign: 'middle'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_X1_ld_label
             text: 'sgX:\\n0'
@@ -116,6 +125,7 @@ Builder.load_string("""
             valign: 'middle'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_X2_ld_label
             text: 'sgX:\\n0'
@@ -124,6 +134,7 @@ Builder.load_string("""
             valign: 'middle'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_Y_ld_label
             text: 'sgY:\\n0'
@@ -131,6 +142,7 @@ Builder.load_string("""
             halign: 'left'
             valign: 'middle'
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_Y1_ld_label
             text: 'sgY1:\\n0'
@@ -139,6 +151,7 @@ Builder.load_string("""
             valign: 'middle'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_Y2_ld_label
             text: 'sgY2:\\n0'
@@ -146,6 +159,7 @@ Builder.load_string("""
             halign: 'left'
             valign: 'middle'
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_Z_ld_label
             text: 'sgZ:\\n0'
@@ -154,6 +168,7 @@ Builder.load_string("""
             valign: 'middle'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_status_label
             text: 'Status'
@@ -161,60 +176,49 @@ Builder.load_string("""
             halign: 'right'
             valign: 'middle'
 
-""")
-
+"""
+)
 
 
 class SGStatusBar(Widget):
-
     GRBL_REPORT_INTERVAL = 0.1
     IP_REPORT_INTERVAL = 2
-    
-    cheeky_color = StringProperty('#4CAF50FF')
-
+    cheeky_color = StringProperty("#4CAF50FF")
     wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
     def __init__(self, **kwargs):
-
         super(SGStatusBar, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
-        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        Clock.schedule_interval(
+            self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
+        )
+        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()
 
-
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
-
             self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
-            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
-            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
-
-            self.grbl_X_ld_label.text = 'sgX:\n' + str(self.m.x_sg())
-            self.grbl_X1_ld_label.text = 'sgX1:\n' + str(self.m.x1_sg())
-            self.grbl_X2_ld_label.text = 'sgX2:\n' + str(self.m.x2_sg())
-            self.grbl_Y_ld_label.text = 'sgY:\n' + str(self.m.y_sg())
-            self.grbl_Y1_ld_label.text = 'sgY1:\n' + str(self.m.y1_sg())
-            self.grbl_Y2_ld_label.text = 'sgY2:\n' + str(self.m.y2_sg())
-            self.grbl_Z_ld_label.text = 'sgZ:\n' + str(self.m.z_sg())
-
+            self.grbl_xm_label.text = "mX:\n" + str(round(self.m.mpos_x(), 2))
+            self.grbl_ym_label.text = "mY:\n" + str(round(self.m.mpos_y(), 2))
+            self.grbl_zm_label.text = "mZ:\n" + str(round(self.m.mpos_z(), 2))
+            self.grbl_X_ld_label.text = "sgX:\n" + str(self.m.x_sg())
+            self.grbl_X1_ld_label.text = "sgX1:\n" + str(self.m.x1_sg())
+            self.grbl_X2_ld_label.text = "sgX2:\n" + str(self.m.x2_sg())
+            self.grbl_Y_ld_label.text = "sgY:\n" + str(self.m.y_sg())
+            self.grbl_Y1_ld_label.text = "sgY1:\n" + str(self.m.y1_sg())
+            self.grbl_Y2_ld_label.text = "sgY2:\n" + str(self.m.y2_sg())
+            self.grbl_Z_ld_label.text = "sgZ:\n" + str(self.m.z_sg())
 
     def refresh_ip_label_value(self, dt):
-
         self.ip_status_label.text = self.m.sett.ip_address
-
-        if self.m.sett.wifi_available: 
+        if self.m.sett.wifi_available:
             self.wifi_image.source = self.wifi_on
-
-        elif not self.m.sett.ip_address: 
+        elif not self.m.sett.ip_address:
             self.wifi_image.source = self.wifi_off
-
-        else: 
+        else:
             self.wifi_image.source = self.wifi_warning
-

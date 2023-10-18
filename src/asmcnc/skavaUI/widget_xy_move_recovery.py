@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <XYMoveRecovery>
 
@@ -12,8 +13,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding: 0.0125*app.width
+        spacing: 0.0208333333333*app.height
 
         GridLayout:
             cols: 3
@@ -24,11 +25,12 @@ Builder.load_string("""
 
 
             BoxLayout:
-                padding: 10
+                padding: 0.0125*app.width
                 size: self.parent.size
                 pos: self.parent.pos
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -49,11 +51,12 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: 0.0125*app.width
                 size: self.parent.size
                 pos: self.parent.pos
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -74,6 +77,7 @@ Builder.load_string("""
                         allow_stretch: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release:
                     self.background_color = hex('#F4433600')
@@ -92,6 +96,7 @@ Builder.load_string("""
                         allow_stretch: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -112,11 +117,12 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: 0.0125*app.width
                 size: self.parent.size
                 pos: self.parent.pos
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -139,85 +145,99 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: 0.0125*app.width
                 size: self.parent.size
                 pos: self.parent.pos
-""")
+"""
+)
 
 
 class XYMoveRecovery(Widget):
-
     def __init__(self, **kwargs):
-
         super(XYMoveRecovery, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
 
-    jogMode = 'free'
+    jogMode = "free"
     jog_mode_button_press_counter = 0
 
     def buttonJogXY(self, case):
-
-        x_feed_speed = self.sm.get_screen('nudge').nudge_speed_widget.feedSpeedJogX
-        y_feed_speed = self.sm.get_screen('nudge').nudge_speed_widget.feedSpeedJogY
-
-        if self.jogMode == 'free':
-            if case == 'X-': self.m.jog_absolute_single_axis('X',
-                                                             self.m.x_min_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'X+': self.m.jog_absolute_single_axis('X',
-                                                             self.m.x_max_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'Y-': self.m.jog_absolute_single_axis('Y',
-                                                             self.m.y_min_jog_abs_limit,
-                                                             y_feed_speed)
-            if case == 'Y+': self.m.jog_absolute_single_axis('Y',
-                                                             self.m.y_max_jog_abs_limit,
-                                                             y_feed_speed)
-
-        elif self.jogMode == 'plus_0-01':
-            if case == 'X+': self.m.jog_relative('X', 0.01, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.01, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.01, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.01, y_feed_speed)
-
-        elif self.jogMode == 'plus_0-1':
-            if case == 'X+': self.m.jog_relative('X', 0.1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.1, y_feed_speed)
-
-        elif self.jogMode == 'plus_1':
-            if case == 'X+': self.m.jog_relative('X', 1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -1, y_feed_speed)
-
-        elif self.jogMode == 'plus_10':
-            if case == 'X+': self.m.jog_relative('X', 10, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -10, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 10, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
+        x_feed_speed = self.sm.get_screen("nudge").nudge_speed_widget.feedSpeedJogX
+        y_feed_speed = self.sm.get_screen("nudge").nudge_speed_widget.feedSpeedJogY
+        if self.jogMode == "free":
+            if case == "X-":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_min_jog_abs_limit, x_feed_speed
+                )
+            if case == "X+":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_max_jog_abs_limit, x_feed_speed
+                )
+            if case == "Y-":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_min_jog_abs_limit, y_feed_speed
+                )
+            if case == "Y+":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_max_jog_abs_limit, y_feed_speed
+                )
+        elif self.jogMode == "plus_0-01":
+            if case == "X+":
+                self.m.jog_relative("X", 0.01, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.01, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.01, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.01, y_feed_speed)
+        elif self.jogMode == "plus_0-1":
+            if case == "X+":
+                self.m.jog_relative("X", 0.1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.1, y_feed_speed)
+        elif self.jogMode == "plus_1":
+            if case == "X+":
+                self.m.jog_relative("X", 1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -1, y_feed_speed)
+        elif self.jogMode == "plus_10":
+            if case == "X+":
+                self.m.jog_relative("X", 10, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -10, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 10, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -10, y_feed_speed)
 
     def jogModeCycled(self):
-
         self.jog_mode_button_press_counter += 1
         if self.jog_mode_button_press_counter % 5 == 0:
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
+            self.jogMode = "free"
+            self.jogModeButtonImage.source = (
+                "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+            )
         if self.jog_mode_button_press_counter % 5 == 1:
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
+            self.jogMode = "plus_10"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_10.png"
         if self.jog_mode_button_press_counter % 5 == 2:
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
+            self.jogMode = "plus_1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_1.png"
         if self.jog_mode_button_press_counter % 5 == 3:
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
+            self.jogMode = "plus_0-1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-1.png"
         if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
+            self.jogMode = "plus_0-01"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-01.png"
 
     def cancelXYJog(self):
-        if self.jogMode == 'free':
+        if self.jogMode == "free":
             self.m.quit_jog()

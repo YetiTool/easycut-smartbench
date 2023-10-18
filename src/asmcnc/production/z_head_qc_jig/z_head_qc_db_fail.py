@@ -3,7 +3,8 @@ from kivy.lang import Builder
 from asmcnc.comms.logging import log_exporter
 import os, sys
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCDBFail>:
     success_label:success_label
 
@@ -25,10 +26,10 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
-            padding: [dp(10),0]
+            padding:[dp(0.0125*app.width),0]
             size_hint_y: 0.2
             size_hint_x: 0.5
-            font_size: dp(20)
+            font_size: dp(0.025*app.width)
 
         GridLayout:
             cols: 1
@@ -37,7 +38,7 @@ Builder.load_string("""
             Label:
                 id: success_label
                 text: 'Database update failed!!'
-                font_size: dp(50)
+                font_size: dp(0.0625*app.width)
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'
@@ -45,29 +46,29 @@ Builder.load_string("""
             Button:
                 on_press: root.retry_send()
                 text: 'RETRY DATA SEND'
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+)
 
 
 class ZHeadQCDBFail(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQCDBFail, self).__init__(**kwargs)
-
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
 
     def on_enter(self):
         log_exporter.create_trim_and_send_logs(self.serial, 1000)
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc2'
+        self.sm.current = "qc2"
 
     def retry_send(self):
-        self.sm.current = 'qcDB2'
+        self.sm.current = "qcDB2"
 
     def set_serial_no(self, serial_no):
         self.serial = serial_no
-        self.success_label.text = 'Database update failed!!\n' + serial_no
+        self.success_label.text = "Database update failed!!\n" + serial_no
