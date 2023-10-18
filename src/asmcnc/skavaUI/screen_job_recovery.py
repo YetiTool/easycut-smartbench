@@ -254,7 +254,7 @@ Builder.load_string("""
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
-                            pos: self.parent.pos
+                            pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                                 center_x: self.parent.center_x
