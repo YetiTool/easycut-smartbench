@@ -8,6 +8,7 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
+
 Builder.load_string(
     """
 
@@ -56,7 +57,7 @@ Builder.load_string(
                     markup: True
 
 """
-    )
+)
 
 
 class ShapeCutterExitScreenClass(Screen):
@@ -64,8 +65,8 @@ class ShapeCutterExitScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(ShapeCutterExitScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1)

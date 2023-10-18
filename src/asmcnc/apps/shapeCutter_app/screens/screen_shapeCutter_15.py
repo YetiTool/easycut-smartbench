@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import widget_sC15_xy_move
+
 Builder.load_string(
     """
 
@@ -301,24 +302,25 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter15ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]15[/b]')
-    title_label = StringProperty('[b]Clamp X beam[/b]')
+    screen_number = StringProperty("[b]15[/b]")
+    title_label = StringProperty("[b]Clamp X beam[/b]")
     user_instructions = StringProperty(
-        'Clamp X beam down [b](1)[/b] and check the upper wheel units run on the surface of the material [b](2)[/b].'
-        )
+        "Clamp X beam down [b](1)[/b] and check the upper wheel units run on the surface of the material [b](2)[/b]."
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter15ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
-        self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(machine=self.m,
-            screen_manager=self.shapecutter_sm.sm, job_parameters=self.j)
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(
+            machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters=self.j
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
 
     def on_pre_enter(self):

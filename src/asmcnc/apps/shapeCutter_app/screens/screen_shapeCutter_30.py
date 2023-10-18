@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -291,72 +292,70 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter30ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]30[/b]')
-    title_label = StringProperty('[b]Set job Z datum[/b]')
+    screen_number = StringProperty("[b]30[/b]")
+    title_label = StringProperty("[b]Set job Z datum[/b]")
     user_instructions = StringProperty(
         """Set Z datum for your job by using the controls on the next screen.
 
 
 You should set the Z datum from the top of your material."""
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter30ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
     def get_info(self):
-        info = (
-            "The Z datum is SmartBench's reference point for the surface of the material."
-            )
+        info = "The Z datum is SmartBench's reference point for the surface of the material."
         popup_info.PopupInfo(self.shapecutter_sm, info)
 
     def go_back(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.previous_screen()
         else:
             pass
 
     def next_screen(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.next_screen()
         else:
             pass
 
     def prepare(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.prepare_tab()
         else:
             pass
 
     def load(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.load_tab()
         else:
             pass
 
     def define(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.define_tab()
         else:
             pass
 
     def position(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.position_tab()
         else:
             pass
 
     def check(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.check_tab()
         else:
             pass

@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -292,26 +293,27 @@ Builder.load_string(
                                     allow_stretch: True              
 
 """
-    )
+)
 
 
 class ShapeCutter26ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]26[/b]')
-    title_label = StringProperty('[b]Home SmartBench[/b]')
+    screen_number = StringProperty("[b]26[/b]")
+    title_label = StringProperty("[b]Home SmartBench[/b]")
     user_instructions = StringProperty(
         """When you are ready, press the button to Home SmartBench.
 
-""")
+"""
+    )
     warning_message = StringProperty(
-        '[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]'
-        )
+        "[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]"
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter26ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -326,7 +328,7 @@ class ShapeCutter26ScreenClass(Screen):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
-        self.shapecutter_sm.homing_screen('sC26', 'sC27')
+        self.shapecutter_sm.homing_screen("sC26", "sC27")
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -351,8 +353,10 @@ class ShapeCutter26ScreenClass(Screen):
         try:
             gcode_generated = self.j.generate_gCode()
         except:
-            description = ('There was a problem generating your cut.\n\n' +
-                'Please go back and check your parameters before continuing.')
+            description = (
+                "There was a problem generating your cut.\n\n"
+                + "Please go back and check your parameters before continuing."
+            )
             self.homing_button.disabled = True
             popup_input_error.PopupInputError(self.shapecutter_sm, description)
         if gcode_generated == True:

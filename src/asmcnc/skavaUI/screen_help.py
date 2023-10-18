@@ -1,6 +1,7 @@
 from kivy.config import Config
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '440')
+
+Config.set("graphics", "width", "800")
+Config.set("graphics", "height", "440")
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -10,6 +11,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 import sys, os
 from kivy.base import runTouchApp
+
 Builder.load_string(
     """
 
@@ -68,18 +70,17 @@ Builder.load_string(
 
                 
 """
-    )
+)
 
 
 class HelpScreen(Screen):
-
     def __init__(self, **kwargs):
         super(HelpScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
+        self.sm = kwargs["screen_manager"]
 
     def load_video(self, selection):
         self.video_player.source = selection
 
     def quit_to_home(self):
-        self.video_player.state = 'stop'
-        self.sm.current = 'home'
+        self.video_player.state = "stop"
+        self.sm.current = "home"

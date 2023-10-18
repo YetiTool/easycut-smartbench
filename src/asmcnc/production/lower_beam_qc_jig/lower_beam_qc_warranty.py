@@ -7,8 +7,11 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from asmcnc.skavaUI import widget_status_bar, popup_info
-from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
+from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import (
+    LowerBeamQCXYMove,
+)
 import sys, os
+
 Builder.load_string(
     """
 <LowerBeamQCWarranty>:
@@ -185,75 +188,91 @@ Builder.load_string(
             pos: self.pos
 
 """
-    )
+)
 
 
 class PopupMotorChipsTest(Widget):
-
     def __init__(self, screen_manager, report_string):
         self.sm = screen_manager
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True,
-            halign='left', valign='middle', text=report_string, color=[0, 0,
-            0, 1], padding=[10, 10])
-        ok_button = Button(text='[b]Ok[/b]', markup=True)
-        ok_button.background_normal = ''
+        label1 = Label(
+            size_hint_y=1,
+            text_size=(None, None),
+            markup=True,
+            halign="left",
+            valign="middle",
+            text=report_string,
+            color=[0, 0, 0, 1],
+            padding=[10, 10],
+        )
+        ok_button = Button(text="[b]Ok[/b]", markup=True)
+        ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
-        text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
+        text_layout = BoxLayout(orientation="horizontal", spacing=0, padding=0)
         text_layout.add_widget(label1)
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15,
-            padding=[150, 10, 150, 0], size_hint_y=0.3)
+        btn_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=15,
+            padding=[150, 10, 150, 0],
+            size_hint_y=0.3,
+        )
         btn_layout.add_widget(ok_button)
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding
-            =[10, 10, 10, 10])
+        layout_plan = BoxLayout(
+            orientation="vertical", spacing=10, padding=[10, 10, 10, 10]
+        )
         layout_plan.add_widget(text_layout)
         layout_plan.add_widget(btn_layout)
-        popup = Popup(title='Output', title_color=[0, 0, 0, 1], title_size=
-            '20sp', content=layout_plan, size_hint=(None, None), size=(700,
-            400), auto_dismiss=False)
-        popup.background = (
-            './asmcnc/apps/shapeCutter_app/img/popup_background.png')
+        popup = Popup(
+            title="Output",
+            title_color=[0, 0, 0, 1],
+            title_size="20sp",
+            content=layout_plan,
+            size_hint=(None, None),
+            size=(700, 400),
+            auto_dismiss=False,
+        )
+        popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
         popup.separator_color = [249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0]
-        popup.separator_height = '4dp'
+        popup.separator_height = "4dp"
         ok_button.bind(on_press=popup.dismiss)
         popup.open()
 
 
 class LowerBeamQCWarranty(Screen):
-
     def __init__(self, **kwargs):
         super(LowerBeamQCWarranty, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
-        self.xy_move_widget = LowerBeamQCXYMove(machine=self.m,
-            screen_manager=self.sm, localization=self.l)
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
+        self.l = kwargs["l"]
+        self.xy_move_widget = LowerBeamQCXYMove(
+            machine=self.m, screen_manager=self.sm, localization=self.l
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
         self.status_container.add_widget(self.status_bar_widget)
-        self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, 0.4)
-        self.poll_for_checks = Clock.schedule_interval(self.
-            update_checkboxes, 0.4)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+        self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, 0.4)
 
     def on_enter(self):
-        self.warranty_toggle.state = 'down'
+        self.warranty_toggle.state = "down"
 
     def update_status_text(self, dt):
         try:
-            self.console_status_text.text = self.sm.get_screen('home'
-                ).gcode_monitor_widget.consoleStatusText.text
+            self.console_status_text.text = self.sm.get_screen(
+                "home"
+            ).gcode_monitor_widget.consoleStatusText.text
         except:
             pass
 
     def set_vac(self):
-        if self.vac_toggle.state == 'normal':
+        if self.vac_toggle.state == "normal":
             self.m.vac_off()
         else:
             self.m.vac_on()
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal':
+        if self.spindle_toggle.state == "normal":
             self.m.spindle_off()
         else:
             self.m.spindle_on()
@@ -264,32 +283,28 @@ class LowerBeamQCWarranty(Screen):
 
     def y_home_switch(self):
         if self.m.s.limit_y:
-            self.y_home_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.y_home_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def y_max_switch(self):
         if self.m.s.limit_Y:
-            self.y_max_check.source = (
-                './asmcnc/skavaUI/img/file_select_select.png')
+            self.y_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
-            self.y_max_check.source = (
-                './asmcnc/skavaUI/img/checkbox_inactive.png')
+            self.y_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def disable_alarms(self):
-        self.m.s.write_command('$21 = 0')
+        self.m.s.write_command("$21 = 0")
 
     def enable_alarms(self):
-        self.m.s.write_command('$21 = 1')
+        self.m.s.write_command("$21 = 1")
 
     def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system('sudo shutdown -h now')
+        if sys.platform != "win32" and sys.platform != "darwin":
+            os.system("sudo shutdown -h now")
 
     def switch_screen(self):
-        self.sm.current = 'qc'
+        self.sm.current = "qc"
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)

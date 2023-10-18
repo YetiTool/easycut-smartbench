@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -298,21 +299,21 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter19ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]19[/b]')
-    title_label = StringProperty('[b]Fit your cutter[/b]')
+    screen_number = StringProperty("[b]19[/b]")
+    title_label = StringProperty("[b]Fit your cutter[/b]")
     user_instructions = StringProperty(
-        'Select the correct router bit, check the condition of the tool, and fit to spindle.'
-        )
+        "Select the correct router bit, check the condition of the tool, and fit to spindle."
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter19ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 1

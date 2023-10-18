@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+
 Builder.load_string(
     """
 
@@ -289,25 +290,26 @@ Builder.load_string(
                                     allow_stretch: True              
 
 """
-    )
+)
 
 
 class ShapeCutter11ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]11[/b]')
-    title_label = StringProperty('[b]Home SmartBench[/b]')
+    screen_number = StringProperty("[b]11[/b]")
+    title_label = StringProperty("[b]Home SmartBench[/b]")
     user_instructions = StringProperty(
         """When you are ready, press the button to Home SmartBench.
 
-""")
+"""
+    )
     warning_message = StringProperty(
-        '[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]'
-        )
+        "[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]"
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter11ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -319,7 +321,7 @@ class ShapeCutter11ScreenClass(Screen):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
-        self.shapecutter_sm.homing_screen('sC11', 'sC12')
+        self.shapecutter_sm.homing_screen("sC11", "sC12")
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

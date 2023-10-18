@@ -11,6 +11,7 @@ import sys, os
 from kivy.clock import Clock
 import traceback
 from asmcnc.apps.systemTools_app.screens import popup_system
+
 Builder.load_string(
     """
 
@@ -109,7 +110,7 @@ Builder.load_string(
             border: [dp(25)]*4
             padding_y: 5
 """
-    )
+)
 
 
 class SupportMenuScreen(Screen):
@@ -117,10 +118,14 @@ class SupportMenuScreen(Screen):
 
     def __init__(self, **kwargs):
         super(SupportMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.l = kwargs['localization']
-        self.id_list = [self.button_download_logs, self.
-            button_reinstall_pika, self.button_git_fsck, self.button_go_back]
+        self.systemtools_sm = kwargs["system_tools"]
+        self.l = kwargs["localization"]
+        self.id_list = [
+            self.button_download_logs,
+            self.button_reinstall_pika,
+            self.button_git_fsck,
+            self.button_go_back,
+        ]
         self.update_strings()
 
     def go_back(self):
@@ -142,10 +147,10 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.do_usb_first_aid()
 
     def update_strings(self):
-        self.button_download_logs.text = self.l.get_str('Download Logs')
-        self.button_reinstall_pika.text = self.l.get_str('Get Pika')
-        self.button_git_fsck.txt = self.l.get_str('Git FSCK')
-        self.button_go_back.text = self.l.get_str('Go Back')
+        self.button_download_logs.text = self.l.get_str("Download Logs")
+        self.button_reinstall_pika.text = self.l.get_str("Get Pika")
+        self.button_git_fsck.txt = self.l.get_str("Git FSCK")
+        self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)
 

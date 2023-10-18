@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+
 Builder.load_string(
     """
 
@@ -311,13 +312,13 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter1ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]1[/b]')
-    title_label = StringProperty('[b]Do you need to calibrate SmartBench?[/b]')
+    screen_number = StringProperty("[b]1[/b]")
+    title_label = StringProperty("[b]Do you need to calibrate SmartBench?[/b]")
     user_instructions = StringProperty(
         """You might want to calibrate the machine if high accuracy is required.
 
@@ -326,12 +327,12 @@ Accuracy may be have been affected by transit, maintenance or a change in ambien
 Click the button below if you want to calibrate SmartBench.
 
 """
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter1ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -364,4 +365,4 @@ Click the button below if you want to calibrate SmartBench.
         self.shapecutter_sm.exit_shapecutter()
 
     def calibrate(self):
-        self.shapecutter_sm.am.start_calibration_app('sC1')
+        self.shapecutter_sm.am.start_calibration_app("sC1")

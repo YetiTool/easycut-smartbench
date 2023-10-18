@@ -12,6 +12,7 @@ from kivy.base import runTouchApp
 from asmcnc.skavaUI import widget_z_height
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -101,80 +102,90 @@ Builder.load_string(
                         allow_stretch: True 
         
 """
-    )
+)
 
 
 class MaintenanceZMove(Widget):
-
     def __init__(self, **kwargs):
         super(MaintenanceZMove, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.jd = kwargs['job']
-        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(
-            machine=self.m, screen_manager=self.sm, job=self.jd))
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
+        self.jd = kwargs["job"]
+        self.virtual_z_container.add_widget(
+            widget_z_height.VirtualZ(
+                machine=self.m, screen_manager=self.sm, job=self.jd
+            )
+        )
 
     def jog_z(self, case):
-        self.m.set_led_colour('WHITE')
-        feed_speed = self.sm.get_screen('maintenance'
-            ).xy_move_widget.feedSpeedJogZ
-        if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free':
-            if case == 'Z-':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
-            if case == 'Z+':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
-        elif self.sm.get_screen('maintenance'
-            ).xy_move_widget.jogMode == 'plus_0-01':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 0.01, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -0.01, feed_speed)
-        elif self.sm.get_screen('maintenance'
-            ).xy_move_widget.jogMode == 'plus_0-1':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 0.1, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -0.1, feed_speed)
-        elif self.sm.get_screen('maintenance'
-            ).xy_move_widget.jogMode == 'plus_1':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 1, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -1, feed_speed)
-        elif self.sm.get_screen('maintenance'
-            ).xy_move_widget.jogMode == 'plus_10':
-            if case == 'Z+':
-                self.m.jog_relative('Z', 10, feed_speed)
-            if case == 'Z-':
-                self.m.jog_relative('Z', -10, feed_speed)
-        elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job':
-            if case == 'Z-':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
-            if case == 'Z+':
-                self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
+        self.m.set_led_colour("WHITE")
+        feed_speed = self.sm.get_screen("maintenance").xy_move_widget.feedSpeedJogZ
+        if self.sm.get_screen("maintenance").xy_move_widget.jogMode == "free":
+            if case == "Z-":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_min_jog_abs_limit, feed_speed
+                )
+            if case == "Z+":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_max_jog_abs_limit, feed_speed
+                )
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_0-01":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.01, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.01, feed_speed)
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_0-1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.1, feed_speed)
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -1, feed_speed)
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_10":
+            if case == "Z+":
+                self.m.jog_relative("Z", 10, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -10, feed_speed)
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "job":
+            if case == "Z-":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_min_jog_abs_limit, feed_speed
+                )
+            if case == "Z+":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_max_jog_abs_limit, feed_speed
+                )
 
     def quit_jog_z(self):
-        if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free':
+        if self.sm.get_screen("maintenance").xy_move_widget.jogMode == "free":
             self.m.quit_jog()
-        elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job':
+        elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "job":
             self.m.quit_jog()
 
     def get_info(self):
-        info = self.l.get_bold('To set, if laser hardware is fitted:'
-            ) + '\n\n' + self.l.get_str(
-            '1. Enable laser crosshair (switch to on).').replace(self.l.
-            get_str('on'), self.l.get_bold('on')) + '\n' + self.l.get_str(
-            '2. On a test piece, cut a mark using manual moves.'
-            ) + '\n' + self.l.get_str(
-            '3. Lift Z Head and press the reset button in the bottom left.'
-            ).replace(self.l.get_str('reset'), self.l.get_bold('reset')
-            ) + '\n' + self.l.get_str(
-            '4. Move the Z Head so that the cross hair lines up with the mark centre.'
-            ) + '\n' + self.l.get_str('5. Press save.').replace(self.l.
-            get_str('save'), self.l.get_bold('save'))
+        info = (
+            self.l.get_bold("To set, if laser hardware is fitted:")
+            + "\n\n"
+            + self.l.get_str("1. Enable laser crosshair (switch to on).").replace(
+                self.l.get_str("on"), self.l.get_bold("on")
+            )
+            + "\n"
+            + self.l.get_str("2. On a test piece, cut a mark using manual moves.")
+            + "\n"
+            + self.l.get_str(
+                "3. Lift Z Head and press the reset button in the bottom left."
+            ).replace(self.l.get_str("reset"), self.l.get_bold("reset"))
+            + "\n"
+            + self.l.get_str(
+                "4. Move the Z Head so that the cross hair lines up with the mark centre."
+            )
+            + "\n"
+            + self.l.get_str("5. Press save.").replace(
+                self.l.get_str("save"), self.l.get_bold("save")
+            )
+        )
         popup_info.PopupInfo(self.sm, self.l, 700, info)

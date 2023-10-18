@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 
@@ -138,16 +139,15 @@ Builder.load_string(
 					padding:[0.241875*app.width, 0, 0, 0]
 
 """
-    )
+)
 
 
 class WarrantyScreen4(Screen):
-
     def __init__(self, **kwargs):
         super(WarrantyScreen4, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.start_seq = kwargs["start_sequence"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):
@@ -157,8 +157,8 @@ class WarrantyScreen4(Screen):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str(
-            'SmartBench Warranty Registration')
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
         self.success_label.text = self.l.get_bold(
-            'You have successfully completed your warranty registration.')
-        self.next_button.text = self.l.get_str('Next') + '...'
+            "You have successfully completed your warranty registration."
+        )
+        self.next_button.text = self.l.get_str("Next") + "..."

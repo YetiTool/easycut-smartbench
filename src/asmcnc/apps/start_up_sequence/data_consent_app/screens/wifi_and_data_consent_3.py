@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -192,25 +193,33 @@ Builder.load_string(
 					# padding: [193.5, 0, 0, 0]
 
 """
-    )
+)
 
 
 class ScrollPrivacyNotice(ScrollView):
-    text = StringProperty('')
-    color_dict = DictProperty({'background': 'e5e5e5ff', 'link': '1976d2ff',
-        'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
+    text = StringProperty("")
+    color_dict = DictProperty(
+        {
+            "background": "e5e5e5ff",
+            "link": "1976d2ff",
+            "paragraph": "333333ff",
+            "title": "333333ff",
+            "bullet": "333333ff",
+        }
+    )
 
 
 class WiFiAndDataConsentScreen3(Screen):
     checkbox_checked = False
     privacy_notice_path = (
-        './asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/')
+        "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
+    )
 
     def __init__(self, **kwargs):
         super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.c = kwargs['consent_manager']
-        self.l = kwargs['localization']
+        self.start_seq = kwargs["start_sequence"]
+        self.c = kwargs["consent_manager"]
+        self.l = kwargs["localization"]
         self.update_strings()
         self.set_checkbox_default()
 
@@ -221,16 +230,18 @@ class WiFiAndDataConsentScreen3(Screen):
         try:
             self.start_seq.prev_in_sequence()
         except:
-            self.c.sm.current = 'consent_2'
+            self.c.sm.current = "consent_2"
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
-        self.scroll_privacy_notice.privacy_notice.source = (self.
-            privacy_notice_path + self.l.lang + '.rst')
+        self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+        self.scroll_privacy_notice.privacy_notice.source = (
+            self.privacy_notice_path + self.l.lang + ".rst"
+        )
         self.user_info.text = self.l.get_str(
-            'I have read and understood the privacy notice')
-        self.decline_button.text = self.l.get_str('Decline')
-        self.accept_button.text = self.l.get_str('Accept')
+            "I have read and understood the privacy notice"
+        )
+        self.decline_button.text = self.l.get_str("Decline")
+        self.accept_button.text = self.l.get_str("Accept")
 
     def accept_terms(self):
         if self.terms_checkbox.active:

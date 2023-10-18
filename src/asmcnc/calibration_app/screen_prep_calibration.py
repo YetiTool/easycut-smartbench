@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 from asmcnc.calibration_app import screen_measurement
+
 Builder.load_string(
     """
 
@@ -165,7 +166,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class PrepCalibrationScreenClass(Screen):
@@ -179,28 +180,30 @@ class PrepCalibrationScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(PrepCalibrationScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
 
     def quit_calibration(self):
-        self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'calibration_complete'
+        self.sm.get_screen("calibration_complete").calibration_cancelled = True
+        self.sm.current = "calibration_complete"
 
     def skip_section(self):
-        if not self.sm.has_screen('measurement'):
-            measurement_screen = screen_measurement.MeasurementScreenClass(name
-                ='measurement', screen_manager=self.sm, machine=self.m)
+        if not self.sm.has_screen("measurement"):
+            measurement_screen = screen_measurement.MeasurementScreenClass(
+                name="measurement", screen_manager=self.sm, machine=self.m
+            )
             self.sm.add_widget(measurement_screen)
-        self.sm.get_screen('measurement').axis = 'X'
-        self.sm.current = 'measurement'
+        self.sm.get_screen("measurement").axis = "X"
+        self.sm.current = "measurement"
 
     def repeat_section(self):
-        self.sm.current = 'calibration_landing'
+        self.sm.current = "calibration_landing"
 
     def next_screen(self):
-        if not self.sm.has_screen('measurement'):
-            measurement_screen = screen_measurement.MeasurementScreenClass(name
-                ='measurement', screen_manager=self.sm, machine=self.m)
+        if not self.sm.has_screen("measurement"):
+            measurement_screen = screen_measurement.MeasurementScreenClass(
+                name="measurement", screen_manager=self.sm, machine=self.m
+            )
             self.sm.add_widget(measurement_screen)
-        self.sm.get_screen('measurement').axis = 'X'
-        self.m.request_homing_procedure('measurement', 'calibration_complete')
+        self.sm.get_screen("measurement").axis = "X"
+        self.m.request_homing_procedure("measurement", "calibration_complete")

@@ -14,6 +14,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from asmcnc.calibration_app import screen_distance_3_x
+
 Builder.load_string(
     """
 
@@ -199,7 +200,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class DistanceScreen2xClass(Screen):
@@ -212,17 +213,19 @@ class DistanceScreen2xClass(Screen):
 
     def __init__(self, **kwargs):
         super(DistanceScreen2xClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
-        self.title_label.text = '[color=000000]X Distance:[/color]'
+        self.title_label.text = "[color=000000]X Distance:[/color]"
         self.user_instructions_text.text = (
             """Re-measure distance between guard post and end plate. 
 
 [b]The distance should measure """
-             + measure_string + '[/b]')
+            + measure_string
+            + "[/b]"
+        )
         self.continue_button_label.text = """[color=455A64]Ok, it measures as expected.
  Finish and move on to the next section.[/color]"""
 
@@ -234,30 +237,33 @@ class DistanceScreen2xClass(Screen):
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x
-        distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name=
-            'distance1x', screen_manager=self.sm, machine=self.m)
+
+        distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
+            name="distance1x", screen_manager=self.sm, machine=self.m
+        )
         self.sm.add_widget(distance_screen1x)
-        self.sm.current = 'distance1x'
+        self.sm.current = "distance1x"
 
     def skip_section(self):
-        self.sm.get_screen('measurement').axis = 'Y'
-        self.sm.current = 'measurement'
+        self.sm.get_screen("measurement").axis = "Y"
+        self.sm.current = "measurement"
 
     def quit_calibration(self):
-        self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
-        self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'tape_measure_alert'
+        self.sm.get_screen(
+            "tape_measure_alert"
+        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("calibration_complete").calibration_cancelled = True
+        self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen('distance3x'):
-            distance3x_screen = screen_distance_3_x.DistanceScreen3xClass(name
-                ='distance3x', screen_manager=self.sm, machine=self.m)
+        if not self.sm.has_screen("distance3x"):
+            distance3x_screen = screen_distance_3_x.DistanceScreen3xClass(
+                name="distance3x", screen_manager=self.sm, machine=self.m
+            )
             self.sm.add_widget(distance3x_screen)
-        self.sm.get_screen('distance3x').x_cal_measure_1 = self.x_cal_measure_1
-        self.sm.current = 'distance3x'
+        self.sm.get_screen("distance3x").x_cal_measure_1 = self.x_cal_measure_1
+        self.sm.current = "distance3x"
 
     def on_leave(self):
-        if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
-            self.sm.remove_widget(self.sm.get_screen('distance2x'))
+        if self.sm.current != "alarmScreen" and self.sm.current != "errorScreen":
+            self.sm.remove_widget(self.sm.get_screen("distance2x"))

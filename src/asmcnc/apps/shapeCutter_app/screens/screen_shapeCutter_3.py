@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+
 Builder.load_string(
     """
 
@@ -290,20 +291,21 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter3ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]3[/b]')
-    title_label = StringProperty('[b]Clear SmartBench topside[/b]')
+    screen_number = StringProperty("[b]3[/b]")
+    title_label = StringProperty("[b]Clear SmartBench topside[/b]")
     user_instructions = StringProperty(
-        'Before loading your material, remove any items from the Y bench.')
+        "Before loading your material, remove any items from the Y bench."
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter3ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0

@@ -7,6 +7,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -159,16 +160,15 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class WelcomeTextScreen(Screen):
-
     def __init__(self, **kwargs):
         super(WelcomeTextScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):
@@ -179,25 +179,25 @@ class WelcomeTextScreen(Screen):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str('Welcome to SmartBench')
+        self.header_label.text = self.l.get_str("Welcome to SmartBench")
         self.thankyou_label.text = self.l.get_str(
-            'Thank you for purchasing SmartBench.')
+            "Thank you for purchasing SmartBench."
+        )
         self.next_steps_label.text = self.l.get_str(
-            'Please follow the next steps to set up your Console, and complete your warranty registration process.'
-            )
-        self.minutes_label.text = self.l.get_str(
-            'It will only a take a few minutes.')
-        self.next_button.text = self.l.get_str('Next') + '...'
+            "Please follow the next steps to set up your Console, and complete your warranty registration process."
+        )
+        self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
+        self.next_button.text = self.l.get_str("Next") + "..."
 
     def update_seen(self):
         show_user_welcome_app = os.popen(
             'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
-            ).read()
+        ).read()
         if not show_user_welcome_app:
             os.system(
                 "sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt"
-                )
-        elif 'True' in show_user_welcome_app:
+            )
+        elif "True" in show_user_welcome_app:
             os.system(
                 'sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt'
-                )
+            )
