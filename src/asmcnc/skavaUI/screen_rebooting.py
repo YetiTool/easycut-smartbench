@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created Mayh 2019
 
@@ -11,9 +10,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
-
-
-# Kivy UI builder:
 Builder.load_string(
     """
 
@@ -30,8 +26,8 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding: 0.0875*app.width
+        spacing: 0.145833333333*app.height
         size_hint_x: 1
 
         BoxLayout:
@@ -43,28 +39,29 @@ Builder.load_string(
                 text_size: self.size
                 size_hint_y: 0.5
                 markup: True
-                font_size: '40sp'   
+                font_size: str(0.05*app.width) + 'sp'   
                 valign: 'middle'
                 halign: 'center'            
 
 """
-)
+    )
 
 
 class RebootingScreen(Screen):
+
     def __init__(self, **kwargs):
         super(RebootingScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
-        self.reboot_label.text = self.l.get_str("Rebooting") + "..."
+        self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
+        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
 
     def on_pre_enter(self):
-        self.reboot_label.text = self.l.get_str("Rebooting") + "..."
+        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
         self.reboot_label.font_name = self.l.font_regular
 
     def on_enter(self):
         Clock.schedule_once(self.reboot, 1)
 
     def reboot(self, dt):
-        if sys.platform != "win32" and sys.platform != "darwin":
-            os.system("sudo reboot")
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+            os.system('sudo reboot')

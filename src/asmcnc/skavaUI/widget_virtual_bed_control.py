@@ -1,22 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 Created on 1 Feb 2018
 @author: Ed
 """
-
 import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from asmcnc.skavaUI import popup_info
-
 Builder.load_string(
     """
 
@@ -28,15 +21,15 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos   
         padding: 0
-        spacing: 20
+        spacing: 0.025*app.width
         orientation: "horizontal"
 
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: 0.00625*app.width
+            spacing: 0.00625*app.width
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -50,9 +43,10 @@ Builder.load_string(
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20
+                font_size: 0.025*app.width
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -71,6 +65,7 @@ Builder.load_string(
                         allow_stretch: True
     
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -108,8 +103,8 @@ Builder.load_string(
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: 0.00625*app.width
+            spacing: 0.00625*app.width
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -122,8 +117,9 @@ Builder.load_string(
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20        
+                font_size: 0.025*app.width        
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -141,6 +137,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                       
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -160,61 +157,48 @@ Builder.load_string(
     
      
 """
-)
+    )
 
 
 class VirtualBedControl(Widget):
 
-    # localize meeee
-
     def __init__(self, **kwargs):
-
         super(VirtualBedControl, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
 
     def zoomStateCheck(self):
-        if self.zoomToggleButton.state == "down":
+        if self.zoomToggleButton.state == 'down':
             self.bedWidgetScatter.do_translation = True
             self.bedWidgetScatter.do_scale = True
-        if self.zoomToggleButton.state == "normal":
+        if self.zoomToggleButton.state == 'normal':
             self.bedWidgetScatter.do_translation = False
             self.bedWidgetScatter.do_scale = False
 
     def set_workzone_to_pos_xy(self):
-        # warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
-
-        # 'Is this where you want to set your X-Y datum?'
-        warning = self.format_command(
-            (
-                self.l.get_str("Is this where you want to set your X-Y datum?").replace(
-                    "X-Y", "[b]X-Y[/b]"
-                )
-            ).replace(self.l.get_str("datum"), self.l.get_bold("datum"))
-        )
-
-        popup_info.PopupDatum(self.sm, self.m, self.l, "XY", warning)
+        warning = self.format_command(self.l.get_str(
+            'Is this where you want to set your X-Y datum?').replace('X-Y',
+            '[b]X-Y[/b]').replace(self.l.get_str('datum'), self.l.get_bold(
+            'datum')))
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
 
     def set_standby_to_pos(self):
-        # warning = 'Is this where you want to set your\nstandby position?'
-
-        # Is this where you want to set your standby position?
-
-        warning = self.format_command(
-            self.l.get_str("Is this where you want to set your standby position?")
-        )
+        warning = self.format_command(self.l.get_str(
+            'Is this where you want to set your standby position?'))
         popup_info.PopupPark(self.sm, self.m, self.l, warning)
 
     def go_to_jobstart_xy(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, self.l, "home", "home")
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home',
+                'home')
         else:
             self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, self.l, "home", "home")
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home',
+                'home')
         else:
             self.m.go_to_standby()
 

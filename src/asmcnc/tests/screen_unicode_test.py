@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
-
-
 """
 Unicode test screen
 
 """
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
-
 Builder.load_string(
     """
 
@@ -24,7 +19,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 90,50
+        padding:0.1125*app.width,0.104166666667*app.height
         spacing: 0
         size_hint_x: 1
 
@@ -34,22 +29,20 @@ Builder.load_string(
 
             Label:
                 text_size: self.size
-                font_size: '40sp'
+                font_size: str(0.05*app.width) + 'sp'
                 halign: 'center'
                 valign: 'middle'
                 text: root.string_test
                 markup: 'True'
                 color: [0,0,0,1]
 """
-)
+    )
 
 
 class ScreenClass(Screen):
-
-    string_test = ""  # "유니코드에 대해"
+    string_test = ''
 
     def __init__(self, **kwargs):
-
         super(ScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
+        self.sm = kwargs['screen_manager']
+        self.m = kwargs['machine']

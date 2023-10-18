@@ -3,8 +3,6 @@ from kivy.lang import Builder
 from kivy.uix.button import Button
 from functools import partial
 from kivy.graphics import Color
-
-
 Builder.load_string(
     """
 
@@ -36,13 +34,13 @@ Builder.load_string(
             halign: "center" 
             valign: "middle"
             color: 0, 0, 0, 1
-            font_size: '22sp'
+            font_size: str(0.0275*app.width) + 'sp'
             size_hint_y: 0.3
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.2
-            padding: [15,0]
+            padding:[0.01875*app.width,0]
 
             Label: 
                 id: min_label
@@ -51,7 +49,7 @@ Builder.load_string(
                 halign: "center" 
                 valign: "middle"
                 size_hint_x: 0.1
-                font_size: '14sp'
+                font_size: str(0.0175*app.width) + 'sp'
 
             Slider:
                 id: power_slider
@@ -67,19 +65,19 @@ Builder.load_string(
                 halign: "center" 
                 valign: "middle"
                 size_hint_x: 0.1
-                font_size: '14sp'
+                font_size: str(0.0175*app.width) + 'sp'
 
         BoxLayout:
             id: button_container
             size_hint_y: 0.5
             orientation: 'horizontal'
-            spacing: 5
-            padding: [5,15,5,20]
+            spacing: 0.00625*app.width
+            padding:[0.00625*app.width,0.03125*app.height,0.00625*app.width,0.0416666666667*app.height]
             # buttons made in init
 
                 
 """
-)
+    )
 
 
 class PowerAdjustButtons(Button):
@@ -90,53 +88,41 @@ dark_grey = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
 
 
 class LoadSliderWidget(Widget):
+
     def __init__(self, **kwargs):
         super(LoadSliderWidget, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        # self.l = kwargs['localization']
-        self.yp = kwargs["yetipilot"]
-
+        self.sm = kwargs['screen_manager']
+        self.yp = kwargs['yetipilot']
         self.load_label.color = dark_grey
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
-
         try:
             self.power_slider.min = self.yp.get_free_load()
         except:
             self.power_slider.min = 390
         self.power_slider.value = self.yp.get_total_target_power()
-
         self.on_slider_value_change()
         self.power_slider.bind(value=self.on_slider_value_change)
-
-        self.min_label.text = str(int(self.power_slider.min)) + " W"
-        self.max_label.text = str(int(self.power_slider.max)) + " W"
-
+        self.min_label.text = str(int(self.power_slider.min)) + ' W'
+        self.max_label.text = str(int(self.power_slider.max)) + ' W'
         self.make_buttons(self.button_container, self.power_slider, -100)
         self.make_buttons(self.button_container, self.power_slider, -10)
         self.make_buttons(self.button_container, self.power_slider, +10)
         self.make_buttons(self.button_container, self.power_slider, +100)
 
     def make_buttons(self, container, slider, val):
-        btn_str = str(val) if val < 0 else "+" + str(val)
+        btn_str = str(val) if val < 0 else '+' + str(val)
         button_adjust_func = partial(self.button_adjust_slider, val)
-        container.add_widget(
-            PowerAdjustButtons(
-                text=btn_str, on_press=button_adjust_func, color=dark_grey
-            )
-        )
+        container.add_widget(PowerAdjustButtons(text=btn_str, on_press=
+            button_adjust_func, color=dark_grey))
 
     def button_adjust_slider(self, val, instance=None):
-        if (
-            self.power_slider.min
-            <= self.power_slider.value + val
-            <= self.power_slider.max
-        ):
+        if (self.power_slider.min <= self.power_slider.value + val <= self.
+            power_slider.max):
             self.power_slider.value += val
 
     def on_slider_value_change(self, instance=None, value=None):
-        self.load_label.text = "[b]" + str(int(self.power_slider.value)) + " W" + "[/b]"
-
+        self.load_label.text = '[b]' + str(int(self.power_slider.value)
+            ) + ' W' + '[/b]'
         tool_load = int(self.power_slider.value) - self.yp.get_free_load()
-
         self.yp.set_tool_load(tool_load)

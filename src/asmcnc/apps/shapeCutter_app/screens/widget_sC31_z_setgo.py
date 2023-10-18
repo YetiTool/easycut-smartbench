@@ -2,20 +2,13 @@
 Created on 5 March 2020
 @author: Letty
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
-
 Builder.load_string(
     """
 
@@ -29,7 +22,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing: 20
+        spacing: 0.0416666666667*app.height
         
         orientation: "vertical"
         
@@ -46,11 +39,12 @@ Builder.load_string(
                     pos: self.pos 
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding: 0.0125*app.width
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -62,6 +56,7 @@ Builder.load_string(
                         allow_stretch: True  
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -81,6 +76,7 @@ Builder.load_string(
                         allow_stretch: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -102,28 +98,28 @@ Builder.load_string(
          
         
 """
-)
+    )
 
 
 class SC31ZSetGo(Widget):
+
     def __init__(self, **kwargs):
         super(SC31ZSetGo, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
-
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == "normal":
-            self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
+        if self.speed_toggle.state == 'normal':
+            self.speed_image.source = './asmcnc/skavaUI/img/slow.png'
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
         else:
-            self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
+            self.speed_image.source = './asmcnc/skavaUI/img/fast.png'
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
