@@ -1,16 +1,17 @@
-'''
+"""
 Created on 4 March 2020
 Repeat? Screen for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterRepeatScreenClass>:
     
@@ -151,22 +152,24 @@ Builder.load_string("""
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos
-""")
+"""
+)
+
 
 class ShapeCutterRepeatScreenClass(Screen):
 
-    exiting = False 
-    
+    exiting = False
+
     def __init__(self, **kwargs):
         super(ShapeCutterRepeatScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-    
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+
     def repeat(self):
         self.shapecutter_sm.repeat_cut()
-        
+
     def new_cut(self):
         self.shapecutter_sm.landing()
-        
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()

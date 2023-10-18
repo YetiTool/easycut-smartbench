@@ -1,9 +1,9 @@
-'''
+"""
 Created on 5 March 2020
 Screen 31 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -11,10 +11,16 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
+from asmcnc.apps.shapeCutter_app.screens import (
+    widget_sC31_xy_move,
+    widget_sC31_z_setgo,
+    widget_sC31_z_move,
+    widget_sC_work_coordinates,
+)
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error, popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter31ScreenClass>
 
@@ -297,105 +303,119 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter31ScreenClass(Screen):
-    
+
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]31[/b]")
     title_label = StringProperty("[b]Set job Z datum[/b]")
     user_instructions = StringProperty()
-    
+
     def __init__(self, **kwargs):
         super(ShapeCutter31ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-        self.j=kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.j = kwargs["job_parameters"]
 
-        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, localization=self.l, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(
+            machine=self.m,
+            localization=self.l,
+            screen_manager=self.shapecutter_sm.sm,
+            job_parameters=self.j,
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
-        
-        self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(machine=self.m, screen_manager=self.shapecutter_sm.sm, )
+
+        self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(
+            machine=self.m,
+            screen_manager=self.shapecutter_sm.sm,
+        )
         self.z_set_go_container.add_widget(self.z_set_go_widget)
-        
-        self.z_move_widget = widget_sC31_z_move.SC31ZMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+
+        self.z_move_widget = widget_sC31_z_move.SC31ZMove(
+            machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters=self.j
+        )
         self.z_move_container.add_widget(self.z_move_widget)
 
-        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(
+            machine=self.m, screen_manager=self.shapecutter_sm.sm
+        )
         self.work_coords_container.add_widget(self.work_coords_widget)
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.z_set_go_widget.set_jog_speeds()
 
-# Action buttons
+    # Action buttons
     def get_info(self):
         info = "Move the machine by using the arrow buttons.\n\nUse the Z0 button to set the datum using the touchplate.\n\nUse the SET button to manually set the datum.\n\nUse the GO button to move the machine to the datum. "
         popup_info.PopupInfo(self.shapecutter_sm, info)
-    
+
     def go_back(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.previous_screen()
         else:
             pass
-    
+
     def next_screen(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.bounding_box_test()
         else:
             pass
-    
-# Tab functions
+
+    # Tab functions
 
     def prepare(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.prepare_tab()
         else:
-            pass  
-    
+            pass
 
     def load(self):
 
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.load_tab()
         else:
-            pass  
+            pass
 
-    
     def define(self):
 
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.define_tab()
         else:
-            pass  
-    
+            pass
+
     def position(self):
-        
-        if not self.m.state().startswith('Jog'):
+
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.position_tab()
         else:
-            pass  
+            pass
 
-    
     def check(self):
-        
-        if not self.m.state().startswith('Jog'):
+
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.check_tab()
         else:
-            pass 
-    
+            pass
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
- 
+
     def bounding_box_test(self):
         bounds_output = self.j.is_job_within_bounds()
-        
+
         if bounds_output == True:
             self.shapecutter_sm.next_screen()
-        else: 
-            description = "The job is not within the bounds of SmartBench." + \
-            bounds_output + '\n\n' + \
-            "Please go back and re-set your job datums."
+        else:
+            description = (
+                "The job is not within the bounds of SmartBench."
+                + bounds_output
+                + "\n\n"
+                + "Please go back and re-set your job datums."
+            )
             popup_input_error.PopupBoundary(self.shapecutter_sm, description)

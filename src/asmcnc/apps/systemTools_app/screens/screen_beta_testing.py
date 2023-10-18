@@ -1,9 +1,9 @@
-'''
+"""
 Created on 18 November 2020
 Beta testers screen for system tools app
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -15,7 +15,8 @@ from kivy.clock import Clock
 
 import os, sys
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import Factory kivy.factory.Factory
 
@@ -287,7 +288,9 @@ Builder.load_string("""
                                     allow_stretch: True
 
 
-""")
+"""
+)
+
 
 class BetaTestingScreen(Screen):
 
@@ -295,12 +298,12 @@ class BetaTestingScreen(Screen):
 
     def __init__(self, **kwargs):
         super(BetaTestingScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.set = kwargs['settings']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
+        self.systemtools_sm = kwargs["system_tools"]
+        self.set = kwargs["settings"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
 
-        self.user_branch.text = (self.set.sw_branch).strip('* ')
+        self.user_branch.text = (self.set.sw_branch).strip("* ")
         self.beta_version.text = self.set.latest_sw_beta
 
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
@@ -326,53 +329,62 @@ class BetaTestingScreen(Screen):
             text_input.focus = False
 
     def checkout_branch(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+        if sys.platform != "win32" and sys.platform != "darwin":
 
             message = (
-                self.l.get_str('Please wait') + \
-                '...\n' + \
-                self.l.get_str('Console will reboot to finish update.')
-                )
-            wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, description = message)
-
+                self.l.get_str("Please wait")
+                + "...\n"
+                + self.l.get_str("Console will reboot to finish update.")
+            )
+            wait_popup = popup_info.PopupWait(
+                self.systemtools_sm.sm, self.l, description=message
+            )
 
             def nested_branch_update(dt):
 
                 # Update config as for any other SW release
-                self.set.update_config() 
-                
+                self.set.update_config()
+
                 # Strip whitespace
-                branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
+                branch_name_formatted = str(self.user_branch.text).translate(None, " ")
 
                 checkout_exit_code = os.system(
-                    "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
+                    "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
+                    + branch_name_formatted
+                )
                 pull_exit_code = os.system("git pull")
-                
+
                 # exit code 0 means success, anything else is error
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()
-                    self.systemtools_sm.sm.current = 'rebooting'
+                    self.systemtools_sm.sm.current = "rebooting"
                 else:
                     wait_popup.popup.dismiss()
-                    message = (self.l.get_str("Failed to checkout and pull branch.") + \
-                        '\n' + \
-                        self.l.get_str("Please check the spelling of your branch and your internet connection."))
-                    error_popup = popup_info.PopupError(self.systemtools_sm.sm, self.l, message)
+                    message = (
+                        self.l.get_str("Failed to checkout and pull branch.")
+                        + "\n"
+                        + self.l.get_str(
+                            "Please check the spelling of your branch and your internet connection."
+                        )
+                    )
+                    error_popup = popup_info.PopupError(
+                        self.systemtools_sm.sm, self.l, message
+                    )
 
             Clock.schedule_once(nested_branch_update, 0.5)
 
     def update_to_latest_beta(self):
-        if self.wifi_toggle.state == 'down':
+        if self.wifi_toggle.state == "down":
             self.set.get_sw_update_via_wifi(beta=True)
-        elif self.usb_toggle.state == 'down':
+        elif self.usb_toggle.state == "down":
             self.set.get_sw_update_via_usb(beta=True)
         self.usb_stick.disable()
-        self.systemtools_sm.sm.current = 'rebooting'
+        self.systemtools_sm.sm.current = "rebooting"
 
     def refresh_latest_software_version(self):
         self.set.refresh_latest_sw_version()
-        self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.user_branch.text = (self.set.sw_branch).strip("*")
         self.beta_version.text = self.set.latest_sw_beta
 
     ## LOCALIZATION TESTING
@@ -384,5 +396,5 @@ class BetaTestingScreen(Screen):
         self.reset_language = True
 
     def restart_app(self):
-        if self.reset_language == True: 
+        if self.reset_language == True:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)

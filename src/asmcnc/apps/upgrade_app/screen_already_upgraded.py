@@ -3,7 +3,8 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <AlreadyUpgradedScreen>:
 
     title_label:title_label
@@ -70,28 +71,36 @@ Builder.load_string("""
                     halign: "center"
                     valign: "middle"
 
-""")
+"""
+)
+
 
 class AlreadyUpgradedScreen(Screen):
-
     def __init__(self, **kwargs):
         super(AlreadyUpgradedScreen, self).__init__(**kwargs)
 
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
 
         self.update_strings()
 
     def next_screen(self):
 
-        if not self.sm.has_screen('pro_plus_safety'):
-            pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(name='pro_plus_safety', start_sequence = None, screen_manager = self.sm, localization = self.l)
+        if not self.sm.has_screen("pro_plus_safety"):
+            pro_plus_safety_screen = screen_pro_plus_safety.ProPlusSafetyScreen(
+                name="pro_plus_safety",
+                start_sequence=None,
+                screen_manager=self.sm,
+                localization=self.l,
+            )
             self.sm.add_widget(pro_plus_safety_screen)
-        
-        self.sm.current = 'pro_plus_safety'
+
+        self.sm.current = "pro_plus_safety"
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str('Upgrade SB V1.3 to PrecisionPro +')
-        self.already_upgraded_label.text = self.l.get_str("Your machine has already been upgraded to PrecisionPro +!")
+        self.title_label.text = self.l.get_str("Upgrade SB V1.3 to PrecisionPro +")
+        self.already_upgraded_label.text = self.l.get_str(
+            "Your machine has already been upgraded to PrecisionPro +!"
+        )
         self.continue_button.text = self.l.get_str("Continue")

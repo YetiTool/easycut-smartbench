@@ -10,13 +10,14 @@ import subprocess
 
 import sys, os, re, glob
 
-try: 
+try:
     import pigpio
 
 except:
     pass
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCHome>:
     
     test_fw_update_button : test_fw_update_button
@@ -69,23 +70,24 @@ Builder.load_string("""
                     background_color: [1,0,0,1]
                     background_normal: ''
                     on_press: root.shutdown_console()
-""")
+"""
+)
 
 
 class ZHeadQCHome(Screen):
 
-    fw_button_string = 'NO - Set up PCB & Flash FW'
+    fw_button_string = "NO - Set up PCB & Flash FW"
     hw_version = 0
 
     def __init__(self, **kwargs):
         super(ZHeadQCHome, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.usb = kwargs['usb']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
+        self.usb = kwargs["usb"]
 
     def on_enter(self):
-        try: 
+        try:
             self.hw_version = int(self.m.s.hw_version)
             self.update_usb_button_label()
 
@@ -93,7 +95,7 @@ class ZHeadQCHome(Screen):
             print("Can't get HW version or hex file")
 
     def go_back_to_pcb_setup(self):
-        self.sm.current = "qcpcbsetup"  
+        self.sm.current = "qcpcbsetup"
 
     def get_fw_filepath(self):
 
@@ -111,16 +113,21 @@ class ZHeadQCHome(Screen):
 
     def update_usb_button_label(self):
         try:
-            self.fw_on_usb = "USB FW: " + re.split('GRBL|\.', str(glob.glob(self.get_fw_filepath())[0]))[1]
-            self.test_fw_update_button.text = self.fw_button_string + "\n\n" + self.fw_on_usb
+            self.fw_on_usb = (
+                "USB FW: "
+                + re.split("GRBL|\.", str(glob.glob(self.get_fw_filepath())[0]))[1]
+            )
+            self.test_fw_update_button.text = (
+                self.fw_button_string + "\n\n" + self.fw_on_usb
+            )
 
-        except: 
+        except:
             self.test_fw_update_button.text = "Looking for USB"
             self.usb.enable()
             Clock.schedule_once(lambda dt: self.update_usb_button_label(), 2)
 
     def enter_qc(self):
-        self.sm.current = 'qc1'
+        self.sm.current = "qc1"
 
     def test_fw_update(self):
 
@@ -137,8 +144,14 @@ class ZHeadQCHome(Screen):
             print(pi.get_mode(17))
             pi.stop()
 
-            cmd = "grbl_file=" + self.get_fw_filepath() + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            cmd = (
+                "grbl_file="
+                + self.get_fw_filepath()
+                + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            )
+            proc = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
+            )
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
 
@@ -150,7 +163,9 @@ class ZHeadQCHome(Screen):
 
         def do_connection(dt):
             self.m.reconnect_serial_connection()
-            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+            self.poll_for_reconnection = Clock.schedule_interval(
+                try_start_services, 0.4
+            )
 
         def try_start_services(dt):
             if self.m.s.is_connected():
@@ -160,28 +175,28 @@ class ZHeadQCHome(Screen):
                 Clock.schedule_once(update_complete, 2)
 
         def update_complete(dt):
-            if self.exit_code == 0: 
+            if self.exit_code == 0:
                 did_fw_update_succeed = "Success!"
 
-            else: 
+            else:
                 did_fw_update_succeed = "Update failed."
 
-            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(
+                self.sm, did_fw_update_succeed, str(self.stdout)
+            )
             self.update_usb_button_label()
 
-            self.sm.get_screen('qc1').reset_checkboxes()
-            self.sm.get_screen('qc2').reset_checkboxes()
-            self.sm.get_screen('qcW136').reset_checkboxes()
-            self.sm.get_screen('qcW112').reset_checkboxes()
-            self.sm.get_screen('qc3').reset_timer()
+            self.sm.get_screen("qc1").reset_checkboxes()
+            self.sm.get_screen("qc2").reset_checkboxes()
+            self.sm.get_screen("qcW136").reset_checkboxes()
+            self.sm.get_screen("qcW112").reset_checkboxes()
+            self.sm.get_screen("qc3").reset_timer()
 
         disconnect_and_update()
 
-
     def secret_option_c(self):
-        self.sm.current = 'qcWC'
+        self.sm.current = "qcWC"
 
     def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            os.system('sudo shutdown -h now')
-
+        if sys.platform != "win32" and sys.platform != "darwin":
+            os.system("sudo shutdown -h now")

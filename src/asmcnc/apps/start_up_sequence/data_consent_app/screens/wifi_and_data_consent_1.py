@@ -6,7 +6,8 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <WiFiAndDataConsentScreen1>
 
@@ -341,45 +342,48 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
 
-""")
+"""
+)
+
 
 class WiFiAndDataConsentScreen1(Screen):
+    def __init__(self, **kwargs):
+        super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.c = kwargs["consent_manager"]
+        self.l = kwargs["localization"]
+        self.update_strings()
 
-	def __init__(self, **kwargs):
-		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.c=kwargs['consent_manager']
-		self.l = kwargs['localization']
-		self.update_strings()
+    def next_screen(self):
 
+        try:
+            self.start_seq.next_in_sequence()
+        except:
+            self.c.sm.current = "consent_2"
 
-	def next_screen(self):
+    def prev_screen(self):
 
-		try:
-			self.start_seq.next_in_sequence()
-		except:
-			self.c.sm.current='consent_2'
+        try:
+            self.start_seq.prev_in_sequence()
 
-	def prev_screen(self):
+        except:
+            self.c.back_to_previous_screen()
 
-		try:
-			self.start_seq.prev_in_sequence()
+    def update_strings(self):
+        self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+        self.we_will_collect.text = self.l.get_bold(
+            "To keep improving our services, we want to collect data from your SmartBench. "
+            + "With your consent, we will collect the following data:"
+        )
+        self.we_wont_collect.text = self.l.get_bold(
+            "We will NEVER collect the following from your Console:"
+        )
+        self.job_critical_events.text = self.l.get_str("Job critical events")
+        self.maintenance_data.text = self.l.get_str("Maintenance data")
+        self.ip_address.text = self.l.get_str("IP address")
+        self.console_hostname.text = self.l.get_str("Console hostname")
+        self.g_code_files.text = self.l.get_str("G-Code files")
+        self.wifi_network_details.text = self.l.get_str("Wi-Fi network details")
+        self.serial_numbers.text = self.l.get_str("Serial numbers")
 
-		except:
-			self.c.back_to_previous_screen()
-		
-
-	def update_strings(self):
-		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \
-			"With your consent, we will collect the following data:")
-		self.we_wont_collect.text = self.l.get_bold("We will NEVER collect the following from your Console:")
-		self.job_critical_events.text = self.l.get_str("Job critical events")
-		self.maintenance_data.text = self.l.get_str("Maintenance data")
-		self.ip_address.text = self.l.get_str("IP address")
-		self.console_hostname.text = self.l.get_str("Console hostname")
-		self.g_code_files.text = self.l.get_str("G-Code files")
-		self.wifi_network_details.text = self.l.get_str("Wi-Fi network details")
-		self.serial_numbers.text = self.l.get_str("Serial numbers")
-
-		self.next_button.text = self.l.get_str("Next") + "..."
+        self.next_button.text = self.l.get_str("Next") + "..."

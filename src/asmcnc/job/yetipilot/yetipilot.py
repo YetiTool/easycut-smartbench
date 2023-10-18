@@ -11,14 +11,23 @@ from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 
+
 def format_time(seconds):
-    return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
+    return time.strftime("%H:%M:%S", time.gmtime(seconds)) + ".{:03d}".format(
+        int(seconds * 1000) % 1000
+    )
 
 
 def get_adjustment_list(feed_adjustment_percentage):
     feed_adjustment_percentage = int(round(feed_adjustment_percentage))
-    tens = [10 if feed_adjustment_percentage > 0 else -10 for _ in range(abs(feed_adjustment_percentage) // 10)]
-    ones = [1 if feed_adjustment_percentage > 0 else -1 for _ in range(abs(feed_adjustment_percentage) % 10)]
+    tens = [
+        10 if feed_adjustment_percentage > 0 else -10
+        for _ in range(abs(feed_adjustment_percentage) // 10)
+    ]
+    ones = [
+        1 if feed_adjustment_percentage > 0 else -1
+        for _ in range(abs(feed_adjustment_percentage) % 10)
+    ]
     return tens + ones
 
 
@@ -63,20 +72,20 @@ class YetiPilot(object):
 
     spindle_230v_correction_factor = 1350
 
-    profiles_path = 'asmcnc/job/yetipilot/config/profiles.json'
-    parameters_path = 'asmcnc/job/yetipilot/config/algorithm_parameters.json'
+    profiles_path = "asmcnc/job/yetipilot/config/profiles.json"
+    parameters_path = "asmcnc/job/yetipilot/config/algorithm_parameters.json"
 
     adjusting_spindle_speed = False
 
     def __init__(self, **kwargs):
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job_data']
-        self.l = kwargs['localization']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.jd = kwargs["job_data"]
+        self.l = kwargs["localization"]
 
-        if kwargs.get('test', False):
-            self.profiles_path = 'src/' + self.profiles_path
-            self.parameters_path = 'src/' + self.parameters_path
+        if kwargs.get("test", False):
+            self.profiles_path = "src/" + self.profiles_path
+            self.parameters_path = "src/" + self.parameters_path
 
         self.get_all_profiles()
         self.load_parameters()
@@ -85,18 +94,19 @@ class YetiPilot(object):
     def enable(self):
         self.use_yp = True
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
-            self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
+        if self.sm.has_screen("go"):
+            self.sm.get_screen("go").feedOverride.set_widget_visibility(False)
+            self.sm.get_screen("go").speedOverride.set_widget_visibility(False)
 
     def disable(self):
         self.use_yp = False
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').yp_widget.switch_reflects_yp()
-            if not self.active_profile: self.sm.get_screen('go').yp_widget.profile_selection.text = ""
-            self.sm.get_screen('go').feedOverride.set_widget_visibility(True)
-            self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
+        if self.sm.has_screen("go"):
+            self.sm.get_screen("go").yp_widget.switch_reflects_yp()
+            if not self.active_profile:
+                self.sm.get_screen("go").yp_widget.profile_selection.text = ""
+            self.sm.get_screen("go").feedOverride.set_widget_visibility(True)
+            self.sm.get_screen("go").speedOverride.set_widget_visibility(True)
 
         if self.m.s.feed_override_percentage > 100:
             self.m.feed_override_reset()
@@ -109,14 +119,30 @@ class YetiPilot(object):
 
     def get_multiplier(self, load):
         if load > self.get_total_target_power():
-            return self.bias_for_feed_decrease * (self.get_total_target_power() - load) / \
-                   self.get_total_target_power() * self.m_coefficient * self.c_coefficient
+            return (
+                self.bias_for_feed_decrease
+                * (self.get_total_target_power() - load)
+                / self.get_total_target_power()
+                * self.m_coefficient
+                * self.c_coefficient
+            )
 
-        return self.bias_for_feed_increase * (self.get_total_target_power() - load) / \
-               self.get_total_target_power() * self.m_coefficient * self.c_coefficient
+        return (
+            self.bias_for_feed_increase
+            * (self.get_total_target_power() - load)
+            / self.get_total_target_power()
+            * self.m_coefficient
+            * self.c_coefficient
+        )
 
-    def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving,
-                                       feed_multiplier=None):
+    def get_feed_adjustment_percentage(
+        self,
+        average_spindle_load,
+        constant_feed,
+        gcode_mode,
+        is_z_moving,
+        feed_multiplier=None,
+    ):
         """
         Calculates the correct feed adjustment percentage
         :param average_spindle_load: the average spindle load
@@ -127,7 +153,11 @@ class YetiPilot(object):
         :return:
         """
 
-        feed_multiplier = self.get_multiplier(load=average_spindle_load) if not feed_multiplier else feed_multiplier
+        feed_multiplier = (
+            self.get_multiplier(load=average_spindle_load)
+            if not feed_multiplier
+            else feed_multiplier
+        )
         allowed_to_feed_up = constant_feed and gcode_mode != 0 and not is_z_moving
 
         # If not allowed to feed up
@@ -135,8 +165,14 @@ class YetiPilot(object):
             return 0
 
         # If outside the limits of adjustment
-        if not (self.cap_for_feed_decrease < feed_multiplier < self.cap_for_feed_increase):
-            return self.cap_for_feed_decrease if feed_multiplier < 0 else self.cap_for_feed_increase
+        if not (
+            self.cap_for_feed_decrease < feed_multiplier < self.cap_for_feed_increase
+        ):
+            return (
+                self.cap_for_feed_decrease
+                if feed_multiplier < 0
+                else self.cap_for_feed_increase
+            )
 
         # Only positive numbers within limits of adjustment should get this far
         return feed_multiplier
@@ -172,7 +208,7 @@ class YetiPilot(object):
 
         # If doing feed adjustments, limit the list
         if feed:
-            adjustment_list = adjustment_list[:self.override_commands_per_adjustment]
+            adjustment_list = adjustment_list[: self.override_commands_per_adjustment]
 
         if not feed:
             self.set_adjusting_spindle_speed(True)
@@ -180,13 +216,19 @@ class YetiPilot(object):
             #                     self.override_command_delay * len(adjustment_list) + 0.2)
 
         for i, adjustment in enumerate(adjustment_list):
-            command_delay = (self.override_command_delay if feed else self.spindle_override_command_delay) * i
+            command_delay = (
+                self.override_command_delay
+                if feed
+                else self.spindle_override_command_delay
+            ) * i
 
             if feed:
                 if self.m.s.feed_override_percentage == 200 and adjustment > 0:
                     return adjustment_list[:i]
 
-                percentage_after_adjustments = adjustment + self.m.s.feed_override_percentage
+                percentage_after_adjustments = (
+                    adjustment + self.m.s.feed_override_percentage
+                )
 
                 # If doing feed adjustments and the feed drops below 10% (theoretical), then start the low feed check
                 if percentage_after_adjustments < 10:
@@ -214,18 +256,25 @@ class YetiPilot(object):
                 10: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_10),
                 1: lambda dt: self.feed_override_wrapper(self.m.feed_override_up_1),
                 -1: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_1),
-                -10: lambda dt: self.feed_override_wrapper(self.m.feed_override_down_10)
+                -10: lambda dt: self.feed_override_wrapper(
+                    self.m.feed_override_down_10
+                ),
             }
 
         return {
             10: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_10),
             1: lambda dt: self.feed_override_wrapper(self.m.speed_override_up_1),
             -1: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_1),
-            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10)
+            -10: lambda dt: self.feed_override_wrapper(self.m.speed_override_down_10),
         }
 
-    def add_status_to_yetipilot(self, digital_spindle_ld_qdA, digital_spindle_mains_voltage,
-                                feed_override_percentage, feed_rate):
+    def add_status_to_yetipilot(
+        self,
+        digital_spindle_ld_qdA,
+        digital_spindle_mains_voltage,
+        feed_override_percentage,
+        feed_rate,
+    ):
         """
         Adds a status to the yetipilot algorithm
         :param digital_spindle_ld_qdA: the digital spindle load in qdA
@@ -248,44 +297,60 @@ class YetiPilot(object):
 
             # Gather required stats
 
-            average_spindle_load = sum(self.digital_spindle_load_stack) / len(self.digital_spindle_load_stack)
+            average_spindle_load = sum(self.digital_spindle_load_stack) / len(
+                self.digital_spindle_load_stack
+            )
 
-            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(self.jd.grbl_mode_tracker[0][1],
-                                                                         feed_override_percentage, feed_rate,
-                                                                         self.tolerance_for_acceleration_detection)
+            constant_feed, gcode_feed = self.m.get_is_constant_feed_rate(
+                self.jd.grbl_mode_tracker[0][1],
+                feed_override_percentage,
+                feed_rate,
+                self.tolerance_for_acceleration_detection,
+            )
 
             gcode_mode = self.m.get_grbl_motion_mode()
 
             is_z_moving = self.m.s.z_change
 
-            feed_adjustment_percentage = self.get_feed_adjustment_percentage(average_spindle_load, constant_feed,
-                                                                             gcode_mode, is_z_moving)
+            feed_adjustment_percentage = self.get_feed_adjustment_percentage(
+                average_spindle_load, constant_feed, gcode_mode, is_z_moving
+            )
 
             # Adjust feeds & speeds
 
-            feed_adjustments = self.do_override_adjustment(feed_adjustment_percentage,
-                                                           self.get_command_dictionary(feed=True),
-                                                           feed=True)
+            feed_adjustments = self.do_override_adjustment(
+                feed_adjustment_percentage,
+                self.get_command_dictionary(feed=True),
+                feed=True,
+            )
 
             if feed_adjustments:
                 print("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
 
             if not self.using_advanced_profile and not self.adjusting_spindle_speed:
                 speed_adjustment_percentage = self.get_speed_adjustment_percentage()
-                speed_adjustments = self.do_override_adjustment(speed_adjustment_percentage,
-                                                                self.get_command_dictionary(feed=False),
-                                                                feed=False)
+                speed_adjustments = self.do_override_adjustment(
+                    speed_adjustment_percentage,
+                    self.get_command_dictionary(feed=False),
+                    feed=False,
+                )
 
                 if speed_adjustments:
-                    print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
+                    print(
+                        "YetiPilot: Speed Adjustments done: " + str(speed_adjustments)
+                    )
 
     def stop_and_show_error(self):
         self.disable()
-        self.m.stop_for_a_stream_pause('yetipilot_low_feed')
+        self.m.stop_for_a_stream_pause("yetipilot_low_feed")
 
     def check_if_feed_too_low(self):
-        if not(self.use_yp and self.m.s.is_job_streaming and
-               not self.m.is_machine_paused and "Alarm" not in self.m.state()):
+        if not (
+            self.use_yp
+            and self.m.s.is_job_streaming
+            and not self.m.is_machine_paused
+            and "Alarm" not in self.m.state()
+        ):
             self.waiting_for_feed_too_low_decision = False
             return
 
@@ -294,8 +359,12 @@ class YetiPilot(object):
         self.waiting_for_feed_too_low_decision = False
 
     def feed_override_wrapper(self, feed_override_func):
-        if self.use_yp and self.m.s.is_job_streaming and \
-                not self.m.is_machine_paused and "Alarm" not in self.m.state():
+        if (
+            self.use_yp
+            and self.m.s.is_job_streaming
+            and not self.m.is_machine_paused
+            and "Alarm" not in self.m.state()
+        ):
             feed_override_func()
 
     def load_parameters(self):
@@ -313,29 +382,41 @@ class YetiPilot(object):
         for profile_json in profiles_json["Profiles"]:
             self.available_profiles.append(
                 YetiPilotProfile(
-                    cutter_diameter=profile_json["Cutter Diameter"].encode('utf-8'),
+                    cutter_diameter=profile_json["Cutter Diameter"].encode("utf-8"),
                     cutter_type=self.l.get_str(profile_json["Cutter Type"]),
                     material_type=self.l.get_str(profile_json["Material Type"]),
                     step_down=profile_json["Step Down"],
-                    parameters=profile_json["Parameters"]
+                    parameters=profile_json["Parameters"],
                 )
             )
 
         # Get available options for dropdowns
-        self.available_material_types = self.get_sorted_material_types(self.available_profiles)
-        self.available_cutter_diameters = self.get_sorted_cutter_diameters(self.available_profiles)
-        self.available_cutter_types = self.get_sorted_cutter_types(self.available_profiles)
+        self.available_material_types = self.get_sorted_material_types(
+            self.available_profiles
+        )
+        self.available_cutter_diameters = self.get_sorted_cutter_diameters(
+            self.available_profiles
+        )
+        self.available_cutter_types = self.get_sorted_cutter_types(
+            self.available_profiles
+        )
 
     def get_sorted_cutter_diameters(self, profiles):
         return sorted({str(profile.cutter_diameter) for profile in profiles})
 
     def get_sorted_material_types(self, profiles):
-        return sorted({self.l.get_str(str(profile.material_type)) for profile in profiles})
+        return sorted(
+            {self.l.get_str(str(profile.material_type)) for profile in profiles}
+        )
 
     def get_sorted_cutter_types(self, profiles):
-        return sorted({self.l.get_str(str(profile.cutter_type)) for profile in profiles})
+        return sorted(
+            {self.l.get_str(str(profile.cutter_type)) for profile in profiles}
+        )
 
-    def filter_available_profiles(self, material_type=None, cutter_diameter=None, cutter_type=None):
+    def filter_available_profiles(
+        self, material_type=None, cutter_diameter=None, cutter_type=None
+    ):
         filters = [cutter_diameter, cutter_type, material_type]
 
         if not any(filters):
@@ -362,14 +443,16 @@ class YetiPilot(object):
         self.using_basic_profile = True
         self.using_advanced_profile = False
 
-        if self.sm.has_screen('go') and self.use_yp:
-            self.sm.get_screen('go').speedOverride.set_widget_visibility(False)
-            self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
+        if self.sm.has_screen("go") and self.use_yp:
+            self.sm.get_screen("go").speedOverride.set_widget_visibility(False)
+            self.sm.get_screen("go").feedOverride.set_widget_visibility(False)
 
         for profile in self.available_profiles:
-            if str(profile.cutter_diameter) == cutter_diameter and \
-                    str(profile.cutter_type) == cutter_type and \
-                    str(profile.material_type) == material_type:
+            if (
+                str(profile.cutter_diameter) == cutter_diameter
+                and str(profile.cutter_type) == cutter_type
+                and str(profile.material_type) == material_type
+            ):
                 return profile
 
     def get_spindle_speed_correction(self, target_rpm):
@@ -395,7 +478,9 @@ class YetiPilot(object):
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
-        self.target_spindle_speed = self.get_spindle_speed_correction(self.target_spindle_speed)
+        self.target_spindle_speed = self.get_spindle_speed_correction(
+            self.target_spindle_speed
+        )
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
@@ -431,9 +516,9 @@ class YetiPilot(object):
         self.using_advanced_profile = using_advanced_profile
 
         if using_advanced_profile and self.use_yp:
-            if self.sm.has_screen('go'):
-                self.sm.get_screen('go').speedOverride.set_widget_visibility(True)
-                self.sm.get_screen('go').feedOverride.set_widget_visibility(False)
+            if self.sm.has_screen("go"):
+                self.sm.get_screen("go").speedOverride.set_widget_visibility(True)
+                self.sm.get_screen("go").feedOverride.set_widget_visibility(False)
 
             self.using_basic_profile = False
 

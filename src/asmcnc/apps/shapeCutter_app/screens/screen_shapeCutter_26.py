@@ -1,9 +1,9 @@
-'''
+"""
 Created on 2 March 2020
 Screen 26 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,7 +12,8 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter26ScreenClass>
 
@@ -284,73 +285,80 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True              
 
-""")
+"""
+)
+
 
 class ShapeCutter26ScreenClass(Screen):
-    
+
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]26[/b]")
     title_label = StringProperty("[b]Home SmartBench[/b]")
-    user_instructions = StringProperty("When you are ready, press the button to Home SmartBench.\n\n")
-    warning_message = StringProperty("[b]WARNING: Homing will cause the machine to move, so " \
-                                     "make sure the machine is clear before pressing the button![/b]")
-    
+    user_instructions = StringProperty(
+        "When you are ready, press the button to Home SmartBench.\n\n"
+    )
+    warning_message = StringProperty(
+        "[b]WARNING: Homing will cause the machine to move, so "
+        "make sure the machine is clear before pressing the button![/b]"
+    )
+
     def __init__(self, **kwargs):
         super(ShapeCutter26ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
-        
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
     def on_enter(self):
         self.load_gcode()
 
-# Action buttons       
+    # Action buttons
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
-        self.shapecutter_sm.homing_screen('sC26' , 'sC27')
-    
-# Tab functions
+        self.shapecutter_sm.homing_screen("sC26", "sC27")
+
+    # Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
     def load_gcode(self):
-        
+
         gcode_generated = False
-        
-        try: 
+
+        try:
             gcode_generated = self.j.generate_gCode()
 
-        except: 
-            description = "There was a problem generating your cut.\n\n" + \
-            "Please go back and check your parameters before continuing."
+        except:
+            description = (
+                "There was a problem generating your cut.\n\n"
+                + "Please go back and check your parameters before continuing."
+            )
             self.homing_button.disabled = True
             popup_input_error.PopupInputError(self.shapecutter_sm, description)
 
-        if gcode_generated == True: 
+        if gcode_generated == True:
             self.homing_button.disabled = False
-        

@@ -1,13 +1,17 @@
-'''
+"""
 Created on 1 Feb 2018
 @author: Ed
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import (
+    ObjectProperty,
+    ListProperty,
+    NumericProperty,
+)  # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
@@ -16,7 +20,8 @@ from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.skavaUI import popup_info
 
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import hex kivy.utils.get_color_from_hex
 
@@ -288,143 +293,166 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
         
-""")
-    
+"""
+)
+
 
 class SC28XYMove(Widget):
-
-
     def __init__(self, **kwargs):
-    
-        super(SC28XYMove, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-        self.sm = kwargs['screen_manager']
-        self.j=kwargs['job_parameters']
 
-    jogMode = 'free'
+        super(SC28XYMove, self).__init__(**kwargs)
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.sm = kwargs["screen_manager"]
+        self.j = kwargs["job_parameters"]
+
+    jogMode = "free"
     jog_mode_button_press_counter = 0
 
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
-            
+
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == "normal":
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
-    
+
     def jogModeCycled(self):
 
         self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 6 == 0: 
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 6 == 1: 
-            self.jogMode = 'job'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_box.png'
-        if self.jog_mode_button_press_counter % 6 == 2: 
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 6 == 3: 
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 6 == 4: 
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 6 == 5: 
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
-    
+        if self.jog_mode_button_press_counter % 6 == 0:
+            self.jogMode = "free"
+            self.jogModeButtonImage.source = (
+                "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+            )
+        if self.jog_mode_button_press_counter % 6 == 1:
+            self.jogMode = "job"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_box.png"
+        if self.jog_mode_button_press_counter % 6 == 2:
+            self.jogMode = "plus_10"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_10.png"
+        if self.jog_mode_button_press_counter % 6 == 3:
+            self.jogMode = "plus_1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_1.png"
+        if self.jog_mode_button_press_counter % 6 == 4:
+            self.jogMode = "plus_0-1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-1.png"
+        if self.jog_mode_button_press_counter % 6 == 5:
+            self.jogMode = "plus_0-01"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-01.png"
+
     def buttonJogXY(self, case):
 
         x_feed_speed = self.feedSpeedJogX
         y_feed_speed = self.feedSpeedJogY
-        
-        if self.jogMode == 'free':
-            if case == 'X-': self.m.jog_absolute_single_axis('X', 
-                                                             self.m.x_min_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'X+': self.m.jog_absolute_single_axis('X', 
-                                                             self.m.x_max_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'Y-': self.m.jog_absolute_single_axis('Y', 
-                                                             self.m.y_min_jog_abs_limit,
-                                                             y_feed_speed)
-            if case == 'Y+': self.m.jog_absolute_single_axis('Y', 
-                                                             self.m.y_max_jog_abs_limit,
-                                                             y_feed_speed)
 
-        elif self.jogMode == 'plus_0-01':
-            if case == 'X+': self.m.jog_relative('X', 0.01, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.01, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.01, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.01, y_feed_speed)
-        
-        elif self.jogMode == 'plus_0-1':
-            if case == 'X+': self.m.jog_relative('X', 0.1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.1, y_feed_speed)
-        
-        elif self.jogMode == 'plus_1':
-            if case == 'X+': self.m.jog_relative('X', 1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -1, y_feed_speed)
-        
-        elif self.jogMode == 'plus_10':
-            if case == 'X+': self.m.jog_relative('X', 10, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -10, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 10, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
-        
-        elif self.jogMode == 'job':
+        if self.jogMode == "free":
+            if case == "X-":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_min_jog_abs_limit, x_feed_speed
+                )
+            if case == "X+":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_max_jog_abs_limit, x_feed_speed
+                )
+            if case == "Y-":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_min_jog_abs_limit, y_feed_speed
+                )
+            if case == "Y+":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_max_jog_abs_limit, y_feed_speed
+                )
+
+        elif self.jogMode == "plus_0-01":
+            if case == "X+":
+                self.m.jog_relative("X", 0.01, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.01, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.01, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.01, y_feed_speed)
+
+        elif self.jogMode == "plus_0-1":
+            if case == "X+":
+                self.m.jog_relative("X", 0.1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.1, y_feed_speed)
+
+        elif self.jogMode == "plus_1":
+            if case == "X+":
+                self.m.jog_relative("X", 1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -1, y_feed_speed)
+
+        elif self.jogMode == "plus_10":
+            if case == "X+":
+                self.m.jog_relative("X", 10, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -10, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 10, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -10, y_feed_speed)
+
+        elif self.jogMode == "job":
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]
 
-            if case == 'X+': self.m.jog_relative('X', job_x_range, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', job_y_range, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -job_y_range, y_feed_speed)
-        
-            
+            if case == "X+":
+                self.m.jog_relative("X", job_x_range, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -job_x_range, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", job_y_range, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -job_y_range, y_feed_speed)
+
     def cancelXYJog(self):
-        if self.jogMode == 'free': 
+        if self.jogMode == "free":
             self.m.quit_jog()
 
-
     def set_workzone_to_pos_xy(self):
-        warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, 'XY', warning)
-    
+        warning = "Is this where you want to set your\n[b]X-Y[/b] datum?"
+        popup_input_error.PopupDatum(self.sm, self.m, "XY", warning)
+
     def set_standby_to_pos(self):
-        warning = 'Is this where you want to set your\nstandby position?'
+        warning = "Is this where you want to set your\nstandby position?"
         popup_info.PopupPark(self.sm, self.m, self.l, warning)
-        
+
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC28', 'sC28')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, "sC28", "sC28")
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC28', 'sC28')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, "sC28", "sC28")
         else:
             self.m.go_y_datum()
 
     def set_x_datum(self):
-        warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, 'X', warning)
+        warning = "Is this where you want to set your\n[b]X[/b] datum?"
+        popup_input_error.PopupDatum(self.sm, self.m, "X", warning)
 
     def set_y_datum(self):
-        warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, 'Y', warning)
+        warning = "Is this where you want to set your\n[b]Y[/b] datum?"
+        popup_input_error.PopupDatum(self.sm, self.m, "Y", warning)

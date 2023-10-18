@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on nov 2020
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -11,7 +11,8 @@ import sys, os
 from kivy.clock import Clock
 from kivy.uix.label import Label
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <LanguageSelectScreen>:
@@ -318,117 +319,124 @@ Builder.load_string("""
 
 
 
-""")
+"""
+)
+
 
 class LanguageSelectScreen(Screen):
 
-	flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
+    flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
 
-	welcome_to_smartbench_labels = [
-		"Welcome to SmartBench",
-		"Willkommen bei SmartBench",
-		"Benvenuto in Smartbench",
-		"Benvenuti in Smartbench",
-		"Tervetuloa Smartbenchiin",
-		"Witamy w SmartBench",
-		"Velkommen til SmartBench",
-		"SmartBench에 오신 것을 환영합니다"
-	]
+    welcome_to_smartbench_labels = [
+        "Welcome to SmartBench",
+        "Willkommen bei SmartBench",
+        "Benvenuto in Smartbench",
+        "Benvenuti in Smartbench",
+        "Tervetuloa Smartbenchiin",
+        "Witamy w SmartBench",
+        "Velkommen til SmartBench",
+        "SmartBench에 오신 것을 환영합니다",
+    ]
 
-	welcome_i = 0
-	update_welcome_header = None
+    welcome_i = 0
+    update_welcome_header = None
 
-	def __init__(self, **kwargs):
-		super(LanguageSelectScreen, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.sm=kwargs['screen_manager']
-		self.l=kwargs['localization']
+    def __init__(self, **kwargs):
+        super(LanguageSelectScreen, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
 
-		self.row_1_col_1.text = self.l.approved_languages[0]
-		self.row_1_col_2.text = self.l.approved_languages[1]
-		self.row_1_col_3.text = self.l.approved_languages[2]
-		self.row_2_col_1.text = self.l.approved_languages[3]
-		self.row_2_col_2.text = self.l.approved_languages[4]
-		self.row_2_col_3.text = self.l.approved_languages[5]
-		self.row_3_col_1.text = self.l.approved_languages[6]
-		self.row_3_col_2.text = self.l.approved_languages[7]
-		# self.row_3_col_3.text = self.l.approved_languages[8]
+        self.row_1_col_1.text = self.l.approved_languages[0]
+        self.row_1_col_2.text = self.l.approved_languages[1]
+        self.row_1_col_3.text = self.l.approved_languages[2]
+        self.row_2_col_1.text = self.l.approved_languages[3]
+        self.row_2_col_2.text = self.l.approved_languages[4]
+        self.row_2_col_3.text = self.l.approved_languages[5]
+        self.row_3_col_1.text = self.l.approved_languages[6]
+        self.row_3_col_2.text = self.l.approved_languages[7]
+        # self.row_3_col_3.text = self.l.approved_languages[8]
 
-		self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
-		self.row_1_col_2_image.source = self.get_image_filename(self.row_1_col_2)
-		self.row_1_col_3_image.source = self.get_image_filename(self.row_1_col_3)
-		self.row_2_col_1_image.source = self.get_image_filename(self.row_2_col_1)
-		self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
-		self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
-		self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
-		self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
-		# self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
+        self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
+        self.row_1_col_2_image.source = self.get_image_filename(self.row_1_col_2)
+        self.row_1_col_3_image.source = self.get_image_filename(self.row_1_col_3)
+        self.row_2_col_1_image.source = self.get_image_filename(self.row_2_col_1)
+        self.row_2_col_2_image.source = self.get_image_filename(self.row_2_col_2)
+        self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
+        self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
+        self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
+        # self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
 
-		# Need specific font to show korean characters
-		self.row_3_col_2.font_name = self.l.korean_font
+        # Need specific font to show korean characters
+        self.row_3_col_2.font_name = self.l.korean_font
 
-	def get_image_filename(self, value):
-		return self.flag_img_path + value.text + ".png"
+    def get_image_filename(self, value):
+        return self.flag_img_path + value.text + ".png"
 
-	def on_enter(self):
-		self.update_welcome_header = Clock.schedule_interval(self.change_welcome_label, 1)
+    def on_enter(self):
+        self.update_welcome_header = Clock.schedule_interval(
+            self.change_welcome_label, 1
+        )
 
-	def change_welcome_label(self, dt):
+    def change_welcome_label(self, dt):
 
-		if self.welcome_i == 7:
-			self.header_label.font_name = self.l.korean_font
-		else: 
-			self.header_label.font_name = self.l.standard_font
+        if self.welcome_i == 7:
+            self.header_label.font_name = self.l.korean_font
+        else:
+            self.header_label.font_name = self.l.standard_font
 
-		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
+        self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
 
-		if self.welcome_i < 7:
-			self.welcome_i += 1
-		else:
-			self.welcome_i = 0
+        if self.welcome_i < 7:
+            self.welcome_i += 1
+        else:
+            self.welcome_i = 0
 
-	def select_language(self, radio_button, language_label):
+    def select_language(self, radio_button, language_label):
 
-		if radio_button.state == 'down':
-			current_font = self.l.font_regular
+        if radio_button.state == "down":
+            current_font = self.l.font_regular
 
-			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
-			self.l.load_in_new_language(language_label.text)
-			[self.sm.get_screen(screen).update_strings() for screen in self.start_seq.screen_sequence]
+            radio_button.color = [25 / 255.0, 118 / 255.0, 210 / 255.0, 1]
+            self.l.load_in_new_language(language_label.text)
+            [
+                self.sm.get_screen(screen).update_strings()
+                for screen in self.start_seq.screen_sequence
+            ]
 
-			# If korean is selected, the startup sequence needs font updated to display it correctly
-			if current_font != self.l.font_regular:
-				# I know this is a nested for loop, but it executes very quickly
-				for screen in self.start_seq.screen_sequence[1:] + ['rebooting']:
-					for widget in self.sm.get_screen(screen).walk():
-						if isinstance(widget, Label):
-							widget.font_name = self.l.font_regular
+            # If korean is selected, the startup sequence needs font updated to display it correctly
+            if current_font != self.l.font_regular:
+                # I know this is a nested for loop, but it executes very quickly
+                for screen in self.start_seq.screen_sequence[1:] + ["rebooting"]:
+                    for widget in self.sm.get_screen(screen).walk():
+                        if isinstance(widget, Label):
+                            widget.font_name = self.l.font_regular
 
-			self.next_button.opacity = 1
-			self.next_button.disabled = False
+            self.next_button.opacity = 1
+            self.next_button.disabled = False
 
-		else: 
-			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
-			self.next_button.opacity = 0
-			self.next_button.disabled = True
+        else:
+            radio_button.color = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
+            self.next_button.opacity = 0
+            self.next_button.disabled = True
 
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-	def update_strings(self):
-		if self.l.lang == self.l.ko:
-			self.header_label.font_name = self.l.korean_font
-			self.next_button.font_name = self.l.korean_font
+    def update_strings(self):
+        if self.l.lang == self.l.ko:
+            self.header_label.font_name = self.l.korean_font
+            self.next_button.font_name = self.l.korean_font
 
-		else: 
-			self.header_label.font_name = self.l.standard_font
-			self.next_button.font_name = self.l.standard_font
+        else:
+            self.header_label.font_name = self.l.standard_font
+            self.next_button.font_name = self.l.standard_font
 
-		self.header_label.text = self.l.get_str("Welcome to SmartBench")
-		self.next_button.text = self.l.get_str("Next") + "..."
-		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
+        self.header_label.text = self.l.get_str("Welcome to SmartBench")
+        self.next_button.text = self.l.get_str("Next") + "..."
+        if self.update_welcome_header:
+            Clock.unschedule(self.update_welcome_header)
 
-	def on_leave(self):
-		self.next_button.disabled = False
-		self.loading_warranty_app = False
-
+    def on_leave(self):
+        self.next_button.disabled = False
+        self.loading_warranty_app = False

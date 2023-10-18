@@ -1,9 +1,9 @@
-'''
+"""
 Created on 20 February 2020
 Screen 22 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -14,7 +14,8 @@ from kivy.uix.switch import Switch
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter20ScreenClass>
 
@@ -475,22 +476,24 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter20ScreenClass(Screen):
-    
+
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]20[/b]")
     title_label = StringProperty("[b]Check the dimensions of your cutter[/b]")
     user_instructions = StringProperty("")
-    
+
     def __init__(self, **kwargs):
         super(ShapeCutter20ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
-        self.kb=kwargs['keyboard']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.kb = kwargs["keyboard"]
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.a_dimension, self.b_dimension, self.c_dimension]
@@ -501,9 +504,15 @@ class ShapeCutter20ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
-        self.a_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["cutter dimensions"]["diameter"]))
-        self.b_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["cutter dimensions"]["cutting length"]))
-        self.c_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["cutter dimensions"]["shoulder length"]))
+        self.a_dimension.text = "{:.2f}".format(
+            float(self.j.parameter_dict["cutter dimensions"]["diameter"])
+        )
+        self.b_dimension.text = "{:.2f}".format(
+            float(self.j.parameter_dict["cutter dimensions"]["cutting length"])
+        )
+        self.c_dimension.text = "{:.2f}".format(
+            float(self.j.parameter_dict["cutter dimensions"]["shoulder length"])
+        )
         # self.unit_label.text = self.j.parameter_dict["cutter dimensions"]["units"]
         if self.j.parameter_dict["cutter dimensions"]["units"] == "mm":
             self.unit_toggle.active = False
@@ -513,104 +522,147 @@ class ShapeCutter20ScreenClass(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
 
-# Action buttons       
+    # Action buttons
     def get_info(self):
-        info = "To maintain accuracy, it is important that you measure the dimensions of your cutter.\n\n " \
-        "The shoulder length must be equal or larger than the cutting length."
+        info = (
+            "To maintain accuracy, it is important that you measure the dimensions of your cutter.\n\n "
+            "The shoulder length must be equal or larger than the cutting length."
+        )
         popup_info.PopupInfo(self.shapecutter_sm, info)
-            
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.check_dimensions()
-    
-# Tab functions
+
+    # Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen specific
-#     def toggle_units(self):
-#         if self.unit_toggle.state == 'normal':
-#             self.unit_label.text = "mm"
-#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
-#         elif self.unit_toggle.state == 'down': 
-#             self.unit_label.text = "inches"
-#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+
+    # Screen specific
+    #     def toggle_units(self):
+    #         if self.unit_toggle.state == 'normal':
+    #             self.unit_label.text = "mm"
+    #             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+    #         elif self.unit_toggle.state == 'down':
+    #             self.unit_label.text = "inches"
+    #             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
 
     def toggle_units(self):
-        
+
         if self.unit_toggle.active == True:
             self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
-            
-            if not (self.a_dimension.text == ""): self.a_dimension.text = "{:.2f}".format(float(self.a_dimension.text) / 25.4)
-            if not (self.b_dimension.text == ""): self.b_dimension.text = "{:.2f}".format(float(self.b_dimension.text) / 25.4)
-            if not (self.c_dimension.text == ""): self.c_dimension.text = "{:.2f}".format(float(self.c_dimension.text) / 25.4)
+
+            if not (self.a_dimension.text == ""):
+                self.a_dimension.text = "{:.2f}".format(
+                    float(self.a_dimension.text) / 25.4
+                )
+            if not (self.b_dimension.text == ""):
+                self.b_dimension.text = "{:.2f}".format(
+                    float(self.b_dimension.text) / 25.4
+                )
+            if not (self.c_dimension.text == ""):
+                self.c_dimension.text = "{:.2f}".format(
+                    float(self.c_dimension.text) / 25.4
+                )
 
         elif self.unit_toggle.active == False:
             self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
 
-            if not (self.a_dimension.text == ""): self.a_dimension.text = "{:.2f}".format(float(self.a_dimension.text) * 25.4)
-            if not (self.b_dimension.text == ""): self.b_dimension.text = "{:.2f}".format(float(self.b_dimension.text) * 25.4)
-            if not (self.c_dimension.text == ""): self.c_dimension.text = "{:.2f}".format(float(self.c_dimension.text) * 25.4)
+            if not (self.a_dimension.text == ""):
+                self.a_dimension.text = "{:.2f}".format(
+                    float(self.a_dimension.text) * 25.4
+                )
+            if not (self.b_dimension.text == ""):
+                self.b_dimension.text = "{:.2f}".format(
+                    float(self.b_dimension.text) * 25.4
+                )
+            if not (self.c_dimension.text == ""):
+                self.c_dimension.text = "{:.2f}".format(
+                    float(self.c_dimension.text) * 25.4
+                )
 
-    def check_dimensions(self):        
-        if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
-        and not self.c_dimension.text == "":
-           
+    def check_dimensions(self):
+        if (
+            not self.a_dimension.text == ""
+            and not self.b_dimension.text == ""
+            and not self.c_dimension.text == ""
+        ):
+
             if self.unit_toggle.active == True:
                 self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
-    
-            elif self.unit_toggle.active == False: 
+
+            elif self.unit_toggle.active == False:
                 self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
-            
+
             units = self.j.parameter_dict["cutter dimensions"]["units"]
-            
-                # save the dimensions
-            input_dim_list = [("diameter", float(self.a_dimension.text)),
-                              ("cutting length", float(self.b_dimension.text)),
-                              ("shoulder length", float(self.c_dimension.text))]
-            
+
+            # save the dimensions
+            input_dim_list = [
+                ("diameter", float(self.a_dimension.text)),
+                ("cutting length", float(self.b_dimension.text)),
+                ("shoulder length", float(self.c_dimension.text)),
+            ]
+
             for (dim, input) in input_dim_list:
                 setting = self.j.validate_cutter_dimensions(dim, input)
                 if not setting == True:
-                    if dim == "shoulder length":               
-                        description = "The " + dim + " input isn't valid.\n\n" + \
-                                    "The shoulder length should be greater" + \
-                                    " than the cutting length, and the Z dimension.\n\n" \
-                                    + "Please re-enter your parameters."
-                    elif dim == "cutting length": 
-                        description = "The " + dim + " input isn't valid.\n\nThe " + \
-                                    dim + " value should be greater than " + "{:.2f}".format(setting) + \
-                                    " " + units + ".\n\n" \
-                                    + "Please re-enter your parameters."    
-                    elif dim == "diameter": 
-                        description = "The " + dim + " input isn't valid.\n\nThe " + \
-                                    dim + " value should be greater than 0 " + \
-                                    "and less than " + "{:.2f}".format(setting) + \
-                                    " " + units + ".\n\n" \
-                                    + "Please re-enter your parameters."                                                                                         
+                    if dim == "shoulder length":
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\n"
+                            + "The shoulder length should be greater"
+                            + " than the cutting length, and the Z dimension.\n\n"
+                            + "Please re-enter your parameters."
+                        )
+                    elif dim == "cutting length":
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\nThe "
+                            + dim
+                            + " value should be greater than "
+                            + "{:.2f}".format(setting)
+                            + " "
+                            + units
+                            + ".\n\n"
+                            + "Please re-enter your parameters."
+                        )
+                    elif dim == "diameter":
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\nThe "
+                            + dim
+                            + " value should be greater than 0 "
+                            + "and less than "
+                            + "{:.2f}".format(setting)
+                            + " "
+                            + units
+                            + ".\n\n"
+                            + "Please re-enter your parameters."
+                        )
                     popup_input_error.PopupInputError(self.shapecutter_sm, description)
                     return False
 
             self.shapecutter_sm.next_screen()
         else:
             pass
- 
-        

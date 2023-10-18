@@ -5,7 +5,8 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 import re
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <LBCalibration4>:
     serial_no_input:serial_no_input
     error_label:error_label
@@ -61,27 +62,29 @@ Builder.load_string("""
                 size_hint_y: 0.6
                 disabled: False
 
-""")
+"""
+)
+
 
 class LBCalibration4(Screen):
 
-    serial_number = ''
+    serial_number = ""
 
     def __init__(self, **kwargs):
         super(LBCalibration4, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-        self.calibration_db = kwargs['calibration_db']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
+        self.calibration_db = kwargs["calibration_db"]
 
     def enter_prev_screen(self):
-        self.sm.current = 'lbc2'
+        self.sm.current = "lbc2"
 
     def on_enter(self):
         self.ok_button.disabled = False
 
     def validate_serial_number(self, serial):
-        expression = '(xl)\d{4}'
+        expression = "(xl)\d{4}"
         pattern = re.compile(expression)
         match = bool(pattern.match(serial))
         return match
@@ -91,11 +94,11 @@ class LBCalibration4(Screen):
         self.ok_button.disabled = True
         self.ok_button.text = "Updating..."
 
-        self.serial_number = self.serial_no_input.text.replace(' ', '').lower()
+        self.serial_number = self.serial_no_input.text.replace(" ", "").lower()
         validated = self.validate_serial_number(self.serial_number)
 
         if not validated:
-            self.error_label.text = 'Serial number invalid'
+            self.error_label.text = "Serial number invalid"
             self.ok_button.text = "OK"
             self.ok_button.disabled = False
             return
@@ -104,15 +107,17 @@ class LBCalibration4(Screen):
 
     def prep_data_send(self, dt):
 
-        self.calibration_db.process_status_running_data_for_database_insert(self.m.measured_running_data(), self.serial_number)
+        self.calibration_db.process_status_running_data_for_database_insert(
+            self.m.measured_running_data(), self.serial_number
+        )
         self.calibration_db.insert_calibration_check_stage(self.serial_number, 2)
         self.do_data_send_when_ready()
 
         self.calibration_db.set_up_connection()
 
-        serial_number = self.serial_no_input.text.replace(' ', '').lower()
+        serial_number = self.serial_no_input.text.replace(" ", "").lower()
         validated = self.validate_serial_number(serial_number)
-        
+
     def do_data_send_when_ready(self):
         if self.calibration_db.processing_running_data:
             log("Poll for sending LB QC statuses when ready")
@@ -124,14 +129,14 @@ class LBCalibration4(Screen):
             try:
                 self.send_calibration_payload(TMC_Y1, self.serial_number)
                 self.send_calibration_payload(TMC_Y2, self.serial_number)
-                next_screen_name = 'lbc5'
+                next_screen_name = "lbc5"
 
             except Exception as e:
-                next_screen_name = 'lbc6'
+                next_screen_name = "lbc6"
                 print(traceback.format_exc())
 
-        else: 
-            next_screen_name = 'lbc6'
+        else:
+            next_screen_name = "lbc6"
 
         self.sm.get_screen(next_screen_name).set_serial_no(self.serial_number)
         self.ok_button.disabled = False
@@ -139,7 +144,7 @@ class LBCalibration4(Screen):
         self.sm.current = next_screen_name
 
     def send_calibration_payload(self, motor_index, serial_number):
-        stage = self.calibration_db.get_stage_id_by_description('CalibrationQC')
+        stage = self.calibration_db.get_stage_id_by_description("CalibrationQC")
 
         sg_coefficients = self.m.TMC_motor[motor_index].calibration_dataset_SG_values
         cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
@@ -149,7 +154,10 @@ class LBCalibration4(Screen):
 
         coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
 
-        self.calibration_db.setup_lower_beam_coefficients(serial_number, motor_index, stage)
+        self.calibration_db.setup_lower_beam_coefficients(
+            serial_number, motor_index, stage
+        )
 
-        self.calibration_db.insert_calibration_coefficients(serial_number, motor_index, stage, coefficients)
-        
+        self.calibration_db.insert_calibration_coefficients(
+            serial_number, motor_index, stage, coefficients
+        )

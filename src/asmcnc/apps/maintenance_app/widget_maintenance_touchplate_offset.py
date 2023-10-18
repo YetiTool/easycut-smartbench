@@ -1,8 +1,8 @@
-'''
+"""
 Created on 17 August 2020
 @author: Letty
 widget to allow user to change touchplate offset
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -12,7 +12,8 @@ from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <TouchplateOffsetWidget>
 
@@ -82,17 +83,17 @@ Builder.load_string("""
                 text: "mm"
 
 
-""")
+"""
+)
 
 
 class TouchplateOffsetWidget(Widget):
-
     def __init__(self, **kwargs):
-    
+
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
 
         self.update_strings()
 

@@ -1,9 +1,9 @@
-'''
+"""
 Created on 16 March 2021
 Screen to help production move through final test more quickly
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -15,7 +15,8 @@ from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 
 import os, sys
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <FinalTestScreen>
 
@@ -167,7 +168,9 @@ Builder.load_string("""
 
 
 
-""")
+"""
+)
+
 
 class FinalTestScreen(Screen):
 
@@ -195,21 +198,35 @@ class FinalTestScreen(Screen):
 
     def __init__(self, **kwargs):
         super(FinalTestScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
+        self.systemtools_sm = kwargs["system_tools"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
 
         # WIDGET SETUP
-        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
-        self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm.sm, localization=self.l))
-        self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
+        self.status_container.add_widget(
+            widget_status_bar.StatusBar(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
+        self.gcode_monitor_container.add_widget(
+            widget_gcode_monitor.GCodeMonitor(
+                machine=self.m,
+                screen_manager=self.systemtools_sm.sm,
+                localization=self.l,
+            )
+        )
+        self.move_container.add_widget(
+            widget_final_test_xy_move.FinalTestXYMove(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
 
         self.text_inputs = [self.y_over_count, self.x_over_count]
 
     def on_enter(self):
         self.m.send_any_gcode_command("AZ")
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
         self.kb.setup_text_inputs(self.text_inputs)
 
     def on_leave(self):
@@ -255,50 +272,59 @@ class FinalTestScreen(Screen):
         self.x_pos_label.text = self.x_pos_command
         self.x_neg_label.text = self.x_neg_command
 
-
     def X_plus(self):
         self.m.send_any_gcode_command(self.x_pos_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def X_minus(self):
         self.m.send_any_gcode_command(self.x_neg_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def Y_plus(self):
         self.m.send_any_gcode_command(self.y_pos_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def Y_minus(self):
         self.m.send_any_gcode_command(self.y_neg_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def X_575(self):
         self.m.send_any_gcode_command("G91 G0 X575.0")
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def y_home_x_mid(self):
-        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, self.fast_y_speed)
-        self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
-        self.m.set_led_colour('BLUE')
+        self.m.jog_absolute_single_axis(
+            "Y", self.m.y_min_jog_abs_limit, self.fast_y_speed
+        )
+        self.m.jog_absolute_single_axis("X", -705, self.fast_x_speed)
+        self.m.set_led_colour("BLUE")
 
     def home(self):
-        normal_homing_sequence = ['$H']
+        normal_homing_sequence = ["$H"]
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
     def set_x_steps(self):
         try:
-            x_overstep = float(self.x_over_count.text)*self.x_calibration_scale_factor
+            x_overstep = float(self.x_over_count.text) * self.x_calibration_scale_factor
             print(x_overstep)
-            self.m.write_dollar_setting(100, float(self.m.s.setting_100) - x_overstep, reset_grbl_after_stream=False)
+            self.m.write_dollar_setting(
+                100,
+                float(self.m.s.setting_100) - x_overstep,
+                reset_grbl_after_stream=False,
+            )
             self.x_over_count.text = ""
         except:
             pass
 
     def set_y_steps(self):
         try:
-            y_overstep = float(self.y_over_count.text)*self.y_calibration_scale_factor
+            y_overstep = float(self.y_over_count.text) * self.y_calibration_scale_factor
             print(y_overstep)
-            self.m.write_dollar_setting(101, float(self.m.s.setting_101) - y_overstep, reset_grbl_after_stream=False)
+            self.m.write_dollar_setting(
+                101,
+                float(self.m.s.setting_101) - y_overstep,
+                reset_grbl_after_stream=False,
+            )
             self.y_over_count.text = ""
         except:
             pass

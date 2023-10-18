@@ -1,9 +1,9 @@
-'''
+"""
 Created on 19 February 2020
 Landing Screen for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,7 +12,8 @@ from kivy.uix.popup import Popup
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterLandingScreenClass>:
     
@@ -164,18 +165,20 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True                             
-""")
+"""
+)
+
 
 class ShapeCutterLandingScreenClass(Screen):
 
-    info_button = ObjectProperty()   
-#     user_instruction = ObjectProperty()
-    
+    info_button = ObjectProperty()
+    #     user_instruction = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(ShapeCutterLandingScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.m.get_grbl_settings()
@@ -183,15 +186,15 @@ class ShapeCutterLandingScreenClass(Screen):
     def get_info(self):
 
         popup_info.PopupTutorial(self.shapecutter_sm)
-      
+
     def cut_rectangle(self):
         self.j.shape_dict["shape"] = "rectangle"
         self.next_screen()
-    
+
     def cut_circle(self):
         self.j.shape_dict["shape"] = "circle"
         self.next_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 

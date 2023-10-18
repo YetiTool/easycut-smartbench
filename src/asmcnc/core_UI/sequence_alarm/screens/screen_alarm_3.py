@@ -1,7 +1,7 @@
-'''
+"""
 Created on 31 March 2021
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
@@ -9,7 +9,8 @@ from asmcnc.skavaUI import widget_status_bar
 
 
 # Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 <AlarmScreen3>:
     status_container : status_container
     description_label : description_label
@@ -121,7 +122,9 @@ Builder.load_string("""
  #            height: 63
  #            width: 100
  #            allow_stretch: True
-""")
+"""
+)
+
 
 class AlarmScreen3(Screen):
 
@@ -130,12 +133,13 @@ class AlarmScreen3(Screen):
 
     def __init__(self, **kwargs):
         super(AlarmScreen3, self).__init__(**kwargs)
-        self.a=kwargs['alarm_manager']
+        self.a = kwargs["alarm_manager"]
 
-        self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.a.sm, machine=self.a.m)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            screen_manager=self.a.sm, machine=self.a.m
+        )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = '#1976d2'\
-
+        self.status_bar_widget.cheeky_color = "#1976d2"
         self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
         self.next_button.text = self.a.l.get_str("Next") + "..."
         # self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
@@ -153,30 +157,27 @@ class AlarmScreen3(Screen):
             self.update_font_size(self.next_button)
             self.camera_img.opacity = 0
 
-
     def next_screen(self):
         if self.for_support:
-            self.a.sm.current = 'alarm_4'
+            self.a.sm.current = "alarm_4"
         else:
-            self.a.sm.current = 'alarm_2'
-
+            self.a.sm.current = "alarm_2"
 
     def prev_screen(self):
         if self.for_support:
-            self.a.sm.current = 'alarm_2'
+            self.a.sm.current = "alarm_2"
         else:
-            self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-            self.a.sm.current = 'alarm_5'
-
+            self.a.sm.get_screen("alarm_5").return_to_screen = "alarm_1"
+            self.a.sm.current = "alarm_5"
 
     def update_font_size(self, value):
         text_length = self.a.l.get_text_length(value.text)
 
         if text_length < 12:
             value.font_size = self.default_font_size
-        elif text_length > 15: 
+        elif text_length > 15:
             value.font_size = self.default_font_size - 2
-        if text_length > 20: 
+        if text_length > 20:
             value.font_size = self.default_font_size - 4
-        if text_length > 22: 
+        if text_length > 22:
             value.font_size = self.default_font_size - 5

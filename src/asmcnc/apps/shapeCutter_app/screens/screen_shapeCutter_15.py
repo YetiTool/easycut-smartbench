@@ -1,9 +1,9 @@
-'''
+"""
 Created on 20 February 2020
 Screen 15 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,7 +12,8 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC15_xy_move
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter15ScreenClass>
 
@@ -293,60 +294,62 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter15ScreenClass(Screen):
-    
+
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]15[/b]")
     title_label = StringProperty("[b]Clamp X beam[/b]")
-    user_instructions = StringProperty("Clamp X beam down [b](1)[/b] and check the upper wheel" \
-                                       " units run on the surface of the material [b](2)[/b].")
+    user_instructions = StringProperty(
+        "Clamp X beam down [b](1)[/b] and check the upper wheel"
+        " units run on the surface of the material [b](2)[/b]."
+    )
 
-    
     def __init__(self, **kwargs):
         super(ShapeCutter15ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
-        self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+        self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(
+            machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters=self.j
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
-
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.xy_move_widget.set_jog_speeds()
-        
-# Action buttons       
+
+    # Action buttons
     def get_info(self):
         pass
-    
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
+
+    # Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-
-        
