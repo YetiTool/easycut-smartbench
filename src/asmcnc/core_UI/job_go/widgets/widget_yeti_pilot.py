@@ -36,7 +36,6 @@ Builder.load_string("""
                 text_size: self.size
                 font_size: '20sp'
                 valign: "bottom"
-                font: 'Roboto Bold'
 
             BoxLayout: 
                 id: bl

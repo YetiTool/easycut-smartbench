@@ -1,0 +1,12 @@
+.. _top:
+
+New language - Korean! New YetiPilot profiles - Solid Surface! 
+====================================================================
+
+The Console software can now be used in Korean! Go to System Tools > System Info to change the language. 
+
+YetiPilot has also been updated with 3 new profiles to cut Solid Surface. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:

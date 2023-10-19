@@ -174,6 +174,9 @@ Builder.load_string("""
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
                     font_size: str(0.01875*app.width) + 'sp'
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
 
 ######### END ############
  

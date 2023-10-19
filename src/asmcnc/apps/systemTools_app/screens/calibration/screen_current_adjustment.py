@@ -33,6 +33,8 @@ Builder.load_string("""
 
     status_container : status_container
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -218,6 +220,7 @@ class CurrentAdjustment(Screen):
         self.m = kwargs['m']
         self.systemtools_sm = kwargs['systemtools']
         self.l = kwargs['l']
+        self.kb = kwargs['keyboard']
 
         # Movement widget
         self.xy_move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
@@ -242,13 +245,26 @@ class CurrentAdjustment(Screen):
 
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
+        self.text_inputs = [
+                            self.x1_current_adjustment_widget.current_current_label,
+                            self.x2_current_adjustment_widget.current_current_label,
+                            self.y1_current_adjustment_widget.current_current_label,
+                            self.y2_current_adjustment_widget.current_current_label,
+                            self.z_current_adjustment_widget.current_current_label
+                            ]
+
     def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         self.m.s.FINAL_TEST = True
         self.update_protocol_status_label_event = Clock.schedule_interval(self.update_protocol_status_label, 0.1)
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
         if self.update_protocol_status_label_event: Clock.unschedule(self.update_protocol_status_label_event)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def back_to_fac_settings(self):
         if not self.m.state().startswith("Idle"):

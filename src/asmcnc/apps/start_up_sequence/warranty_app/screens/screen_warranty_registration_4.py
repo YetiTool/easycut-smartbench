@@ -77,7 +77,6 @@ Builder.load_string("""
 						valign: 'top'
 						halign: 'center'
 						markup: 'true'
-						bold: True
 						color: hex('#333333ff')
 
 
@@ -158,5 +157,5 @@ class WarrantyScreen4(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.success_label.text = self.l.get_str("You have successfully completed your warranty registration.")
+		self.success_label.text = self.l.get_bold("You have successfully completed your warranty registration.")
 		self.next_button.text = self.l.get_str("Next") + "..."

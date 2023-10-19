@@ -27,6 +27,8 @@ Builder.load_string("""
     z_feed: z_feed
     spindle_speed: spindle_speed
     
+    on_touch_down: root.on_touch()
+    
     BoxLayout:
         size_hint: (None,None)
         width: dp(800)
@@ -233,7 +235,7 @@ Builder.load_string("""
                                     size_hint: (None,None)
                                     height: dp(32)
                                     width: dp(595)
-                                    padding: (342,0,170,0)
+                                    padding: (382,0,130,0)
                                     orientation: "horizontal"
                                                     
                       
@@ -300,7 +302,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: xy_feed_units
@@ -350,7 +352,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             id: z_feed_units
@@ -399,7 +401,7 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(150)
+                                        width: dp(110)
                                         padding: (10,0,10,0)
                                         Label: 
                                             text: "RPM"
@@ -511,6 +513,14 @@ class ShapeCutter23ScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
         self.l=kwargs['localization']
+        self.kb=kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.xy_feed, self.z_feed, self.spindle_speed]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
@@ -528,6 +538,9 @@ class ShapeCutter23ScreenClass(Screen):
             self.unit_toggle.active = False
             self.xy_feed_units.text = "mm/min"
             self.z_feed_units.text = "mm/min"
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
 # Action buttons       
     def get_info(self):
