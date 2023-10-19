@@ -142,6 +142,9 @@ class SkavaUI(App):
 
     test_no = 0
 
+    width = Window.width
+    height = Window.height
+
     def build(self):
 
         log("Starting App:")
