@@ -31,6 +31,7 @@ Builder.load_string("""
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
+    font_size: str(0.01875*app.width) + 'sp'
 
 <WifiScreen>:
     
