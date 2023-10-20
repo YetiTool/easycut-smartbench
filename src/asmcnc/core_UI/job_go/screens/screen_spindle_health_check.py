@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created July 2020
 
 @author: Letty
 
 Spindle cooldown screen
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -16,7 +16,8 @@ from datetime import datetime
 
 from math import sqrt, ceil
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <SpindleHealthCheckActiveScreen>:
 
@@ -124,25 +125,28 @@ Builder.load_string("""
                         width: dp(100) 
 
 
-""")
+"""
+)
 
 
 class SpindleHealthCheckActiveScreen(Screen):
-    return_screen = 'go'
+    return_screen = "go"
     max_seconds = 6
     seconds = 6
     update_timer_event = None
 
     def __init__(self, **kwargs):
-
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.seconds = self.max_seconds
 
-        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…') + "\n" + \
-                                    self.l.get_str('SmartBench is raising the Z axis.')
+        self.cool_down_label.text = (
+            self.l.get_str("Running Spindle motor health check…")
+            + "\n"
+            + self.l.get_str("SmartBench is raising the Z axis.")
+        )
 
     def on_pre_enter(self):
         # health check if not called from elsewhere
@@ -151,12 +155,17 @@ class SpindleHealthCheckActiveScreen(Screen):
 
     def on_enter(self):
         self.run_spindle_health_check()
-        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…') + "\n" + \
-                                    self.l.get_str('SmartBench is raising the Z axis.')
+        self.cool_down_label.text = (
+            self.l.get_str("Running Spindle motor health check…")
+            + "\n"
+            + self.l.get_str("SmartBench is raising the Z axis.")
+        )
 
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
-        self.cool_down_label.text = self.l.get_str('Running Spindle motor health check…')
+        self.cool_down_label.text = self.l.get_str(
+            "Running Spindle motor health check…"
+        )
 
     def exit_screen(self, dt=0):
         self.sm.current = self.return_screen
@@ -169,7 +178,8 @@ class SpindleHealthCheckActiveScreen(Screen):
     def on_leave(self):
         # self.m.spindle_off()
         # self.m.vac_off()
-        if self.update_timer_event != None: Clock.unschedule(self.update_timer_event)
+        if self.update_timer_event != None:
+            Clock.unschedule(self.update_timer_event)
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
 
@@ -192,20 +202,24 @@ class SpindleHealthCheckActiveScreen(Screen):
 
             self.m.s.yp.set_free_load(free_load)
 
-            if self.return_to_advanced_tab and self.sm.has_screen('go'):
-                self.sm.get_screen('go').yp_widget.open_yp_settings()
+            if self.return_to_advanced_tab and self.sm.has_screen("go"):
+                self.sm.get_screen("go").yp_widget.open_yp_settings()
 
             self.exit_screen()
 
-            if self.sm.has_screen('go') and self.start_after_pass and not self.return_to_advanced_tab:
-                self.sm.get_screen('go')._start_running_job()
-                self.sm.current = 'go'
+            if (
+                self.sm.has_screen("go")
+                and self.start_after_pass
+                and not self.return_to_advanced_tab
+            ):
+                self.sm.get_screen("go")._start_running_job()
+                self.sm.current = "go"
 
         def show_fail_screen(reason):
             self.m.stop_for_a_stream_pause(reason)
 
-            if self.sm.has_screen('go'):
-                self.sm.get_screen('go').raise_pause_screens_if_paused(override=True)
+            if self.sm.has_screen("go"):
+                self.sm.get_screen("go").raise_pause_screens_if_paused(override=True)
 
         def fail_test(reason):
             print("Spindle health check failed - " + reason)
@@ -214,20 +228,26 @@ class SpindleHealthCheckActiveScreen(Screen):
             show_fail_screen(reason)
 
         def check_average():
-            average_load = sum(self.m.s.spindle_health_check_data) / (len(self.m.s.spindle_health_check_data) or 1)
-            average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load) if average_load != 0 else 0
+            average_load = sum(self.m.s.spindle_health_check_data) / (
+                len(self.m.s.spindle_health_check_data) or 1
+            )
+            average_load_w = (
+                self.m.spindle_voltage * 0.1 * sqrt(average_load)
+                if average_load != 0
+                else 0
+            )
 
             if average_load_w > self.spindle_health_check_max_w:
-                fail_test('spindle_health_check_failed')
+                fail_test("spindle_health_check_failed")
                 return
             elif average_load_w == 0:
-                fail_test('yetipilot_spindle_data_loss')
+                fail_test("yetipilot_spindle_data_loss")
                 return
 
             pass_test(round_up_to_ten(average_load_w))
 
         def stop_test():
-            self.m.s.write_command('M5')
+            self.m.s.write_command("M5")
             self.m.s.spindle_health_check = False
 
         def start_test():
@@ -237,7 +257,7 @@ class SpindleHealthCheckActiveScreen(Screen):
 
             self.start_timer()
             self.m.s.spindle_health_check = True
-            self.m.s.write_command('M3 S24000')
+            self.m.s.write_command("M3 S24000")
             Clock.schedule_once(lambda dt: stop_test(), 6)
             Clock.schedule_once(lambda dt: check_average(), 6)
 

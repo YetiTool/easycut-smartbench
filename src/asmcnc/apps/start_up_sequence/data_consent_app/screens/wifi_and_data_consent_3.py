@@ -6,7 +6,8 @@ from kivy.properties import StringProperty, DictProperty
 
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <ScrollPrivacyNotice>:
@@ -192,67 +193,76 @@ Builder.load_string("""
 					width: dp(60)
 					# padding: [193.5, 0, 0, 0]
 
-""")
+"""
+)
+
 
 class ScrollPrivacyNotice(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
 
-    color_dict = DictProperty({
-                    'background': 'e5e5e5ff',
-                    'link': '1976d2ff',
-                    'paragraph': '333333ff',
-                    'title': '333333ff',
-                    'bullet': '333333ff'})
+    color_dict = DictProperty(
+        {
+            "background": "e5e5e5ff",
+            "link": "1976d2ff",
+            "paragraph": "333333ff",
+            "title": "333333ff",
+            "bullet": "333333ff",
+        }
+    )
 
 
 class WiFiAndDataConsentScreen3(Screen):
+    checkbox_checked = False
+    privacy_notice_path = (
+        "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
+    )
 
-	checkbox_checked = False
-	privacy_notice_path = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
+    def __init__(self, **kwargs):
+        super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.c = kwargs["consent_manager"]
+        self.l = kwargs["localization"]
+        self.update_strings()
+        self.set_checkbox_default()
 
-	def __init__(self, **kwargs):
-		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.c=kwargs['consent_manager']
-		self.l = kwargs['localization']
-		self.update_strings()
-		self.set_checkbox_default()
+    def on_pre_leave(self):
+        self.set_checkbox_default()
 
-	def on_pre_leave(self):
-		self.set_checkbox_default()
+    def prev_screen(self):
+        try:
+            self.start_seq.prev_in_sequence()
 
-	def prev_screen(self):
+        except:
+            self.c.sm.current = "consent_2"
 
-		try:
-			self.start_seq.prev_in_sequence()
+    def update_strings(self):
+        self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
+        self.scroll_privacy_notice.privacy_notice.source = (
+            self.privacy_notice_path + self.l.lang + ".rst"
+        )
+        self.user_info.text = self.l.get_str(
+            "I have read and understood the privacy notice"
+        )
+        self.decline_button.text = self.l.get_str("Decline")
+        self.accept_button.text = self.l.get_str("Accept")
 
-		except:
-			self.c.sm.current='consent_2'
+    def accept_terms(self):
+        if self.terms_checkbox.active:
+            self.c.accept_terms_and_enable_wifi()
 
-	def update_strings(self):
-		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
-		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
-		self.decline_button.text = self.l.get_str("Decline")
-		self.accept_button.text = self.l.get_str("Accept")
+    def decline_terms(self):
+        if self.terms_checkbox.active:
+            self.c.warn_user_before_accepting_decline()
 
-	def accept_terms(self):
-		if self.terms_checkbox.active: 
-			self.c.accept_terms_and_enable_wifi()
+    def on_checkbox_active(self):
+        if self.terms_checkbox.active:
+            self.decline_button.disabled = False
+            self.accept_button.disabled = False
+        else:
+            self.decline_button.disabled = True
+            self.accept_button.disabled = True
 
-	def decline_terms(self):
-		if self.terms_checkbox.active: 
-			self.c.warn_user_before_accepting_decline()
-
-	def on_checkbox_active(self):
-		if self.terms_checkbox.active: 
-			self.decline_button.disabled = False
-			self.accept_button.disabled = False
-		else:
-			self.decline_button.disabled = True
-			self.accept_button.disabled = True
-
-	def set_checkbox_default(self):
-		self.terms_checkbox.active = False
-		self.decline_button.disabled = True
-		self.accept_button.disabled = True
+    def set_checkbox_default(self):
+        self.terms_checkbox.active = False
+        self.decline_button.disabled = True
+        self.accept_button.disabled = True

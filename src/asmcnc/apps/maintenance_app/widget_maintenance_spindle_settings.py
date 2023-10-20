@@ -1,8 +1,8 @@
-'''
+"""
 Created on 19 August 2020
 @author: Letty
 widget to spindle settings
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -10,9 +10,13 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.maintenance_app import widget_maintenance_spindle_save, popup_maintenance
+from asmcnc.apps.maintenance_app import (
+    widget_maintenance_spindle_save,
+    popup_maintenance,
+)
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <SpindleSpinner@SpinnerOption>
 
@@ -326,25 +330,36 @@ Builder.load_string("""
 
 
 
-""")
+"""
+)
+
 
 class SpindleSettingsWidget(Widget):
-
-    brand_list_sc1 = [' YETI SC1 digital 230V', ' YETI SC1 digital 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
-    brand_list_sc2 = [' YETI SC2 digital 230V', ' YETI SC2 digital 110V'] + brand_list_sc1
+    brand_list_sc1 = [
+        " YETI SC1 digital 230V",
+        " YETI SC1 digital 110V",
+        " AMB digital 230V",
+        " AMB manual 230V",
+        " AMB manual 110V",
+    ]
+    brand_list_sc2 = [
+        " YETI SC2 digital 230V",
+        " YETI SC2 digital 110V",
+    ] + brand_list_sc1
 
     def __init__(self, **kwargs):
-    
         super(SpindleSettingsWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
 
         self.rpm_override = self.m.spindle_cooldown_rpm_override
         self.cooldown_speed_slider.bind(value=self.cooldown_speed_updated)
         self.cooldown_time_slider.bind(value=self.cooldown_time_updated)
 
-        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(
+            machine=self.m, screen_manager=self.sm, localization=self.l
+        )
         self.spindle_save_container.add_widget(self.spindle_save_widget)
 
         self.update_strings()
@@ -359,19 +374,18 @@ class SpindleSettingsWidget(Widget):
         self.seconds_label.text = "%i " % value + self.l.get_str("seconds")
 
     def autofill_rpm_time(self):
-
-        if 'AMB' in self.spindle_brand.text:
+        if "AMB" in self.spindle_brand.text:
             self.cooldown_time_slider.value = 30
             self.cooldown_speed_slider.value = self.m.amb_cooldown_rpm_default
 
-        if 'YETI' in self.spindle_brand.text:
+        if "YETI" in self.spindle_brand.text:
             self.cooldown_time_slider.value = 10
             self.cooldown_speed_slider.value = self.m.yeti_cooldown_rpm_default
 
-        if 'manual' in self.spindle_brand.text:
+        if "manual" in self.spindle_brand.text:
             self.cooldown_speed_slider.disabled = True
 
-        if 'digital' in self.spindle_brand.text:
+        if "digital" in self.spindle_brand.text:
             self.cooldown_speed_slider.disabled = False
 
         self.rpm_override = False
@@ -392,46 +406,64 @@ class SpindleSettingsWidget(Widget):
         popup_maintenance.PopupGetSpindleData(self.sm, self.l)
 
     def raise_z_then_get_data(self):
-        if self.m.state().startswith('Idle'):
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('SmartBench is raising the Z axis.'))
+        if self.m.state().startswith("Idle"):
+            self.wait_popup = popup_info.PopupWait(
+                self.sm, self.l, self.l.get_str("SmartBench is raising the Z axis.")
+            )
             self.m.zUp()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+            popup_info.PopupError(
+                self.sm,
+                self.l,
+                self.l.get_str("Please ensure machine is idle before continuing."),
+            )
 
     def get_spindle_data(self, dt):
         # Wait until Z axis is raised
         if not self.m.smartbench_is_busy():
             self.wait_popup.popup.dismiss()
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
-            self.m.s.write_command('M3 S0')
+            self.m.s.write_command("M3 S0")
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
             Clock.schedule_once(self.get_spindle_data, 0.4)
 
     def get_spindle_info(self, dt):
-        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+        self.m.s.write_protocol(
+            self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"
+        )
         self.check_info_count = 0
         Clock.schedule_once(self.check_spindle_info, 0.3)
 
     def check_spindle_info(self, dt):
         self.check_info_count += 1
         # Value of -999 represents disconnected spindle
-        if (self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]) or (self.check_info_count > 10):
+        if (
+            self.m.s.digital_spindle_ld_qdA != -999
+            and self.m.s.spindle_serial_number not in [None, -999, 999]
+        ) or (self.check_info_count > 10):
             self.read_restore_info()
-        else: # Keep trying for a few seconds
+        else:  # Keep trying for a few seconds
             Clock.schedule_once(self.check_spindle_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command('M5')
+        self.m.s.write_command("M5")
         self.wait_popup.popup.dismiss()
         # Value of -999 for ld_qdA represents disconnected spindle
-        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
+        if (
+            self.m.s.digital_spindle_ld_qdA != -999
+            and self.m.s.spindle_serial_number not in [None, -999, 999]
+        ):
             # Get info was successful, show info
             popup_maintenance.PopupDisplaySpindleData(self.sm, self.l, self.m.s)
         else:
             # Otherwise, spindle is probably disconnected
-            error_message = self.l.get_str("No SC2 Spindle motor detected.") + " " + self.l.get_str("Please check your connections.")
+            error_message = (
+                self.l.get_str("No SC2 Spindle motor detected.")
+                + " "
+                + self.l.get_str("Please check your connections.")
+            )
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def update_strings(self):
@@ -451,6 +483,5 @@ class SpindleSettingsWidget(Widget):
 
         if text_length > 33:
             value.font_size = 22
-        else: 
+        else:
             value.font_size = 24
-
