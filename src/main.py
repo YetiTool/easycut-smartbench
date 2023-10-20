@@ -28,7 +28,7 @@ from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
 if sys.platform.startswith("linux"):
-    # get screen resolution as "1280x800"
+    # get screen resolution as "1280x800" or "800x480"
     resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
     width, height = resolution.split("x")
     Config.set('graphics', 'width', width)
