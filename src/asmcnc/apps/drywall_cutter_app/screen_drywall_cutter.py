@@ -3,6 +3,8 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string("""
 <DrywallCutterScreen>:
 
@@ -17,29 +19,35 @@ Builder.load_string("""
             Button:
                 size_hint_x: 7
                 text: 'Home'
+                on_press: root.home()
 
             Button:
                 size_hint_x: 7
                 text: 'File'
 
-            Button:
+            Spinner:
                 size_hint_x: 7
                 text: 'Tool'
+                values: root.tool_options
 
-            Button:
+            Spinner:
                 size_hint_x: 7
                 text: 'Shape'
+                values: root.shape_options
+                on_text: root.select_shape()
 
             Button:
                 size_hint_x: 7
                 text: 'Rotate'
+                on_press: root.rotate_shape()
 
-            Button:
+            Spinner:
                 size_hint_x: 7
                 text: 'Cut on line'
                 text_size: self.size
                 halign: 'center'
                 valign: 'middle'
+                values: root.line_cut_options
 
             Button:
                 size_hint_x: 7
@@ -47,10 +55,12 @@ Builder.load_string("""
                 text_size: self.size
                 halign: 'center'
                 valign: 'middle'
+                on_press: root.material_setup()
 
             Button:
                 size_hint_x: 15
                 text: 'STOP'
+                on_press: root.stop()
 
             Button:
                 size_hint_x: 7
@@ -95,12 +105,15 @@ Builder.load_string("""
 
                     Button:
                         text: 'Simulate'
+                        on_press: root.simulate()
 
                     Button:
                         text: 'Save'
+                        on_press: root.save()
 
                     Button:
                         text: 'Run'
+                        on_press: root.run()
 
 """)
 
@@ -110,6 +123,10 @@ def log(message):
 
 class DrywallCutterScreen(Screen):
 
+    tool_options = ['6mm', '8mm', 'V groove']
+    shape_options = ['Circle', 'Square', 'Line', 'Geberit']
+    line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
+
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
@@ -118,5 +135,29 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.gtg = kwargs['geometry_to_gcode']
 
+    def home(self):
+        self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
+
+    def select_shape(self):
+        pass
+
+    def rotate_shape(self):
+        pass
+
+    def material_setup(self):
+        pass
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)
+
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
+
+    def simulate(self):
+        pass
+
+    def save(self):
+        pass
+
+    def run(self):
+        pass
