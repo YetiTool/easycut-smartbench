@@ -4,9 +4,12 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 
 Builder.load_string("""
 <DrywallCutterScreen>:
+
+    xy_move_container:xy_move_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -76,7 +79,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint_x: 55
 
-                canvas:
+                canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
@@ -89,9 +92,10 @@ Builder.load_string("""
                 spacing: dp(10)
 
                 BoxLayout:
+                    id: xy_move_container
                     size_hint_y: 31
 
-                    canvas:
+                    canvas.before:
                         Color:
                             rgba: hex('#E5E5E5FF')
                         Rectangle:
@@ -134,6 +138,10 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
         self.gtg = kwargs['geometry_to_gcode']
+
+        # XY move widget
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
+        self.xy_move_container.add_widget(self.xy_move_widget)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
