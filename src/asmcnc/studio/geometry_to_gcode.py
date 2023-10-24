@@ -20,6 +20,17 @@ class GeometryToGcode(object):
         transformation += " scale(1,-1) translate(0,%s)" % -editor_height
         return transformation
 
+    def create_rectangle(self, dwg, rect_pos, rect_centre, rect_rotation, rect_width, rect_height):
+        transformation = self.get_global_transformation(float(dwg.attribs['viewBox'].split()[2]))
+        transformation += " rotate(%s,%s,%s)" % (rect_rotation, rect_centre[0], rect_centre[1])
+        # If the rect is turned sideways
+        if int(rect_rotation) % 180 != 0:
+            # Then rotation will mess up its position so align centre first
+            # It is important to note that this has to be added after the rotation, because transformations are performed right to left
+            transformation += " translate(%s,%s)" % (rect_width/2, -rect_height/4)
+
+        dwg.add(dwg.rect(rect_pos, (rect_width, rect_height), fill='white', stroke='black', transform=transformation))
+
     def create_geberit_panel(self, dwg, panel_pos, panel_centre, panel_rotation, panel_width, panel_height):
         transformation = self.get_global_transformation(float(dwg.attribs['viewBox'].split()[2]))
 
@@ -72,6 +83,7 @@ class GeometryToGcode(object):
         dwg.save()
 
     def convert_svg_to_gcode(self, svg_filepath, gcode_filepath, speed, depth, feed):
+        # These arguments are shared between the commands for either platform
         gcode_arguments = " --off M5 --on M3S%sG1Z%sF%s --feedrate %s -o" % (str(speed), "-" + str(depth), str(feed), str(feed))
 
         if sys.platform != "win32":

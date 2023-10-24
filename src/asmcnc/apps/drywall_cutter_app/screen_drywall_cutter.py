@@ -94,6 +94,7 @@ Builder.load_string("""
                 BoxLayout:
                     id: xy_move_container
                     size_hint_y: 31
+                    padding: [dp(0), dp(30)]
 
                     canvas.before:
                         Color:
