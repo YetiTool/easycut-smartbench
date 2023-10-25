@@ -26,8 +26,17 @@ from os import path
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
+
+if sys.platform.startswith("linux"):
+    # get screen resolution as "1280x800" or "800x480"
+    resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
+    width, height = resolution.split("x")
+    Config.set('graphics', 'width', width)
+    Config.set('graphics', 'height', height)
+else:
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '480')
+
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
@@ -141,6 +150,9 @@ def log(message):
 class SkavaUI(App):
 
     test_no = 0
+
+    width = Window.width
+    height = Window.height
 
     def build(self):
 
