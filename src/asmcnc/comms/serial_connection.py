@@ -70,14 +70,20 @@ class SerialConnection(object):
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
 
+        self.spindle_data_failure_poll = Clock.schedule_interval(lambda dt: self.reset_spindle_data_failure_count(),
+                                                                 600)
+
     def __del__(self):
         if self.s: self.s.close()
         log('Serial connection destructor')
 
+    def reset_spindle_data_failure_count(self):
+        self.spindle_data_failure_count = 0
+
     def is_use_yp(self):
         if self.yp:
             return self.yp.use_yp
-        else: 
+        else:
             return False
 
     def set_use_yp(self, val):
@@ -813,7 +819,7 @@ class SerialConnection(object):
     digital_spindle_mains_voltage = None
 
     # Spindle data "inrush" counter
-    digital_load_pattern = re.compile(r"Ld:\d+,\d+,\d+,\d+")
+    digital_load_pattern = re.compile(r"Ld:[-]?\d+,[-]?\d+,[-]?\d+,[-]?\d+")
     inrush_counter = 0
     inrush_max = 20
     in_inrush = True
@@ -899,6 +905,11 @@ class SerialConnection(object):
     measure_running_data = False
     running_data = []
     measurement_stage = 0
+
+    # SPINDLE DATA VALIDATION
+    spindle_data_failure_poll = None
+    spindle_data_failure_count = 0
+    spindle_data_failure_max = 20
 
     # Spindle health check
     spindle_health_check = False
@@ -1151,6 +1162,15 @@ class SerialConnection(object):
 
                         if self.spindle_health_check and not self.in_inrush:
                             self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
+
+                        if self.digital_spindle_ld_qdA == -999 and self.sm.current != 'spindle_cooldown'\
+                                and not self.in_inrush and not self.m.is_machine_paused:
+                            self.spindle_data_failure_count += 1
+                            log("Spindle data failure count: " + str(self.spindle_data_failure_count))
+
+                        if self.spindle_data_failure_count >= self.spindle_data_failure_max:
+                            self.m.stop_for_a_stream_pause("yetipilot_spindle_data_loss")
+                            self.reset_spindle_data_failure_count()
 
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
