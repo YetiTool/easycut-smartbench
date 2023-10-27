@@ -32,8 +32,10 @@ class DWTConfig(object):
 
         :param config_name: The name of to save the configuration file as.
         """
-        with open(CONFIGURATIONS_DIR + config_name, 'w') as f:
-            json.dump(self.active_config, f, indent=4)
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
+
+        with open(file_path, 'w') as f:
+            json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
     def load_cutter(self, cutter_name):
         # type (str) -> None

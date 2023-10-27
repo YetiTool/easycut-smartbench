@@ -1,7 +1,8 @@
 import sys, os
-from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 
 sys.path.append('./src')
+
+from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 
 try:
     import unittest
@@ -16,6 +17,17 @@ except Exception as e:
 def test_load_config():
     dwt_config = DWTConfig()
 
+    os.chdir('./src')
     dwt_config.load_config('test_config.json')
 
     assert dwt_config.active_config.shape_type == 'rectangle'
+
+
+def test_save_config():
+    dwt_config = DWTConfig()
+
+    dwt_config.load_config('test_config.json')
+
+    dwt_config.save_config('test_config_saved.json')
+
+    assert os.path.exists('asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved.json')
