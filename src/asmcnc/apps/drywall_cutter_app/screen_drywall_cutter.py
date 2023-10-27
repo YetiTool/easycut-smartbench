@@ -159,4 +159,11 @@ class DrywallCutterScreen(Screen):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
-        self.dwt_config.active_config.__setattr__(parameter_name, parameter_value)
+        if '.' in parameter_name:
+            nested_parameter_names = parameter_name.split('.')
+            parameter_object = self.dwt_config.active_config
+            for nested_parameter_name in nested_parameter_names:
+                parameter_object = getattr(parameter_object, nested_parameter_name)
+            setattr(parameter_object, nested_parameter_names[-1], parameter_value)
+        else:
+            setattr(self.dwt_config.active_config, parameter_name, parameter_value)
