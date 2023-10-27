@@ -31,3 +31,11 @@ def test_save_config():
     dwt_config.save_config('test_config_saved.json')
 
     assert os.path.exists('asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved.json')
+
+
+def test_load_cutter():
+    dwt_config = DWTConfig()
+
+    dwt_config.load_cutter('test_cutter.json')
+
+    assert dwt_config.active_cutter.cutter_description == 'unique_label'

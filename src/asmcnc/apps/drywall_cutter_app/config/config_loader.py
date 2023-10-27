@@ -3,7 +3,7 @@ import os
 import config_classes
 
 CONFIGURATIONS_DIR = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-CUTTERS_DIR = 'asmcnc/apps/drywall_cutter_app/config/configurations'
+CUTTERS_DIR = 'asmcnc/apps/drywall_cutter_app/config/cutters'
 
 
 class DWTConfig(object):
@@ -44,10 +44,10 @@ class DWTConfig(object):
 
         :param cutter_name: The name of the cutter file to load.
         """
-        file_path = os.path.join(CONFIGURATIONS_DIR, cutter_name)
+        file_path = os.path.join(CUTTERS_DIR, cutter_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Configuration file does not exist. ' + file_path)
+            raise Exception('Cutter file does not exist. ' + file_path + ' ' + os.getcwd())
 
         with open(file_path, 'r') as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))

@@ -8,8 +8,8 @@
   "plunge_rate": 100,
   "cutting_direction": "climb",
   "allowable_toolpath_offsets": {
-    "in": true,
-    "out": false,
+    "inside": true,
+    "outside": false,
     "on": true
   },
   "max_depth_per_pass": 2.0,
