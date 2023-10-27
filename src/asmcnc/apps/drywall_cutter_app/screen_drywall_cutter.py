@@ -155,6 +155,7 @@ class DrywallCutterScreen(Screen):
         """
         Should be called when a parameter is changed in the UI.
         Bind this to the widget, e.g.: on_value: root.on_parameter_change('parameter_name', self.value)
+        If the parameter is nested, use a dot to separate the names, e.g.: 'nested_parameter_name.parameter_name'
 
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
