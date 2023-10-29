@@ -23,6 +23,10 @@ class AllowableToolpathOffsets:
         self.outside = outside
         self.on = on
 
+    @staticmethod
+    def default():
+        return AllowableToolpathOffsets(inside=0.0, outside=0.0, on=0.0)
+
 
 class CanvasShapeDims:
     def __init__(self, x, y, r, d, l):
@@ -32,6 +36,10 @@ class CanvasShapeDims:
         self.d = d
         self.l = l
 
+    @staticmethod
+    def default():
+        return CanvasShapeDims(x=0.0, y=0.0, r=0.0, d=0.0, l=0.0)
+
 
 class CuttingDepths:
     def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
@@ -40,11 +48,19 @@ class CuttingDepths:
         self.auto_pass = auto_pass
         self.depth_per_pass = depth_per_pass
 
+    @staticmethod
+    def default():
+        return CuttingDepths(material_thickness=0.0, bottom_offset=0.0, auto_pass=False, depth_per_pass=0.0)
+
 
 class DatumPosition:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    @staticmethod
+    def default():
+        return DatumPosition(x=0.0, y=0.0)
 
 
 class Configuration:
@@ -58,3 +74,12 @@ class Configuration:
         self.cutting_depths = CuttingDepths(**cutting_depths)
         self.datum_position = DatumPosition(**datum_position)
 
+    @staticmethod
+    def default():
+        return Configuration(shape_type='Circle', units='mm',
+                             canvas_shape_dims={'x': 0.0, 'y': 0.0, 'r': 0.0, 'd': 0.0, 'l': 0.0},
+                             cutter_type='6mm',
+                             toolpath_offset={'in': 0.0, 'out': 0.0, 'on': 0.0},
+                             cutting_depths={'material_thickness': 0.0, 'bottom_offset': 0.0, 'auto_pass': False,
+                                             'depth_per_pass': 0.0},
+                             datum_position={'x': 0.0, 'y': 0.0})

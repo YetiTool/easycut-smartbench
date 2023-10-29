@@ -117,7 +117,7 @@ class DrywallCutterScreen(Screen):
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        # self.l = kwargs['localization']
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
@@ -150,6 +150,9 @@ class DrywallCutterScreen(Screen):
     def run(self):
         pass
 
+    def on_leave(self, *args):
+        self.dwt_config.save_temp_config()
+
     def on_parameter_change(self, parameter_name, parameter_value):
         # type: (str, object) -> None
         """
@@ -160,11 +163,14 @@ class DrywallCutterScreen(Screen):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
+
         if '.' in parameter_name:
-            nested_parameter_names = parameter_name.split('.')
-            parameter_object = self.dwt_config.active_config
-            for nested_parameter_name in nested_parameter_names:
-                parameter_object = getattr(parameter_object, nested_parameter_name)
-            setattr(parameter_object, nested_parameter_names[-1], parameter_value)
+            parameter_names = parameter_name.split('.')
+            parameter = self.dwt_config.active_config
+
+            for parameter_name in parameter_names[:-1]:
+                parameter = getattr(parameter, parameter_name)
+
+            setattr(parameter, parameter_names[-1], parameter_value)
         else:
             setattr(self.dwt_config.active_config, parameter_name, parameter_value)

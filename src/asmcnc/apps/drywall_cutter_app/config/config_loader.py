@@ -7,7 +7,7 @@ CUTTERS_DIR = 'asmcnc/apps/drywall_cutter_app/config/cutters'
 
 
 class DWTConfig(object):
-    active_config = None  # type: config_classes.Configuration
+    active_config = config_classes.Configuration.default()  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
     def load_config(self, config_name):
@@ -51,3 +51,12 @@ class DWTConfig(object):
 
         with open(file_path, 'r') as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))
+
+    def save_temp_config(self):
+        # type () -> None
+        """
+        Saves the active configuration to a temporary file.
+
+        This is used to save the configuration when the Drywall Cutter screen is left.
+        """
+        self.save_config('temp_config.json')
