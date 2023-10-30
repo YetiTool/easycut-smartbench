@@ -152,25 +152,3 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
-
-    def on_parameter_change(self, parameter_name, parameter_value):
-        # type: (str, object) -> None
-        """
-        Should be called when a parameter is changed in the UI.
-        Bind this to the widget, e.g.: on_value: root.on_parameter_change('parameter_name', self.value)
-        If the parameter is nested, use a dot to separate the names, e.g.: 'nested_parameter_name.parameter_name'
-
-        :param parameter_name: The name of the parameter that was changed.
-        :param parameter_value: The new value of the parameter.
-        """
-
-        if '.' in parameter_name:
-            parameter_names = parameter_name.split('.')
-            parameter = self.dwt_config.active_config
-
-            for parameter_name in parameter_names[:-1]:
-                parameter = getattr(parameter, parameter_name)
-
-            setattr(parameter, parameter_names[-1], parameter_value)
-        else:
-            setattr(self.dwt_config.active_config, parameter_name, parameter_value)

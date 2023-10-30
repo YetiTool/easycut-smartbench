@@ -15,6 +15,11 @@ except Exception as e:
     print(e)
     print("Can't import mocking packages, are you on a dev machine?")
 
+"""
+RUN WITH python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.py
+FROM EASYCUT-SMARTBENCH DIR
+"""
+
 
 @pytest.fixture
 def m():
@@ -35,7 +40,6 @@ def sm():
 def test_load_config():
     dwt_config = DWTConfig()
 
-    os.chdir('./src')
     dwt_config.load_config('test_config.json')
 
     assert dwt_config.active_config.shape_type == 'rectangle'
@@ -48,7 +52,7 @@ def test_save_config():
 
     dwt_config.save_config('test_config_saved.json')
 
-    assert os.path.exists('asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved.json')
+    assert os.path.exists('src/asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved.json')
 
 
 def test_load_cutter():
@@ -59,11 +63,19 @@ def test_load_cutter():
     assert dwt_config.active_cutter.cutter_description == 'unique_label'
 
 
+def test_save_temp_config():
+    dwt_config = DWTConfig()
+
+    dwt_config.save_temp_config()
+
+    assert os.path.exists('src/asmcnc/apps/drywall_cutter_app/config/configurations/temp_config.json')
+
+
 def test_on_parameter_change():
     dwt_screen = DrywallCutterScreen(machine=m, screen_manager=sm)
 
-    dwt_screen.on_parameter_change('shape_type', 'circle')
-    dwt_screen.on_parameter_change('cutting_depths.material_thickness', 0.5)
+    dwt_screen.dwt_config.on_parameter_change('shape_type', 'circle')
+    dwt_screen.dwt_config.on_parameter_change('cutting_depths.material_thickness', 0.5)
 
     assert dwt_screen.dwt_config.active_config.shape_type == 'circle'
     assert dwt_screen.dwt_config.active_config.cutting_depths.material_thickness == 0.5

@@ -76,10 +76,10 @@ class Configuration:
 
     @staticmethod
     def default():
-        return Configuration(shape_type='Circle', units='mm',
-                             canvas_shape_dims={'x': 0.0, 'y': 0.0, 'r': 0.0, 'd': 0.0, 'l': 0.0},
-                             cutter_type='6mm',
-                             toolpath_offset={'in': 0.0, 'out': 0.0, 'on': 0.0},
-                             cutting_depths={'material_thickness': 0.0, 'bottom_offset': 0.0, 'auto_pass': False,
-                                             'depth_per_pass': 0.0},
+        return Configuration(shape_type='Square', units='mm',
+                             canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
+                             cutter_type='test_cutter',
+                             toolpath_offset='inside',
+                             cutting_depths={'material_thickness': 12.0, 'bottom_offset': 0.5, 'auto_pass': True,
+                                             'depth_per_pass': 6.0},
                              datum_position={'x': 0.0, 'y': 0.0})
