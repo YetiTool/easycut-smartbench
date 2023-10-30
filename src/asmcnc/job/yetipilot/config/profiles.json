@@ -609,7 +609,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "3 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -625,7 +625,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "4 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -641,7 +641,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "5 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -657,7 +657,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "6 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -720,55 +720,7 @@
         }
       ]
     },
-    {
-      "Material Type": "Steel",
-      "Cutter Diameter":"6 mm",
-      "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "1 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 550
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 24000.0
-        }
-      ]
-    },
-    {
-      "Material Type": "Steel",
-      "Cutter Diameter": "4 mm",
-      "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "1 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 240
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 20000.0
-        }
-      ]
-    },
-    {
-      "Material Type": "Steel",
-      "Cutter Diameter": "3 mm",
-      "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "1 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 210
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 19000.0
-        }
-      ]
-    },
-    {
+   {
       "Material Type": "Cast Acrylic",
       "Cutter Diameter": "4 mm",
       "Cutter Type": "1 flute upcut spiral",
