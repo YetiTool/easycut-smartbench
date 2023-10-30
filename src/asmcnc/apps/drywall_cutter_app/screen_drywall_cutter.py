@@ -5,10 +5,13 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
+from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
+    shape_display_container:shape_display_container
+    shape_selection:shape_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -27,6 +30,7 @@ Builder.load_string("""
                 text: 'Tool'
                 values: root.tool_options
             Spinner:
+                id: shape_selection
                 size_hint_x: 7
                 text: 'Shape'
                 values: root.shape_options
@@ -63,13 +67,8 @@ Builder.load_string("""
             padding: dp(5)
             spacing: dp(10)
             BoxLayout:
+                id: shape_display_container
                 size_hint_x: 55
-                canvas.before:
-                    Color:
-                        rgba: hex('#E5E5E5FF')
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
             BoxLayout:
                 size_hint_x: 23
                 orientation: 'vertical'
@@ -120,11 +119,14 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
+        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay()
+        self.shape_display_container.add_widget(self.drywall_shape_display_widget)
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
 
     def select_shape(self):
-        pass
+        self.drywall_shape_display_widget.select_shape(self.shape_selection.text)
 
     def rotate_shape(self):
         pass
