@@ -16,18 +16,14 @@ Builder.load_string("""
 
             Image:
                 source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
+                size: self.parent.size
+                pos: self.parent.pos
 
             Image:
                 id: shape_dims_image
                 opacity: 0
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
+                size: self.parent.size
+                pos: self.parent.pos
 
 """)
 
