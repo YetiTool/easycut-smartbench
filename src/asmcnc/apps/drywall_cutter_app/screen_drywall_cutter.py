@@ -48,6 +48,7 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 values: root.line_cut_options
+                on_text: root.select_toolpath()
             Button:
                 size_hint_x: 7
                 text: 'Material setup'
@@ -107,8 +108,8 @@ def log(message):
 class DrywallCutterScreen(Screen):
 
     tool_options = ['6mm', '8mm', 'V groove']
-    shape_options = ['Circle', 'Square', 'Rectangle', 'Line', 'Geberit']
-    line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
+    shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
+    line_cut_options = ['inside', 'on', 'outside']
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -124,20 +125,29 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay()
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
+        self.shape_selection.text = 'circle'
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
 
     def select_shape(self):
-        if self.shape_selection.text in ['Line', 'Geberit']:
-            self.cut_offset_selection.text = 'Cut on line'
+        if self.shape_selection.text in ['line', 'geberit']:
+            # Only on line available for these options
+            self.cut_offset_selection.text = 'on'
             self.cut_offset_selection.disabled = True
         else:
+            # Default to cut inside line
+            self.cut_offset_selection.text = 'inside'
             self.cut_offset_selection.disabled = False
 
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text)
+        self.select_toolpath()
 
     def rotate_shape(self):
         pass
+
+    def select_toolpath(self):
+        self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text)
 
     def material_setup(self):
         pass
