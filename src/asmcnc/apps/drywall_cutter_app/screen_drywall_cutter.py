@@ -105,7 +105,7 @@ def log(message):
 class DrywallCutterScreen(Screen):
 
     tool_options = ['6mm', '8mm', 'V groove']
-    shape_options = ['Circle', 'Square', 'Line', 'Geberit']
+    shape_options = ['Circle', 'Square', 'Rectangle', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
 
     def __init__(self, **kwargs):

@@ -32,9 +32,10 @@ class DrywallShapeDisplay(Widget):
 
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
 
-    shape_image_filepath_dict = {
+    dims_image_filepath_dict = {
         "Circle":image_filepath + "circle_dims.png",
         "Square":image_filepath + "square_dims.png",
+        "Rectangle":image_filepath + "rectangle_horizontal_dims.png",
         "Line":image_filepath + "line_horizontal_dims.png",
         "Geberit":image_filepath + "geberit_vertical_dims.png"
     }
@@ -43,5 +44,5 @@ class DrywallShapeDisplay(Widget):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
     def select_shape(self, shape):
-        self.shape_dims_image.source = self.shape_image_filepath_dict[shape]
+        self.shape_dims_image.source = self.dims_image_filepath_dict[shape]
         self.shape_dims_image.opacity = 1
