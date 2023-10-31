@@ -12,6 +12,7 @@ Builder.load_string("""
     xy_move_container:xy_move_container
     shape_display_container:shape_display_container
     shape_selection:shape_selection
+    cut_offset_selection:cut_offset_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -40,6 +41,7 @@ Builder.load_string("""
                 text: 'Rotate'
                 on_press: root.rotate_shape()
             Spinner:
+                id: cut_offset_selection
                 size_hint_x: 7
                 text: 'Cut on line'
                 text_size: self.size
@@ -126,6 +128,12 @@ class DrywallCutterScreen(Screen):
         self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
 
     def select_shape(self):
+        if self.shape_selection.text in ['Line', 'Geberit']:
+            self.cut_offset_selection.text = 'Cut on line'
+            self.cut_offset_selection.disabled = True
+        else:
+            self.cut_offset_selection.disabled = False
+
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text)
 
     def rotate_shape(self):
