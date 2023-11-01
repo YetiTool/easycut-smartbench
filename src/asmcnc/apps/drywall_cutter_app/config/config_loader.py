@@ -19,7 +19,6 @@ class DWTConfig(object):
 
     def __init__(self):
         fix_paths_for_tests()
-
         # Load the temp config if it exists, otherwise load the default config.
         if os.path.exists(os.path.join(configurations_dir, 'temp_config.json')):
             self.load_config('temp_config.json')

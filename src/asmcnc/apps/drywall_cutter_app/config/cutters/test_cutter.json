@@ -10,7 +10,7 @@
   "allowable_toolpath_offsets": {
     "inside": true,
     "outside": false,
-    "on": true
+    "on": false
   },
   "max_depth_per_pass": 2.0,
   "max_depth_total": 10.0,

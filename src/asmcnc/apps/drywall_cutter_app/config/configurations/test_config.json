@@ -8,7 +8,7 @@
     "d": 15,
     "l": 30
   },
-  "cutter_type": "straight",
+  "cutter_type": "test_cutter.json",
   "toolpath_offset": "in",
   "cutting_depths": {
     "material_thickness": 3.0,

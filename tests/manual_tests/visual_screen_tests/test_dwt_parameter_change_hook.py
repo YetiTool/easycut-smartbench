@@ -14,6 +14,9 @@ try:
 except:
     print("Can't import mocking packages, are you on a dev machine?")
 
+"""
+RUN WITH python tests/manual_tests/visual_screen_tests/test_dwt_parameter_change_hook.py FROM EASYCUT-SMARTBENCH DIR
+"""
 
 class TestApp(App):
     def build(self):
@@ -35,6 +38,7 @@ Builder.load_string("""
             text: '0'
             filter: 'int'
             multiline: False
+            # This will cause an error if the value is not an int - will be fixed in the future
             on_text: root.dwt_config.on_parameter_change('cutting_depths.material_thickness', int(self.text))
             
         Spinner:

@@ -1,4 +1,5 @@
-import sys, os
+import os
+import sys
 
 sys.path.append('./src')
 
@@ -20,6 +21,7 @@ RUN WITH python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt
 FROM EASYCUT-SMARTBENCH DIR
 """
 
+# config_loader.fix_paths_for_tests()
 
 @pytest.fixture
 def m():
@@ -31,6 +33,9 @@ def m():
     m.s.s = MagicMock()
     return m
 
+@pytest.fixture(scope="module")
+def l():
+    return localization.Localization()
 
 @pytest.fixture(scope="module")
 def sm():
@@ -72,7 +77,7 @@ def test_save_temp_config():
 
 
 def test_on_parameter_change():
-    dwt_screen = DrywallCutterScreen(machine=m, screen_manager=sm)
+    dwt_screen = DrywallCutterScreen(machine=m, screen_manager=sm, localization=l)
 
     dwt_screen.dwt_config.on_parameter_change('shape_type', 'circle')
     dwt_screen.dwt_config.on_parameter_change('cutting_depths.material_thickness', 0.5)

@@ -117,7 +117,7 @@ class DrywallCutterScreen(Screen):
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
-        # self.l = kwargs['localization']
+        self.l = kwargs['localization']
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
