@@ -21,8 +21,6 @@ RUN WITH python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt
 FROM EASYCUT-SMARTBENCH DIR
 """
 
-# config_loader.fix_paths_for_tests()
-
 @pytest.fixture
 def m():
     l = None
