@@ -39,27 +39,23 @@ class DrywallShapeDisplay(Widget):
 
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
 
-    dims_image_filepath_dict = {
-        "circle":image_filepath + "circle_dims.png",
-        "square":image_filepath + "square_dims.png",
-        "rectangle":image_filepath + "rectangle_horizontal_dims.png",
-        "line":image_filepath + "line_horizontal_dims.png",
-        "geberit":image_filepath + "geberit_vertical_dims.png"
-    }
-
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
-    def select_shape(self, shape):
-        self.shape_dims_image.source = self.dims_image_filepath_dict[shape]
+    def select_shape(self, shape, rotation):
+        image_source = self.image_filepath + shape
+        if shape in ['rectangle', 'line', 'geberit']:
+            image_source += "_" + rotation
+        self.shape_dims_image.source = image_source + "_dims.png"
+
         self.shape_dims_image.opacity = 1
 
-    def select_toolpath(self, shape, toolpath):
+    def select_toolpath(self, shape, toolpath, rotation):
         if shape in ['line', 'geberit']:
             self.shape_toolpath_image.opacity = 0
         else:
             if shape == 'rectangle':
-                self.shape_toolpath_image.source = self.image_filepath + shape + "_horizontal_" + toolpath + "_toolpath.png"
+                self.shape_toolpath_image.source = self.image_filepath + shape + "_" + rotation + "_" + toolpath + "_toolpath.png"
             else:
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1

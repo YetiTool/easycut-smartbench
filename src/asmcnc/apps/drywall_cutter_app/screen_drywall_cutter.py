@@ -110,6 +110,7 @@ class DrywallCutterScreen(Screen):
     tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
+    rotation = 'horizontal'
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -140,14 +141,20 @@ class DrywallCutterScreen(Screen):
             self.cut_offset_selection.text = 'inside'
             self.cut_offset_selection.disabled = False
 
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text)
+        self.rotation = 'horizontal'
+        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
         self.select_toolpath()
 
     def rotate_shape(self):
-        pass
+        if self.rotation == 'horizontal':
+            self.rotation = 'vertical'
+        else:
+            self.rotation = 'horizontal'
+        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
+        self.select_toolpath()
 
     def select_toolpath(self):
-        self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text)
+        self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text, self.rotation)
 
     def material_setup(self):
         pass
