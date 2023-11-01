@@ -5,6 +5,7 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -115,6 +116,7 @@ class DrywallCutterScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
@@ -130,6 +132,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def material_setup(self):
+        material_setup_popup.CuttingDepthsPopup(self.l, self.kb)
         pass
 
     def stop(self):
