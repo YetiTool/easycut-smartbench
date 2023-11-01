@@ -2,10 +2,14 @@ import os
 import sys
 
 sys.path.append('./src')
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 
-from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
+config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
+config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
+
 from asmcnc.apps.drywall_cutter_app.screen_drywall_cutter import DrywallCutterScreen
 from asmcnc.comms import router_machine
+
 
 try:
     import unittest
@@ -33,7 +37,7 @@ def m():
 
 @pytest.fixture(scope="module")
 def l():
-    return localization.Localization()
+    return Mock()
 
 @pytest.fixture(scope="module")
 def sm():
@@ -41,7 +45,7 @@ def sm():
 
 
 def test_load_config():
-    dwt_config = DWTConfig()
+    dwt_config = config_loader.DWTConfig()
 
     dwt_config.load_config('test_config.json')
 
@@ -49,7 +53,7 @@ def test_load_config():
 
 
 def test_save_config():
-    dwt_config = DWTConfig()
+    dwt_config = config_loader.DWTConfig()
 
     dwt_config.load_config('test_config.json')
 
@@ -59,7 +63,7 @@ def test_save_config():
 
 
 def test_load_cutter():
-    dwt_config = DWTConfig()
+    dwt_config = config_loader.DWTConfig()
 
     dwt_config.load_cutter('test_cutter.json')
 
@@ -67,7 +71,7 @@ def test_load_cutter():
 
 
 def test_save_temp_config():
-    dwt_config = DWTConfig()
+    dwt_config = config_loader.DWTConfig()
 
     dwt_config.save_temp_config()
 

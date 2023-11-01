@@ -6,19 +6,11 @@ configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
 
 
-def fix_paths_for_tests():
-    global configurations_dir, cutters_dir
-    if os.getcwd().split('/')[-1] == 'easycut-smartbench':
-        configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
-        cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
-
-
 class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
     def __init__(self):
-        fix_paths_for_tests()
         # Load the temp config if it exists, otherwise load the default config.
         if os.path.exists(os.path.join(configurations_dir, 'temp_config.json')):
             self.load_config('temp_config.json')
