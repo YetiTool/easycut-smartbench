@@ -5,12 +5,25 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.core.text import LabelBase
 
-LabelBase.register(name='KRFont',
-                   fn_regular='./asmcnc/keyboard/fonts/KRFont.ttf',
-                   fn_bold='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
 
-LabelBase.register(name='KRFont-Bold',
-                   fn_regular='./asmcnc/keyboard/fonts/KRFont-Bold.ttf')
+kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
+kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
+
+try: 
+    LabelBase.register(name='KRFont',
+                       fn_regular="." + kr_font_path,
+                       fn_bold="." + kr_font_bold_path)
+
+    LabelBase.register(name='KRFont-Bold',
+                       fn_regular="." + kr_font_bold_path)
+
+except:
+    LabelBase.register(name='KRFont',
+                       fn_regular="./src" + kr_font_path,
+                       fn_bold="./src" + kr_font_bold_path)
+
+    LabelBase.register(name='KRFont-Bold',
+                       fn_regular="./src" + kr_font_bold_path)
 
 builder_font_string = """
 <Widget>:
