@@ -5,6 +5,7 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -99,15 +100,17 @@ Builder.load_string("""
                         on_press: root.run()
 """)
 
+
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
+
 
 class DrywallCutterScreen(Screen):
-
     tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
+    dwt_config = config_loader.DWTConfig()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -121,7 +124,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
 
     def home(self):
-        self.m.request_homing_procedure('drywall_cutter','drywall_cutter')
+        self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_shape(self):
         pass
@@ -146,3 +149,6 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         pass
+
+    def on_leave(self, *args):
+        self.dwt_config.save_temp_config()
