@@ -22,9 +22,9 @@ from io import open
 import os
 import re
 
-from config import config_loader
-
 config = config_loader.DWTConfig()
+
+from config import config_loader
 
 active_config = config.active_config
 active_cutter = config.active_cutter
