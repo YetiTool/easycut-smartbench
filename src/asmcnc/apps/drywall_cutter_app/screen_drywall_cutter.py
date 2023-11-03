@@ -7,6 +7,8 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
+from engine import engine_run
+
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
@@ -148,7 +150,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def run(self):
-        pass
+        engine_run()
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
