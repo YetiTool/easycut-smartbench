@@ -22,7 +22,7 @@ from io import open
 import os
 import re
 
-from asmcnc.drywall_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 config = config_loader.DWTConfig()
 
