@@ -135,7 +135,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def material_setup(self):
-        material_setup_popup.CuttingDepthsPopup(self.l, self.kb)
+        material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         pass
 
     def stop(self):

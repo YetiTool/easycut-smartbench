@@ -1,5 +1,6 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
+import math
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -16,6 +17,8 @@ Builder.load_string("""
     total_cut_depth_label:total_cut_depth_label
     auto_pass_label:auto_pass_label
     depth_per_pass_label:depth_per_pass_label
+    
+    cutter_graphic:cutter_graphic
     
     auto_dismiss: False
     size_hint: (None,None)
@@ -78,11 +81,11 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '20sp'
+            font_size: '16sp'
             markup: True
             multiline: False
             text: ''
-            input_filter: 'int'
+            input_filter: 'float'
         
         Label:
             id: bottom_offset_label
@@ -107,11 +110,11 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '20sp'
+            font_size: '16sp'
             markup: True
             multiline: False
             text: ''
-            input_filter: 'int' 
+            input_filter: 'float' 
         
         Image:
             id: total_cut_depth_dims
@@ -144,7 +147,7 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '20sp'
+            font_size: '16sp'
             markup: True
             multiline: False
             text: ''
@@ -194,12 +197,12 @@ Builder.load_string("""
                 halign: 'center'
                 size_hint: (0, 0)
                 text_size: self.size
-                font_size: '20sp'
+                font_size: '16sp'
                 markup: True
                 multiline: False
                 text: ''
                 disabled: True
-                input_filter: 'int' 
+                input_filter: 'float' 
                 
         BoxLayout:
             orientation: 'horizontal'
@@ -229,10 +232,11 @@ Builder.load_string("""
 
 
 class CuttingDepthsPopup(Popup):
-    def __init__(self, localization, keyboard, **kwargs):
+    def __init__(self, localization, keyboard, dwt_config, **kwargs):
         super(CuttingDepthsPopup, self).__init__(**kwargs)
         self.l = localization
         self.kb = keyboard
+        self.dwt_config = dwt_config
 
         self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
         self.kb.setup_text_inputs(self.text_inputs)
@@ -252,15 +256,48 @@ class CuttingDepthsPopup(Popup):
     def on_touch(self):
         for text_input in self.text_inputs:
             text_input.focus = False
+            if text_input.text != '':
+                text_input.text = str(float(text_input.text))
 
     def on_checkbox_active(self):
         if self.auto_pass_checkbox.active:
             self.depth_per_pass.disabled = True
+            self.depth_per_pass.text = self.depth_per_pass.hint_text
+            self.depth_per_pass.hint_text = ''
         else:
             self.depth_per_pass.disabled = False
+            self.depth_per_pass.hint_text = self.depth_per_pass.text
+            self.depth_per_pass.text = ''
 
     def update_text(self, instance, value):
-        print(value)
+        max_total_cut_depth = 63
+        # Calculate total cut depth and handle inputs
+        if instance == self.material_thickness or instance == self.bottom_offset:
+            if self.material_thickness.text != '' and self.bottom_offset.text != '':
+                try:
+                    total_cut_depth_result = float(self.material_thickness.text) + float(self.bottom_offset.text)
+                    if total_cut_depth_result > max_total_cut_depth:
+                        if instance == self.material_thickness:
+                            self.material_thickness.text = str(max_total_cut_depth - float(self.bottom_offset.text))
+                        elif instance == self.bottom_offset:
+                            self.bottom_offset.text = str(max_total_cut_depth - float(self.material_thickness.text))
+                    self.total_cut_depth.text = str(float(self.material_thickness.text) + float(self.bottom_offset.text))
+                    self.calculate_depth_per_pass()
+                except:
+                    pass
+            else:
+                self.total_cut_depth.text = ''
+
+    def calculate_depth_per_pass(self):
+        if self.auto_pass_checkbox.active:
+            try:
+                max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+                number_of_passes = math.ceil(float(self.total_cut_depth.text) / max_cut_depth_per_pass)
+
+                depth_per_pass = float(self.total_cut_depth.text) / number_of_passes
+                self.depth_per_pass.text = str(round(depth_per_pass, 1))
+            except:
+                pass
 
     def confirm(self):
         self.dismiss()
