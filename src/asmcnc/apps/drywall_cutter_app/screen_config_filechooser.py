@@ -105,7 +105,7 @@ Builder.load_string("""
 
                 FileChooser:
                     id: filechooser
-                    rootpath: './jobCache/'
+                    rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
                     filters: ['*.json']
                     on_selection: root.refresh_filechooser()
