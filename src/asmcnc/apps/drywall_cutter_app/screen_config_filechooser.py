@@ -41,7 +41,6 @@ Builder.load_string("""
     metadata_preview : metadata_preview
     toggle_view_button : toggle_view_button
     sort_button : sort_button
-    button_usb : button_usb
     load_button : load_button
     delete_selected_button : delete_selected_button
     delete_all_button : delete_all_button
