@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on 19 Aug 2017
 
 @author: Ed
-
-Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
-'''
+edited by Archie 2023 for use in dwt app
+"""
 # config
 
 import os
