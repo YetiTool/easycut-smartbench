@@ -150,7 +150,6 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.open_USB()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -393,12 +392,6 @@ class ConfigFileChooser(Screen):
 
         self.filechooser._update_files()
 
-    def open_USB(self):
-        if not self.is_filechooser_scrolling:
-            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-            self.sm.current = 'usb_filechooser'
-
     def refresh_filechooser(self):
 
         self.filechooser._update_item_selection()
@@ -510,4 +503,4 @@ class ConfigFileChooser(Screen):
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
-            self.sm.current = 'home'
+            self.sm.current = 'drywall_cutter'

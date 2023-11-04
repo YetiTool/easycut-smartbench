@@ -24,7 +24,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 7
                 text: 'File'
-                on_press: root.file()
+                on_press: root.open_filechooser()
             Spinner:
                 size_hint_x: 7
                 text: 'Tool'
@@ -152,13 +152,26 @@ class DrywallCutterScreen(Screen):
     def run(self):
         pass
 
-    def file(self):
+    def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
                                                                            screen_manager=self.sm,
                                                                            localization=self.l,
-                                                                           callback=self.dwt_config.load_config))
+                                                                           callback=self.load_config))
         self.sm.current = 'config_filechooser'
+
+    def load_config(self, config):
+        # type: (str) -> None
+        """
+        Used as the callback for the config filechooser screen.
+
+        :param config: The path to the config file, including extension.
+        """
+        self.dwt_config.load_config(config)
+
+        file_name_no_ext = config.split('/')[-1].split('.')[0]
+
+        # set the label on the screen to the name of the config file below
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
