@@ -280,7 +280,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.go_to_loading_screen()
+                    root.load_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -336,6 +336,7 @@ class ConfigFileChooser(Screen):
         super(ConfigFileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
+        self.callback = kwargs['callback']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
 
@@ -527,16 +528,10 @@ class ConfigFileChooser(Screen):
         except:
             self.metadata_preview.text = self.l.get_bold("Could not open file.")
 
-    def go_to_loading_screen(self):
+    def load_config_and_return_to_dwt(self):
+        self.callback(self.filechooser.selection[0])
 
-        file_selection = self.filechooser.selection[0]
-
-        if os.path.isfile(file_selection):
-            self.manager.current = 'loading'
-
-        else:
-            error_message = self.l.get_str('File selected does not exist!')
-            popup_info.PopupError(self.sm, self.l, error_message)
+        self.sm.current = 'drywall_cutter'
 
     def delete_popup(self, **kwargs):
 
