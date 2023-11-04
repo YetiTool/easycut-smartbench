@@ -317,6 +317,16 @@ class ConfigFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
 
+        self.json_config_order = {
+            "shape_type": 0,
+            "units": 1,
+            "canvas_shape_dims": 2,
+            "cutter_type": 3,
+            "toolpath_offset": 4,
+            "cutting_depths": 5,
+            "datum_position": 6
+        }
+
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
 
@@ -435,8 +445,10 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        # JSON STILL NEEDS TO BE ORDERED
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        sorted_keys = sorted(json_obj.keys(), key=lambda key: self.json_config_order.get(key, float('inf')))
+        ordered_json = {key: json_obj[key] for key in sorted_keys}
+
+        self.metadata_preview.text = self.to_human_readable(ordered_json)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
