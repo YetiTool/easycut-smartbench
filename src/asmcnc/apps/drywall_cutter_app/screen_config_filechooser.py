@@ -46,7 +46,6 @@ Builder.load_string("""
     delete_all_button : delete_all_button
     image_view : image_view
     image_sort: image_sort
-    image_usb : image_usb
     image_delete : image_delete
     image_delete_all : image_delete_all
     image_select : image_select
