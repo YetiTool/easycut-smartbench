@@ -166,6 +166,36 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+
+            Button:
+                disabled: True
+                size_hint_x: 1
+                background_color: hex('#FFFFFF00')
+                on_release: 
+                    self.background_color = hex('#FFFFFF00')
+                on_press:
+                    root.open_USB()
+                    self.background_color = hex('#FFFFFFFF')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    
+            Button:
+                disabled: True
+                size_hint_x: 1
+                background_color: hex('#FFFFFF00')
+                on_release: 
+                    self.background_color = hex('#FFFFFF00')
+                on_press:
+                    root.get_FTP_files()
+                    root.refresh_filechooser() 
+                    self.background_color = hex('#FFFFFFFF')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    
             Button:
                 id: delete_selected_button
                 disabled: True
