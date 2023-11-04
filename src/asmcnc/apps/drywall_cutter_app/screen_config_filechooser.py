@@ -168,49 +168,6 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
-
-            Button:
-                id: button_usb
-                disabled: True
-                size_hint_x: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.open_USB()
-                    self.background_color = hex('#FFFFFFFF')
-                BoxLayout:
-                    padding: 25
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_usb
-                        source: "./asmcnc/skavaUI/img/file_select_usb_disabled.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
-            Button:
-                disabled: False
-                size_hint_x: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.get_FTP_files()
-                    root.refresh_filechooser() 
-                    self.background_color = hex('#FFFFFFFF')
-                BoxLayout:
-                    padding: 25
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_refresh
-                        source: "./asmcnc/skavaUI/img/file_select_refresh.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
                 id: delete_selected_button
                 disabled: True
