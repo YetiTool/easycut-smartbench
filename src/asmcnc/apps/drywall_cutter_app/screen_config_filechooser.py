@@ -8,23 +8,17 @@ Screen allows user to select their job for loading into easycut, either from Job
 '''
 # config
 
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty  # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.graphics import Color, Rectangle
+import os
+import sys
+import json
 
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from itertools import takewhile
+import kivy
 from chardet import detect
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
-from asmcnc.skavaUI import screen_file_loading
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -446,7 +440,10 @@ class ConfigFileChooser(Screen):
         else:
             self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
 
-        self.metadata_preview.text = self.to_human_readable(self.filechooser.selection[0])
+        with open(self.filechooser.selection[0], 'r') as f:
+            json_obj = json.load(f)
+
+        self.metadata_preview.text = self.to_human_readable(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
