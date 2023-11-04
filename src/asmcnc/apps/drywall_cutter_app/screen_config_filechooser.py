@@ -459,8 +459,7 @@ class ConfigFileChooser(Screen):
 
         for key, value in json_obj.items():
             if isinstance(value, dict):
-                result += format_key(key) + ":\n"
-                result += self.to_human_readable(value, indent + 4)
+                result += format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
             else:
                 result += format_key(key) + ": " + str(value) + "\n"
         return ' ' * indent + result
