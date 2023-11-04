@@ -6,6 +6,7 @@ from kivy.uix.screenmanager import Screen
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -23,6 +24,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 7
                 text: 'File'
+                on_press: root.file()
             Spinner:
                 size_hint_x: 7
                 text: 'Tool'
@@ -149,6 +151,14 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         pass
+
+    def file(self):
+        if not self.sm.has_screen('config_filechooser'):
+            self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
+                                                                           screen_manager=self.sm,
+                                                                           machine=self.m,
+                                                                           localization=self.l))
+        self.sm.current = 'config_filechooser'
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
