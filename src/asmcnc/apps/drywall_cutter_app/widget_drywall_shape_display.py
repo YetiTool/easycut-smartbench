@@ -44,7 +44,7 @@ class DrywallShapeDisplay(Widget):
 
     def select_shape(self, shape, rotation):
         image_source = self.image_filepath + shape
-        if shape in ['rectangle', 'line', 'geberit']:
+        if shape in ['rectangle', 'line']:
             image_source += "_" + rotation
         self.shape_dims_image.source = image_source + "_dims.png"
 
