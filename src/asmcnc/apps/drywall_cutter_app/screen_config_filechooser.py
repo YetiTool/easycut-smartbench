@@ -459,10 +459,10 @@ class ConfigFileChooser(Screen):
 
         for key, value in json_obj.items():
             if isinstance(value, dict):
-                result += format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
+                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
             else:
-                result += format_key(key) + ": " + str(value) + "\n"
-        return ' ' * indent + result
+                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
+        return result
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
