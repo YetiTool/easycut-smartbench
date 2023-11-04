@@ -443,6 +443,7 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
+        # JSON STILL NEEDS TO BE ORDERED
         self.metadata_preview.text = self.to_human_readable(json_obj)
 
         self.load_button.disabled = False
