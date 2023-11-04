@@ -318,7 +318,7 @@ def name_order_sort_reverse(files, filesystem):
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 
-class LocalFileChooser(Screen):
+class FileChooser(Screen):
     filename_selected_label_text = StringProperty()
 
     sort_by_date = ObjectProperty(date_order_sort)
@@ -329,10 +329,11 @@ class LocalFileChooser(Screen):
 
     def __init__(self, **kwargs):
 
-        super(LocalFileChooser, self).__init__(**kwargs)
+        super(FileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
+        # self.jd = kwargs['job']
         self.l = kwargs['localization']
+        self.dwt_config = kwargs['config']
         # self.usb_stick = usb_storage.USB_storage(self.sm,
         #                                          self.l)  # object to manage presence of USB stick (fun in Linux)
         #
