@@ -451,16 +451,19 @@ class ConfigFileChooser(Screen):
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
-    def to_human_readable(self, json_obj):
+    def to_human_readable(self, json_obj, indent=0):
+        def format_key(json_key):
+            return json_key.replace("_", " ").title()
+
         result = ''
 
         for key, value in json_obj.items():
             if isinstance(value, dict):
-                result += key + ":\n"
-                result += self.to_human_readable(value)
+                result += format_key(key) + ":\n"
+                result += self.to_human_readable(value, indent + 4)
             else:
-                result += key + ": " + str(value) + "\n"
-        return result
+                result += format_key(key) + ": " + str(value) + "\n"
+        return ' ' * indent + result
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
