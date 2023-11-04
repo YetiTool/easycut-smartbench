@@ -26,7 +26,7 @@ Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
 
-<LocalFileChooser>:
+<FileChooser>:
 
     on_enter: root.refresh_filechooser()
 
