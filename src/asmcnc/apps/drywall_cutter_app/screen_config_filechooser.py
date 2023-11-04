@@ -297,9 +297,7 @@ Builder.load_string("""
 
 """)
 
-configs_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations/'  # where job files are cached for selection (for last used history/easy access)
-job_q_dir = './jobQ/'  # where file is copied if to be used next in job
-ftp_file_dir = '../../router_ftp/'  # Linux location where incoming files are FTP'd to
+configs_dir = './asmcnc/apps/drywall_cutter_app/config/configurations/'  # where job files are cached for selection (for last used history/easy access)
 
 
 def date_order_sort(files, filesystem):
@@ -393,45 +391,17 @@ class ConfigFileChooser(Screen):
 
             if not os.path.exists(configs_dir + '.gitignore'):
                 file = open(configs_dir + '.gitignore', "w+")
-                file.write('*.nc')
+                file.write('*.json')
                 file.close()
 
     def on_enter(self):
 
         self.filechooser.path = configs_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
-        self.usb_stick.enable()  # start the object scanning for USB stick
+        # self.usb_stick.enable()  # start the object scanning for USB stick
         self.refresh_filechooser()
-        self.check_USB_status(1)
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)  # poll status to update button
+        # self.check_USB_status(1)
+        # self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)  # poll status to update button
         self.switch_view()
-
-    def on_pre_leave(self):
-        self.sm.get_screen('usb_filechooser').filechooser_usb.sort_func = self.filechooser.sort_func
-        self.sm.get_screen('usb_filechooser').image_sort.source = self.image_sort.source
-        Clock.unschedule(self.poll_USB)
-        if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
-
-    def on_leave(self):
-        self.usb_status_label.size_hint_y = 0
-
-    def check_USB_status(self, dt):
-
-        if not self.is_filechooser_scrolling:
-            if self.usb_stick.is_available():
-                self.button_usb.disabled = False
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-                self.sm.get_screen('loading').usb_status_label.opacity = 1
-                self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.canvas.before.clear()
-                with self.usb_status_label.canvas.before:
-                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                    Rectangle(pos=self.usb_status_label.pos, size=self.usb_status_label.size)
-            else:
-                self.button_usb.disabled = True
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-                self.usb_status_label.size_hint_y = 0
-                self.sm.get_screen('loading').usb_status = None
-                self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -556,15 +526,6 @@ class ConfigFileChooser(Screen):
 
         except:
             self.metadata_preview.text = self.l.get_bold("Could not open file.")
-
-    def get_FTP_files(self):
-
-        if sys.platform != "win32":
-            ftp_files = os.listdir(ftp_file_dir)
-            if ftp_files:
-                for file in ftp_files:
-                    copy(ftp_file_dir + file, configs_dir)  # "copy" overwrites same-name file at destination
-                    os.remove(ftp_file_dir + file)  # clean original space
 
     def go_to_loading_screen(self):
 
