@@ -266,7 +266,3 @@ class XYMoveDrywall(Widget):
 
     def probe_z(self):
         self.m.probe_z()
-        self.disable_z_datum_reminder()
-
-    def disable_z_datum_reminder(self):
-        self.sm.get_screen('home').has_datum_been_reset = True

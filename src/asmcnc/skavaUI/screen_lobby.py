@@ -37,6 +37,8 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    shapecutter_container:shapecutter_container
+    drywall_app_container:drywall_app_container
     upgrade_app_container:upgrade_app_container
 
     canvas.before:
@@ -102,6 +104,7 @@ Builder.load_string("""
 
                    
                 BoxLayout:
+                    id: shapecutter_container
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing: 20
@@ -132,6 +135,42 @@ Builder.load_string("""
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Shape Cutter'
+
+
+                BoxLayout:
+                    id: drywall_app_container
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                    padding: [65,0]
+
+                    Button:
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release:
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.drywall_cutter_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                            Label:
+                                text: 'Drywall cutter'
+                                color: 0,0,0,1
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Drywall cutter'
+                        markup: True
+
                         
             # Carousel pane 2
             BoxLayout:
@@ -343,45 +382,6 @@ Builder.load_string("""
                         text: 'System Tools'
                         markup: True
 
-            # Carousel pane 5
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
-
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing: 20
-                    padding: [215, 0]
-
-                    Button:
-                        size_hint_y: 8
-                        disabled: False
-                        background_color: hex('#FFFFFF00')
-                        on_release:
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            root.drywall_cutter_app()
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                            Label:
-                                text: 'Drywall cutter'
-                                color: 0,0,0,1
-                    Label:
-                        size_hint_y: 1
-                        font_size: '25sp'
-                        text: 'Drywall cutter'
-                        markup: True
-
         BoxLayout:
             size_hint_y: 6
             size: self.parent.size
@@ -508,11 +508,20 @@ class LobbyScreen(Screen):
 
         self.update_strings()
 
+        # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
+        if "DRYWALLTEC" in self.m.smartbench_model():
+            self.shapecutter_container.parent.remove_widget(self.shapecutter_container)
+        else:
+            self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
+
     def on_pre_enter(self):
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
             self.upgrade_app_hidden = True
+
+        elif self.upgrade_app_hidden and "V1.3" in self.m.smartbench_model():
+            pass # reinstate upgrade_app_container, tbc - this is placeholder for now
 
     def on_enter(self):
         if not sys.platform == "win32":
