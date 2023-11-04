@@ -337,7 +337,6 @@ class ConfigFileChooser(Screen):
     def __init__(self, **kwargs):
         super(ConfigFileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job']
         self.l = kwargs['localization']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
@@ -572,8 +571,6 @@ class ConfigFileChooser(Screen):
         file_selection = self.filechooser.selection[0]
 
         if os.path.isfile(file_selection):
-            self.jd.reset_values()
-            self.jd.set_job_filename(file_selection)
             self.manager.current = 'loading'
 
         else:

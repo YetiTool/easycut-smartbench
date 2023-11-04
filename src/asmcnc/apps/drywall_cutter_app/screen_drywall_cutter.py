@@ -156,7 +156,6 @@ class DrywallCutterScreen(Screen):
         if not self.sm.has_screen('config_filechooser'):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
                                                                            screen_manager=self.sm,
-                                                                           machine=self.m,
                                                                            localization=self.l))
         self.sm.current = 'config_filechooser'
 
