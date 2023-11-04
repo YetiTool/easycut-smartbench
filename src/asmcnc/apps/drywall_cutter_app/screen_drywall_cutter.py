@@ -152,13 +152,13 @@ class DrywallCutterScreen(Screen):
     def run(self):
         pass
 
-    def file(self):
-        if not self.sm.has_screen('dwt_file_chooser'):
-            file_chooser = FileChooser(name='dwt_file_chooser', screen_manager=self.sm, localization=self.l,
-                                       config=self.dwt_config)
-            self.sm.add_widget(file_chooser)
-
-        self.sm.current = 'dwt_file_chooser'
+    # def file(self):
+    #     if not self.sm.has_screen('dwt_file_chooser'):
+    #         file_chooser = FileChooser(name='dwt_file_chooser', screen_manager=self.sm, localization=self.l,
+    #                                    config=self.dwt_config)
+    #         self.sm.add_widget(file_chooser)
+    #
+    #     self.sm.current = 'dwt_file_chooser'
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
