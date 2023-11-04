@@ -148,6 +148,8 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
         self.select_toolpath()
 
+        self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
+
     def rotate_shape(self):
         if self.rotation == 'horizontal':
             self.rotation = 'vertical'
@@ -158,6 +160,8 @@ class DrywallCutterScreen(Screen):
 
     def select_toolpath(self):
         self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text, self.rotation)
+
+        self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
 
     def material_setup(self):
         pass
