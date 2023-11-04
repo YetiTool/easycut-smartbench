@@ -50,7 +50,6 @@ Builder.load_string("""
     image_delete_all : image_delete_all
     image_select : image_select
     file_selected_label : file_selected_label
-    usb_status_label : usb_status_label
 
     BoxLayout:
         padding: 0
@@ -64,22 +63,6 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             spacing: 0
-
-            Label:
-                id: usb_status_label
-                canvas.before:
-                    Color:
-                        rgba: hex('#333333FF')
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-                size_hint_y: 0.7
-                markup: True
-                font_size: '18sp'   
-                valign: 'middle'
-                halign: 'left'
-                text_size: self.size
-                padding: [10, 0]
 
             Label:
                 canvas.before:
@@ -326,8 +309,6 @@ class ConfigFileChooser(Screen):
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
 
         self.check_for_job_cache_dir()
-
-        self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
 
         # MANAGING KIVY SCROLL BUG
 
