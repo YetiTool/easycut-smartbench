@@ -1,38 +1,32 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created on 19 Aug 2017
 
 @author: Ed
+copied & edited to be used in dwt by Archie 2023
+"""
 
-Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
-'''
-# config
+import os
+import sys
+from itertools import takewhile
+from shutil import copy
 
 import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
+from chardet import detect
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from itertools import takewhile
-from chardet import detect
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
-from asmcnc.skavaUI import screen_file_loading
 from asmcnc.skavaUI import popup_info
-
 
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
 
-<LocalFileChooser>:
+<FileChooser>:
 
     on_enter: root.refresh_filechooser()
 
@@ -108,7 +102,7 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './jobCache/'
                     show_hidden: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -130,7 +124,7 @@ Builder.load_string("""
                         text_size: self.width, None
                         padding: 10, 10
                         markup: True
-               
+
 
         BoxLayout:
             size_hint_y: None
@@ -295,36 +289,38 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
 
-                
+
 """)
 
+config_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 
-job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
-job_q_dir = './jobQ/'            # where file is copied if to be used next in job
-ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
 
 def date_order_sort(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
-        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = False))
+            sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse=False))
+
 
 def date_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
-        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
+            sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse=True))
+
 
 def name_order_sort(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted(f for f in files if not filesystem.is_dir(f)))
 
+
 def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
-            sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
+            sorted((f for f in files if not filesystem.is_dir(f)), reverse=True))
+
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
-class LocalFileChooser(Screen):
 
+class FileChooser(Screen):
     filename_selected_label_text = StringProperty()
-    
+
     sort_by_date = ObjectProperty(date_order_sort)
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
     sort_by_name = ObjectProperty(name_order_sort)
@@ -333,22 +329,24 @@ class LocalFileChooser(Screen):
 
     def __init__(self, **kwargs):
 
-        super(LocalFileChooser, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
-        self.l=kwargs['localization']
-        self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
+        super(FileChooser, self).__init__(**kwargs)
+        self.sm = kwargs['screen_manager']
+        # self.jd = kwargs['job']
+        self.l = kwargs['localization']
+        self.dwt_config = kwargs['config']
+        # self.usb_stick = usb_storage.USB_storage(self.sm,
+        #                                          self.l)  # object to manage presence of USB stick (fun in Linux)
+        #
+        # self.check_for_job_cache_dir()
+        #
+        # self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
 
-        self.check_for_job_cache_dir()
+        # MANAGING KIVY SCROLL BUG
 
-        self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
-
-    # MANAGING KIVY SCROLL BUG
-
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
 
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
@@ -357,7 +355,6 @@ class LocalFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
-
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -375,7 +372,7 @@ class LocalFileChooser(Screen):
             scrollview_object.effect_y.max = scrollable_height
             scrollview_object.effect_y.value = scrollview_object.effect_y.max * scrollview_object.scroll_y
 
-        except: 
+        except:
             pass
 
     def scrolling_start(self, *args):
@@ -386,51 +383,10 @@ class LocalFileChooser(Screen):
 
     # SCREEN FUNCTIONS
 
-    def check_for_job_cache_dir(self):
-        if not os.path.exists(job_cache_dir):
-            os.mkdir(job_cache_dir)
-            
-            if not os.path.exists(job_cache_dir + '.gitignore'):
-                file = open(job_cache_dir + '.gitignore', "w+")
-                file.write('*.nc')
-                file.close()
-
     def on_enter(self):
-
-        self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
-        self.usb_stick.enable() # start the object scanning for USB stick
+        self.filechooser.path = config_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         self.refresh_filechooser()
-        self.check_USB_status(1)
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button
         self.switch_view()
-    
-    def on_pre_leave(self):
-        self.sm.get_screen('usb_filechooser').filechooser_usb.sort_func = self.filechooser.sort_func
-        self.sm.get_screen('usb_filechooser').image_sort.source = self.image_sort.source
-        Clock.unschedule(self.poll_USB)
-        if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
-
-    def on_leave(self):
-        self.usb_status_label.size_hint_y = 0
-
-    def check_USB_status(self, dt):
-
-        if not self.is_filechooser_scrolling:
-            if self.usb_stick.is_available():
-                self.button_usb.disabled = False
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-                self.sm.get_screen('loading').usb_status_label.opacity = 1
-                self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.canvas.before.clear()
-                with self.usb_status_label.canvas.before:
-                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-            else:
-                self.button_usb.disabled = True
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-                self.usb_status_label.size_hint_y = 0
-                self.sm.get_screen('loading').usb_status = None
-                self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -462,12 +418,6 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_files()
 
-    def open_USB(self):
-        if not self.is_filechooser_scrolling:
-            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-            self.sm.current = 'usb_filechooser'
-
     def refresh_filechooser(self):
 
         self.filechooser._update_item_selection()
@@ -477,10 +427,10 @@ class LocalFileChooser(Screen):
                 self.display_selected_file()
 
             else:
-                
+
                 self.load_button.disabled = True
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-                
+
                 self.delete_selected_button.disabled = True
                 self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
@@ -492,14 +442,13 @@ class LocalFileChooser(Screen):
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
-            
+
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
         self.filechooser._update_files()
-
 
     def display_selected_file(self):
 
@@ -513,16 +462,16 @@ class LocalFileChooser(Screen):
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
-        
+
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
-
     def get_metadata(self):
-
         def not_end_of_metadata(x):
-            if "(End of YetiTool SmartBench MES-Data)" in x: return False
-            else: return True
+            if "(End of YetiTool SmartBench MES-Data)" in x:
+                return False
+            else:
+                return True
 
         def format_metadata(y):
             mini_list = y.split(': ')
@@ -536,77 +485,71 @@ class LocalFileChooser(Screen):
                 try:
 
                     if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
-                    
-                    else: 
+                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in
+                                                                          takewhile(not_end_of_metadata, previewed_file)
+                                                                          if
+                                                                          (decode_and_encode(i).split(':', 1)[1]).strip(
+                                                                              '\n\r() ')])
+
+                    else:
                         # just get GCode preview if no metadata
                         previewed_file.seek(0)
-                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
-                    
+                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [
+                            (decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
+
                     self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
                 except:
                     self.metadata_preview.text = self.l.get_bold("Could not preview file.")
 
-        except: 
+        except:
             self.metadata_preview.text = self.l.get_bold("Could not open file.")
-
-    
-    def get_FTP_files(self):
-
-        if sys.platform != "win32":
-            ftp_files = os.listdir(ftp_file_dir)
-            if ftp_files:
-                for file in ftp_files:
-                    copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
-                    os.remove(ftp_file_dir + file) # clean original space
-
 
     def go_to_loading_screen(self):
 
         file_selection = self.filechooser.selection[0]
 
         if os.path.isfile(file_selection):
-            self.jd.reset_values()
-            self.jd.set_job_filename(file_selection)
             self.manager.current = 'loading'
 
-        else: 
+        else:
             error_message = self.l.get_str('File selected does not exist!')
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def delete_popup(self, **kwargs):
 
         if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager = self.sm, localization = self.l, function = self.delete_all, file_selection = 'all')
-        else: 
-            popup_info.PopupDeleteFile(screen_manager = self.sm, localization = self.l, function = self.delete_selected, file_selection = kwargs['file_selection'])
+            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_all,
+                                       file_selection='all')
+        else:
+            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_selected,
+                                       file_selection=kwargs['file_selection'])
 
-    def delete_selected(self, filename):        
+    def delete_selected(self, filename):
         self.refresh_filechooser()
 
         if os.path.isfile(filename):
-            try: 
+            try:
                 os.remove(filename)
                 self.filechooser.selection = []
-                
-            except: 
+
+            except:
                 print "attempt to delete folder, or undeletable file"
 
-            self.refresh_filechooser()    
+            self.refresh_filechooser()
 
     def delete_all(self):
-        files_in_cache = os.listdir(job_cache_dir) # clean cache
+        files_in_cache = os.listdir(config_dir)  # clean cache
         self.refresh_filechooser()
 
         if files_in_cache:
             for file in files_in_cache:
-                try: 
-                    os.remove(job_cache_dir+file)
+                try:
+                    os.remove(config_dir + file)
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
 
-                except: 
+                except:
                     print "attempt to delete folder, or undeletable file"
 
         self.filechooser.selection = []
