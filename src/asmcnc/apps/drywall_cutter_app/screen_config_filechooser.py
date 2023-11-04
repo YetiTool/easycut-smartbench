@@ -446,7 +446,7 @@ class ConfigFileChooser(Screen):
         else:
             self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
 
-        self.get_metadata()
+        self.metadata_preview.text = self.to_human_readable(self.filechooser.selection[0])
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -454,45 +454,16 @@ class ConfigFileChooser(Screen):
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
-    def get_metadata(self):
+    def to_human_readable(self, json_obj):
+        result = ''
 
-        def not_end_of_metadata(x):
-            if "(End of YetiTool SmartBench MES-Data)" in x:
-                return False
+        for key, value in json_obj.items():
+            if isinstance(value, dict):
+                result += key + ":\n"
+                result += self.to_human_readable(value)
             else:
-                return True
-
-        def format_metadata(y):
-            mini_list = y.split(': ')
-            return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
-
-        try:
-
-            # with codecs.open(self.filechooser.selection[0], encoding='utf-8') as previewed_file:
-            with open(self.filechooser.selection[0]) as previewed_file:
-
-                try:
-
-                    if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in
-                                                                          takewhile(not_end_of_metadata, previewed_file)
-                                                                          if
-                                                                          (decode_and_encode(i).split(':', 1)[1]).strip(
-                                                                              '\n\r() ')])
-
-                    else:
-                        # just get GCode preview if no metadata
-                        previewed_file.seek(0)
-                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [
-                            (decode_and_encode(next(previewed_file, "")).strip('\n\r')) for x in xrange(20)]
-
-                    self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
-
-                except:
-                    self.metadata_preview.text = self.l.get_bold("Could not preview file.")
-
-        except:
-            self.metadata_preview.text = self.l.get_bold("Could not open file.")
+                result += key + ": " + str(value) + "\n"
+        return result
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
