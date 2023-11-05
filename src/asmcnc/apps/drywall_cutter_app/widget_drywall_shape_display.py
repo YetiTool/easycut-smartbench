@@ -170,64 +170,50 @@ class DrywallShapeDisplay(Widget):
         self.shape_dims_image.opacity = 1
 
         if shape == 'circle':
-            self.d_input.disabled = False
-            self.d_input.opacity = 1
-            self.d_input.parent.opacity = 1
-            self.d_input.parent.pos = (468, 310)
+            self.enable_input(self.d_input, (468, 310))
         else:
-            self.d_input.disabled = True
-            self.d_input.opacity = 0
-            self.d_input.parent.opacity = 0
+            self.disable_input(self.d_input)
 
         if shape in ['square', 'rectangle']:
-            self.r_input.disabled = False
-            self.r_input.opacity = 1
-            self.r_input.parent.opacity = 1
-            self.x_input.disabled = False
-            self.x_input.opacity = 1
-            self.x_input.parent.opacity = 1
-            self.y_input.disabled = False
-            self.y_input.opacity = 1
-            self.y_input.parent.opacity = 1
             if shape == 'square':
-                self.r_input.parent.pos = (421, 311)
-                self.x_input.parent.pos = (86, 175)
-                self.y_input.parent.pos = (248, 327)
+                self.enable_input(self.r_input, (421, 311))
+                self.enable_input(self.x_input, (86, 175))
+                self.enable_input(self.y_input, (248, 327))
             else:
                 if rotation == 'horizontal':
-                    self.r_input.parent.pos = (463, 311)
-                    self.x_input.parent.pos = (43, 175)
-                    self.y_input.parent.pos = (248, 327)
+                    self.enable_input(self.r_input, (463, 311))
+                    self.enable_input(self.x_input, (43, 175))
+                    self.enable_input(self.y_input, (248, 327))
                 else:
-                    self.r_input.parent.pos = (419, 333)
-                    self.x_input.parent.pos = (98, 155)
-                    self.y_input.parent.pos = (248, 331)
+                    self.enable_input(self.r_input, (419, 333))
+                    self.enable_input(self.x_input, (98, 155))
+                    self.enable_input(self.y_input, (248, 331))
         else:
-            self.r_input.disabled = True
-            self.r_input.opacity = 0
-            self.r_input.parent.opacity = 0
-            self.x_input.disabled = True
-            self.x_input.opacity = 0
-            self.x_input.parent.opacity = 0
-            self.y_input.disabled = True
-            self.y_input.opacity = 0
-            self.y_input.parent.opacity = 0
+            self.disable_input(self.r_input)
+            self.disable_input(self.x_input)
+            self.disable_input(self.y_input)
 
         if shape == 'line':
-            self.l_input.disabled = False
-            self.l_input.opacity = 1
-            self.l_input.parent.opacity = 1
             if rotation == 'horizontal':
-                self.l_input.parent.pos = (250, 230)
+                self.enable_input(self.l_input, (250, 230))
             else:
-                self.l_input.parent.pos = (175, 175)
+                self.enable_input(self.l_input, (175, 175))
         else:
-            self.l_input.disabled = True
-            self.l_input.opacity = 0
-            self.l_input.parent.opacity = 0
+            self.disable_input(self.l_input)
 
         if shape == 'geberit':
             pass
+
+    def enable_input(self, text_input, pos):
+        text_input.disabled = False
+        text_input.opacity = 1
+        text_input.parent.opacity = 1
+        text_input.parent.pos = pos
+
+    def disable_input(self, text_input):
+        text_input.disabled = True
+        text_input.opacity = 0
+        text_input.parent.opacity = 0
 
     def select_toolpath(self, shape, toolpath, rotation):
         if shape in ['line', 'geberit']:
