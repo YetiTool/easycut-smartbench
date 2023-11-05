@@ -120,7 +120,10 @@ class DrywallShapeDisplay(Widget):
             self.l_input.disabled = False
             self.l_input.opacity = 1
             self.l_input.parent.opacity = 1
-            self.l_input.parent.pos = (250, 230)
+            if rotation == 'horizontal':
+                self.l_input.parent.pos = (250, 230)
+            else:
+                self.l_input.parent.pos = (175, 175)
         else:
             self.l_input.disabled = True
             self.l_input.opacity = 0
