@@ -9,6 +9,7 @@ Builder.load_string("""
 
     d_input:d_input
     l_input:l_input
+    r_input:r_input
 
     BoxLayout:
         size: self.parent.size
@@ -77,6 +78,27 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            BoxLayout:
+                size: dp(70), dp(40)
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 5, self.y + 5
+                        size: self.width - 10, self.height - 10
+
+                TextInput:
+                    id: r_input
+                    font_size: dp(25)
+                    halign: 'center'
+                    input_filter: 'int'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
 """)
 
 
@@ -91,6 +113,7 @@ class DrywallShapeDisplay(Widget):
 
         self.d_input.bind(text=self.d_input_change)
         self.l_input.bind(text=self.l_input_change)
+        self.r_input.bind(text=self.r_input_change)
 
     def select_shape(self, shape, rotation):
         image_source = self.image_filepath + shape
@@ -104,17 +127,28 @@ class DrywallShapeDisplay(Widget):
             self.d_input.disabled = False
             self.d_input.opacity = 1
             self.d_input.parent.opacity = 1
-            self.d_input.parent.pos = (470, 310)
+            self.d_input.parent.pos = (468, 310)
         else:
             self.d_input.disabled = True
             self.d_input.opacity = 0
             self.d_input.parent.opacity = 0
 
 
-        if shape == 'square':
-            pass
-        elif shape == 'rectangle':
-            pass
+        if shape in ['square', 'rectangle']:
+            self.r_input.disabled = False
+            self.r_input.opacity = 1
+            self.r_input.parent.opacity = 1
+            if shape == 'square':
+                self.r_input.parent.pos = (421, 311)
+            else:
+                if rotation == 'horizontal':
+                    self.r_input.parent.pos = (463, 311)
+                else:
+                    self.r_input.parent.pos = (419, 333)
+        else:
+            self.r_input.disabled = True
+            self.r_input.opacity = 0
+            self.r_input.parent.opacity = 0
 
         if shape == 'line':
             self.l_input.disabled = False
@@ -147,3 +181,6 @@ class DrywallShapeDisplay(Widget):
 
     def l_input_change(self, instance, value):
         self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
+
+    def r_input_change(self, instance, value):
+        self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
