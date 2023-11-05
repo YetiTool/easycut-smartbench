@@ -7,6 +7,8 @@ Builder.load_string("""
     shape_dims_image:shape_dims_image
     shape_toolpath_image:shape_toolpath_image
 
+    d_input:d_input
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -32,6 +34,27 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
 
+            BoxLayout:
+                size: dp(70), dp(40)
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 5, self.y + 5
+                        size: self.width - 10, self.height - 10
+
+                TextInput:
+                    id: d_input
+                    font_size: dp(25)
+                    halign: 'center'
+                    input_filter: 'int'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
 """)
 
 
@@ -42,6 +65,10 @@ class DrywallShapeDisplay(Widget):
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
+        self.dwt_config = kwargs['dwt_config']
+
+        self.d_input.bind(text = self.update_d)
+
     def select_shape(self, shape, rotation):
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
@@ -49,6 +76,26 @@ class DrywallShapeDisplay(Widget):
         self.shape_dims_image.source = image_source + "_dims.png"
 
         self.shape_dims_image.opacity = 1
+
+        if shape == 'circle':
+            self.d_input.disabled = False
+            self.d_input.opacity = 1
+            self.d_input.parent.opacity = 1
+            self.d_input.parent.pos = (470, 310)
+        else:
+            self.d_input.disabled = True
+            self.d_input.opacity = 0
+            self.d_input.parent.opacity = 0
+
+
+        if shape == 'square':
+            pass
+        elif shape == 'rectangle':
+            pass
+        elif shape == 'line':
+            pass
+        elif shape == 'geberit':
+            pass
 
     def select_toolpath(self, shape, toolpath, rotation):
         if shape in ['line', 'geberit']:
@@ -59,3 +106,6 @@ class DrywallShapeDisplay(Widget):
             else:
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
+
+    def update_d(self, instance, value):
+        self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))

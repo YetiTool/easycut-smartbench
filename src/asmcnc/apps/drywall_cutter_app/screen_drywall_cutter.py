@@ -126,7 +126,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay()
+        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(dwt_config=self.dwt_config)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.shape_selection.text = 'circle'
