@@ -8,6 +8,7 @@ Builder.load_string("""
     shape_toolpath_image:shape_toolpath_image
 
     d_input:d_input
+    l_input:l_input
 
     BoxLayout:
         size: self.parent.size
@@ -55,6 +56,27 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            BoxLayout:
+                size: dp(70), dp(40)
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 5, self.y + 5
+                        size: self.width - 10, self.height - 10
+
+                TextInput:
+                    id: l_input
+                    font_size: dp(25)
+                    halign: 'center'
+                    input_filter: 'int'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
 """)
 
 
@@ -67,7 +89,8 @@ class DrywallShapeDisplay(Widget):
 
         self.dwt_config = kwargs['dwt_config']
 
-        self.d_input.bind(text = self.update_d)
+        self.d_input.bind(text=self.d_input_change)
+        self.l_input.bind(text=self.l_input_change)
 
     def select_shape(self, shape, rotation):
         image_source = self.image_filepath + shape
@@ -92,9 +115,18 @@ class DrywallShapeDisplay(Widget):
             pass
         elif shape == 'rectangle':
             pass
-        elif shape == 'line':
-            pass
-        elif shape == 'geberit':
+
+        if shape == 'line':
+            self.l_input.disabled = False
+            self.l_input.opacity = 1
+            self.l_input.parent.opacity = 1
+            self.l_input.parent.pos = (250, 230)
+        else:
+            self.l_input.disabled = True
+            self.l_input.opacity = 0
+            self.l_input.parent.opacity = 0
+
+        if shape == 'geberit':
             pass
 
     def select_toolpath(self, shape, toolpath, rotation):
@@ -107,5 +139,8 @@ class DrywallShapeDisplay(Widget):
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
 
-    def update_d(self, instance, value):
+    def d_input_change(self, instance, value):
         self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
+
+    def l_input_change(self, instance, value):
+        self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
