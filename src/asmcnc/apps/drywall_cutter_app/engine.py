@@ -417,7 +417,7 @@ def engine_run():
     # Calculated parameters
     total_cut_depth = active_config.cutting_depths.material_thickness - active_config.cutting_depths.bottom_offset
 
-    if config.active_config.shape_type == u"rectangle":
+    if config.active_config.shape_type.lower() == u"rectangle" or config.active_config.shape_type.lower() == U"square":
         rect_coordinates = rectangle_coordinates(active_config.canvas_shape_dims.x,active_config.canvas_shape_dims.x)
         if len(rect_coordinates) != 4:
             raise Exception(u"Sir, rectangles have 4 sides, not %d" % len(rect_coordinates))
@@ -453,7 +453,7 @@ def engine_run():
 
             cutting_lines += rectangle
 
-    elif config.active_config.shape_type == u"geberit":
+    elif config.active_config.shape_type.lower() == u"geberit":
         source_folder_name = "gcode" 
         source_folder_path = os.path.join(source_folder_name)   
 
