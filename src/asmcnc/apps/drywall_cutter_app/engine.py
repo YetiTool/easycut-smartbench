@@ -138,41 +138,31 @@ class GCodeEngine:
         adjusted_coordinates = []
         if offset_type != None:
             tool_radius = tool_diameter / 2
-            #x_offset = tool_radius 
-            #y_offset = tool_radius 
             for coordinate in coordinates:
-
                 if offset_type == u"inside":
-
-                    if coordinate[x] > shape_centre[x]: #RHS
-                        x_offset = -1 * tool_radius #Move to the left
-                    else: #LHS
-                        x_offset = tool_radius #Move to the right
-                        
-                    if coordinate[y] > shape_centre[y]: #Top
-                        y_offset = -1 * tool_radius #Move down
-                    else: #Bottom
-                        y_offset = tool_radius #Move up
-
+                    if coordinate[self.x] > shape_centre[self.x]:  # RHS
+                        x_offset = -1 * tool_radius  # Move to the left
+                    else:  # LHS
+                        x_offset = tool_radius  # Move to the right
+                    if coordinate[self.y] > shape_centre[self.y]:  # Top
+                        y_offset = -1 * tool_radius  # Move down
+                    else:  # Bottom
+                        y_offset = tool_radius  # Move up
                 elif offset_type == u"outside":
-
-                    if coordinate[x] < shape_centre[x]: #LHS
-                        x_offset = -1 * tool_radius #Move to the left
-                    else:#RHS
-                        x_offset = tool_radius #Move to the right
-
-                    if coordinate[y] < shape_centre[y]: #Bottom
-                        y_offset = -1 * tool_radius #Move down
-                    else: #Top
-                        y_offset = tool_radius #Move up
-                new_coordinate = coordinate[x] + x_offset, coordinate[y] + y_offset 
+                    if coordinate[self.x] < shape_centre[self.x]:  # LHS
+                        x_offset = -1 * tool_radius  # Move to the left
+                    else:  # RHS
+                        x_offset = tool_radius  # Move to the right
+                    if coordinate[self.y] < shape_centre[self.y]:  # Bottom
+                        y_offset = -1 * tool_radius  # Move down
+                    else:  # Top
+                        y_offset = tool_radius  # Move up
+                new_coordinate = coordinate[self.x] + x_offset, coordinate[self.y] + y_offset
                 adjusted_coordinates.append(new_coordinate)
         else:
             adjusted_coordinates = coordinates
+        return adjusted_coordinates
 
-        return  adjusted_coordinates
-
-        pass
 
     #Produce a list of cut depths based on total depth and pass depth
     def calculate_pass_depths(self, total_cut_depth, pass_depth):
