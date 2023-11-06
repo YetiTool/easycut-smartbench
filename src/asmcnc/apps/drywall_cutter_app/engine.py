@@ -103,21 +103,21 @@ class GCodeEngine():
         new_coordinates = []
         for coordinate in coordinates:
             #Bottom left
-            if coordinate[x] < shape_centre[x] and coordinate[y] < shape_centre[y]: 
-                rad_point_1 = coordinate[x] + corner_radius, coordinate[y]
-                rad_point_2 = coordinate[x], coordinate[y] + corner_radius
+            if coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]: 
+                rad_point_1 = coordinate[self.x] + corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
             #Top left
-            elif coordinate[x] < shape_centre[x] and coordinate[y] > shape_centre[y]:
-                rad_point_1 = coordinate[x], coordinate[y] - corner_radius
-                rad_point_2 = coordinate[x] + corner_radius, coordinate[y]
+            elif coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
+                rad_point_1 = coordinate[self.x], coordinate[self.y] - corner_radius
+                rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
             #Top right
-            elif coordinate[x] > shape_centre[x] and coordinate[y] > shape_centre[y]:
-                rad_point_1 = coordinate[x] - corner_radius, coordinate[y]
-                rad_point_2 = coordinate[x], coordinate[y] - corner_radius
+            elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
+                rad_point_1 = coordinate[self.x] - corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] - corner_radius
             #Bottom right
-            elif coordinate[x] > shape_centre[x] and coordinate[y] < shape_centre[y]:
-                rad_point_1 = coordinate[x], coordinate[y] + corner_radius
-                rad_point_2 = coordinate[x] - corner_radius, coordinate[y]
+            elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]:
+                rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
+                rad_point_2 = coordinate[self.x] - corner_radius, coordinate[self.y]
             new_coordinates.append(rad_point_1)
             new_coordinates.append(rad_point_2)
         return new_coordinates 
