@@ -155,7 +155,7 @@ class DrywallCutterScreen(Screen):
             self.rotation = 'vertical'
         else:
             self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
+        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation, swap_lengths=True)
         self.select_toolpath()
 
     def select_toolpath(self):

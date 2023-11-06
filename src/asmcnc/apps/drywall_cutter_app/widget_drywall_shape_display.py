@@ -207,13 +207,18 @@ class DrywallShapeDisplay(Widget):
         self.x_datum_input.bind(text=self.x_datum_input_change)
         self.y_datum_input.bind(text=self.y_datum_input_change)
 
-    def select_shape(self, shape, rotation):
+    def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
             image_source += "_" + rotation
         self.shape_dims_image.source = image_source + "_dims.png"
-
         self.shape_dims_image.opacity = 1
+
+        if swap_lengths:
+            x = self.x_input.text
+            y = self.y_input.text
+            self.x_input.text = y
+            self.y_input.text = x
 
         if shape == 'circle':
             self.enable_input(self.d_input, (468, 310))
