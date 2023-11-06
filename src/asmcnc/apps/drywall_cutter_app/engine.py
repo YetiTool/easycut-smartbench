@@ -401,7 +401,7 @@ def repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key):
 
 #Main
 def engine_run():
-    output_file = config.active_config.shape_type + u".nc"
+    output_file = "jobCache/" + config.active_config.shape_type + u".nc"
     safe_start_position = u"X0 Y0 Z10"
     z_safe_distance = 5
     cutting_lines = []
