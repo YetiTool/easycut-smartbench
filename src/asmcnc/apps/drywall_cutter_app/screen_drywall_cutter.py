@@ -9,6 +9,8 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
+from engine import GCodeEngine
+
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
@@ -124,6 +126,8 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
+        self.engine = GCodeEngine()
+
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
@@ -182,7 +186,17 @@ class DrywallCutterScreen(Screen):
         pass
 
     def run(self):
-        pass
+        config = self.dwt_config.active_config
+        cutter = self.dwt_config.active_cutter
+        # Create an instance of the GCodeEngine class
+        gcode_engine = GCodeEngine()
+
+        # Set any required data attributes in the GCodeEngine instance
+        gcode_engine.active_config = config
+        gcode_engine.active_cutter = cutter
+
+        # Call the GCode generation method
+        gcode_engine.engine_run()
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
