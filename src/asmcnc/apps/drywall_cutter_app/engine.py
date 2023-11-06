@@ -24,9 +24,11 @@ import re
 
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
-class GCodeEngine:
+class GCodeEngine():
     def __init__(self, dwt_config):
         self.config = dwt_config
+        self.active_config = self.config.active_config
+        self.active_cutter = self.config.active_cutter
 
         #Globals
         self.x = 0  # Identifier for use in arrays
