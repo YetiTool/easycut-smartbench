@@ -218,7 +218,6 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.load_config(config)
 
         file_name_no_ext = config.split('/')[-1].split('.')[0]
-
         # set the label on the screen to the name of the config file below
 
     def on_leave(self, *args):
