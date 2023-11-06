@@ -12,6 +12,8 @@ Builder.load_string("""
     r_input:r_input
     x_input:x_input
     y_input:y_input
+    x_datum_input:x_datum_input
+    y_datum_input:y_datum_input
 
     BoxLayout:
         size: self.parent.size
@@ -143,6 +145,48 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            BoxLayout:
+                size: dp(70), dp(40)
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 5, self.y + 5
+                        size: self.width - 10, self.height - 10
+
+                TextInput:
+                    id: x_datum_input
+                    font_size: dp(25)
+                    halign: 'center'
+                    input_filter: 'int'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            BoxLayout:
+                size: dp(70), dp(40)
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 5, self.y + 5
+                        size: self.width - 10, self.height - 10
+
+                TextInput:
+                    id: y_datum_input
+                    font_size: dp(25)
+                    halign: 'center'
+                    input_filter: 'int'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
 """)
 
 
@@ -160,6 +204,8 @@ class DrywallShapeDisplay(Widget):
         self.r_input.bind(text=self.r_input_change)
         self.x_input.bind(text=self.x_input_change)
         self.y_input.bind(text=self.y_input_change)
+        self.x_datum_input.bind(text=self.x_datum_input_change)
+        self.y_datum_input.bind(text=self.y_datum_input_change)
 
     def select_shape(self, shape, rotation):
         image_source = self.image_filepath + shape
@@ -171,6 +217,8 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'circle':
             self.enable_input(self.d_input, (468, 310))
+            self.enable_input(self.x_datum_input, (278, 27))
+            self.enable_input(self.y_datum_input, (438, 196))
         else:
             self.disable_input(self.d_input)
 
@@ -179,15 +227,21 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.r_input, (421, 311))
                 self.enable_input(self.x_input, (86, 175))
                 self.enable_input(self.y_input, (248, 327))
+                self.enable_input(self.x_datum_input, (365, 35))
+                self.enable_input(self.y_datum_input, (433, 113))
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (463, 311))
                     self.enable_input(self.x_input, (43, 175))
                     self.enable_input(self.y_input, (248, 327))
+                    self.enable_input(self.x_datum_input, (407, 35))
+                    self.enable_input(self.y_datum_input, (451, 114))
                 else:
                     self.enable_input(self.r_input, (419, 333))
                     self.enable_input(self.x_input, (98, 155))
                     self.enable_input(self.y_input, (248, 331))
+                    self.enable_input(self.x_datum_input, (367, 10))
+                    self.enable_input(self.y_datum_input, (430, 63))
         else:
             self.disable_input(self.r_input)
             self.disable_input(self.x_input)
@@ -195,14 +249,19 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'line':
             if rotation == 'horizontal':
-                self.enable_input(self.l_input, (250, 230))
+                self.enable_input(self.l_input, (250, 228))
+                self.enable_input(self.x_datum_input, (424, 75))
+                self.enable_input(self.y_datum_input, (460, 195))
             else:
-                self.enable_input(self.l_input, (175, 175))
+                self.enable_input(self.l_input, (178, 173))
+                self.enable_input(self.x_datum_input, (281, 3))
+                self.enable_input(self.y_datum_input, (385, 56))
         else:
             self.disable_input(self.l_input)
 
         if shape == 'geberit':
-            pass
+            self.enable_input(self.x_datum_input, (360, 19))
+            self.enable_input(self.y_datum_input, (425, 77))
 
     def enable_input(self, text_input, pos):
         text_input.disabled = False
@@ -239,3 +298,9 @@ class DrywallShapeDisplay(Widget):
 
     def y_input_change(self, instance, value):
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+
+    def x_datum_input_change(self, instance, value):
+        self.dwt_config.on_parameter_change('datum_position.x', float(value or 0))
+
+    def y_datum_input_change(self, instance, value):
+        self.dwt_config.on_parameter_change('datum_position.y', float(value or 0))
