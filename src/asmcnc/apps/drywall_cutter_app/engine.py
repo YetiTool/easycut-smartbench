@@ -25,10 +25,8 @@ import re
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 class GCodeEngine:
-    def __init__(self):
-        self.config = config_loader.DWTConfig()
-        self.active_config = self.config.active_config
-        self.active_cutter = self.config.active_cutter
+    def __init__(self, dwt_config):
+        self.config = dwt_config
 
         #Globals
         self.x = 0  # Identifier for use in arrays
@@ -390,7 +388,7 @@ class GCodeEngine:
 
     #Main
     def engine_run(self):
-        output_file = "jobCache/" + self.active_config.shape_type + u".nc"
+        output_file = "jobCache/" + self.config.active_config.shape_type + u".nc"
         safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_lines = []
@@ -398,13 +396,13 @@ class GCodeEngine:
         stepovers = [0]
         radii_present = None
 
-        if self.active_cutter.cutting_direction.lower() == "climb":
+        if self.config.active_cutter.cutting_direction.lower() == "climb":
             is_climb = True
         else:
             is_climb = False
 
         # Calculated parameters
-        total_cut_depth = self.active_config.cutting_depths.material_thickness - self.active_config.cutting_depths.bottom_offset
+        total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
 
         if self.active_config.shape_type.lower() == u"rectangle" or self.active_config.shape_type.lower() == u"square":
             rect_coordinates = self.rectangle_coordinates(self.active_config.canvas_shape_dims.x, self.active_config.canvas_shape_dims.x)

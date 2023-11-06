@@ -128,7 +128,7 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
-        self.engine = GCodeEngine()
+        self.engine = GCodeEngine(self.dwt_config)
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
@@ -188,17 +188,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def run(self):
-        config = self.dwt_config.active_config
-        cutter = self.dwt_config.active_cutter
-        # Create an instance of the GCodeEngine class
-        gcode_engine = GCodeEngine()
-
-        # Set any required data attributes in the GCodeEngine instance
-        gcode_engine.active_config = config
-        gcode_engine.active_cutter = cutter
-
-        # Call the GCode generation method
-        gcode_engine.engine_run()
+        self.engine.engine_run()
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
@@ -219,6 +209,7 @@ class DrywallCutterScreen(Screen):
 
         file_name_no_ext = config.split('/')[-1].split('.')[0]
         # set the label on the screen to the name of the config file below
+
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
