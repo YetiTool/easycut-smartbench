@@ -152,7 +152,17 @@ class DrywallCutterScreen(Screen):
         pass
 
     def run(self):
-        self.engine.generate_gcode()
+        config = self.dwt_config.active_config
+        cutter = self.dwt_config.active_cutter
+        # Create an instance of the GCodeEngine class
+        gcode_engine = GCodeEngine()
+
+        # Set any required data attributes in the GCodeEngine instance
+        gcode_engine.active_config = config
+        gcode_engine.active_cutter = cutter
+
+        # Call the GCode generation method
+        gcode_engine.engine_run()
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
