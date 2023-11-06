@@ -220,70 +220,69 @@ class GCodeEngine:
 
     #Produce gcode instructions to cut a rounded (or not) rectangle
     def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance):
-            # Ensure coordinates are all in clockwise order
-            coordinates = correct_orientation(coordinates, is_clockwise(coordinates))
+        # Ensure coordinates are all in clockwise order
+        coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))  
 
-            # Find shape centre for further calcs
-            shape_centre = find_centre(coordinates[:-1], 0,0) #datum_x, datum_y)
+        # Find shape centre for further calcs
+        shape_centre = self.find_centre(coordinates[:-1], 0, 0)  
 
-            # Apply offset for toolpath (inside, on, outside the line cutting)
-            offset_coordinates = apply_offset(coordinates, offset, tool_diameter, shape_centre)
+        # Apply offset for toolpath (inside, on, outside the line cutting)
+        offset_coordinates = self.apply_offset(coordinates, offset, tool_diameter, shape_centre)  
 
-            clockwise_cutting = determine_cut_direction_clockwise(offset, is_climb)
+        clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)  
 
-            # Add corner coordinates if necessary
-            radii_present = find_corner_rads(corner_radius)
-            final_coordinates = offset_coordinates
-            if radii_present:
-                adjusted_corner_radius = corner_radius + calculate_corner_radius_offset(offset, tool_diameter)
-                if adjusted_corner_radius > 0:
-                    final_coordinates = add_corner_coordinates(offset_coordinates, shape_centre, adjusted_corner_radius)
-                else:
-                    radii_present = False
-                
-
-            pass_depths = calculate_pass_depths(total_cut_depth, pass_depth)
-
-            # Time to make some gcode :)
-            if clockwise_cutting:
-                arc_instruction = u"G2"
+        # Add corner coordinates if necessary
+        radii_present = self.find_corner_rads(corner_radius)  
+        final_coordinates = offset_coordinates
+        if radii_present:
+            adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)  
+            if adjusted_corner_radius > 0:
+                final_coordinates = self.add_corner_coordinates(offset_coordinates, shape_centre, adjusted_corner_radius)  
             else:
-                final_coordinates = correct_orientation(final_coordinates, True)
-                arc_instruction = u"G3"
+                radii_present = False
 
-            cutting_lines = []
+        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)  
 
-            for depth in pass_depths:
-                gcode_instruction = "(Offset: %s)\n(New pass)\n" % offset
-                cutting_lines.append(gcode_instruction)
-                cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
-                # Cut the shape
-                if not radii_present:
-                    # Logic for straight lines only
-                    for coordinate in final_coordinates:
-                        second_line = 1 == final_coordinates.index(coordinate)
-                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
-                        cutting_lines.append(gcode_instruction)
-                else:
-                    # Logic for when corner rads are present
-                    arc_flag = True
-                    for coordinate in final_coordinates[:-1]:
-                        second_line = 1 == final_coordinates.index(coordinate)
-                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
-                        if arc_flag:
-                            gcode_instruction = "G1 X%s Y%s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y)
-                        else:
-                            gcode_instruction = "%s X%s Y%s R%s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius)
-                        arc_flag = not arc_flag
-                        cutting_lines.append(gcode_instruction)
-                cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
+        # Time to make some gcode :)
+        if clockwise_cutting:
+            arc_instruction = u"G2"
+        else:
+            final_coordinates = self.correct_orientation(final_coordinates, True)
+            arc_instruction = u"G3"
 
-            # Correct gcode order
-            cutting_lines = swap_lines_after_keyword(cutting_lines, u"New pass")
-            # Speed up first XY move
-            cutting_lines = replace_after_keyword(cutting_lines, u"New pass", u"G0")
+        cutting_lines = []
 
-            return cutting_lines
+        for depth in pass_depths:
+            gcode_instruction = "(Offset: %s)\n(New pass)\n" % offset
+            cutting_lines.append(gcode_instruction)
+            cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
+            # Cut the shape
+            if not radii_present:
+                # Logic for straight lines only
+                for coordinate in final_coordinates:
+                    second_line = 1 == final_coordinates.index(coordinate)
+                    gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
+                    cutting_lines.append(gcode_instruction)
+            else:
+                # Logic for when corner rads are present
+                arc_flag = True
+                for coordinate in final_coordinates[:-1]:
+                    second_line = 1 == final_coordinates.index(coordinate)
+                    gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
+                    if arc_flag:
+                        gcode_instruction = "G1 X%s Y%s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y)
+                    else:
+                        gcode_instruction = "%s X%s Y%s R%s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius)
+                    arc_flag = not arc_flag
+                    cutting_lines.append(gcode_instruction)
+            cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
+
+        # Correct gcode order
+        cutting_lines = swap_lines_after_keyword(cutting_lines, u"New pass")
+        # Speed up first XY move
+        cutting_lines = replace_after_keyword(cutting_lines, u"New pass", u"G0")
+
+        return cutting_lines
 
     #Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
