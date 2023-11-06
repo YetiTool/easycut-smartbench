@@ -243,7 +243,14 @@ class CuttingDepthsPopup(Popup):
         for text_input in self.text_inputs:
             text_input.bind(text=self.update_text)
         self.update_strings()
+        self.load_active_config()
         self.open()
+
+    def load_active_config(self):
+        self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
+        self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
+        self.auto_pass_checkbox.active = self.dwt_config.active_config.cutting_depths.auto_pass
+        self.depth_per_pass.text = str(self.dwt_config.active_config.cutting_depths.depth_per_pass)
 
     def update_strings(self):
         self.title_label.text = self.l.get_str("Cutting depths")
@@ -270,17 +277,24 @@ class CuttingDepthsPopup(Popup):
             self.depth_per_pass.text = ''
 
     def update_text(self, instance, value):
-        max_total_cut_depth = 63
+        soft_limit_total_cut_depth = 63
+        cutter_max_depth_total = self.dwt_config.active_cutter.max_depth_total
         # Calculate total cut depth and handle inputs
         if instance == self.material_thickness or instance == self.bottom_offset:
             if self.material_thickness.text != '' and self.bottom_offset.text != '':
                 try:
                     total_cut_depth_result = float(self.material_thickness.text) + float(self.bottom_offset.text)
-                    if total_cut_depth_result > max_total_cut_depth:
+                    if total_cut_depth_result > cutter_max_depth_total:
                         if instance == self.material_thickness:
-                            self.material_thickness.text = str(max_total_cut_depth - float(self.bottom_offset.text))
+                            self.material_thickness.text = str(cutter_max_depth_total - float(self.bottom_offset.text))
                         elif instance == self.bottom_offset:
-                            self.bottom_offset.text = str(max_total_cut_depth - float(self.material_thickness.text))
+                            self.bottom_offset.text = str(cutter_max_depth_total - float(self.material_thickness.text))
+                    elif total_cut_depth_result > soft_limit_total_cut_depth:
+                        if instance == self.material_thickness:
+                            self.material_thickness.text = str(soft_limit_total_cut_depth - float(self.bottom_offset.text))
+                        elif instance == self.bottom_offset:
+                            self.bottom_offset.text = str(soft_limit_total_cut_depth - float(self.material_thickness.text))
+
                     self.total_cut_depth.text = str(float(self.material_thickness.text) + float(self.bottom_offset.text))
                     self.calculate_depth_per_pass()
                 except:
@@ -295,7 +309,10 @@ class CuttingDepthsPopup(Popup):
                 number_of_passes = math.ceil(float(self.total_cut_depth.text) / max_cut_depth_per_pass)
 
                 depth_per_pass = float(self.total_cut_depth.text) / number_of_passes
-                self.depth_per_pass.text = str(round(depth_per_pass, 1))
+                if depth_per_pass > max_cut_depth_per_pass:
+                    self.depth_per_pass.text = str(max_cut_depth_per_pass)
+                else:
+                    self.depth_per_pass.text = str(round(depth_per_pass, 1))
             except:
                 pass
 
