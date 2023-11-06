@@ -30,9 +30,9 @@ class GCodeEngine:
         self.active_config = self.config.active_config
         self.active_cutter = self.config.active_cutter
 
-    #Globals
-    x = 0  # Identifier for use in arrays
-    y = 1  # Identifier for use in arrays
+        #Globals
+        self.x = 0  # Identifier for use in arrays
+        self.y = 1  # Identifier for use in arrays
 
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
