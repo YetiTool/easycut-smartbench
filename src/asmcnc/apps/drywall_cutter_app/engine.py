@@ -163,7 +163,6 @@ class GCodeEngine:
             adjusted_coordinates = coordinates
         return adjusted_coordinates
 
-
     #Produce a list of cut depths based on total depth and pass depth
     def calculate_pass_depths(self, total_cut_depth, pass_depth):
         pass_depths = []
@@ -268,9 +267,9 @@ class GCodeEngine:
             cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
 
         # Correct gcode order
-        cutting_lines = swap_lines_after_keyword(cutting_lines, u"New pass")
+        cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"New pass")
         # Speed up first XY move
-        cutting_lines = replace_after_keyword(cutting_lines, u"New pass", u"G0")
+        cutting_lines = self.replace_after_keyword(cutting_lines, u"New pass", u"G0")
 
         return cutting_lines
 
