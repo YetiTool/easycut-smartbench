@@ -29,6 +29,18 @@ config = config_loader.DWTConfig()
 active_config = config.active_config
 active_cutter = config.active_cutter
 
+#Globals
+x = 0  # Identifier for use in arrays
+y = 1  # Identifier for use in arrays
+
+output_file = config.active_config.shape_type + u".nc"
+safe_start_position = u"X0 Y0 Z10"
+z_safe_distance = 5
+cutting_lines = []
+pass_depths = []
+stepovers = [0]
+radii_present = None
+
 #Produce corner coordinates for a rectangle of size x, y
 def rectangle_coordinates(x, y):
     if x <= 0 or y <= 0:
@@ -397,18 +409,6 @@ def repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key):
 
 #Main
 def engine_run():
-
-    x = 0  # Identifier for use in arrays
-    y = 1  # Identifier for use in arrays
-
-    output_file = config.active_config.shape_type + u".nc"
-    safe_start_position = u"X0 Y0 Z10"
-    z_safe_distance = 5
-    cutting_lines = []
-    pass_depths = []
-    stepovers = [0]
-    radii_present = None
-
     if active_cutter.cutting_direction.lower() == "climb":
         is_climb = True
     else:
