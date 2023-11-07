@@ -273,7 +273,7 @@ class ConfigFileSaver(Screen):
     sort_by_name = ObjectProperty(name_order_sort)
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
-    filter = lambda folder, filename: not filename == 'temp_config.json' and filename.endswith('.json')
+    filter = lambda folder, filename: filename != 'temp_config.json' and filename.endswith('.json')
 
     def __init__(self, **kwargs):
         super(ConfigFileSaver, self).__init__(**kwargs)
