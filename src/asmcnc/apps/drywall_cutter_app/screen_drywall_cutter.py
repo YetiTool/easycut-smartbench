@@ -110,10 +110,10 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = []
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
+    tool_options = dwt_config.get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -121,8 +121,6 @@ class DrywallCutterScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
-
-        self.tool_options = self.dwt_config.get_available_cutter_names()
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
