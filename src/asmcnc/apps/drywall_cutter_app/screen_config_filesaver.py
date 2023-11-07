@@ -73,6 +73,9 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'
                 bold: True
+                padding: 10, 10
+                multiline: False
+                size_hint_x: 1
 
             BoxLayout: 
                 orientation: 'horizontal'
