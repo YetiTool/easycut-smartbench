@@ -15,5 +15,6 @@
   "max_depth_per_pass": 2.0,
   "max_depth_total": 10.0,
   "stepover": 1.5,
-  "yeti_pilot_target_powers": 700
+  "yeti_pilot_target_powers": 700,
+  "image_path": "images/test_cutter.png"
 }

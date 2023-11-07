@@ -10,6 +10,7 @@ from asmcnc.apps.drywall_cutter_app.config import config_loader
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
+    tool_selection:tool_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -24,9 +25,11 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'File'
             Spinner:
+                id: tool_selection
                 size_hint_x: 7
-                text: 'Tool'
-                values: root.tool_options
+                text: root.tool_options[0][0]
+                values: [item[0] for item in root.tool_options]
+                on_text: root.select_tool()
             Spinner:
                 size_hint_x: 7
                 text: 'Shape'
@@ -107,7 +110,7 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
+    tool_options = []
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
@@ -119,12 +122,22 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
+        self.tool_options = self.dwt_config.get_available_cutter_names()
+
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+
+    def select_tool(self):
+        selected_tool_name = self.tool_selection.text
+
+        for tool in self.tool_options:
+            if tool[0] == selected_tool_name:
+                self.dwt_config.load_cutter(tool[1])
+                break
 
     def select_shape(self):
         pass
