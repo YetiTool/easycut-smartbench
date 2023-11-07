@@ -173,5 +173,16 @@ class DrywallCutterScreen(Screen):
 
         # set the label on the screen to the name of the config file below
 
+    def save_config(self, name):
+        # type: (str) -> None
+        """
+        Saves the active configuration to the configurations directory.
+
+        :param name: The name of to save the configuration file as.
+        """
+        file_name = name + ('.json' if not name.endswith('.json') else '')
+
+        self.dwt_config.save_config(file_name)
+
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
