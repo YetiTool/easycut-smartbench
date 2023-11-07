@@ -39,8 +39,6 @@ Builder.load_string("""
     delete_all_button : delete_all_button
     image_view : image_view
     image_sort: image_sort
-    image_delete : image_delete
-    image_delete_all : image_delete_all
     image_select : image_select
     file_selected_label : file_selected_label
 
@@ -58,12 +56,6 @@ Builder.load_string("""
             spacing: 0
 
             TextInput:
-                # canvas.before:
-                #     Color:
-                #         rgba: hex('#333333FF')
-                #     Rectangle:
-                #         size: self.size
-                #         pos: self.pos
                 id: file_selected_label
                 size_hint_y: 1
                 text: root.filename_selected_label_text
@@ -191,7 +183,7 @@ Builder.load_string("""
                     pos: self.parent.pos
             Button:
                 id: delete_all_button
-                disabled: False
+                disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
@@ -399,28 +391,11 @@ class ConfigFileSaver(Screen):
         try:
             if self.filechooser.selection[0] != 'C':
                 self.display_selected_file()
-
             else:
-
                 self.load_button.disabled = False
-                # self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-
-                self.delete_selected_button.disabled = True
-                self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
-
-                # self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-                self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
-
+                self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
         except:
-            self.load_button.disabled = False
-            # self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-            # self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
-
-            self.delete_selected_button.disabled = True
-            self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
-            # self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
 
         self.filechooser._update_files()
 
@@ -439,11 +414,7 @@ class ConfigFileSaver(Screen):
 
         self.metadata_preview.text = self.to_human_readable(sorted_json)
 
-        self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
-
-        self.delete_selected_button.disabled = False
-        self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
     def sort_json(self, json_obj):
         items = json_obj.items()
