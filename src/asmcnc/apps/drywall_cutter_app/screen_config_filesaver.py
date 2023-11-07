@@ -77,7 +77,7 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: root.file_chooser_filter
+                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -308,9 +308,6 @@ class ConfigFileSaver(Screen):
             u'cutting_depths': 5,
             u'datum_position': 6
         }
-
-    def file_chooser_filter(self, folder, filename):
-        return filename != 'temp_config.json' and filename.endswith('.json')
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
