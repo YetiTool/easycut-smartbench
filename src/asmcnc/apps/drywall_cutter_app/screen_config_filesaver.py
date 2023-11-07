@@ -235,7 +235,7 @@ Builder.load_string("""
                         allow_stretch: True 
             Button:
                 id: load_button
-                disabled: True
+                disabled: False
                 size_hint_x: 1
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
@@ -412,7 +412,7 @@ class ConfigFileSaver(Screen):
 
             else:
 
-                self.load_button.disabled = True
+                self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
 
                 self.delete_selected_button.disabled = True
@@ -422,7 +422,7 @@ class ConfigFileSaver(Screen):
                 self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
         except:
-            self.load_button.disabled = True
+            self.load_button.disabled = False
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
