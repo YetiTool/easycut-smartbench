@@ -68,6 +68,7 @@ Builder.load_string("""
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
+                color: hex('#FFFFFFFF')
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'center'
