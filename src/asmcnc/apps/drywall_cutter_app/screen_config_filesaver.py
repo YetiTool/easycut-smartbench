@@ -252,7 +252,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_select
-                        source: "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+                        source: "./asmcnc/skavaUI/img/file_select_select.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -417,7 +417,7 @@ class ConfigFileSaver(Screen):
             else:
 
                 self.load_button.disabled = False
-                self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+                # self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
 
                 self.delete_selected_button.disabled = True
                 self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
@@ -427,7 +427,7 @@ class ConfigFileSaver(Screen):
 
         except:
             self.load_button.disabled = False
-            self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+            # self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
             # self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
