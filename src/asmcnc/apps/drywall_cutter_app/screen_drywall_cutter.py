@@ -14,6 +14,7 @@ Builder.load_string("""
     shape_display_container:shape_display_container
     shape_selection:shape_selection
     cut_offset_selection:cut_offset_selection
+    rotate_button:rotate_button
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -38,6 +39,7 @@ Builder.load_string("""
                 values: root.shape_options
                 on_text: root.select_shape()
             Button:
+                id: rotate_button
                 size_hint_x: 7
                 text: 'Rotate'
                 on_press: root.rotate_shape()
@@ -143,6 +145,11 @@ class DrywallCutterScreen(Screen):
             # Default to cut inside line
             self.cut_offset_selection.text = 'inside'
             self.cut_offset_selection.disabled = False
+
+        if self.shape_selection.text in ['rectangle', 'line']:
+            self.rotate_button.disabled = False
+        else:
+            self.rotate_button.disabled = True
 
         self.rotation = 'horizontal'
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
