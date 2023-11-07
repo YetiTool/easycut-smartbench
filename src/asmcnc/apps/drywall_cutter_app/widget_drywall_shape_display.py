@@ -299,5 +299,13 @@ class DrywallShapeDisplay(Widget):
             return False
 
     def poll_position(self, dt):
-        self.x_datum_label.text = 'X: ' + str(round(-self.m.mpos_x(), 2))
-        self.y_datum_label.text = 'Y: ' + str(round(-self.m.mpos_y(), 2))
+        current_x = round(abs(self.m.mpos_x()), 2)
+        current_y = round(abs(self.m.mpos_y()), 2)
+        self.x_datum_label.text = 'X: ' + str(current_x)
+        self.y_datum_label.text = 'Y: ' + str(current_y)
+
+        if self.dwt_config.active_config.datum_position.x != current_x:
+            self.dwt_config.active_config.datum_position.x = current_x
+
+        if self.dwt_config.active_config.datum_position.y != current_y:
+            self.dwt_config.active_config.datum_position.y = current_y
