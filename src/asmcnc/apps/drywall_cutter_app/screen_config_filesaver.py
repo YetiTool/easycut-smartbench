@@ -58,12 +58,12 @@ Builder.load_string("""
             spacing: 0
 
             TextInput:
-                canvas.before:
-                    Color:
-                        rgba: hex('#333333FF')
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+                # canvas.before:
+                #     Color:
+                #         rgba: hex('#333333FF')
+                #     Rectangle:
+                #         size: self.size
+                #         pos: self.pos
                 id: file_selected_label
                 size_hint_y: 1
                 text: root.filename_selected_label_text
