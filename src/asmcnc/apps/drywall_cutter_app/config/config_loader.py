@@ -80,9 +80,7 @@ class DWTConfig(object):
     def get_available_cutter_names():
         # type () -> list[str]
         """
-        Returns a list of the available cutter names read from 'cutter_description' in the JSON.
-
-        :return: A list of the available cutter names.
+        :return: A list of the available cutter names and their file names.
         """
         cutters = []
         for f_name in os.listdir(cutters_dir):
