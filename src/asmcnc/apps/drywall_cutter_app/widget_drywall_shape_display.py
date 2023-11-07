@@ -230,7 +230,7 @@ class DrywallShapeDisplay(Widget):
         if shape in ['square', 'rectangle']:
             if shape == 'square':
                 self.enable_input(self.r_input, (421, 311))
-                self.enable_input(self.x_input, (86, 175))
+                self.disable_input(self.x_input)
                 self.enable_input(self.y_input, (248, 327))
                 self.enable_input(self.x_datum_input, (365, 35))
                 self.enable_input(self.y_datum_input, (433, 113))
