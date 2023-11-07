@@ -77,7 +77,7 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: ['*.json']
+                    filters: root.filter
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -273,6 +273,7 @@ class ConfigFileSaver(Screen):
     sort_by_name = ObjectProperty(name_order_sort)
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
+    filter = lambda folder, filename: not filename == 'temp_config.json' and filename.endswith('.json')
 
     def __init__(self, **kwargs):
         super(ConfigFileSaver, self).__init__(**kwargs)
