@@ -189,13 +189,6 @@ Builder.load_string("""
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
-                    Image:
-                        id: image_delete
-                        source: "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
                 id: delete_all_button
                 disabled: False
@@ -210,13 +203,6 @@ Builder.load_string("""
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
-                    Image:
-                        id: image_delete_all
-                        source: "./asmcnc/skavaUI/img/file_select_delete_all.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
                 disabled: False
                 size_hint_x: 1
