@@ -133,7 +133,6 @@ class DrywallCutterScreen(Screen):
         selected_tool_name = self.tool_selection.text
 
         for tool in self.tool_options:
-            print(selected_tool_name, tool[0])
             if tool[0] == selected_tool_name:
                 self.dwt_config.load_cutter(tool[1])
                 break
