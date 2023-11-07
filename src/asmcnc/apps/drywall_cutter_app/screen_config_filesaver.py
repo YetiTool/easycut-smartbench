@@ -24,7 +24,7 @@ Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
 
-<ConfigFileChooser>:
+<ConfigFileSaver>:
 
     on_enter: root.refresh_filechooser()
 
@@ -283,7 +283,7 @@ def name_order_sort_reverse(files, filesystem):
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 
-class ConfigFileChooser(Screen):
+class ConfigFileSaver(Screen):
     filename_selected_label_text = StringProperty()
 
     sort_by_date = ObjectProperty(date_order_sort)
@@ -293,7 +293,7 @@ class ConfigFileChooser(Screen):
     is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
-        super(ConfigFileChooser, self).__init__(**kwargs)
+        super(ConfigFileSaver, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
