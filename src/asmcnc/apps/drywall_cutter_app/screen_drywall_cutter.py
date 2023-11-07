@@ -227,5 +227,15 @@ class DrywallCutterScreen(Screen):
         file_name_no_ext = config.split('/')[-1].split('.')[0]
         # set the label on the screen to the name of the config file below
 
+        self.shape_selection.text = self.dwt_config.active_config.shape_type
+        self.cut_offset_selection.text = self.dwt_config.active_config.toolpath_offset
+        self.select_shape()
+
+        self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
+        self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
+        self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
+        self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
+        self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
+
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
