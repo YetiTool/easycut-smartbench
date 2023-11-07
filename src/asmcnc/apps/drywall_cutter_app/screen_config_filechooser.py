@@ -318,13 +318,13 @@ class ConfigFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
 
         self.json_config_order = {
-            u"shape_type": 0,
-            u"units": 1,
-            u"canvas_shape_dims": 2,
-            u"cutter_type": 3,
-            u"toolpath_offset": 4,
-            u"cutting_depths": 5,
-            u"datum_position": 6
+            u'shape_type': 0,
+            u'units': 1,
+            u'canvas_shape_dims': 2,
+            u'cutter_type': 3,
+            u'toolpath_offset': 4,
+            u'cutting_depths': 5,
+            u'datum_position': 6
         }
 
     def alternate_update_effect_bounds_icon(self, *args):
