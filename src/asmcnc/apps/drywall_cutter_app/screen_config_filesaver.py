@@ -425,7 +425,7 @@ class ConfigFileSaver(Screen):
         except:
             self.load_button.disabled = False
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
+            # self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
             self.delete_selected_button.disabled = True
