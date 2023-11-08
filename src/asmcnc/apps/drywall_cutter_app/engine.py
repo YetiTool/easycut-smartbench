@@ -208,7 +208,7 @@ class GCodeEngine():
         return input_list
 
     #Produce gcode instructions to cut a rounded (or not) rectangle
-    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance):
+    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, roughing_pass):
         # Ensure coordinates are all in clockwise order
         coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))  
 
@@ -242,7 +242,7 @@ class GCodeEngine():
         cutting_lines = []
 
         for depth in pass_depths:
-            gcode_instruction = "(Offset: %s)\n(New pass)\n" % offset
+            gcode_instruction = "(Offset: %s)\n(Roughing pass)\n" % offset if roughing_pass else "(Offset: %s)\n(Finishing pass)\n" % offset
             cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
             # Cut the shape
@@ -424,6 +424,7 @@ class GCodeEngine():
                 stepovers.append(0)
 
             # Produce instructions for each complete rectangle
+            roughing_pass = True
             for stepover in stepovers:
                 effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
                 pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
@@ -438,8 +439,10 @@ class GCodeEngine():
                                         self.config.active_cutter.cutting_feedrate,
                                         self.config.active_cutter.plunge_rate,
                                         total_cut_depth,
-                                        z_safe_distance)
+                                        z_safe_distance,
+                                        roughing_pass)
 
+                roughing_pass = False
                 cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
