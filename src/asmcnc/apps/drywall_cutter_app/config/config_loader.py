@@ -11,7 +11,7 @@ DEBUG_MODE = True
 def debug_decorator(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
-            print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(kwargs))
+            print('Calling function: ' + func.__name__ + ' with args: ' + str(args[-1:]) + ' and kwargs: ' + str(kwargs))
         return func(*args, **kwargs)
     return wrapper
 
@@ -78,7 +78,7 @@ class DWTConfig(object):
     @staticmethod
     @debug_decorator
     def get_available_cutter_names():
-        # type () -> list[str]
+        # type () -> list[str, str]
         """
         :return: A list of the available cutter names and their file names.
         """
