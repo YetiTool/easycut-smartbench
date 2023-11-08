@@ -311,7 +311,8 @@ class CuttingDepthsPopup(Popup):
         self.auto_pass_label.text = self.l.get_str("Auto pass")
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
         self.pass_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
-                                       + " Xmm[/color]".replace("X", str(self.dwt_config.active_cutter.max_depth_per_pass))
+                                       + " Xmm[/color]".replace("X",
+                                                                str(self.dwt_config.active_cutter.max_depth_per_pass))
         self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is 62mm") + "[/color]"
 
     def on_touch(self):
@@ -346,7 +347,8 @@ class CuttingDepthsPopup(Popup):
             if self.material_thickness.text != '' and self.bottom_offset.text != '':
                 try:
                     total_cut_depth_result = float(self.material_thickness.text) + float(self.bottom_offset.text)
-                    max_cut_depth = 0
+
+                    # Update warning label text
                     if soft_limit_total_cut_depth < cutter_max_depth_total:
                         max_cut_depth = soft_limit_total_cut_depth
                         self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is") + \
@@ -356,34 +358,26 @@ class CuttingDepthsPopup(Popup):
                         self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
                                                       " Xmm[/color]".replace("X", str(max_cut_depth))
 
-
+                    # Make sure bottom offset is never bigger than material thickness
                     if float(self.bottom_offset.text) > float(self.material_thickness.text):
                         self.bottom_offset.text = self.material_thickness.text
-                    # if total_cut_depth_result > cutter_max_depth_total:
-                    #     if instance == self.material_thickness:
-                    #         self.material_thickness.text = str(cutter_max_depth_total - float(self.bottom_offset.text))
-                    #     elif instance == self.bottom_offset:
-                    #         self.bottom_offset.text = str(cutter_max_depth_total - float(self.material_thickness.text))
-                    # elif total_cut_depth_result > soft_limit_total_cut_depth:
-                    #     if instance == self.material_thickness:
-                    #         self.material_thickness.text = str(soft_limit_total_cut_depth - float(self.bottom_offset.text))
-                    #     elif instance == self.bottom_offset:
-                    #         self.bottom_offset.text = str(soft_limit_total_cut_depth - float(self.material_thickness.text))
-
-                    self.total_cut_depth.text = str(float(self.material_thickness.text) + float(self.bottom_offset.text))
+                    self.total_cut_depth.text = str(
+                        float(self.material_thickness.text) + float(self.bottom_offset.text))
                     self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
                     self.update_graphic_position()
+
                     if total_cut_depth_result > max_cut_depth:
                         self.float_layout.add_widget(self.cut_depth_warning)
-                        self.disable_confirm_button(True)
                     else:
                         self.float_layout.remove_widget(self.cut_depth_warning)
-                        self.disable_confirm_button(False)
+
+                    self.disable_confirm_button()
                 except:
                     pass
             else:
                 self.total_cut_depth.text = ''
-    def disable_confirm_button(self, value):
+
+    def disable_confirm_button(self):
         children = self.float_layout.children
         if self.cut_depth_warning in children or self.pass_depth_warning in children:
             self.confirm_button.disabled = True
@@ -391,7 +385,6 @@ class CuttingDepthsPopup(Popup):
         else:
             self.confirm_button.disabled = False
             self.confirm_button.opacity = 1
-
 
     def calculate_depth_per_pass(self, instance, value):
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
@@ -404,6 +397,9 @@ class CuttingDepthsPopup(Popup):
                     self.depth_per_pass.text = str(max_cut_depth_per_pass)
                 else:
                     self.depth_per_pass.text = str(round(depth_per_pass, 1))
+                if self.pass_depth_warning in self.float_layout.children:
+                    self.float_layout.remove_widget(self.pass_depth_warning)
+                self.disable_confirm_button()
             except:
                 pass
         else:
@@ -411,13 +407,13 @@ class CuttingDepthsPopup(Popup):
             if depth_per_pass > max_cut_depth_per_pass or depth_per_pass == 0:
                 try:
                     self.float_layout.add_widget(self.pass_depth_warning)
-                    self.disable_confirm_button(True)
+                    self.disable_confirm_button()
                 except:
                     pass
             else:
                 try:
                     self.float_layout.remove_widget(self.pass_depth_warning)
-                    self.disable_confirm_button(False)
+                    self.disable_confirm_button()
                 except:
                     pass
 
