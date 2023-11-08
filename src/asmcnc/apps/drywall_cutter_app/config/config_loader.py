@@ -32,7 +32,7 @@ class DWTConfig(object):
     def load_config(self, config_name):
         # type (str) -> None
         """
-        Loads a configuration file from the configurations directory.
+        Loads a configuration file from the configuration directory.
 
         :param config_name: The name of the configuration file to load.
         """
@@ -50,7 +50,7 @@ class DWTConfig(object):
     def save_config(self, config_name):
         # type (str) -> None
         """
-        Saves the active configuration to the configurations directory.
+        Saves the active configuration to the configuration directory.
 
         :param config_name: The name of to save the configuration file as.
         """
@@ -78,7 +78,7 @@ class DWTConfig(object):
     @staticmethod
     @debug_decorator
     def get_available_cutter_names():
-        # type () -> list[str, str]
+        # type () -> list[list[str, str]]
         """
         :return: A list of the available cutter names and their file names.
         """
