@@ -1,6 +1,7 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import math
+from kivy.core.window import Window
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -163,7 +164,7 @@ Builder.load_string("""
         Image:
             id: cutter_graphic
             source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
-            pos_hint: {'center_x': 0.45}
+            pos_hint: {'center_x': 0.45, 'y': root.cutter_y}
             y: self.parent.y
             size: self.parent.size
             allow_stretch: True 
@@ -276,6 +277,8 @@ Builder.load_string("""
 
 
 class CuttingDepthsPopup(Popup):
+    cutter_y = 0.3
+
     def __init__(self, localization, keyboard, dwt_config, **kwargs):
         super(CuttingDepthsPopup, self).__init__(**kwargs)
         self.l = localization
@@ -327,8 +330,16 @@ class CuttingDepthsPopup(Popup):
             self.depth_per_pass.hint_text = self.depth_per_pass.text
             self.depth_per_pass.text = ''
 
+    def update_graphic_position(self):
+        try:
+            self.cutter_y = round((float(self.total_cut_depth.text) / Window.height) * 2, 2)
+            self.cutter_graphic.pos_hint['y'] = self.cutter_y
+            print(self.cutter_graphic.pos_hint)
+        except:
+            pass
+
     def update_text(self, instance, value):
-        soft_limit_total_cut_depth = 63
+        soft_limit_total_cut_depth = 62
         cutter_max_depth_total = self.dwt_config.active_cutter.max_depth_total
         # Calculate total cut depth and handle inputs
         if instance == self.material_thickness or instance == self.bottom_offset:
@@ -345,12 +356,9 @@ class CuttingDepthsPopup(Popup):
                         self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
                                                       " Xmm[/color]".replace("X", str(max_cut_depth))
 
-                    if total_cut_depth_result > max_cut_depth:
-                        self.float_layout.add_widget(self.cut_depth_warning)
-                        self.disable_confirm_button(True)
-                    else:
-                        self.float_layout.remove_widget(self.cut_depth_warning)
-                        self.disable_confirm_button(False)
+
+                    if float(self.bottom_offset.text) > float(self.material_thickness.text):
+                        self.bottom_offset.text = self.material_thickness.text
                     # if total_cut_depth_result > cutter_max_depth_total:
                     #     if instance == self.material_thickness:
                     #         self.material_thickness.text = str(cutter_max_depth_total - float(self.bottom_offset.text))
@@ -364,12 +372,20 @@ class CuttingDepthsPopup(Popup):
 
                     self.total_cut_depth.text = str(float(self.material_thickness.text) + float(self.bottom_offset.text))
                     self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
+                    self.update_graphic_position()
+                    if total_cut_depth_result > max_cut_depth:
+                        self.float_layout.add_widget(self.cut_depth_warning)
+                        self.disable_confirm_button(True)
+                    else:
+                        self.float_layout.remove_widget(self.cut_depth_warning)
+                        self.disable_confirm_button(False)
                 except:
                     pass
             else:
                 self.total_cut_depth.text = ''
     def disable_confirm_button(self, value):
-        if value:
+        children = self.float_layout.children
+        if self.cut_depth_warning in children or self.pass_depth_warning in children:
             self.confirm_button.disabled = True
             self.confirm_button.opacity = 0.5
         else:
@@ -392,7 +408,7 @@ class CuttingDepthsPopup(Popup):
                 pass
         else:
             depth_per_pass = 0 if self.depth_per_pass.text == "" else float(self.depth_per_pass.text)
-            if depth_per_pass > max_cut_depth_per_pass:
+            if depth_per_pass > max_cut_depth_per_pass or depth_per_pass == 0:
                 try:
                     self.float_layout.add_widget(self.pass_depth_warning)
                     self.disable_confirm_button(True)
