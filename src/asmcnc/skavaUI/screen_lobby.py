@@ -37,6 +37,8 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    carousel_pane_4:carousel_pane_4
+
     shapecutter_container:shapecutter_container
     drywall_app_container:drywall_app_container
     upgrade_app_container:upgrade_app_container
@@ -313,6 +315,7 @@ Builder.load_string("""
 
             # Carousel pane 4
             BoxLayout:
+                id: carousel_pane_4
                 orientation: 'horizontal'
                 padding: [100, 20, 100, 50]
                 spacing: 20
@@ -517,11 +520,13 @@ class LobbyScreen(Screen):
     def on_pre_enter(self):
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
-            self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
+            self.carousel_pane_4.remove_widget(self.upgrade_app_container)
             self.upgrade_app_hidden = True
 
         elif self.upgrade_app_hidden and "V1.3" in self.m.smartbench_model():
-            pass # reinstate upgrade_app_container, tbc - this is placeholder for now
+            # reinstate upgrade_app_container, tbc - this is placeholder for now
+            self.carousel_pane_4.add_widget(self.upgrade_app_container) # not sure if this will work
+            self.upgrade_app_hidden = False
 
     def on_enter(self):
         if not sys.platform == "win32":
