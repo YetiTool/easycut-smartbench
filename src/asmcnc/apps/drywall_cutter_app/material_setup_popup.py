@@ -4,6 +4,8 @@ import math
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
+    float_layout:float_layout
+    
     material_graphic:material_graphic
     material_thickness:material_thickness
     bottom_offset:bottom_offset
@@ -17,8 +19,12 @@ Builder.load_string("""
     total_cut_depth_label:total_cut_depth_label
     auto_pass_label:auto_pass_label
     depth_per_pass_label:depth_per_pass_label
+    cut_depth_warning:cut_depth_warning
+    pass_depth_warning:pass_depth_warning
     
     cutter_graphic:cutter_graphic
+    
+    confirm_button:confirm_button
     
     auto_dismiss: False
     size_hint: (None,None)
@@ -30,6 +36,7 @@ Builder.load_string("""
     on_touch_down: root.on_touch()
 
     FloatLayout:
+        id: float_layout
         size_hint: (None, None)
         size: (577, 301)
         pos_hint: {'y': -0.05}
@@ -161,6 +168,24 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True 
         
+        Label:
+            id: cut_depth_warning
+            pos_hint: {'x': -0.335, 'y': -0.4}
+            text: ''
+            font_size: '14sp'
+            markup: True
+            color: hex('#FF0000')
+            text_size: (175, None)
+        
+        Label:
+            id: pass_depth_warning
+            pos_hint: {'x': 0.2525, 'y': -0.1}
+            text: ''
+            font_size: '14sp'
+            markup: True
+            color: hex('#FF0000')
+            text_size: (150, None) 
+        
         GridLayout:
             rows: 2
             cols: 2
@@ -207,26 +232,45 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             pos_hint: {'x': 0.625, 'y': 0.075}
-            size_hint: (0.2,0.1)
+            size_hint: (None, None)
+            size: (189,23)
             spacing: 0.025*app.width
 
             Button:
                 id: cancel_button
                 on_press: root.cancel()
-                background_normal: "./asmcnc/apps/drywall_cutter_app/img/cancel_button.png"
-                background_down: "./asmcnc/apps/drywall_cutter_app/img/cancel_button.png"
                 size_hint: (None,None)
                 width: dp(83)
                 height: dp(23)
+                background_color: [0,0,0,0]
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/apps/drywall_cutter_app/img/cancel_button.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
             Button:
                 id: confirm_button
                 on_press: root.confirm()
-                background_normal: "./asmcnc/apps/drywall_cutter_app/img/confirm_button.png"
-                background_down: "./asmcnc/apps/drywall_cutter_app/img/confirm_button.png"
                 size_hint: (None,None)
                 width: dp(86)
                 height: dp(23)
+                background_color: [0,0,0,0]
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/apps/drywall_cutter_app/img/confirm_button.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
         
 """)
 
@@ -238,10 +282,14 @@ class CuttingDepthsPopup(Popup):
         self.kb = keyboard
         self.dwt_config = dwt_config
 
+        self.float_layout.remove_widget(self.cut_depth_warning)
+        self.float_layout.remove_widget(self.pass_depth_warning)
+
         self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
         self.kb.setup_text_inputs(self.text_inputs)
         for text_input in self.text_inputs:
             text_input.bind(text=self.update_text)
+        self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
         self.update_strings()
         self.load_active_config()
         self.open()
@@ -259,6 +307,9 @@ class CuttingDepthsPopup(Popup):
         self.total_cut_depth_label.text = self.l.get_str("Total cut depth")
         self.auto_pass_label.text = self.l.get_str("Auto pass")
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
+        self.pass_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
+                                       + " Xmm[/color]".replace("X", str(self.dwt_config.active_cutter.max_depth_per_pass))
+        self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is 62mm") + "[/color]"
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -284,28 +335,52 @@ class CuttingDepthsPopup(Popup):
             if self.material_thickness.text != '' and self.bottom_offset.text != '':
                 try:
                     total_cut_depth_result = float(self.material_thickness.text) + float(self.bottom_offset.text)
-                    if total_cut_depth_result > cutter_max_depth_total:
-                        if instance == self.material_thickness:
-                            self.material_thickness.text = str(cutter_max_depth_total - float(self.bottom_offset.text))
-                        elif instance == self.bottom_offset:
-                            self.bottom_offset.text = str(cutter_max_depth_total - float(self.material_thickness.text))
-                    elif total_cut_depth_result > soft_limit_total_cut_depth:
-                        if instance == self.material_thickness:
-                            self.material_thickness.text = str(soft_limit_total_cut_depth - float(self.bottom_offset.text))
-                        elif instance == self.bottom_offset:
-                            self.bottom_offset.text = str(soft_limit_total_cut_depth - float(self.material_thickness.text))
+                    max_cut_depth = 0
+                    if soft_limit_total_cut_depth < cutter_max_depth_total:
+                        max_cut_depth = soft_limit_total_cut_depth
+                        self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is") + \
+                                                      " Xmm[/color]".replace("X", str(max_cut_depth))
+                    else:
+                        max_cut_depth = cutter_max_depth_total
+                        self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
+                                                      " Xmm[/color]".replace("X", str(max_cut_depth))
+
+                    if total_cut_depth_result > max_cut_depth:
+                        self.float_layout.add_widget(self.cut_depth_warning)
+                        self.disable_confirm_button(True)
+                    else:
+                        self.float_layout.remove_widget(self.cut_depth_warning)
+                        self.disable_confirm_button(False)
+                    # if total_cut_depth_result > cutter_max_depth_total:
+                    #     if instance == self.material_thickness:
+                    #         self.material_thickness.text = str(cutter_max_depth_total - float(self.bottom_offset.text))
+                    #     elif instance == self.bottom_offset:
+                    #         self.bottom_offset.text = str(cutter_max_depth_total - float(self.material_thickness.text))
+                    # elif total_cut_depth_result > soft_limit_total_cut_depth:
+                    #     if instance == self.material_thickness:
+                    #         self.material_thickness.text = str(soft_limit_total_cut_depth - float(self.bottom_offset.text))
+                    #     elif instance == self.bottom_offset:
+                    #         self.bottom_offset.text = str(soft_limit_total_cut_depth - float(self.material_thickness.text))
 
                     self.total_cut_depth.text = str(float(self.material_thickness.text) + float(self.bottom_offset.text))
-                    self.calculate_depth_per_pass()
+                    self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
                 except:
                     pass
             else:
                 self.total_cut_depth.text = ''
+    def disable_confirm_button(self, value):
+        if value:
+            self.confirm_button.disabled = True
+            self.confirm_button.opacity = 0.5
+        else:
+            self.confirm_button.disabled = False
+            self.confirm_button.opacity = 1
 
-    def calculate_depth_per_pass(self):
+
+    def calculate_depth_per_pass(self, instance, value):
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
         if self.auto_pass_checkbox.active:
             try:
-                max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
                 number_of_passes = math.ceil(float(self.total_cut_depth.text) / max_cut_depth_per_pass)
 
                 depth_per_pass = float(self.total_cut_depth.text) / number_of_passes
@@ -315,6 +390,20 @@ class CuttingDepthsPopup(Popup):
                     self.depth_per_pass.text = str(round(depth_per_pass, 1))
             except:
                 pass
+        else:
+            depth_per_pass = 0 if self.depth_per_pass.text == "" else float(self.depth_per_pass.text)
+            if depth_per_pass > max_cut_depth_per_pass:
+                try:
+                    self.float_layout.add_widget(self.pass_depth_warning)
+                    self.disable_confirm_button(True)
+                except:
+                    pass
+            else:
+                try:
+                    self.float_layout.remove_widget(self.pass_depth_warning)
+                    self.disable_confirm_button(False)
+                except:
+                    pass
 
     def confirm(self):
         self.dismiss()
