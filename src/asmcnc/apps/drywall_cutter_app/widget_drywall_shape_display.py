@@ -174,6 +174,7 @@ class DrywallShapeDisplay(Widget):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
         self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
 
         self.d_input.bind(text=self.d_input_change)
@@ -279,11 +280,32 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
+        if self.rotation_required():
+            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
+        if self.rotation_required():
+            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
+    def rotation_required(self):
+        if "rectangle" in self.shape_dims_image.source:
+            if "vertical" in self.shape_dims_image.source:
+                return float(self.x_input.text or 0) < float(self.y_input.text or 0)
+            else:
+                return float(self.x_input.text or 0) > float(self.y_input.text or 0)
+        else:
+            return False
+
     def poll_position(self, dt):
-        self.x_datum_label.text = 'X: ' + str(round(-self.m.mpos_x(), 2))
-        self.y_datum_label.text = 'Y: ' + str(round(-self.m.mpos_y(), 2))
+        current_x = round(abs(self.m.mpos_x()), 2)
+        current_y = round(abs(self.m.mpos_y()), 2)
+        self.x_datum_label.text = 'X: ' + str(current_x)
+        self.y_datum_label.text = 'Y: ' + str(current_y)
+
+        if self.dwt_config.active_config.datum_position.x != current_x:
+            self.dwt_config.active_config.datum_position.x = current_x
+
+        if self.dwt_config.active_config.datum_position.y != current_y:
+            self.dwt_config.active_config.datum_position.y = current_y

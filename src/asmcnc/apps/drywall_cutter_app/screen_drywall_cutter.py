@@ -130,7 +130,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, dwt_config=self.dwt_config)
+        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.shape_selection.text = 'circle'
@@ -159,12 +159,12 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
 
-    def rotate_shape(self):
+    def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
             self.rotation = 'vertical'
         else:
             self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation, swap_lengths=True)
+        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation, swap_lengths=swap_lengths)
         self.select_toolpath()
 
     def select_toolpath(self):
@@ -210,6 +210,19 @@ class DrywallCutterScreen(Screen):
         file_name_no_ext = config.split('/')[-1].split('.')[0]
 
         # set the label on the screen to the name of the config file below
+
+        toolpath_offset = self.dwt_config.active_config.toolpath_offset
+        self.shape_selection.text = self.dwt_config.active_config.shape_type
+        self.select_shape()
+
+        self.cut_offset_selection.text = toolpath_offset
+        self.select_toolpath()
+
+        self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
+        self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
+        self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
+        self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
+        self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
