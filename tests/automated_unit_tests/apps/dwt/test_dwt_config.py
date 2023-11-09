@@ -92,4 +92,7 @@ def test_on_parameter_change():
 def test_get_available_cutter_names():
     dwt_config = config_loader.DWTConfig()
 
-    assert dwt_config.get_available_cutter_names() == [['unique_label', 'test_cutter.json']]
+    assert dwt_config.get_available_cutter_names() == {
+        'unique_label': 'test_cutter.json',
+        'cutter 2': 'test_cutter2.json'
+    }
