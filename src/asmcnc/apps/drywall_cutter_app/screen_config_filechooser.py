@@ -147,10 +147,6 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -160,12 +156,6 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.get_FTP_files()
-                    root.refresh_filechooser() 
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
