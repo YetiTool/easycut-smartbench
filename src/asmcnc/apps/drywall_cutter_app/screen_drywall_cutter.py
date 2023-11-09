@@ -28,7 +28,7 @@ Builder.load_string("""
                 id: tool_selection
                 size_hint_x: 7
                 text: root.tool_options.keys()[0]
-                values: [k for k in root.tool_options.keys()]
+                values: root.tool_options.keys()
                 on_text: root.select_tool()
             Spinner:
                 size_hint_x: 7
