@@ -5,6 +5,16 @@ import config_classes
 configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
 
+DEBUG_MODE = True
+
+
+def debug_decorator(func):
+    def wrapper(*args, **kwargs):
+        if DEBUG_MODE:
+            print('Calling function: ' + func.__name__ + ' with args: ' + str(args[-1:]) + ' and kwargs: ' + str(kwargs))
+        return func(*args, **kwargs)
+    return wrapper
+
 
 class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
@@ -18,10 +28,11 @@ class DWTConfig(object):
             self.active_config = config_classes.Configuration.default()
             self.active_cutter = self.load_cutter(self.active_config.cutter_type)
 
+    @debug_decorator
     def load_config(self, config_name):
         # type (str) -> None
         """
-        Loads a configuration file from the configurations directory.
+        Loads a configuration file from the configuration directory.
 
         :param config_name: The name of the configuration file to load.
         """
@@ -35,10 +46,11 @@ class DWTConfig(object):
 
         self.load_cutter(self.active_config.cutter_type)
 
+    @debug_decorator
     def save_config(self, config_name):
         # type (str) -> None
         """
-        Saves the active configuration to the configurations directory.
+        Saves the active configuration to the configuration directory.
 
         :param config_name: The name of to save the configuration file as.
         """
@@ -47,10 +59,11 @@ class DWTConfig(object):
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
+    @debug_decorator
     def load_cutter(self, cutter_name):
         # type (str) -> None
         """
-        Loads a cutter file from the cutters directory.
+        Loads a cutter file from the cutter directory.
 
         :param cutter_name: The name of the cutter file to load.
         """
@@ -62,6 +75,29 @@ class DWTConfig(object):
         with open(file_path, 'r') as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))
 
+    @staticmethod
+    @debug_decorator
+    def get_available_cutter_names():
+        # type () -> dict{str: str}
+        """
+        :return: A list of the available cutter names and their file names.
+        """
+        cutters = {}
+        for f_name in os.listdir(cutters_dir):
+            if not f_name.endswith('.json'):
+                continue
+
+            file_path = os.path.join(cutters_dir, f_name)
+
+            if os.path.isfile(file_path):
+                with open(file_path, 'r') as f:
+                    cutter = json.load(f)
+
+                    if 'cutter_description' in cutter:
+                        cutters[cutter['cutter_description']] = f_name
+        return cutters
+
+    @debug_decorator
     def save_temp_config(self):
         # type () -> None
         """
@@ -71,6 +107,7 @@ class DWTConfig(object):
         """
         self.save_config('temp_config.json')
 
+    @debug_decorator
     def on_parameter_change(self, parameter_name, parameter_value):
         # type: (str, object) -> None
         """
