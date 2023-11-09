@@ -34,7 +34,7 @@ Builder.load_string("""
     metadata_preview : metadata_preview
     toggle_view_button : toggle_view_button
     sort_button : sort_button
-    load_button : load_button
+    save_button : save_button
     delete_selected_button : delete_selected_button
     delete_all_button : delete_all_button
     image_view : image_view
@@ -234,7 +234,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                id: load_button
+                id: save_button
                 disabled: True
                 size_hint_x: 1
                 on_release: 
@@ -292,6 +292,16 @@ class ConfigFileChooser(Screen):
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
 
+    json_config_order = {
+        u'shape_type': 0,
+        u'units': 1,
+        u'canvas_shape_dims': 2,
+        u'cutter_type': 3,
+        u'toolpath_offset': 4,
+        u'cutting_depths': 5,
+        u'datum_position': 6
+    }
+
     def __init__(self, **kwargs):
         super(ConfigFileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -316,16 +326,6 @@ class ConfigFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
-
-        self.json_config_order = {
-            u'shape_type': 0,
-            u'units': 1,
-            u'canvas_shape_dims': 2,
-            u'cutter_type': 3,
-            u'toolpath_offset': 4,
-            u'cutting_depths': 5,
-            u'datum_position': 6
-        }
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -412,7 +412,7 @@ class ConfigFileChooser(Screen):
 
             else:
 
-                self.load_button.disabled = True
+                self.save_button.disabled = True
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
 
                 self.delete_selected_button.disabled = True
@@ -422,7 +422,7 @@ class ConfigFileChooser(Screen):
                 self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
         except:
-            self.load_button.disabled = True
+            self.save_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
@@ -451,7 +451,7 @@ class ConfigFileChooser(Screen):
 
         self.metadata_preview.text = self.to_human_readable(sorted_json)
 
-        self.load_button.disabled = False
+        self.save_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
         self.delete_selected_button.disabled = False
