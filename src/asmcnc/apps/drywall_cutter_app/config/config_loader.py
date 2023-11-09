@@ -78,11 +78,11 @@ class DWTConfig(object):
     @staticmethod
     @debug_decorator
     def get_available_cutter_names():
-        # type () -> list[list[str, str]]
+        # type () -> dict{str: str}
         """
         :return: A list of the available cutter names and their file names.
         """
-        cutters = []
+        cutters = {}
         for f_name in os.listdir(cutters_dir):
             if not f_name.endswith('.json'):
                 continue
@@ -94,7 +94,7 @@ class DWTConfig(object):
                     cutter = json.load(f)
 
                     if 'cutter_description' in cutter:
-                        cutters.append([cutter['cutter_description'], f_name])
+                        cutters[cutter['cutter_description']] = f_name
         return cutters
 
     @debug_decorator

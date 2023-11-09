@@ -27,8 +27,8 @@ Builder.load_string("""
             Spinner:
                 id: tool_selection
                 size_hint_x: 7
-                text: root.tool_options[0][0]
-                values: [item[0] for item in root.tool_options]
+                text: root.tool_options.keys()[0]
+                values: [k for k in root.tool_options.keys()]
                 on_text: root.select_tool()
             Spinner:
                 size_hint_x: 7
@@ -132,10 +132,7 @@ class DrywallCutterScreen(Screen):
     def select_tool(self):
         selected_tool_name = self.tool_selection.text
 
-        for tool in self.tool_options:
-            if tool[0] == selected_tool_name:
-                self.dwt_config.load_cutter(tool[1])
-                break
+        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
     def select_shape(self):
         pass
