@@ -472,17 +472,54 @@ class GCodeEngine():
             
             cutting_lines = gcode_lines
 
+        elif self.config.active_config.shape_type.lower() == u"circle":
+            circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d) #Circles are secretly rounded rectangles            
+
+            # Add first point to end of coordinate list to complete the contour
+            coordinates = circle_coordinates
+            coordinates.append(coordinates[0])
+
+            # Create a list of stepovers to add finishing passes
+            finish_passes = 1
+            finish_stepover = 0.5
+            finish_stepdown = self.config.active_config.cutting_depths.material_thickness
+            if finish_passes > 0:
+                stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
+                stepovers.append(0)
+
+            roughing_pass = True
+            for stepover in stepovers:
+                effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
+                pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+                circle = self.cut_rectangle(coordinates,
+                                        self.config.active_config.datum_position.x,
+                                        self.config.active_config.datum_position.y,
+                                        self.config.active_config.toolpath_offset,
+                                        effective_tool_diameter,
+                                        is_climb,
+                                        self.config.active_config.canvas_shape_dims.d/2,
+                                        pass_depth,
+                                        self.config.active_cutter.cutting_feedrate,
+                                        self.config.active_cutter.plunge_rate,
+                                        total_cut_depth,
+                                        z_safe_distance,
+                                        roughing_pass)
+
+                roughing_pass = False
+                cutting_lines += circle 
+
         else:
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
 
         # GCODE FILE STRUCTURE
-        if self.config.active_config.shape_type == "rectangle":
+        file_structure_1_shapes = ["rectangle", "square", "circle"]
+        if self.config.active_config.shape_type in file_structure_1_shapes:
             output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                 output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
         else:
             output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
 
         with open(output_file, 'w+') as out_file:
-            out_file.write(output)  # Use write() to write the entire output as a single string
+            out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
             print("%s written" % output_file)
 
