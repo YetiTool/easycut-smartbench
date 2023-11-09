@@ -34,9 +34,7 @@ Builder.load_string("""
     metadata_preview : metadata_preview
     toggle_view_button : toggle_view_button
     sort_button : sort_button
-    load_button : load_button
-    delete_selected_button : delete_selected_button
-    delete_all_button : delete_all_button
+    save_button : save_button
     image_view : image_view
     image_sort: image_sort
     image_select : image_select
@@ -143,10 +141,6 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -156,41 +150,23 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.get_FTP_files()
-                    root.refresh_filechooser() 
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
                     
             Button:
-                id: delete_selected_button
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    root.delete_popup(file_selection = filechooser.selection[0])
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
             Button:
-                id: delete_all_button
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.delete_popup(file_selection = 'all')
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -216,7 +192,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                id: load_button
+                id: save_button
                 disabled: False
                 size_hint_x: 1
                 on_release: 
@@ -274,6 +250,16 @@ class ConfigFileSaver(Screen):
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
 
+    json_config_order = {
+        u'shape_type': 0,
+        u'units': 1,
+        u'canvas_shape_dims': 2,
+        u'cutter_type': 3,
+        u'toolpath_offset': 4,
+        u'cutting_depths': 5,
+        u'datum_position': 6
+    }
+
     def __init__(self, **kwargs):
         super(ConfigFileSaver, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -298,16 +284,6 @@ class ConfigFileSaver(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
-
-        self.json_config_order = {
-            u'shape_type': 0,
-            u'units': 1,
-            u'canvas_shape_dims': 2,
-            u'cutter_type': 3,
-            u'toolpath_offset': 4,
-            u'cutting_depths': 5,
-            u'datum_position': 6
-        }
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -392,7 +368,7 @@ class ConfigFileSaver(Screen):
             if self.filechooser.selection[0] != 'C':
                 self.display_selected_file()
             else:
-                self.load_button.disabled = False
+                self.save_button.disabled = False
                 self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
         except:
             self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
@@ -447,36 +423,6 @@ class ConfigFileSaver(Screen):
         else:
             popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_selected,
                                        file_selection=kwargs['file_selection'])
-
-    def delete_selected(self, filename):
-        self.refresh_filechooser()
-
-        if os.path.isfile(filename):
-            try:
-                os.remove(filename)
-                self.filechooser.selection = []
-
-            except:
-                print "attempt to delete folder, or undeletable file"
-
-            self.refresh_filechooser()
-
-    def delete_all(self):
-        files_in_cache = os.listdir(configs_dir)  # clean cache
-        self.refresh_filechooser()
-
-        if files_in_cache:
-            for file in files_in_cache:
-                try:
-                    os.remove(configs_dir + file)
-                    if files_in_cache.index(file) + 2 >= len(files_in_cache):
-                        self.refresh_filechooser()
-
-                except:
-                    print "attempt to delete folder, or undeletable file"
-
-        self.filechooser.selection = []
-        self.refresh_filechooser()
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
