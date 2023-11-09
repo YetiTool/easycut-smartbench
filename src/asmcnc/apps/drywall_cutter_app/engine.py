@@ -388,6 +388,71 @@ class GCodeEngine():
 
         return '\n'.join(output)
 
+    #Add partoff cut for geberit shape
+    def add_partoff(self, gcode_lines, insertion_key, start_coordinate, end_coordinate, pass_depths, feedrate, plungerate, z_safe_distance):
+        x = 0
+        y = 1
+        insert_index = None
+        partoff_gcode = ["(Partoff)"]
+        direction_flag = True
+
+        #Find index to insert partoff line
+        for i in range(len(gcode_lines)):
+            if insertion_key.lower() == gcode_lines[i].lower() + gcode_lines[i+1].lower():
+                insert_index = i
+                break
+            if i == len(gcode_lines):
+                break
+        if insert_index is None:
+            raise Exception ("Unable to find " + insertion_key + " in gcode")
+        
+        #Generate partoff line gcode
+        partoff_gcode.append("G1 Z" + str(z_safe_distance)) #Lift to Z safe distance
+        partoff_gcode.append("G0 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y]) + "F" + str(feedrate)) #Go to start position
+        for depth in pass_depths:          
+            if direction_flag: #x min -> x max pass   
+                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate)) #Plunge to depth
+                partoff_gcode.append("G1 X" + str(end_coordinate[x]) + " Y" + str(end_coordinate[y])+ "F" + str(feedrate)) #Go to end position
+            else: #x max -> x min pass
+                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate)) #Plunge to depth
+                partoff_gcode.append("G1 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y])+ "F" + str(feedrate)) #Go to start position
+            direction_flag = not(direction_flag)
+        partoff_gcode.append("G1 Z" + str(z_safe_distance)) #Lift to Z safe distance
+
+        output = ""
+        for line in partoff_gcode:
+            output += line + "\n"
+        partoff_gcode = "".join(output)
+
+        #Insert partoff gcode
+        gcode_part_1 = gcode_lines[:insert_index]
+        gcode_part_2 = gcode_lines[insert_index:]
+
+        return gcode_part_1 +partoff_gcode + gcode_part_2      
+
+    def read_in_custom_shape_dimentions(self, gcode_lines):
+        x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
+        y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
+
+        x_dim = None
+        y_dim = None
+
+        for string in gcode_lines[:20]: #Data should be found within the first 20 lines
+            if x_dim is None:
+                x_dim_match = re.search(x_dim_pattern, string, re.IGNORECASE)
+                if x_dim_match:
+                    x_dim = x_dim_match.group(1)  # Store the matched value as a string
+
+            if y_dim is None:
+                y_dim_match = re.search(y_dim_pattern, string, re.IGNORECASE)
+                if y_dim_match:
+                    y_dim = y_dim_match.group(1)  # Store the matched value as a string
+
+            if x_dim and y_dim:
+                break  # Exit the loop once both values have been found
+
+        return x_dim, y_dim
+
     #Main
     def engine_run(self):
         output_file = "jobCache/" + self.config.active_config.shape_type + u".nc"
@@ -396,7 +461,6 @@ class GCodeEngine():
         cutting_lines = []
         pass_depths = []
         stepovers = [0]
-        radii_present = None
 
         if self.config.active_cutter.cutting_direction.lower() == "climb":
             is_climb = True
@@ -446,12 +510,13 @@ class GCodeEngine():
                 cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
-            source_folder_name = "gcode" 
-            source_folder_path = os.path.join(source_folder_name)   
+            source_folder_name = u"gcode" 
+            source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + source_folder_name #os.path.join(source_folder_name) 
 
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
+            x_size, y_size = self.read_in_custom_shape_dimentions(gcode_lines)
             
             # Remove header info
             gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
@@ -461,7 +526,7 @@ class GCodeEngine():
             gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
 
             # Apply datum offset
-            gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.DatumPosition.x, self.config.active_config.DatumPosition.y)
+            gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.datum_position.x, self.config.active_config.datum_position.y)
 
             # Apply pass depths
             pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
@@ -469,6 +534,13 @@ class GCodeEngine():
             end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
             gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
 
+            tool_radius = self.config.active_cutter.diameter / 2
+            
+            partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
+                                         float(y_size) + tool_radius + self.config.active_config.datum_position.y]
+            partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
+                                      tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+            gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, z_safe_distance)
             
             cutting_lines = gcode_lines
 
