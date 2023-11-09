@@ -165,7 +165,7 @@ Builder.load_string("""
             id: cutter_graphic
             source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
             pos_hint: {'center_x': 0.45, 'y': root.cutter_y}
-            y: self.parent.y
+            # y: self.parent.y
             size: self.parent.size
             allow_stretch: True 
         
@@ -335,6 +335,7 @@ class CuttingDepthsPopup(Popup):
         try:
             self.cutter_y = round((float(self.total_cut_depth.text) / Window.height) * 2, 2)
             self.cutter_graphic.pos_hint['y'] = self.cutter_y
+            self.float_layout.do_layout()
             print(self.cutter_graphic.pos_hint)
         except:
             pass
