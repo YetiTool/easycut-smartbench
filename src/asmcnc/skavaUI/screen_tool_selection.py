@@ -25,7 +25,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp([0.0625*app.width, 0.104166666667*app.height])
+        padding: [dp(0.0625)*app.width, dp(0.104166666667)*app.height]
 
         # Top text
 

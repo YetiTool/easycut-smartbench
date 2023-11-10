@@ -34,7 +34,7 @@ Builder.load_string(
     BoxLayout:
         valign: 'bottom'
         halign: 'left'
-        padding: dp([0.0375*app.width, 0.0625*app.height])
+        padding: [dp(0.0375)*app.width, dp(0.0625)*app.height]
 
         Button:
             font_size: str(0.01875 * app.width) + 'sp'

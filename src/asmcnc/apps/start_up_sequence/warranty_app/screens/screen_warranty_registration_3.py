@@ -110,7 +110,7 @@ Builder.load_string(
 					orientation: 'vertical'
 					width: dp(1.0*app.width)
 					height: dp(0.260416666667*app.height)
-					padding: [dp([0.025*app.width, 0.0416666666667*app.height])]
+					padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 					size_hint: (None,None)
 					Label:
 						id: error_message_top

@@ -28,7 +28,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 5
             orientation: 'vertical'
-            padding: dp([0.0375*app.width, 0.0625*app.height])
+            padding: [dp(0.0375)*app.width, dp(0.0625)*app.height]
             spacing: dp(0.0625*app.height)
 
             GridLayout:

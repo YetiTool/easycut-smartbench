@@ -47,7 +47,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 0.08
-                padding: dp([0.00625*app.width, 0.0104166666667*app.height])
+                padding: [dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -72,7 +72,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding: dp([0.0125*app.width, 0.0208333333333*app.height])
+            padding: [dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 
             canvas: 
                 Color:

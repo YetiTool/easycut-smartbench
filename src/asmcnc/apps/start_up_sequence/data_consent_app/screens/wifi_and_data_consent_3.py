@@ -81,7 +81,7 @@ Builder.load_string(
 	                    Rectangle:
 	                        pos: self.pos
 	                        size: self.size
-					padding: dp([0.00125*app.width, 0.00208333333333*app.height])
+					padding: [dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
 	            	ScrollPrivacyNotice:
 	                	id: scroll_privacy_notice
 

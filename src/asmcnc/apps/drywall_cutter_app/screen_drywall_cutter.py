@@ -14,7 +14,7 @@ Builder.load_string(
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
-            padding: dp([0.00625*app.width, 0.0104166666667*app.height])
+            padding: [dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
             spacing: dp(0.0125*app.width)
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -73,7 +73,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 5
             orientation: 'horizontal'
-            padding: dp([0.00625*app.width, 0.0104166666667*app.height])
+            padding: [dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
             spacing: dp(0.0125*app.width)
             BoxLayout:
                 size_hint_x: 55

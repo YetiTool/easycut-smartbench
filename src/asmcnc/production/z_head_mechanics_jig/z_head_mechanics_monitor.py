@@ -9,7 +9,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp([0.0125*app.width, 0.0208333333333*app.height])
+        padding: [dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
         spacing: dp(0.0208333333333*app.height)
 
         Button:

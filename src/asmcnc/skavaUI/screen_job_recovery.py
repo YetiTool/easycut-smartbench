@@ -191,7 +191,7 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'vertical'
-                        padding: dp([0.015*app.width, 0.025*app.height])
+                        padding: [dp(0.015)*app.width, dp(0.025)*app.height]
                         spacing: dp(0.0145833333333*app.height)
                         canvas:
                             Color:
