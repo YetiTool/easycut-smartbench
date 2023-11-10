@@ -307,7 +307,7 @@ class SkavaUI(App):
 
         ## -----------------------------------------------------------------------------------
 
-        if self.width == 1280:
+        if self.width == 1268:
             root = BoxLayout(orientation='vertical')
 
             top_bar = BoxLayout(size_hint=(1, None), height=16, background_color=(0, 0, 0, 1))
