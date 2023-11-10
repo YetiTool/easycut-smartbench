@@ -49,13 +49,13 @@ Builder.load_string(
 
     BoxLayout:
         padding: 0
-        spacing: 0.0208333333333*app.height
+        spacing: dp(0.0208333333333)*app.height
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
             padding: 0
-            spacing: 0.0125*app.width
+            spacing: dp(0.0125)*app.width
             orientation: "horizontal"
 
             BoxLayout:
@@ -67,16 +67,16 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 90
-                    tab_width: 0.1125*app.width
+                    tab_height: dp(90 / 480)*app.height
+                    tab_width: dp(0.1125)*app.width
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding: [0.025*app.width, 0.0416666666667*app.height]
-                            spacing: 0.025*app.width
+                            padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing: dp(0.025)*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -95,8 +95,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: [0.025*app.width, 0.0416666666667*app.height]
-                            spacing: 0.025*app.width
+                            padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing: dp(0.025)*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -136,8 +136,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: [0.025*app.width, 0.0416666666667*app.height]
-                            spacing: 0.0416666666667*app.height
+                            padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing: dp(0.0416666666667)*app.height
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -147,7 +147,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding: [0.0125*app.width, 0.0208333333333*app.height]
+                                padding: [dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -168,8 +168,8 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: [0.025*app.width, 0.0416666666667*app.height]
-                            spacing: 0.0416666666667*app.height
+                            padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing: dp(0.0416666666667)*app.height
                             id: job_container
                             canvas:
                                 Color:
@@ -180,8 +180,8 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding: [0.0125*app.width, 0.0208333333333*app.height]
-                                spacing: 0.0125*app.width
+                                padding: [dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                spacing: dp(0.0125)*app.width
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -238,7 +238,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding: [0.025*app.width, 0.0416666666667*app.height]
+                                padding: [dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
