@@ -67,7 +67,7 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: dp(90 / 480)*app.height
+                    tab_height: dp(float(90 / 480))*app.height
                     tab_width: dp(0.1125)*app.width
 
                     TabbedPanelItem:
