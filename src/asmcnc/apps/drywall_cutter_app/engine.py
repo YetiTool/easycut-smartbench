@@ -478,7 +478,7 @@ class GCodeEngine():
         return x_dim, y_dim, x_min, y_min
 
     #For use in UI not engine
-    def get_custom_shape_dimensions(self):
+    def get_custom_shape_extents(self):
         if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
