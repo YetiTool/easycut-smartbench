@@ -7,6 +7,8 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
+from engine import GCodeEngine
+
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
@@ -122,6 +124,8 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
 
+        self.engine = GCodeEngine(self.dwt_config)
+
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
@@ -156,7 +160,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def run(self):
-        pass
+        self.engine.engine_run()
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
