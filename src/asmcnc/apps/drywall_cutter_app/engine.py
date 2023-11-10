@@ -277,6 +277,36 @@ class GCodeEngine():
         cutting_lines = self.replace_after_keyword(cutting_lines, u"New pass", u"G0")
 
         return cutting_lines
+    
+    #Produce gcode instructions to cut a straight line
+    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance):
+        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
+        tool_radius = tool_diameter / 2
+        x = 0
+        y = 1 
+        direction_flag = True
+
+        gcode_lines = ["G0 Z{}\n".format(z_safe_distance)]
+
+        if orientation == "vertical":
+            start_coordinate = [datum_x + tool_radius, datum_y]
+            end_coordinate = [datum_x + length - tool_radius, datum_y]
+        else: #horizontal
+            start_coordinate = [datum_x, datum_y + tool_radius]
+            end_coordinate = [datum_x, datum_y + length - tool_radius]
+        gcode_lines.append("G0 X{} Y{}\n".format(start_coordinate[x], start_coordinate[y]))
+        for depth in pass_depths:
+            if direction_flag:
+                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
+                gcode_lines.append("G1 X{} Y{} F{}\n".format(end_coordinate[x], end_coordinate[y], feedrate))
+            else:
+                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
+                gcode_lines.append("G1 X{} Y{} F{}\n".format(start_coordinate[x], start_coordinate[y], feedrate))
+            direction_flag = not(direction_flag)
+
+        gcode_lines.append("G1 Z{} F{}\n".format(z_safe_distance, plungerate))
+
+        return gcode_lines
 
     #Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
@@ -495,7 +525,6 @@ class GCodeEngine():
             return x_dim, y_dim, x_min, y_min
         else:
             raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
-            
 
     #Main
     def engine_run(self):
@@ -621,11 +650,24 @@ class GCodeEngine():
                 roughing_pass = False
                 cutting_lines += circle 
 
+        elif self.config.active_config.shape_type.lower() == u"line":
+            cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
+                                        self.config.active_config.datum_position.y,
+                                        self.config.active_config.canvas_shape_dims.l,
+                                        self.config.active_cutter.diameter,
+                                        "vertical",
+                                        self.config.active_config.cutting_depths.depth_per_pass,
+                                        self.config.active_cutter.cutting_feedrate,
+                                        self.config.active_cutter.plunge_rate,
+                                        total_cut_depth,
+                                        z_safe_distance
+                                        )
+
         else:
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
 
         # GCODE FILE STRUCTURE
-        file_structure_1_shapes = ["rectangle", "square", "circle"]
+        file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
         if self.config.active_config.shape_type in file_structure_1_shapes:
             output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                 output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
