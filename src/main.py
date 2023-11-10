@@ -307,19 +307,33 @@ class SkavaUI(App):
 
         ## -----------------------------------------------------------------------------------
 
-        root = BoxLayout(orientation='vertical')
+        if self.width == 1280:
+            root = BoxLayout(orientation='vertical')
 
-        top_bar = BoxLayout(size_hint=(1, None), height=16, background_color=(0, 0, 0, 1))
-        root.add_widget(top_bar)
+            top_bar = BoxLayout(size_hint=(1, None), height=16, background_color=(0, 0, 0, 1))
+            root.add_widget(top_bar)
 
-        main_content = BoxLayout(orientation='vertical')
-        main_content.add_widget(sm)
-        root.add_widget(main_content)
+            main_content = BoxLayout(orientation='vertical')
+            main_content.add_widget(sm)
+            root.add_widget(main_content)
 
-        bottom_bar = BoxLayout(size_hint=(1, None), height=16, background_color=(0, 0, 0, 1))
-        root.add_widget(bottom_bar)
+            bottom_bar = BoxLayout(size_hint=(1, None), height=16, background_color=(0, 0, 0, 1))
+            root.add_widget(bottom_bar)
 
-        return root
+            self.root = root
+
+            self.set_top_bar_colour((1, 1, 1, 1))
+            self.set_bottom_bar_colour((1, 1, 1, 1))
+
+            return root
+        return sm
+
+    def set_top_bar_colour(self, colour):
+        self.root.children[0].background_color = colour
+
+    def set_bottom_bar_colour(self, colour):
+        self.root.children[-1].background_color = colour
+
 
 if __name__ == '__main__':
 
