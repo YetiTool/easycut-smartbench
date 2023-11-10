@@ -32,6 +32,11 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
 
+        self.custom_gcode_shapes = ["geberit"]
+
+        self.source_folder_name = u"gcode" 
+        self.source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + self.source_folder_name 
+
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
         if x <= 0 or y <= 0:
@@ -430,14 +435,19 @@ class GCodeEngine():
 
         return gcode_part_1 +partoff_gcode + gcode_part_2      
 
+    #Extract dimention data from gcode header (manually inserted)
     def read_in_custom_shape_dimentions(self, gcode_lines):
         x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
         y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
+        x_min_pattern = r"x min: (-?\d+\.\d+)"
+        y_min_pattern = r"y min: (-?\d+\.\d+)"
 
         x_dim = None
         y_dim = None
+        x_min = None
+        y_min = None
 
-        for string in gcode_lines[:20]: #Data should be found within the first 20 lines
+        for string in gcode_lines:
             if x_dim is None:
                 x_dim_match = re.search(x_dim_pattern, string, re.IGNORECASE)
                 if x_dim_match:
@@ -448,10 +458,44 @@ class GCodeEngine():
                 if y_dim_match:
                     y_dim = y_dim_match.group(1)  # Store the matched value as a string
 
-            if x_dim and y_dim:
+            if x_min is None:
+                x_min_match = re.search(x_min_pattern, string, re.IGNORECASE)
+                if x_min_match:
+                    x_min = x_min_match.group(1)  # Store the matched value as a string
+
+            if y_min is None:
+                y_min_match = re.search(y_min_pattern, string, re.IGNORECASE)
+                if y_min_match:
+                    y_min = y_min_match.group(1)  # Store the matched value as a string
+
+            if x_dim and y_dim and x_min and y_min:
                 break  # Exit the loop once both values have been found
 
-        return x_dim, y_dim
+        missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min]) if value is None]
+        if missing_values:
+            raise Exception("Unable to gather shape dimension data. Missing values: {}".format(', '.join(missing_values)))
+
+        return x_dim, y_dim, x_min, y_min
+
+    #For use in UI not engine
+    def get_custom_shape_dimensions(self):
+        if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
+            # Read in data
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
+            
+            # Get dimensions as strings
+            x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
+            
+            # Convert strings to floats
+            x_dim = float(x_dim_str)
+            y_dim = float(y_dim_str)
+            x_min = float(x_min_str)
+            y_min = float(y_min_str)
+
+            return x_dim, y_dim, x_min, y_min
+        else:
+            raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
+            
 
     #Main
     def engine_run(self):
@@ -510,13 +554,10 @@ class GCodeEngine():
                 cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
-            source_folder_name = u"gcode" 
-            source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + source_folder_name #os.path.join(source_folder_name) 
-
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size = self.read_in_custom_shape_dimentions(gcode_lines)
+            x_size, y_size, _, _  = self.read_in_custom_shape_dimentions(gcode_lines)
             
             # Remove header info
             gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
