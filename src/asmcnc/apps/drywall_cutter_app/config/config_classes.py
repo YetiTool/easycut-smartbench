@@ -71,10 +71,11 @@ class DatumPosition:
 
 
 class Configuration:
-    def __init__(self, shape_type, units, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
+    def __init__(self, shape_type, units, rotation, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
                  datum_position):
         self.shape_type = shape_type  # type: str
         self.units = units  # type: str
+        self.rotation = rotation
         self.canvas_shape_dims = CanvasShapeDims(**canvas_shape_dims)  # type: CanvasShapeDims
         self.cutter_type = cutter_type  # type: str
         self.toolpath_offset = toolpath_offset  # type: str
@@ -83,7 +84,7 @@ class Configuration:
 
     @staticmethod
     def default():
-        return Configuration(shape_type='Square', units='mm',
+        return Configuration(shape_type='Square', units='mm', rotation='horizontal',
                              canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
                              cutter_type='test_cutter.json',
                              toolpath_offset='inside',
