@@ -67,8 +67,8 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: dp(float(90 / 480))*app.height
-                    tab_width: dp(0.1125)*app.width
+                    tab_height: 90
+                    tab_width: 90
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
