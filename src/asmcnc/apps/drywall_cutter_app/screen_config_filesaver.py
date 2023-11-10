@@ -415,15 +415,6 @@ class ConfigFileSaver(Screen):
 
         self.sm.current = 'drywall_cutter'
 
-    def delete_popup(self, **kwargs):
-
-        if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_all,
-                                       file_selection='all')
-        else:
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_selected,
-                                       file_selection=kwargs['file_selection'])
-
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
             self.sm.current = 'drywall_cutter'
