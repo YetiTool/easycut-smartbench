@@ -16,6 +16,7 @@ Builder.load_string("""
     shape_selection:shape_selection
     cut_offset_selection:cut_offset_selection
     rotate_button:rotate_button
+    tool_selection:tool_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -31,9 +32,11 @@ Builder.load_string("""
                 text: 'File'
                 on_press: root.open_filechooser()
             Spinner:
+                id: tool_selection
                 size_hint_x: 7
-                text: 'Tool'
-                values: root.tool_options
+                text: root.tool_options.keys()[0]
+                values: root.tool_options.keys()
+                on_text: root.select_tool()
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -118,6 +121,7 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
     dwt_config = config_loader.DWTConfig()
+    tool_options = config_loader.DWTConfig().get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -137,6 +141,11 @@ class DrywallCutterScreen(Screen):
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+
+    def select_tool(self):
+        selected_tool_name = self.tool_selection.text
+
+        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:

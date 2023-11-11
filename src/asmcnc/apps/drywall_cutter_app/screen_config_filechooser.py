@@ -147,10 +147,6 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -160,12 +156,6 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.get_FTP_files()
-                    root.refresh_filechooser() 
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -292,6 +282,16 @@ class ConfigFileChooser(Screen):
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
 
+    json_config_order = {
+        u'shape_type': 0,
+        u'units': 1,
+        u'canvas_shape_dims': 2,
+        u'cutter_type': 3,
+        u'toolpath_offset': 4,
+        u'cutting_depths': 5,
+        u'datum_position': 6
+    }
+
     def __init__(self, **kwargs):
         super(ConfigFileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -316,16 +316,6 @@ class ConfigFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
-
-        self.json_config_order = {
-            u'shape_type': 0,
-            u'units': 1,
-            u'canvas_shape_dims': 2,
-            u'cutter_type': 3,
-            u'toolpath_offset': 4,
-            u'cutting_depths': 5,
-            u'datum_position': 6
-        }
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)

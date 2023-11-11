@@ -142,7 +142,7 @@ class Keyboard(VKeyboard):
             self.text_instance.insert_text(internal)
 
     def set_keyboard_background(self):
-        if self.do_translation == (True,True):
+        if self.do_translation == (True,True) and sys.platform != 'darwin':
             self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
             if self.layout == self.numeric_layout:
                 self.background = "./asmcnc/keyboard/images/numeric_background_" + str(Window.width) + ".png"
