@@ -299,13 +299,8 @@ class DrywallShapeDisplay(Widget):
             return False
 
     def poll_position(self, dt):
-        current_x = round(abs(self.m.mpos_x()), 2)
-        current_y = round(abs(self.m.mpos_y()), 2)
+        # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
+        current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
-
-        if self.dwt_config.active_config.datum_position.x != current_x:
-            self.dwt_config.active_config.datum_position.x = current_x
-
-        if self.dwt_config.active_config.datum_position.y != current_y:
-            self.dwt_config.active_config.datum_position.y = current_y

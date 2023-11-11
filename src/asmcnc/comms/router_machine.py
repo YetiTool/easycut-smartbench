@@ -107,6 +107,8 @@ class RouterMachine(object):
     is_laser_on = False
     is_laser_enabled = False
 
+    laser_offset_tool_clearance_to_access_edge_of_sheet = 5
+
     ## STYLUS SETTINGS
     is_stylus_enabled = True
     stylus_router_choice = 'router'
