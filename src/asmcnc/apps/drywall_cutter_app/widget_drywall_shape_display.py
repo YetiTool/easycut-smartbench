@@ -280,14 +280,20 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
-        if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
+        self.do_rectangle_checks()
         self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
+        self.do_rectangle_checks()
+        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+
+    def do_rectangle_checks(self):
         if self.rotation_required():
             self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+        if self.rectangle_with_equal_sides():
+            toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
+            self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
+            self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
 
     def rotation_required(self):
         if "rectangle" in self.shape_dims_image.source:
@@ -297,6 +303,13 @@ class DrywallShapeDisplay(Widget):
                 return float(self.x_input.text or 0) > float(self.y_input.text or 0)
         else:
             return False
+        
+    def rectangle_with_equal_sides(self):
+        if "rectangle" in self.shape_dims_image.source:
+            if self.x_input.text and self.y_input.text:
+                if self.x_input.text == self.y_input.text:
+                    return True
+        return False
 
     def poll_position(self, dt):
         current_x = round(abs(self.m.mpos_x()), 2)
