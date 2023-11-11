@@ -1748,6 +1748,11 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+ 
+    def go_xy_datum(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X0 Y0')
 
     def jog_spindle_to_laser_datum(self, axis):
 

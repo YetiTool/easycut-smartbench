@@ -1,5 +1,9 @@
+import sys
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -25,7 +29,22 @@ Builder.load_string("""
                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos
-                Button             
+                Button:
+                    background_color: hex('#F4433600')
+                    on_release:
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.go_to_datum()
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
             
             Button:
                 background_color: hex('#F4433600')
@@ -109,7 +128,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             BoxLayout:
-                padding: 10
+                padding: 15
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -137,20 +156,20 @@ Builder.load_string("""
                     print('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
-                on_press: 
+                on_press:
                     print('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos      
+                    pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True                                    
+                        allow_stretch: True
             BoxLayout:
                 padding: 10
                 size: self.parent.size
@@ -179,6 +198,7 @@ class XYMoveDrywall(Widget):
         super(XYMoveDrywall, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
         self.set_jog_speeds()
 
@@ -266,3 +286,9 @@ class XYMoveDrywall(Widget):
 
     def probe_z(self):
         self.m.probe_z()
+
+    def go_to_datum(self):
+        if self.m.is_machine_homed == False and sys.platform != 'win32':
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
+        else:
+            self.m.go_xy_datum()
