@@ -1,4 +1,4 @@
-import sys
+import sys, textwrap
 
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
@@ -68,12 +68,28 @@ Builder.load_string("""
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True                                    
+                        allow_stretch: True
+    
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                Button
+                pos: self.parent.pos
+                Button:
+                    background_color: hex('#F4433600')
+                    on_release:
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.set_datum()
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/drywall_cutter_app/img/set_datum.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
                             
             Button:
                 background_color: hex('#F4433600')
@@ -326,3 +342,15 @@ class XYMoveDrywall(Widget):
                 self.go_to_datum_button_overlay.opacity -= 0.1
         else:
             self.go_to_datum_button_overlay.opacity = 0
+
+    def set_datum(self):
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd
