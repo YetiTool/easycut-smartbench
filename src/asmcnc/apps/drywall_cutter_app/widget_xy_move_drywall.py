@@ -2,6 +2,7 @@ import sys
 
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
@@ -10,6 +11,8 @@ Builder.load_string("""
     jogModeButtonImage:jogModeButtonImage
     speed_toggle:speed_toggle
     speed_image:speed_image
+    go_to_datum_button_image:go_to_datum_button_image
+    go_to_datum_button_overlay:go_to_datum_button_overlay
     
     BoxLayout:
     
@@ -40,6 +43,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
+                            id: go_to_datum_button_image
                             source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
@@ -188,6 +192,17 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
+
+    FloatLayout:
+        Image:
+            id: go_to_datum_button_overlay
+            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum_pulse.png"
+            pos: go_to_datum_button_image.pos
+            size: go_to_datum_button_image.size
+            allow_stretch: True
+            size_hint: (None, None)
+            opacity: 0
+
 """)
 
 
@@ -201,6 +216,8 @@ class XYMoveDrywall(Widget):
         self.l=kwargs['localization']
 
         self.set_jog_speeds()
+
+        Clock.schedule_interval(self.check_zh_at_datum, 0.04)
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -292,3 +309,20 @@ class XYMoveDrywall(Widget):
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
             self.m.go_xy_datum()
+
+    def check_zh_at_datum(self, dt):
+        # wpos == 0,0 when zh is at datum
+        if not (round(self.m.wpos_x(), 2) == 0 and round(self.m.wpos_y(), 2) == 0):
+            # Pulse overlay by smoothly alternating between 0 and 1 opacity
+            # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
+            if self.go_to_datum_button_overlay.opacity <= 0:
+                self.go_to_datum_button_overlay.opacity = 0.01
+            elif self.go_to_datum_button_overlay.opacity >= 1:
+                self.go_to_datum_button_overlay.opacity = 0.98
+            # Check if second decimal place is even or odd
+            elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
+                self.go_to_datum_button_overlay.opacity += 0.1
+            else:
+                self.go_to_datum_button_overlay.opacity -= 0.1
+        else:
+            self.go_to_datum_button_overlay.opacity = 0
