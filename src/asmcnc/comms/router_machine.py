@@ -91,6 +91,8 @@ class RouterMachine(object):
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
+    z_probe_speed_fast = 500
+    fast_probing = False
 
     ## CALIBRATION SETTINGS
     time_since_calibration_seconds = 0
@@ -2047,13 +2049,19 @@ class RouterMachine(object):
 
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
-    def probe_z(self):
+    def probe_z(self, fast_probe=False):
 
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
             probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
-            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
+            if fast_probe:
+                probe_speed = self.z_probe_speed_fast
+                self.fast_probing = True
+            else:
+                probe_speed = self.z_probe_speed
+                self.fast_probing = False
+            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
@@ -2067,7 +2075,11 @@ class RouterMachine(object):
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
-        self.zUp()    
+        if self.fast_probing:
+            self.jog_relative('Z', 5, 750)
+            self.fast_probing = False
+        else:
+            self.zUp()
 
 
 
