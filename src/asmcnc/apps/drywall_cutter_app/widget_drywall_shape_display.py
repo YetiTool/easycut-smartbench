@@ -176,6 +176,7 @@ class DrywallShapeDisplay(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
+        self.engine = kwargs['engine']
 
         self.d_input.bind(text=self.d_input_change)
         self.l_input.bind(text=self.l_input_change)
@@ -183,7 +184,7 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change)
         self.y_input.bind(text=self.y_input_change)
 
-        Clock.schedule_interval(self.poll_position, 0.1)
+        Clock.schedule_interval(self.check_datum_and_extents, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
@@ -298,9 +299,12 @@ class DrywallShapeDisplay(Widget):
         else:
             return False
 
-    def poll_position(self, dt):
+    def check_datum_and_extents(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
         current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
         current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
+
+        if self.dwt_config.active_config.shape_type.lower() == 'geberit':
+            x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
