@@ -306,5 +306,40 @@ class DrywallShapeDisplay(Widget):
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
 
-        if self.dwt_config.active_config.shape_type.lower() == 'geberit':
+        # Account for cutter size
+        cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        if self.dwt_config.active_config.toolpath_offset == 'inside':
+            tool_offset_value = -cutter_radius
+        elif self.dwt_config.active_config.toolpath_offset == 'outside':
+            tool_offset_value = cutter_radius
+        else:
+            tool_offset_value = 0
+
+        # Calculate shape's extent from datum using shape type and input dimensions
+        current_shape = self.dwt_config.active_config.shape_type.lower()
+        if current_shape == 'circle':
+            x_min = y_min = -(float(self.d_input.text or 0) / 2) - tool_offset_value
+            x_dim = y_dim = (float(self.d_input.text or 0) / 2) + tool_offset_value
+        elif current_shape in ['square', 'rectangle']:
+            x_min = y_min = -tool_offset_value
+            y_dim = float(self.y_input.text or 0) + tool_offset_value
+            # As square only uses y input it needs a separate condition
+            if current_shape == 'square':
+                x_dim = y_dim
+            elif current_shape == 'rectangle':
+                x_dim = float(self.x_input.text or 0) + tool_offset_value
+        elif current_shape == 'line':
+            x_min = y_min = 0
+            if "horizontal" in self.shape_dims_image.source:
+                x_dim = 0
+                y_dim = float(self.l_input.text or 0)
+            else:
+                x_dim = float(self.l_input.text or 0)
+                y_dim = 0
+        elif current_shape == 'geberit':
             x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
+
+        x_min_clearance = self.m.x_wco() + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
+        y_min_clearance = self.m.y_wco() + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
+        x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
+        y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
