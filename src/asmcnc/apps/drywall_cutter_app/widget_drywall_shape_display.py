@@ -16,6 +16,11 @@ Builder.load_string("""
     x_datum_label:x_datum_label
     y_datum_label:y_datum_label
 
+    bumper_bottom_image:bumper_bottom_image
+    bumper_left_image:bumper_left_image
+    bumper_right_image:bumper_right_image
+    bumper_top_image:bumper_top_image
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -363,7 +368,29 @@ class DrywallShapeDisplay(Widget):
         elif current_shape == 'geberit':
             x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
 
+        # Calculate shape's distances from every edge
         x_min_clearance = self.m.x_wco() + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
         y_min_clearance = self.m.y_wco() + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
         x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
         y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
+
+        # Set bumper colours based on whether anything crosses a boundary
+        if x_min_clearance < 0:
+            self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
+        else:
+            self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
+
+        if y_min_clearance < 0:
+            self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
+        else:
+            self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
+
+        if x_max_clearance < 0:
+            self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
+        else:
+            self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
+
+        if y_max_clearance < 0:
+            self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
+        else:
+            self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
