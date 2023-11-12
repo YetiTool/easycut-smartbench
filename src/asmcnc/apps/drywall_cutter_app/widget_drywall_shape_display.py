@@ -163,6 +163,30 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
+            Image:
+                id: bumper_bottom_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_left_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_right_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_top_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
 """)
 
 
