@@ -21,7 +21,8 @@ except Exception as e:
     print("Can't import mocking packages, are you on a dev machine?")
 
 """
-RUN WITH python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.py
+RUN WITH 
+python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.py
 FROM EASYCUT-SMARTBENCH DIR
 """
 
