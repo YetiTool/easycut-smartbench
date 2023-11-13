@@ -165,7 +165,7 @@ Builder.load_string("""
             Label:
                 id: x_datum_validation_label
                 font_size: dp(15)
-                size: dp(150), dp(40)
+                size: x_datum_label.size
                 size_hint: (None, None)
                 pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
                 color: 1,0,0,1
@@ -183,7 +183,7 @@ Builder.load_string("""
             Label:
                 id: y_datum_validation_label
                 font_size: dp(15)
-                size: dp(150), dp(40)
+                size: y_datum_label.size
                 size_hint: (None, None)
                 pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
                 color: 1,0,0,1
@@ -269,13 +269,13 @@ class DrywallShapeDisplay(Widget):
                     self.enable_input(self.r_input, (463, 311))
                     self.enable_input(self.x_input, (43, 175))
                     self.enable_input(self.y_input, (248, 327))
-                    self.place_widget(self.x_datum_label, (407, 35))
+                    self.place_widget(self.x_datum_label, (397, 35))
                     self.place_widget(self.y_datum_label, (416, 114))
                 else:
                     self.enable_input(self.r_input, (419, 333))
                     self.enable_input(self.x_input, (98, 155))
                     self.enable_input(self.y_input, (248, 331))
-                    self.place_widget(self.x_datum_label, (367, 10))
+                    self.place_widget(self.x_datum_label, (235, 20))
                     self.place_widget(self.y_datum_label, (395, 63))
         else:
             self.disable_input(self.r_input)
@@ -285,11 +285,11 @@ class DrywallShapeDisplay(Widget):
         if shape == 'line':
             if rotation == 'horizontal':
                 self.enable_input(self.l_input, (250, 228))
-                self.place_widget(self.x_datum_label, (424, 75))
+                self.place_widget(self.x_datum_label, (414, 75))
                 self.place_widget(self.y_datum_label, (425, 195))
             else:
                 self.enable_input(self.l_input, (178, 173))
-                self.place_widget(self.x_datum_label, (281, 3))
+                self.place_widget(self.x_datum_label, (270, 20))
                 self.place_widget(self.y_datum_label, (350, 56))
         else:
             self.disable_input(self.l_input)
@@ -401,28 +401,28 @@ class DrywallShapeDisplay(Widget):
         # Set bumper colours based on whether anything crosses a boundary, and show validation labels
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
-            self.x_datum_validation_label.text = 'MIN: ' + str(abs(x_min_clearance) + current_x)
+            self.x_datum_validation_label.text = 'MIN: ' + str(round(abs(x_min_clearance) + current_x, 2))
             self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
 
         if y_min_clearance < 0:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
-            self.y_datum_validation_label.text = 'MIN: ' + str(abs(y_min_clearance) + current_y)
+            self.y_datum_validation_label.text = 'MIN: ' + str(round(abs(y_min_clearance) + current_y, 2))
             self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
 
         if x_max_clearance < 0:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
-            self.x_datum_validation_label.text = 'MAX: ' + str(current_x - abs(x_max_clearance))
+            self.x_datum_validation_label.text = 'MAX: ' + str(round(current_x - abs(x_max_clearance), 2))
             self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
 
         if y_max_clearance < 0:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
-            self.y_datum_validation_label.text = 'MAX: ' + str(current_y - abs(y_max_clearance))
+            self.y_datum_validation_label.text = 'MAX: ' + str(round(current_y - abs(y_max_clearance), 2))
             self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
