@@ -357,6 +357,12 @@ class DrywallShapeDisplay(Widget):
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
 
+        if self.dwt_config.active_config.datum_position.x != current_x:
+            self.dwt_config.active_config.datum_position.x = current_x
+
+        if self.dwt_config.active_config.datum_position.y != current_y:
+            self.dwt_config.active_config.datum_position.y = current_y
+
         # Account for cutter size
         cutter_radius = self.dwt_config.active_cutter.diameter / 2
         if self.dwt_config.active_config.toolpath_offset == 'inside':
