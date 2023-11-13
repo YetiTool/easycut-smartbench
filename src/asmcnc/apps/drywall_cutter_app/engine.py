@@ -727,8 +727,7 @@ class GCodeEngine():
         
         if simulate:
             for line in cutting_lines:
-                self.m.s.write_command(line[:-1])  
-                print("Sending: {}".format(line[:-1]))
+                self.m.s.write_command(line)  
         else:
             # GCODE FILE STRUCTURE
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
