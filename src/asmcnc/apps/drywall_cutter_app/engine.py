@@ -727,7 +727,8 @@ class GCodeEngine():
         
         if simulate:
             for line in cutting_lines:
-                self.m.s.write_command(line)  
+                if "(" not in line:
+                    self.m.s.write_command(line)  
         else:
             # GCODE FILE STRUCTURE
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
