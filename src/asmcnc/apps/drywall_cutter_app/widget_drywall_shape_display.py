@@ -13,6 +13,12 @@ Builder.load_string("""
     r_input:r_input
     x_input:x_input
     y_input:y_input
+
+    d_input_validation_label:d_input_validation_label
+    l_input_validation_label:l_input_validation_label
+    r_input_validation_label:r_input_validation_label
+    x_input_validation_label:x_input_validation_label
+    y_input_validation_label:y_input_validation_label
     x_datum_label:x_datum_label
     x_datum_validation_label:x_datum_validation_label
     y_datum_label:y_datum_label
@@ -69,6 +75,16 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                id: d_input_validation_label
+                font_size: dp(15)
+                size: d_input.size
+                size_hint: (None, None)
+                pos: d_input.pos[0], d_input.pos[1] - dp(30)
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -89,6 +105,16 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                id: l_input_validation_label
+                font_size: dp(15)
+                size: l_input.size
+                size_hint: (None, None)
+                pos: l_input.pos[0], l_input.pos[1] - dp(30)
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -111,6 +137,16 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                id: r_input_validation_label
+                font_size: dp(15)
+                size: r_input.size
+                size_hint: (None, None)
+                pos: r_input.pos[0], r_input.pos[1] - dp(30)
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -132,6 +168,16 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                id: x_input_validation_label
+                font_size: dp(15)
+                size: x_input.size
+                size_hint: (None, None)
+                pos: x_input.pos[0], x_input.pos[1] - dp(30)
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -152,6 +198,16 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                id: y_input_validation_label
+                font_size: dp(15)
+                size: y_input.size
+                size_hint: (None, None)
+                pos: y_input.pos[0], y_input.pos[1] - dp(30)
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
 
             Label:
                 id: x_datum_label
@@ -351,7 +407,7 @@ class DrywallShapeDisplay(Widget):
             return False
 
     def check_datum_and_extents(self, dt):
-        # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
+        # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
         current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
         current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
@@ -432,3 +488,70 @@ class DrywallShapeDisplay(Widget):
             self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
+
+        x_machine_range = self.m.get_dollar_setting(130) - 2 * self.m.limit_switch_safety_distance
+        y_machine_range = self.m.get_dollar_setting(131) - 2 * self.m.limit_switch_safety_distance
+        clearance_between_limit_edge = 1
+        x_practical_range = x_machine_range - 2 * clearance_between_limit_edge
+        y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
+
+        # Now show a message if any dimensions are too big
+        d_limit = min(x_machine_range, y_machine_range)
+        if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
+            self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
+            self.d_input_validation_label.opacity = 1
+        else:
+            self.d_input_validation_label.opacity = 0
+
+        if current_shape in ['square', 'rectangle']:
+            x_limit = x_practical_range
+            y_limit = y_practical_range
+            r_limit = min(x_limit, y_limit) / 2
+            # Because square is limited by the smaller dimension
+            square_limit = min(x_limit, y_limit)
+
+            if current_shape == 'square':
+                self.x_input_validation_label.opacity = 0
+                if float(self.y_input.text or 0) > square_limit:
+                    self.y_input_validation_label.text = 'MAX: ' + str(square_limit)
+                    self.y_input_validation_label.opacity = 1
+                else:
+                    self.y_input_validation_label.opacity = 0
+            else:
+                if float(self.x_input.text or 0) > x_limit:
+                    self.x_input_validation_label.text = 'MAX: ' + str(x_limit)
+                    self.x_input_validation_label.opacity = 1
+                else:
+                    self.x_input_validation_label.opacity = 0
+
+                if float(self.y_input.text or 0) > y_limit:
+                    self.y_input_validation_label.text = 'MAX: ' + str(y_limit)
+                    self.y_input_validation_label.opacity = 1
+                else:
+                    self.y_input_validation_label.opacity = 0
+
+            if float(self.r_input.text or 0) > r_limit:
+                self.r_input_validation_label.text = 'MAX: ' + str(r_limit)
+                self.r_input_validation_label.opacity = 1
+            else:
+                self.r_input_validation_label.opacity = 0
+        else:
+            self.r_input_validation_label.opacity = 0
+            self.x_input_validation_label.opacity = 0
+            self.y_input_validation_label.opacity = 0
+
+        if current_shape == 'line':
+            if "horizontal" in self.shape_dims_image.source:
+                if float(self.l_input.text or 0) > y_practical_range:
+                    self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
+                    self.l_input_validation_label.opacity = 1
+                else:
+                    self.l_input_validation_label.opacity = 0
+            else:
+                if float(self.l_input.text or 0) > x_practical_range:
+                    self.l_input_validation_label.text = 'MAX: ' + str(x_practical_range)
+                    self.l_input_validation_label.opacity = 1
+                else:
+                    self.l_input_validation_label.opacity = 0
+        else:
+            self.l_input_validation_label.opacity = 0
