@@ -253,7 +253,7 @@ class GCodeEngine():
                 cutting_lines.append(gcode_instruction)
                 cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
             else:
-                gcode_instruction = "Simulation pass"
+                gcode_instruction = "(Simulation pass)"
                 cutting_lines.append(gcode_instruction)
                 cutting_lines.append("G1 Z%s F%s\n" % (depth, plungerate))
             # Cut the shape
