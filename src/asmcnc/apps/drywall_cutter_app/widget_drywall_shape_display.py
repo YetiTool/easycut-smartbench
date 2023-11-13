@@ -14,7 +14,9 @@ Builder.load_string("""
     x_input:x_input
     y_input:y_input
     x_datum_label:x_datum_label
+    x_datum_validation_label:x_datum_validation_label
     y_datum_label:y_datum_label
+    y_datum_validation_label:y_datum_validation_label
 
     bumper_bottom_image:bumper_bottom_image
     bumper_left_image:bumper_left_image
@@ -161,12 +163,32 @@ Builder.load_string("""
                 halign: 'left'
 
             Label:
+                id: x_datum_validation_label
+                font_size: dp(15)
+                size: dp(150), dp(40)
+                size_hint: (None, None)
+                pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
+                text: 'MAX: Test'
+                color: 1,0,0,1
+                halign: 'left'
+
+            Label:
                 id: y_datum_label
                 font_size: dp(25)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
                 color: 0,0,0,1
+
+            Label:
+                id: y_datum_validation_label
+                font_size: dp(15)
+                size: dp(150), dp(40)
+                size_hint: (None, None)
+                pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
+                text: 'MAX: Test'
+                color: 1,0,0,1
+                halign: 'left'
 
             Image:
                 id: bumper_bottom_image
