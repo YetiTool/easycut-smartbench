@@ -168,9 +168,9 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
-                text: 'MAX: Test'
                 color: 1,0,0,1
                 halign: 'left'
+                opacity: 0
 
             Label:
                 id: y_datum_label
@@ -186,9 +186,9 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
-                text: 'MAX: Test'
                 color: 1,0,0,1
                 halign: 'left'
+                opacity: 0
 
             Image:
                 id: bumper_bottom_image
@@ -396,23 +396,33 @@ class DrywallShapeDisplay(Widget):
         x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
         y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
 
-        # Set bumper colours based on whether anything crosses a boundary
+        self.x_datum_validation_label.opacity = 0
+        self.y_datum_validation_label.opacity = 0
+        # Set bumper colours based on whether anything crosses a boundary, and show validation labels
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
+            self.x_datum_validation_label.text = 'MIN: ' + str(abs(x_min_clearance) + current_x)
+            self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
 
         if y_min_clearance < 0:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
+            self.y_datum_validation_label.text = 'MIN: ' + str(abs(y_min_clearance) + current_y)
+            self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
 
         if x_max_clearance < 0:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
+            self.x_datum_validation_label.text = 'MAX: ' + str(current_x - abs(x_max_clearance))
+            self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
 
         if y_max_clearance < 0:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
+            self.y_datum_validation_label.text = 'MAX: ' + str(current_y - abs(y_max_clearance))
+            self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
