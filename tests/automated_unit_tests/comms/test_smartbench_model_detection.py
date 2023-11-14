@@ -39,6 +39,10 @@ def m():
 def test_initial_failure(m):
     assert(m.smartbench_model() == "SmartBench model detection failed")
 
+def test_drywalltec_machine(m):
+    m.bench_is_dwt = Mock(return_value=True)
+    assert(m.smartbench_model() == "DRYWALLTEC SmartCNC")
+
 def test_mini_v1_3_precision_pro(m):
     m.grbl_y_max_travel = 1500
     m.s.hw_version = 32
