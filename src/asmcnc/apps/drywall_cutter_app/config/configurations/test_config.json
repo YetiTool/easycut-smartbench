@@ -1,6 +1,7 @@
 {
   "shape_type": "rectangle",
   "units": "mm",
+  "rotation": "horizontal",
   "canvas_shape_dims": {
     "x": 10,
     "y": 20,
