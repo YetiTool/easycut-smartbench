@@ -384,18 +384,24 @@ class CuttingDepthsPopup(Popup):
             self.confirm_button.opacity = 1
 
     def generate_pass_depth_lines(self, number_of_passes):
+        total_cut_depth = round((float(self.total_cut_depth.text) / Window.height) * 5, 4)
+        singular_cut = 0 if self.depth_per_pass.text == "" else round((float(self.depth_per_pass.text) / Window.height) * 5, 4)
         for pass_line in self.pass_depth_lines:
             self.float_layout.remove_widget(pass_line)
+        if self.total_cut_depth.text != "0.0":
+            for i in range(0, int(number_of_passes)):
+                img = Image()
 
-        # for i in range(0, int(number_of_passes)):
-        #     print(i)
-    # Image:
-    #     id: pass_depths_graphic
-    #     source: "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
-    #     pos_hint: {'center_x': 0.45}
-    #     y: self.parent.y
-    #     size: self.parent.size
-    #     allow_stretch: True
+                self.float_layout.add_widget(img)
+
+                img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
+                line_depth = 0.0825 - (singular_cut * (i+1))
+                if line_depth < (0.0825 - total_cut_depth):
+                    line_depth = 0.0825 - total_cut_depth
+                img.pos_hint = {'center_x': 0.45, 'y': line_depth}
+                img.allow_stretch = True
+
+                self.pass_depth_lines.append(img)
 
     def calculate_depth_per_pass(self, instance, value):
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
@@ -403,7 +409,7 @@ class CuttingDepthsPopup(Popup):
             try:
                 number_of_passes = math.ceil(float(self.total_cut_depth.text) / max_cut_depth_per_pass)
 
-                depth_per_pass = float(self.total_cut_depth.text) / number_of_passes
+                depth_per_pass = 0 if number_of_passes == 0 else float(self.total_cut_depth.text) / number_of_passes
                 if depth_per_pass > max_cut_depth_per_pass:
                     self.depth_per_pass.text = str(max_cut_depth_per_pass)
                 else:
@@ -424,7 +430,7 @@ class CuttingDepthsPopup(Popup):
                 else:
                     self.float_layout.remove_widget(self.pass_depth_warning)
                     self.disable_confirm_button()
-                number_of_passes = math.ceil(float(self.total_cut_depth.text) / depth_per_pass)
+                number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.total_cut_depth.text) / depth_per_pass)
                 self.generate_pass_depth_lines(number_of_passes)
             except:
                 pass
