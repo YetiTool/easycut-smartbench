@@ -106,6 +106,8 @@ Cmport = 'COM3'
 initial_version = 'v2.7.0'
 
 config_flag = False
+
+profiler = cProfile.Profile()
         
 def check_and_update_config():
 
@@ -158,8 +160,7 @@ class SkavaUI(App):
 
     def build(self):
 
-        self.profiler = cProfile.Profile()
-        self.profiler.enable()
+        profiler.enable()
 
         log("Starting App:")
 
@@ -312,11 +313,15 @@ class SkavaUI(App):
         return sm
 
     def on_exit(self):
-        self.profiler.disable()
-        self.profiler.dump_stats('profiling_stats.txt')
+        profiler.disable()
+        profiler.dump_stats('profiling_stats.txt')
 
 
 if __name__ == '__main__':
+    try:
+        SkavaUI().run()
+    except KeyboardInterrupt:
+        profiler.disable()
+        profiler.dump_stats('profiling_stats.txt')
 
-    SkavaUI().run()
     
