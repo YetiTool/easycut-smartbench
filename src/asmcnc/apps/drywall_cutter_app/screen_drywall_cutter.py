@@ -12,11 +12,11 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
-    tool_selection:tool_selection
     shape_display_container:shape_display_container
     shape_selection:shape_selection
     cut_offset_selection:cut_offset_selection
     rotate_button:rotate_button
+    tool_selection:tool_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -131,7 +131,7 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config)

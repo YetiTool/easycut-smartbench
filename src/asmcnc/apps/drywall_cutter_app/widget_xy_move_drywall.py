@@ -1,11 +1,18 @@
+import sys, textwrap
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <XYMoveDrywall>
     jogModeButtonImage:jogModeButtonImage
     speed_toggle:speed_toggle
     speed_image:speed_image
+    go_to_datum_button_image:go_to_datum_button_image
+    go_to_datum_button_overlay:go_to_datum_button_overlay
     
     BoxLayout:
     
@@ -25,7 +32,23 @@ Builder.load_string("""
                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos
-                Button             
+                Button:
+                    background_color: hex('#F4433600')
+                    on_release:
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.go_to_datum()
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: go_to_datum_button_image
+                            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
             
             Button:
                 background_color: hex('#F4433600')
@@ -45,12 +68,28 @@ Builder.load_string("""
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True                                    
+                        allow_stretch: True
+    
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                Button
+                pos: self.parent.pos
+                Button:
+                    background_color: hex('#F4433600')
+                    on_release:
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.set_datum()
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/drywall_cutter_app/img/set_datum.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
                             
             Button:
                 background_color: hex('#F4433600')
@@ -109,7 +148,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             BoxLayout:
-                padding: 10
+                padding: 15
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -137,20 +176,20 @@ Builder.load_string("""
                     print('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
-                on_press: 
+                on_press:
                     print('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
-                    pos: self.parent.pos      
+                    pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True                                    
+                        allow_stretch: True
             BoxLayout:
                 padding: 10
                 size: self.parent.size
@@ -169,6 +208,17 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
+
+    FloatLayout:
+        Image:
+            id: go_to_datum_button_overlay
+            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum_pulse.png"
+            pos: go_to_datum_button_image.pos
+            size: go_to_datum_button_image.size
+            allow_stretch: True
+            size_hint: (None, None)
+            opacity: 0
+
 """)
 
 
@@ -179,8 +229,11 @@ class XYMoveDrywall(Widget):
         super(XYMoveDrywall, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
         self.set_jog_speeds()
+
+        Clock.schedule_interval(self.check_zh_at_datum, 0.04)
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -266,3 +319,38 @@ class XYMoveDrywall(Widget):
 
     def probe_z(self):
         self.m.probe_z()
+
+    def go_to_datum(self):
+        if self.m.is_machine_homed == False and sys.platform != 'win32':
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
+        else:
+            self.m.go_xy_datum()
+
+    def check_zh_at_datum(self, dt):
+        # wpos == 0,0 when zh is at datum
+        if not (round(self.m.wpos_x(), 2) == 0 and round(self.m.wpos_y(), 2) == 0):
+            # Pulse overlay by smoothly alternating between 0 and 1 opacity
+            # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
+            if self.go_to_datum_button_overlay.opacity <= 0:
+                self.go_to_datum_button_overlay.opacity = 0.01
+            elif self.go_to_datum_button_overlay.opacity >= 1:
+                self.go_to_datum_button_overlay.opacity = 0.98
+            # Check if second decimal place is even or odd
+            elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
+                self.go_to_datum_button_overlay.opacity += 0.1
+            else:
+                self.go_to_datum_button_overlay.opacity -= 0.1
+        else:
+            self.go_to_datum_button_overlay.opacity = 0
+
+    def set_datum(self):
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd
