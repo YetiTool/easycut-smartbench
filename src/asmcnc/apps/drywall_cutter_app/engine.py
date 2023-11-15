@@ -745,25 +745,16 @@ class GCodeEngine():
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
         
         if simulate:
-            file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
-            if self.config.active_config.shape_type in file_structure_1_shapes:
-                output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
-                    output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
-            else:
-                output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
-
-            with open(output_file, 'w+') as out_file:
-                out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
-                print("%s written" % output_file) 
+            self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
         else:
-            # GCODE FILE STRUCTURE
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
+           
             if self.config.active_config.shape_type in file_structure_1_shapes:
                 output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                     output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
-                output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
+                output = ''.join(cutting_lines)
 
             with open(output_file, 'w+') as out_file:
-                out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
+                out_file.write(output.decode('utf-8'))
                 print("%s written" % output_file)
