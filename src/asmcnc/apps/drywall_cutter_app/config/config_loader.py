@@ -1,6 +1,7 @@
 import json
 import os
 import config_classes
+import inspect
 
 configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
@@ -11,8 +12,10 @@ DEBUG_MODE = True
 def debug_decorator(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
-            print('Calling function: ' + func.__name__ + ' with args: ' + str(args[-1:]) + ' and kwargs: ' + str(kwargs))
+            print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
+                kwargs))
         return func(*args, **kwargs)
+
     return wrapper
 
 
@@ -28,6 +31,93 @@ class DWTConfig(object):
             self.active_config = config_classes.Configuration.default()
             self.active_cutter = self.load_cutter(self.active_config.cutter_type)
 
+    @staticmethod
+    @debug_decorator
+    def is_valid_configuration(config_name):
+        # type (str) -> bool
+        """
+        Checks if a configuration file is valid/complete.
+
+        :param config_name: The name of the configuration file to check.
+        :return: True if the configuration file is valid/complete, otherwise False.
+        """
+
+        file_path = os.path.join(configurations_dir, config_name)
+
+        if not os.path.exists(file_path):
+            return False
+
+        with open(file_path, 'r') as f:
+            cfg = json.load(f)
+
+        field_count = len(cfg)
+
+        valid_field_count = len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+
+        if field_count != valid_field_count:
+            return False
+
+        return True
+
+    @staticmethod
+    @debug_decorator
+    def get_missing_fields(config_name):
+        # type (str) -> list[str]
+        """
+        Gets the fields that are missing from a configuration file.
+
+        :param config_name: The name of the configuration file to check.
+        :return: A list of the fields that are missing from the configuration file.
+        """
+
+        file_path = os.path.join(configurations_dir, config_name)
+
+        if not os.path.exists(file_path):
+            return []
+
+        with open(file_path, 'r') as f:
+            cfg = json.load(f)
+
+        valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
+
+        missing_fields = []
+
+        for field_name in valid_field_names:
+            if field_name not in cfg:
+                missing_fields.append(field_name)
+
+        return missing_fields
+
+    @staticmethod
+    @debug_decorator
+    def fix_config(config_name):
+        # type (str) -> bool
+        """
+        Fixes a configuration file by adding any missing fields.
+
+        :param config_name: The name of the configuration file to fix.
+        :return: True if the configuration file was fixed, otherwise False.
+        """
+
+        file_path = os.path.join(configurations_dir, config_name)
+
+        if not os.path.exists(file_path):
+            return False
+
+        with open(file_path, 'r') as f:
+            cfg = json.load(f)
+
+        valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
+
+        for field_name in valid_field_names:
+            if field_name not in cfg:
+                cfg[field_name] = getattr(config_classes.Configuration.default(), field_name)
+
+        with open(file_path, 'w') as f:
+            json.dump(cfg, f, indent=4, default=lambda o: o.__dict__)
+
+        return True
+
     @debug_decorator
     def load_config(self, config_name):
         # type (str) -> None
@@ -40,6 +130,11 @@ class DWTConfig(object):
 
         if not os.path.exists(file_path):
             raise Exception('Configuration file does not exist. ' + file_path + ' ' + os.getcwd())
+
+        if not self.is_valid_configuration(config_name):
+            if not self.fix_config(config_name):
+                self.active_config = config_classes.Configuration.default()
+                self.save_temp_config()
 
         with open(file_path, 'r') as f:
             self.active_config = config_classes.Configuration(**json.load(f))
@@ -129,4 +224,3 @@ class DWTConfig(object):
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             setattr(self.active_config, parameter_name, parameter_value)
-
