@@ -745,12 +745,12 @@ class GCodeEngine():
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
         
         if simulate:
-            self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
+            self.m.s.run_skeleton_buffer_stuffer(["G90"].append(cutting_lines[1:]))
         else:
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
            
             if self.config.active_config.shape_type in file_structure_1_shapes:
-                output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
+                output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                     output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
                 output = ''.join(cutting_lines)
