@@ -97,6 +97,8 @@ from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
 from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 
+import cProfile
+
 # developer testing
 Cmport = 'COM3'
 
@@ -155,6 +157,9 @@ class SkavaUI(App):
     height = Window.height
 
     def build(self):
+
+        self.profiler = cProfile.Profile()
+        self.profiler.enable()
 
         log("Starting App:")
 
@@ -305,6 +310,11 @@ class SkavaUI(App):
 
         ## -----------------------------------------------------------------------------------
         return sm
+
+    def on_exit(self):
+        self.profiler.disable()
+        self.profiler.dump_stats('profiling_stats.txt')
+
 
 if __name__ == '__main__':
 
