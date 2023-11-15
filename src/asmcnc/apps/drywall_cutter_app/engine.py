@@ -240,10 +240,10 @@ class GCodeEngine():
 
         # Time to make some gcode :)
         if clockwise_cutting:
-            arc_instruction = u"G2"
+            arc_instruction = "G2"
         else:
             final_coordinates = self.correct_orientation(final_coordinates, True)
-            arc_instruction = u"G3"
+            arc_instruction = "G3"
 
         cutting_lines = []
 
@@ -280,7 +280,7 @@ class GCodeEngine():
         # Correct gcode order
         cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"pass")
         # Speed up first XY move
-        cutting_lines = self.replace_after_keyword(cutting_lines, u"pass", u"G0")
+        cutting_lines = self.replace_after_keyword(cutting_lines, u"pass", "G0")
 
         return cutting_lines
     
@@ -745,7 +745,8 @@ class GCodeEngine():
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
         
         if simulate:
-            self.m.s.run_skeleton_buffer_stuffer(cutting_lines.insert(0, "G90"))
+            cutting_lines = cutting_lines.insert(0, "G90")
+            self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
         else:
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
            
