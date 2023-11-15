@@ -314,7 +314,10 @@ class CuttingDepthsPopup(Popup):
         for text_input in self.text_inputs:
             text_input.focus = False
             if text_input.text != '':
-                text_input.text = str(float(text_input.text))
+                try:
+                    text_input.text = str(float(text_input.text))
+                except:
+                    pass
             # else:
             #     text_input.text = str(float(0))
 
@@ -330,7 +333,11 @@ class CuttingDepthsPopup(Popup):
 
     def update_graphic_position(self):
         try:
-            cutter_y = 0.225 - round((float(self.total_cut_depth.text) / Window.height) * 5, 3)
+            bottom_offset = 0 if self.bottom_offset.text == '' else float(self.bottom_offset.text)
+            material_thickness = 0 if self.material_thickness.text == '' else float(self.material_thickness.text)
+            cutter_y = -0.035 - round((bottom_offset / Window.height) * 5, 3)
+            # x = (material_thickness - bottom_offset)
+            # cutter_y = -0.035 - round(0.26 * (1 - x), 3)
             self.cutter_graphic.pos_hint['y'] = cutter_y
             self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
             self.float_layout.do_layout()
@@ -343,7 +350,6 @@ class CuttingDepthsPopup(Popup):
         # Calculate total cut depth and handle inputs
         if instance == self.material_thickness or instance == self.bottom_offset:
             try:
-
                 # Update warning label text
                 if soft_limit_total_cut_depth < cutter_max_depth_total:
                     max_cut_depth = soft_limit_total_cut_depth
@@ -357,13 +363,19 @@ class CuttingDepthsPopup(Popup):
                 material_thickness = 0 if self.material_thickness.text == '' else float(self.material_thickness.text)
                 bottom_offset = 0 if self.bottom_offset.text == '' else float(self.bottom_offset.text)
 
+                if material_thickness < 0:
+                    self.material_thickness.text = '0'
+                    material_thickness = 0
+
                 # Make sure bottom offset is never bigger than material thickness
-                if bottom_offset > material_thickness:
-                    self.bottom_offset.text = self.material_thickness.text
+                if abs(bottom_offset) > material_thickness:
+                    if bottom_offset < 0:
+                        self.bottom_offset.text = '-' + self.material_thickness.text
+                        bottom_offset = -material_thickness
 
                 self.total_cut_depth.text = str(material_thickness + bottom_offset)
-                self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
                 self.update_graphic_position()
+                self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
 
                 if float(self.total_cut_depth.text) > max_cut_depth:
                     self.float_layout.add_widget(self.cut_depth_warning)
@@ -384,8 +396,10 @@ class CuttingDepthsPopup(Popup):
             self.confirm_button.opacity = 1
 
     def generate_pass_depth_lines(self, number_of_passes):
-        total_cut_depth = round((float(self.total_cut_depth.text) / Window.height) * 5, 4)
-        singular_cut = 0 if self.depth_per_pass.text == "" else round((float(self.depth_per_pass.text) / Window.height) * 5, 4)
+        upper_limit = 0.0825
+        lower_limit = -0.175 - (-0.035 - self.cutter_graphic.pos_hint['y'])
+        line_range = upper_limit - lower_limit
+        singular_cut = 0 if self.depth_per_pass.text == "" else round(line_range / (float(number_of_passes)), 4)
         for pass_line in self.pass_depth_lines:
             self.float_layout.remove_widget(pass_line)
         if self.total_cut_depth.text != "0.0":
@@ -395,9 +409,9 @@ class CuttingDepthsPopup(Popup):
                 self.float_layout.add_widget(img)
 
                 img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
-                line_depth = 0.0825 - (singular_cut * (i+1))
-                if line_depth < (0.0825 - total_cut_depth):
-                    line_depth = 0.0825 - total_cut_depth
+                line_depth = upper_limit - (singular_cut * (i+1))
+                if line_depth < lower_limit:
+                    line_depth = lower_limit
                 img.pos_hint = {'center_x': 0.45, 'y': line_depth}
                 img.allow_stretch = True
 
@@ -414,7 +428,10 @@ class CuttingDepthsPopup(Popup):
                     self.depth_per_pass.text = str(max_cut_depth_per_pass)
                 else:
                     self.depth_per_pass.text = str(round(depth_per_pass, 1))
-                if self.pass_depth_warning in self.float_layout.children:
+
+                if depth_per_pass == 0:
+                    self.float_layout.add_widget(self.pass_depth_warning)
+                elif self.pass_depth_warning in self.float_layout.children:
                     self.float_layout.remove_widget(self.pass_depth_warning)
                 self.disable_confirm_button()
                 self.generate_pass_depth_lines(number_of_passes)
