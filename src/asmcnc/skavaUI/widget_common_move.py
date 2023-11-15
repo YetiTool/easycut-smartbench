@@ -1,18 +1,16 @@
-'''
+"""
 Created on 1 Feb 2018
 @author: Ed
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <CommonMove>
@@ -28,7 +26,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing: 20
+        spacing:0.0416666666667*app.height
         
         orientation: "vertical"
         
@@ -45,11 +43,12 @@ Builder.load_string("""
                     pos: self.pos 
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -73,11 +72,12 @@ Builder.load_string("""
                     pos: self.pos 
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: vacuum_toggle
                 on_press: root.set_vacuum()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -90,11 +90,12 @@ Builder.load_string("""
 
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: spindle_toggle
                 on_press: root.set_spindle()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -107,46 +108,45 @@ Builder.load_string("""
         
          
         
-""")
-    
+"""
+    )
+
 
 class CommonMove(Widget):
 
     def __init__(self, **kwargs):
         super(CommonMove, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
-        
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
-            
+
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
-            self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
+        if self.speed_toggle.state == 'normal':
+            self.speed_image.source = './asmcnc/skavaUI/img/slow.png'
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
-        else: 
-            self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
+        else:
+            self.speed_image.source = './asmcnc/skavaUI/img/fast.png'
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
 
     def set_vacuum(self):
-        if self.vacuum_toggle.state == 'normal': 
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
+        if self.vacuum_toggle.state == 'normal':
+            self.vacuum_image.source = './asmcnc/skavaUI/img/vac_off.png'
             self.m.vac_off()
-        else: 
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
+        else:
+            self.vacuum_image.source = './asmcnc/skavaUI/img/vac_on.png'
             self.m.vac_on()
-    
-    def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
-        else: 
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
 
+    def set_spindle(self):
+        if self.spindle_toggle.state == 'normal':
+            self.spindle_image.source = './asmcnc/skavaUI/img/spindle_off.png'
+            self.m.spindle_off()
+        else:
+            self.spindle_image.source = './asmcnc/skavaUI/img/spindle_on.png'
+            self.m.spindle_on()

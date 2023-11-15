@@ -1,12 +1,11 @@
 import sys
-
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCConnecting>:
 
 
@@ -21,8 +20,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding:[dp(0.0875)*app.width, dp(0.145833333333)*app.height]
+        spacing:0.145833333333*app.height
         size_hint_x: 1
 
         BoxLayout:
@@ -34,57 +33,60 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.5
                 markup: True
-                font_size: '40sp'   
+                font_size: str(0.05*app.width) + 'sp'   
                 valign: 'middle'
                 halign: 'center'    
     
 
-""")
+"""
+    )
+
 
 def log(message):
     timestamp = datetime.now()
-    print ('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print 'Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
+        ] + ' ' + str(message)
+
 
 class ZHeadQCConnecting(Screen):
 
     def __init__(self, **kwargs):
-
         super(ZHeadQCConnecting, self).__init__(**kwargs)
-
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.usb = kwargs['usb']
-        self.connecting_label.text = "Connecting to Z Head..."
+        self.connecting_label.text = 'Connecting to Z Head...'
         self.z_current = 25
         self.x_current = 26
 
     def on_enter(self):
-        self.connecting_label.text = "Connecting to Z Head..."
+        self.connecting_label.text = 'Connecting to Z Head...'
         self.ensure_hw_version_and_registers_are_loaded_in()
-        if sys.platform == 'win32' or sys.platform == 'darwin': self.progress_to_next_screen()
-    
+        if sys.platform == 'win32' or sys.platform == 'darwin':
+            self.progress_to_next_screen()
+
     def ensure_hw_version_and_registers_are_loaded_in(self):
-
         if not self.m.s.fw_version:
-            log("Waiting to get FW version")
-            self.connecting_label.text = "Waiting to get FW version"
-            Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 0.5)
+            log('Waiting to get FW version')
+            self.connecting_label.text = 'Waiting to get FW version'
+            Clock.schedule_once(lambda dt: self.
+                ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
-
-        if not self.m.TMC_registers_have_been_read_in() and (self.m.s.fw_version).startswith("2"):
-            log("Waiting to get TMC registers")
-            self.connecting_label.text = "Waiting to get TMC registers"
-            Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
+        if not self.m.TMC_registers_have_been_read_in(
+            ) and self.m.s.fw_version.startswith('2'):
+            log('Waiting to get TMC registers')
+            self.connecting_label.text = 'Waiting to get TMC registers'
+            Clock.schedule_once(lambda dt: self.
+                ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
-
         if not self.usb.is_available():
-            log("Getting USB")
-            self.connecting_label.text = "Getting USB"
-            Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
+            log('Getting USB')
+            self.connecting_label.text = 'Getting USB'
+            Clock.schedule_once(lambda dt: self.
+                ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
-
         self.progress_to_next_screen()
 
     def progress_to_next_screen(self):
-        log("Progress to next screen")
+        log('Progress to next screen')
         self.sm.current = 'qcpcbsetup'
