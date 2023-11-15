@@ -144,6 +144,8 @@ class DrywallCutterScreen(Screen):
 
         self.shape_selection.text = 'circle'
 
+        ##
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
