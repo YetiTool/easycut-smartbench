@@ -1474,8 +1474,15 @@ class RouterMachine(object):
         except: return 0
         else: return self.s.fw_version
 
+    dwt_path =  "../../dwt.txt"
+
+    def bench_is_dwt(self):
+        return path.isfile(self.dwt_path)
+
     def smartbench_model(self):
-        if self.bench_is_short():
+        if self.bench_is_dwt():
+            return "DRYWALLTEC SmartCNC"
+        elif self.bench_is_short():
             return "SmartBench Mini V1.3 PrecisionPro"
         elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
             return "SmartBench V1.3 PrecisionPro CNC Router"
