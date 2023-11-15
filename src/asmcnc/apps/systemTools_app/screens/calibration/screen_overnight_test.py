@@ -351,7 +351,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(0.01875 * app.width) + 'sp' 
                             text: 'Y1+:  '
                             halign: 'right'
                             markup: True
