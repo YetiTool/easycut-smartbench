@@ -55,7 +55,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: dp(10)
         orientation: "vertical"
 
         BoxLayout:
@@ -81,8 +81,8 @@ Builder.load_string("""
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding: 20
-                            spacing: 20
+                            padding: dp(20)
+                            spacing: dp(20)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -101,8 +101,8 @@ Builder.load_string("""
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 20
-                            spacing: 20
+                            padding: dp(20)
+                            spacing: dp(20)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -142,8 +142,8 @@ Builder.load_string("""
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding: dp(20)
+                            spacing: dp(20)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -153,7 +153,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding: 10
+                                padding: dp(10)
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -174,8 +174,8 @@ Builder.load_string("""
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding: dp(20)
+                            spacing: dp(20)
                             id: job_container
                             canvas:
                                 Color:
@@ -186,8 +186,8 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding: 10
-                                spacing: 10
+                                padding: dp(10)
+                                spacing: dp(10)
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -242,7 +242,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding: 20
+                                padding: dp(20)
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
