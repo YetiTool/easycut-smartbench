@@ -122,6 +122,7 @@ def log(message):
 class DrywallCutterScreen(Screen):
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
+    rotation = 'horizontal'
     dwt_config = config_loader.DWTConfig()
     tool_options = config_loader.DWTConfig().get_available_cutter_names()
 
