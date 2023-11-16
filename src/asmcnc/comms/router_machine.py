@@ -107,6 +107,8 @@ class RouterMachine(object):
     is_laser_on = False
     is_laser_enabled = False
 
+    laser_offset_tool_clearance_to_access_edge_of_sheet = 5
+
     ## STYLUS SETTINGS
     is_stylus_enabled = True
     stylus_router_choice = 'router'
@@ -1746,6 +1748,11 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+ 
+    def go_xy_datum(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X0 Y0')
 
     def jog_spindle_to_laser_datum(self, axis):
 
