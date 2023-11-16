@@ -426,7 +426,7 @@ Builder.load_string(
 
     FloatLayout:
         size_hint: (None,None)
-        pos_hint: {'top': 1, 'right': 1}
+        pos_hint: root.get_pos_hint()
         Button:
             font_size: str(0.01875 * app.width) + 'sp'
             size_hint: (None,None)
