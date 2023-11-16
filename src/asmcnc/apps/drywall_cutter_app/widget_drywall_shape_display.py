@@ -177,11 +177,11 @@ class DrywallShapeDisplay(Widget):
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
 
-        self.d_input.bind(text=self.d_input_change)
-        self.l_input.bind(text=self.l_input_change)
-        self.r_input.bind(text=self.r_input_change)
-        self.x_input.bind(text=self.x_input_change)
-        self.y_input.bind(text=self.y_input_change)
+        self.d_input.bind(text=self.d_input_change) # Diameter of circle
+        self.l_input.bind(text=self.l_input_change) # Length of line
+        self.r_input.bind(text=self.r_input_change) # Radius of corners
+        self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
+        self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
         Clock.schedule_interval(self.poll_position, 0.1)
 
