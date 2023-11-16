@@ -424,7 +424,7 @@ Builder.load_string(
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(710), dp(390))
+        pos: (dp(710/800)*app.width, dp(390/480)*app.height)
         Button:
             font_size: str(0.01875 * app.width) + 'sp'
             size_hint: (None,None)
