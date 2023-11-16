@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -133,7 +134,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BrushLifeWidget(Widget):
@@ -141,21 +142,20 @@ class BrushLifeWidget(Widget):
 
     def __init__(self, **kwargs):
         super(BrushLifeWidget, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def restore(self):
-        self.brush_life.text = str(int(self.m.
-            spindle_brush_lifetime_seconds / 3600))
+        self.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds / 3600))
 
     def reset_to_120(self):
-        self.brush_life.text = '120'
+        self.brush_life.text = "120"
 
     def update_strings(self):
-        self.brush_reminder_label.text = self.l.get_bold('BRUSH REMINDER')
-        self.hours_label.text = self.l.get_str('hours')
+        self.brush_reminder_label.text = self.l.get_bold("BRUSH REMINDER")
+        self.hours_label.text = self.l.get_str("hours")
         self.update_font_size(self.brush_reminder_label)
 
     def update_font_size(self, value):

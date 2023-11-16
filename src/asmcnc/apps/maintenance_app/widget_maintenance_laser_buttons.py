@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -139,16 +140,15 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class LaserDatumButtons(Widget):
-
     def __init__(self, **kwargs):
         super(LaserDatumButtons, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
 
     def reset_button_press(self):
         popup_maintenance.PopupResetOffset(self.sm, self.l)
@@ -157,60 +157,77 @@ class LaserDatumButtons(Widget):
         if self.m.is_laser_enabled == True:
             popup_maintenance.PopupSaveOffset(self.sm, self.l)
         else:
-            warning_message = self.l.get_str(
-                'Could not save laser crosshair offset!'
-                ) + '\n\n' + self.l.get_str(
-                'You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help).'
-                ).replace('(i)', '[b](i)[/b]') + '\n\n' + self.l.get_str(
-                'Please enable laser to set offset.')
+            warning_message = (
+                self.l.get_str("Could not save laser crosshair offset!")
+                + "\n\n"
+                + self.l.get_str(
+                    "You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help)."
+                ).replace("(i)", "[b](i)[/b]")
+                + "\n\n"
+                + self.l.get_str("Please enable laser to set offset.")
+            )
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def reset_laser_offset(self):
-        self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_x = self.m.mpos_x()
-        self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_y = self.m.mpos_y()
+        self.sm.get_screen(
+            "maintenance"
+        ).laser_datum_reset_coordinate_x = self.m.mpos_x()
+        self.sm.get_screen(
+            "maintenance"
+        ).laser_datum_reset_coordinate_y = self.m.mpos_y()
         self.save_button_image.source = (
-            './asmcnc/apps/maintenance_app/img/save_button_132.png')
+            "./asmcnc/apps/maintenance_app/img/save_button_132.png"
+        )
         self.save_button.disabled = False
 
     def save_laser_offset(self):
-        self.m.laser_offset_x_value = self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_x - self.m.mpos_x()
-        self.m.laser_offset_y_value = self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_y - self.m.mpos_y()
-        if self.m.write_z_head_laser_offset_values('True', self.m.
-            laser_offset_x_value, self.m.laser_offset_y_value):
-            saved_success = self.l.get_str('Settings saved!')
+        self.m.laser_offset_x_value = (
+            self.sm.get_screen("maintenance").laser_datum_reset_coordinate_x
+            - self.m.mpos_x()
+        )
+        self.m.laser_offset_y_value = (
+            self.sm.get_screen("maintenance").laser_datum_reset_coordinate_y
+            - self.m.mpos_y()
+        )
+        if self.m.write_z_head_laser_offset_values(
+            "True", self.m.laser_offset_x_value, self.m.laser_offset_y_value
+        ):
+            saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
             self.save_button_image.source = (
-                './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png'
-                )
+                "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+            )
             self.save_button.disabled = True
         else:
-            warning_message = self.l.get_str(
-                'There was a problem saving your settings.'
-                ) + '\n\n' + self.l.get_str(
-                'Please check your settings and try again, or if the problem persists please contact the YetiTool support team.'
+            warning_message = (
+                self.l.get_str("There was a problem saving your settings.")
+                + "\n\n"
+                + self.l.get_str(
+                    "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
+            )
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def set_vacuum(self):
-        if self.vacuum_toggle.state == 'normal':
+        if self.vacuum_toggle.state == "normal":
             self.vacuum_image.source = (
-                './asmcnc/apps/maintenance_app/img/extractor_off_120.png')
+                "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
+            )
             self.m.vac_off()
         else:
             self.vacuum_image.source = (
-                './asmcnc/apps/maintenance_app/img/extractor_on_120.png')
+                "./asmcnc/apps/maintenance_app/img/extractor_on_120.png"
+            )
             self.m.vac_on()
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal':
+        if self.spindle_toggle.state == "normal":
             self.spindle_image.source = (
-                './asmcnc/apps/maintenance_app/img/spindle_off_120.png')
+                "./asmcnc/apps/maintenance_app/img/spindle_off_120.png"
+            )
             self.m.spindle_off()
         else:
             self.spindle_image.source = (
-                './asmcnc/apps/maintenance_app/img/spindle_on_120.png')
+                "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
+            )
             self.m.spindle_on()

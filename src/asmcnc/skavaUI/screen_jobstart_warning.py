@@ -8,6 +8,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
+
 Builder.load_string(
     """
 
@@ -198,7 +199,7 @@ Builder.load_string(
                   
 
 """
-    )
+)
 
 
 class RoundedButton(Button):
@@ -206,33 +207,37 @@ class RoundedButton(Button):
 
 
 class JobstartWarningScreen(Screen):
-
     def __init__(self, **kwargs):
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def continue_to_go_screen(self):
         self.m.spindle_health_check_failed = False
         self.m.spindle_health_check_passed = False
         self.m.s.yp.set_adjusting_spindle_speed(False)
-        self.sm.current = 'go'
+        self.sm.current = "go"
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str('Safety Warning')
-        self.risk_of_fire.text = self.l.get_str('Risk of fire')
-        self.causes_of_fire.text = self.l.get_str('Common causes of fire'
-            ) + ':\n- ' + self.l.get_str(
-            'Processing combustible materials, e.g. woods'
-            ) + '\n- ' + self.l.get_str(
-            'Using dull cutters which produce heat through friction'
-            ) + '\n- ' + self.l.get_str('Variation in extraction') + '\n'
+        self.header_label.text = self.l.get_str("Safety Warning")
+        self.risk_of_fire.text = self.l.get_str("Risk of fire")
+        self.causes_of_fire.text = (
+            self.l.get_str("Common causes of fire")
+            + ":\n- "
+            + self.l.get_str("Processing combustible materials, e.g. woods")
+            + "\n- "
+            + self.l.get_str("Using dull cutters which produce heat through friction")
+            + "\n- "
+            + self.l.get_str("Variation in extraction")
+            + "\n"
+        )
         self.never_unattended.text = self.l.get_bold(
-            'Never leave CNC machines unattended')
-        self.scan_label.text = self.l.get_bold('SCAN ME')
-        self.confirm_button.text = self.l.get_str('I understand')
+            "Never leave CNC machines unattended"
+        )
+        self.scan_label.text = self.l.get_bold("SCAN ME")
+        self.confirm_button.text = self.l.get_str("I understand")
         self.update_font_size(self.scan_label)
 
     def update_font_size(self, value):

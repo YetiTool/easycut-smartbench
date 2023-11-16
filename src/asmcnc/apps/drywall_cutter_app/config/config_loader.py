@@ -2,8 +2,8 @@ import json
 import os
 import config_classes
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+configurations_dir = "asmcnc/apps/drywall_cutter_app/config/configurations"
+cutters_dir = "asmcnc/apps/drywall_cutter_app/config/cutters"
 
 DEBUG_MODE = True
 
@@ -11,8 +11,16 @@ DEBUG_MODE = True
 def debug_decorator(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
-            print('Calling function: ' + func.__name__ + ' with args: ' + str(args[-1:]) + ' and kwargs: ' + str(kwargs))
+            print(
+                "Calling function: "
+                + func.__name__
+                + " with args: "
+                + str(args[-1:])
+                + " and kwargs: "
+                + str(kwargs)
+            )
         return func(*args, **kwargs)
+
     return wrapper
 
 
@@ -22,8 +30,8 @@ class DWTConfig(object):
 
     def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
-        if os.path.exists(os.path.join(configurations_dir, 'temp_config.json')):
-            self.load_config('temp_config.json')
+        if os.path.exists(os.path.join(configurations_dir, "temp_config.json")):
+            self.load_config("temp_config.json")
         else:
             self.active_config = config_classes.Configuration.default()
             self.active_cutter = self.load_cutter(self.active_config.cutter_type)
@@ -39,9 +47,11 @@ class DWTConfig(object):
         file_path = os.path.join(configurations_dir, config_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Configuration file does not exist. ' + file_path + ' ' + os.getcwd())
+            raise Exception(
+                "Configuration file does not exist. " + file_path + " " + os.getcwd()
+            )
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
         self.load_cutter(self.active_config.cutter_type)
@@ -56,7 +66,7 @@ class DWTConfig(object):
         """
         file_path = os.path.join(configurations_dir, config_name)
 
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
     @debug_decorator
@@ -70,9 +80,11 @@ class DWTConfig(object):
         file_path = os.path.join(cutters_dir, cutter_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Cutter file does not exist. ' + file_path + ' ' + os.getcwd())
+            raise Exception(
+                "Cutter file does not exist. " + file_path + " " + os.getcwd()
+            )
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))
 
     @staticmethod
@@ -84,17 +96,17 @@ class DWTConfig(object):
         """
         cutters = {}
         for f_name in os.listdir(cutters_dir):
-            if not f_name.endswith('.json'):
+            if not f_name.endswith(".json"):
                 continue
 
             file_path = os.path.join(cutters_dir, f_name)
 
             if os.path.isfile(file_path):
-                with open(file_path, 'r') as f:
+                with open(file_path, "r") as f:
                     cutter = json.load(f)
 
-                    if 'cutter_description' in cutter:
-                        cutters[cutter['cutter_description']] = f_name
+                    if "cutter_description" in cutter:
+                        cutters[cutter["cutter_description"]] = f_name
         return cutters
 
     @debug_decorator
@@ -105,7 +117,7 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config('temp_config.json')
+        self.save_config("temp_config.json")
 
     @debug_decorator
     def on_parameter_change(self, parameter_name, parameter_value):
@@ -119,8 +131,8 @@ class DWTConfig(object):
         :param parameter_value: The new value of the parameter.
         """
 
-        if '.' in parameter_name:
-            parameter_names = parameter_name.split('.')
+        if "." in parameter_name:
+            parameter_names = parameter_name.split(".")
             parameter = self.active_config
 
             for parameter_name in parameter_names[:-1]:
@@ -129,4 +141,3 @@ class DWTConfig(object):
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             setattr(self.active_config, parameter_name, parameter_value)
-

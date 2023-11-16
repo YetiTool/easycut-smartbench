@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -167,7 +168,7 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True                             
 """
-    )
+)
 
 
 class ShapeCutterLandingScreenClass(Screen):
@@ -175,9 +176,9 @@ class ShapeCutterLandingScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(ShapeCutterLandingScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.m.get_grbl_settings()
@@ -186,11 +187,11 @@ class ShapeCutterLandingScreenClass(Screen):
         popup_info.PopupTutorial(self.shapecutter_sm)
 
     def cut_rectangle(self):
-        self.j.shape_dict['shape'] = 'rectangle'
+        self.j.shape_dict["shape"] = "rectangle"
         self.next_screen()
 
     def cut_circle(self):
-        self.j.shape_dict['shape'] = 'circle'
+        self.j.shape_dict["shape"] = "circle"
         self.next_screen()
 
     def next_screen(self):

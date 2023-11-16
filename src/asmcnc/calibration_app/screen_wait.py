@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -39,7 +40,7 @@ Builder.load_string(
                 text: '[color=455A64]Moving to the next measurement point...[/color]'
                 markup: 'True'
 """
-    )
+)
 
 
 class WaitScreenClass(Screen):
@@ -47,14 +48,15 @@ class WaitScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(WaitScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
 
     def on_enter(self):
-        self.poll_for_success = Clock.schedule_interval(self.
-            wait_for_movement_to_complete, 1)
+        self.poll_for_success = Clock.schedule_interval(
+            self.wait_for_movement_to_complete, 1
+        )
 
     def wait_for_movement_to_complete(self, dt):
-        if not self.m.state() == 'Jog':
+        if not self.m.state() == "Jog":
             Clock.unschedule(self.poll_for_success)
             self.sm.current = self.return_to_screen

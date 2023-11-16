@@ -1,12 +1,13 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from kivy.config import Config
 from kivy.clock import Clock
-Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
-Config.set('graphics', 'maxfps', '60')
-Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
+
+Config.set("kivy", "keyboard_mode", "systemanddock")
+Config.set("graphics", "width", "800")
+Config.set("graphics", "height", "480")
+Config.set("graphics", "maxfps", "60")
+Config.set("kivy", "KIVY_CLOCK", "interrupt")
 Config.write()
 
 import kivy
@@ -15,24 +16,25 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
 
-try: 
+try:
     from mock import Mock, MagicMock
 
-except: 
+except:
     pass
 
 from asmcnc.comms import router_machine
 
-from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import (
+    OvernightTesting,
+)
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
-Cmport = 'COM3'
+Cmport = "COM3"
+
 
 class ScreenTest(App):
-
     def build(self):
-
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
@@ -44,7 +46,7 @@ class ScreenTest(App):
 
         # Initialise settings object
         sett = Mock()
-        sett.ip_address = ''
+        sett.ip_address = ""
 
         # Initialise 'j'ob 'd'ata object
         jd = Mock()
@@ -55,15 +57,21 @@ class ScreenTest(App):
         # m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
         m = Mock()
 
-        test_screen = OvernightTesting(name='overnight_testing', m = m, systemtools = systemtools_sm, calibration_db = calibration_db, sm = systemtools_sm.sm, l = l)
+        test_screen = OvernightTesting(
+            name="overnight_testing",
+            m=m,
+            systemtools=systemtools_sm,
+            calibration_db=calibration_db,
+            sm=systemtools_sm.sm,
+            l=l,
+        )
         sm.add_widget(test_screen)
 
-        sm.current = 'overnight_testing'
-        
+        sm.current = "overnight_testing"
+
         # Clock.schedule_once(m.s.start_services, 4)
 
         return sm
 
+
 ScreenTest().run()
-
-

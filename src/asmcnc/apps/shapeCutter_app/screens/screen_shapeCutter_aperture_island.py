@@ -7,6 +7,7 @@ ApIs Screen for the Shape Cutter App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
+
 Builder.load_string(
     """
 
@@ -228,37 +229,33 @@ Builder.load_string(
                             allow_stretch: True                       
 
 """
-    )
+)
 
 
 class ShapeCutterApIsScreenClass(Screen):
     info_button = ObjectProperty()
-    shape = 'circle'
+    shape = "circle"
 
     def __init__(self, **kwargs):
         super(ShapeCutterApIsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
-        if self.j.shape_dict['shape'] == 'circle':
-            self.image_apt.source = (
-                './asmcnc/apps/shapeCutter_app/img/apt_circ.png')
-            self.image_is.source = (
-                './asmcnc/apps/shapeCutter_app/img/is_circ.png')
-        elif self.j.shape_dict['shape'] == 'rectangle':
-            self.image_apt.source = (
-                './asmcnc/apps/shapeCutter_app/img/apt_rect.png')
-            self.image_is.source = (
-                './asmcnc/apps/shapeCutter_app/img/is_rect.png')
+        if self.j.shape_dict["shape"] == "circle":
+            self.image_apt.source = "./asmcnc/apps/shapeCutter_app/img/apt_circ.png"
+            self.image_is.source = "./asmcnc/apps/shapeCutter_app/img/is_circ.png"
+        elif self.j.shape_dict["shape"] == "rectangle":
+            self.image_apt.source = "./asmcnc/apps/shapeCutter_app/img/apt_rect.png"
+            self.image_is.source = "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
 
     def aperture(self):
-        self.j.shape_dict['cut_type'] = 'aperture'
+        self.j.shape_dict["cut_type"] = "aperture"
         self.next_screen()
 
     def island(self):
-        self.j.shape_dict['cut_type'] = 'island'
+        self.j.shape_dict["cut_type"] = "island"
         self.next_screen()
 
     def next_screen(self):

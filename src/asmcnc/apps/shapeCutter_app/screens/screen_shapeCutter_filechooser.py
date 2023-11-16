@@ -15,6 +15,7 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 <SCFileChooser>:
@@ -183,58 +184,57 @@ Builder.load_string(
                         allow_stretch: True 
                 
 """
-    )
+)
 parameter_file_dir = (
-    '/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_app/parameter_cache/'
-    )
+    "/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_app/parameter_cache/"
+)
 
 
 class SCFileChooser(Screen):
-
     def __init__(self, **kwargs):
         super(SCFileChooser, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.l = kwargs['localization']
-        self.j = kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.l = kwargs["localization"]
+        self.j = kwargs["job_parameters"]
 
     def on_enter(self):
         self.refresh_filechooser()
         self.switch_view()
 
     def switch_view(self):
-        if self.toggle_view_button.state == 'normal':
-            self.filechooser_sc_params.view_mode = 'icon'
-            self.image_view.source = (
-                './asmcnc/skavaUI/img/file_select_list_view.png')
-        elif self.toggle_view_button.state == 'down':
-            self.filechooser_sc_params.view_mode = 'list'
-            self.image_view.source = (
-                './asmcnc/skavaUI/img/file_select_list_icon.png')
+        if self.toggle_view_button.state == "normal":
+            self.filechooser_sc_params.view_mode = "icon"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+        elif self.toggle_view_button.state == "down":
+            self.filechooser_sc_params.view_mode = "list"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
     def refresh_filechooser(self):
         self.filechooser_sc_params._update_item_selection()
         try:
-            if self.filechooser_sc_params.selection[0] != 'C':
+            if self.filechooser_sc_params.selection[0] != "C":
                 self.load_button.disabled = False
-                self.image_select.source = (
-                    './asmcnc/skavaUI/img/file_select_select.png')
+                self.image_select.source = "./asmcnc/skavaUI/img/file_select_select.png"
                 self.delete_selected_button.disabled = False
-                self.image_delete.source = (
-                    './asmcnc/skavaUI/img/file_select_delete.png')
+                self.image_delete.source = "./asmcnc/skavaUI/img/file_select_delete.png"
             else:
                 self.load_button.disabled = True
                 self.image_select.source = (
-                    './asmcnc/skavaUI/img/file_select_select_disabled.png')
+                    "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+                )
                 self.delete_selected_button.disabled = True
                 self.image_delete.source = (
-                    './asmcnc/skavaUI/img/file_select_delete_disabled.png')
+                    "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
+                )
         except:
             self.load_button.disabled = True
             self.image_select.source = (
-                './asmcnc/skavaUI/img/file_select_select_disabled.png')
+                "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+            )
             self.delete_selected_button.disabled = True
             self.image_delete.source = (
-                './asmcnc/skavaUI/img/file_select_delete_disabled.png')
+                "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
+            )
         self.filechooser_sc_params._update_files()
 
     def return_to_SC17(self, file_selection):
@@ -242,18 +242,24 @@ class SCFileChooser(Screen):
             self.j.load_parameters(file_selection)
             self.shapecutter_sm.next_screen()
         else:
-            error_message = 'File selected does not exist!'
+            error_message = "File selected does not exist!"
             popup_info.PopupError(self.shapecutter_sm, self.l, error_message)
 
     def delete_popup(self, **kwargs):
-        if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager=self.shapecutter_sm,
-                localization=self.l, function=self.delete_all,
-                file_selection='all')
+        if kwargs["file_selection"] == "all":
+            popup_info.PopupDeleteFile(
+                screen_manager=self.shapecutter_sm,
+                localization=self.l,
+                function=self.delete_all,
+                file_selection="all",
+            )
         else:
-            popup_info.PopupDeleteFile(screen_manager=self.shapecutter_sm,
-                localization=self.l, function=self.delete_selected,
-                file_selection=kwargs['file_selection'])
+            popup_info.PopupDeleteFile(
+                screen_manager=self.shapecutter_sm,
+                localization=self.l,
+                function=self.delete_selected,
+                file_selection=kwargs["file_selection"],
+            )
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):

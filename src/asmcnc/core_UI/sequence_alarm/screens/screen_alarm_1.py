@@ -5,6 +5,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <AlarmScreen1>:
@@ -137,27 +138,26 @@ Builder.load_string(
 				width: dp(0.305625*app.width)
 				padding:[dp(0.241875)*app.width, 0, 0, 0]
 """
-    )
+)
 
 
 class AlarmScreen1(Screen):
-
     def __init__(self, **kwargs):
         super(AlarmScreen1, self).__init__(**kwargs)
-        self.a = kwargs['alarm_manager']
-        self.alarm_title.text = self.a.l.get_bold('Alarm: Unexpected event!')
-        self.icon.source = './asmcnc/core_UI/sequence_alarm/img/alarm_icon.png'
-        self.next_button.text = self.a.l.get_str('Next') + '...'
+        self.a = kwargs["alarm_manager"]
+        self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
+        self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+        self.next_button.text = self.a.l.get_str("Next") + "..."
 
     def next_screen(self):
         if self.a.support_sequence:
-            self.a.sm.current = 'alarm_2'
+            self.a.sm.current = "alarm_2"
         else:
-            self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-            self.a.sm.current = 'alarm_5'
+            self.a.sm.get_screen("alarm_5").return_to_screen = "alarm_1"
+            self.a.sm.current = "alarm_5"
 
     def prev_screen(self):
-        self.a.sm.current = 'alarm_1'
+        self.a.sm.current = "alarm_1"
 
     def on_pre_enter(self):
         self.update_font_size(self.description_label)

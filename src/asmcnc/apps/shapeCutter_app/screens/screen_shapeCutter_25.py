@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -363,22 +364,21 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter25ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]25[/b]')
-    title_label = StringProperty(
-        '[b]Would you like to save this as a new profile?[/b]')
+    screen_number = StringProperty("[b]25[/b]")
+    title_label = StringProperty("[b]Would you like to save this as a new profile?[/b]")
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
         super(ShapeCutter25ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
-        self.kb = kwargs['keyboard']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.kb = kwargs["keyboard"]
         self.text_inputs = [self.file_name]
 
     def on_touch(self):
@@ -388,9 +388,8 @@ class ShapeCutter25ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.display_profile = self.j.parameters_to_string()
-        self.file_name.text = ''
-        self.save_image.source = (
-            './asmcnc/apps/shapeCutter_app/img/save_file.png')
+        self.file_name.text = ""
+        self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/save_file.png"
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
@@ -423,10 +422,9 @@ class ShapeCutter25ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
 
     def save_file(self):
-        if not self.file_name.text == '':
+        if not self.file_name.text == "":
             self.j.save_parameters(self.file_name.text)
-            self.save_image.source = (
-                './asmcnc/apps/shapeCutter_app/img/thumbs_up.png')
+            self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
         else:
             description = """Filename input is empty.
 

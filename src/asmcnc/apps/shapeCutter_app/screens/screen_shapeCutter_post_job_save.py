@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -209,7 +210,7 @@ Builder.load_string(
                                 allow_stretch: True               
                     
 """
-    )
+)
 
 
 class ShapeCutterSaveJobScreenClass(Screen):
@@ -219,10 +220,10 @@ class ShapeCutterSaveJobScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
-        self.kb = kwargs['keyboard']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.kb = kwargs["keyboard"]
         self.text_inputs = [self.file_name]
 
     def on_touch(self):
@@ -232,8 +233,7 @@ class ShapeCutterSaveJobScreenClass(Screen):
     def on_pre_enter(self):
         self.display_profile = self.j.parameters_to_string()
         self.file_name.text = str(self.j.profile_filename)
-        self.save_image.source = (
-            './asmcnc/apps/shapeCutter_app/img/save_file.png')
+        self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/save_file.png"
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
@@ -242,11 +242,10 @@ class ShapeCutterSaveJobScreenClass(Screen):
         self.shapecutter_sm.next_screen()
 
     def save_file(self):
-        if not self.file_name.text == '':
+        if not self.file_name.text == "":
             self.j.save_parameters(self.file_name.text)
             self.j.save_gCode()
-            self.save_image.source = (
-                './asmcnc/apps/shapeCutter_app/img/thumbs_up.png')
+            self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
         else:
             description = """Filename input is empty.
 

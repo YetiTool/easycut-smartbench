@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_feedback
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_post_job_save
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_repeat
+
 Builder.load_string(
     """
 
@@ -298,21 +299,21 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter36ScreenClass(Screen):
     info_button = ObjectProperty()
     vacuum_toggle = ObjectProperty()
-    screen_number = StringProperty('[b]36[/b]')
+    screen_number = StringProperty("[b]36[/b]")
     title_label = StringProperty("[b]You're all set![/b]")
     user_instructions = StringProperty()
 
     def __init__(self, **kwargs):
         super(ShapeCutter36ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -327,7 +328,7 @@ Remember when you had to cut out all these shapes by hand? Think of all the thin
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
-        self.shapecutter_sm.go_screen('sC36', 'sCsavejob')
+        self.shapecutter_sm.go_screen("sC36", "sCsavejob")
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
