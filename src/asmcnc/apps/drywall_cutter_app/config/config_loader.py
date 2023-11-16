@@ -15,7 +15,6 @@ def debug_decorator(func):
             print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
                 kwargs))
         return func(*args, **kwargs)
-
     return wrapper
 
 
