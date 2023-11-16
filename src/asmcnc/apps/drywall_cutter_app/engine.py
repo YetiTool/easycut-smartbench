@@ -25,7 +25,8 @@ import re
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 class GCodeEngine():
-    def __init__(self, dwt_config):
+    def __init__(self, dwt_config, **kwargs):
+        self.m = kwargs['machine']
         self.config = dwt_config
 
         #Globals 
@@ -38,15 +39,15 @@ class GCodeEngine():
         self.source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + self.source_folder_name 
 
     #Produce corner coordinates for a rectangle of size x, y
-    def rectangle_coordinates(self, x, y):
+    def rectangle_coordinates(self, x, y, xmin, ymin):
         if x <= 0 or y <= 0:
             return []  # Invalid dimensions, return an empty list
 
         # Define the coordinates for the four corners
-        top_left = (0, y)
+        top_left = (xmin, y)
         top_right = (x, y)
-        bottom_right = (x, 0)
-        bottom_left = (0, 0)
+        bottom_right = (x, ymin)
+        bottom_left = (xmin, ymin)
 
         # Return the coordinates in clockwise order
         return [bottom_left, top_left, top_right, bottom_right]
@@ -213,7 +214,7 @@ class GCodeEngine():
         return input_list
 
     #Produce gcode instructions to cut a rounded (or not) rectangle
-    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, roughing_pass):
+    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, roughing_pass, simulate):
         # Ensure coordinates are all in clockwise order
         coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))  
 
@@ -239,17 +240,22 @@ class GCodeEngine():
 
         # Time to make some gcode :)
         if clockwise_cutting:
-            arc_instruction = u"G2"
+            arc_instruction = "G2"
         else:
             final_coordinates = self.correct_orientation(final_coordinates, True)
-            arc_instruction = u"G3"
+            arc_instruction = "G3"
 
         cutting_lines = []
 
         for depth in pass_depths:
-            gcode_instruction = "(Offset: %s)\n(Roughing pass)\n" % offset if roughing_pass else "(Offset: %s)\n(Finishing pass)\n" % offset
-            cutting_lines.append(gcode_instruction)
-            cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
+            if not simulate:
+                gcode_instruction = "(Offset: %s)\n(Roughing pass)\n" % offset if roughing_pass else "(Offset: %s)\n(Finishing pass)\n" % offset
+                cutting_lines.append(gcode_instruction)
+                cutting_lines.append("G1 Z-%s F%s\n" % (depth, plungerate))
+            else:
+                gcode_instruction = "(Simulation pass)\n"
+                cutting_lines.append(gcode_instruction)
+                cutting_lines.append("G1 Z%s F%s\n" % (depth, plungerate))
             # Cut the shape
             if not radii_present:
                 # Logic for straight lines only
@@ -261,25 +267,25 @@ class GCodeEngine():
                 # Logic for when corner rads are present
                 arc_flag = True
                 for coordinate in final_coordinates[:-1]:
-                    second_line = 1 == final_coordinates.index(coordinate)
+                    second_line = 1 == final_coordinates.index(coordinate)              
                     gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
-                    if arc_flag:
-                        gcode_instruction = "G1 X%s Y%s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y)
+                    if arc_flag:                        
+                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
                     else:
-                        gcode_instruction = "%s X%s Y%s R%s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius)
+                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius, 'F%s' % feedrate if second_line else '')
                     arc_flag = not arc_flag
                     cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
 
         # Correct gcode order
-        cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"New pass")
+        cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"pass")
         # Speed up first XY move
-        cutting_lines = self.replace_after_keyword(cutting_lines, u"New pass", u"G0")
+        cutting_lines = self.replace_after_keyword(cutting_lines, u"pass", "G0")
 
         return cutting_lines
     
     #Produce gcode instructions to cut a straight line
-    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance):
+    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, simulate):
         pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
         tool_radius = tool_diameter / 2
         x = 0
@@ -296,11 +302,13 @@ class GCodeEngine():
             end_coordinate = [datum_x, datum_y + length - tool_radius]
         gcode_lines.append("G0 X{} Y{}\n".format(start_coordinate[x], start_coordinate[y]))
         for depth in pass_depths:
-            if direction_flag:
-                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
+            if simulate:
+                    gcode_lines.append("G1 Z{} F{}\n".format(depth, plungerate))
+            else:                    
+                    gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
+            if direction_flag:                
                 gcode_lines.append("G1 X{} Y{} F{}\n".format(end_coordinate[x], end_coordinate[y], feedrate))
             else:
-                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
                 gcode_lines.append("G1 X{} Y{} F{}\n".format(start_coordinate[x], start_coordinate[y], feedrate))
             direction_flag = not(direction_flag)
 
@@ -527,13 +535,16 @@ class GCodeEngine():
             raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
 
     #Main
-    def engine_run(self):
+    def engine_run(self, simulate=True):
         output_file = "jobCache/" + self.config.active_config.shape_type + u".nc"
         safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_lines = []
         pass_depths = []
         stepovers = [0]
+        simulation_z_height = 5 #mm
+        simualtion_plunge_rate = 750 #mm/s
+        simulation_feedrate = 2000 #mm/s
 
         if self.config.active_cutter.cutting_direction.lower() == "climb":
             is_climb = True
@@ -544,7 +555,7 @@ class GCodeEngine():
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
-            rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y)
+            rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y, 0, 0)
             if len(rect_coordinates) != 4:
                 raise Exception(u"Sir, rectangles have 4 sides, not %d" % len(rect_coordinates))
 
@@ -553,128 +564,198 @@ class GCodeEngine():
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
             finish_stepdown = self.config.active_config.cutting_depths.material_thickness
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
 
-            # Produce instructions for each complete rectangle
-            roughing_pass = True
-            for stepover in stepovers:
-                effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
-                pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+            if simulate:              
                 rectangle = self.cut_rectangle(coordinates,
-                                        self.config.active_config.datum_position.x,
-                                        self.config.active_config.datum_position.y,
-                                        self.config.active_config.toolpath_offset,
-                                        effective_tool_diameter,
-                                        is_climb,
-                                        self.config.active_config.canvas_shape_dims.r,
-                                        pass_depth,
-                                        self.config.active_cutter.cutting_feedrate,
-                                        self.config.active_cutter.plunge_rate,
-                                        total_cut_depth,
-                                        z_safe_distance,
-                                        roughing_pass)
+                                               self.config.active_config.datum_position.x,
+                                                self.config.active_config.datum_position.y,
+                                                self.config.active_config.toolpath_offset,
+                                                self.config.active_cutter.diameter,
+                                                is_climb,
+                                                self.config.active_config.canvas_shape_dims.r,
+                                                simulation_z_height,
+                                                simulation_feedrate,
+                                                simualtion_plunge_rate,
+                                                simulation_z_height,
+                                                z_safe_distance,
+                                                True,
+                                                True)
+            else:
+                roughing_pass = True
+                for stepover in stepovers:
+                    effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
+                    pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+                    rectangle = self.cut_rectangle(coordinates,
+                                            self.config.active_config.datum_position.x,
+                                            self.config.active_config.datum_position.y,
+                                            self.config.active_config.toolpath_offset,
+                                            effective_tool_diameter,
+                                            is_climb,
+                                            self.config.active_config.canvas_shape_dims.r,
+                                            pass_depth,
+                                            self.config.active_cutter.cutting_feedrate,
+                                            self.config.active_cutter.plunge_rate,
+                                            total_cut_depth,
+                                            z_safe_distance,
+                                            roughing_pass,
+                                            False)
+                    roughing_pass = False
 
-                roughing_pass = False
-                cutting_lines += rectangle
+            cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size, _, _  = self.read_in_custom_shape_dimensions(gcode_lines)
-            
-            # Remove header info
-            gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
+            x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimentions(gcode_lines)
 
-            # Adjust feeds, speeds, and Z values
-            gcode_lines = self.adjust_feeds_and_speeds(gcode_lines, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, self.config.active_cutter.cutting_spindle_speed)
-            gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
+            if simulate:
+                coordinates = self.rectangle_coordinates(float(x_size), float(y_size), float(x_minus), float(y_minus))
+                coordinates.append(coordinates[0])
+                gcode_lines = self.cut_rectangle(coordinates,
+                                               self.config.active_config.datum_position.x,
+                                                self.config.active_config.datum_position.y,
+                                                "on",
+                                                0,
+                                                is_climb,
+                                                0,
+                                                simulation_z_height,
+                                                simulation_feedrate,
+                                                simualtion_plunge_rate,
+                                                simulation_z_height,
+                                                z_safe_distance,
+                                                True,
+                                                True)
 
-            # Apply datum offset
-            gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.datum_position.x, self.config.active_config.datum_position.y)
+            else:
+                # Remove header info
+                gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
 
-            # Apply pass depths
-            pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
-            start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None)
-            end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
-            gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
+                # Adjust feeds, speeds, and Z values
+                gcode_lines = self.adjust_feeds_and_speeds(gcode_lines, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, self.config.active_cutter.cutting_spindle_speed)
+                gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
 
-            tool_radius = self.config.active_cutter.diameter / 2
-            
-            partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
-                                         float(y_size) + tool_radius + self.config.active_config.datum_position.y]
-            partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
-                                      tool_radius + float(y_size) + self.config.active_config.datum_position.y]
-            gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, z_safe_distance)
-            
+                # Apply datum offset
+                gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.datum_position.x, self.config.active_config.datum_position.y)
+
+                # Apply pass depths
+                pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
+                start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None)
+                end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
+                gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
+
+                tool_radius = self.config.active_cutter.diameter / 2
+                
+                partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
+                                            float(y_size) + tool_radius + self.config.active_config.datum_position.y]
+                partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
+                                        tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+                gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, z_safe_distance)
+                
             cutting_lines = gcode_lines
 
         elif self.config.active_config.shape_type.lower() == u"circle":
-            circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d) #Circles are secretly rounded rectangles            
+            circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d, 0, 0) #Circles are secretly rounded rectangles            
 
             # Add first point to end of coordinate list to complete the contour
             coordinates = circle_coordinates
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
             finish_stepdown = self.config.active_config.cutting_depths.material_thickness
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
 
-            roughing_pass = True
-            for stepover in stepovers:
-                effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
-                pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+            if simulate:
                 circle = self.cut_rectangle(coordinates,
-                                        self.config.active_config.datum_position.x,
-                                        self.config.active_config.datum_position.y,
-                                        self.config.active_config.toolpath_offset,
-                                        effective_tool_diameter,
-                                        is_climb,
-                                        self.config.active_config.canvas_shape_dims.d/2,
-                                        pass_depth,
-                                        self.config.active_cutter.cutting_feedrate,
-                                        self.config.active_cutter.plunge_rate,
-                                        total_cut_depth,
-                                        z_safe_distance,
-                                        roughing_pass)
+                                               self.config.active_config.datum_position.x,
+                                                self.config.active_config.datum_position.y,
+                                                self.config.active_config.toolpath_offset,
+                                                self.config.active_cutter.diameter,
+                                                is_climb,
+                                                self.config.active_config.canvas_shape_dims.d/2,
+                                                simulation_z_height,
+                                                simulation_feedrate,
+                                                simualtion_plunge_rate,
+                                                simulation_z_height,
+                                                z_safe_distance,
+                                                True,
+                                                True)
+            else:
+                roughing_pass = True
+                for stepover in stepovers:
+                    effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
+                    pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+                    circle = self.cut_rectangle(coordinates,
+                                            self.config.active_config.datum_position.x,
+                                            self.config.active_config.datum_position.y,
+                                            self.config.active_config.toolpath_offset,
+                                            effective_tool_diameter,
+                                            is_climb,
+                                            self.config.active_config.canvas_shape_dims.d/2,
+                                            pass_depth,
+                                            self.config.active_cutter.cutting_feedrate,
+                                            self.config.active_cutter.plunge_rate,
+                                            total_cut_depth,
+                                            z_safe_distance,
+                                            roughing_pass,
+                                            False)
 
-                roughing_pass = False
-                cutting_lines += circle 
+                    roughing_pass = False
+            cutting_lines += circle 
 
         elif self.config.active_config.shape_type.lower() == u"line":
-            cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
-                                        self.config.active_config.datum_position.y,
-                                        self.config.active_config.canvas_shape_dims.l,
-                                        self.config.active_cutter.diameter,
-                                        "vertical",
-                                        self.config.active_config.cutting_depths.depth_per_pass,
-                                        self.config.active_cutter.cutting_feedrate,
-                                        self.config.active_cutter.plunge_rate,
-                                        total_cut_depth,
-                                        z_safe_distance
-                                        )
+            if simulate:
+                cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
+                                            self.config.active_config.datum_position.y,
+                                            self.config.active_config.canvas_shape_dims.l,
+                                            self.config.active_cutter.diameter,
+                                            "vertical",
+                                            simulation_z_height,
+                                            simulation_feedrate,
+                                            simualtion_plunge_rate,
+                                            simulation_z_height,
+                                            z_safe_distance,
+                                            simulate
+                                            )
+            else:
+                cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
+                                            self.config.active_config.datum_position.y,
+                                            self.config.active_config.canvas_shape_dims.l,
+                                            self.config.active_cutter.diameter,
+                                            "vertical",
+                                            self.config.active_config.cutting_depths.depth_per_pass,
+                                            self.config.active_cutter.cutting_feedrate,
+                                            self.config.active_cutter.plunge_rate,
+                                            total_cut_depth,
+                                            z_safe_distance,
+                                            simulate
+                                            )
 
         else:
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
-
-        # GCODE FILE STRUCTURE
-        file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
-        if self.config.active_config.shape_type in file_structure_1_shapes:
-            output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
-                output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
+        
+        if simulate:
+            cutting_lines = cutting_lines.insert(0, "G90")
+            self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
         else:
-            output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
+            file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
+           
+            if self.config.active_config.shape_type in file_structure_1_shapes:
+                output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
+                    output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
+            else:
+                output = ''.join(cutting_lines)
 
-        with open(output_file, 'w+') as out_file:
-            out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
-            print("%s written" % output_file)
-
+            with open(output_file, 'w+') as out_file:
+                out_file.write(output.decode('utf-8'))
+                print("%s written" % output_file)

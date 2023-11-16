@@ -135,7 +135,7 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
-        self.engine = GCodeEngine(self.dwt_config)
+        self.engine = GCodeEngine(self.dwt_config, machine=self.m)
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
@@ -202,7 +202,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        pass
+        self.engine.engine_run(True)
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
@@ -213,7 +213,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        self.engine.engine_run(False)
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
