@@ -7,10 +7,13 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
+from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 
 Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
+    tool_selection:tool_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -24,10 +27,13 @@ Builder.load_string("""
             Button:
                 size_hint_x: 7
                 text: 'File'
+                on_press: root.open_filechooser()
             Spinner:
+                id: tool_selection
                 size_hint_x: 7
-                text: 'Tool'
-                values: root.tool_options
+                text: root.tool_options.keys()[0]
+                values: root.tool_options.keys()
+                on_text: root.select_tool()
             Spinner:
                 size_hint_x: 7
                 text: 'Shape'
@@ -108,10 +114,10 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
+    tool_options = config_loader.DWTConfig().get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -127,6 +133,11 @@ class DrywallCutterScreen(Screen):
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+
+    def select_tool(self):
+        selected_tool_name = self.tool_selection.text
+
+        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
     def select_shape(self):
         pass
@@ -148,10 +159,47 @@ class DrywallCutterScreen(Screen):
         pass
 
     def save(self):
-        pass
+        if not self.sm.has_screen('config_filesaver'):
+            self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
+                                                                       screen_manager=self.sm,
+                                                                       localization=self.l,
+                                                                       callback=self.save_config))
+        self.sm.current = 'config_filesaver'
 
     def run(self):
         pass
+
+    def open_filechooser(self):
+        if not self.sm.has_screen('config_filechooser'):
+            self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
+                                                                           screen_manager=self.sm,
+                                                                           localization=self.l,
+                                                                           callback=self.load_config))
+        self.sm.current = 'config_filechooser'
+
+    def load_config(self, config):
+        # type: (str) -> None
+        """
+        Used as the callback for the config filechooser screen.
+
+        :param config: The path to the config file, including extension.
+        """
+        self.dwt_config.load_config(config)
+
+        file_name_no_ext = config.split('/')[-1].split('.')[0]
+
+        # set the label on the screen to the name of the config file below
+
+    def save_config(self, name):
+        # type: (str) -> None
+        """
+        Saves the active configuration to the configurations directory.
+
+        :param name: The name of to save the configuration file as.
+        """
+        file_name = name + ('.json' if not name.endswith('.json') else '')
+
+        self.dwt_config.save_config(file_name)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()

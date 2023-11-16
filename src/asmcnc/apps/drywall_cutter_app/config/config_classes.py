@@ -8,7 +8,7 @@ Data types are not confirmed.
 class Cutter:
     def __init__(self, cutter_description, units, diameter, material, cutting_spindle_speed,
                  cutting_feedrate, plunge_rate, cutting_direction, allowable_toolpath_offsets,
-                 max_depth_per_pass, max_depth_total, stepover, yeti_pilot_target_powers):
+                 max_depth_per_pass, max_depth_total, stepover, yeti_pilot_target_powers, image_path):
         self.cutter_description = cutter_description  # type: str
         self.units = units  # type: str
         self.diameter = diameter  # type: float
@@ -22,6 +22,7 @@ class Cutter:
         self.max_depth_total = max_depth_total  # type: float
         self.stepover = stepover  # type: float
         self.yeti_pilot_target_powers = yeti_pilot_target_powers  # type: float
+        self.image_path = image_path  # type: str
 
 
 class AllowableToolpathOffsets:
@@ -71,10 +72,11 @@ class DatumPosition:
 
 
 class Configuration:
-    def __init__(self, shape_type, units, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
+    def __init__(self, shape_type, units, rotation, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
                  datum_position):
         self.shape_type = shape_type  # type: str
         self.units = units  # type: str
+        self.rotation = rotation
         self.canvas_shape_dims = CanvasShapeDims(**canvas_shape_dims)  # type: CanvasShapeDims
         self.cutter_type = cutter_type  # type: str
         self.toolpath_offset = toolpath_offset  # type: str
@@ -83,7 +85,7 @@ class Configuration:
 
     @staticmethod
     def default():
-        return Configuration(shape_type='Square', units='mm',
+        return Configuration(shape_type='Square', units='mm', rotation='horizontal',
                              canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
                              cutter_type='test_cutter.json',
                              toolpath_offset='inside',
