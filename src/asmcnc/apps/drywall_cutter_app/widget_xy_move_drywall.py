@@ -318,7 +318,8 @@ class XYMoveDrywall(Widget):
             self.m.quit_jog()
 
     def probe_z(self):
-        self.m.probe_z()
+        self.m.s.write_command('G0 G53 Z-60')
+        self.m.probe_z(fast_probe=True)
 
     def go_to_datum(self):
         if self.m.is_machine_homed == False and sys.platform != 'win32':
