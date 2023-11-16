@@ -422,7 +422,7 @@ Builder.load_string(
                             size: self.size
                             pos: self.pos
 
-    FloatLayout:: 
+    FloatLayout:
         size_hint: (None,None)
         pos_hint: {'top': 1, 'right': 1}
         Button:
