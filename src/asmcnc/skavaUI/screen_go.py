@@ -226,7 +226,7 @@ Builder.load_string(
                                 Label:
                                     id: spindle_label
                                     markup: True
-                                    font_size: str(0.02*app.width) + 'px' 
+                                    font_size: str(0.02*app.width) + 'sp' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
