@@ -443,11 +443,6 @@ class ConfigFileChooser(Screen):
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
-    def sort_json(self, json_obj):
-        items = json_obj.items()
-        items.sort(key=lambda x: self.json_config_order[x[0]])
-        return dict(items)
-
     def to_human_readable(self, json_obj, indent=0):
         def format_key(json_key):
             return json_key.replace("_", " ").title()

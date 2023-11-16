@@ -390,11 +390,6 @@ class ConfigFileSaver(Screen):
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
-    def sort_json(self, json_obj):
-        items = json_obj.items()
-        items.sort(key=lambda x: self.json_config_order[x[0]])
-        return dict(items)
-
     def to_human_readable(self, json_obj, indent=0):
         def format_key(json_key):
             return json_key.replace("_", " ").title()
