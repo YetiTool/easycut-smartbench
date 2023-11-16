@@ -422,9 +422,9 @@ Builder.load_string(
                             size: self.size
                             pos: self.pos
 
-    BoxLayout: 
+    FloatLayout:: 
         size_hint: (None,None)
-        pos: (dp(710.0)*app.width/800.0, dp(390.0)*app.height/480.0)
+        pos_hint: {'top': 1, 'right': 1}
         Button:
             font_size: str(0.01875 * app.width) + 'sp'
             size_hint: (None,None)
