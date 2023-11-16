@@ -386,16 +386,9 @@ class ConfigFileSaver(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        sorted_json = self.sort_json(json_obj)
-
-        self.metadata_preview.text = self.to_human_readable(sorted_json)
+        self.metadata_preview.text = self.to_human_readable(json_obj)
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
-
-    def sort_json(self, json_obj):
-        items = json_obj.items()
-        items.sort(key=lambda x: self.json_config_order[x[0]])
-        return dict(items)
 
     def to_human_readable(self, json_obj, indent=0):
         def format_key(json_key):
