@@ -13,6 +13,13 @@ config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/co
 config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
 
 
+"""
+RUN WITH
+python tests/automated_unit_tests/apps/dwt/test_dwt_config_checking.py
+FROM EASYCUT-SMARTBENCH DIR
+"""
+
+
 class TestDWTConfigChecking(unittest.TestCase):
     def setUp(self):
         self.valid_temp_json_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
