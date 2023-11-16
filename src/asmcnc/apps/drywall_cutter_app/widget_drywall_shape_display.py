@@ -277,6 +277,8 @@ class DrywallShapeDisplay(Widget):
 
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
 
+    swapping_lengths = False
+
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
@@ -301,10 +303,12 @@ class DrywallShapeDisplay(Widget):
         self.shape_dims_image.opacity = 1
 
         if swap_lengths:
+            self.swapping_lengths = True
             x = self.x_input.text
             y = self.y_input.text
             self.x_input.text = y
             self.y_input.text = x
+            self.swapping_lengths = False
 
         if shape == 'circle':
             self.enable_input(self.d_input, (468, 310))
@@ -398,12 +402,13 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
     def do_rectangle_checks(self):
-        if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        if self.rectangle_with_equal_sides():
-            toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
-            self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
-            self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
+        if not self.swapping_lengths:
+            if self.rotation_required():
+                self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
+            if self.rectangle_with_equal_sides():
+                toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
+                self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
+                self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
 
     def rotation_required(self):
         if "rectangle" in self.shape_dims_image.source:
