@@ -424,7 +424,6 @@ class ConfigFileChooser(Screen):
         self.filechooser._update_files()
 
     def display_selected_file(self):
-        print('a')
 
         # display file selected in the filename display label
         if sys.platform == 'win32':
