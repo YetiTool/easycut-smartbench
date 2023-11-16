@@ -26,6 +26,8 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_health_check,
 )
 
+from kivy.core.window import Window
+
 Builder.load_string(
     """
 
@@ -532,6 +534,14 @@ class MaintenanceScreenClass(Screen):
             self.brush_life_widget.brush_life,
             self.touchplate_offset_widget.touchplate_offset,
         ]
+
+    def get_pos_hint(self):
+        if Window.height == 480:
+            return {"top": 1, "right": 1}
+
+        percentage = 16.0 / 1280.0
+
+        return {"top": 1.0 - percentage, "right": 1}
 
     def quit_to_lobby(self):
         self.on_tab_switch()
