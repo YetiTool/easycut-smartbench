@@ -61,35 +61,6 @@ class DWTConfig(object):
 
     @staticmethod
     @debug
-    def get_missing_fields(config_name):
-        # type (str) -> list[str]
-        """
-        Gets the fields that are missing from a configuration file.
-
-        :param config_name: The name of the configuration file to check.
-        :return: A list of the fields that are missing from the configuration file.
-        """
-
-        file_path = os.path.join(configurations_dir, config_name)
-
-        if not os.path.exists(file_path):
-            return []
-
-        with open(file_path, 'r') as f:
-            cfg = json.load(f)
-
-        valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
-
-        missing_fields = []
-
-        for field_name in valid_field_names:
-            if field_name not in cfg:
-                missing_fields.append(field_name)
-
-        return missing_fields
-
-    @staticmethod
-    @debug
     def fix_config(config_name):
         # type (str) -> bool
         """

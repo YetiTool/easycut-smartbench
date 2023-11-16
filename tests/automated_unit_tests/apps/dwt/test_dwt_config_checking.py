@@ -86,6 +86,13 @@ class TestDWTConfigChecking(unittest.TestCase):
 
         dwt_config.fix_config(self.invalid_temp_json_file.name)
 
+        self.assertTrue(dwt_config.is_valid_configuration(self.invalid_temp_json_file.name))
+
+    def test_fix_already_valid_config(self):
+        dwt_config = config_loader.DWTConfig()
+
+        dwt_config.fix_config(self.valid_temp_json_file.name)
+
         self.assertTrue(dwt_config.is_valid_configuration(self.valid_temp_json_file.name))
 
 
