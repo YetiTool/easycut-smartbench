@@ -247,10 +247,10 @@ class DrywallShapeDisplay(Widget):
             self.place_widget(self.y_datum_label, (390, 77))
 
     def enable_input(self, text_input, pos):
+        text_input.parent.pos = pos
         text_input.disabled = False
         text_input.opacity = 1
         text_input.parent.opacity = 1
-        text_input.parent.pos = pos
 
     def place_widget(self, widget, pos):
         widget.pos = pos
