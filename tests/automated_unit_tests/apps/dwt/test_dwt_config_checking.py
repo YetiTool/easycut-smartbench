@@ -13,6 +13,13 @@ config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/co
 config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
 
 
+"""
+RUN WITH
+python tests/automated_unit_tests/apps/dwt/test_dwt_config_checking.py
+FROM EASYCUT-SMARTBENCH DIR
+"""
+
+
 class TestDWTConfigChecking(unittest.TestCase):
     def setUp(self):
         self.valid_temp_json_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -78,6 +85,13 @@ class TestDWTConfigChecking(unittest.TestCase):
         dwt_config = config_loader.DWTConfig()
 
         dwt_config.fix_config(self.invalid_temp_json_file.name)
+
+        self.assertTrue(dwt_config.is_valid_configuration(self.invalid_temp_json_file.name))
+
+    def test_fix_already_valid_config(self):
+        dwt_config = config_loader.DWTConfig()
+
+        dwt_config.fix_config(self.valid_temp_json_file.name)
 
         self.assertTrue(dwt_config.is_valid_configuration(self.valid_temp_json_file.name))
 

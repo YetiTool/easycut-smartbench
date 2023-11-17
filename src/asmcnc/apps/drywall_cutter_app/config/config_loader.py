@@ -9,7 +9,7 @@ cutters_dir = './asmcnc/apps/drywall_cutter_app/config/cutters'
 DEBUG_MODE = True
 
 
-def debug_decorator(func):
+def debug(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
             print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
@@ -31,7 +31,7 @@ class DWTConfig(object):
             self.active_cutter = self.load_cutter(self.active_config.cutter_type)
 
     @staticmethod
-    @debug_decorator
+    @debug
     def is_valid_configuration(config_name):
         # type (str) -> bool
         """
@@ -59,36 +59,7 @@ class DWTConfig(object):
         return True
 
     @staticmethod
-    @debug_decorator
-    def get_missing_fields(config_name):
-        # type (str) -> list[str]
-        """
-        Gets the fields that are missing from a configuration file.
-
-        :param config_name: The name of the configuration file to check.
-        :return: A list of the fields that are missing from the configuration file.
-        """
-
-        file_path = os.path.join(configurations_dir, config_name)
-
-        if not os.path.exists(file_path):
-            return []
-
-        with open(file_path, 'r') as f:
-            cfg = json.load(f)
-
-        valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
-
-        missing_fields = []
-
-        for field_name in valid_field_names:
-            if field_name not in cfg:
-                missing_fields.append(field_name)
-
-        return missing_fields
-
-    @staticmethod
-    @debug_decorator
+    @debug
     def fix_config(config_name):
         # type (str) -> bool
         """
@@ -117,7 +88,7 @@ class DWTConfig(object):
 
         return True
 
-    @debug_decorator
+    @debug
     def load_config(self, config_name):
         # type (str) -> None
         """
@@ -140,7 +111,7 @@ class DWTConfig(object):
 
         self.load_cutter(self.active_config.cutter_type)
 
-    @debug_decorator
+    @debug
     def save_config(self, config_name):
         # type (str) -> None
         """
@@ -153,7 +124,7 @@ class DWTConfig(object):
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
-    @debug_decorator
+    @debug
     def load_cutter(self, cutter_name):
         # type (str) -> None
         """
@@ -170,7 +141,7 @@ class DWTConfig(object):
             self.active_cutter = config_classes.Cutter(**json.load(f))
 
     @staticmethod
-    @debug_decorator
+    @debug
     def get_available_cutter_names():
         # type () -> dict{str: str}
         """
@@ -191,7 +162,7 @@ class DWTConfig(object):
                         cutters[cutter['cutter_description']] = f_name
         return cutters
 
-    @debug_decorator
+    @debug
     def save_temp_config(self):
         # type () -> None
         """
@@ -201,7 +172,7 @@ class DWTConfig(object):
         """
         self.save_config('temp_config.json')
 
-    @debug_decorator
+    @debug
     def on_parameter_change(self, parameter_name, parameter_value):
         # type: (str, object) -> None
         """
