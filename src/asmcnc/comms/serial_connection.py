@@ -1809,6 +1809,11 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
+        # THIS IS A TEMPORARY FIX - DO NOT MERGE INTO MASTER: 
+        # scale command sent to spindle for 110V machine: 
+        if 'S' in serialCommand: 
+            serialCommand = self.mod_spindle_speed_command(serialCommand)
+
         # Finally issue the command        
         if self.s:
             try:
@@ -1874,3 +1879,58 @@ class SerialConnection(object):
 
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    # Functions for modifying spindle speed - specifically for 110 V machines!!
+
+    def mod_spindle_speed_command(self, spindle_speed_line):
+
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line)
+        if match:
+            spindle_speed = float(match.group(1))
+
+        try:
+            spindle_speed = self.transform_intended_RPM_to_sendable_RPM(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), spindle_speed_line)
+            return new_line
+
+        except:
+            pass
+
+        return spindle_speed_line
+
+    def transform_intended_RPM_to_sendable_RPM(self, speed):
+        if int(speed) > 8899:
+            return int((float(speed) - 8890)/0.663)
+        else: 
+            return speed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

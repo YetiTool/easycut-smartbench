@@ -615,3 +615,136 @@ def test_yp_cancel_stream_exists(sc):
     sc.update_machine_runtime = Mock()
     sc.cancel_stream()
     assert not sc.yp.use_yp
+
+# Test modifying spindle speeds as GRBL stream is sent out
+## Does transformation for 110V spindle users only
+
+written_to_serial_list = []
+
+@pytest.fixture
+def sc_s_write_spy():
+
+    def s_write_spy(gcode):
+        global written_to_serial_list
+        if gcode != '?':
+            written_to_serial_list.append(gcode)
+
+    l = localization.Localization()
+    machine = Mock()
+    screen_manager = Mock()
+    settings_manager = Mock()
+    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    sc_obj = serial_connection.SerialConnection(machine, screen_manager, settings_manager, l, jd)
+    sc_obj.next_poll_time = 0
+    sc_obj.s = MagicMock()
+    sc_obj.s.write = Mock(side_effect=s_write_spy)
+    sc_obj.s.inWaiting = Mock(return_value = True)
+    sc_obj.s.readline = Mock(return_value = '<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0>')
+    return sc_obj
+
+
+def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_18000(sc):
+    assert sc.transform_intended_RPM_to_sendable_RPM('18000') == 13740
+
+def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_20000(sc):
+    assert sc.transform_intended_RPM_to_sendable_RPM(20000) == 16757
+
+def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_5000(sc):
+    assert sc.transform_intended_RPM_to_sendable_RPM(5000) == 5000
+
+def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_10000(sc):
+    assert sc.transform_intended_RPM_to_sendable_RPM(10000) == 1674
+
+
+def test_spindle_mods_mod_spindle_speed_command_M3_S20000(sc):
+    assert sc.mod_spindle_speed_command("M3 S20000") == "M3 S16757"
+
+def test_spindle_mods_mod_spindle_speed_command_S10000M4(sc):
+    assert sc.mod_spindle_speed_command("S10000M4") == "S1674M4"
+
+def test_spindle_mods_mod_spindle_speed_command_M2___S4000(sc):
+    assert sc.mod_spindle_speed_command("M2   S4000.0") == "M2   S4000.0"
+
+def test_spindle_mods_mod_spindle_speed_command_S18000(sc):
+    assert sc.mod_spindle_speed_command("S18000") == "S13740"
+
+def test_spindle_mods_mod_spindle_speed_command_SLP(sc):
+    assert sc.mod_spindle_speed_command("$SLP") == "$SLP"
+
+
+def test_spindle_mods_write_direct_single_spindle_command(sc_s_write_spy):
+    global written_to_serial_list
+    written_to_serial_list = []
+    sc_s_write_spy.write_direct("M3 S20000")
+    assert written_to_serial_list == ["M3 S16757\n"]
+
+def test_spindle_mods_write_direct_non_spindle_command(sc_s_write_spy):
+    global written_to_serial_list
+    written_to_serial_list = []
+    sc_s_write_spy.write_direct("G91X122")
+    assert written_to_serial_list == ["G91X122\n"]
+
+def test_spindle_mods_write_direct_slp(sc_s_write_spy):
+    global written_to_serial_list
+    written_to_serial_list = []
+    sc_s_write_spy.write_direct("$SLP")
+    assert written_to_serial_list == ["$SLP\n"]
+
+def test_spindle_mods_write_direct_M3_S(sc_s_write_spy):
+    global written_to_serial_list
+    written_to_serial_list = []
+    sc_s_write_spy.write_direct("M3 S")
+    assert written_to_serial_list == ["M3 S\n"]
+
+def test_spindle_mods_write_direct_float(sc_s_write_spy):
+    global written_to_serial_list
+    written_to_serial_list = []
+    sc_s_write_spy.write_direct("M3 S12300.45")
+    assert written_to_serial_list == ["M3 S5143\n"]
+
+
+def test_spindle_mods_stuff_buffer(sc_s_write_spy):
+    test_gcode = ["G90", "G0X4Y5F100", "AE", "G1", "G91", "M3 S18000.1"]
+    expected_lines = ["N0G90\n", "N1G0X4Y5F100\n", "AE\n", "N3G1\n", "N4G91\n", "N5M3 S13740\n"]
+    global written_to_serial_list
+    written_to_serial_list = []
+
+    sc_s_write_spy.l_count = 0
+    sc_s_write_spy.c_line = []
+    sc_s_write_spy.jd.job_gcode_running = test_gcode
+    sc_s_write_spy.stuff_buffer()
+    assert written_to_serial_list == expected_lines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
