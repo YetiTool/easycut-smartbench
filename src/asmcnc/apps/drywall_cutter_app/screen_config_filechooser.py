@@ -393,7 +393,6 @@ class ConfigFileChooser(Screen):
         self.filechooser._update_files()
 
     def refresh_filechooser(self):
-
         self.filechooser._update_item_selection()
 
         try:
@@ -435,22 +434,13 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        sorted_json = self.sort_json(json_obj)
-
-        print(sorted_json)
-
-        self.metadata_preview.text = self.to_human_readable(sorted_json)
+        self.metadata_preview.text = self.to_human_readable(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
-
-    def sort_json(self, json_obj):
-        items = json_obj.items()
-        items.sort(key=lambda x: self.json_config_order[x[0]])
-        return dict(items)
 
     def to_human_readable(self, json_obj, indent=0):
         def format_key(json_key):

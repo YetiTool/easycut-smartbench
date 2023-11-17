@@ -117,7 +117,7 @@ class DrywallCutterScreen(Screen):
     shape_options = ['Circle', 'Square', 'Line', 'Geberit']
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
-    tool_options = config_loader.DWTConfig().get_available_cutter_names()
+    tool_options = dwt_config.get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
