@@ -46,7 +46,6 @@ Builder.load_string("""
                 
         Label:
             id: title_label
-            #size_hint: (1, 0.12)
             pos_hint: {'x': -0.39, 'y': 0.45}
             text: 'Cutting depths'
             font_size: '20sp'
@@ -333,11 +332,13 @@ class CuttingDepthsPopup(Popup):
 
     def update_graphic_position(self):
         try:
-            bottom_offset = 0 if self.bottom_offset.text == '' else float(self.bottom_offset.text)
-            material_thickness = 0 if self.material_thickness.text == '' else float(self.material_thickness.text)
-            cutter_y = -0.035 - round((bottom_offset / Window.height) * 5, 3)
-            # x = (material_thickness - bottom_offset)
-            # cutter_y = -0.035 - round(0.26 * (1 - x), 3)
+            upper_limit = 0.225  # Value at which the cutter sits at the top of the material
+            lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
+            range = upper_limit - lower_limit
+            bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(self.bottom_offset.text)
+            material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(self.material_thickness.text)
+            ratio = 0 if material_thickness == 0 else bottom_offset / material_thickness
+            cutter_y = lower_limit - (range * ratio)
             self.cutter_graphic.pos_hint['y'] = cutter_y
             self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
             self.float_layout.do_layout()
@@ -360,8 +361,10 @@ class CuttingDepthsPopup(Popup):
                     self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
                                                   " Xmm[/color]".replace("X", str(max_cut_depth))
 
-                material_thickness = 0 if self.material_thickness.text == '' else float(self.material_thickness.text)
-                bottom_offset = 0 if self.bottom_offset.text == '' else float(self.bottom_offset.text)
+                material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+                    self.material_thickness.text)
+                bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+                    self.bottom_offset.text)
 
                 if material_thickness < 0:
                     self.material_thickness.text = '0'
@@ -370,8 +373,12 @@ class CuttingDepthsPopup(Popup):
                 # Make sure bottom offset is never bigger than material thickness
                 if abs(bottom_offset) > material_thickness:
                     if bottom_offset < 0:
-                        self.bottom_offset.text = '-' + self.material_thickness.text
-                        bottom_offset = -material_thickness
+                        if self.material_thickness.text == '':
+                            self.bottom_offset.text = ''
+                            bottom_offset = material_thickness
+                        else:
+                            self.bottom_offset.text = '-' + self.material_thickness.text
+                            bottom_offset = -material_thickness
 
                 self.total_cut_depth.text = str(material_thickness + bottom_offset)
                 self.update_graphic_position()
@@ -394,12 +401,18 @@ class CuttingDepthsPopup(Popup):
         else:
             self.confirm_button.disabled = False
             self.confirm_button.opacity = 1
+        self.float_layout.do_layout()
 
     def generate_pass_depth_lines(self, number_of_passes):
-        upper_limit = 0.0825
-        lower_limit = -0.175 - (-0.035 - self.cutter_graphic.pos_hint['y'])
+        upper_limit = 0.0825  # Value at which the line sits at the top of the material
+        lower_limit = -0.175  # Value at which the line sits at the bottom surface of the material
         line_range = upper_limit - lower_limit
-        singular_cut = 0 if self.depth_per_pass.text == "" else round(line_range / (float(number_of_passes)), 4)
+        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+        ratio = 0 if material_thickness == 0 else depth_per_pass / material_thickness
+        singular_cut = 0 if self.depth_per_pass.text == "" else round(ratio * line_range, 4)
         for pass_line in self.pass_depth_lines:
             self.float_layout.remove_widget(pass_line)
         if self.total_cut_depth.text != "0.0":
@@ -409,13 +422,17 @@ class CuttingDepthsPopup(Popup):
                 self.float_layout.add_widget(img)
 
                 img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
+
                 line_depth = upper_limit - (singular_cut * (i+1))
-                if line_depth < lower_limit:
-                    line_depth = lower_limit
+                cutter_limit = lower_limit - (-0.035 - self.cutter_graphic.pos_hint['y'])
+                if line_depth < cutter_limit:
+                    line_depth = cutter_limit
+
                 img.pos_hint = {'center_x': 0.45, 'y': line_depth}
                 img.allow_stretch = True
 
                 self.pass_depth_lines.append(img)
+        self.float_layout.do_layout()
 
     def calculate_depth_per_pass(self, instance, value):
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
@@ -453,8 +470,8 @@ class CuttingDepthsPopup(Popup):
                 pass
 
     def confirm(self):
-        material_thickness = 0.0 if self.material_thickness.text == '' else float(self.material_thickness.text)
-        bottom_offset = 0.0 if self.bottom_offset.text == '' else float(self.bottom_offset.text)
+        material_thickness = 0.0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(self.material_thickness.text)
+        bottom_offset = 0.0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(self.bottom_offset.text)
         depth_per_pass = 0.0 if self.depth_per_pass.text == '' else float(self.depth_per_pass.text)
 
         self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
