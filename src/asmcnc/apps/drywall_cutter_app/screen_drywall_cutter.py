@@ -235,17 +235,6 @@ class DrywallCutterScreen(Screen):
         file_name_no_ext = config.split('/')[-1].split('.')[0]
         # set the label on the screen to the name of the config file below
 
-    def save_config(self, name):
-        # type: (str) -> None
-        """
-        Saves the active configuration to the configurations directory.
-
-        :param name: The name of to save the configuration file as.
-        """
-        file_name = name + ('.json' if not name.endswith('.json') else '')
-
-        self.dwt_config.save_config(file_name)
-
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type
         self.select_shape()
@@ -258,6 +247,17 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
+
+    def save_config(self, name):
+        # type: (str) -> None
+        """
+        Saves the active configuration to the configurations directory.
+
+        :param name: The name of to save the configuration file as.
+        """
+        file_name = name + ('.json' if not name.endswith('.json') else '')
+
+        self.dwt_config.save_config(file_name)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
