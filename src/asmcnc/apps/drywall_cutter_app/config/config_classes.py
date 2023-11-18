@@ -8,7 +8,7 @@ Data types are not confirmed.
 class Cutter:
     def __init__(self, cutter_description, units, diameter, material, cutting_spindle_speed,
                  cutting_feedrate, plunge_rate, cutting_direction, allowable_toolpath_offsets,
-                 max_depth_per_pass, max_depth_total, stepover, yeti_pilot_target_powers):
+                 max_depth_per_pass, max_depth_total, stepover, yeti_pilot_target_powers, image_path):
         self.cutter_description = cutter_description  # type: str
         self.units = units  # type: str
         self.diameter = diameter  # type: float
@@ -22,6 +22,7 @@ class Cutter:
         self.max_depth_total = max_depth_total  # type: float
         self.stepover = stepover  # type: float
         self.yeti_pilot_target_powers = yeti_pilot_target_powers  # type: float
+        self.image_path = image_path  # type: str
 
 
 class AllowableToolpathOffsets:
