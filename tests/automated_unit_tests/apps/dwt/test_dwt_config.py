@@ -21,7 +21,8 @@ except Exception as e:
     print("Can't import mocking packages, are you on a dev machine?")
 
 """
-RUN WITH python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.py
+RUN WITH 
+python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.py
 FROM EASYCUT-SMARTBENCH DIR
 """
 
@@ -86,3 +87,12 @@ def test_on_parameter_change():
 
     assert dwt_screen.dwt_config.active_config.shape_type == 'circle'
     assert dwt_screen.dwt_config.active_config.cutting_depths.material_thickness == 0.5
+
+
+def test_get_available_cutter_names():
+    dwt_config = config_loader.DWTConfig()
+
+    assert dwt_config.get_available_cutter_names() == {
+        'unique_label': 'test_cutter.json',
+        'cutter 2': 'test_cutter2.json'
+    }
