@@ -50,6 +50,13 @@ Builder.load_string("""
             text: 'Cutting depths'
             font_size: '20sp'
             color: hex('#F9F9F9')
+        
+        Label:
+            id: Z0
+            pos_hint: {'x': 0.0375, 'y': 0.21}
+            text: 'Z0'
+            font_size: '20sp'
+            color: hex('#333333')
             
         Image:
             id: material_graphic
