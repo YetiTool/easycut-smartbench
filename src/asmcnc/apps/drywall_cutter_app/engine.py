@@ -677,8 +677,8 @@ class GCodeEngine():
 
             if simulate:
                 circle = self.cut_rectangle(coordinates,
-                                               0,
-                                                0,
+                                                -1 * self.config.active_config.canvas_shape_dims.d/2,
+                                                -1 * self.config.active_config.canvas_shape_dims.d/2,
                                                 self.config.active_config.toolpath_offset,
                                                 self.config.active_cutter.diameter,
                                                 is_climb,
@@ -696,8 +696,8 @@ class GCodeEngine():
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
                     pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
                     circle = self.cut_rectangle(coordinates,
-                                            0,
-                                            0,
+                                            -1 * self.config.active_config.canvas_shape_dims.d/2,
+                                            -1 * self.config.active_config.canvas_shape_dims.d/2,
                                             self.config.active_config.toolpath_offset,
                                             effective_tool_diameter,
                                             is_climb,
