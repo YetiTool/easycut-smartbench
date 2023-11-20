@@ -65,7 +65,7 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: True
                     pos: self.parent.pos
-                    width: 0.1*app.width
+                    width: dp(0.1)*app.width
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
@@ -78,14 +78,14 @@ Builder.load_string(
                     source: './asmcnc/skavaUI/img/park.png'
                     allow_stretch: True
                     keep_ratio: True
-                    width: 0.025*app.width
+                    width: dp(0.025)*app.width
                     pos: self.parent.pos    
                 Image:
                     id: g54_marker
                     source: './asmcnc/skavaUI/img/jobstart.png'
                     allow_stretch: True
                     keep_ratio: True
-                    width: 0.0125*app.width
+                    width: dp(0.0125)*app.width
                     pos: self.parent.pos  
                     
 """
