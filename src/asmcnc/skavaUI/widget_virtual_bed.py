@@ -78,14 +78,14 @@ Builder.load_string(
                     source: './asmcnc/skavaUI/img/park.png'
                     allow_stretch: True
                     keep_ratio: True
-                    width: dp(0.025)*app.width
+                    width: self.parent.width/20
                     pos: self.parent.pos    
                 Image:
                     id: g54_marker
                     source: './asmcnc/skavaUI/img/jobstart.png'
                     allow_stretch: True
                     keep_ratio: True
-                    width: dp(0.0125)*app.width
+                    width: self.parent.width/10
                     pos: self.parent.pos  
                     
 """
