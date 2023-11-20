@@ -573,8 +573,8 @@ class GCodeEngine():
 
             if simulate:              
                 rectangle = self.cut_rectangle(coordinates,
-                                               self.config.active_config.datum_position.x,
-                                                self.config.active_config.datum_position.y,
+                                               0,
+                                                0,
                                                 self.config.active_config.toolpath_offset,
                                                 self.config.active_cutter.diameter,
                                                 is_climb,
@@ -592,8 +592,8 @@ class GCodeEngine():
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
                     pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
                     rectangle = self.cut_rectangle(coordinates,
-                                            self.config.active_config.datum_position.x,
-                                            self.config.active_config.datum_position.y,
+                                            0,
+                                            0,
                                             self.config.active_config.toolpath_offset,
                                             effective_tool_diameter,
                                             is_climb,
@@ -619,8 +619,8 @@ class GCodeEngine():
                 coordinates = self.rectangle_coordinates(float(x_size), float(y_size), float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
                 gcode_lines = self.cut_rectangle(coordinates,
-                                               self.config.active_config.datum_position.x,
-                                                self.config.active_config.datum_position.y,
+                                               0,
+                                                0,
                                                 "on",
                                                 0,
                                                 is_climb,
@@ -642,7 +642,7 @@ class GCodeEngine():
                 gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
 
                 # Apply datum offset
-                gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.datum_position.x, self.config.active_config.datum_position.y)
+                gcode_lines = self.apply_datum_offset(gcode_lines, 0, 0)
 
                 # Apply pass depths
                 pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
@@ -652,10 +652,10 @@ class GCodeEngine():
 
                 tool_radius = self.config.active_cutter.diameter / 2
                 
-                partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
-                                            float(y_size) + tool_radius + self.config.active_config.datum_position.y]
-                partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
-                                        tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+                partoff_start_coordinate = [(-1 * tool_radius) + 0,
+                                            float(y_size) + tool_radius + 0]
+                partoff_end_coordinate = [tool_radius + float(x_size) + 0,
+                                        tool_radius + float(y_size) + 0]
                 gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.cutting_feedrate, self.config.active_cutter.plunge_rate, z_safe_distance)
                 
             cutting_lines = gcode_lines
@@ -677,8 +677,8 @@ class GCodeEngine():
 
             if simulate:
                 circle = self.cut_rectangle(coordinates,
-                                               self.config.active_config.datum_position.x,
-                                                self.config.active_config.datum_position.y,
+                                               0,
+                                                0,
                                                 self.config.active_config.toolpath_offset,
                                                 self.config.active_cutter.diameter,
                                                 is_climb,
@@ -696,8 +696,8 @@ class GCodeEngine():
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
                     pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
                     circle = self.cut_rectangle(coordinates,
-                                            self.config.active_config.datum_position.x,
-                                            self.config.active_config.datum_position.y,
+                                            0,
+                                            0,
                                             self.config.active_config.toolpath_offset,
                                             effective_tool_diameter,
                                             is_climb,
@@ -715,8 +715,8 @@ class GCodeEngine():
 
         elif self.config.active_config.shape_type.lower() == u"line":
             if simulate:
-                cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
-                                            self.config.active_config.datum_position.y,
+                cutting_lines = self.cut_line(0,
+                                            0,
                                             self.config.active_config.canvas_shape_dims.l,
                                             self.config.active_cutter.diameter,
                                             "vertical",
@@ -728,8 +728,8 @@ class GCodeEngine():
                                             simulate
                                             )
             else:
-                cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
-                                            self.config.active_config.datum_position.y,
+                cutting_lines = self.cut_line(0,
+                                            0,
                                             self.config.active_config.canvas_shape_dims.l,
                                             self.config.active_cutter.diameter,
                                             "vertical",
