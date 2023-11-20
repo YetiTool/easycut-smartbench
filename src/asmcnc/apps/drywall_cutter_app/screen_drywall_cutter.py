@@ -163,7 +163,6 @@ class DrywallCutterScreen(Screen):
         self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
         # Default to first cutter, so disabled cutter is never selected
         self.cut_offset_selection.text = self.cut_offset_selection.values[0]
-        self.select_toolpath
 
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
