@@ -38,6 +38,9 @@ Builder.load_string("""
                 text: root.tool_options.keys()[0]
                 values: root.tool_options.keys()
                 on_text: root.select_tool()
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -140,6 +143,8 @@ class DrywallCutterScreen(Screen):
 
         self.shape_selection.text = 'circle'
 
+        self.select_tool()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -147,6 +152,12 @@ class DrywallCutterScreen(Screen):
         selected_tool_name = self.tool_selection.text
 
         self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
+
+        # Convert allowed toolpaths object to dict, then put attributes with True into a list
+        self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        # Default to first cutter, so disabled cutter is never selected
+        self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+        self.select_toolpath
 
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
