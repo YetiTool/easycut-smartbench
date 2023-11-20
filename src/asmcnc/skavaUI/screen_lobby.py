@@ -475,7 +475,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None, None)
-                size: (dp(80/800)*app.width,dp(80/480)*app.height)
+                size: (dp(80.0/800)*app.width,dp(80.0/480)*app.height)
                 orientation: 'horizontal'
                 padding:[dp(0.03625)*app.width, dp(0.0604166666667)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 Button:
