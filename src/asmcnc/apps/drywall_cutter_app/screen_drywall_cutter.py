@@ -165,8 +165,8 @@ class DrywallCutterScreen(Screen):
             self.cut_offset_selection.text = 'on'
             self.cut_offset_selection.disabled = True
         else:
-            # Default to cut inside line
-            self.cut_offset_selection.text = 'inside'
+            # Default to cut inside line (when available)
+            self.cut_offset_selection.text = 'inside' if 'inside' in self.cut_offset_selection.values else self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
         if self.shape_selection.text in ['rectangle', 'line']:
