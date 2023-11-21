@@ -6,7 +6,8 @@ import inspect
 configurations_dir = './asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = './asmcnc/apps/drywall_cutter_app/config/cutters'
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config')
+TEMP_DIR = './asmcnc/apps/drywall_cutter_app/config/temp'
+TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, 'temp_config')
 DEBUG_MODE = True
 
 
@@ -26,6 +27,9 @@ class DWTConfig(object):
 
     def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
+        if not os.path.exists(TEMP_DIR):
+            os.makedirs(TEMP_DIR)
+
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
         else:
