@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from kivy.lang import Builder
@@ -183,18 +184,17 @@ class DrywallCutterScreen(Screen):
         """
         self.dwt_config.load_config(config)
 
-        file_name_no_ext = config.split('/')[-1].split('.')[0]
+        file_name = config.rsplit(os.sep, 1)[-1]
 
         # set the label on the screen to the name of the config file below
 
-    def save_config(self, name):
+    def save_config(self, file_name):
         # type: (str) -> None
         """
         Saves the active configuration to the configurations directory.
 
-        :param name: The name of to save the configuration file as.
+        :param file_name: The name of to save the configuration file as.
         """
-        file_name = name + ('.json' if not name.endswith('.json') else '')
 
         self.dwt_config.save_config(file_name)
 

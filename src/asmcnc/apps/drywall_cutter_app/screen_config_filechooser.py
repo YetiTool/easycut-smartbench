@@ -81,7 +81,6 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -350,7 +349,7 @@ class ConfigFileChooser(Screen):
 
             if not os.path.exists(configs_dir + '.gitignore'):
                 file = open(configs_dir + '.gitignore', "w+")
-                file.write('*.json')
+                file.write('*')
                 file.close()
 
     def on_enter(self):
