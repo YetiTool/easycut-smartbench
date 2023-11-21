@@ -404,9 +404,16 @@ class ConfigFileSaver(Screen):
         return result
 
     def save_config_and_return_to_dwt(self):
-        self.callback(self.file_selected_label.text)
+        if self.validate_file_name(self.file_selected_label.text):
+            self.callback(self.file_selected_label.text)
 
-        self.sm.current = 'drywall_cutter'
+            self.sm.current = 'drywall_cutter'
+        else:
+            popup_info.PopupInfo(screen_manager=self.sm, localization=self.l, popup_width=500,
+                                 description=self.l.get_str("File names must be between 1 and 40 characters long."))
+
+    def validate_file_name(self, file_name):
+        return 0 < len(file_name) <= 40
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
