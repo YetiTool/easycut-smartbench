@@ -544,7 +544,7 @@ class GCodeEngine():
         stepovers = [0]
         simulation_z_height = 5 #mm
         simualtion_plunge_rate = 750 #mm/s
-        simulation_feedrate = 2000 #mm/s
+        simulation_feedrate = 6000 #mm/s
 
         if self.config.active_cutter.cutting_direction.lower() == "climb":
             is_climb = True
