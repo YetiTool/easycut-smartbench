@@ -556,7 +556,7 @@ class GCodeEngine():
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
             if self.config.active_config.shape_type.lower() == u"square":
-                self.config.active_config.canvas_shape_dims.y = self.config.active_config.canvas_shape_dims.x #Make square not rectangle
+                self.config.active_config.canvas_shape_dims.x = self.config.active_config.canvas_shape_dims.y #Make square not rectangle
 
             rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y, 0, 0)
             if len(rect_coordinates) != 4:
