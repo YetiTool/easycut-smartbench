@@ -746,6 +746,7 @@ class GCodeEngine():
         
         if simulate:
             cutting_lines.insert(0, "G90")
+            cutting_lines.append("G0 X0 Y0")
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
         else:
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
