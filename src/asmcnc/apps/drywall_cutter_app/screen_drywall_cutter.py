@@ -15,12 +15,12 @@ from engine import GCodeEngine
 
 Builder.load_string("""
 <DrywallCutterScreen>:
-    xy_move_container:xy_move_container
     tool_selection:tool_selection
-    shape_display_container:shape_display_container
     shape_selection:shape_selection
-    cut_offset_selection:cut_offset_selection
     rotate_button:rotate_button
+    cut_offset_selection:cut_offset_selection
+    shape_display_container:shape_display_container
+    xy_move_container:xy_move_container
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -41,6 +41,9 @@ Builder.load_string("""
                 text: root.tool_options.keys()[0]
                 values: root.tool_options.keys()
                 on_text: root.select_tool()
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -146,6 +149,8 @@ class DrywallCutterScreen(Screen):
 
         self.shape_selection.text = 'circle'
 
+        self.select_tool()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -154,14 +159,19 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
+        # Convert allowed toolpaths object to dict, then put attributes with True into a list
+        self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        # Default to first cutter, so disabled cutter is never selected
+        self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
             # Only on line available for these options
             self.cut_offset_selection.text = 'on'
             self.cut_offset_selection.disabled = True
         else:
-            # Default to cut inside line
-            self.cut_offset_selection.text = 'inside'
+            # Default to cut inside line (when available)
+            self.cut_offset_selection.text = 'inside' if 'inside' in self.cut_offset_selection.values else self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
         if self.shape_selection.text in ['rectangle', 'line']:
@@ -245,6 +255,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
         self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
         self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
+        # Shape rotation is automatically set when these inputs are changed
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
