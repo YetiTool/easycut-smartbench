@@ -61,7 +61,9 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 values: root.line_cut_options
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 text: 'Material setup'
                 text_size: self.size
