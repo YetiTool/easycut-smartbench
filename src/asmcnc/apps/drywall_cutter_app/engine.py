@@ -735,7 +735,7 @@ class GCodeEngine():
                                             0,
                                             self.config.active_config.canvas_shape_dims.l,
                                             self.config.active_cutter.diameter,
-                                            "vertical",
+                                            self.config.active_config.rotation,
                                             self.config.active_config.cutting_depths.depth_per_pass,
                                             self.config.active_cutter.cutting_feedrate,
                                             self.config.active_cutter.plunge_rate,
