@@ -8,6 +8,7 @@ from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -27,12 +28,20 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
-            Spinner:
+            ImageDropDownButton:
                 id: tool_selection
+                callback: root.select_tool
+                key_name: 'cutter_path'
+                image_dict: root.tool_options
                 size_hint_x: 7
-                text: root.tool_options.keys()[0]
-                values: root.tool_options.keys()
-                on_text: root.select_tool()
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
+            # Spinner:
+            #     id: tool_selection
+            #     size_hint_x: 7
+            #     text: root.tool_options.keys()[0]
+            #     values: root.tool_options.keys()
+            #     on_text: root.select_tool()
             Spinner:
                 size_hint_x: 7
                 text: 'Shape'
@@ -132,10 +141,9 @@ class DrywallCutterScreen(Screen):
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
-    def select_tool(self):
-        selected_tool_name = self.tool_selection.text
-
-        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
+    def select_tool(self, cutter_file, *args):
+        self.dwt_config.load_cutter(cutter_file)
+        self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
     def select_shape(self):
         pass
