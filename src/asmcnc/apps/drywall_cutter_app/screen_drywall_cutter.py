@@ -138,11 +138,16 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
+        self.show_tool_image()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
+        self.show_tool_image()
+
+    def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
     def select_shape(self):
