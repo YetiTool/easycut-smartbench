@@ -473,8 +473,8 @@ class GCodeEngine():
 
         return gcode_part_1 +partoff_gcode + gcode_part_2      
 
-    #Extract dimention data from gcode header (manually inserted)
-    def read_in_custom_shape_dimentions(self, gcode_lines):
+    #Extract dimension data from gcode header (manually inserted)
+    def read_in_custom_shape_dimensions(self, gcode_lines):
         x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
         y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
         x_min_pattern = r"x min: (-?\d+\.\d+)"
@@ -555,6 +555,9 @@ class GCodeEngine():
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
+            if self.config.active_config.shape_type.lower() == u"square":
+                self.config.active_config.canvas_shape_dims.x = self.config.active_config.canvas_shape_dims.y #Make square not rectangle
+
             rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y, 0, 0)
             if len(rect_coordinates) != 4:
                 raise Exception(u"Sir, rectangles have 4 sides, not %d" % len(rect_coordinates))
@@ -613,7 +616,7 @@ class GCodeEngine():
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimentions(gcode_lines)
+            x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
             if simulate:
                 coordinates = self.rectangle_coordinates(float(x_size), float(y_size), float(x_minus), float(y_minus))
@@ -677,8 +680,8 @@ class GCodeEngine():
 
             if simulate:
                 circle = self.cut_rectangle(coordinates,
-                                               0,
-                                                0,
+                                                -1 * self.config.active_config.canvas_shape_dims.d/2,
+                                                -1 * self.config.active_config.canvas_shape_dims.d/2,
                                                 self.config.active_config.toolpath_offset,
                                                 self.config.active_cutter.diameter,
                                                 is_climb,
@@ -696,8 +699,8 @@ class GCodeEngine():
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
                     pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
                     circle = self.cut_rectangle(coordinates,
-                                            0,
-                                            0,
+                                            -1 * self.config.active_config.canvas_shape_dims.d/2,
+                                            -1 * self.config.active_config.canvas_shape_dims.d/2,
                                             self.config.active_config.toolpath_offset,
                                             effective_tool_diameter,
                                             is_climb,
@@ -732,7 +735,7 @@ class GCodeEngine():
                                             0,
                                             self.config.active_config.canvas_shape_dims.l,
                                             self.config.active_cutter.diameter,
-                                            self.config.active_config.rotation,
+                                            "vertical",
                                             self.config.active_config.cutting_depths.depth_per_pass,
                                             self.config.active_cutter.cutting_feedrate,
                                             self.config.active_cutter.plunge_rate,
