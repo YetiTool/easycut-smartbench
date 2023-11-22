@@ -552,7 +552,7 @@ class GCodeEngine():
             is_climb = False
 
         # Calculated parameters
-        total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
+        total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
             if self.config.active_config.shape_type.lower() == u"square":
