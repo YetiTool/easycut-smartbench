@@ -475,10 +475,10 @@ class GCodeEngine():
 
     #Extract dimension data from gcode header (manually inserted)
     def read_in_custom_shape_dimensions(self, gcode_lines):
-        x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
-        y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
-        x_min_pattern = r"x min: (-?\d+\.\d+)"
-        y_min_pattern = r"y min: (-?\d+\.\d+)"
+        x_dim_pattern = r"Final part x dim: (-?\d+\.?\d*)"
+        y_dim_pattern = r"Final part y dim: (-?\d+\.?\d*)"
+        x_min_pattern = r"x min: (-?\d+\.?\d*)"
+        y_min_pattern = r"y min: (-?\d+\.?\d*)"
 
         x_dim = None
         y_dim = None
@@ -507,7 +507,7 @@ class GCodeEngine():
                     y_min = y_min_match.group(1)  # Store the matched value as a string
 
             if x_dim and y_dim and x_min and y_min:
-                break  # Exit the loop once both values have been found
+                break  # Exit the loop once all values have been found
 
         missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min]) if value is None]
         if missing_values:
