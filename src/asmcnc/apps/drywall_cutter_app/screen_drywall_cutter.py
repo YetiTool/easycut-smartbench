@@ -12,6 +12,7 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 
 from engine import GCodeEngine
+from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -35,15 +36,15 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
-            Spinner:
+            ImageDropDownButton:
                 id: tool_selection
+                callback: root.select_tool
+                key_name: 'cutter_path'
+                image_dict: root.tool_options
                 size_hint_x: 7
                 text: root.tool_options.keys()[0]
                 values: root.tool_options.keys()
                 on_text: root.select_tool()
-                text_size: self.size
-                halign: 'center'
-                valign: 'middle'
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -144,20 +145,15 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine)
-        self.shape_display_container.add_widget(self.drywall_shape_display_widget)
-
-        self.shape_selection.text = 'circle'
-
-        self.select_tool()
-
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
-    def select_tool(self):
-        selected_tool_name = self.tool_selection.text
+    def select_tool(self, cutter_file, *args):
+        self.dwt_config.load_cutter(cutter_file)
+        self.show_tool_image()
 
-        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
+    def show_tool_image(self):
+        self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
