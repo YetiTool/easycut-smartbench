@@ -540,6 +540,7 @@ class GCodeEngine():
         safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_lines = []
+        cutting_pass_depth = self.config.active_cutter.max_depth_per_pass if self.config.active_config.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
         pass_depths = []
         stepovers = [0]
         simulation_z_height = 5 #mm
@@ -593,7 +594,7 @@ class GCodeEngine():
                 roughing_pass = True
                 for stepover in stepovers:
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
-                    pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+                    pass_depth = finish_stepdown if stepover != max(stepovers) else cutting_pass_depth
                     rectangle = self.cut_rectangle(coordinates,
                                             0,
                                             0,
@@ -648,7 +649,7 @@ class GCodeEngine():
                 gcode_lines = self.apply_datum_offset(gcode_lines, 0, 0)
 
                 # Apply pass depths
-                pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
+                pass_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
                 start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None)
                 end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
                 gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
@@ -697,7 +698,7 @@ class GCodeEngine():
                 roughing_pass = True
                 for stepover in stepovers:
                     effective_tool_diameter = self.config.active_cutter.diameter + (stepover * 2)
-                    pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_config.cutting_depths.depth_per_pass
+                    pass_depth = finish_stepdown if stepover != max(stepovers) else cutting_pass_depth
                     circle = self.cut_rectangle(coordinates,
                                             -1 * self.config.active_config.canvas_shape_dims.d/2,
                                             -1 * self.config.active_config.canvas_shape_dims.d/2,
@@ -736,7 +737,7 @@ class GCodeEngine():
                                             self.config.active_config.canvas_shape_dims.l,
                                             self.config.active_cutter.diameter,
                                             self.config.active_config.rotation,
-                                            self.config.active_config.cutting_depths.depth_per_pass,
+                                            cutting_pass_depth,
                                             self.config.active_cutter.cutting_feedrate,
                                             self.config.active_cutter.plunge_rate,
                                             total_cut_depth,
