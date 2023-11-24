@@ -11,6 +11,7 @@ from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+from asmcnc.apps.drywall_cutter_app import job_load_helper
 
 from engine import GCodeEngine
 
@@ -226,6 +227,11 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         self.engine.engine_run(False)
+        job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
+                                                           localization=self.l)
+        output_file = "jobCache/" + self.dwt_config.active_config.shape_type + u".nc"
+        self.jd.set_job_filename(output_file)
+        job_loader.load_gcode_file(output_file)
         self.proceed_to_go_screen()
 
     def proceed_to_go_screen(self):
@@ -246,11 +252,8 @@ class DrywallCutterScreen(Screen):
 
             popup_info.PopupInfo(self.sm, self.l, 450, info)
 
-        elif not self.m.state().startswith('Idle'):
-            self.sm.current = 'mstate'
-
-        elif self.is_job_within_bounds() == False and sys.platform != "win32":
-            self.sm.current = 'boundary'
+        # elif not self.m.state().startswith('Idle'):
+        #     self.sm.current = 'mstate'
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('home', 'home')
