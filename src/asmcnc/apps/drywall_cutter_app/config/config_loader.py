@@ -3,8 +3,8 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+configurations_dir = './asmcnc/apps/drywall_cutter_app/config/configurations'
+cutters_dir = './asmcnc/apps/drywall_cutter_app/config/cutters'
 
 TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
 DEBUG_MODE = True
@@ -16,7 +16,6 @@ def debug(func):
             print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
                 kwargs))
         return func(*args, **kwargs)
-
     return wrapper
 
 

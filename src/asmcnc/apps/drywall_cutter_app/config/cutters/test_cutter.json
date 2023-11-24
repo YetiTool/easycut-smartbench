@@ -1,7 +1,7 @@
 {
   "cutter_description": "unique_label",
   "units": "mm",
-  "diameter": 10.0,
+  "diameter": 8.0,
   "material": "drywall",
   "cutting_spindle_speed": 2000,
   "cutting_feedrate": 500,
