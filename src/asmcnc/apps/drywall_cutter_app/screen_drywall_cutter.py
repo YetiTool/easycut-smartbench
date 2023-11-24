@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from kivy.lang import Builder
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
@@ -13,6 +15,11 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 
 from engine import GCodeEngine
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
+
+
+class ImageButton(ButtonBehavior, Image):
+    pass
+
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -28,11 +35,14 @@ Builder.load_string("""
             orientation: 'horizontal'
             padding: dp(5)
             spacing: dp(10)
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/home_button.png'
+                allow_stretch: True
                 size_hint_x: 7
-                text: 'Home'
                 on_press: root.home()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/open_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
@@ -52,7 +62,6 @@ Builder.load_string("""
                 values: root.shape_options
                 on_text: root.select_shape()
             Button:
-                id: rotate_button
                 size_hint_x: 7
                 text: 'Rotate'
                 on_press: root.rotate_shape()
@@ -64,7 +73,6 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 values: root.line_cut_options
-                on_text: root.select_toolpath()
             Button:
                 size_hint_x: 7
                 text: 'Material setup'
@@ -72,11 +80,15 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 on_press: root.material_setup()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/stop_button.png'
+                allow_stretch: True
                 size_hint_x: 15
                 text: 'STOP'
                 on_press: root.stop()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/exit_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 on_press: root.quit_to_lobby()
                 text: 'Quit'
@@ -106,13 +118,19 @@ Builder.load_string("""
                     size_hint_y: 7
                     orientation: 'horizontal'
                     spacing: dp(10)
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/simulate_button.png'
+                        allow_stretch: True
                         text: 'Simulate'
                         on_press: root.simulate()
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/save_button.png'
+                        allow_stretch: True
                         text: 'Save'
                         on_press: root.save()
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/start_job_button.png'
+                        allow_stretch: True
                         text: 'Run'
                         on_press: root.run()
 """)
