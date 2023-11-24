@@ -14,6 +14,7 @@ Builder.load_string("""
 <DrywallCutterScreen>:
     xy_move_container:xy_move_container
     tool_selection:tool_selection
+    toolpath_selection:toolpath_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -51,13 +52,14 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'Rotate'
                 on_press: root.rotate_shape()
-            Spinner:
+            ImageDropDownButton:
+                id: toolpath_selection
                 size_hint_x: 7
-                text: 'Cut on line'
-                text_size: self.size
-                halign: 'center'
-                valign: 'middle'
-                values: root.line_cut_options
+                callback: root.select_toolpath
+                key_name: 'key'
+                image_dict: root.toolpath_offset_options_dict
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
             Button:
                 size_hint_x: 7
                 text: 'Material setup'
@@ -126,6 +128,17 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
+    toolpath_offset_options_dict = {
+        'inside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+        },
+        'outside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+        },
+        'on': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+        },
+    }
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -139,6 +152,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.show_tool_image()
+        self.show_toolpath_image()
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -158,6 +172,13 @@ class DrywallCutterScreen(Screen):
 
     def material_setup(self):
         pass
+
+    def select_toolpath(self, toolpath):
+        self.dwt_config.on_parameter_change('toolpath_offset', toolpath)
+        self.show_toolpath_image()
+
+    def show_toolpath_image(self):
+        self.toolpath_selection.source = self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)

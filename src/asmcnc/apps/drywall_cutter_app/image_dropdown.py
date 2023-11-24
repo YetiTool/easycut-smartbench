@@ -23,8 +23,11 @@ class ImageDropDown(DropDown):
 
             image.bind(on_release=self.dismiss)
 
-            # https://stackoverflow.com/questions/2295290/what-do-lambda-function-closures-capture
-            image.bind(on_press=lambda x, k=key: callback(image_dict[k][key_name]))
+            if key_name == 'key':
+                image.bind(on_press=lambda x, k=key: callback(k))
+            else:
+                # https://stackoverflow.com/questions/2295290/what-do-lambda-function-closures-capture
+                image.bind(on_press=lambda x, k=key: callback(image_dict[k][key_name]))
 
             self.add_widget(image)
 
