@@ -176,7 +176,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.shape_selection.text = 'circle'
+        self.select_shape('circle')
 
         self.show_tool_image()
         self.show_toolpath_image()
@@ -192,50 +192,47 @@ class DrywallCutterScreen(Screen):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
     def select_shape(self, shape):
+        self.dwt_config.on_parameter_change('shape_type', shape.lower())
+
         self.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
 
-        if self.shape_selection.text in ['line', 'geberit']:
+        if shape in ['line', 'geberit']:
             # Only on line available for these options
-            self.cut_offset_selection.text = 'on'
-            self.cut_offset_selection.disabled = True
+            new_toolpath = 'on'
+            self.toolpath_selection.disabled = True
         else:
             # Default to cut inside line
-            self.cut_offset_selection.text = 'inside'
-            self.cut_offset_selection.disabled = False
+            new_toolpath = 'inside'
+            self.toolpath_selection.disabled = False
 
-        if self.shape_selection.text in ['rectangle', 'line']:
+        if shape in ['rectangle', 'line']:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True
 
         self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
-        self.select_toolpath()
+        self.drywall_shape_display_widget.select_shape(shape, self.rotation)
+        self.select_toolpath(new_toolpath)
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
-
-        self.dwt_config.on_parameter_change('shape_type', shape.lower())
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
             self.rotation = 'vertical'
         else:
             self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation, swap_lengths=swap_lengths)
-        self.select_toolpath()
-
-    def select_toolpath(self):
-        self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text, self.rotation)
-
-        self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
+        self.drywall_shape_display_widget.select_shape(self.dwt_config.active_config.shape_type, self.rotation, swap_lengths=swap_lengths)
+        self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
 
     def material_setup(self):
         material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        pass
 
     def select_toolpath(self, toolpath):
         self.dwt_config.on_parameter_change('toolpath_offset', toolpath)
+
+        self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, toolpath, self.rotation)
+
         self.show_toolpath_image()
 
     def show_toolpath_image(self):
@@ -282,11 +279,9 @@ class DrywallCutterScreen(Screen):
         # set the label on the screen to the name of the config file below
 
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
-        self.shape_selection.text = self.dwt_config.active_config.shape_type
-        self.select_shape()
+        self.select_shape(self.dwt_config.active_config.shape_type)
 
-        self.cut_offset_selection.text = toolpath_offset
-        self.select_toolpath()
+        self.select_toolpath(toolpath_offset)
 
         self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
         self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
