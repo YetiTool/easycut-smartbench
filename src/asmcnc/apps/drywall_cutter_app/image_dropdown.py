@@ -25,6 +25,7 @@ class ImageDropDown(DropDown):
 
             if key_name == 'key':
                 image.bind(on_press=lambda x, k=key: callback(k))
+                self.parent.text = key  # this is added as a temporary fix to integrate with @Dennis's code, will be removed in the future
             else:
                 # https://stackoverflow.com/questions/2295290/what-do-lambda-function-closures-capture
                 image.bind(on_press=lambda x, k=key: callback(image_dict[k][key_name]))
@@ -53,6 +54,7 @@ class ImageDropDownButton(ButtonBehavior, Image):
             return
 
         self.dropdown = ImageDropDown(self.image_dict, self.callback, self.key_name)
+        self.add_widget(self.dropdown)
 
     def on_release(self):
         self.dropdown.open(self)

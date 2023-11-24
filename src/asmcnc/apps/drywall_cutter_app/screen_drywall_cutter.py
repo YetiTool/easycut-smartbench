@@ -15,6 +15,7 @@ Builder.load_string("""
     xy_move_container:xy_move_container
     tool_selection:tool_selection
     toolpath_selection:toolpath_selection
+    shape_selection:shape_selection
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -37,17 +38,14 @@ Builder.load_string("""
                 size_hint_x: 7
                 allow_stretch: True
                 source: './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
-            # Spinner:
-            #     id: tool_selection
-            #     size_hint_x: 7
-            #     text: root.tool_options.keys()[0]
-            #     values: root.tool_options.keys()
-            #     on_text: root.select_tool()
-            Spinner:
+            ImageDropDownButton:
+                id: shape_selection
+                callback: root.select_shape
+                image_dict: root.shape_options_dict
+                key_name: 'key'
                 size_hint_x: 7
-                text: 'Shape'
-                values: root.shape_options
-                on_text: root.select_shape()
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png'
             Button:
                 size_hint_x: 7
                 text: 'Rotate'
@@ -128,6 +126,23 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['Cut on line', 'Cut inside line', 'Cut outside line']
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
+    shape_options_dict = {
+        'circle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
+        },
+        'square': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png',
+        },
+        'line': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
+        },
+        'geberit': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
+        },
+        'rectangle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
+        },
+    }
     toolpath_offset_options_dict = {
         'inside': {
             'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
@@ -164,8 +179,9 @@ class DrywallCutterScreen(Screen):
     def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
-    def select_shape(self):
-        pass
+    def select_shape(self, shape):
+        self.dwt_config.on_parameter_change('shape_type', shape.lower())
+        self.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
 
     def rotate_shape(self):
         pass
