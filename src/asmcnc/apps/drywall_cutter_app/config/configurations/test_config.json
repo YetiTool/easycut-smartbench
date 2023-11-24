@@ -9,7 +9,7 @@
     "d": 15,
     "l": 30
   },
-  "cutter_type": "test_cutter.json",
+  "cutter_type": "tool_6mm.json",
   "toolpath_offset": "in",
   "cutting_depths": {
     "material_thickness": 3.0,

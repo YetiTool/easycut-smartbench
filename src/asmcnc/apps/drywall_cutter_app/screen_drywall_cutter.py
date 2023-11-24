@@ -10,6 +10,7 @@ from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 
 from engine import GCodeEngine
 
@@ -35,15 +36,20 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
-            Spinner:
+            ImageDropDownButton:
                 id: tool_selection
+                callback: root.select_tool
+                key_name: 'cutter_path'
+                image_dict: root.tool_options
                 size_hint_x: 7
-                text: root.tool_options.keys()[0]
-                values: root.tool_options.keys()
-                on_text: root.select_tool()
-                text_size: self.size
-                halign: 'center'
-                valign: 'middle'
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
+            # Spinner:
+            #     id: tool_selection
+            #     size_hint_x: 7
+            #     text: root.tool_options.keys()[0]
+            #     values: root.tool_options.keys()
+            #     on_text: root.select_tool()
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -123,7 +129,6 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
@@ -144,6 +149,8 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
+        self.show_tool_image()
+
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
@@ -154,15 +161,16 @@ class DrywallCutterScreen(Screen):
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
-    def select_tool(self):
-        selected_tool_name = self.tool_selection.text
-
-        self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
-
+    def select_tool(self, cutter_file, *args):
+        self.dwt_config.load_cutter(cutter_file)
+        self.show_tool_image()
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
         # Default to first cutter, so disabled cutter is never selected
         self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+
+    def show_tool_image(self):
+        self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
@@ -203,7 +211,6 @@ class DrywallCutterScreen(Screen):
 
     def material_setup(self):
         material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        pass
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
@@ -212,7 +219,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        self.engine.engine_run(True)
+        self.engine.engine_run(simulate=True)
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
@@ -223,7 +230,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run(False)
+        self.engine.engine_run(simulate=False)
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
