@@ -619,7 +619,7 @@ class GCodeEngine():
             x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
             if simulate:
-                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.active_cutter.diameter/2, float(x_minus), float(y_minus))
+                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.diameter/2, float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
                 gcode_lines = self.cut_rectangle(coordinates,
                                                 0,
