@@ -1,4 +1,5 @@
 from datetime import datetime
+import sys, textwrap
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -137,6 +138,7 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
+        self.jd = kwargs['job']
 
         self.engine = GCodeEngine(self.dwt_config, machine=self.m)
 
@@ -224,6 +226,69 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         self.engine.engine_run(False)
+        self.proceed_to_go_screen()
+
+    def proceed_to_go_screen(self):
+
+        # NON-OPTIONAL CHECKS (bomb if non-satisfactory)
+
+        # GCode must be loaded.
+        # Machine state must be idle.
+        # Machine must be homed.
+        # Job must be within machine bounds.
+
+        if self.jd.job_gcode == []:
+            info = (
+                    self.format_command(
+                        self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + self.format_command(
+                self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
+            )
+
+            popup_info.PopupInfo(self.sm, self.l, 450, info)
+
+        elif not self.m.state().startswith('Idle'):
+            self.sm.current = 'mstate'
+
+        elif self.is_job_within_bounds() == False and sys.platform != "win32":
+            self.sm.current = 'boundary'
+
+        elif self.m.is_machine_homed == False and sys.platform != "win32":
+            self.m.request_homing_procedure('home', 'home')
+
+        elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
+
+            z_datum_reminder_message = (
+                    self.format_command(
+                        self.l.get_str(
+                            'You may need to set a new Z datum before you start a new job!')) + '\n\n' + self.format_command(
+                self.l.get_str('Press Ok to clear this reminder.').replace(self.l.get_str('Ok'), self.l.get_bold('Ok')))
+            )
+
+            popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+            self.sm.get_screen('home').z_datum_reminder_flag = False
+
+        else:
+            # clear to proceed
+            self.jd.screen_to_return_to_after_job = 'home'
+            self.jd.screen_to_cancel_to_after_job = 'home'
+
+            # Check if stylus option is enabled
+            if self.m.is_stylus_enabled == True:
+                # Display tool selection screen
+                self.sm.current = 'tool_selection'
+
+            else:
+                self.m.stylus_router_choice = 'router'
+
+                # is fw capable of auto Z lift?
+                if self.m.fw_can_operate_zUp_on_pause():
+                    self.sm.current = 'lift_z_on_pause_or_not'
+                else:
+                    self.sm.current = 'jobstart_warning'
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        return wrapped_cmd
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
