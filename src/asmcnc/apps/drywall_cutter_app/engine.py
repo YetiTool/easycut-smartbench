@@ -540,7 +540,7 @@ class GCodeEngine():
         safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_lines = []
-        cutting_pass_depth = self.config.active_cutter.max_depth_per_pass if self.config.active_config.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
+        cutting_pass_depth = self.config.active_cutter.max_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
         pass_depths = []
         stepovers = [0]
         simulation_z_height = 5 #mm
