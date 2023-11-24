@@ -6,6 +6,7 @@ import inspect
 configurations_dir = './asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = './asmcnc/apps/drywall_cutter_app/config/cutters'
 
+TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
 DEBUG_MODE = True
 
 
@@ -25,11 +26,11 @@ class DWTConfig(object):
 
     def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
-        if os.path.exists(os.path.join(configurations_dir, 'temp_config.json')):
-            self.load_config('temp_config.json')
+        if os.path.exists(TEMP_CONFIG_PATH):
+            self.load_temp_config()
         else:
             self.active_config = config_classes.Configuration.default()
-            self.active_cutter = self.load_cutter(self.active_config.cutter_type)
+            self.load_cutter(self.active_config.cutter_type)
 
     @staticmethod
     @debug
@@ -144,23 +145,26 @@ class DWTConfig(object):
     @staticmethod
     @debug
     def get_available_cutter_names():
-        # type () -> dict{str: str}
+        # type () -> dict{str: dict{str: str}}
         """
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
-        for f_name in os.listdir(cutters_dir):
-            if not f_name.endswith('.json'):
+        for cutter_file in sorted(os.listdir(cutters_dir)):
+            if not cutter_file.endswith('.json'):
                 continue
 
-            file_path = os.path.join(cutters_dir, f_name)
+            file_path = os.path.join(cutters_dir, cutter_file)
 
             if os.path.isfile(file_path):
                 with open(file_path, 'r') as f:
                     cutter = json.load(f)
 
-                    if 'cutter_description' in cutter:
-                        cutters[cutter['cutter_description']] = f_name
+                    if 'cutter_description' in cutter and 'image_path' in cutter:
+                        cutters[cutter['cutter_description']] = {
+                            'cutter_path': cutter_file,
+                            'image_path': cutter['image_path']
+                        }
         return cutters
 
     @debug
@@ -171,7 +175,17 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config('temp_config.json')
+        self.save_config(os.path.join('..', 'temp', 'temp_config.json'))
+
+    @debug
+    def load_temp_config(self):
+        # type () -> None
+        """
+        Loads the temporary configuration file.
+
+        This is used to load the configuration when the Drywall Cutter screen is loaded.
+        """
+        self.load_config(os.path.join('..', 'temp', 'temp_config.json'))
 
     @debug
     def on_parameter_change(self, parameter_name, parameter_value):
