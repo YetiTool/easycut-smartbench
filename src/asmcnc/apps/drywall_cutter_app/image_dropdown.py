@@ -4,6 +4,25 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 
+"""
+This is a custom widget that is used to create a dropdown menu with images.
+
+The images are loaded from a dictionary that is passed to the widget.
+
+The image_dict parameter should have the following format:
+{
+    'key': {
+        'image_path': 'path/to/image.png',
+        'other_key_where_required': 'value',
+    }, ...
+}
+
+The callback parameter should be a function that you want to be called when an image is pressed.
+
+The key_name parameter should be the name of the key that you want to be passed to the callback function. 
+Pass 'key' if you want the key to be passed.
+"""
+
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -25,7 +44,6 @@ class ImageDropDown(DropDown):
 
             if key_name == 'key':
                 image.bind(on_press=lambda x, k=key: callback(k))
-                self.parent.text = key  # this is added as a temporary fix to integrate with @Dennis's code, will be removed in the future
             else:
                 # https://stackoverflow.com/questions/2295290/what-do-lambda-function-closures-capture
                 image.bind(on_press=lambda x, k=key: callback(image_dict[k][key_name]))
@@ -47,8 +65,8 @@ class ImageDropDownButton(ButtonBehavior, Image):
         self.bind(key_name=self.on_property)
 
     def on_property(self, *args):
-        # this is needed because the properties are set in the kv file
-        # idk how to do it better
+        # this is needed because the properties are set in the kv file, and they don't always get set at the same time
+        # idk how to do it better @Lettie any ideas?
         if self.callback == ObjectProperty(None) or self.key_name == StringProperty(
                 '') or self.image_dict == DictProperty({}):
             return
