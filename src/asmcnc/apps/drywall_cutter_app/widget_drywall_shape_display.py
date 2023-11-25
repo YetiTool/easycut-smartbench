@@ -587,14 +587,25 @@ class DrywallShapeDisplay(Widget):
                 return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter
             else:
                 return float(self.d_input.text or 0) >= 0.1
-        elif self.dwt_config.active_config.shape_type.lower() in ["square", "rectangle"]:
+
+        elif self.dwt_config.active_config.shape_type.lower() == "square":
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter
+            elif self.dwt_config.active_config.toolpath_offset.lower() ==  "outside":
+                return float(self.y_input.text or 0) >= 1
+            else:
+                return float(self.y_input.text or 0) >= 0.1
+
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
                 return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter) and (float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter)
             elif self.dwt_config.active_config.toolpath_offset.lower() ==  "outside":
                 return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
             else:
                 return (float(self.x_input.text or 0) >= 0.1) and (float(self.y_input.text or 0) >= 0.1)
+
         elif self.dwt_config.active_config.shape_type.lower() == "line":
             return float(self.l_input.text or 0) >= 0.1
+
         else:
             return True
