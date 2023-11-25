@@ -291,12 +291,6 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
-        self.d_input.input_filter = self.positive_float_input_filter
-        self.l_input.input_filter = self.positive_float_input_filter
-        self.r_input.input_filter = self.positive_float_input_filter
-        self.x_input.input_filter = self.positive_float_input_filter
-        self.y_input.input_filter = self.positive_float_input_filter
-
         Clock.schedule_interval(self.check_datum_and_extents, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
@@ -385,20 +379,25 @@ class DrywallShapeDisplay(Widget):
             self.shape_toolpath_image.opacity = 1
 
     def d_input_change(self, instance, value):
+        value = self.remove_negatives(instance, value)
         self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
+        value = self.remove_negatives(instance, value)
         self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
+        value = self.remove_negatives(instance, value)
         self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
+        value = self.remove_negatives(instance, value)
         if self.rotation_required():
             self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
+        value = self.remove_negatives(instance, value)
         if self.rotation_required():
             self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
@@ -412,20 +411,12 @@ class DrywallShapeDisplay(Widget):
         else:
             return False
 
-    # Can be used to override insert_text function of text input
-    def positive_float_input_filter(self, value, from_undo=False):
-        try:
-            # Try to convert the value to a float
-            float(value)
-            # If the value is a positive float, return it
-            if float(value) >= 0:
-                return value
-            # If the value is a negative float, return an empty string
-            else:
-                return ''
-        # If the value cannot be converted to a float, return an empty string
-        except ValueError:
-            return ''
+    def remove_negatives(self, instance, value):
+        if value.startswith("-"):
+            # Stop user inputting negative values
+            instance.text = ""
+            value = ""
+        return value
 
     def check_datum_and_extents(self, dt):
         # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
