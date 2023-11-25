@@ -328,7 +328,8 @@ class XYMoveDrywall(Widget):
 
     def check_zh_at_datum(self, dt):
         # wpos == 0,0 when zh is at datum
-        if not (round(self.m.wpos_x(), 2) == 0 and round(self.m.wpos_y(), 2) == 0):
+        # Round to 1dp instead of 2dp to make up for grbl error
+        if not (round(self.m.wpos_x(), 1) == 0 and round(self.m.wpos_y(), 1) == 0):
             # Pulse overlay by smoothly alternating between 0 and 1 opacity
             # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
             if self.go_to_datum_button_overlay.opacity <= 0:
