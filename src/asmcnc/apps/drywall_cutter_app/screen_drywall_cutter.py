@@ -138,7 +138,8 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.shape_selection.text = 'circle'
+    def on_pre_enter(self):
+        self.apply_active_config()
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -226,6 +227,9 @@ class DrywallCutterScreen(Screen):
 
         # set the label on the screen to the name of the config file below
 
+        self.apply_active_config()
+
+    def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type
         self.select_shape()
