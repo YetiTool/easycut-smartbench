@@ -581,6 +581,14 @@ class DrywallShapeDisplay(Widget):
                  self.y_datum_validation_label.opacity]:
             return False
 
+        # Ensure roundedness is not too large
+        if self.dwt_config.active_config.shape_type.lower() == "square":
+            if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
+                return False
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
+                return False
+
         # Otherwise check hardcoded min values
         if self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
