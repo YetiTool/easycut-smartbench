@@ -202,7 +202,10 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        pass
+        if self.are_inputs_valid():
+            pass
+        else:
+            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
@@ -213,7 +216,13 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        if self.are_inputs_valid():
+            self.engine.engine_run()
+        else:
+            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
+
+    def are_inputs_valid(self):
+        return self.drywall_shape_display_widget.are_inputs_valid()
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):

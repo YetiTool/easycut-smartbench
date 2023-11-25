@@ -555,3 +555,36 @@ class DrywallShapeDisplay(Widget):
                     self.l_input_validation_label.opacity = 0
         else:
             self.l_input_validation_label.opacity = 0
+
+    def are_inputs_valid(self):
+        # Logic defined by Benji here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=1512963755
+
+        # First check if any validation label is visible, meaning something is out of bounds
+        if 1 in [self.d_input_validation_label.opacity,
+                 self.l_input_validation_label.opacity,
+                 self.r_input_validation_label.opacity,
+                 self.x_input_validation_label.opacity,
+                 self.y_input_validation_label.opacity,
+                 self.x_datum_label.opacity,
+                 self.x_datum_validation_label.opacity,
+                 self.y_datum_label.opacity,
+                 self.y_datum_validation_label.opacity]:
+            return False
+
+        # Otherwise check hardcoded min values
+        if self.dwt_config.active_config.shape_type.lower() == "circle":
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter
+            else:
+                return float(self.d_input.text or 0) >= 0.1
+        elif self.dwt_config.active_config.shape_type.lower() in ["square", "rectangle"]:
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter) and (float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter)
+            elif self.dwt_config.active_config.toolpath_offset.lower() ==  "outside":
+                return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
+            else:
+                return (float(self.x_input.text or 0) >= 0.1) and (float(self.y_input.text or 0) >= 0.1)
+        elif self.dwt_config.active_config.shape_type.lower() == "line":
+            return float(self.l_input.text or 0) >= 0.1
+        else:
+            return True
