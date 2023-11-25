@@ -69,7 +69,7 @@ Builder.load_string("""
                     id: d_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -100,7 +100,7 @@ Builder.load_string("""
                     id: l_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -131,7 +131,7 @@ Builder.load_string("""
                     id: r_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -162,7 +162,7 @@ Builder.load_string("""
                     id: x_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -193,7 +193,7 @@ Builder.load_string("""
                     id: y_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -565,9 +565,7 @@ class DrywallShapeDisplay(Widget):
                  self.r_input_validation_label.opacity,
                  self.x_input_validation_label.opacity,
                  self.y_input_validation_label.opacity,
-                 self.x_datum_label.opacity,
                  self.x_datum_validation_label.opacity,
-                 self.y_datum_label.opacity,
                  self.y_datum_validation_label.opacity]:
             return False
 
