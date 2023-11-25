@@ -291,6 +291,12 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
+        self.d_input.input_filter = self.positive_float_input_filter
+        self.l_input.input_filter = self.positive_float_input_filter
+        self.r_input.input_filter = self.positive_float_input_filter
+        self.x_input.input_filter = self.positive_float_input_filter
+        self.y_input.input_filter = self.positive_float_input_filter
+
         Clock.schedule_interval(self.check_datum_and_extents, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
@@ -405,6 +411,21 @@ class DrywallShapeDisplay(Widget):
                 return float(self.x_input.text or 0) > float(self.y_input.text or 0)
         else:
             return False
+
+    # Can be used to override insert_text function of text input
+    def positive_float_input_filter(self, value, from_undo=False):
+        try:
+            # Try to convert the value to a float
+            float(value)
+            # If the value is a positive float, return it
+            if float(value) >= 0:
+                return value
+            # If the value is a negative float, return an empty string
+            else:
+                return ''
+        # If the value cannot be converted to a float, return an empty string
+        except ValueError:
+            return ''
 
     def check_datum_and_extents(self, dt):
         # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
