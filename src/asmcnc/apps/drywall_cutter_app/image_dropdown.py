@@ -72,7 +72,6 @@ class ImageDropDownButton(ButtonBehavior, Image):
             return
 
         self.dropdown = ImageDropDown(self.image_dict, self.callback, self.key_name)
-        self.add_widget(self.dropdown)
 
     def on_release(self):
         self.dropdown.open(self)
