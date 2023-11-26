@@ -132,9 +132,6 @@ class DrywallCutterScreen(Screen):
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
 
-    go_screen_return_to_screen = ''
-    go_screen_cancel_to_screen = ''
-
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
