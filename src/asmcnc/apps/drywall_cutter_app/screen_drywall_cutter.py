@@ -28,7 +28,7 @@ Builder.load_string("""
     tool_selection:tool_selection
     shape_selection:shape_selection
     rotate_button:rotate_button
-    cut_offset_selection:cut_offset_selection
+    toolpath_selection:toolpath_selection
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
     BoxLayout:
@@ -56,33 +56,28 @@ Builder.load_string("""
                 size_hint_x: 7
                 allow_stretch: True
                 source: './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
-            # Spinner:
-            #     id: tool_selection
-            #     size_hint_x: 7
-            #     text: root.tool_options.keys()[0]
-            #     values: root.tool_options.keys()
-            #     on_text: root.select_tool()
-            Spinner:
+            ImageDropDownButton:
                 id: shape_selection
+                callback: root.select_shape
+                image_dict: root.shape_options_dict
+                key_name: 'key'
                 size_hint_x: 7
-                text: 'Shape'
-                values: root.shape_options
-                on_text: root.select_shape()
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png'
             ImageButton:
                 id: rotate_button
                 source: './asmcnc/apps/drywall_cutter_app/img/rotate_button.png'
                 allow_stretch: True
                 size_hint_x: 7
                 on_press: root.rotate_shape()
-            Spinner:
-                id: cut_offset_selection
+            ImageDropDownButton:
+                id: toolpath_selection
                 size_hint_x: 7
-                text: 'Cut on line'
-                text_size: self.size
-                halign: 'center'
-                valign: 'middle'
-                values: root.line_cut_options
-                on_text: root.select_toolpath()
+                callback: root.select_toolpath
+                key_name: 'key'
+                image_dict: root.toolpath_offset_options_dict
+                allow_stretch: True
+                source: './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
             ImageButton:
                 source: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_button.png'
                 allow_stretch: True
@@ -159,6 +154,34 @@ class DrywallCutterScreen(Screen):
     rotation = 'horizontal'
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
+    shape_options_dict = {
+        'circle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
+        },
+        'square': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png',
+        },
+        'line': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
+        },
+        'geberit': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
+        },
+        'rectangle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
+        },
+    }
+    toolpath_offset_options_dict = {
+        'inside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+        },
+        'outside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+        },
+        'on': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+        },
+    }
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
@@ -175,12 +198,13 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.show_tool_image()
-
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.shape_selection.text = 'circle'
+        self.select_shape('circle')
+
+        self.show_tool_image()
+        self.show_toolpath_image()
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -189,52 +213,59 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.load_cutter(cutter_file)
         self.show_tool_image()
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        self.toolpath_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
         # Default to first cutter, so disabled cutter is never selected
-        self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+        self.toolpath_selection.text = self.toolpath_selection.values[0]
 
     def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
 
-    def select_shape(self):
-        if self.shape_selection.text in ['line', 'geberit']:
+    def select_shape(self, shape):
+        self.dwt_config.on_parameter_change('shape_type', shape.lower())
+
+        self.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
+
+        if shape in ['line', 'geberit']:
             # Only on line available for these options
-            self.cut_offset_selection.text = 'on'
-            self.cut_offset_selection.disabled = True
+            new_toolpath = 'on'
+            self.toolpath_selection.disabled = True
         else:
             # Default to cut inside line (when available)
-            self.cut_offset_selection.text = 'inside' if 'inside' in self.cut_offset_selection.values else self.cut_offset_selection.values[0]
-            self.cut_offset_selection.disabled = False
+            new_toolpath = 'inside' if 'inside' in self.toolpath_selection.values else self.toolpath_selection.values[0]
+            self.toolpath_selection.disabled = False
 
-        if self.shape_selection.text in ['rectangle', 'line']:
+        if shape in ['rectangle', 'line']:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True
 
         self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
-        self.select_toolpath()
+        self.drywall_shape_display_widget.select_shape(shape, self.rotation)
+        self.select_toolpath(new_toolpath)
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
-
-        self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
             self.rotation = 'vertical'
         else:
             self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation, swap_lengths=swap_lengths)
-        self.select_toolpath()
-
-    def select_toolpath(self):
-        self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text, self.rotation)
-
-        self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
+        self.drywall_shape_display_widget.select_shape(self.dwt_config.active_config.shape_type, self.rotation, swap_lengths=swap_lengths)
+        self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
 
     def material_setup(self):
         material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
+
+    def select_toolpath(self, toolpath):
+        self.dwt_config.on_parameter_change('toolpath_offset', toolpath)
+
+        self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, toolpath, self.rotation)
+
+        self.show_toolpath_image()
+
+    def show_toolpath_image(self):
+        self.toolpath_selection.source = self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
@@ -349,11 +380,9 @@ class DrywallCutterScreen(Screen):
         # set the label on the screen to the name of the config file below
 
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
-        self.shape_selection.text = self.dwt_config.active_config.shape_type
-        self.select_shape()
+        self.select_shape(self.dwt_config.active_config.shape_type)
 
-        self.cut_offset_selection.text = toolpath_offset
-        self.select_toolpath()
+        self.select_toolpath(toolpath_offset)
 
         self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
         self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
