@@ -141,6 +141,9 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
 
+        self.go_screen_return_to_screen = self.sm.get_screen('go').return_to_screen
+        self.go_screen_cancel_to_screen = self.sm.get_screen('go').cancel_to_screen
+
         self.engine = GCodeEngine(self.dwt_config, machine=self.m)
 
         # XY move widget
@@ -232,7 +235,12 @@ class DrywallCutterScreen(Screen):
         output_file = "jobCache/" + self.dwt_config.active_config.shape_type + u".nc"
         self.jd.set_job_filename(output_file)
         job_loader.load_gcode_file(output_file)
+        self.set_return_screens()
         self.proceed_to_go_screen()
+
+    def set_return_screens(self):
+        self.sm.get_screen('go').return_to_screen = 'drywall_cutter'
+        self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter'
 
     def proceed_to_go_screen(self):
 
@@ -256,7 +264,7 @@ class DrywallCutterScreen(Screen):
         #     self.sm.current = 'mstate'
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
-            self.m.request_homing_procedure('home', 'home')
+            self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
 
@@ -272,8 +280,8 @@ class DrywallCutterScreen(Screen):
 
         else:
             # clear to proceed
-            self.jd.screen_to_return_to_after_job = 'home'
-            self.jd.screen_to_cancel_to_after_job = 'home'
+            self.jd.screen_to_return_to_after_job = 'drywall_cutter'
+            self.jd.screen_to_return_to_after_cancel = 'drywall_cutter'
 
             # Check if stylus option is enabled
             if self.m.is_stylus_enabled == True:
@@ -340,3 +348,5 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+        self.sm.get_screen('go').return_to_screen = self.go_screen_return_to_screen
+        self.sm.get_screen('go').cancel_to_screen = self.go_screen_cancel_to_screen
