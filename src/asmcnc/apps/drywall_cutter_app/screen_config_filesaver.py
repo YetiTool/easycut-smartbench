@@ -39,6 +39,8 @@ Builder.load_string("""
     image_sort: image_sort
     image_select : image_select
     file_selected_label : file_selected_label
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         padding: 0
@@ -265,10 +267,14 @@ class ConfigFileSaver(Screen):
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
+        self.kb = kwargs['keyboard']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
 
         self.check_for_job_cache_dir()
+
+        self.text_inputs = [self.file_selected_label]
+        self.kb.setup_text_inputs(self.text_inputs)
 
         # MANAGING KIVY SCROLL BUG
 
@@ -284,6 +290,10 @@ class ConfigFileSaver(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)

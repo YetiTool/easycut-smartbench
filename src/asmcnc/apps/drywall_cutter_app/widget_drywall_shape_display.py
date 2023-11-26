@@ -28,6 +28,8 @@ Builder.load_string("""
     bumper_left_image:bumper_left_image
     bumper_right_image:bumper_right_image
     bumper_top_image:bumper_top_image
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         size: self.parent.size
@@ -286,6 +288,7 @@ class DrywallShapeDisplay(Widget):
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
         self.engine = kwargs['engine']
+        self.kb = kwargs['keyboard']
 
         self.d_input.bind(text=self.d_input_change) # Diameter of circle
         self.l_input.bind(text=self.l_input_change) # Length of line
@@ -293,7 +296,14 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
+        self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
+        self.kb.setup_text_inputs(self.text_inputs)
+
         Clock.schedule_interval(self.check_datum_and_extents, 0.1)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
