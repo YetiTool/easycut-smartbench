@@ -10,15 +10,15 @@
         "y": 0.0, 
         "x": 0.0, 
         "r": 0.0, 
-        "d": 2.0, 
+        "d": 0.0, 
         "l": 0.0
-    },
-    "shape_type": "Square", 
-    "cutter_type": "tool_6mm.json",
+    }, 
+    "shape_type": "circle", 
+    "cutter_type": "tool_6mm.json", 
     "units": "mm", 
     "rotation": "horizontal", 
     "datum_position": {
-        "y": 0.0, 
-        "x": 0.0
+        "y": 6.0, 
+        "x": 5.0
     }
 }
