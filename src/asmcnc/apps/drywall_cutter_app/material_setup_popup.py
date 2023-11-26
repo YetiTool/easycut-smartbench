@@ -496,6 +496,8 @@ class CuttingDepthsPopup(Popup):
         self.dismiss()
 
     def validate_inputs(self):
+        self.load_active_config()
+
         material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
             self.material_thickness.text)
         bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(

@@ -222,7 +222,7 @@ class DrywallCutterScreen(Screen):
             popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
     def are_inputs_valid(self):
-        return self.drywall_shape_display_widget.are_inputs_valid()
+        return self.drywall_shape_display_widget.are_inputs_valid() and self.materials_popup.validate_inputs()
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
