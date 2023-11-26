@@ -145,6 +145,7 @@ class DrywallCutterScreen(Screen):
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.shape_selection.text = 'circle'
+        self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -192,8 +193,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
 
     def material_setup(self):
-        material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        pass
+        self.materials_popup.open()
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
