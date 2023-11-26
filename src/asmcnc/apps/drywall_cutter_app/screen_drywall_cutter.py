@@ -177,7 +177,7 @@ class DrywallCutterScreen(Screen):
 
         self.show_tool_image()
 
-        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine)
+        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine, keyboard = self.kb)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.shape_selection.text = 'circle'
@@ -252,7 +252,8 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
-                                                                       callback=self.save_config))
+                                                                       callback=self.save_config,
+                                                                       keyboard=self.kb))
         self.sm.current = 'config_filesaver'
 
     def run(self):
