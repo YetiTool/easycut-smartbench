@@ -135,6 +135,8 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
+        self.m.laser_on()
+
         self.engine = GCodeEngine(self.dwt_config)
 
         # XY move widget
@@ -262,3 +264,4 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+        self.m.laser_off()
