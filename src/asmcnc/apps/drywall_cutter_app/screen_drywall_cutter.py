@@ -206,6 +206,9 @@ class DrywallCutterScreen(Screen):
         self.show_tool_image()
         self.show_toolpath_image()
 
+    def on_pre_enter(self):
+        self.apply_active_config()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -380,6 +383,12 @@ class DrywallCutterScreen(Screen):
         file_name_no_ext = config.split('/')[-1].split('.')[0]
         # set the label on the screen to the name of the config file below
 
+        # Set datum when loading a new config
+        self.m.set_datum(x=self.dwt_config.active_config.datum_position.x, y=self.dwt_config.active_config.datum_position.y, relative=True)
+
+        self.apply_active_config()
+
+    def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.select_shape(self.dwt_config.active_config.shape_type)
 
