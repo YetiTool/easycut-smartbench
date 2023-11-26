@@ -227,6 +227,9 @@ class DrywallCutterScreen(Screen):
 
         # set the label on the screen to the name of the config file below
 
+        # Set datum when loading a new config
+        self.m.set_datum(x=self.dwt_config.active_config.datum_position.x, y=self.dwt_config.active_config.datum_position.y, relative=True)
+
         self.apply_active_config()
 
     def apply_active_config(self):
