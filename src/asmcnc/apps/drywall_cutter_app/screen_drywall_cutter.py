@@ -215,6 +215,8 @@ class DrywallCutterScreen(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_to_lobby(self):
+        self.set_return_screens()
+        self.jd.reset_values()
         self.sm.current = 'lobby'
 
     def simulate(self):
@@ -348,4 +350,3 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
-        self.set_return_screens()
