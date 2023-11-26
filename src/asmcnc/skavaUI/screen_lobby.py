@@ -509,7 +509,7 @@ class LobbyScreen(Screen):
         self.update_strings()
 
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
-        if "DRYWALLTEC" in self.m.smartbench_model() or True:
+        if "DRYWALLTEC" in self.m.smartbench_model():
             self.shapecutter_container.parent.remove_widget(self.shapecutter_container)
         else:
             self.drywall_app_container.parent.remove_widget(self.drywall_app_container)

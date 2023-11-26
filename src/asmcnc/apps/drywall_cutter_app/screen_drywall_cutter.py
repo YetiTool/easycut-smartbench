@@ -132,6 +132,9 @@ class DrywallCutterScreen(Screen):
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
 
+    go_screen_return_to_screen = ''
+    go_screen_cancel_to_screen = ''
+
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
@@ -140,9 +143,6 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
-
-        self.go_screen_return_to_screen = self.sm.get_screen('go').return_to_screen
-        self.go_screen_cancel_to_screen = self.sm.get_screen('go').cancel_to_screen
 
         self.engine = GCodeEngine(self.dwt_config, machine=self.m)
 
@@ -239,8 +239,8 @@ class DrywallCutterScreen(Screen):
         self.proceed_to_go_screen()
 
     def set_return_screens(self):
-        self.sm.get_screen('go').return_to_screen = 'drywall_cutter'
-        self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter'
+        self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen('go').return_to_screen == 'home' else 'home'
+        self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen('go').cancel_to_screen == 'home' else 'home'
 
     def proceed_to_go_screen(self):
 
@@ -348,5 +348,4 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
-        self.sm.get_screen('go').return_to_screen = self.go_screen_return_to_screen
-        self.sm.get_screen('go').cancel_to_screen = self.go_screen_cancel_to_screen
+        self.set_return_screens()
