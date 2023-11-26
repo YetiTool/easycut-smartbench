@@ -201,8 +201,6 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config, engine=self.engine, keyboard = self.kb)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.select_shape('circle')
-
         self.show_tool_image()
         self.show_toolpath_image()
 
