@@ -131,6 +131,8 @@ class DrywallCutterScreen(Screen):
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
+        self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -146,8 +148,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def material_setup(self):
-        material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        pass
+        self.materials_popup.open()
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
