@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import sys, textwrap
 
@@ -389,8 +390,9 @@ class DrywallCutterScreen(Screen):
         """
         self.dwt_config.load_config(config)
 
-        file_name_no_ext = config.split('/')[-1].split('.')[0]
-        # set the label on the screen to the name of the config file below
+        # Show config name
+        file_name = config.rsplit(os.sep, 1)[-1]
+        self.drywall_shape_display_widget.config_name_label.text = file_name
 
         # Set datum when loading a new config
         self.m.set_datum(x=self.dwt_config.active_config.datum_position.x, y=self.dwt_config.active_config.datum_position.y, relative=True)
