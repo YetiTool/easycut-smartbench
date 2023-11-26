@@ -230,8 +230,8 @@ class DrywallCutterScreen(Screen):
             new_toolpath = 'on'
             self.toolpath_selection.disabled = True
         else:
-            # Default to cut inside line (when available)
-            new_toolpath = 'inside' if 'inside' in self.toolpath_selection.values else self.toolpath_selection.values[0]
+            # Default to cut inside line
+            new_toolpath = 'inside'
             self.toolpath_selection.disabled = False
 
         if shape in ['rectangle', 'line']:
