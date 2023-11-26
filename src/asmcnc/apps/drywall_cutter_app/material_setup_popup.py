@@ -277,6 +277,7 @@ Builder.load_string("""
 
 
 class CuttingDepthsPopup(Popup):
+    soft_limit_total_cut_depth = 62
 
     def __init__(self, localization, keyboard, dwt_config, **kwargs):
         super(CuttingDepthsPopup, self).__init__(**kwargs)
@@ -289,6 +290,9 @@ class CuttingDepthsPopup(Popup):
         self.float_layout.remove_widget(self.cut_depth_warning)
         self.float_layout.remove_widget(self.pass_depth_warning)
 
+        # This resolves the 'weakly-referenced' objects exception, same as in screen_wifi.py
+        self.refs = [self.cut_depth_warning.__self__, self.pass_depth_warning.__self__]
+
         self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
         self.kb.setup_text_inputs(self.text_inputs)
         for text_input in self.text_inputs:
@@ -296,7 +300,6 @@ class CuttingDepthsPopup(Popup):
         self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
         self.update_strings()
         self.load_active_config()
-        self.open()
 
     def load_active_config(self):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
@@ -353,14 +356,13 @@ class CuttingDepthsPopup(Popup):
             pass
 
     def update_text(self, instance, value):
-        soft_limit_total_cut_depth = 62
         cutter_max_depth_total = self.dwt_config.active_cutter.max_depth_total
         # Calculate total cut depth and handle inputs
         if instance == self.material_thickness or instance == self.bottom_offset:
             try:
                 # Update warning label text
-                if soft_limit_total_cut_depth < cutter_max_depth_total:
-                    max_cut_depth = soft_limit_total_cut_depth
+                if self.soft_limit_total_cut_depth < cutter_max_depth_total:
+                    max_cut_depth = self.soft_limit_total_cut_depth
                     self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is") + \
                                                   " Xmm[/color]".replace("X", str(max_cut_depth))
                 else:
@@ -477,9 +479,12 @@ class CuttingDepthsPopup(Popup):
                 pass
 
     def confirm(self):
-        material_thickness = 0.0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(self.material_thickness.text)
-        bottom_offset = 0.0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(self.bottom_offset.text)
-        depth_per_pass = 0.0 if self.depth_per_pass.text == '' else float(self.depth_per_pass.text)
+        material_thickness = 0.0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        bottom_offset = 0.0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+            self.bottom_offset.text)
+        depth_per_pass = 0.0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
 
         self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
         self.dwt_config.active_config.cutting_depths.bottom_offset = bottom_offset
@@ -489,3 +494,37 @@ class CuttingDepthsPopup(Popup):
 
     def cancel(self):
         self.dismiss()
+
+    def validate_inputs(self):
+        self.load_active_config()
+
+        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+            self.bottom_offset.text)
+        total_cut_depth = 0 if self.total_cut_depth.text == '' or self.total_cut_depth.text == '-' else float(
+            self.total_cut_depth.text)
+        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+        auto_pass_checkbox = self.auto_pass_checkbox.active
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+
+        # Check for negative material thickness
+        if material_thickness < 0:
+            return False
+
+        # The bottom offset should never have a greater value than the material thickness if negative
+        if abs(bottom_offset) > material_thickness:
+            if bottom_offset < 0:
+                return False
+
+        if total_cut_depth < 0 or total_cut_depth > self.soft_limit_total_cut_depth:
+            return False
+
+        if total_cut_depth != material_thickness + bottom_offset:
+            return False
+
+        if depth_per_pass > max_cut_depth_per_pass or depth_per_pass <= 0:
+            return False
+
+        return True

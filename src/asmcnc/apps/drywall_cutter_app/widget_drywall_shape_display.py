@@ -71,7 +71,7 @@ Builder.load_string("""
                     id: d_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -102,7 +102,7 @@ Builder.load_string("""
                     id: l_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -133,7 +133,7 @@ Builder.load_string("""
                     id: r_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -164,7 +164,7 @@ Builder.load_string("""
                     id: x_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -195,7 +195,7 @@ Builder.load_string("""
                     id: y_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -398,23 +398,28 @@ class DrywallShapeDisplay(Widget):
     def d_input_change(self, instance, value):
         # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
         if self.sm.current == 'drywall_cutter':
+            value = self.remove_negatives(instance, value)
             self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
+            value = self.remove_negatives(instance, value)
             self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
+            value = self.remove_negatives(instance, value)
             self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
+            value = self.remove_negatives(instance, value)
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
+            value = self.remove_negatives(instance, value)
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
@@ -442,6 +447,13 @@ class DrywallShapeDisplay(Widget):
                 if float(self.x_input.text) == float(self.y_input.text):
                     return True
         return False
+
+    def remove_negatives(self, instance, value):
+        if value.startswith("-"):
+            # Stop user inputting negative values
+            instance.text = ""
+            value = ""
+        return value
 
     def check_datum_and_extents(self, dt):
         # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
@@ -592,3 +604,53 @@ class DrywallShapeDisplay(Widget):
                     self.l_input_validation_label.opacity = 0
         else:
             self.l_input_validation_label.opacity = 0
+
+    def are_inputs_valid(self):
+        # Logic defined by Benji here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=1512963755
+
+        # First check if any validation label is visible, meaning something is out of bounds
+        if 1 in [self.d_input_validation_label.opacity,
+                 self.l_input_validation_label.opacity,
+                 self.r_input_validation_label.opacity,
+                 self.x_input_validation_label.opacity,
+                 self.y_input_validation_label.opacity,
+                 self.x_datum_validation_label.opacity,
+                 self.y_datum_validation_label.opacity]:
+            return False
+
+        # Ensure roundedness is not too large
+        if self.dwt_config.active_config.shape_type.lower() == "square":
+            if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
+                return False
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
+                return False
+
+        # Otherwise check hardcoded min values
+        if self.dwt_config.active_config.shape_type.lower() == "circle":
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter
+            else:
+                return float(self.d_input.text or 0) >= 0.1
+
+        elif self.dwt_config.active_config.shape_type.lower() == "square":
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter
+            elif self.dwt_config.active_config.toolpath_offset.lower() ==  "outside":
+                return float(self.y_input.text or 0) >= 1
+            else:
+                return float(self.y_input.text or 0) >= 0.1
+
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if self.dwt_config.active_config.toolpath_offset.lower() ==  "inside":
+                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter) and (float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.diameter)
+            elif self.dwt_config.active_config.toolpath_offset.lower() ==  "outside":
+                return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
+            else:
+                return (float(self.x_input.text or 0) >= 0.1) and (float(self.y_input.text or 0) >= 0.1)
+
+        elif self.dwt_config.active_config.shape_type.lower() == "line":
+            return float(self.l_input.text or 0) >= 0.1
+
+        else:
+            return True

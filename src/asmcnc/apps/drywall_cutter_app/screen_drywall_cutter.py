@@ -204,6 +204,8 @@ class DrywallCutterScreen(Screen):
         self.show_tool_image()
         self.show_toolpath_image()
 
+        self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
+
     def on_pre_enter(self):
         self.apply_active_config()
 
@@ -256,7 +258,7 @@ class DrywallCutterScreen(Screen):
         self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
 
     def material_setup(self):
-        material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
+        self.materials_popup.open()
 
     def select_toolpath(self, toolpath):
         self.dwt_config.on_parameter_change('toolpath_offset', toolpath)
@@ -277,7 +279,10 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        self.engine.engine_run(simulate=True)
+        if self.are_inputs_valid():
+            self.engine.engine_run(simulate=True)
+        else:
+            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
@@ -289,14 +294,20 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run(False)
-        job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
-                                                           localization=self.l)
-        output_file = "jobCache/" + self.dwt_config.active_config.shape_type + u".nc"
-        self.jd.set_job_filename(output_file)
-        job_loader.load_gcode_file(output_file)
-        self.set_return_screens()
-        self.proceed_to_go_screen()
+        if self.are_inputs_valid():
+            self.engine.engine_run(False)
+            job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
+                                                            localization=self.l)
+            output_file = "jobCache/" + self.dwt_config.active_config.shape_type + u".nc"
+            self.jd.set_job_filename(output_file)
+            job_loader.load_gcode_file(output_file)
+            self.set_return_screens()
+            self.proceed_to_go_screen()
+        else:
+            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
+
+    def are_inputs_valid(self):
+        return self.drywall_shape_display_widget.are_inputs_valid() and self.materials_popup.validate_inputs()
 
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen('go').return_to_screen == 'home' else 'home'
