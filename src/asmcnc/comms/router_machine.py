@@ -91,7 +91,7 @@ class RouterMachine(object):
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
-    z_probe_speed_fast = 500
+    z_probe_speed_fast = 400
     fast_probing = False
 
     ## CALIBRATION SETTINGS
