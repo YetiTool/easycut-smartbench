@@ -265,5 +265,4 @@ class XYMoveDrywall(Widget):
             self.m.quit_jog()
 
     def probe_z(self):
-        self.m.s.write_command('G0 G53 Z-60')
         self.m.probe_z(fast_probe=True)

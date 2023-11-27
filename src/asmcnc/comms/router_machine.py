@@ -2055,12 +2055,10 @@ class RouterMachine(object):
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
             probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probe_speed = self.z_probe_speed_fast if fast_probe else self.z_probe_speed
+            self.fast_probing = fast_probe
             if fast_probe:
-                probe_speed = self.z_probe_speed_fast
-                self.fast_probing = True
-            else:
-                probe_speed = self.z_probe_speed
-                self.fast_probing = False
+                self.s.write_command('G0 G53 Z-60')
             self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
