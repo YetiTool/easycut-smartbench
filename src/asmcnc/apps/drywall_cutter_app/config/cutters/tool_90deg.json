@@ -1,20 +1,20 @@
 {
   "cutter_description": "90 degree V-bit",
-  "units": "mm",
-  "diameter": 10.0,
+  "units": "°",
+  "diameter": 90,
   "material": "drywall",
-  "cutting_spindle_speed": 2000,
-  "cutting_feedrate": 500,
-  "plunge_rate": 100,
+  "cutting_spindle_speed": 21000,
+  "cutting_feedrate": 8000,
+  "plunge_rate": 400,
   "cutting_direction": "climb",
   "allowable_toolpath_offsets": {
-    "inside": true,
+    "inside": false,
     "outside": false,
-    "on": false
+    "on": true
   },
-  "max_depth_per_pass": 2.0,
-  "max_depth_total": 10.0,
-  "stepover": 1.5,
-  "yeti_pilot_target_powers": 700,
+  "max_depth_per_pass": 12.0,
+  "max_depth_total": 14,
+  "stepover": 5,
+  "yeti_pilot_target_powers": 600,
   "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png"
 }

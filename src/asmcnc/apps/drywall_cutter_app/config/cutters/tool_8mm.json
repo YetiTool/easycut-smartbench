@@ -1,20 +1,20 @@
 {
   "cutter_description": "8mm drywall cutter",
   "units": "mm",
-  "diameter": 10.0,
+  "diameter": 8.0,
   "material": "drywall",
-  "cutting_spindle_speed": 2000,
-  "cutting_feedrate": 500,
-  "plunge_rate": 100,
+  "cutting_spindle_speed": 21000,
+  "cutting_feedrate": 8000,
+  "plunge_rate": 400,
   "cutting_direction": "climb",
   "allowable_toolpath_offsets": {
     "inside": true,
-    "outside": false,
-    "on": false
+    "outside": true,
+    "on": true
   },
-  "max_depth_per_pass": 2.0,
-  "max_depth_total": 10.0,
-  "stepover": 1.5,
-  "yeti_pilot_target_powers": 700,
-  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_8mm.png"
+  "max_depth_per_pass": 12.0,
+  "max_depth_total": 14,
+  "stepover": 4,
+  "yeti_pilot_target_powers": 590,
+  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png"
 }
