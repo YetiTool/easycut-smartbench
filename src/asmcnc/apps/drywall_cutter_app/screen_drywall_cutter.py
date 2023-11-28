@@ -38,6 +38,9 @@ Builder.load_string("""
                 text: root.tool_options.keys()[0]
                 values: root.tool_options.keys()
                 on_text: root.select_tool()
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
@@ -141,6 +144,8 @@ class DrywallCutterScreen(Screen):
     def on_pre_enter(self):
         self.apply_active_config()
 
+        self.select_tool()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -149,14 +154,19 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
+        # Convert allowed toolpaths object to dict, then put attributes with True into a list
+        self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        # Default to first cutter, so disabled cutter is never selected
+        self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
             # Only on line available for these options
             self.cut_offset_selection.text = 'on'
             self.cut_offset_selection.disabled = True
         else:
-            # Default to cut inside line
-            self.cut_offset_selection.text = 'inside'
+            # Default to cut inside line (when available)
+            self.cut_offset_selection.text = 'inside' if 'inside' in self.cut_offset_selection.values else self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
         if self.shape_selection.text in ['rectangle', 'line']:
