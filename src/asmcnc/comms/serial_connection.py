@@ -1904,6 +1904,11 @@ class SerialConnection(object):
         else: 
             return speed
 
+    # This is a reverse of the above function, used for testing. 
+    # I think it makes sense to keep it next to its sister. 
+    def transform_sent_RPM_to_predicted_measured_RPM(self, speed):
+        return int((0.663*float(speed) + 8890))
+
 
 
 

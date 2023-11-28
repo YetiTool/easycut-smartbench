@@ -16,6 +16,7 @@ except:
 
 
 from asmcnc.comms import serial_connection
+from asmcnc.comms import router_machine
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 
@@ -25,6 +26,15 @@ RUN FROM easycut-smartbench FOLDER WITH:
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_streaming_units.py
 ######################################
 '''
+
+@pytest.fixture
+def m():
+    l = localization.Localization()
+    screen_manager = Mock()
+    settings_manager = Mock()
+    jd = Mock()
+    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, jd)
+    return m
 
 @pytest.fixture
 def sc():
@@ -671,6 +681,9 @@ def test_spindle_mods_mod_spindle_speed_command_S18000(sc):
 def test_spindle_mods_mod_spindle_speed_command_SLP(sc):
     assert sc.mod_spindle_speed_command("$SLP") == "$SLP"
 
+def test_spindle_mods_mod_spindle_speed_command_S12000_M3(sc):
+    assert sc.mod_spindle_speed_command("S12000 M3") == "S4690 M3"
+
 
 def test_spindle_mods_write_direct_single_spindle_command(sc_s_write_spy):
     global written_to_serial_list
@@ -716,7 +729,18 @@ def test_spindle_mods_stuff_buffer(sc_s_write_spy):
     assert written_to_serial_list == expected_lines
 
 
+# Tests to confirm what happens when double transformation happens
+# def test_combination_of_110_conversion_and_RPM_write_correction_12000(sc,m):
+#     rpm = m.convert_from_110_to_230(13500)
+#     twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
+#     thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm)
+#     assert m.convert_from_230_to_110(thrice_transformed_rpm) == 13500
 
+# def test_combination_of_110_conversion_and_RPM_write_correction_18000(sc,m):
+#     rpm = m.convert_from_110_to_230(18000)
+#     twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
+#     thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm) 
+#     assert m.convert_from_230_to_110(thrice_transformed_rpm) == 18000
 
 
 
