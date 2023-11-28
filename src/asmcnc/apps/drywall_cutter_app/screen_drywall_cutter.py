@@ -135,8 +135,6 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
-        self.m.laser_on()
-
         self.engine = GCodeEngine(self.dwt_config)
 
         # XY move widget
@@ -261,6 +259,9 @@ class DrywallCutterScreen(Screen):
         file_name = name + ('.json' if not name.endswith('.json') else '')
 
         self.dwt_config.save_config(file_name)
+
+    def on_enter(self):
+        self.m.laser_on()
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
