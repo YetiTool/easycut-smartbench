@@ -24,7 +24,7 @@ Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
 
-<ConfigFileChooser>:
+<ConfigFileSaver>:
 
     on_enter: root.refresh_filechooser()
 
@@ -34,13 +34,9 @@ Builder.load_string("""
     metadata_preview : metadata_preview
     toggle_view_button : toggle_view_button
     sort_button : sort_button
-    load_button : load_button
-    delete_selected_button : delete_selected_button
-    delete_all_button : delete_all_button
+    save_button : save_button
     image_view : image_view
     image_sort: image_sort
-    image_delete : image_delete
-    image_delete_all : image_delete_all
     image_select : image_select
     file_selected_label : file_selected_label
 
@@ -57,21 +53,19 @@ Builder.load_string("""
             pos: self.parent.pos
             spacing: 0
 
-            Label:
-                canvas.before:
-                    Color:
-                        rgba: hex('#333333FF')
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+            TextInput:
                 id: file_selected_label
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
+                color: hex('#FFFFFFFF')
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'center'
                 bold: True
+                padding: 10, 10
+                multiline: False
+                size_hint_x: 1
 
             BoxLayout: 
                 orientation: 'horizontal'
@@ -162,47 +156,21 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
             Button:
-                id: delete_selected_button
                 disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    root.delete_popup(file_selection = filechooser.selection[0])
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
-                    Image:
-                        id: image_delete
-                        source: "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
-                id: delete_all_button
-                disabled: False
+                disabled: True
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.delete_popup(file_selection = 'all')
-                    self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
-                    Image:
-                        id: image_delete_all
-                        source: "./asmcnc/skavaUI/img/file_select_delete_all.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
                 disabled: False
                 size_hint_x: 1
@@ -224,13 +192,13 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                id: load_button
-                disabled: True
+                id: save_button
+                disabled: False
                 size_hint_x: 1
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.load_config_and_return_to_dwt()
+                    root.save_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -238,7 +206,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_select
-                        source: "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+                        source: "./asmcnc/skavaUI/img/file_select_select.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -273,7 +241,7 @@ def name_order_sort_reverse(files, filesystem):
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding'] or 'utf-8').encode('utf-8'))
 
 
-class ConfigFileChooser(Screen):
+class ConfigFileSaver(Screen):
     filename_selected_label_text = StringProperty()
 
     sort_by_date = ObjectProperty(date_order_sort)
@@ -293,7 +261,7 @@ class ConfigFileChooser(Screen):
     }
 
     def __init__(self, **kwargs):
-        super(ConfigFileChooser, self).__init__(**kwargs)
+        super(ConfigFileSaver, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
@@ -393,33 +361,17 @@ class ConfigFileChooser(Screen):
         self.filechooser._update_files()
 
     def refresh_filechooser(self):
+
         self.filechooser._update_item_selection()
 
         try:
             if self.filechooser.selection[0] != 'C':
                 self.display_selected_file()
-
             else:
-
-                self.load_button.disabled = True
-                self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-
-                self.delete_selected_button.disabled = True
-                self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
-
-                self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-                self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
-
+                self.save_button.disabled = False
+                self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
         except:
-            self.load_button.disabled = True
-            self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
-
-            self.delete_selected_button.disabled = True
-            self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
-            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
-            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            self.metadata_preview.text = self.l.get_str("Select a file to see configuration preview.")
 
         self.filechooser._update_files()
 
@@ -436,11 +388,7 @@ class ConfigFileChooser(Screen):
 
         self.metadata_preview.text = self.to_human_readable(json_obj)
 
-        self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
-
-        self.delete_selected_button.disabled = False
-        self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
     def to_human_readable(self, json_obj, indent=0):
         def format_key(json_key):
@@ -455,49 +403,17 @@ class ConfigFileChooser(Screen):
                 result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
         return result
 
-    def load_config_and_return_to_dwt(self):
-        self.callback(self.filechooser.selection[0])
+    def save_config_and_return_to_dwt(self):
+        if self.validate_file_name(self.file_selected_label.text):
+            self.callback(self.file_selected_label.text)
 
-        self.sm.current = 'drywall_cutter'
-
-    def delete_popup(self, **kwargs):
-
-        if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_all,
-                                       file_selection='all')
+            self.sm.current = 'drywall_cutter'
         else:
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization=self.l, function=self.delete_selected,
-                                       file_selection=kwargs['file_selection'])
+            popup_info.PopupInfo(screen_manager=self.sm, localization=self.l, popup_width=500,
+                                 description=self.l.get_str("File names must be between 1 and 40 characters long."))
 
-    def delete_selected(self, filename):
-        self.refresh_filechooser()
-
-        if os.path.isfile(filename):
-            try:
-                os.remove(filename)
-                self.filechooser.selection = []
-
-            except:
-                print "attempt to delete folder, or undeletable file"
-
-            self.refresh_filechooser()
-
-    def delete_all(self):
-        files_in_cache = os.listdir(configs_dir)  # clean cache
-        self.refresh_filechooser()
-
-        if files_in_cache:
-            for file in files_in_cache:
-                try:
-                    os.remove(configs_dir + file)
-                    if files_in_cache.index(file) + 2 >= len(files_in_cache):
-                        self.refresh_filechooser()
-
-                except:
-                    print "attempt to delete folder, or undeletable file"
-
-        self.filechooser.selection = []
-        self.refresh_filechooser()
+    def validate_file_name(self, file_name):
+        return 0 < len(file_name) <= 40
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
