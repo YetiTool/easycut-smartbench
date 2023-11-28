@@ -42,7 +42,7 @@ Builder.load_string("""
             pos: self.parent.pos
 
             Image:
-                source: "./asmcnc/apps/drywall_cutter_app/img/shapes_canvas_480.png"
+                source: "./asmcnc/apps/drywall_cutter_app/img/shapes_canvas.png"
                 size: self.parent.size
                 pos: self.parent.pos
 
