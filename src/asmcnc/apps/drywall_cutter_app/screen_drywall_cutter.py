@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
@@ -29,6 +30,7 @@ Builder.load_string("""
     tool_selection:tool_selection
     shape_selection:shape_selection
     rotate_button:rotate_button
+    simulate_button:simulate_button
     toolpath_selection:toolpath_selection
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
@@ -131,6 +133,7 @@ Builder.load_string("""
                         allow_stretch: True
                         text: 'Simulate'
                         on_press: root.simulate()
+                        id: simulate_button
                     ImageButton:
                         source: './asmcnc/apps/drywall_cutter_app/img/save_button.png'
                         allow_stretch: True
@@ -286,6 +289,9 @@ class DrywallCutterScreen(Screen):
     def simulate(self):
         if self.are_inputs_valid():
             self.engine.engine_run(simulate=True)
+            Clock.schedule_once(
+                            lambda dt: self.simualte_button.disabled = True, 5)
+            self.simualte_button.disabled = False
         else:
             popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
