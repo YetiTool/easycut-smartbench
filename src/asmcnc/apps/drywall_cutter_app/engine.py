@@ -1,4 +1,5 @@
 '''
+Author: ChatGPT 3.5
 Working theory:
 
 read in data
@@ -752,6 +753,7 @@ class GCodeEngine():
             cutting_lines.insert(0, "G90")
             cutting_lines.append("G0 X0 Y0")
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
+            self.m.jog_laser_to_datum('XY') # return to laser datum
         else:
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
            
