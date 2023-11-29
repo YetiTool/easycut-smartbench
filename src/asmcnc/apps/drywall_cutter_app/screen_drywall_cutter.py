@@ -325,7 +325,7 @@ class DrywallCutterScreen(Screen):
         self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen('go').cancel_to_screen == 'home' else 'home'
 
     def enable_simulation_button(self):
-        self.simualte_button.disabled = False
+        self.simulate_button.disabled = False
 
     def proceed_to_go_screen(self):
 
