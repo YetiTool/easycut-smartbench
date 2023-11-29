@@ -1787,21 +1787,7 @@ class RouterMachine(object):
         return True
     
     def jog_laser_to_datum(self, axis):
-
-        if axis == 'X' or axis == 'XY' or axis == 'YX':
-
-            # Keep this is for beta testing, as 
-            print("Laser offset value: " + str(self.laser_offset_x_value))
-            print("Pos value: " + str(self.wpos_x()))
-
-            print("Try to move to: " + str(self.wpos_x() - float(self.laser_offset_x_value)))
-            print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
-
-            self.s.write_command("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
-            print("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
-
-            self.s.write_command("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
-            print("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
+            self.s.write_command("G90 G1 X{} Y{} F{}".format(-self.laser_offset_x_value,-self.laser_offset_y_value, 6000.0))
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
