@@ -334,7 +334,7 @@ class XYMoveDrywall(Widget):
         # wpos == 0,0 when zh is at datum
         # Round to 1dp instead of 2dp to make up for grbl error
         if self.m.is_laser_enabled:
-            if not (round(self.m.wpos_x() - self.m.laser_offset_x_value, 1) == 0 and round(self.m.wpos_y() - self.m.laser_offset_y_value, 1) == 0):
+            if not (round(self.m.wpos_x() + self.m.laser_offset_x_value, 1) == 0 and round(self.m.wpos_y() + self.m.laser_offset_y_value, 1) == 0):
                 # Pulse overlay by smoothly alternating between 0 and 1 opacity
                 # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
                 if self.go_to_datum_button_overlay.opacity <= 0:
