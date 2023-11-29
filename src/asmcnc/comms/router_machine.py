@@ -1053,18 +1053,20 @@ class RouterMachine(object):
     """
 
     def convert_from_110_to_230(self, rpm_green):
-        if float(rpm_green) != 0:
-            v_green = (float(rpm_green) - 9375)/1562.5
-            rpm_red = (2187.5*float(v_green)) + 3125
-            return float(rpm_red)
-        else: return 0
+        # if float(rpm_green) != 0:
+        #     v_green = (float(rpm_green) - 9375)/1562.5
+        #     rpm_red = (2187.5*float(v_green)) + 3125
+        #     return float(rpm_red)
+        # else: return 0
+        return float(rpm_green)
 
     def convert_from_230_to_110(self, rpm_red):
-        if float(rpm_red) != 0:
-            v_red = (float(rpm_red) - 3125)/2187.5
-            rpm_green = (1562.5*float(v_red)) + 9375
-            return float(rpm_green)
-        else: return 0
+        # if float(rpm_red) != 0:
+        #     v_red = (float(rpm_red) - 3125)/2187.5
+        #     rpm_green = (1562.5*float(v_red)) + 9375
+        #     return float(rpm_green)
+        # else: return 0
+        return float(rpm_red)
 
 # START UP SEQUENCES
 
