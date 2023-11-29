@@ -227,9 +227,9 @@ class XYMoveDrywall(Widget):
     def __init__(self, **kwargs):
 
         super(XYMoveDrywall, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
 
         self.set_jog_speeds()
 
@@ -242,11 +242,11 @@ class XYMoveDrywall(Widget):
     fast_y_speed = 6000
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == 'normal':
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
@@ -322,10 +322,13 @@ class XYMoveDrywall(Widget):
         self.m.probe_z(fast_probe=True)
 
     def go_to_datum(self):
-        if self.m.is_machine_homed == False and sys.platform != 'win32':
+        if not self.m.is_machine_homed and sys.platform != 'win32':
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
-            self.m.go_xy_datum()
+            if self.m.is_laser_enabled:
+                self.m.jog_spindle_to_laser_datum('XY')
+            else:
+                self.m.go_xy_datum()
 
     def check_zh_at_datum(self, dt):
         # wpos == 0,0 when zh is at datum
@@ -348,8 +351,8 @@ class XYMoveDrywall(Widget):
     def set_datum(self):
         warning = self.format_command(
             (self.l.get_str('Is this where you want to set your X-Y datum?'
-                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
-            )
+                            ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+        )
 
         popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
 

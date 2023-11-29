@@ -427,5 +427,9 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.save_config(file_name)
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+        self.m.laser_off()
