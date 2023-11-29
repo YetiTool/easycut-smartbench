@@ -750,12 +750,12 @@ class GCodeEngine():
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
         
         if simulate:
-            cutting_lines.insert(0, "AX") #Laser off
+            self.m.s.write_command("AX") #Laser off
             cutting_lines.insert(0, "G90")
             # cutting_lines.append("G0 X0 Y0") #obsolete
-            cutting_lines.append("AZ") # Laser on
             cutting_lines.append("G0 X{} Y{}".format(-self.m.laser_offset_x_value,-self.m.laser_offset_y_value))
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
+            self.m.s.write_command("AZ") # Laser on
         else:
             file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
            
