@@ -1797,26 +1797,11 @@ class RouterMachine(object):
             print("Try to move to: " + str(self.wpos_x() - float(self.laser_offset_x_value)))
             print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
 
-            # Check that movement is within bounds before jogging
-            if (self.wpos_x() - float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
-            and self.wpos_x() - float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+            self.s.write_command("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
+            print("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
 
-                self.s.write_command("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
-                print("G90 G1 X{} F{}".format(-self.laser_offset_x_value, 6000.0))
-
-            else: return False
-
-        if axis == 'Y' or axis == 'XY' or axis == 'YX':
-            # Check that movement is within bounds before jogging
-            if (self.mpos_y() - float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
-            and self.mpos_y() - float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
-
-                self.s.write_command("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
-                print("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
-
-            else: return False
-
-        return True
+            self.s.write_command("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
+            print("G90 G1 Y{} F{}".format(-self.laser_offset_y_value, 6000.0))
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
