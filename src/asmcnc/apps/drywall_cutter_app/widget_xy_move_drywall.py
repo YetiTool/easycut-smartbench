@@ -326,7 +326,7 @@ class XYMoveDrywall(Widget):
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
             if self.m.is_laser_enabled:
-                self.m.jog_spindle_to_laser_datum('XY')
+                self.m.jog_laser_to_datum('XY')
             else:
                 self.m.go_xy_datum()
 

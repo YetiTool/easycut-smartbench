@@ -1785,6 +1785,36 @@ class RouterMachine(object):
             else: return False
 
         return True
+    
+    def jog_laser_to_datum(self, axis):
+
+        if axis == 'X' or axis == 'XY' or axis == 'YX':
+
+            # Keep this is for beta testing, as 
+            print("Laser offset value: " + str(self.laser_offset_x_value))
+            print("Pos value: " + str(self.mpos_x()))
+
+            print("Try to move to: " + str(self.mpos_x() + float(self.laser_offset_x_value)))
+            print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
+
+            # Check that movement is within bounds before jogging
+            if (self.mpos_x() - float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+            and self.mpos_x() - float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+
+                self.jog_relative('X', -self.laser_offset_x_value, 6000.0)
+
+            else: return False
+
+        if axis == 'Y' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_y() - float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+            and self.mpos_y() - float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+
+                self.jog_relative('Y', -self.laser_offset_y_value, 6000.0)
+
+            else: return False
+
+        return True
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
