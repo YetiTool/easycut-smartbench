@@ -1891,6 +1891,7 @@ class SerialConnection(object):
         try:
             spindle_speed = self.transform_intended_RPM_to_sendable_RPM(spindle_speed)
             new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), spindle_speed_line)
+            log("MODIFIED SPINDLE COMMAND: " + new_line)
             return new_line
 
         except:
