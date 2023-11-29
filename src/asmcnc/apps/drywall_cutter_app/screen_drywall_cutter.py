@@ -288,10 +288,10 @@ class DrywallCutterScreen(Screen):
 
     def simulate(self):
         if self.are_inputs_valid():
+            self.simualte_button.disabled = True
             self.engine.engine_run(simulate=True)
             Clock.schedule_once(
-                            lambda dt: self.simualte_button.disabled = True, 5)
-            self.simualte_button.disabled = False
+                            lambda dt: self.enable_simulation_button(), 5)
         else:
             popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
@@ -323,6 +323,9 @@ class DrywallCutterScreen(Screen):
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen('go').return_to_screen == 'home' else 'home'
         self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen('go').cancel_to_screen == 'home' else 'home'
+
+    def enable_simulation_button(self):
+        self.simualte_button.disabled = False
 
     def proceed_to_go_screen(self):
 
