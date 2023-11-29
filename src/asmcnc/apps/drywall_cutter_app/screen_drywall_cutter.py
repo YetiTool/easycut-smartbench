@@ -288,7 +288,7 @@ class DrywallCutterScreen(Screen):
 
     def simulate(self):
         if self.are_inputs_valid():
-            self.simualte_button.disabled = True
+            self.simulate_button.disabled = True
             self.engine.engine_run(simulate=True)
             Clock.schedule_once(
                             lambda dt: self.enable_simulation_button(), 5)
