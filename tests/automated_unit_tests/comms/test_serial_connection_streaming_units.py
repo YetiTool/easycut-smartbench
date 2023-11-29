@@ -665,6 +665,9 @@ def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_5000(sc):
 def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_10000(sc):
     assert sc.transform_intended_RPM_to_sendable_RPM(10000) == 2275
 
+def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_25000(sc):
+    assert sc.transform_intended_RPM_to_sendable_RPM(25000) == 23284
+
 
 def test_spindle_mods_mod_spindle_speed_command_M3_S20000(sc):
     assert sc.mod_spindle_speed_command("M3 S20000") == "M3 S16281"
@@ -683,6 +686,9 @@ def test_spindle_mods_mod_spindle_speed_command_SLP(sc):
 
 def test_spindle_mods_mod_spindle_speed_command_S12000_M3(sc):
     assert sc.mod_spindle_speed_command("S12000 M3") == "S5077 M3"
+
+def test_spindle_mods_mod_spindle_speed_command_m3s21000(sc):
+    assert sc.mod_spindle_speed_command("m3s21000") == "M3S17682"
 
 
 def test_spindle_mods_write_direct_single_spindle_command(sc_s_write_spy):
