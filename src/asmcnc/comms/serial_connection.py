@@ -1899,15 +1899,15 @@ class SerialConnection(object):
         return spindle_speed_line
 
     def transform_intended_RPM_to_sendable_RPM(self, speed):
-        if int(speed) > 8899:
-            return int((float(speed) - 8890)/0.663)
+        if int(speed) > 8399:
+            return int((float(speed) - 8375)/0.714)
         else: 
             return speed
 
     # This is a reverse of the above function, used for testing. 
     # I think it makes sense to keep it next to its sister. 
     def transform_sent_RPM_to_predicted_measured_RPM(self, speed):
-        return int((0.663*float(speed) + 8890))
+        return int((0.714*float(speed) + 8375))
 
 
 

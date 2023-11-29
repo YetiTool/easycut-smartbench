@@ -654,42 +654,42 @@ def sc_s_write_spy():
 
 
 def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_18000(sc):
-    assert sc.transform_intended_RPM_to_sendable_RPM('18000') == 13740
+    assert sc.transform_intended_RPM_to_sendable_RPM('18000') == 13480
 
 def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_20000(sc):
-    assert sc.transform_intended_RPM_to_sendable_RPM(20000) == 16757
+    assert sc.transform_intended_RPM_to_sendable_RPM(20000) == 16281
 
 def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_5000(sc):
     assert sc.transform_intended_RPM_to_sendable_RPM(5000) == 5000
 
 def test_spindle_mods_transform_intended_RPM_to_sendable_RPM_10000(sc):
-    assert sc.transform_intended_RPM_to_sendable_RPM(10000) == 1674
+    assert sc.transform_intended_RPM_to_sendable_RPM(10000) == 2275
 
 
 def test_spindle_mods_mod_spindle_speed_command_M3_S20000(sc):
-    assert sc.mod_spindle_speed_command("M3 S20000") == "M3 S16757"
+    assert sc.mod_spindle_speed_command("M3 S20000") == "M3 S16281"
 
 def test_spindle_mods_mod_spindle_speed_command_S10000M4(sc):
-    assert sc.mod_spindle_speed_command("S10000M4") == "S1674M4"
+    assert sc.mod_spindle_speed_command("S10000M4") == "S2275M4"
 
 def test_spindle_mods_mod_spindle_speed_command_M2___S4000(sc):
     assert sc.mod_spindle_speed_command("M2   S4000.0") == "M2   S4000.0"
 
 def test_spindle_mods_mod_spindle_speed_command_S18000(sc):
-    assert sc.mod_spindle_speed_command("S18000") == "S13740"
+    assert sc.mod_spindle_speed_command("S18000") == "S13480"
 
 def test_spindle_mods_mod_spindle_speed_command_SLP(sc):
     assert sc.mod_spindle_speed_command("$SLP") == "$SLP"
 
 def test_spindle_mods_mod_spindle_speed_command_S12000_M3(sc):
-    assert sc.mod_spindle_speed_command("S12000 M3") == "S4690 M3"
+    assert sc.mod_spindle_speed_command("S12000 M3") == "S5077 M3"
 
 
 def test_spindle_mods_write_direct_single_spindle_command(sc_s_write_spy):
     global written_to_serial_list
     written_to_serial_list = []
     sc_s_write_spy.write_direct("M3 S20000")
-    assert written_to_serial_list == ["M3 S16757\n"]
+    assert written_to_serial_list == ["M3 S16281\n"]
 
 def test_spindle_mods_write_direct_non_spindle_command(sc_s_write_spy):
     global written_to_serial_list
@@ -713,12 +713,12 @@ def test_spindle_mods_write_direct_float(sc_s_write_spy):
     global written_to_serial_list
     written_to_serial_list = []
     sc_s_write_spy.write_direct("M3 S12300.45")
-    assert written_to_serial_list == ["M3 S5143\n"]
+    assert written_to_serial_list == ["M3 S5497\n"]
 
 
 def test_spindle_mods_stuff_buffer(sc_s_write_spy):
     test_gcode = ["G90", "G0X4Y5F100", "AE", "G1", "G91", "M3 S18000.1"]
-    expected_lines = ["N0G90\n", "N1G0X4Y5F100\n", "AE\n", "N3G1\n", "N4G91\n", "N5M3 S13740\n"]
+    expected_lines = ["N0G90\n", "N1G0X4Y5F100\n", "AE\n", "N3G1\n", "N4G91\n", "N5M3 S13480\n"]
     global written_to_serial_list
     written_to_serial_list = []
 
@@ -730,17 +730,17 @@ def test_spindle_mods_stuff_buffer(sc_s_write_spy):
 
 
 # Tests to confirm what happens when double transformation happens
-# def test_combination_of_110_conversion_and_RPM_write_correction_12000(sc,m):
-#     rpm = m.convert_from_110_to_230(13500)
-#     twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
-#     thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm)
-#     assert m.convert_from_230_to_110(thrice_transformed_rpm) == 13500
+def test_combination_of_110_conversion_and_RPM_write_correction_12000(sc,m):
+    rpm = m.convert_from_110_to_230(13500)
+    twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
+    thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm)
+    assert round(m.convert_from_230_to_110(thrice_transformed_rpm), -1) == 13500
 
-# def test_combination_of_110_conversion_and_RPM_write_correction_18000(sc,m):
-#     rpm = m.convert_from_110_to_230(18000)
-#     twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
-#     thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm) 
-#     assert m.convert_from_230_to_110(thrice_transformed_rpm) == 18000
+def test_combination_of_110_conversion_and_RPM_write_correction_18000(sc,m):
+    rpm = m.convert_from_110_to_230(18000)
+    twice_transformed_rpm = sc.transform_intended_RPM_to_sendable_RPM(rpm)
+    thrice_transformed_rpm = sc.transform_sent_RPM_to_predicted_measured_RPM(twice_transformed_rpm) 
+    assert round(m.convert_from_230_to_110(thrice_transformed_rpm), -1) == 18000
 
 
 
