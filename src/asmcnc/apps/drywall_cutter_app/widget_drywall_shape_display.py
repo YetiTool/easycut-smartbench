@@ -483,7 +483,10 @@ class DrywallShapeDisplay(Widget):
             self.dwt_config.active_config.datum_position.y = self.m.y_wco()
 
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        if self.dwt_config.active_cutter.units == "mm":
+            cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        else:
+            cutter_radius = 0
         if self.dwt_config.active_config.toolpath_offset == 'inside':
             tool_offset_value = -cutter_radius
         elif self.dwt_config.active_config.toolpath_offset == 'outside':
