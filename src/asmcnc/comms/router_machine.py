@@ -1787,7 +1787,7 @@ class RouterMachine(object):
         return True
     
     def jog_laser_to_datum(self, dt):
-            self.s.write_command("G90 G1 X{} Y{} F{}".format(-self.laser_offset_x_value,-self.laser_offset_y_value, 6000.0))
+        self.s.write_command("G90 G1 X{} Y{} F{}".format(-self.laser_offset_x_value, -self.laser_offset_y_value, 6000.0))
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
