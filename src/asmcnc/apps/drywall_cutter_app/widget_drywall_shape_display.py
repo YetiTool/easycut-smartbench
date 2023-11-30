@@ -435,7 +435,7 @@ class DrywallShapeDisplay(Widget):
         current_shape = self.dwt_config.active_config.shape_type.lower()
         current_x, current_y = self.get_current_x_y(x_coord, y_coord)
         tool_offset_value = self.tool_offset_value()
-        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, tool_offset_value)
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, x_coord, y_coord, tool_offset_value)
 
         # Update canvas elements
         self.set_datum_position_label(current_x, current_y)
@@ -464,7 +464,7 @@ class DrywallShapeDisplay(Widget):
 
         return tool_offset_value
 
-    def get_x_y_clearances(self, current_shape, tool_offset_value):
+    def get_x_y_clearances(self, current_shape, x_coord, y_coord, tool_offset_value):
         # Calculate shape's extent from datum using shape type and input dimensions
         if current_shape == 'circle':
             x_min = y_min = -(float(self.d_input.text or 0) / 2) - tool_offset_value
@@ -489,10 +489,10 @@ class DrywallShapeDisplay(Widget):
             x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
 
         # Calculate shape's distances from every edge
-        x_min_clearance = self.m.x_wco() + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
-        y_min_clearance = self.m.y_wco() + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
-        x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
-        y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
+        x_min_clearance = x_coord + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
+        y_min_clearance = y_coord + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
+        x_max_clearance = -(x_coord + x_dim) - self.m.limit_switch_safety_distance
+        y_max_clearance = -(y_coord + y_dim) - self.m.limit_switch_safety_distance
 
         return x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance
 
