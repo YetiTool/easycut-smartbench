@@ -1592,6 +1592,7 @@ class RouterMachine(object):
                 if not self.state() == 'Jog':
                     Clock.unschedule(xy_poll_for_success)
                     self.set_workzone_to_pos_xy()
+                    self.jog_laser_to_datum()
 
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
@@ -1786,7 +1787,7 @@ class RouterMachine(object):
 
         return True
     
-    def jog_laser_to_datum(self, dt):
+    def jog_laser_to_datum(self):
         self.s.write_command("G90 G1 X{} Y{} F{}".format(-self.laser_offset_x_value, -self.laser_offset_y_value, 6000.0))
 
     # Realtime XYZ feed adjustment
