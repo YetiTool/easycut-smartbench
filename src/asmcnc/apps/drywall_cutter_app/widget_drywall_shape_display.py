@@ -71,7 +71,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: d_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -102,7 +102,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: l_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -133,7 +133,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: r_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -164,7 +164,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: x_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -195,7 +195,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: y_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -215,7 +215,7 @@ Builder.load_string("""
 
             Label:
                 id: x_datum_label
-                font_size: dp(25)
+                font_size: dp(22)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'X:'
@@ -234,7 +234,7 @@ Builder.load_string("""
 
             Label:
                 id: y_datum_label
-                font_size: dp(25)
+                font_size: dp(22)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
