@@ -78,6 +78,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: d_input_validation_label
@@ -109,6 +110,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: l_input_validation_label
@@ -140,6 +142,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: r_input_validation_label
@@ -171,6 +174,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: x_input_validation_label
@@ -202,6 +206,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: y_input_validation_label
@@ -409,6 +414,20 @@ class DrywallShapeDisplay(Widget):
             else:
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
+
+    def format_input(self, text, decimal_places):
+        # Format input to allow only 'decimal_places' digits after the decimal point
+        try:
+            parts = text.split('.')
+            if len(parts) > 1:
+                integer_part = parts[0]
+                decimal_part = parts[1][:decimal_places]
+                return ("{}.{decimal_part}".format(integer_part,decimal_part))
+            else:
+                return text
+        except Exception as e:
+            print("Error formatting input: {}".format(e))
+            return text
 
     def d_input_change(self, instance, value):
         # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
