@@ -117,9 +117,11 @@ class PopupDatum(Widget):
                     self.m.set_x_datum_with_laser()  # testing!!
                 elif xy == 'Y':
                     self.m.set_y_datum_with_laser()
-
                 elif xy == 'XY':
                     self.m.set_workzone_to_pos_xy_with_laser()
+
+                # Do not dismiss the popup when setting datum with laser
+                return
 
             else:
 
@@ -129,6 +131,9 @@ class PopupDatum(Widget):
                     self.m.set_y_datum()
                 elif xy == 'XY':
                     self.m.set_workzone_to_pos_xy()
+
+            # Dismiss the popup for other cases
+            popup.dismiss()
 
         def set_checkbox_default():
             if self.sm.get_screen('home').default_datum_choice == 'spindle':
@@ -182,7 +187,6 @@ class PopupDatum(Widget):
 
         if self.m.is_laser_enabled == True: checkbox.bind(active=on_checkbox_active)
 
-        ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=set_datum)
         back_button.bind(on_press=popup.dismiss)
 
