@@ -78,7 +78,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: d_input_validation_label
@@ -110,7 +109,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: l_input_validation_label
@@ -142,7 +140,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: r_input_validation_label
@@ -174,7 +171,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
 
             Label:
                 id: x_input_validation_label
@@ -206,8 +202,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-                    on_text: self.text = root.format_input(self.text, 1)  # Limit to 1 decimal place
-
+                    
             Label:
                 id: y_input_validation_label
                 font_size: dp(15)
@@ -433,11 +428,15 @@ class DrywallShapeDisplay(Widget):
         # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
@@ -448,12 +447,16 @@ class DrywallShapeDisplay(Widget):
     def x_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
