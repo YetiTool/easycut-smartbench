@@ -501,7 +501,7 @@ class DrywallShapeDisplay(Widget):
         x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, x_coord, y_coord, tool_offset_value)
 
         # Update canvas elements
-        self.set_datum_position_label(current_x, current_y)
+        self.set_datum_position_label(round(current_x, 1), round(current_y, 1))
         self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
 
     # Check_datum_and_extents sub-functions below this comment:
