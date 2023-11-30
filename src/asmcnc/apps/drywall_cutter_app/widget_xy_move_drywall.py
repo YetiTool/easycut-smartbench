@@ -321,7 +321,7 @@ class XYMoveDrywall(Widget):
         self.m.s.write_command('G0 G53 Z-60')
         self.m.probe_z(fast_probe=True)
 
-    def go_to_datum(self):
+    def go_to_datum(self, dt):
         if not self.m.is_machine_homed and sys.platform != 'win32':
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
