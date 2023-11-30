@@ -422,11 +422,11 @@ class DrywallShapeDisplay(Widget):
             if len(parts) > 1:
                 integer_part = parts[0]
                 decimal_part = parts[1][:decimal_places]
-                return ("{}.{decimal_part}".format(integer_part,decimal_part))
+                return "%s.%s" % (integer_part, decimal_part)
             else:
                 return text
         except Exception as e:
-            print("Error formatting input: {}".format(e))
+            print("Error formatting input: %s" % e)
             return text
 
     def d_input_change(self, instance, value):
