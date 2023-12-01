@@ -177,7 +177,7 @@ class SkavaUI(App):
         log("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition(), size=(self.width, self.height))
+        sm = ScreenManager(transition=NoTransition(), size=(self.width, self.height), size_hint=(None, None))
 
         # Localization/language object
         l = localization.Localization()
@@ -447,8 +447,7 @@ class SkavaUI(App):
         ## -----------------------------------------------------------------------------------
 
         if self.height == 768:
-            print('768')
-            root = BoxLayout(orientation="vertical", size=(self.width, self.height + 32))
+            root = BoxLayout(orientation="vertical", size_hint=(None, None), size=(self.width, self.height + 32))
             root.add_widget(sm)
 
             sm.pos_hint = {'center_x': .5, 'center_y': .5}
