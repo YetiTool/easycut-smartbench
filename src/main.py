@@ -177,7 +177,7 @@ class SkavaUI(App):
         log("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition())
+        sm = ScreenManager(transition=NoTransition(), size=(self.width, self.height))
 
         # Localization/language object
         l = localization.Localization()
