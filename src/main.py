@@ -447,6 +447,7 @@ class SkavaUI(App):
         ## -----------------------------------------------------------------------------------
 
         if self.height == 768:
+            print('768')
             root = BoxLayout(orientation="vertical", size=(self.width, self.height + 32))
             root.add_widget(sm)
 
