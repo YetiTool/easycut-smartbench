@@ -233,7 +233,7 @@ class DrywallCutterScreen(Screen):
         self.select_toolpath(allowed_toolpaths[0])
 
     def save_active_cutter_info(self):
-        active_cutter_info = "{}, {}".format(str(self.dwt_config.active_cutter.diameter), self.dwt_config.active_cutter.cutter_description)
+        active_cutter_info = "{}, {}".format(str(self.dwt_config.active_cutter.diameter) + " mm", self.dwt_config.active_cutter.cutter_description)
         print("active_cutter_info: {}".format(active_cutter_info))
         with open("active_cutter_info.txt", "w+") as file:
             file.write(active_cutter_info)
