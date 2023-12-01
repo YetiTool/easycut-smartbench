@@ -548,6 +548,7 @@ class MaintenanceScreenClass(Screen):
         self.sm.current = "lobby"
 
     def on_pre_enter(self):
+        Window.update()
         if self.m.is_laser_enabled == True:
             self.laser_switch_widget.laser_switch.active = True
         else:
