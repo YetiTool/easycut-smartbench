@@ -6,6 +6,8 @@ Module to manage apps and screens
 
 import os
 
+from kivy.clock import Clock
+
 from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
@@ -142,7 +144,10 @@ class AppManagerClass(object):
 
     def start_maintenance_app(self, landing_tab):
         self.sm.get_screen("maintenance").landing_tab = landing_tab
-        self.sm.current = "maintenance"
+        Clock.schedule_once(lambda dt: self.set_current_screen("maintenance"), 0)
+
+    def set_current_screen(self, screen):
+        self.sm.current = screen
 
     def start_systemtools_app(self):
         self.current_app = "system_tools"
