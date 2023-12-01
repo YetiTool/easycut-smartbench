@@ -217,11 +217,6 @@ class DrywallCutterScreen(Screen):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_tool(self, cutter_file, *args):
-        
-        def save_active_cutter_info(self):
-            active_cutter_info = self.dwt_config.active_cutter.diameter,self.dwt_config.active_cutter.cutter_description
-            with open("active_cutter_info.txt", "w+") as file:
-                file.write(active_cutter_info)
 
         self.dwt_config.load_cutter(cutter_file)
         self.show_tool_image()
@@ -236,6 +231,11 @@ class DrywallCutterScreen(Screen):
         self.toolpath_selection.image_dict = allowed_toolpath_dict
         # Default to first toolpath, so disabled toolpath is never selected
         self.select_toolpath(allowed_toolpaths[0])
+
+    def save_active_cutter_info(self):
+        active_cutter_info = self.dwt_config.active_cutter.diameter,self.dwt_config.active_cutter.cutter_description
+        with open("active_cutter_info.txt", "w+") as file:
+            file.write(active_cutter_info)
 
     def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
