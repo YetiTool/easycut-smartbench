@@ -345,7 +345,7 @@ class HomeScreen(Screen):
                 log('Unable to preview file')
 
     def on_pre_enter(self):
-
+        self.do_layout()
         if self.jd.job_gcode == []:
 
             # File label at the top
