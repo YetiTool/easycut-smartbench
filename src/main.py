@@ -154,7 +154,7 @@ class SkavaUI(App):
     test_no = 0
 
     width = Window.width
-    height = Window.height if Window.height == 480 else height - 32
+    height = Window.height if Window.height == 480 else Window.height - 32
 
     def build(self):
 
