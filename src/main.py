@@ -455,6 +455,7 @@ class SkavaUI(App):
             root.add_widget(top_bar)
 
             main_content = BoxLayout(orientation="vertical")
+            sm.height = self.height
             main_content.add_widget(sm)
             root.add_widget(main_content)
 
