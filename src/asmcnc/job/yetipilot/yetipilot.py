@@ -405,7 +405,9 @@ class YetiPilot(object):
        # try:
             # Read active cutter information from the text file
             with open("active_cutter_info.txt", "r") as file:
-                return file.read().strip().split(',')
+                output = file.read().strip().split(',')
+                print ("Read in: {}".format(output))
+                return output
        # except:
         #    raise Exception("Unable to read active cutter info")
 
