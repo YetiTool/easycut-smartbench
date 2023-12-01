@@ -212,11 +212,6 @@ class DrywallCutterScreen(Screen):
 
     def on_pre_enter(self):
         self.apply_active_config()
-        self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config)
-        self.shape_display_container.add_widget(self.drywall_shape_display_widget)
-
-        self.shape_selection.text = 'circle'
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
