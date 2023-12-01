@@ -511,8 +511,8 @@ class DrywallShapeDisplay(Widget):
         # x_coord = self.m.x_wco()
         # y_coord = self.m.y_wco()
 
-        x_coord = self.m.mpos_x()
-        y_coord = self.m.mpos_y()
+        x_coord = self.m.mpos_x() + self.m.laser_offset_x_value
+        y_coord = self.m.mpos_y() + self.m.laser_offset_y_value
 
         # REST OF THIS FUNCTION
 
