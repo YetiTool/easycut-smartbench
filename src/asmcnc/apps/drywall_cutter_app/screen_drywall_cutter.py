@@ -292,7 +292,7 @@ class DrywallCutterScreen(Screen):
             self.engine.engine_run(simulate=True)
             sim_popup = popup_info.PopupWait(self.sm, self.l, "Preparing for simulation")
             Clock.schedule_once(
-                                lambda dt: self.dismiss_popup(sim_popup), 3)
+                                lambda dt: self.dismiss_popup(sim_popup), 2)
             Clock.schedule_once(
                             lambda dt: self.enable_simulation_button(), 5)
         else:
