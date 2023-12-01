@@ -81,6 +81,7 @@ class YetiPilot(object):
         # Set the default profile to active drywall profile
         drywall_cutter_diameter, drywall_cutter_type = self.read_drywall_profile()
         self.default_profile = self.get_profile(cutter_diameter=drywall_cutter_diameter, cutter_type=drywall_cutter_type, material_type='Drywall')
+        print("Profile should match: {}, {}".format(drywall_cutter_diameter, drywall_cutter_type))
 
         self.get_all_profiles()
         self.load_parameters()
