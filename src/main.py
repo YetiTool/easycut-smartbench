@@ -307,16 +307,8 @@ class SkavaUI(App):
 
         ## -----------------------------------------------------------------------------------
         if self.height == 768:
-            root = BoxLayout(orientation='vertical')
-
-            top_black_bar = BoxLayout(size_hint=(1, 0), height=16)
-            root.add_widget(top_black_bar)
-
-            root.add_widget(sm)
-
-            bottom_black_bar = BoxLayout(size_hint=(1, 0), height=16)
-            root.add_widget(bottom_black_bar)
-            return root
+            sm.size = (1280, 768)
+            sm.pos_hint = {'center_x': .5, 'center_y': .5}
 
         return sm
 
