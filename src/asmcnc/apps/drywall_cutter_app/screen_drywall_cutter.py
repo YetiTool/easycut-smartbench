@@ -286,10 +286,13 @@ class DrywallCutterScreen(Screen):
         self.jd.reset_values()
         self.sm.current = 'lobby'
 
-    def simulate(self):
+    def simulate(self):        
         if self.are_inputs_valid():
             self.simulate_button.disabled = True
             self.engine.engine_run(simulate=True)
+            sim_popup = popup_info.PopupWait(self.sm, self.l, "Preparing for simulation")
+            Clock.schedule_once(
+                                lambda dt: self.dismiss_popup(sim_popup), 3)
             Clock.schedule_once(
                             lambda dt: self.enable_simulation_button(), 5)
         else:
@@ -326,6 +329,9 @@ class DrywallCutterScreen(Screen):
 
     def enable_simulation_button(self):
         self.simulate_button.disabled = False
+
+    def dismiss_popup(self, popup):
+        popup.popup.dismiss()
 
     def proceed_to_go_screen(self):
 
