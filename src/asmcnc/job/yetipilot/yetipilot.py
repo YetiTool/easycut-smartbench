@@ -78,6 +78,10 @@ class YetiPilot(object):
             self.profiles_path = 'src/' + self.profiles_path
             self.parameters_path = 'src/' + self.parameters_path
 
+        # Set the default profile to active drywall profile
+        drywall_cutter_diameter, drywall_cutter_type = self.read_drywall_profile()
+        self.default_profile = self.get_profile(cutter_diameter=drywall_cutter_diameter, cutter_type=drywall_cutter_type, material_type='Drywall')
+
         self.get_all_profiles()
         self.load_parameters()
 
@@ -396,6 +400,14 @@ class YetiPilot(object):
             setattr(self, parameter["Name"], parameter["Value"])
 
         self.target_spindle_speed = self.get_spindle_speed_correction(self.target_spindle_speed)
+
+    def read_drywall_profile(self):
+       # try:
+            # Read active cutter information from the text file
+            with open("active_cutter_info.txt", "r") as file:
+                return file.read().strip().split(',')
+       # except:
+        #    raise Exception("Unable to read active cutter info")
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):

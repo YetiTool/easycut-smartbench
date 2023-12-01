@@ -217,8 +217,17 @@ class DrywallCutterScreen(Screen):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_tool(self, cutter_file, *args):
+        
+        def save_active_cutter_info(self):
+            active_cutter_info = self.dwt_config.active_cutter.diameter,self.dwt_config.active_cutter.cutter_description
+            with open("active_cutter_info.txt", "w+") as file:
+                file.write(active_cutter_info)
+
         self.dwt_config.load_cutter(cutter_file)
         self.show_tool_image()
+
+        # Save active cutter information to a text file
+        self.save_active_cutter_info()
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
