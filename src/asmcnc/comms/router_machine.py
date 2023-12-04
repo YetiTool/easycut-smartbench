@@ -1578,7 +1578,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
 
     def set_datum_at_laser_pos(self):
-        self.set_datum(x=self.laser_offset_x_value, y=self.laser_offset_y_value)
+        self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
 
     def set_x_datum(self):
