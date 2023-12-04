@@ -581,7 +581,7 @@ class GCodeEngine():
         # GCODE FILE STRUCTURE
         file_structure_1_shapes = ["rectangle", "square", "circle"]
         if self.config.active_config.shape_type in file_structure_1_shapes:
-            output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
+            output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                 output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
         else:
             output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
