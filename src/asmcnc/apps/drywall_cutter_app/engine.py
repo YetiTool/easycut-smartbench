@@ -81,9 +81,9 @@ class GCodeEngine():
     #Reverse coordinates if need to be clockwise
     def correct_orientation(self, coordinates, clockwise):
         if clockwise:
-            return coordinates[::-1]
-        else:
             return coordinates
+        else:
+            return coordinates[::-1]
 
     #Take in corner coordinates and return coordinates for arcs
     def add_corner_coordinates(self, coordinates, shape_centre, corner_radius):
@@ -222,10 +222,11 @@ class GCodeEngine():
         pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)  
 
         # Time to make some gcode :)
+        final_coordinates = self.correct_orientation(final_coordinates, clockwise_cutting)
+        
         if clockwise_cutting:
             arc_instruction = u"G2"
         else:
-            final_coordinates = self.correct_orientation(final_coordinates, True)
             arc_instruction = u"G3"
 
         cutting_lines = []
