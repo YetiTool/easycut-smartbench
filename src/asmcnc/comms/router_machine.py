@@ -2075,8 +2075,7 @@ class RouterMachine(object):
             else:
                 probe_speed = self.z_probe_speed
                 self.fast_probing = False
-            self.s.write_command('G90 G38.3 Z' + str(-(self.grbl_z_max_travel) + 3) + ' F' + str(probe_speed))
-            self.s.write_command('G90')
+            self.s.write_command('G90 G38.2 Z0 F' + str(probe_speed))
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
             # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
