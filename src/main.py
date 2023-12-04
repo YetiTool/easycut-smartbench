@@ -178,7 +178,7 @@ class SkavaUI(App):
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition(), size=(self.width, self.height), size_hint=(None, None),
-                           pos_hint={'center_x': .5, 'center_y': .5})
+                           padding=(0, 0, 0, 16))
 
         # Localization/language object
         l = localization.Localization()
