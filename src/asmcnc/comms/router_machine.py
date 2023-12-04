@@ -1575,7 +1575,11 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
-        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
+
+    def set_datum_at_laser_pos(self):
+        self.set_datum(x=self.laser_offset_x_value, y=self.laser_offset_y_value)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
 
     def set_x_datum(self):
         self.set_datum(x=0)
@@ -1586,13 +1590,12 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        if self.jog_spindle_to_laser_datum('XY'): 
+        if True: #self.jog_spindle_to_laser_datum('XY'): 
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
                     Clock.unschedule(xy_poll_for_success)
-                    self.set_workzone_to_pos_xy()
-                    self.jog_laser_to_datum()
+                    self.set_datum_at_laser_pos()
 
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
