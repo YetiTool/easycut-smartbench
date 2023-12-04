@@ -1,0 +1,24 @@
+{
+    "cutting_depths": {
+        "bottom_offset": 1.0, 
+        "auto_pass": true, 
+        "depth_per_pass": 1.8, 
+        "material_thickness": 8.0
+    }, 
+    "toolpath_offset": "inside", 
+    "canvas_shape_dims": {
+        "y": 0.0, 
+        "x": 0.0, 
+        "r": 0.0, 
+        "d": 0.0, 
+        "l": 0.0
+    }, 
+    "shape_type": "circle", 
+    "cutter_type": "tool_6mm.json", 
+    "units": "mm", 
+    "rotation": "horizontal", 
+    "datum_position": {
+        "y": 6.0, 
+        "x": 5.0
+    }
+}
