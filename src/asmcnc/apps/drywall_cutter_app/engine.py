@@ -46,17 +46,6 @@ class GCodeEngine():
         # Return the coordinates in clockwise order
         return [bottom_left, top_left, top_right, bottom_right]
 
-    #Adjust corner radius depending on the offset type (in, on, outside of line)
-    def offset_corner_radius(self, corner_radius, offset_type, tool_diameter):
-        if offset_type == u"inside":
-            return corner_radius - tool_diameter
-        elif offset_type == u"outside":
-            return corner_radius + tool_diameter
-        elif offset_type == None:
-            return corner_radius
-        else: 
-            raise  Exception(u"Unknown offset type. Please specify 'inside', 'outside' or 'none'.")
-
     #Find the shape centre coordinates
     def find_centre(self, coordinates, x_offset, y_offset):
         x_sum = 0
@@ -340,7 +329,7 @@ class GCodeEngine():
     #Replace gcode z data with user-driven z data
     def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance):
         output = []    
-        
+
         for line in gcode_lines:
             if str(gcode_cut_depth) in line:
                 # Replace Z cut depth
