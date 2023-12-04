@@ -176,7 +176,7 @@ class SerialConnection(object):
             if not SmartBench_port:
 
                 port_list = [port.device for port in serial.tools.list_ports.comports() if
-                             'n/a' not in port.description]]
+                             'n/a' not in port.description]
 
                 print("Windows port list: ")  # for debugging
                 print(str(port_list))
