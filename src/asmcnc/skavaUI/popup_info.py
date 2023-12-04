@@ -120,6 +120,8 @@ class PopupDatum(Widget):
 
                 elif xy == 'XY':
                     self.m.set_workzone_to_pos_xy_with_laser()
+                
+                Clock.schedule_once(lambda dt: self.m.jog_laser_to_datum(), 4) # Move laser back over datum (drywall app only)
 
             else:
 
