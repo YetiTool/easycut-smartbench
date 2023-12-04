@@ -340,10 +340,15 @@ class GCodeEngine():
     #Replace gcode z data with user-driven z data
     def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance):
         output = []    
+        
         for line in gcode_lines:
-            original_line = line
-            line = line.replace(str(gcode_cut_depth), str(new_cut_depth))
-            line = line.replace(str(gcode_z_safe_distance), str(new_z_safe_distance))
+            if str(gcode_cut_depth) in line:
+                # Replace Z cut depth
+                line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_cut_depth), line)
+            elif str(gcode_z_safe_distance) in line: # Only 1 Z value will be present per line, hence using elif
+                # Replace Z safe distance
+                line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_z_safe_distance), line)
+
             output.append(line)
 
         return output
