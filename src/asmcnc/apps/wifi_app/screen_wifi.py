@@ -222,7 +222,7 @@ Builder.load_string(
                                 valign: 'top'
                                 markup: True
                                 size_hint: (None, None)
-                                size: dp(200.0/800)*app.width, dp(24/480)*app.height
+                                size: dp(200.0/800.0)*app.width, dp(24.0/480.0)*app.height
                                 text: ''
                                 font_size: str(0.025*app.width) + 'sp'
                                 text_size: self.size
