@@ -26,12 +26,10 @@ class PopupSystem(Popup):
     m = ObjectProperty(None)
     l = ObjectProperty(None)
 
-    separator_color = ListProperty([230 / 255., 74 / 255., 25 / 255., 1.])
-    separator_height = ObjectProperty(dp(4))
+    separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+    separator_height = 4
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
-    size_hint = ObjectProperty((None, None))
-    size = ListProperty([300, 350])
 
     """
     title_string: string to be used as title
@@ -42,10 +40,13 @@ class PopupSystem(Popup):
     """
 
     def __init__(self, title_string, main_string, popup_type, buttons,
-                 popup_image=None, **kwargs):
+                 popup_width=300, popup_height=300, popup_image=None,
+                 **kwargs):
         super(PopupSystem, self).__init__(**kwargs)
 
         self.title = self.l.get_str(title_string)
+        self.width = dp(popup_width)
+        self.height = dp(popup_height)
 
         self.main_string = self.l.get_str(main_string)
         self.buttons = buttons
