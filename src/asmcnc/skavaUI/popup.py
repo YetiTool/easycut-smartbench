@@ -3,6 +3,7 @@
 
 Popup system for easycut-smartbench
 """
+from kivy.core.window import Window
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -46,8 +47,8 @@ class PopupSystem(Popup):
 
         self.title = self.l.get_str(title_string)
         self.size_hint = (None, None)
-        self.width = dp(popup_width)
-        self.height = dp(popup_height)
+        self.width = dp(float(popup_width)/800.0)*Window.width
+        self.height = dp(float(popup_height)/480.0)*Window.height
 
         self.main_string = self.l.get_str(main_string)
         self.buttons = buttons
