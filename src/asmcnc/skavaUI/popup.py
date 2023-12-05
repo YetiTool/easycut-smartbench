@@ -45,6 +45,7 @@ class PopupSystem(Popup):
         super(PopupSystem, self).__init__(**kwargs)
 
         self.title = self.l.get_str(title_string)
+        self.size_hint = (None, None)
         self.width = dp(popup_width)
         self.height = dp(popup_height)
 
