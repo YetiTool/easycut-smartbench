@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 19 August 2020
 @author: Letty
@@ -163,8 +164,8 @@ class BrushLifeWidget(Widget):
         if text_length <= 18:
             value.font_size = self.default_font_size
         if text_length > 18:
-            value.font_size = self.default_font_size - 3
+            value.font_size = self.default_font_size - 0.00375 * Window.width
         if text_length > 23:
-            value.font_size = self.default_font_size - 6
+            value.font_size = self.default_font_size - 0.0075 * Window.width
         if text_length > 28:
-            value.font_size = self.default_font_size - 7
+            value.font_size = self.default_font_size - 0.00875 * Window.width

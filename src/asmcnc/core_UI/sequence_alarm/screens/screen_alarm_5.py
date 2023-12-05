@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 31 March 2021
 @author: Letty
@@ -221,8 +222,8 @@ class AlarmScreen5(Screen):
         if text_length < 12:
             value.font_size = self.default_font_size
         elif text_length > 15:
-            value.font_size = self.default_font_size - 2
+            value.font_size = self.default_font_size - 0.0025 * Window.width
         if text_length > 20:
-            value.font_size = self.default_font_size - 4
+            value.font_size = self.default_font_size - 0.005 * Window.width
         if text_length > 22:
-            value.font_size = self.default_font_size - 5
+            value.font_size = self.default_font_size - 0.00625 * Window.width

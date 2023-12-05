@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created March 2019
 
@@ -157,5 +158,5 @@ class HomingScreenPrepare(Screen):
             value1.font_size = self.default_font_size
             value2.font_size = self.default_font_size
         else:
-            value1.font_size = self.default_font_size - 2
-            value2.font_size = self.default_font_size - 2
+            value1.font_size = self.default_font_size - 0.0025 * Window.width
+            value2.font_size = self.default_font_size - 0.0025 * Window.width

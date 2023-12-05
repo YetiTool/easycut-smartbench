@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 31 March 2021
 @author: Letty
@@ -165,10 +166,10 @@ class AlarmScreen1(Screen):
     def update_font_size(self, value):
         text_length = self.a.l.get_text_length(value.text)
         if text_length > 330:
-            value.font_size = 16
+            value.font_size = 0.02 * Window.width
         elif text_length > 280:
-            value.font_size = 17
+            value.font_size = 0.02125 * Window.width
         elif text_length > 270:
-            value.font_size = 18
+            value.font_size = 0.0225 * Window.width
         else:
-            value.font_size = 20
+            value.font_size = 0.025 * Window.width

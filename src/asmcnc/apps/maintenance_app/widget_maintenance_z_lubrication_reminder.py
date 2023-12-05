@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 17 August 2020
 @author: Letty
@@ -147,17 +148,17 @@ class ZLubricationReminderWidget(Widget):
 
     def update_font_size(self, value):
         if len(value.text) < 8 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 90
+            value.font_size = 0.1125 * Window.width
         if len(value.text) > 7 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 80
+            value.font_size = 0.1 * Window.width
         if len(value.text) > 8 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 75
+            value.font_size = 0.09375 * Window.width
         if len(value.text) > 9 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 70
+            value.font_size = 0.0875 * Window.width
         if len(value.text) > 10 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 60
+            value.font_size = 0.075 * Window.width
         if len(value.text) > 11 + len('[color=4caf50ff]') + len('[/color]'):
-            value.font_size = 50
+            value.font_size = 0.0625 * Window.width
 
     def update_label_font_size(self, value):
         text_length = self.l.get_text_length(value.text)

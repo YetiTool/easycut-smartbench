@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 import os, sys
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
@@ -193,6 +194,6 @@ class RecoveryDecisionScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 50:
-            value.font_size = 28
+            value.font_size = 0.035 * Window.width
         else:
-            value.font_size = 30
+            value.font_size = 0.0375 * Window.width

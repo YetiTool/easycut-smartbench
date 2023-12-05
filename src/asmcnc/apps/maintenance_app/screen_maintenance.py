@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 8 June 2020
 Tabbed maintenance screen, for setting the laser datum; monitoring brush life. 
@@ -616,9 +617,9 @@ class MaintenanceScreenClass(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 18:
-            value.font_size = 19
+            value.font_size = 0.02375 * Window.width
         else:
-            value.font_size = 22
+            value.font_size = 0.0275 * Window.width
 
     def on_tab_switch(self):
         for text_input in self.text_inputs:

@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 1 February 2021
 @author: Letty
@@ -238,6 +239,6 @@ class JobstartWarningScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 11:
-            value.font_size = 19
+            value.font_size = 0.02375 * Window.width
         else:
-            value.font_size = 22
+            value.font_size = 0.0275 * Window.width

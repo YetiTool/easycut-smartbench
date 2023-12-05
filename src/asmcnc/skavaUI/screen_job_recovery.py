@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 import re
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
@@ -562,6 +563,6 @@ class JobRecoveryScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 10:
-            value.font_size = 25
+            value.font_size = 0.03125 * Window.width
         else:
-            value.font_size = 30
+            value.font_size = 0.0375 * Window.width

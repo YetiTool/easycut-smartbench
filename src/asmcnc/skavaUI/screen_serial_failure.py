@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 19 Feb 2019
 
@@ -140,6 +141,6 @@ class SerialFailureClass(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length >= 20:
-            value.font_size = '25sp'
+            value.font_size = str(0.03125 * Window.width) + 'sp'
         else:
-            value.font_size = '30sp'
+            value.font_size = str(0.0375 * Window.width) + 'sp'

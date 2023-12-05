@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 19 Aug 2017
 

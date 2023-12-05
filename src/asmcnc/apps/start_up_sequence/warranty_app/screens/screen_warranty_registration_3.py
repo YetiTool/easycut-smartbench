@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on nov 2020
 @author: Ollie
@@ -321,6 +322,6 @@ class WarrantyScreen3(Screen):
         if text_length < 85:
             value.font_size = self.default_font_size
         elif text_length < 100:
-            value.font_size = '18sp'
+            value.font_size = str(0.0225 * Window.width) + 'sp'
         else:
-            value.font_size = '16sp'
+            value.font_size = str(0.02 * Window.width) + 'sp'

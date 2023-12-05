@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 15th September 2021
 @author: Letty
@@ -160,6 +161,6 @@ class ApplySettingsScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 20:
-            value.font_size = 25
+            value.font_size = 0.03125 * Window.width
         else:
-            value.font_size = 30
+            value.font_size = 0.0375 * Window.width

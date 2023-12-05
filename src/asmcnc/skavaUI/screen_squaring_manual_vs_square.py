@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created March 2019
 
@@ -231,10 +232,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         if text_length < 35:
             value.font_size = self.default_font_size
         elif text_length > 38:
-            value.font_size = self.default_font_size - 2
+            value.font_size = self.default_font_size - 0.0025 * Window.width
         if text_length > 42:
-            value.font_size = self.default_font_size - 4
+            value.font_size = self.default_font_size - 0.005 * Window.width
         if text_length > 44:
-            value.font_size = self.default_font_size - 5
+            value.font_size = self.default_font_size - 0.00625 * Window.width
         if text_length > 50:
-            value.font_size = self.default_font_size - 7
+            value.font_size = self.default_font_size - 0.00875 * Window.width

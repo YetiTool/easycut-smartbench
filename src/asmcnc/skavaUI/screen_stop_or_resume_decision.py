@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created March 2019
 
@@ -239,8 +240,8 @@ class StopOrResumeDecisionScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 700:
-            value.font_size = 16
+            value.font_size = 0.02 * Window.width
         elif text_length > 500:
-            value.font_size = 17
+            value.font_size = 0.02125 * Window.width
         else:
-            value.font_size = 18
+            value.font_size = 0.0225 * Window.width

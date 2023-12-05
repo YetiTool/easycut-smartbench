@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on 19 August 2020
 @author: Letty
@@ -445,6 +446,6 @@ class SpindleSettingsWidget(Widget):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 33:
-            value.font_size = 22
+            value.font_size = 0.0275 * Window.width
         else:
-            value.font_size = 24
+            value.font_size = 0.03 * Window.width
