@@ -61,8 +61,8 @@ Builder.load_string(
         spacing:[0, dp(0.00833333333333)*app.height]
         do_default_tab: False
         tab_pos: 'top_left'
-        tab_height: dp(90)
-        tab_width: dp(142)
+        tab_height: dp(90.0/480.0)*app.height
+        tab_width: dp(142.0/800.0)*app.width
         on_touch_down: root.on_tab_switch()
 
 
