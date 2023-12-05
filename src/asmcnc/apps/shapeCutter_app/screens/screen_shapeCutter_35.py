@@ -4,11 +4,11 @@ Screen 35 for the Shape Cutter App
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -300,7 +300,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter35ScreenClass(Screen):
@@ -312,7 +312,7 @@ class ShapeCutter35ScreenClass(Screen):
         """Press the button. The spindle should come on for 2 seconds.
 
 If not, check that it's connected and switched on, then retry by pressing the button again."""
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter35ScreenClass, self).__init__(**kwargs)

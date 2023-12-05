@@ -5,12 +5,12 @@ Screen 22 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.switch import Switch
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -483,7 +483,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter20ScreenClass(Screen):
@@ -499,7 +499,7 @@ class ShapeCutter20ScreenClass(Screen):
         self.j = kwargs['job_parameters']
         self.kb = kwargs['keyboard']
         self.text_inputs = [self.a_dimension, self.b_dimension, self.
-            c_dimension]
+        c_dimension]
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -508,11 +508,11 @@ class ShapeCutter20ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.a_dimension.text = '{:.2f}'.format(float(self.j.parameter_dict
-            ['cutter dimensions']['diameter']))
+                                                      ['cutter dimensions']['diameter']))
         self.b_dimension.text = '{:.2f}'.format(float(self.j.parameter_dict
-            ['cutter dimensions']['cutting length']))
+                                                      ['cutter dimensions']['cutting length']))
         self.c_dimension.text = '{:.2f}'.format(float(self.j.parameter_dict
-            ['cutter dimensions']['shoulder length']))
+                                                      ['cutter dimensions']['shoulder length']))
         if self.j.parameter_dict['cutter dimensions']['units'] == 'mm':
             self.unit_toggle.active = False
         elif self.j.parameter_dict['cutter dimensions']['units'] == 'inches':
@@ -556,28 +556,28 @@ class ShapeCutter20ScreenClass(Screen):
             self.j.parameter_dict['cutter dimensions']['units'] = 'inches'
             if not self.a_dimension.text == '':
                 self.a_dimension.text = '{:.2f}'.format(float(self.
-                    a_dimension.text) / 25.4)
+                                                              a_dimension.text) / 25.4)
             if not self.b_dimension.text == '':
                 self.b_dimension.text = '{:.2f}'.format(float(self.
-                    b_dimension.text) / 25.4)
+                                                              b_dimension.text) / 25.4)
             if not self.c_dimension.text == '':
                 self.c_dimension.text = '{:.2f}'.format(float(self.
-                    c_dimension.text) / 25.4)
+                                                              c_dimension.text) / 25.4)
         elif self.unit_toggle.active == False:
             self.j.parameter_dict['cutter dimensions']['units'] = 'mm'
             if not self.a_dimension.text == '':
                 self.a_dimension.text = '{:.2f}'.format(float(self.
-                    a_dimension.text) * 25.4)
+                                                              a_dimension.text) * 25.4)
             if not self.b_dimension.text == '':
                 self.b_dimension.text = '{:.2f}'.format(float(self.
-                    b_dimension.text) * 25.4)
+                                                              b_dimension.text) * 25.4)
             if not self.c_dimension.text == '':
                 self.c_dimension.text = '{:.2f}'.format(float(self.
-                    c_dimension.text) * 25.4)
+                                                              c_dimension.text) * 25.4)
 
     def check_dimensions(self):
         if (not self.a_dimension.text == '' and not self.b_dimension.text ==
-            '' and not self.c_dimension.text == ''):
+                                                    '' and not self.c_dimension.text == ''):
             if self.unit_toggle.active == True:
                 self.j.parameter_dict['cutter dimensions']['units'] = 'inches'
             elif self.unit_toggle.active == False:
@@ -585,33 +585,33 @@ class ShapeCutter20ScreenClass(Screen):
             units = self.j.parameter_dict['cutter dimensions']['units']
             input_dim_list = [('diameter', float(self.a_dimension.text)), (
                 'cutting length', float(self.b_dimension.text)), (
-                'shoulder length', float(self.c_dimension.text))]
+                                  'shoulder length', float(self.c_dimension.text))]
             for dim, input in input_dim_list:
                 setting = self.j.validate_cutter_dimensions(dim, input)
                 if not setting == True:
                     if dim == 'shoulder length':
                         description = ('The ' + dim +
-                            " input isn't valid.\n\n" +
-                            'The shoulder length should be greater' +
-                            """ than the cutting length, and the Z dimension.
-
-"""
-                             + 'Please re-enter your parameters.')
+                                       " input isn't valid.\n\n" +
+                                       'The shoulder length should be greater' +
+                                       """ than the cutting length, and the Z dimension.
+           
+           """
+                                       + 'Please re-enter your parameters.')
                     elif dim == 'cutting length':
                         description = ('The ' + dim +
-                            " input isn't valid.\n\nThe " + dim +
-                            ' value should be greater than ' + '{:.2f}'.
-                            format(setting) + ' ' + units + '.\n\n' +
-                            'Please re-enter your parameters.')
+                                       " input isn't valid.\n\nThe " + dim +
+                                       ' value should be greater than ' + '{:.2f}'.
+                                       format(setting) + ' ' + units + '.\n\n' +
+                                       'Please re-enter your parameters.')
                     elif dim == 'diameter':
                         description = ('The ' + dim +
-                            " input isn't valid.\n\nThe " + dim +
-                            ' value should be greater than 0 ' +
-                            'and less than ' + '{:.2f}'.format(setting) +
-                            ' ' + units + '.\n\n' +
-                            'Please re-enter your parameters.')
+                                       " input isn't valid.\n\nThe " + dim +
+                                       ' value should be greater than 0 ' +
+                                       'and less than ' + '{:.2f}'.format(setting) +
+                                       ' ' + units + '.\n\n' +
+                                       'Please re-enter your parameters.')
                     popup_input_error.PopupInputError(self.shapecutter_sm,
-                        description)
+                                                      description)
                     return False
             self.shapecutter_sm.next_screen()
         else:

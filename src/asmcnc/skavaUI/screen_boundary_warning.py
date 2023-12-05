@@ -5,24 +5,10 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
-import kivy
-import docutils
-import time
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
-from kivy.clock import Clock
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from datetime import datetime
-from functools import partial
-import re
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -123,7 +109,7 @@ Builder.load_string(
                     orientation: 'horizontal'
                     size_hint_y: 0.15                       
 """
-    )
+)
 
 
 class BoundaryWarningScreen(Screen):
@@ -142,15 +128,15 @@ class BoundaryWarningScreen(Screen):
 
     def on_enter(self):
         self.check_outcome = self.l.get_bold('WARNING'
-            ) + '[b]:[/b]\n' + self.l.get_bold(
+                                             ) + '[b]:[/b]\n' + self.l.get_bold(
             'Job is not within machine bounds!') + '\n\n' + self.l.get_str(
             'Please set datum appropriately, so that job boundaries are within SmartBench limits.'
-            )
+        )
         self.write_boundary_output()
 
     def write_boundary_output(self):
         self.display_output = self.l.get_bold('DETAILS OF BOUNDARY CONFLICT'
-            ) + '\n\n' + '\n\n'.join(map(str, self.job_box_details))
+                                              ) + '\n\n' + '\n\n'.join(map(str, self.job_box_details))
 
     def quit_to_home(self):
         self.sm.current = 'home'

@@ -1,7 +1,11 @@
-import os, sys
-from kivy.uix.screenmanager import Screen
+import os
+import sys
+
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -96,7 +100,7 @@ Builder.load_string(
                 background_down: "./asmcnc/skavaUI/img/blank_orange_button.png"
 
 """
-    )
+)
 
 
 class RecoveryDecisionScreen(Screen):
@@ -160,19 +164,19 @@ class RecoveryDecisionScreen(Screen):
                     self.jd.set_job_filename(self.jd.job_recovery_filepath)
                     if recovering:
                         self.sm.get_screen('loading'
-                            ).continuing_to_recovery = True
+                                           ).continuing_to_recovery = True
                     else:
                         self.sm.get_screen('loading'
-                            ).skip_check_decision = True
+                                           ).skip_check_decision = True
                     self.sm.current = 'loading'
                 else:
                     self.sm.get_screen('home').z_datum_reminder_flag = True
                     self.jd.reset_recovery()
                     if recovering:
                         self.sm.get_screen('homing_decision'
-                            ).return_to_screen = 'job_recovery'
+                                           ).return_to_screen = 'job_recovery'
                         self.sm.get_screen('homing_decision'
-                            ).cancel_to_screen = 'job_recovery'
+                                           ).cancel_to_screen = 'job_recovery'
                         self.sm.current = 'homing_decision'
                     else:
                         self.jd.job_recovery_from_beginning = True

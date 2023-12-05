@@ -5,11 +5,11 @@ Dimensions Entry Screen for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
-from kivy.uix.textinput import TextInput
-from kivy.uix.switch import Switch
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -403,7 +403,7 @@ Builder.load_string(
                 
                 
 """
-    )
+)
 
 
 class ShapeCutterDimensionsScreenClass(Screen):
@@ -422,7 +422,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.j = kwargs['job_parameters']
         self.kb = kwargs['keyboard']
         self.text_inputs = [self.input_dim1, self.input_dim2, self.
-            input_dim3, self.input_dim4]
+        input_dim3, self.input_dim4]
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -498,30 +498,30 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.j.shape_dict['units'] = 'inches'
             if not self.input_dim1.text == '':
                 self.input_dim1.text = '{:.2f}'.format(float(self.
-                    input_dim1.text) / 25.4)
+                                                             input_dim1.text) / 25.4)
             if not self.input_dim2.text == '':
                 self.input_dim2.text = '{:.2f}'.format(float(self.
-                    input_dim2.text) / 25.4)
+                                                             input_dim2.text) / 25.4)
             if not self.input_dim3.text == '':
                 self.input_dim3.text = '{:.2f}'.format(float(self.
-                    input_dim3.text) / 25.4)
+                                                             input_dim3.text) / 25.4)
             if not self.input_dim4.text == '':
                 self.input_dim4.text = '{:.2f}'.format(float(self.
-                    input_dim4.text) / 25.4)
+                                                             input_dim4.text) / 25.4)
         elif self.unit_toggle.active == False:
             self.j.shape_dict['units'] = 'mm'
             if not self.input_dim1.text == '':
                 self.input_dim1.text = '{:.2f}'.format(float(self.
-                    input_dim1.text) * 25.4)
+                                                             input_dim1.text) * 25.4)
             if not self.input_dim2.text == '':
                 self.input_dim2.text = '{:.2f}'.format(float(self.
-                    input_dim2.text) * 25.4)
+                                                             input_dim2.text) * 25.4)
             if not self.input_dim3.text == '':
                 self.input_dim3.text = '{:.2f}'.format(float(self.
-                    input_dim3.text) * 25.4)
+                                                             input_dim3.text) * 25.4)
             if not self.input_dim4.text == '':
                 self.input_dim4.text = '{:.2f}'.format(float(self.
-                    input_dim4.text) * 25.4)
+                                                             input_dim4.text) * 25.4)
 
     def check_dimensions(self):
         if self.unit_toggle.active == True:
@@ -531,38 +531,39 @@ class ShapeCutterDimensionsScreenClass(Screen):
         units = self.j.shape_dict['units']
         if self.j.shape_dict['shape'] == 'rectangle':
             if (not self.input_dim1.text == '' and not self.input_dim2.text ==
-                '' and not self.input_dim3.text == '' and not self.
-                input_dim4.text == ''):
+                                                       '' and not self.input_dim3.text == '' and not self.
+                                                                                                             input_dim4.text == ''):
                 input_dim_list = [('X', float(self.input_dim1.text)), ('Y',
-                    float(self.input_dim2.text)), ('Z', float(self.
-                    input_dim3.text)), ('R', float(self.input_dim4.text))]
+                                                                       float(self.input_dim2.text)), ('Z', float(self.
+                                                                                                                 input_dim3.text)),
+                                  ('R', float(self.input_dim4.text))]
                 for dim, input in input_dim_list:
                     setting = self.j.validate_shape_dimensions(dim, input)
                     if not setting == True:
                         description = (dim + " dimension isn't valid. \n\n" +
-                            dim + ' value should be between 0 and ' +
-                            '{:.2f}'.format(setting) + ' ' + units +
-                            '.\n\n' + 'Please re-enter your dimensions.')
+                                       dim + ' value should be between 0 and ' +
+                                       '{:.2f}'.format(setting) + ' ' + units +
+                                       '.\n\n' + 'Please re-enter your dimensions.')
                         popup_input_error.PopupInputError(self.
-                            shapecutter_sm, description)
+                                                          shapecutter_sm, description)
                         return False
                 self.next_screen()
             else:
                 pass
         if self.j.shape_dict['shape'] == 'circle':
             if (not self.input_dim2.text == '' and not self.input_dim3.text ==
-                ''):
+                                                       ''):
                 input_dim_list = [('D', float(self.input_dim2.text)), ('Z',
-                    float(self.input_dim3.text))]
+                                                                       float(self.input_dim3.text))]
                 for dim, input in input_dim_list:
                     setting = self.j.validate_shape_dimensions(dim, input)
                     if not setting == True:
                         description = (dim + " dimension isn't valid. \n\n" +
-                            dim + ' value should be between 0 and ' +
-                            '{:.2f}'.format(setting) + ' ' + units +
-                            '.\n\n' + 'Please re-enter your dimensions.')
+                                       dim + ' value should be between 0 and ' +
+                                       '{:.2f}'.format(setting) + ' ' + units +
+                                       '.\n\n' + 'Please re-enter your dimensions.')
                         popup_input_error.PopupInputError(self.
-                            shapecutter_sm, description)
+                                                          shapecutter_sm, description)
                         return False
                 self.next_screen()
             else:

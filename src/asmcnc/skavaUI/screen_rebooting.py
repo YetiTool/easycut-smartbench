@@ -5,11 +5,13 @@ Created Mayh 2019
 
 Basic screen 
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+import os
+import sys
+
 from kivy.clock import Clock
-import sys, os
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -44,7 +46,7 @@ Builder.load_string(
                 halign: 'center'            
 
 """
-    )
+)
 
 
 class RebootingScreen(Screen):

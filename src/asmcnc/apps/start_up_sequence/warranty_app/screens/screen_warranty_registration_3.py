@@ -3,16 +3,13 @@ Created on nov 2020
 @author: Ollie
 Text input # on_enter: root.sucessful_activation
 """
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.textinput import TextInput
-from asmcnc.skavaUI import widget_status_bar
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.gridlayout import GridLayout
-from kivy.clock import Clock
 import os
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -193,7 +190,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class WarrantyScreen3(Screen):
@@ -217,7 +214,7 @@ class WarrantyScreen3(Screen):
 
     def on_enter(self):
         self.check_activation_event = Clock.schedule_interval(lambda dt:
-            self.next_screen(), 2)
+                                                              self.next_screen(), 2)
         self.kb.setup_text_inputs(self.text_inputs)
 
     def on_touch(self):
@@ -236,13 +233,14 @@ class WarrantyScreen3(Screen):
 
     def backup_generate_activation_code(self):
         self.activation_code_from_file = self.generate_activation_code(self
-            .start_seq.sm.get_screen('warranty_2').serial_number_label.text)
+                                                                       .start_seq.sm.get_screen(
+            'warranty_2').serial_number_label.text)
         self.error_message_bottom.opacity = 1
 
     def check_activation_code(self):
         if self.activation_code.text != '':
             if int(self.activation_code.text
-                ) == self.activation_code_from_file:
+                   ) == self.activation_code_from_file:
                 if os.path.isfile(self.activation_code_filepath):
                     os.remove(self.activation_code_filepath)
                 return True
@@ -296,10 +294,10 @@ class WarrantyScreen3(Screen):
         Activation_Code_13 = int(ActiveTempStartReduce[6]) * 53262890
         Activation_Code_14 = int(ActiveTempStartReduce[6]) * 89201233
         Final_Activation_Code = (Activation_Code_1 + Activation_Code_2 +
-            Activation_Code_3 + Activation_Code_4 + Activation_Code_5 +
-            Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
-            Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
-            Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
+                                 Activation_Code_3 + Activation_Code_4 + Activation_Code_5 +
+                                 Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
+                                 Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
+                                 Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
         print str(Final_Activation_Code) + '\n'
         return Final_Activation_Code
 
@@ -312,7 +310,7 @@ class WarrantyScreen3(Screen):
             'Please check your activation code.')
         self.error_message_bottom.text = self.l.get_str(
             'Stuck on this screen? Contact us at https://www.yetitool.com/support'
-            )
+        )
         self.next_button.text = self.l.get_str('Next') + '...'
         self.update_font_size(self.error_message_bottom)
 

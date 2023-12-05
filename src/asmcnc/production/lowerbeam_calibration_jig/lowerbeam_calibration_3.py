@@ -1,5 +1,6 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <LBCalibration3>:
@@ -42,7 +43,7 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class LBCalibration3(Screen):

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-import time
-import os, csv, re
+import csv
+import os
+import re
 from datetime import datetime
-from kivy.lang import Builder
-from kivy.core.text import LabelBase
 
+from kivy.core.text import LabelBase
+from kivy.lang import Builder
 
 kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
 kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
 
-try: 
+try:
     LabelBase.register(name='KRFont',
                        fn_regular="." + kr_font_path,
                        fn_bold="." + kr_font_bold_path)
@@ -31,12 +32,13 @@ builder_font_string = """
     title_font: "%s"
 """
 
+
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
 
 class Localization(object):
-
     dictionary = {}
 
     gb = "English (GB)"
@@ -50,18 +52,17 @@ class Localization(object):
     nl = "Nederlands (NL)"
 
     approved_languages = [
-                            gb,
-                            it, 
-                            fi, 
-                            de,
-                            fr,
-                            pl,
-                            dk,
-                            ko
-                        ]
+        gb,
+        it,
+        fi,
+        de,
+        fr,
+        pl,
+        dk,
+        ko
+    ]
 
     supported_languages = approved_languages + [nl]
-
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -102,15 +103,14 @@ class Localization(object):
         elif "day" in string:
             return string.replace("day", self.get_str("day"))
 
-        else: 
+        else:
             return string
-    
+
     # Removes kivy markup tags to leave only text before returning length, and decode to correctly count Korean characters
     def get_text_length(self, string):
         if self.lang == self.ko:
             string = string.decode('utf-8')
         return len(re.sub(self.kivy_markup_regex, '', string))
-
 
     ## DEBUGGING (forces KeyErrors)
     # def get_str(self, string):
@@ -125,13 +125,13 @@ class Localization(object):
     # LANGUAGE NAME
     # Read in name of language, so it can be used as a key when accessing the complete language dictionary
     def read_in_language_name(self):
-        try: 
+        try:
             file = open(self.persistent_language_path, 'r')
-            self.lang  = str(file.read())
+            self.lang = str(file.read())
             file.close()
             log("Read in language name: using " + self.lang)
 
-        except: 
+        except:
             self.lang = self.default_lang
             log("Could not read in language name, using English (GB) as default")
 
@@ -141,7 +141,6 @@ class Localization(object):
         else:
             log("Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
             self.lang = self.default_lang
-            
 
     # Save language name
     def save_language_name(self):
@@ -153,7 +152,6 @@ class Localization(object):
 
         except:
             log("Could not save language name, using English (GB) as default")
-
 
     ## DICTIONARY
     def load_from_dictionary(self):
@@ -168,7 +166,7 @@ class Localization(object):
             if self.lang == self.ko:
                 self.font_regular = self.korean_font
                 self.font_bold = self.korean_font_bold
-            
+
                 # Only do this load for Korean, as it prevents some spinner weirdness
                 Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
 
@@ -181,7 +179,6 @@ class Localization(object):
         except:
             log("Could not load in from full dictionary")
 
-
     ## LOAD IN NEW LANGUAGE
     def load_in_new_language(self, language):
         # When choosing a language, read in from full dictionary
@@ -189,7 +186,6 @@ class Localization(object):
         self.load_from_dictionary()
         self.save_language_name()
 
-    
     ## LOAD SUPPORTED LANGUAGES
     # def load_supported_languages(self):
     #     try: 
@@ -201,17 +197,16 @@ class Localization(object):
     #     except:
     #         log("Could not load list of supported_languages from dictionary")
 
-
     ## FAST DICTIONARY
 
-        # fast_dictionary_path = './sb_values/fast_dictionary.csv'
+    # fast_dictionary_path = './sb_values/fast_dictionary.csv'
 
-        # if os.path.exists(self.fast_dictionary_path):
-        #     # self.load_language() # only use this when not adding new keys!
-        #     self.load_in_new_language(self.lang)
+    # if os.path.exists(self.fast_dictionary_path):
+    #     # self.load_language() # only use this when not adding new keys!
+    #     self.load_in_new_language(self.lang)
 
-        # else:
-        #     self.load_in_new_language(self.lang)
+    # else:
+    #     self.load_in_new_language(self.lang)
 
     # def load_language(self):
     #     try: 
@@ -237,4 +232,3 @@ class Localization(object):
 
     #     except:
     #         log("Could not save fast dictionary")
-

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-import traceback, threading
-import json
 import sys
+import threading
+import traceback
+from datetime import datetime
+
 from asmcnc.production.database.payload_publisher import DataPublisher
+
 
 def log(message):
     timestamp = datetime.now()
     print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-try: 
+try:
     try:
         import pymysql as my_sql_client
 
@@ -37,7 +39,6 @@ class CalibrationDatabase(object):
         "CalibrationCheckOT": 7,
         "FullyCalibratedTest": 8
     }
-
 
     # if sys.platform == 'win32' or sys.platform == 'darwin':
     #     # ODBC Driver 17 for SQL Server ON WINDOWS
@@ -73,8 +74,9 @@ class CalibrationDatabase(object):
                 import credentials
 
         try:
-            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
-                                        passwd=credentials.password)
+            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database,
+                                              user=credentials.username,
+                                              passwd=credentials.password)
             log("Connected to database")
 
         except:
@@ -247,7 +249,7 @@ class CalibrationDatabase(object):
 
     def insert_calibration_check_stage(self, sub_serial, stage_id):
         try:
-            
+
             combined_id = str(sub_serial)[2:] + str(stage_id)
 
             if self.does_calibration_check_stage_already_exist(combined_id):
@@ -354,7 +356,7 @@ class CalibrationDatabase(object):
 
                 self.conn.commit()
 
-        except: 
+        except:
             print(traceback.format_exc())
 
         print("After insert ft status")
@@ -423,7 +425,6 @@ class CalibrationDatabase(object):
 
             return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
 
-
     def insert_stall_experiment_results(self, stall_events):
 
         # # Example data: 
@@ -452,12 +453,11 @@ class CalibrationDatabase(object):
                 self.conn.commit()
                 return True
 
-        except: 
+        except:
             print(traceback.format_exc())
             return False
 
         print("After insert stall events")
-
 
     processing_running_data = False
     processed_running_data = {
@@ -470,11 +470,14 @@ class CalibrationDatabase(object):
         "13": ([], "CalibrationCheckStatuses", "CalibrationCheckXL")
 
     }
-    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0, y_weight=0, z_weight=2):
+
+    def process_status_running_data_for_database_insert(self, unprocessed_status_data, serial_number, x_weight=0,
+                                                        y_weight=0, z_weight=2):
 
         self.processing_running_data = True
 
-        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(unprocessed_status_data, serial_number, x_weight, y_weight, z_weight))
+        processing_running_data_thread = threading.Thread(target=self._process_running_data, args=(
+        unprocessed_status_data, serial_number, x_weight, y_weight, z_weight))
         processing_running_data_thread.daemon = True
         processing_running_data_thread.start()
 
@@ -482,13 +485,12 @@ class CalibrationDatabase(object):
 
         self.processing_running_data = True
 
-        try: 
+        try:
 
-            for idx, element in enumerate(unprocessed_status_data): 
-
+            for idx, element in enumerate(unprocessed_status_data):
                 x_dir, y_dir, z_dir = self.generate_directions(unprocessed_status_data, idx)
 
-            # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
+                # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
                 status = {
                     "Id": "",
@@ -502,11 +504,11 @@ class CalibrationDatabase(object):
                     "XSG": element[4],
                     "YSG": element[5],
                     "Y1SG": element[6],
-                    "Y2SG":element[7],
-                    "ZSG":element[8],
-                    "TMCTemperature":element[9],
-                    "PCBTemperature":element[10],
-                    "MOTTemperature":element[11],
+                    "Y2SG": element[7],
+                    "ZSG": element[8],
+                    "TMCTemperature": element[9],
+                    "PCBTemperature": element[10],
+                    "MOTTemperature": element[11],
                     "Timestamp": element[12].strftime('%Y-%m-%d %H:%M:%S'),
                     "Feedrate": element[13],
                     "XWeight": x_weight,
@@ -521,7 +523,6 @@ class CalibrationDatabase(object):
 
         self.processing_running_data = False
 
-
     def generate_directions(self, unprocessed_status_data, idx):
 
         # -1    FORWARDS/DOWN (AWAY FROM HOME)
@@ -530,23 +531,23 @@ class CalibrationDatabase(object):
 
         if idx > 0:
 
-            if unprocessed_status_data[idx-1][1] < unprocessed_status_data[idx][1]:
+            if unprocessed_status_data[idx - 1][1] < unprocessed_status_data[idx][1]:
                 x_dir = -1
-            elif unprocessed_status_data[idx-1][1] > unprocessed_status_data[idx][1]:
+            elif unprocessed_status_data[idx - 1][1] > unprocessed_status_data[idx][1]:
                 x_dir = 1
             else:
                 x_dir = 0
 
-            if unprocessed_status_data[idx-1][2] < unprocessed_status_data[idx][2]:
+            if unprocessed_status_data[idx - 1][2] < unprocessed_status_data[idx][2]:
                 y_dir = -1
-            elif unprocessed_status_data[idx-1][2] > unprocessed_status_data[idx][2]:
+            elif unprocessed_status_data[idx - 1][2] > unprocessed_status_data[idx][2]:
                 y_dir = 1
             else:
                 y_dir = 0
 
-            if unprocessed_status_data[idx-1][3] < unprocessed_status_data[idx][3]:
+            if unprocessed_status_data[idx - 1][3] < unprocessed_status_data[idx][3]:
                 z_dir = 1
-            elif unprocessed_status_data[idx-1][3] > unprocessed_status_data[idx][3]:
+            elif unprocessed_status_data[idx - 1][3] > unprocessed_status_data[idx][3]:
                 z_dir = -1
             else:
                 z_dir = 0
@@ -554,13 +555,12 @@ class CalibrationDatabase(object):
         else:
             x_dir = 0
             y_dir = 0
-            z_dir = 0 
+            z_dir = 0
 
         return x_dir, y_dir, z_dir
 
-
     def send_data_through_publisher(self, sn_for_db, stage_id):
-        
+
         publisher = DataPublisher(sn_for_db)
 
         if not self.processed_running_data[str(stage_id)][0]:
@@ -599,5 +599,3 @@ class CalibrationDatabase(object):
             params = [serial]
 
             cursor.execute(query, params)
-
-

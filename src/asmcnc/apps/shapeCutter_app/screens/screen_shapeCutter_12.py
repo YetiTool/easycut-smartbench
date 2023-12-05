@@ -4,12 +4,13 @@ Screen 12 for the Shape Cutter App
 
 @author: Letty
 """
-from kivy.lang import Builder
 from kivy.clock import Clock
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
+from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_machine
+
 Builder.load_string(
     """
 
@@ -281,7 +282,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter12ScreenClass(Screen):
@@ -304,8 +305,9 @@ class ShapeCutter12ScreenClass(Screen):
             if self.m.state().startswith('Idle'):
                 Clock.unschedule(check_Zmove_status)
                 popup_Zmove.popup.dismiss()
+
         check_Zmove_status = Clock.schedule_interval(lambda dt:
-            check_Zmove_finished(), 0.5)
+                                                     check_Zmove_finished(), 0.5)
 
     def get_info(self):
         pass

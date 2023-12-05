@@ -5,9 +5,9 @@ Screen 14 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -297,7 +297,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter14ScreenClass(Screen):
@@ -307,7 +307,7 @@ class ShapeCutter14ScreenClass(Screen):
     user_instructions = StringProperty(
         """Secure the stock using either screws, clamps, or tape.
 For work holding techniques visit www.yetitool.com/support."""
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter14ScreenClass, self).__init__(**kwargs)

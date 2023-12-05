@@ -1,6 +1,4 @@
-
-
-current_position = { # this may need changing depending on direction that X axis travels
+current_position = {  # this may need changing depending on direction that X axis travels
 
     "X": 10,
     "Y": 10,
@@ -8,16 +6,22 @@ current_position = { # this may need changing depending on direction that X axis
 
 }
 
+
 def if_less_than_coord(expected_pos):
-    if current_position["X"] < expected_pos: return True
-    else: return False
+    if current_position["X"] < expected_pos:
+        return True
+    else:
+        return False
+
 
 def if_more_than_coord(expected_pos):
-    if current_position["X"] > expected_pos: return True
-    else: return False
+    if current_position["X"] > expected_pos:
+        return True
+    else:
+        return False
 
 
-detection_too_late = { # this may need changing depending on direction that X axis travels
+detection_too_late = {  # this may need changing depending on direction that X axis travels
 
     "X": if_more_than_coord,
     "Y": if_more_than_coord,
@@ -25,9 +29,8 @@ detection_too_late = { # this may need changing depending on direction that X ax
 
 }
 
-
-if detection_too_late["X"](100): 
-	print "YES"
+if detection_too_late["X"](100):
+    print "YES"
 
 else:
-	print "NO"
+    print "NO"

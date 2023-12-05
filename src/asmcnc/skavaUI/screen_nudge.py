@@ -1,13 +1,16 @@
 import math
+
 from kivy.clock import Clock
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from asmcnc.skavaUI import widget_status_bar
-from asmcnc.skavaUI import widget_z_move_nudge
-from asmcnc.skavaUI import widget_xy_move_recovery
-from asmcnc.skavaUI import widget_nudge_speed
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import popup_info
 from asmcnc.skavaUI import popup_nudge
+from asmcnc.skavaUI import widget_nudge_speed
+from asmcnc.skavaUI import widget_status_bar
+from asmcnc.skavaUI import widget_xy_move_recovery
+from asmcnc.skavaUI import widget_z_move_nudge
+
 Builder.load_string(
     """
 <NudgeScreen>:
@@ -186,7 +189,7 @@ Builder.load_string(
             font_size: dp(0.025*app.width)
 
 """
-    )
+)
 
 
 class NudgeScreen(Screen):
@@ -205,10 +208,10 @@ class NudgeScreen(Screen):
         self.z_move_container.add_widget(widget_z_move_nudge.ZMoveNudge(
             machine=self.m, screen_manager=self.sm, job=self.jd))
         self.xy_move_widget = widget_xy_move_recovery.XYMoveRecovery(machine
-            =self.m, screen_manager=self.sm)
+                                                                     =self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.nudge_speed_widget = widget_nudge_speed.NudgeSpeed(machine=
-            self.m, screen_manager=self.sm)
+                                                                self.m, screen_manager=self.sm)
         self.nudge_speed_container.add_widget(self.nudge_speed_widget)
         self.update_strings()
 
@@ -221,21 +224,21 @@ class NudgeScreen(Screen):
     def get_info(self):
         info = self.l.get_str(
             'Nudging is an optional manual adjustment in the XY plane.'
-            ) + ' ' + self.l.get_str(
+        ) + ' ' + self.l.get_str(
             'It is only necessary if SmartBench has suffered any positional loss e.g. due to a stall, or a re-home.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Nudging allows the user to apply micro-corrections to the XY starting point of the tool, allowing the tool to re-start in exact registration with previous cut paths.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Check X and Y axes individually. Any adjustments you make should be minor (normally < 3 mm).'
-            ) + ' ' + self.l.get_bold(
+        ) + ' ' + self.l.get_bold(
             'The toolpiece should lightly touch the edge of the cut path.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Once you have nudged your X and Y axis, press the "SET" button to save your new datum.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'To correct for a stall in Z axis or tool change, please use the standard functions in the manual move screen to set the Z datum.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Warning: Nudging your tool incorrectly (putting the start point too far away from last physical cut path) could result in damage to your spindle, cutting tool and/or workpiece.'
-            )
+        )
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def back_to_home(self):
@@ -245,7 +248,7 @@ class NudgeScreen(Screen):
 
     def on_pre_leave(self):
         z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').
-            job_box.range_z[1], -self.m.limit_switch_safety_distance)
+                            job_box.range_z[1], -self.m.limit_switch_safety_distance)
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
 
@@ -265,6 +268,7 @@ class NudgeScreen(Screen):
             else:
                 self.jd.job_recovery_from_beginning = False
             self.sm.current = 'home'
+
         Clock.schedule_once(lambda dt: generate_gcode(), 0.5)
 
     def set_datum_popup(self):
@@ -272,9 +276,9 @@ class NudgeScreen(Screen):
         self.diff_y = self.m.mpos_y() - self.initial_y
         if abs(self.diff_x) > 3 or abs(self.diff_y) > 3:
             nudge_distance = '{:.2f}'.format(math.hypot(self.diff_x, self.
-                diff_y))
+                                                        diff_y))
             popup_nudge.PopupNudgeWarning(self.sm, self.m, self.l,
-                nudge_distance)
+                                          nudge_distance)
         else:
             popup_nudge.PopupNudgeDatum(self.sm, self.m, self.l)
 

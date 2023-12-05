@@ -1,6 +1,6 @@
-from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQCDBSuccess>:
@@ -37,7 +37,7 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class ZHeadQCDBSuccess(Screen):

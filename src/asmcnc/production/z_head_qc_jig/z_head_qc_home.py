@@ -1,11 +1,15 @@
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+import glob
+import os
+import re
 import subprocess
-import sys, os, re, glob
+import sys
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+
 try:
     import pigpio
 except:
@@ -65,7 +69,7 @@ Builder.load_string(
                     background_normal: ''
                     on_press: root.shutdown_console()
 """
-    )
+)
 
 
 class ZHeadQCHome(Screen):
@@ -100,9 +104,9 @@ class ZHeadQCHome(Screen):
     def update_usb_button_label(self):
         try:
             self.fw_on_usb = 'USB FW: ' + re.split('GRBL|\\.', str(glob.
-                glob(self.get_fw_filepath())[0]))[1]
+                                                                   glob(self.get_fw_filepath())[0]))[1]
             self.test_fw_update_button.text = (self.fw_button_string +
-                '\n\n' + self.fw_on_usb)
+                                               '\n\n' + self.fw_on_usb)
         except:
             self.test_fw_update_button.text = 'Looking for USB'
             self.usb.enable()
@@ -125,10 +129,10 @@ class ZHeadQCHome(Screen):
             print pi.get_mode(17)
             pi.stop()
             cmd = ('grbl_file=' + self.get_fw_filepath() +
-                ' && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
-                )
+                   ' && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
+                   )
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
-                subprocess.STDOUT, shell=True)
+            subprocess.STDOUT, shell=True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
             connect()
@@ -154,13 +158,14 @@ class ZHeadQCHome(Screen):
             else:
                 did_fw_update_succeed = 'Update failed.'
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm,
-                did_fw_update_succeed, str(self.stdout))
+                                                         did_fw_update_succeed, str(self.stdout))
             self.update_usb_button_label()
             self.sm.get_screen('qc1').reset_checkboxes()
             self.sm.get_screen('qc2').reset_checkboxes()
             self.sm.get_screen('qcW136').reset_checkboxes()
             self.sm.get_screen('qcW112').reset_checkboxes()
             self.sm.get_screen('qc3').reset_timer()
+
         disconnect_and_update()
 
     def secret_option_c(self):

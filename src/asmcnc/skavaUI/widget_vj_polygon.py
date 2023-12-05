@@ -1,10 +1,11 @@
-import kivy
-from kivy.lang import Builder
-from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty, ListProperty
-from kivy.clock import Clock
-from asmcnc.geometry import geometry
 from asmcnc.gcode_writer import GcodeWriter
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, ListProperty
+from kivy.uix.widget import Widget
+
+from asmcnc.geometry import geometry
+
 Builder.load_string(
     """
 
@@ -237,7 +238,7 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True 
 """
-    )
+)
 
 
 class PolygonVJ(Widget):
@@ -252,22 +253,25 @@ class PolygonVJ(Widget):
 
     def my_callback(self, dt):
         polygon_vertices = geometry.compute_polygon_points(float(self.
-            sides_textinput2.text), float(self.rad_textinput2.text))
+                                                                 sides_textinput2.text),
+                                                           float(self.rad_textinput2.text))
         self.plot_ploygon(polygon_vertices)
 
     def on_sides_textinput(self):
         if self.sides_textinput2.text and float(self.sides_textinput2.text
-            ) > 2:
+                                                ) > 2:
             print 'on_sides_textinput ' + str(self.sides_textinput2.text)
             polygon_vertices = geometry.compute_polygon_points(float(self.
-                sides_textinput2.text), float(self.rad_textinput2.text))
+                                                                     sides_textinput2.text),
+                                                               float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
     def on_rad_textinput(self):
         if self.rad_textinput2.text and float(self.rad_textinput2.text) > 0:
             print 'on_rad_textinput ' + str(self.rad_textinput2.text)
             polygon_vertices = geometry.compute_polygon_points(float(self.
-                sides_textinput2.text), float(self.rad_textinput2.text))
+                                                                     sides_textinput2.text),
+                                                               float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
     def on_ok(self):
@@ -279,7 +283,7 @@ class PolygonVJ(Widget):
         layers_points = []
         layers_points.append(self.points)
         my_gcode_writer.write_gcode('ae_test.nc', layers_points, bit_width=
-            3, depth_increment=0.1, feedrate=1000)
+        3, depth_increment=0.1, feedrate=1000)
 
     def plot_ploygon(self, polygon_vertices):
         self.points = []

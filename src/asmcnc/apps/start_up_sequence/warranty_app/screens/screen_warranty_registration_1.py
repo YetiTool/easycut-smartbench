@@ -2,16 +2,11 @@
 Created on nov 2020
 @author: Ollie
 """
-from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.textinput import TextInput
-from asmcnc.skavaUI import widget_status_bar
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.gridlayout import GridLayout
-import sys, os
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
+
 Builder.load_string(
     """
 
@@ -243,7 +238,7 @@ Builder.load_string(
 						on_press: root.quit_to_console()
 
 """
-    )
+)
 
 
 class WarrantyScreen1(Screen):
@@ -268,7 +263,7 @@ class WarrantyScreen1(Screen):
         self.instructions_label.text = self.l.get_str(
             'To submit your details and receive your activation code, go to')
         self.cant_use_web_label.text = self.l.get_str("Can't use the web form?"
-            )
+                                                      )
         self.contact_us_at_support.text = self.l.get_str(
             'Contact us at https://www.yetitool.com/support')
         self.next_button.text = self.l.get_str('Next') + '...'

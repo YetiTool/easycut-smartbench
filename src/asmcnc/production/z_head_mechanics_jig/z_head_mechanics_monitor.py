@@ -1,6 +1,8 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_gcode_monitor
+
 Builder.load_string(
     """
 <ZHeadMechanicsMonitor>:
@@ -30,7 +32,7 @@ Builder.load_string(
                     pos: self.pos
 
 """
-    )
+)
 
 
 class ZHeadMechanicsMonitor(Screen):
@@ -41,8 +43,8 @@ class ZHeadMechanicsMonitor(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.
-            GCodeMonitor(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                                GCodeMonitor(machine=self.m, screen_manager=self.sm,
+                                                             localization=self.l))
 
     def back(self):
         self.sm.current = 'mechanics'

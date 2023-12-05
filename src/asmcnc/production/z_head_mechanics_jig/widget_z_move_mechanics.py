@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -119,7 +120,7 @@ Builder.load_string(
             font_size: dp(0.025*app.width)
 
 """
-    )
+)
 
 
 class ZMoveMechanics(Widget):
@@ -129,6 +130,7 @@ class ZMoveMechanics(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
+
     fast_z_speed = 750
     feedSpeedJogZ = 750
 
@@ -139,6 +141,7 @@ class ZMoveMechanics(Widget):
         else:
             self.speed_image.source = './asmcnc/skavaUI/img/fast.png'
             self.feedSpeedJogZ = self.fast_z_speed
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
@@ -171,10 +174,10 @@ class ZMoveMechanics(Widget):
         if self.jogMode == 'free':
             if case == 'Z-':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
+                                                z_min_jog_abs_limit, feed_speed)
             if case == 'Z+':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
+                                                z_max_jog_abs_limit, feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'Z+':
                 self.m.jog_relative('Z', 0.01, feed_speed)

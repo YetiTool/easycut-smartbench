@@ -11,6 +11,7 @@ from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 
+
 def format_time(seconds):
     return time.strftime('%H:%M:%S', time.gmtime(seconds)) + '.{:03d}'.format(int(seconds * 1000) % 1000)
 
@@ -110,10 +111,10 @@ class YetiPilot(object):
     def get_multiplier(self, load):
         if load > self.get_total_target_power():
             return self.bias_for_feed_decrease * (self.get_total_target_power() - load) / \
-                   self.get_total_target_power() * self.m_coefficient * self.c_coefficient
+                self.get_total_target_power() * self.m_coefficient * self.c_coefficient
 
         return self.bias_for_feed_increase * (self.get_total_target_power() - load) / \
-               self.get_total_target_power() * self.m_coefficient * self.c_coefficient
+            self.get_total_target_power() * self.m_coefficient * self.c_coefficient
 
     def get_feed_adjustment_percentage(self, average_spindle_load, constant_feed, gcode_mode, is_z_moving,
                                        feed_multiplier=None):
@@ -284,8 +285,8 @@ class YetiPilot(object):
         self.m.stop_for_a_stream_pause('yetipilot_low_feed')
 
     def check_if_feed_too_low(self):
-        if not(self.use_yp and self.m.s.is_job_streaming and
-               not self.m.is_machine_paused and "Alarm" not in self.m.state()):
+        if not (self.use_yp and self.m.s.is_job_streaming and
+                not self.m.is_machine_paused and "Alarm" not in self.m.state()):
             self.waiting_for_feed_too_low_decision = False
             return
 

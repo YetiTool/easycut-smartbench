@@ -5,9 +5,9 @@ Screen 8 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -334,7 +334,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter8ScreenClass(Screen):
@@ -343,7 +343,7 @@ class ShapeCutter8ScreenClass(Screen):
     title_label = StringProperty('[b]Lock Z-head connections[/b]')
     user_instructions = StringProperty(
         'Check the head connectors  [b](1)[/b], and drag chain latch plates [b](2)[/b] are secure.'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter8ScreenClass, self).__init__(**kwargs)

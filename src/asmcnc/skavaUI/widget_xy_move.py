@@ -2,15 +2,13 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy, textwrap
+import textwrap
+
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
+
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -278,7 +276,7 @@ Builder.load_string(
                         allow_stretch: True
         
 """
-    )
+)
 
 
 class XYMove(Widget):
@@ -288,6 +286,7 @@ class XYMove(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
@@ -320,22 +319,22 @@ class XYMove(Widget):
 
     def buttonJogXY(self, case):
         x_feed_speed = self.sm.get_screen('home'
-            ).common_move_widget.feedSpeedJogX
+                                          ).common_move_widget.feedSpeedJogX
         y_feed_speed = self.sm.get_screen('home'
-            ).common_move_widget.feedSpeedJogY
+                                          ).common_move_widget.feedSpeedJogY
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)
@@ -392,8 +391,9 @@ class XYMove(Widget):
     def set_workzone_to_pos_xy(self):
         warning = self.format_command(self.l.get_str(
             'Is this where you want to set your X-Y datum?').replace('X-Y',
-            '[b]X-Y[/b]').replace(self.l.get_str('datum'), self.l.get_bold(
-            'datum')))
+                                                                     '[b]X-Y[/b]').replace(self.l.get_str('datum'),
+                                                                                           self.l.get_bold(
+                                                                                               'datum')))
         popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
 
     def set_standby_to_pos(self):
@@ -404,29 +404,31 @@ class XYMove(Widget):
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home',
-                'home')
+                                          'home')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home',
-                'home')
+                                          'home')
         else:
             self.m.go_y_datum()
 
     def set_x_datum(self):
         warning = self.format_command(self.l.get_str(
             'Is this where you want to set your X-Y datum?').replace('X-Y',
-            '[b]X[/b]').replace(self.l.get_str('datum'), self.l.get_bold(
-            'datum')))
+                                                                     '[b]X[/b]').replace(self.l.get_str('datum'),
+                                                                                         self.l.get_bold(
+                                                                                             'datum')))
         popup_info.PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
         warning = self.format_command(self.l.get_str(
             'Is this where you want to set your X-Y datum?').replace('X-Y',
-            '[b]Y[/b]').replace(self.l.get_str('datum'), self.l.get_bold(
-            'datum')))
+                                                                     '[b]Y[/b]').replace(self.l.get_str('datum'),
+                                                                                         self.l.get_bold(
+                                                                                             'datum')))
         popup_info.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
 
     def format_command(self, cmd):

@@ -1,9 +1,12 @@
-import traceback
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 import re
+import traceback
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
 Builder.load_string(
     """
 <LBCalibration4>:
@@ -62,7 +65,7 @@ Builder.load_string(
                 disabled: False
 
 """
-    )
+)
 
 
 class LBCalibration4(Screen):
@@ -102,7 +105,7 @@ class LBCalibration4(Screen):
         self.calibration_db.process_status_running_data_for_database_insert(
             self.m.measured_running_data(), self.serial_number)
         self.calibration_db.insert_calibration_check_stage(self.
-            serial_number, 2)
+                                                           serial_number, 2)
         self.do_data_send_when_ready()
         self.calibration_db.set_up_connection()
         serial_number = self.serial_no_input.text.replace(' ', '').lower()
@@ -114,7 +117,7 @@ class LBCalibration4(Screen):
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
         if self.calibration_db.send_data_through_publisher(self.
-            serial_number, 13):
+                                                                   serial_number, 13):
             try:
                 self.send_calibration_payload(TMC_Y1, self.serial_number)
                 self.send_calibration_payload(TMC_Y2, self.serial_number)
@@ -131,15 +134,15 @@ class LBCalibration4(Screen):
 
     def send_calibration_payload(self, motor_index, serial_number):
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC'
-            )
+                                                                )
         sg_coefficients = self.m.TMC_motor[motor_index
-            ].calibration_dataset_SG_values
+        ].calibration_dataset_SG_values
         cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
         sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
         self.calibration_db.setup_lower_beam_coefficients(serial_number,
-            motor_index, stage)
+                                                          motor_index, stage)
         self.calibration_db.insert_calibration_coefficients(serial_number,
-            motor_index, stage, coefficients)
+                                                            motor_index, stage, coefficients)

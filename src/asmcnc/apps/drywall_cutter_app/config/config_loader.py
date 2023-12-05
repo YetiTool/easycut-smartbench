@@ -1,7 +1,8 @@
+import inspect
 import json
 import os
+
 import config_classes
-import inspect
 
 configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'

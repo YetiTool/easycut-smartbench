@@ -4,24 +4,23 @@ Created on 3 Feb 2018
 TODO: This all looks a bit lonely. Reintegrate back with the other UI widgets e.g. widget_virtual_bed?
 '''
 
+
 class BoundingBox(object):
 
     def __init__(self):
-        
-        pass
-    
 
-    range_x = [0,0] 
-    range_y = [0,0] 
-    range_z = [0,0] 
-        
- 
+        pass
+
+    range_x = [0, 0]
+    range_y = [0, 0]
+    range_z = [0, 0]
+
     def set_job_envelope(self, gcode_file_path):
-        
+
         x_values = []
         y_values = []
         z_values = []
-        file = open(gcode_file_path,'r');
+        file = open(gcode_file_path, 'r');
         for line in file:
             blocks = line.strip().split(" ")
             for part in blocks:

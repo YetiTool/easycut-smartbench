@@ -1,7 +1,6 @@
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -340,7 +339,7 @@ Builder.load_string(
 					padding:[dp(0.241875)*app.width, 0, 0, 0]
 
 """
-    )
+)
 
 
 class WiFiAndDataConsentScreen1(Screen):
@@ -368,7 +367,7 @@ class WiFiAndDataConsentScreen1(Screen):
         self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
         self.we_will_collect.text = self.l.get_bold(
             'To keep improving our services, we want to collect data from your SmartBench. '
-             + 'With your consent, we will collect the following data:')
+            + 'With your consent, we will collect the following data:')
         self.we_wont_collect.text = self.l.get_bold(
             'We will NEVER collect the following from your Console:')
         self.job_critical_events.text = self.l.get_str('Job critical events')
@@ -377,6 +376,6 @@ class WiFiAndDataConsentScreen1(Screen):
         self.console_hostname.text = self.l.get_str('Console hostname')
         self.g_code_files.text = self.l.get_str('G-Code files')
         self.wifi_network_details.text = self.l.get_str('Wi-Fi network details'
-            )
+                                                        )
         self.serial_numbers.text = self.l.get_str('Serial numbers')
         self.next_button.text = self.l.get_str('Next') + '...'

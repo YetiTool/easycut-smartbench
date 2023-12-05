@@ -5,12 +5,10 @@ Menu screen for system tools app
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
+
 Builder.load_string(
     """
 
@@ -300,7 +298,7 @@ Builder.load_string(
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
 """
-    )
+)
 
 
 class ScrollableLabelLogsView(ScrollView):

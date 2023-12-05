@@ -2,14 +2,10 @@
 Created on 10 March 2020
 @author: Letty
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -59,7 +55,7 @@ Builder.load_string(
      
         
 """
-    )
+)
 
 
 class VirtualZ31(Widget):
@@ -71,7 +67,7 @@ class VirtualZ31(Widget):
         self.sm = kwargs['screen_manager']
         self.j = kwargs['job_parameters']
         Clock.schedule_interval(self.refresh_widget, self.
-            WIDGET_REFRESH_INTERVAL)
+                                WIDGET_REFRESH_INTERVAL)
 
     def refresh_widget(self, dt):
         self.setZones()
@@ -83,14 +79,15 @@ class VirtualZ31(Widget):
         z0_machine_coords = self.m.z_wco()
         self.z_clear.y = (self.z_clear.parent.y + self.z_clear.parent.size[
             1] - -z0_machine_coords / self.m.grbl_z_max_travel * self.
-            z_clear.parent.size[1])
+                          z_clear.parent.size[1])
         self.z_clear.size[1
-            ] = z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
+        ] = z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
         self.z_cut.size[1
-            ] = -z_min / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
+        ] = -z_min / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]
         self.z_cut.y = self.z_clear.y - self.z_cut.height
 
     def setBitPos(self):
         self.z_bit.y = self.z_bit.parent.y + self.z_bit.parent.size[1] - -(self
-            .m.mpos_z() / self.m.grbl_z_max_travel) * self.z_clear.parent.size[
-            1]
+                                                                           .m.mpos_z() / self.m.grbl_z_max_travel) * \
+                       self.z_clear.parent.size[
+                           1]

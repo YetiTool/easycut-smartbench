@@ -3,21 +3,19 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.graphics import Color, Rectangle
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from asmcnc.comms import usb_storage
-from os import path
+import os
+import sys
 from itertools import takewhile
+from os import path
+from shutil import copy
+
+import kivy
 from chardet import detect
+from kivy.graphics import Color, Rectangle
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -218,7 +216,7 @@ Builder.load_string(
                         allow_stretch: True 
                 
 """
-    )
+)
 job_cache_dir = './jobCache/'
 job_q_dir = './jobQ/'
 verbose = True
@@ -226,28 +224,31 @@ verbose = True
 
 def date_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=False)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=False)
 
 
 def date_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=True)
 
 
 def name_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted(f for
-        f in files if not filesystem.is_dir(f))
+                                                                     f in files if not filesystem.is_dir(f))
 
 
 def name_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     reverse=True)
 
 
 decode_and_encode = lambda x: unicode(x, detect(x)['encoding'] or 'utf-8'
-    ).encode('utf-8')
+                                      ).encode('utf-8')
 
 
 class USBFileChooser(Screen):
@@ -263,25 +264,25 @@ class USBFileChooser(Screen):
         self.jd = kwargs['job']
         self.l = kwargs['localization']
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.list_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            icon_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            list_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_icon)
+                                                 alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_list)
+                                                 alternate_update_effect_bounds_list)
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -292,15 +293,15 @@ class USBFileChooser(Screen):
     def update_y_bounds_try_except(sefl, scrollview_object):
         try:
             if (not scrollview_object._viewport or not scrollview_object.
-                effect_y):
+                    effect_y):
                 return
             scrollable_height = (scrollview_object.height -
-                scrollview_object.viewport_size[1])
+                                 scrollview_object.viewport_size[1])
             scrollview_object.effect_y.min = (0 if scrollable_height < 0 else
-                scrollable_height)
+                                              scrollable_height)
             scrollview_object.effect_y.max = scrollable_height
             scrollview_object.effect_y.value = (scrollview_object.effect_y.
-                max * scrollview_object.scroll_y)
+                                                max * scrollview_object.scroll_y)
         except:
             pass
 
@@ -326,9 +327,9 @@ class USBFileChooser(Screen):
 
     def on_pre_leave(self):
         self.sm.get_screen('local_filechooser'
-            ).filechooser.sort_func = self.filechooser_usb.sort_func
+                           ).filechooser.sort_func = self.filechooser_usb.sort_func
         self.sm.get_screen('local_filechooser'
-            ).image_sort.source = self.image_sort.source
+                           ).image_sort.source = self.image_sort.source
         if self.sm.current != 'local_filechooser':
             self.usb_stick.disable()
 
@@ -346,12 +347,12 @@ class USBFileChooser(Screen):
                 self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.text = self.l.get_str(
                     'USB connected: Please do not remove USB until file is loaded.'
-                    )
+                )
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0)
                     Rectangle(pos=self.usb_status_label.pos, size=self.
-                        usb_status_label.size)
+                              usb_status_label.size)
             else:
                 self.usb_status_label.text = self.l.get_str(
                     'USB removed! Files will not load properly.')
@@ -360,7 +361,7 @@ class USBFileChooser(Screen):
                 with self.usb_status_label.canvas.before:
                     Color(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0)
                     Rectangle(pos=self.usb_status_label.pos, size=self.
-                        usb_status_label.size)
+                              usb_status_label.size)
         except:
             pass
 
@@ -376,25 +377,25 @@ class USBFileChooser(Screen):
 
     def switch_sort(self):
         if self.filechooser_usb.sort_func == self.sm.get_screen(
-            'local_filechooser').sort_by_date_reverse:
+                'local_filechooser').sort_by_date_reverse:
             self.filechooser_usb.sort_func = self.sm.get_screen(
                 'local_filechooser').sort_by_date
             self.image_sort.source = (
                 './asmcnc/skavaUI/img/file_select_sort_up_name.png')
         elif self.filechooser_usb.sort_func == self.sm.get_screen(
-            'local_filechooser').sort_by_date:
+                'local_filechooser').sort_by_date:
             self.filechooser_usb.sort_func = self.sm.get_screen(
                 'local_filechooser').sort_by_name
             self.image_sort.source = (
                 './asmcnc/skavaUI/img/file_select_sort_down_name.png')
         elif self.filechooser_usb.sort_func == self.sm.get_screen(
-            'local_filechooser').sort_by_name:
+                'local_filechooser').sort_by_name:
             self.filechooser_usb.sort_func = self.sm.get_screen(
                 'local_filechooser').sort_by_name_reverse
             self.image_sort.source = (
                 './asmcnc/skavaUI/img/file_select_sort_up_date.png')
         elif self.filechooser_usb.sort_func == self.sm.get_screen(
-            'local_filechooser').sort_by_name_reverse:
+                'local_filechooser').sort_by_name_reverse:
             self.filechooser_usb.sort_func = self.sm.get_screen(
                 'local_filechooser').sort_by_date_reverse
             self.image_sort.source = (
@@ -428,10 +429,10 @@ class USBFileChooser(Screen):
     def display_selected_file(self):
         if sys.platform == 'win32':
             self.file_selected_label.text = self.filechooser_usb.selection[0
-                ].split('\\')[-1]
+            ].split('\\')[-1]
         else:
             self.file_selected_label.text = self.filechooser_usb.selection[0
-                ].split('/')[-1]
+            ].split('/')[-1]
         self.get_metadata()
         self.load_button.disabled = False
         self.image_select.source = (
@@ -448,23 +449,24 @@ class USBFileChooser(Screen):
         def format_metadata(y):
             mini_list = y.split(': ')
             return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' +
-                mini_list[1])
+                       mini_list[1])
+
         try:
             with open(self.filechooser_usb.selection[0]) as previewed_file:
                 try:
                     if ('(YetiTool SmartBench MES-Data)' in previewed_file.
-                        readline()):
+                            readline()):
                         metadata_or_gcode_preview = map(format_metadata, [
                             decode_and_encode(i).strip('\n\r()') for i in
                             takewhile(not_end_of_metadata, previewed_file) if
                             decode_and_encode(i).split(':', 1)[1].strip(
-                            '\n\r() ')])
+                                '\n\r() ')])
                     else:
                         previewed_file.seek(0)
                         metadata_or_gcode_preview = [self.l.get_bold(
                             'G-Code Preview (first 20 lines)'), ''] + [
-                            decode_and_encode(next(previewed_file, '')).
-                            strip('\n\r') for x in xrange(20)]
+                                                        decode_and_encode(next(previewed_file, '')).
+                                                        strip('\n\r') for x in xrange(20)]
                     self.metadata_preview.text = '\n'.join(
                         metadata_or_gcode_preview)
                 except:
@@ -472,7 +474,7 @@ class USBFileChooser(Screen):
                         'Could not preview file.')
         except:
             self.metadata_preview.text = self.l.get_bold('Could not open file.'
-                )
+                                                         )
 
     def import_usb_file(self):
         file_selection = self.filechooser_usb.selection[0]

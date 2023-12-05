@@ -5,13 +5,12 @@ Created July 2020
 
 Spindle cooldown screen
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
-from datetime import datetime
 from math import sqrt, ceil
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -122,7 +121,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class SpindleHealthCheckActiveScreen(Screen):
@@ -139,7 +138,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.seconds = self.max_seconds
         self.cool_down_label.text = self.l.get_str(
             'Running Spindle motor health check\xe2\x80\xa6'
-            ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
+        ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
 
     def on_pre_enter(self):
         self.seconds = self.max_seconds
@@ -149,7 +148,7 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.run_spindle_health_check()
         self.cool_down_label.text = self.l.get_str(
             'Running Spindle motor health check\xe2\x80\xa6'
-            ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
+        ) + '\n' + self.l.get_str('SmartBench is raising the Z axis.')
 
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
@@ -169,6 +168,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             Clock.unschedule(self.update_timer_event)
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
+
     passed_spindle_health_check = False
     spindle_health_check_max_w = 550
     start_after_pass = False
@@ -189,7 +189,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen('go').yp_widget.open_yp_settings()
             self.exit_screen()
             if self.sm.has_screen('go'
-                ) and self.start_after_pass and not self.return_to_advanced_tab:
+                                  ) and self.start_after_pass and not self.return_to_advanced_tab:
                 self.sm.get_screen('go')._start_running_job()
                 self.sm.current = 'go'
 
@@ -197,7 +197,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.stop_for_a_stream_pause(reason)
             if self.sm.has_screen('go'):
                 self.sm.get_screen('go').raise_pause_screens_if_paused(override
-                    =True)
+                                                                       =True)
 
         def fail_test(reason):
             print 'Spindle health check failed - ' + reason
@@ -209,7 +209,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             average_load = sum(self.m.s.spindle_health_check_data) / (len(
                 self.m.s.spindle_health_check_data) or 1)
             average_load_w = self.m.spindle_voltage * 0.1 * sqrt(average_load
-                ) if average_load != 0 else 0
+                                                                 ) if average_load != 0 else 0
             if average_load_w > self.spindle_health_check_max_w:
                 fail_test('spindle_health_check_failed')
                 return
@@ -231,6 +231,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.m.s.write_command('M3 S24000')
             Clock.schedule_once(lambda dt: stop_test(), 6)
             Clock.schedule_once(lambda dt: check_average(), 6)
+
         self.m._grbl_soft_reset()
         self.m.resume_from_a_soft_door()
         Clock.schedule_once(lambda dt: self.m.zUp(), 1)

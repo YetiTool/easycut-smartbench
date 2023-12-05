@@ -3,18 +3,14 @@ Created on 19 Aug 2017
 @author: Ed
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
+import os
+
 from kivy.clock import Clock
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from asmcnc.comms import usb_storage
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 <SCFileChooser>:
@@ -183,10 +179,10 @@ Builder.load_string(
                         allow_stretch: True 
                 
 """
-    )
+)
 parameter_file_dir = (
     '/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_app/parameter_cache/'
-    )
+)
 
 
 class SCFileChooser(Screen):
@@ -248,12 +244,12 @@ class SCFileChooser(Screen):
     def delete_popup(self, **kwargs):
         if kwargs['file_selection'] == 'all':
             popup_info.PopupDeleteFile(screen_manager=self.shapecutter_sm,
-                localization=self.l, function=self.delete_all,
-                file_selection='all')
+                                       localization=self.l, function=self.delete_all,
+                                       file_selection='all')
         else:
             popup_info.PopupDeleteFile(screen_manager=self.shapecutter_sm,
-                localization=self.l, function=self.delete_selected,
-                file_selection=kwargs['file_selection'])
+                                       localization=self.l, function=self.delete_selected,
+                                       file_selection=kwargs['file_selection'])
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):

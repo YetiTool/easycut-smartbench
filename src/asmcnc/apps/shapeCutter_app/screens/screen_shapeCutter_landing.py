@@ -5,10 +5,11 @@ Landing Screen for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -167,7 +168,7 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True                             
 """
-    )
+)
 
 
 class ShapeCutterLandingScreenClass(Screen):

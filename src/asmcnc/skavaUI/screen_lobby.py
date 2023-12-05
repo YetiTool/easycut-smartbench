@@ -3,17 +3,15 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-import kivy
+import os
+import sys
+import textwrap
+
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-import sys, os, textwrap
-from os.path import expanduser
-from shutil import copy
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -494,7 +492,7 @@ Builder.load_string(
                             allow_stretch: True
                 
 """
-    )
+)
 job_cache_dir = './jobCache/'
 job_q_dir = './jobQ/'
 ftp_file_dir = '/home/sysop/router_ftp'
@@ -517,16 +515,16 @@ class LobbyScreen(Screen):
         self.update_strings()
         if 'DRYWALLTEC' in self.m.smartbench_model():
             self.shapecutter_container.parent.remove_widget(self.
-                shapecutter_container)
+                                                            shapecutter_container)
         else:
             self.drywall_app_container.parent.remove_widget(self.
-                drywall_app_container)
+                                                            drywall_app_container)
 
     def on_pre_enter(self):
         if not 'V1.3' in self.m.smartbench_model(
-            ) and not self.upgrade_app_hidden:
+        ) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.
-                upgrade_app_container)
+                                                            upgrade_app_container)
             self.upgrade_app_hidden = True
         elif self.upgrade_app_hidden and 'V1.3' in self.m.smartbench_model():
             pass
@@ -541,7 +539,7 @@ class LobbyScreen(Screen):
 
     def help_popup(self):
         popup_info.PopupWelcome(self.sm, self.m, self.l, self.
-            welcome_popup_description)
+                                welcome_popup_description)
 
     def pro_app(self):
         self.am.start_pro_app()
@@ -593,18 +591,19 @@ class LobbyScreen(Screen):
         self.welcome_popup_description = self.format_command(self.l.get_str
             (
             'Use the arrows to go through the menu, and select an app to get started.'
-            )) + '\n\n' + self.format_command(self.l.get_str(
+        )) + '\n\n' + self.format_command(self.l.get_str(
             'If this is your first time, make sure you use the Wifi, Maintenance, '
-             + 'and Calibrate apps to set up SmartBench.').replace(self.l.
-            get_str('Wifi'), self.l.get_bold('Wifi')).replace(self.l.
+            + 'and Calibrate apps to set up SmartBench.').replace(self.l.
+                                                                  get_str('Wifi'), self.l.get_bold('Wifi')).replace(
+            self.l.
             get_str('Maintenance'), self.l.get_bold('Maintenance')).replace
-            (self.l.get_str('Calibrate'), self.l.get_bold('Calibrate'))
-            ) + '\n\n' + self.format_command(self.l.get_str(
+                                          (self.l.get_str('Calibrate'), self.l.get_bold('Calibrate'))
+                                          ) + '\n\n' + self.format_command(self.l.get_str(
             'For more help, please visit:')
-            ) + '\n' + '[b]https://www.yetitool.com/support[/b]' + '\n'
+        ) + '\n' + '[b]https://www.yetitool.com/support[/b]' + '\n'
         self.update_message = self.l.get_str(
             'New software update available for download!'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Please use the Update app to get the latest version.').replace(
             self.l.get_str('Update'), self.l.get_bold('Update'))
 

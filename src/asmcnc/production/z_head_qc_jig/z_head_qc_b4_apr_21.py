@@ -2,22 +2,24 @@
 Created on 03 August 2020
 @author: Letty
 """
-import os, sys, subprocess
+import os
+import subprocess
+import sys
 from datetime import datetime
+
 try:
     import pigpio
 except:
     pass
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
-from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadQCWarrantyBeforeApr21>:
@@ -317,7 +319,7 @@ Builder.load_string(
             id: status_container 
             pos: self.pos
 """
-    )
+)
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
@@ -343,7 +345,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.string_overload_summary = ''
         self.spindle_test_counter = 0
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self, *args):
@@ -351,9 +353,9 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         Clock.schedule_interval(self.scrape_fw_version, 1)
         self.m.is_laser_enabled = True
         self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, STATUS_UPDATE_DELAY)
+                                                       update_status_text, STATUS_UPDATE_DELAY)
         self.poll_for_limits = Clock.schedule_interval(self.
-            update_checkboxes, STATUS_UPDATE_DELAY)
+                                                       update_checkboxes, STATUS_UPDATE_DELAY)
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
@@ -366,14 +368,14 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def bake_grbl_settings(self):
         grbl_settings = ['$0=10', '$1=255', '$2=4', '$3=1', '$4=0', '$5=1',
-            '$6=0', '$10=3', '$11=0.010', '$12=0.002', '$13=0', '$20=1',
-            '$22=1', '$23=3', '$24=600.0', '$25=3000.0', '$26=250',
-            '$27=15.000', '$30=25000.0', '$31=0.0', '$32=0', '$110=8000.0',
-            '$111=6000.0', '$112=750.0', '$120=130.0', '$121=130.0',
-            '$122=200.0', '$130=1300.0', '$131=2503.0', '$132=150.0', '$$',
-            '$#']
+                         '$6=0', '$10=3', '$11=0.010', '$12=0.002', '$13=0', '$20=1',
+                         '$22=1', '$23=3', '$24=600.0', '$25=3000.0', '$26=250',
+                         '$27=15.000', '$30=25000.0', '$31=0.0', '$32=0', '$110=8000.0',
+                         '$111=6000.0', '$112=750.0', '$120=130.0', '$121=130.0',
+                         '$122=200.0', '$130=1300.0', '$131=2503.0', '$132=150.0', '$$',
+                         '$#']
         self.m.s.start_sequential_stream(grbl_settings,
-            reset_grbl_after_stream=True)
+                                         reset_grbl_after_stream=True)
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
@@ -518,9 +520,9 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             pi.stop()
             cmd = (
                 'grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
-                )
+            )
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
-                subprocess.STDOUT, shell=True)
+            subprocess.STDOUT, shell=True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
             connect()
@@ -546,18 +548,19 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             else:
                 did_fw_update_succeed = 'Update failed.'
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm,
-                did_fw_update_succeed, str(self.stdout))
+                                                         did_fw_update_succeed, str(self.stdout))
             self.test_fw_update_button.text = '  17. Test FW Update'
             self.sm.get_screen('qc1').reset_checkboxes()
             self.sm.get_screen('qc2').reset_checkboxes()
             self.sm.get_screen('qcW136').reset_checkboxes()
             self.sm.get_screen('qcW112').reset_checkboxes()
             self.sm.get_screen('qc3').reset_timer()
+
         disconnect_and_update()
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home'
-            ).gcode_monitor_widget.consoleStatusText.text
+                                                         ).gcode_monitor_widget.consoleStatusText.text
 
     def do_reboot(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':

@@ -5,12 +5,13 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from asmcnc.skavaUI import popup_info
 from datetime import datetime
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -95,7 +96,7 @@ Builder.load_string(
             size_hint_y: .5                
 
 """
-    )
+)
 
 
 def log(message):
@@ -116,17 +117,17 @@ class LiftZOnPauseDecisionScreen(Screen):
     def popup_help(self):
         info = self.l.get_bold(
             'Automatic lifting during a pause (recommended for most tools)'
-            ) + ':' + '\n' + self.l.get_str(
+        ) + ':' + '\n' + self.l.get_str(
             'When paused, SmartBench can automatically lift the Z axis and move the tool away from the job.'
-            ) + '\n\n' + ' - ' + self.l.get_str(
+        ) + '\n\n' + ' - ' + self.l.get_str(
             'This can be used to inspect the work or clear blockages.'
-            ) + '\n' + ' - ' + self.l.get_str(
+        ) + '\n' + ' - ' + self.l.get_str(
             'It allows the spindle to decelerate away from the job, avoiding burn marks.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'SmartBench automatically returns the tool to the correct position before resuming.'
-            ) + '\n\n' + self.l.get_bold(
+        ) + '\n\n' + self.l.get_bold(
             'Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile).'
-            )
+        )
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
     def decision_no(self):
@@ -144,4 +145,4 @@ class LiftZOnPauseDecisionScreen(Screen):
         self.no_button.text = self.l.get_str('No')
         self.header_label.text = self.l.get_str(
             'If the job pauses, should SmartBench automatically lift the Z axis away from the job?'
-            )
+        )

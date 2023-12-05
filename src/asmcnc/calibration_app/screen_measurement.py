@@ -11,11 +11,12 @@ Y measurement:
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_backlash
 from asmcnc.calibration_app import screen_distance_1_x
+
 Builder.load_string(
     """
 
@@ -176,7 +177,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class MeasurementScreenClass(Screen):
@@ -224,7 +225,7 @@ Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and mea
     def screen_x_2(self):
         self.instruction_top.text = (
             '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
-            )
+        )
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
@@ -234,7 +235,7 @@ Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and mea
     def screen_x_3(self):
         self.instruction_top.text = (
             '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
-            )
+        )
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
@@ -244,7 +245,7 @@ Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and mea
     def screen_x_4(self):
         self.instruction_top.text = (
             '[color=000000]Make sure you make your measurement in line with the reference face.[/color]'
-            )
+        )
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
@@ -253,11 +254,11 @@ Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and mea
 
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X', -660, 9999)
-        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel + 
-            182, 9999)
+        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel +
+                                        182, 9999)
         self.instruction_top.text = (
             '[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
-            )
+        )
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
@@ -296,7 +297,7 @@ Note which face [b](1)[/b] you take your initial measurement from, and make sure
 
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
@@ -312,8 +313,8 @@ Note which face [b](1)[/b] you take your initial measurement from, and make sure
             else:
                 if not self.sm.has_screen('distance1x'):
                     distance_screen1x = (screen_distance_1_x.
-                        DistanceScreen1xClass(name='distance1x',
-                        screen_manager=self.sm, machine=self.m))
+                                         DistanceScreen1xClass(name='distance1x',
+                                                               screen_manager=self.sm, machine=self.m))
                     self.sm.add_widget(distance_screen1x)
                 self.sm.current = 'distance1x'
 
@@ -324,7 +325,7 @@ Note which face [b](1)[/b] you take your initial measurement from, and make sure
         self.sub_screen_count = 0
         if not self.sm.has_screen('backlash'):
             backlash_screen = screen_backlash.BacklashScreenClass(name=
-                'backlash', screen_manager=self.sm, machine=self.m)
+                                                                  'backlash', screen_manager=self.sm, machine=self.m)
             self.sm.add_widget(backlash_screen)
         self.sm.get_screen('backlash').axis = self.axis
         if self.axis == 'X':

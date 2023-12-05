@@ -1,19 +1,17 @@
-import sys, os
+import sys
+
 sys.path.append('./src')
 
-try: 
+try:
     import unittest
     import pytest
     from mock import Mock, MagicMock
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
 from asmcnc.comms import localization
-from datetime import datetime
-
-from kivy.clock import Clock
 
 '''
 ######################################
@@ -22,12 +20,13 @@ python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_uni
 ######################################
 '''
 
+
 # FIXTURES
 @pytest.fixture
 def jd():
     l = localization.Localization()
     settings_manager = Mock()
-    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    jd = job_data.JobData(localization=l, settings_manager=settings_manager)
     return jd
 
 
@@ -167,6 +166,7 @@ def test_coordinate_system_select(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_plane_selection(jd):
     jd.job_gcode = [
         "G90X0F1000",
@@ -237,6 +237,7 @@ def test_plane_selection(jd):
     ]
     assert jd.job_recovery_offset == -1
 
+
 def test_absolute_or_incremental_distance_mode(jd):
     jd.job_gcode = [
         "G90X0F1000",
@@ -282,6 +283,7 @@ def test_absolute_or_incremental_distance_mode(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_arc_ijk_distance_mode(jd):
     jd.job_gcode = [
         "G90X0F1000",
@@ -317,6 +319,7 @@ def test_arc_ijk_distance_mode(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == -1
+
 
 def test_feed_rate_mode(jd):
     jd.job_gcode = [
@@ -370,6 +373,7 @@ def test_feed_rate_mode(jd):
     ]
     assert jd.job_recovery_offset == -1
 
+
 def test_units(jd):
     jd.job_gcode = [
         "G90X0F1000",
@@ -422,6 +426,7 @@ def test_units(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_cutter_radius_compensation(jd):
     jd.job_gcode = [
         "G90X0F1000",
@@ -459,6 +464,7 @@ def test_cutter_radius_compensation(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_tool_length_offset(jd):
     jd.job_gcode = [
@@ -511,6 +517,7 @@ def test_tool_length_offset(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_program_mode(jd):
     jd.job_gcode = [
@@ -608,6 +615,7 @@ def test_program_mode(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_coolant_state(jd):
     # Various orders and combinations as M7 and M8 can be used simultaneously
@@ -796,6 +804,7 @@ def test_coolant_state(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_spindle_speed(jd):
     jd.job_gcode = [
         "S2000",
@@ -924,6 +933,7 @@ def test_spindle_speed(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_feedrate(jd):
     jd.job_gcode = [
         "G1X0",
@@ -1011,6 +1021,7 @@ def test_feedrate(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_motion_mode(jd):
     jd.job_gcode = [
         "G1 X100",
@@ -1089,6 +1100,7 @@ def test_motion_mode(jd):
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_spindle_state(jd):
     jd.job_gcode = [
         "G90",
@@ -1158,6 +1170,7 @@ def test_spindle_state(jd):
         "G1"
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_regular_case(jd):
     jd.job_gcode = [
@@ -1299,6 +1312,7 @@ def test_regular_case(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_random_gibberish(jd):
     jd.job_gcode = [

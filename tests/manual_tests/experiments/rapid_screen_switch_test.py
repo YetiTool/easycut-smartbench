@@ -1,7 +1,7 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from kivy.config import Config
-from kivy.clock import Clock
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
@@ -17,13 +17,10 @@ python -m tests.manual_tests.experiments.rapid_screen_switch_test
 
 '''
 
-import kivy
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
-
 
 Builder.load_string("""
 <MenuScreen>:
@@ -43,9 +40,11 @@ Builder.load_string("""
             on_press: root.manager.current = 'menu'
 """)
 
+
 # Declare both screens
 class SettingsScreen(Screen):
-	pass
+    pass
+
 
 class MenuScreen(Screen):
 
@@ -54,13 +53,13 @@ class MenuScreen(Screen):
         self.sm = kwargs['sm']
 
     def on_enter(self):
-    	Clock.schedule_once(self.go_to_settings, 1)
+        Clock.schedule_once(self.go_to_settings, 1)
 
     def go_to_settings(self, dt):
-    	self.sm.current = 'settings'
+        self.sm.current = 'settings'
 
     def on_leave(self):
-		self.sm.current = 'menu'	
+        self.sm.current = 'menu'
 
 
 class TestApp(App):
@@ -74,6 +73,7 @@ class TestApp(App):
         sm.current = 'menu'
 
         return sm
+
 
 if __name__ == '__main__':
     TestApp().run()

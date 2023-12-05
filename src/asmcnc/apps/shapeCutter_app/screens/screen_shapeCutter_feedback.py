@@ -5,8 +5,9 @@ Feedback Screen for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -126,7 +127,7 @@ Builder.load_string(
                 orientation: 'horizontal'
                 pos: self.parent.pos
 """
-    )
+)
 
 
 class ShapeCutterFeedbackScreenClass(Screen):

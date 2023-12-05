@@ -3,8 +3,8 @@ Unicode test screen
 
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -36,7 +36,7 @@ Builder.load_string(
                 markup: 'True'
                 color: [0,0,0,1]
 """
-    )
+)
 
 
 class ScreenClass(Screen):

@@ -1,10 +1,9 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_status_bar
-import datetime
-import os, sys
+
 Builder.load_string(
     """
 <ZHeadQC7>:
@@ -85,7 +84,7 @@ Builder.load_string(
             pos: self.pos
 
 """
-    )
+)
 
 
 class ZHeadQC7(Screen):
@@ -96,7 +95,7 @@ class ZHeadQC7(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self):

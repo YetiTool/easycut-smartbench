@@ -3,201 +3,201 @@
   hosts: localhost
   become: yes
   roles:
-  - geerlingguy.exim
+    - geerlingguy.exim
   tasks:
-  - name: Distribution major version
-    debug: msg="{{ ansible_distribution_major_version }}"
-  - name: Copying the setting hostname script
-    template:
-      src: set-hostname.sh
-      dest: /usr/local/bin/set-hostname.sh
-      mode: '0544'
-  - name: Setting the hostname
-    command: /usr/local/bin/set-hostname.sh
-    become: yes
-    become_user: root
-  - name: Ensure we use ttyS0 port on Pi3
-    lineinfile:
-      name: /boot/config.txt
-      state: absent
-      insertafter: 'enable_uart=1'
-      line: 'dtoverlay=pi3-disable-bt'
-    when: ansible_distribution_major_version == '9'
-  - name: Ensure we use ttyS0 port on Pi4
-    lineinfile:
-      name: /boot/config.txt
-      state: absent
-      insertafter: 'enable_uart=1'
-      line: 'dtoverlay=disable-bt'
-    when: ansible_distribution_major_version == '11'
-  - name: Update GPU memory
-    lineinfile: 
-      name: /boot/config.txt
-      regexp: 'gpu_mem=128'
-      line: 'gpu_mem=256'
-      backrefs: yes
-  - name: Copying the starteasycut shell script
-    template:
-      src: starteasycut.sh
-      dest: /home/pi/starteasycut.sh
-      mode: '0755'
+    - name: Distribution major version
+      debug: msg="{{ ansible_distribution_major_version }}"
+    - name: Copying the setting hostname script
+      template:
+        src: set-hostname.sh
+        dest: /usr/local/bin/set-hostname.sh
+        mode: '0544'
+    - name: Setting the hostname
+      command: /usr/local/bin/set-hostname.sh
+      become: yes
+      become_user: root
+    - name: Ensure we use ttyS0 port on Pi3
+      lineinfile:
+        name: /boot/config.txt
+        state: absent
+        insertafter: 'enable_uart=1'
+        line: 'dtoverlay=pi3-disable-bt'
+      when: ansible_distribution_major_version == '9'
+    - name: Ensure we use ttyS0 port on Pi4
+      lineinfile:
+        name: /boot/config.txt
+        state: absent
+        insertafter: 'enable_uart=1'
+        line: 'dtoverlay=disable-bt'
+      when: ansible_distribution_major_version == '11'
+    - name: Update GPU memory
+      lineinfile:
+        name: /boot/config.txt
+        regexp: 'gpu_mem=128'
+        line: 'gpu_mem=256'
+        backrefs: yes
+    - name: Copying the starteasycut shell script
+      template:
+        src: starteasycut.sh
+        dest: /home/pi/starteasycut.sh
+        mode: '0755'
 
-    # Python2 pip and mysqldb are only available on stretch
-  - name: Install packages for Raspbian Stretch
-    package:
-      name: "{{ item }}"
-      state: present
-    with_items: "{{ stretch_pkgs }}"
-    when: ansible_distribution_major_version == '9' or ansible_distribution_major_version == '10'
-    ignore_errors: yes
+      # Python2 pip and mysqldb are only available on stretch
+    - name: Install packages for Raspbian Stretch
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ stretch_pkgs }}"
+      when: ansible_distribution_major_version == '9' or ansible_distribution_major_version == '10'
+      ignore_errors: yes
 
-    # This is very important before the pip run
-  - name: Install apt packages and one python package
-    package:
-      name: "{{ item }}"
-      state: present
-    with_items: "{{ apt_pkgs }}"
-    ignore_errors: yes
+      # This is very important before the pip run
+    - name: Install apt packages and one python package
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ apt_pkgs }}"
+      ignore_errors: yes
 
-  # Install python2 pip packages
-  - name: Pip install pika==1.2.0
-    pip:
-      name: pika==1.2.0
-    ignore_errors: yes
-  - name: Pip install paramiko 2.0.0
-    pip:
-      name: paramiko==2.0.0
-    ignore_errors: yes
-  - name: Pip install pigpio==1.78
-    pip:
-      name: pigpio==1.78
-    ignore_errors: yes
-  - name: Pip install pytz==2022.5
-    pip:
-      name: pytz==2022.5
-    ignore_errors: yes
-  - name: Pip install influxdb==5.2.0
-    pip:
-      name: influxdb==5.2.0
-    ignore_errors: yes
-  - name: Pip install pyserial==3.2.1
-    pip:
-      name: pyserial==3.2.1
-    ignore_errors: yes
-  - name: Pip install pyodbc<=4.0.34
-    pip:
-      name: pyodbc<=4.0.34
-    ignore_errors: yes
-  - name: Pip install numpy==1.16.6
-    pip:
-      name: numpy==1.16.6
-    ignore_errors: yes
-  - name: Pip install matplotlib==2.2.5
-    pip:
-      name: matplotlib==2.2.5
-    ignore_errors: yes
-  - name: Pip install PyMySQL==0.10.1
-    pip:
-      name: PyMySQL==0.10.1
-    ignore_errors: yes 
-    when: ansible_distribution_major_version == '11'
-  - name: Pip install hgtk
-    pip:
-      name: hgtk==0.2.0
-    ignore_errors: yes
-  - name: Pip install six
-    pip:
-      name: six==1.16.0
-    ignore_errors: yes
+    # Install python2 pip packages
+    - name: Pip install pika==1.2.0
+      pip:
+        name: pika==1.2.0
+      ignore_errors: yes
+    - name: Pip install paramiko 2.0.0
+      pip:
+        name: paramiko==2.0.0
+      ignore_errors: yes
+    - name: Pip install pigpio==1.78
+      pip:
+        name: pigpio==1.78
+      ignore_errors: yes
+    - name: Pip install pytz==2022.5
+      pip:
+        name: pytz==2022.5
+      ignore_errors: yes
+    - name: Pip install influxdb==5.2.0
+      pip:
+        name: influxdb==5.2.0
+      ignore_errors: yes
+    - name: Pip install pyserial==3.2.1
+      pip:
+        name: pyserial==3.2.1
+      ignore_errors: yes
+    - name: Pip install pyodbc<=4.0.34
+      pip:
+        name: pyodbc<=4.0.34
+      ignore_errors: yes
+    - name: Pip install numpy==1.16.6
+      pip:
+        name: numpy==1.16.6
+      ignore_errors: yes
+    - name: Pip install matplotlib==2.2.5
+      pip:
+        name: matplotlib==2.2.5
+      ignore_errors: yes
+    - name: Pip install PyMySQL==0.10.1
+      pip:
+        name: PyMySQL==0.10.1
+      ignore_errors: yes
+      when: ansible_distribution_major_version == '11'
+    - name: Pip install hgtk
+      pip:
+        name: hgtk==0.2.0
+      ignore_errors: yes
+    - name: Pip install six
+      pip:
+        name: six==1.16.0
+      ignore_errors: yes
 
-  - name: Copying the odbcinst ini script
-    template:
-      src: odbcinst.ini
-      dest: /etc/odbcinst.ini
-      mode: '0544'
-  - name: Define glbal export for current tag
-    template:
-      src=profile-platform-v-var.sh
-      dest=/etc/profile.d/platform-v-var.sh
-      mode=544
-      owner=pi
-  - name: Copy Ansible service config
-    template:
-      src=ansible.service
-      dest=/lib/systemd/system/ansible.service
-      mode=644
-  - name: Reload systemctl to re-read configs
-    systemd:
-      name: ansible.service
-      daemon_reload: yes
-      state: started
-      enabled: yes
-      masked: no
-  - name: Copy Support service start script
-    template:
-      src=support-start.sh
-      dest=/usr/local/bin/support-start.sh
-      mode=544
-      owner=pi
-  - name: Copy Support service startup script
-    template:
-      src=support-stop.sh
-      dest=/usr/local/bin/support-stop.sh
-      mode=544
-      owner=pi
-  - name: Copy Support service config
-    template:
-      src=support.service
-      dest=/lib/systemd/system/support.service
-      mode=644
-  - name: Reload systemctl to re-read configs
-    systemd:
-      name: support.service
-      daemon_reload: yes
-      enabled: no
-      masked: no
-  - name: Copy ProFTPD service config
-    template:
-      src=proftpd-jobCache.conf
-      dest=/etc/proftpd/conf.d/jobCache.conf
-  - name: Restarting ProFTPD
-    systemd:
-      name: proftpd.service
-      state: restarted
-    ignore_errors: yes
-  - name: Generate /home/pi/.ssh/ RSA host key
-    command : ssh-keygen -q -t rsa -b 4096 -f /home/pi/.ssh/id_rsa -N ""
-    become: true
-    become_user: pi
-    args:
-      creates: /home/pi/.ssh/id_rsa
-  - name: Add the Support public key to the host
-    template:
-      src: authorized_keys
-      dest: /home/pi/.ssh/authorized_keys
-      owner: pi
-      group: pi
-      mode: '0644'
-  - name: Ensure journalctl writes files to disk
-    lineinfile:
-      name: /etc/systemd/journald.conf
-      regexp: '^Storage='
-      line: Storage=persistent
-  - name: Cron job to keep the journalctl file low
-    cron:
-      user: root
-      name: "clean logs"
-      minute: "*/5"
-      job: "journalctl --vacuum-size=100M"
-  - name:
-    lineinfile:
-      name: /etc/avrdude.conf
-      state: present
-      insertafter: 'wiring'
-      line: '  reset = 17;'
-  - name: Add ansible_from_easycut line to Easycut config
-    lineinfile:
-      name: /home/pi/easycut-smartbench/src/config.txt
-      state: present
-      insertafter: EOF
-      line: 'ansible_from_easycut=True'
+    - name: Copying the odbcinst ini script
+      template:
+        src: odbcinst.ini
+        dest: /etc/odbcinst.ini
+        mode: '0544'
+    - name: Define glbal export for current tag
+      template:
+        src=profile-platform-v-var.sh
+        dest=/etc/profile.d/platform-v-var.sh
+        mode=544
+        owner=pi
+    - name: Copy Ansible service config
+      template:
+        src=ansible.service
+        dest=/lib/systemd/system/ansible.service
+        mode=644
+    - name: Reload systemctl to re-read configs
+      systemd:
+        name: ansible.service
+        daemon_reload: yes
+        state: started
+        enabled: yes
+        masked: no
+    - name: Copy Support service start script
+      template:
+        src=support-start.sh
+        dest=/usr/local/bin/support-start.sh
+        mode=544
+        owner=pi
+    - name: Copy Support service startup script
+      template:
+        src=support-stop.sh
+        dest=/usr/local/bin/support-stop.sh
+        mode=544
+        owner=pi
+    - name: Copy Support service config
+      template:
+        src=support.service
+        dest=/lib/systemd/system/support.service
+        mode=644
+    - name: Reload systemctl to re-read configs
+      systemd:
+        name: support.service
+        daemon_reload: yes
+        enabled: no
+        masked: no
+    - name: Copy ProFTPD service config
+      template:
+        src=proftpd-jobCache.conf
+        dest=/etc/proftpd/conf.d/jobCache.conf
+    - name: Restarting ProFTPD
+      systemd:
+        name: proftpd.service
+        state: restarted
+      ignore_errors: yes
+    - name: Generate /home/pi/.ssh/ RSA host key
+      command: ssh-keygen -q -t rsa -b 4096 -f /home/pi/.ssh/id_rsa -N ""
+      become: true
+      become_user: pi
+      args:
+        creates: /home/pi/.ssh/id_rsa
+    - name: Add the Support public key to the host
+      template:
+        src: authorized_keys
+        dest: /home/pi/.ssh/authorized_keys
+        owner: pi
+        group: pi
+        mode: '0644'
+    - name: Ensure journalctl writes files to disk
+      lineinfile:
+        name: /etc/systemd/journald.conf
+        regexp: '^Storage='
+        line: Storage=persistent
+    - name: Cron job to keep the journalctl file low
+      cron:
+        user: root
+        name: "clean logs"
+        minute: "*/5"
+        job: "journalctl --vacuum-size=100M"
+    - name:
+      lineinfile:
+        name: /etc/avrdude.conf
+        state: present
+        insertafter: 'wiring'
+        line: '  reset = 17;'
+    - name: Add ansible_from_easycut line to Easycut config
+      lineinfile:
+        name: /home/pi/easycut-smartbench/src/config.txt
+        state: present
+        insertafter: EOF
+        line: 'ansible_from_easycut=True'

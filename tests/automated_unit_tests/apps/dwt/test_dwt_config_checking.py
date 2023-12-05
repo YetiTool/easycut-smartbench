@@ -1,9 +1,9 @@
-import unittest
-import json
-import tempfile
-import os
 import copy
+import json
+import os
 import sys
+import tempfile
+import unittest
 
 sys.path.append('./src')
 
@@ -11,7 +11,6 @@ from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
 config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
-
 
 """
 RUN WITH

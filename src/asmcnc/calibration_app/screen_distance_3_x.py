@@ -7,11 +7,11 @@ Distance: step 3
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_distance_4_x
+
 Builder.load_string(
     """
 
@@ -270,7 +270,7 @@ Builder.load_string(
                                 text: '[color=455A64]Set and check[/color]'
                                 markup: True
 """
-    )
+)
 
 
 class DistanceScreen3xClass(Screen):
@@ -303,7 +303,7 @@ class DistanceScreen3xClass(Screen):
 Nudging will move the Z head away from X-home."""
         self.test_instructions_label.text = (
             '[color=000000]Enter the value recorded by your tape measure. [/color]'
-            )
+        )
         self.warning_label.opacity = 0
 
     def nudge_01(self):
@@ -323,7 +323,7 @@ Nudging will move the Z head away from X-home."""
         self.m.get_grbl_settings()
         self.existing_x_steps_per_mm = self.m.s.setting_100
         self.new_x_steps_per_mm = self.existing_x_steps_per_mm * (self.
-            final_x_cal_move / self.measured_x_cal_move)
+                                                                  final_x_cal_move / self.measured_x_cal_move)
         self.next_screen()
 
     def next_instruction(self):
@@ -333,7 +333,7 @@ Nudging will move the Z head away from X-home."""
         if self.x_cal_measure_1 == float(self.value_input.text):
             self.test_instructions_label.text = (
                 '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm incrementand record the new value[/color]'
-                )
+            )
             return
         self.save_measured_value()
         self.nudge_total = self.nudge_counter
@@ -342,14 +342,15 @@ Nudging will move the Z head away from X-home."""
 
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name=
-            'distance1x', screen_manager=self.sm, machine=self.m)
+                                                                      'distance1x', screen_manager=self.sm,
+                                                                      machine=self.m)
         self.sm.add_widget(distance_screen1x)
         self.sm.current = 'distance1x'
 
@@ -360,14 +361,15 @@ Nudging will move the Z head away from X-home."""
     def next_screen(self):
         if not self.sm.has_screen('distance4x'):
             distance4x_screen = screen_distance_4_x.DistanceScreen4xClass(name
-                ='distance4x', screen_manager=self.sm, machine=self.m)
+                                                                          ='distance4x', screen_manager=self.sm,
+                                                                          machine=self.m)
             self.sm.add_widget(distance4x_screen)
         self.sm.get_screen('distance4x'
-            ).old_x_steps = self.existing_x_steps_per_mm
+                           ).old_x_steps = self.existing_x_steps_per_mm
         self.sm.get_screen('distance4x').new_x_steps = self.new_x_steps_per_mm
         self.sm.current = 'distance4x'
 
     def on_leave(self):
         if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
+                'errorScreen'):
             self.sm.remove_widget(self.sm.get_screen('distance3x'))

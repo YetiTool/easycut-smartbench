@@ -5,7 +5,6 @@ from asmcnc.production.database.calibration_database import CalibrationDatabase
 calibration_db = CalibrationDatabase()
 calibration_db.set_up_connection()
 
-
 ## STAGES ADDED:
 # calibration_db.insert_stage("CalibrationQC")
 # calibration_db.insert_stage("CalibrationCheckQC")

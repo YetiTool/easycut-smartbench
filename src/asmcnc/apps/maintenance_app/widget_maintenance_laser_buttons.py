@@ -3,12 +3,12 @@ Created on 10 June 2020
 @author: Letty
 widget to hold laser datum setting buttons
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -139,7 +139,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class LaserDatumButtons(Widget):
@@ -159,40 +159,40 @@ class LaserDatumButtons(Widget):
         else:
             warning_message = self.l.get_str(
                 'Could not save laser crosshair offset!'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help).'
-                ).replace('(i)', '[b](i)[/b]') + '\n\n' + self.l.get_str(
+            ).replace('(i)', '[b](i)[/b]') + '\n\n' + self.l.get_str(
                 'Please enable laser to set offset.')
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_x = self.m.mpos_x()
+                           ).laser_datum_reset_coordinate_x = self.m.mpos_x()
         self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_y = self.m.mpos_y()
+                           ).laser_datum_reset_coordinate_y = self.m.mpos_y()
         self.save_button_image.source = (
             './asmcnc/apps/maintenance_app/img/save_button_132.png')
         self.save_button.disabled = False
 
     def save_laser_offset(self):
         self.m.laser_offset_x_value = self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_x - self.m.mpos_x()
+                                                         ).laser_datum_reset_coordinate_x - self.m.mpos_x()
         self.m.laser_offset_y_value = self.sm.get_screen('maintenance'
-            ).laser_datum_reset_coordinate_y - self.m.mpos_y()
+                                                         ).laser_datum_reset_coordinate_y - self.m.mpos_y()
         if self.m.write_z_head_laser_offset_values('True', self.m.
-            laser_offset_x_value, self.m.laser_offset_y_value):
+                laser_offset_x_value, self.m.laser_offset_y_value):
             saved_success = self.l.get_str('Settings saved!')
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
             self.save_button_image.source = (
                 './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png'
-                )
+            )
             self.save_button.disabled = True
         else:
             warning_message = self.l.get_str(
                 'There was a problem saving your settings.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'Please check your settings and try again, or if the problem persists please contact the YetiTool support team.'
-                )
+            )
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def set_vacuum(self):

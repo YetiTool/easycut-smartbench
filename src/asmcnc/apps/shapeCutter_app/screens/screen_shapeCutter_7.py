@@ -5,9 +5,9 @@ Screen 7 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -334,7 +334,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter7ScreenClass(Screen):
@@ -343,7 +343,7 @@ class ShapeCutter7ScreenClass(Screen):
     title_label = StringProperty('[b]Secure power cords[/b]')
     user_instructions = StringProperty(
         'Ensure power leads are secured [b](1)[/b], and can move the length of the job [b](2)[/b].'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter7ScreenClass, self).__init__(**kwargs)

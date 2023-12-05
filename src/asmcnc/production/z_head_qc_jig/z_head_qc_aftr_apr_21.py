@@ -2,22 +2,24 @@
 Created on 03 August 2020
 @author: Letty
 """
-import os, sys, subprocess
+import os
+import subprocess
+import sys
 from datetime import datetime
+
 try:
     import pigpio
 except:
     pass
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
-from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadQCWarrantyAfterApr21>:
@@ -343,7 +345,7 @@ Builder.load_string(
             id: status_container 
             pos: self.pos
 """
-    )
+)
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
@@ -369,7 +371,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.string_overload_summary = ''
         self.spindle_test_counter = 0
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self, *args):
@@ -377,11 +379,11 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         Clock.schedule_interval(self.scrape_fw_version, 1)
         self.m.is_laser_enabled = True
         self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, STATUS_UPDATE_DELAY)
+                                                       update_status_text, STATUS_UPDATE_DELAY)
         self.poll_for_limits = Clock.schedule_interval(self.
-            update_checkboxes, STATUS_UPDATE_DELAY)
+                                                       update_checkboxes, STATUS_UPDATE_DELAY)
         self.poll_for_temps_power = Clock.schedule_interval(self.
-            temp_power_check, TEMP_POWER_POLL)
+                                                            temp_power_check, TEMP_POWER_POLL)
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
@@ -391,18 +393,18 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def scrape_fw_version(self, dt):
         self.fw_version_label.text = 'FW: ' + str(str(self.m.s.fw_version).
-            split('; HW')[0])
+                                                  split('; HW')[0])
 
     def bake_grbl_settings(self):
         grbl_settings = ['$0=10', '$1=255', '$2=4', '$3=1', '$4=0', '$5=1',
-            '$6=0', '$10=3', '$11=0.010', '$12=0.002', '$13=0', '$20=1',
-            '$22=1', '$23=3', '$24=600.0', '$25=3000.0', '$26=250',
-            '$27=15.000', '$30=25000.0', '$31=0.0', '$32=0', '$110=8000.0',
-            '$111=6000.0', '$112=750.0', '$120=130.0', '$121=130.0',
-            '$122=200.0', '$130=1300.0', '$131=2503.0', '$132=150.0', '$$',
-            '$#']
+                         '$6=0', '$10=3', '$11=0.010', '$12=0.002', '$13=0', '$20=1',
+                         '$22=1', '$23=3', '$24=600.0', '$25=3000.0', '$26=250',
+                         '$27=15.000', '$30=25000.0', '$31=0.0', '$32=0', '$110=8000.0',
+                         '$111=6000.0', '$112=750.0', '$120=130.0', '$121=130.0',
+                         '$122=200.0', '$130=1300.0', '$131=2503.0', '$132=150.0', '$$',
+                         '$#']
         self.m.s.start_sequential_stream(grbl_settings,
-            reset_grbl_after_stream=True)
+                                         reset_grbl_after_stream=True)
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
@@ -503,7 +505,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('PCB Temperature: ' + str(self.m.s.pcb_temp) +
-                ' degrees C')
+                               ' degrees C')
             fail_report.append(
                 'Should be greater than 10 and less than 70 deg C.')
         if self.m.s.motor_driver_temp > 10 and self.m.s.motor_driver_temp < 60:
@@ -511,16 +513,16 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('Motor Driver Temperature: ' + str(self.m.s.
-                motor_driver_temp) + ' degrees C')
+                                                                  motor_driver_temp) + ' degrees C')
             fail_report.append(
                 'Should be greater than 10 and less than 60 deg C.')
         if (self.m.s.microcontroller_mV > 4800 and self.m.s.
-            microcontroller_mV < 5200):
+                microcontroller_mV < 5200):
             pass_fail = pass_fail * True
         else:
             pass_fail = pass_fail * False
             fail_report.append('Microcontroller voltage: ' + str(self.m.s.
-                microcontroller_mV) + ' mV')
+                                                                 microcontroller_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4800 and less than 5200 mV.')
         if self.m.s.LED_mV > 4800 and self.m.s.LED_mV < 5200:
@@ -528,7 +530,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('LED (dust shoe) voltage: ' + str(self.m.s.
-                LED_mV) + ' mV')
+                                                                 LED_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4800 and less than 5200 mV.')
         if self.m.s.PSU_mV > 22000 and self.m.s.PSU_mV < 26000:
@@ -536,7 +538,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('24V PSU Voltage: ' + str(self.m.s.PSU_mV) +
-                ' mV')
+                               ' mV')
             fail_report.append(
                 'Should be greater than 22000 and less than 26000 mV.')
         if self.m.s.power_loss_detected == True:
@@ -550,7 +552,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = '\n'.join(fail_report)
             popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm,
-                fail_report_string)
+                                                          fail_report_string)
             self.temp_voltage_power_check.source = (
                 './asmcnc/skavaUI/img/template_cancel.png')
         else:
@@ -594,13 +596,13 @@ class ZHeadQCWarrantyAfterApr21(Screen):
     def run_spindle_check(self):
         self.spindle_check('M3 S5000', 2000, 2000)
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4000,
-            4000), 9)
+                                                          4000), 9)
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6000,
-            6000), 18)
+                                                          6000), 18)
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 7800,
-            8000), 27)
+                                                          8000), 27)
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 8500,
-            10000), 36)
+                                                          10000), 36)
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 45)
 
         def show_outcome():
@@ -611,13 +613,14 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                         './asmcnc/skavaUI/img/template_cancel.png')
                     test = self.string_overload_summary.split('**')
                     popup_z_head_qc.PopupSpindleDiagnosticsInfo(self.sm,
-                        test[1], test[2], test[3], test[4], test[5])
+                                                                test[1], test[2], test[3], test[4], test[5])
                 else:
                     self.spindle_speed_check.source = (
                         './asmcnc/skavaUI/img/file_select_select.png')
                 self.spindle_pass_fail = True
             except:
                 log('Could not show outcome')
+
         Clock.schedule_once(lambda dt: show_outcome(), 45)
 
     def spindle_check(self, M3_command, ld_expected_mV, speed_expected_mV):
@@ -635,32 +638,33 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 speed_V_tolerance = int(0.1 * speed_mid_range_mV)
             if self.spindle_test_counter == 1:
                 self.string_overload_summary = (self.
-                    string_overload_summary + '\n' + 'Ld range: ' + '\n' +
-                    str(ld_mid_range_mV - ld_tolerance) + ' - ' + str(
-                    ld_mid_range_mV + ld_tolerance) + ' mV')
+                                                string_overload_summary + '\n' + 'Ld range: ' + '\n' +
+                                                str(ld_mid_range_mV - ld_tolerance) + ' - ' + str(
+                            ld_mid_range_mV + ld_tolerance) + ' mV')
                 self.string_overload_summary = (self.
-                    string_overload_summary + '\n' + 'Speed V range: ' +
-                    '\n' + str(speed_mid_range_mV - speed_V_tolerance) +
-                    ' - ' + str(speed_mid_range_mV + speed_V_tolerance) + ' mV'
-                    )
+                                                string_overload_summary + '\n' + 'Speed V range: ' +
+                                                '\n' + str(speed_mid_range_mV - speed_V_tolerance) +
+                                                ' - ' + str(speed_mid_range_mV + speed_V_tolerance) + ' mV'
+                                                )
             elif self.spindle_test_counter > 3:
                 return
             overload_value = self.m.s.spindle_load_voltage
             spindle_speed_value = self.m.s.spindle_speed_monitor_mV
             self.string_overload_summary = (self.string_overload_summary +
-                '\n' + 'Test ' + str(self.spindle_test_counter) +
-                ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +
-                str(spindle_speed_value) + ' mV')
+                                            '\n' + 'Test ' + str(self.spindle_test_counter) +
+                                            ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +
+                                            str(spindle_speed_value) + ' mV')
             self.is_it_within_tolerance(overload_value, ld_mid_range_mV,
-                ld_tolerance)
+                                        ld_tolerance)
             self.is_it_within_tolerance(spindle_speed_value,
-                speed_mid_range_mV, speed_V_tolerance)
+                                        speed_mid_range_mV, speed_V_tolerance)
             self.spindle_test_counter += 1
+
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
         self.string_overload_summary = (self.string_overload_summary + '**' +
-            '[b]' + str(M3_command).strip('M3 S') + ' RPM[/b]')
+                                        '[b]' + str(M3_command).strip('M3 S') + ' RPM[/b]')
         overload_check_event = Clock.schedule_interval(lambda dt:
-            overload_check(ld_expected_mV, speed_expected_mV), 2.5)
+                                                       overload_check(ld_expected_mV, speed_expected_mV), 2.5)
         Clock.schedule_once(lambda dt: Clock.unschedule(
             overload_check_event), 8)
 
@@ -685,9 +689,9 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             pi.stop()
             cmd = (
                 'grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'
-                )
+            )
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=
-                subprocess.STDOUT, shell=True)
+            subprocess.STDOUT, shell=True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
             connect()
@@ -713,7 +717,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             else:
                 did_fw_update_succeed = 'Update failed.'
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm,
-                did_fw_update_succeed, str(self.stdout))
+                                                         did_fw_update_succeed, str(self.stdout))
             self.test_fw_update_button.text = '  19. Test FW Update'
             self.sm.get_screen('qc1').reset_checkboxes()
             self.sm.get_screen('qc2').reset_checkboxes()
@@ -722,12 +726,13 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             self.sm.get_screen('qc3').reset_timer()
             Clock.unschedule(self.poll_for_temps_power)
             self.poll_for_temps_power = Clock.schedule_interval(self.
-                temp_power_check, TEMP_POWER_POLL)
+                                                                temp_power_check, TEMP_POWER_POLL)
+
         disconnect_and_update()
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home'
-            ).gcode_monitor_widget.consoleStatusText.text
+                                                         ).gcode_monitor_widget.consoleStatusText.text
 
     def do_reboot(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':

@@ -1,18 +1,16 @@
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
-from kivy.base import runTouchApp
-from kivy.properties import ObjectProperty
+import math
+import re
+from datetime import datetime
+from functools import partial
+
 from kivy.clock import Clock
 from kivy.graphics import *
-from kivy.utils import *
-import math
-from datetime import datetime
-from kivy.uix.widget import Widget
-from kivy.uix.stencilview import StencilView
+from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-import re
-from functools import partial
+from kivy.uix.stencilview import StencilView
+from kivy.uix.widget import Widget
+from kivy.utils import *
+
 Builder.load_string(
     """
 
@@ -35,7 +33,7 @@ Builder.load_string(
             do_translation: True
             do_scale: True
 """
-    )
+)
 
 
 def log(message):
@@ -115,9 +113,9 @@ class GCodeView(Widget):
                             break
                     with self.gCodePreview.canvas:
                         Color(self.g0_move_colour[0], self.g0_move_colour[1
-                            ], self.g0_move_colour[2], self.g0_move_colour[3])
+                        ], self.g0_move_colour[2], self.g0_move_colour[3])
                         Line(points=[last_x, last_y, target_x, target_y],
-                            close=False, width=self.line_width)
+                             close=False, width=self.line_width)
                     last_x, last_y = target_x, target_y
                 elif move == 'G1':
                     for bit in line.strip().split(' '):
@@ -128,10 +126,10 @@ class GCodeView(Widget):
                             break
                     with self.gCodePreview.canvas:
                         Color(self.feed_move_colour[0], self.
-                            feed_move_colour[1], self.feed_move_colour[2],
-                            self.feed_move_colour[3])
+                              feed_move_colour[1], self.feed_move_colour[2],
+                              self.feed_move_colour[3])
                         Line(points=[last_x, last_y, target_x, target_y],
-                            close=False, width=self.line_width)
+                             close=False, width=self.line_width)
                     last_x, last_y = target_x, target_y
                 elif move == 'G2' or move == 'G3':
                     i, j = 0, 0
@@ -168,39 +166,39 @@ class GCodeView(Widget):
                         angle_end = 180
                     if start_quad == 1:
                         angle_start = math.degrees(math.acos(math.fabs(j) /
-                            radius))
+                                                             radius))
                     if start_quad == 2:
                         angle_start = math.degrees(math.acos(math.fabs(i) /
-                            radius)) + 270
+                                                             radius)) + 270
                     if start_quad == 3:
                         angle_start = math.degrees(math.acos(math.fabs(j) /
-                            radius)) + 180
+                                                             radius)) + 180
                     if start_quad == 4:
                         angle_start = math.degrees(math.acos(math.fabs(i) /
-                            radius)) + 90
+                                                             radius)) + 90
                     if end_quad == 1:
                         angle_end = math.degrees(math.acos(math.fabs(j) /
-                            radius))
+                                                           radius))
                     if end_quad == 2:
                         angle_end = math.degrees(math.acos(math.fabs(i) /
-                            radius)) + 270
+                                                           radius)) + 270
                     if end_quad == 3:
                         angle_end = math.degrees(math.acos(math.fabs(j) /
-                            radius)) + 180
+                                                           radius)) + 180
                     if end_quad == 4:
                         angle_end = math.degrees(math.acos(math.fabs(i) /
-                            radius)) + 90
+                                                           radius)) + 90
                     if move == 'G2' and angle_start > angle_end:
                         angle_end = angle_end + 360
                     if move == 'G3' and angle_start < angle_end:
                         angle_end = angle_end - 360
                     with self.gCodePreview.canvas:
                         Color(self.feed_move_colour[0], self.
-                            feed_move_colour[1], self.feed_move_colour[2],
-                            self.feed_move_colour[3])
+                              feed_move_colour[1], self.feed_move_colour[2],
+                              self.feed_move_colour[3])
                         Line(circle=(last_x + i, last_y + j, radius, int(
                             angle_start), int(angle_end), 10), close=False,
-                            width=self.line_width)
+                             width=self.line_width)
                     last_x, last_y = target_x, target_y
                 else:
                     print 'Did not draw: ' + line
@@ -234,15 +232,16 @@ class GCodeView(Widget):
         with self.gCodePreview.canvas:
             Scale(scale, scale, 1)
             Color(0, 1, 0, 1)
+
     interrupt_line_threshold = 5000
     interrupt_delay = 0.2
 
     def prep_for_non_modal_gcode(self, job_file_gcode, line_cap,
-        screen_manager, dt):
+                                 screen_manager, dt):
         self.line_number = 0
         self.lines_read = 0
         self.line_threshold_to_pause_and_update_at = (self.
-            interrupt_line_threshold)
+                                                      interrupt_line_threshold)
         self.total_lines_in_job_file_pre_scrubbed = len(job_file_gcode)
         self.min_x = 999999
         self.max_x = -999999
@@ -261,16 +260,16 @@ class GCodeView(Widget):
         self.get_non_modal_gcode(job_file_gcode, line_cap, screen_manager, dt)
 
     def get_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt
-        ):
+                            ):
         if self.lines_read < self.total_lines_in_job_file_pre_scrubbed:
             break_threshold = min(self.
-                line_threshold_to_pause_and_update_at, self.
-                total_lines_in_job_file_pre_scrubbed)
+                                  line_threshold_to_pause_and_update_at, self.
+                                  total_lines_in_job_file_pre_scrubbed)
             while self.lines_read < break_threshold:
                 draw_line = job_file_gcode[self.lines_read]
                 self.lines_read += 1
                 if (line_cap == True and self.lines_read > self.
-                    max_lines_to_read):
+                        max_lines_to_read):
                     break
                 line = draw_line
                 line = re.sub('Y', ' YY', line)
@@ -289,7 +288,7 @@ class GCodeView(Widget):
                 elif len(line) <= 1:
                     continue
                 for idx, bit in enumerate(re.split(
-                    '( X| Y| Z| F| S| I| J| K| G)', line)):
+                        '( X| Y| Z| F| S| I| J| K| G)', line)):
                     if bit == '':
                         continue
                     if idx == 2:
@@ -318,7 +317,7 @@ class GCodeView(Widget):
                             self.last_x = bit[1:]
                         except:
                             print 'Line not for preview (' + str(self.
-                                line_number) + '): ' + line
+                                                                 line_number) + '): ' + line
                     elif start == 'Y':
                         try:
                             self.last_y = float(bit[1:])
@@ -329,7 +328,7 @@ class GCodeView(Widget):
                             self.last_y = bit[1:]
                         except:
                             print 'Line not for preview (' + str(self.
-                                line_number) + '): ' + line
+                                                                 line_number) + '): ' + line
                     elif start == 'Z':
                         try:
                             self.last_z = float(bit[1:])
@@ -340,7 +339,7 @@ class GCodeView(Widget):
                             self.last_z = bit[1:]
                         except:
                             print 'Line not for preview (' + str(self.
-                                line_number) + '): ' + line
+                                                                 line_number) + '): ' + line
                     elif start == 'F':
                         self.feed_rate = bit[1:]
                     elif start == 'I':
@@ -351,31 +350,31 @@ class GCodeView(Widget):
                         k = bit[1:]
                 if self.move == 'G0':
                     processed_line = (self.plane + ' ' + self.move + ' X' +
-                        self.last_x + ' Y' + self.last_y + ' Z' + self.last_z)
+                                      self.last_x + ' Y' + self.last_y + ' Z' + self.last_z)
                     self.xy_preview_gcode.append(processed_line)
                 elif self.move == 'G1':
                     processed_line = (self.plane + ' ' + self.move + ' X' +
-                        self.last_x + ' Y' + self.last_y + ' Z' + self.
-                        last_z + ' F' + self.feed_rate)
+                                      self.last_x + ' Y' + self.last_y + ' Z' + self.
+                                      last_z + ' F' + self.feed_rate)
                     self.xy_preview_gcode.append(processed_line)
                 elif self.move == 'G2' or self.move == 'G3':
                     processed_line = (self.plane + ' ' + self.move + ' X' +
-                        self.last_x + ' Y' + self.last_y + ' Z' + self.
-                        last_z + ' I' + i + ' J' + j + ' K' + k + ' F' +
-                        self.feed_rate)
+                                      self.last_x + ' Y' + self.last_y + ' Z' + self.
+                                      last_z + ' I' + i + ' J' + j + ' K' + k + ' F' +
+                                      self.feed_rate)
                     self.xy_preview_gcode.append(processed_line)
                 else:
                     print 'Line not for preview (' + str(self.line_number
-                        ) + self.move + '): ' + line
+                                                         ) + self.move + '): ' + line
             self.line_threshold_to_pause_and_update_at += (self.
-                interrupt_line_threshold)
+                                                           interrupt_line_threshold)
             percentage_progress = int(self.lines_read * 1.0 / self.
-                total_lines_in_job_file_pre_scrubbed * 1.0 * 100.0)
+                                      total_lines_in_job_file_pre_scrubbed * 1.0 * 100.0)
             screen_manager.get_screen('loading').update_screen('Analysing',
-                percentage_progress)
+                                                               percentage_progress)
             Clock.schedule_once(partial(self.get_non_modal_gcode,
-                job_file_gcode, line_cap, screen_manager), self.interrupt_delay
-                )
+                                        job_file_gcode, line_cap, screen_manager), self.interrupt_delay
+                                )
         else:
             log('> Finished getting non modal gcode')
             self.jd.x_max = self.max_x
@@ -385,4 +384,4 @@ class GCodeView(Widget):
             self.jd.z_max = self.max_z
             self.jd.z_min = self.min_z
             screen_manager.get_screen('loading')._finish_loading(self.
-                xy_preview_gcode)
+                                                                 xy_preview_gcode)

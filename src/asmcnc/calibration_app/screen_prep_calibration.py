@@ -5,10 +5,10 @@ Screen to inform user of essential preparation before they continue calibrating
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
-from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_measurement
+
 Builder.load_string(
     """
 
@@ -165,7 +165,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class PrepCalibrationScreenClass(Screen):
@@ -189,7 +189,8 @@ class PrepCalibrationScreenClass(Screen):
     def skip_section(self):
         if not self.sm.has_screen('measurement'):
             measurement_screen = screen_measurement.MeasurementScreenClass(name
-                ='measurement', screen_manager=self.sm, machine=self.m)
+                                                                           ='measurement', screen_manager=self.sm,
+                                                                           machine=self.m)
             self.sm.add_widget(measurement_screen)
         self.sm.get_screen('measurement').axis = 'X'
         self.sm.current = 'measurement'
@@ -200,7 +201,8 @@ class PrepCalibrationScreenClass(Screen):
     def next_screen(self):
         if not self.sm.has_screen('measurement'):
             measurement_screen = screen_measurement.MeasurementScreenClass(name
-                ='measurement', screen_manager=self.sm, machine=self.m)
+                                                                           ='measurement', screen_manager=self.sm,
+                                                                           machine=self.m)
             self.sm.add_widget(measurement_screen)
         self.sm.get_screen('measurement').axis = 'X'
         self.m.request_homing_procedure('measurement', 'calibration_complete')

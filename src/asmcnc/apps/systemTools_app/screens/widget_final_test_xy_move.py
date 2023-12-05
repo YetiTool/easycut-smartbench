@@ -2,15 +2,9 @@
 X-Y move widget for final test screen
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 #:import hex kivy.utils.get_color_from_hex
@@ -251,7 +245,7 @@ Builder.load_string(
                             allow_stretch: True
 
 """
-    )
+)
 
 
 class FinalTestXYMove(Widget):
@@ -299,16 +293,16 @@ class FinalTestXYMove(Widget):
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)
@@ -368,10 +362,10 @@ class FinalTestXYMove(Widget):
         if self.jogMode == 'free':
             if case == 'Z-':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
+                                                z_min_jog_abs_limit, feed_speed)
             if case == 'Z+':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
+                                                z_max_jog_abs_limit, feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'Z+':
                 self.m.jog_relative('Z', 0.01, feed_speed)
@@ -395,10 +389,10 @@ class FinalTestXYMove(Widget):
         elif self.jogMode == 'job':
             if case == 'Z-':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
+                                                z_min_jog_abs_limit, feed_speed)
             if case == 'Z+':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
+                                                z_max_jog_abs_limit, feed_speed)
 
     def quit_jog_z(self):
         if self.jogMode == 'free':
@@ -408,6 +402,6 @@ class FinalTestXYMove(Widget):
 
     def y_home_x_mid(self):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit,
-            self.fast_y_speed)
+                                        self.fast_y_speed)
         self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
         self.m.set_led_colour('BLUE')

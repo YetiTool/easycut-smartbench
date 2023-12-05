@@ -2,16 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
-import os, sys
-import socket
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -171,7 +166,7 @@ Builder.load_string(
             valign: 'middle'
 
 """
-    )
+)
 
 
 class SGStatusBar(Widget):
@@ -187,9 +182,9 @@ class SGStatusBar(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.
-            GRBL_REPORT_INTERVAL)
+                                GRBL_REPORT_INTERVAL)
         Clock.schedule_interval(self.refresh_ip_label_value, self.
-            IP_REPORT_INTERVAL)
+                                IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()

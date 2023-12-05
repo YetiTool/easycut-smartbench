@@ -5,9 +5,9 @@ Screen 4 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -350,7 +350,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter4ScreenClass(Screen):
@@ -359,7 +359,7 @@ class ShapeCutter4ScreenClass(Screen):
     title_label = StringProperty('[b]Clean SmartBench Axes[/b]')
     user_instructions = StringProperty(
         'Vacuum the Y bench [b](1)[/b], wheel tracks [b](2)[/b] and racks [b](3)[/b].'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter4ScreenClass, self).__init__(**kwargs)

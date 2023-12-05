@@ -3,12 +3,12 @@ Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
 """
-from datetime import datetime, timedelta
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.metrics import dp
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <JobFeedbackScreen>
@@ -249,14 +249,14 @@ Builder.load_string(
                         font_size: dp(0.0225*app.width)
 
 """
-    )
+)
 
 
 class JobFeedbackScreen(Screen):
     return_to_screen = StringProperty()
     metadata_string = ('Project_name | Step 1 of 3' + '\n' +
-        'Actual runtime: 0:30:43' + '\n' +
-        'Total time (with pauses): 0:45:41' + '\n' + 'Parts completed: 8/24')
+                       'Actual runtime: 0:30:43' + '\n' +
+                       'Total time (with pauses): 0:45:41' + '\n' + 'Parts completed: 8/24')
 
     def __init__(self, **kwargs):
         super(JobFeedbackScreen, self).__init__(**kwargs)
@@ -267,7 +267,7 @@ class JobFeedbackScreen(Screen):
         self.db = kwargs['database']
         self.kb = kwargs['keyboard']
         self.text_inputs = [self.batch_number_input, self.post_production_notes
-            ]
+                            ]
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -303,7 +303,7 @@ class JobFeedbackScreen(Screen):
     def confirm_job_unsuccessful(self):
         self.set_post_production_notes()
         self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful',
-            event_number=False)
+                                                              event_number=False)
         self.sm.current = 'job_incomplete'
 
     def quit_to_return_screen(self):
@@ -315,21 +315,22 @@ class JobFeedbackScreen(Screen):
 
     def update_strings(self):
         self.job_completed_label.text = self.l.get_str('Job completed'
-            ).replace(self.l.get_str('Job'), self.jd.job_name) + '!'
+                                                       ).replace(self.l.get_str('Job'), self.jd.job_name) + '!'
         internal_order_code = self.jd.metadata_dict.get('Internal Order Code',
-            '')
+                                                        '')
         if len(internal_order_code) > 23:
             internal_order_code = internal_order_code[:23] + '... | '
         elif len(internal_order_code) > 0:
             internal_order_code = internal_order_code + ' | '
         self.metadata_label.text = (internal_order_code + self.jd.
-            metadata_dict.get('Process Step', '') + '\n' + self.l.get_str(
+                                    metadata_dict.get('Process Step', '') + '\n' + self.l.get_str(
             'Job duration:') + ' ' + self.l.get_localized_days(self.jd.
-            actual_runtime) + '\n' + self.l.get_str('Pause duration:') +
-            ' ' + self.l.get_localized_days(self.jd.pause_duration))
+                                                               actual_runtime) + '\n' + self.l.get_str(
+            'Pause duration:') +
+                                    ' ' + self.l.get_localized_days(self.jd.pause_duration))
         self.batch_number_label.text = self.l.get_str('Batch Number:') + ' '
         self.batch_number_label.width = dp(len(self.batch_number_label.text
-            ) * 10.5)
+                                               ) * 10.5)
         self.batch_number_input.text = ''
         self.post_production_notes.text = self.jd.post_production_notes
         self.post_production_notes_label.text = self.l.get_str(
@@ -338,11 +339,12 @@ class JobFeedbackScreen(Screen):
             'Did this complete successfully?')
         try:
             parts_completed_if_job_successful = int(self.jd.metadata_dict.
-                get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.
-                get('Parts Made Per Job', 1))
+                                                    get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.
+                                                                                       get('Parts Made Per Job', 1))
             self.parts_completed_label.text = self.l.get_str('Parts completed:'
-                ) + ' ' + str(parts_completed_if_job_successful) + '/' + str(
+                                                             ) + ' ' + str(
+                parts_completed_if_job_successful) + '/' + str(
                 int(self.jd.metadata_dict.get('Total Parts Required', 1)))
         except:
             self.parts_completed_label.text = self.l.get_str('Parts completed:'
-                ) + ' 1/1'
+                                                             ) + ' 1/1'

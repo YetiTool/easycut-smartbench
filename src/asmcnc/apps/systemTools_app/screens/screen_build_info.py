@@ -4,17 +4,15 @@ Build info screen for system tools app
 
 @author: Letty
 """
-import os, sys
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
-from kivy.metrics import dp
-from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens import popup_system
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
+from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -585,7 +583,7 @@ Builder.load_string(
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
 """
-    )
+)
 
 
 class BuildInfoScreen(Screen):
@@ -619,7 +617,7 @@ class BuildInfoScreen(Screen):
         self.zh_version_label.text = str(self.m.z_head_version())
         try:
             self.machine_serial_number_label.text = 'YS6' + str(self.m.
-                serial_number())[0:4]
+                                                                serial_number())[0:4]
         except:
             self.machine_serial_number_label.text = '-'
         self.console_serial_number.text = self.set.console_hostname
@@ -627,7 +625,7 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_name()
         self.get_smartbench_location()
         self.text_inputs = [self.smartbench_name_input, self.
-            smartbench_location_input]
+        smartbench_location_input]
 
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -653,14 +651,15 @@ class BuildInfoScreen(Screen):
             '; HW')[0])
 
     def open_data_consent_app(self):
-        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, 
-            self.l.get_str('Loading Data and Wi-Fi') + '...')
+        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l,
+                                          self.l.get_str('Loading Data and Wi-Fi') + '...')
 
         def nested_open_data_consent_app(dt):
             self.data_consent_app = (screen_manager_data_consent.
-                ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l))
+                                     ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l))
             self.data_consent_app.open_data_consent('build_info', 'build_info')
             wait_popup.popup.dismiss()
+
         Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
     def do_show_more_info(self):
@@ -673,7 +672,7 @@ class BuildInfoScreen(Screen):
         model = self.m.smartbench_model()
         if model != 'SmartBench model detection failed':
             self.smartbench_model.text = model.replace('SmartBench ', ''
-                ).replace('CNC Router', '')
+                                                       ).replace('CNC Router', '')
         else:
             self.smartbench_model.text = 'SmartBench CNC Router'
 
@@ -692,10 +691,10 @@ class BuildInfoScreen(Screen):
 
     def refresh_ssh_button(self):
         enabled_text = self.l.get_str('Enabled'
-            ) if self.set.is_service_running('ssh') else self.l.get_str(
+                                      ) if self.set.is_service_running('ssh') else self.l.get_str(
             'Disabled')
         self.toggle_ssh_button.text = self.l.get_str('SSH'
-            ) + ': ' + enabled_text
+                                                     ) + ': ' + enabled_text
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -713,7 +712,7 @@ class BuildInfoScreen(Screen):
         self.hardware_header.text = self.l.get_str('Hardware')
         self.refresh_ssh_button()
         self.show_more_info.text = self.l.get_str('Software'
-            ) + '\n' + self.set.sw_branch + '\n' + self.set.sw_hash + '\n\n'
+                                                  ) + '\n' + self.set.sw_branch + '\n' + self.set.sw_hash + '\n\n'
         self.update_font_sizes()
 
     def update_font_sizes(self):
@@ -772,10 +771,10 @@ class BuildInfoScreen(Screen):
     def get_smartbench_name(self):
         self.smartbench_name_unformatted = self.m.device_label
         self.smartbench_name_formatted = (self.smartbench_name_unformatted.
-            replace('\n', ' '))
+                                          replace('\n', ' '))
         self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
         self.smartbench_name_label.text = ('[b]' + self.
-            smartbench_name_formatted + '[/b]')
+                                           smartbench_name_formatted + '[/b]')
         self.smartbench_name_input.text = self.smartbench_name_formatted
 
     def write_name_to_file(self):
@@ -784,7 +783,7 @@ class BuildInfoScreen(Screen):
         else:
             warning_message = self.l.get_str('Problem saving nickname!')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
 
     def on_focus_location(self, instance, value):
@@ -806,7 +805,7 @@ class BuildInfoScreen(Screen):
 
     def save_new_location(self):
         self.smartbench_location_unformatted = (self.
-            smartbench_location_input.text)
+                                                smartbench_location_input.text)
         self.write_location_to_file()
         self.smartbench_location_input.focus = False
         self.smartbench_location_input.disabled = True
@@ -820,23 +819,23 @@ class BuildInfoScreen(Screen):
     def get_smartbench_location(self):
         self.smartbench_location_unformatted = self.m.device_location
         self.smartbench_location_formatted = (self.
-            smartbench_location_unformatted.replace('\n', ' '))
+                                              smartbench_location_unformatted.replace('\n', ' '))
         self.smartbench_location_formatted = (self.
-            smartbench_location_formatted.strip())
+                                              smartbench_location_formatted.strip())
         if self.smartbench_location_formatted == 'SmartBench location':
             self.smartbench_location_formatted = self.l.get_str(
                 'SmartBench location')
         self.smartbench_location_label.text = ('[b]' + self.
-            smartbench_location_formatted + '[/b]')
+                                               smartbench_location_formatted + '[/b]')
         self.smartbench_location_input.text = (self.
-            smartbench_location_formatted)
+                                               smartbench_location_formatted)
 
     def write_location_to_file(self):
         if self.m.write_device_location(str(self.
-            smartbench_location_unformatted)):
+                                                    smartbench_location_unformatted)):
             return True
         else:
             warning_message = self.l.get_str('Problem saving location!')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False

@@ -9,11 +9,11 @@ Allows user to input next measurement
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_distance_4_y
+
 Builder.load_string(
     """
 
@@ -277,7 +277,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class DistanceScreen3yClass(Screen):
@@ -314,7 +314,7 @@ class DistanceScreen3yClass(Screen):
 Nudging will move the Z head away from Y-home."""
         self.test_instructions_label.text = (
             '[color=000000]Enter the value recorded by your tape measure. [/color]'
-            )
+        )
 
     def nudge_01(self):
         self.m.jog_relative('Y', 0.1, 9999)
@@ -333,7 +333,7 @@ Nudging will move the Z head away from Y-home."""
         self.m.get_grbl_settings()
         self.existing_y_steps_per_mm = self.m.s.setting_101
         self.new_y_steps_per_mm = self.existing_y_steps_per_mm * (self.
-            final_y_cal_move / self.measured_y_cal_move)
+                                                                  final_y_cal_move / self.measured_y_cal_move)
         self.next_screen()
 
     def next_instruction(self):
@@ -343,7 +343,7 @@ Nudging will move the Z head away from Y-home."""
         if self.y_cal_measure_1 == float(self.value_input.text):
             self.test_instructions_label.text = (
                 '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm incrementand record the new value[/color]'
-                )
+            )
             return
         self.save_measured_value()
         self.nudge_total = self.nudge_counter
@@ -352,34 +352,36 @@ Nudging will move the Z head away from Y-home."""
 
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name=
-            'distance1y', screen_manager=self.sm, machine=self.m)
+                                                                      'distance1y', screen_manager=self.sm,
+                                                                      machine=self.m)
         self.sm.add_widget(distance_screen1y)
         self.sm.current = 'distance1y'
 
     def skip_section(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
     def next_screen(self):
         if not self.sm.has_screen('distance4y'):
             distance4y_screen = screen_distance_4_y.DistanceScreen4yClass(name
-                ='distance4y', screen_manager=self.sm, machine=self.m)
+                                                                          ='distance4y', screen_manager=self.sm,
+                                                                          machine=self.m)
             self.sm.add_widget(distance4y_screen)
         self.sm.get_screen('distance4y'
-            ).old_y_steps = self.existing_y_steps_per_mm
+                           ).old_y_steps = self.existing_y_steps_per_mm
         self.sm.get_screen('distance4y').new_y_steps = self.new_y_steps_per_mm
         self.sm.current = 'distance4y'
 
     def on_leave(self):
         if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
+                'errorScreen'):
             self.sm.remove_widget(self.sm.get_screen('distance3y'))

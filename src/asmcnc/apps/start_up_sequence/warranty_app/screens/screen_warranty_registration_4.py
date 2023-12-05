@@ -3,9 +3,8 @@ Created on nov 2020
 @author: Ollie
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from asmcnc.skavaUI import widget_status_bar
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -138,7 +137,7 @@ Builder.load_string(
 					padding:[dp(0.241875)*app.width, 0, 0, 0]
 
 """
-    )
+)
 
 
 class WarrantyScreen4(Screen):

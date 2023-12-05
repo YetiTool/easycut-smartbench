@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -51,7 +52,7 @@ Builder.load_string(
                     allow_stretch: True
 
 """
-    )
+)
 
 
 class NudgeSpeed(Widget):
@@ -61,6 +62,7 @@ class NudgeSpeed(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
+
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750

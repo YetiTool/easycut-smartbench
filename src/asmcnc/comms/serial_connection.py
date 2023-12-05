@@ -4,17 +4,19 @@ Created on 31 Jan 2018
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
 
-from kivy.config import Config
-from __builtin__ import True
-
-import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime, timedelta
-from os import listdir
-from kivy.clock import Clock
-
 import re
+from __builtin__ import True
+from datetime import datetime, timedelta
 from functools import partial
-from serial.serialutil import SerialException
+from os import listdir
+
+import serial
+import serial.tools.list_ports
+import string
+import sys
+import threading
+import time
+from kivy.clock import Clock
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -77,7 +79,7 @@ class SerialConnection(object):
     def is_use_yp(self):
         if self.yp:
             return self.yp.use_yp
-        else: 
+        else:
             return False
 
     def set_use_yp(self, val):
@@ -394,7 +396,6 @@ class SerialConnection(object):
                                 and self.grbl_ln is not None \
                                 and self.digital_spindle_mains_voltage >= 0 \
                                 and not self.in_inrush:
-
                             self.yp.add_status_to_yetipilot(self.digital_spindle_ld_qdA,
                                                             self.digital_spindle_mains_voltage,
                                                             self.feed_override_percentage,
@@ -597,12 +598,12 @@ class SerialConnection(object):
         self.last_sent_speed = self.get_grbl_float(line_to_go, self.speed_pattern, self.last_sent_speed)
 
     def add_to_g_mode_tracker(self, motion, feed, speed):
-        self.jd.grbl_mode_tracker += (  motion,
-                                        feed,
-                                        speed),
+        self.jd.grbl_mode_tracker += (motion,
+                                      feed,
+                                      speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff: 
+        if line_diff:
             del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
@@ -761,7 +762,6 @@ class SerialConnection(object):
         self._reset_counters()
 
         return time_without_current_pause
-
 
     # PUSH MESSAGE HANDLING
 

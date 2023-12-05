@@ -5,11 +5,12 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
+import sys
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -90,7 +91,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class SquaringScreenActive(Screen):
@@ -117,7 +118,7 @@ class SquaringScreenActive(Screen):
         if sys.platform == 'win32' or sys.platform == 'darwin':
             return
         self.poll_for_completion_loop = Clock.schedule_once(self.
-            poll_for_squaring_status_func, 0.2)
+                                                            poll_for_squaring_status_func, 0.2)
 
     def on_leave(self):
         self.cancel_poll()
@@ -133,7 +134,7 @@ class SquaringScreenActive(Screen):
             self.return_to_homing_active_screen()
             return
         self.poll_for_completion_loop = Clock.schedule_once(self.
-            poll_for_squaring_status_func, 0.2)
+                                                            poll_for_squaring_status_func, 0.2)
 
     def stop_button_press(self):
         self.cancel_squaring()
@@ -154,9 +155,9 @@ class SquaringScreenActive(Screen):
 
     def return_to_homing_active_screen(self):
         self.sm.get_screen('homing_active'
-            ).cancel_to_screen = self.cancel_to_screen
+                           ).cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('homing_active'
-            ).return_to_screen = self.return_to_screen
+                           ).return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
 
     def cancel_poll(self):
@@ -166,7 +167,7 @@ class SquaringScreenActive(Screen):
     def update_strings(self):
         self.overdrive_label.text = self.l.get_str(
             'This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.'
-            )
+        )
         self.squaring_label.text = self.l.get_bold('Squaring') + '...'
 
     def windows_cheat_to_procede(self):

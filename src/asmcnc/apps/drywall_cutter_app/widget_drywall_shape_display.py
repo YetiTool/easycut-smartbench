@@ -1,6 +1,7 @@
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-from kivy.clock import Clock
+
 Builder.load_string(
     """
 <DrywallShapeDisplay>
@@ -164,7 +165,7 @@ Builder.load_string(
                 color: 0,0,0,1
 
 """
-    )
+)
 
 
 class DrywallShapeDisplay(Widget):
@@ -258,10 +259,10 @@ class DrywallShapeDisplay(Widget):
         else:
             if shape == 'rectangle':
                 self.shape_toolpath_image.source = (self.image_filepath +
-                    shape + '_' + rotation + '_' + toolpath + '_toolpath.png')
+                                                    shape + '_' + rotation + '_' + toolpath + '_toolpath.png')
             else:
                 self.shape_toolpath_image.source = (self.image_filepath +
-                    shape + '_' + toolpath + '_toolpath.png')
+                                                    shape + '_' + toolpath + '_toolpath.png')
             self.shape_toolpath_image.opacity = 1
 
     def d_input_change(self, instance, value):
@@ -279,14 +280,14 @@ class DrywallShapeDisplay(Widget):
     def x_input_change(self, instance, value):
         if self.rotation_required():
             self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=
-                False)
+                                                              False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(
             value or 0))
 
     def y_input_change(self, instance, value):
         if self.rotation_required():
             self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=
-                False)
+                                                              False)
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(
             value or 0))
 
@@ -294,10 +295,10 @@ class DrywallShapeDisplay(Widget):
         if 'rectangle' in self.shape_dims_image.source:
             if 'vertical' in self.shape_dims_image.source:
                 return float(self.x_input.text or 0) < float(self.y_input.
-                    text or 0)
+                                                             text or 0)
             else:
                 return float(self.x_input.text or 0) > float(self.y_input.
-                    text or 0)
+                                                             text or 0)
         else:
             return False
 

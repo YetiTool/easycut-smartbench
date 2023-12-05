@@ -4,16 +4,16 @@ Created on 17 Aug 2022
 '''
 
 import sys
+
 sys.path.append('./src')
 
-try: 
+try:
     import unittest
     import pytest
     from mock import Mock, MagicMock
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
-
 
 from asmcnc.comms import serial_connection
 from asmcnc.comms import router_machine
@@ -27,9 +27,9 @@ To run individual tests add < -k 'test_name_here' >, where test_name_here can be
 ######################################
 '''
 
+
 @pytest.fixture
 def sc():
-
     l = localization.Localization()
     machine = Mock()
     screen_manager = Mock()
@@ -55,8 +55,8 @@ def m():
 ## TEST SG VALUES READ IN PROPERLY 
 ## --------------------------------
 
-def construct_status_with_sg_values(z_motor_axis = None, x_motor_axis = None, y_axis = None, y1_motor = None, y2_motor = None, x1_motor = None, x2_motor = None):
-
+def construct_status_with_sg_values(z_motor_axis=None, x_motor_axis=None, y_axis=None, y1_motor=None, y2_motor=None,
+                                    x1_motor=None, x2_motor=None):
     # Use this to construct the test status passed out by mock serial object
 
     if z_motor_axis == None:
@@ -66,30 +66,30 @@ def construct_status_with_sg_values(z_motor_axis = None, x_motor_axis = None, y_
     elif x1_motor == None:
 
         status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
-            str(z_motor_axis) + "," + \
-            str(x_motor_axis) + "," + \
-            str(y_axis) + "," + \
-            str(y1_motor) + "," + \
-            str(y2_motor) + \
-            "|Sp:1,2,3,4,5,6,7>"
+                 str(z_motor_axis) + "," + \
+                 str(x_motor_axis) + "," + \
+                 str(y_axis) + "," + \
+                 str(y1_motor) + "," + \
+                 str(y2_motor) + \
+                 "|Sp:1,2,3,4,5,6,7>"
 
     else:
 
         status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
-            str(z_motor_axis) + "," + \
-            str(x_motor_axis) + "," + \
-            str(y_axis) + "," + \
-            str(y1_motor) + "," + \
-            str(y2_motor) + "," + \
-            str(x1_motor) + "," + \
-            str(x2_motor) + \
-            "|Sp:1,2,3,4,5,6,7>"
+                 str(z_motor_axis) + "," + \
+                 str(x_motor_axis) + "," + \
+                 str(y_axis) + "," + \
+                 str(y1_motor) + "," + \
+                 str(y2_motor) + "," + \
+                 str(x1_motor) + "," + \
+                 str(x2_motor) + \
+                 "|Sp:1,2,3,4,5,6,7>"
 
     return status
 
 
-def assert_all_sg_values_equal(serial_comms, z_motor_axis = None, x_motor_axis = None, y_axis = None, y1_motor = None, y2_motor = None, x1_motor = None, x2_motor = None):
-    
+def assert_all_sg_values_equal(serial_comms, z_motor_axis=None, x_motor_axis=None, y_axis=None, y1_motor=None,
+                               y2_motor=None, x1_motor=None, x2_motor=None):
     if z_motor_axis: assert serial_comms.sg_z_motor_axis == z_motor_axis
     if x_motor_axis: assert serial_comms.sg_x_motor_axis == x_motor_axis
     if y_axis: assert serial_comms.sg_y_axis == y_axis
@@ -103,7 +103,8 @@ def test_read_in_no_SG_values(sc):
     status = construct_status_with_sg_values()
     sc.process_grbl_push(status)
     assert_all_sg_values_equal(sc)
-    assert sc.spindle_mains_frequency_hertz == 7 # ensures that function has continued processing status parts
+    assert sc.spindle_mains_frequency_hertz == 7  # ensures that function has continued processing status parts
+
 
 def test_read_in_SG_values_upto_y_motors(sc):
     # This is relevant to 4 driver PCBs, which DO NOT report individual x motor loads
@@ -115,7 +116,8 @@ def test_read_in_SG_values_upto_y_motors(sc):
     status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor)
     sc.process_grbl_push(status)
     assert_all_sg_values_equal(sc, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor)
-    assert sc.spindle_mains_frequency_hertz == 7 # ensures that function has continued processing status parts
+    assert sc.spindle_mains_frequency_hertz == 7  # ensures that function has continued processing status parts
+
 
 def test_read_in_SG_values_for_dual_x_drivers(sc):
     # This is relevant to 5 driver PCBs, which DO report individual x motor loads
@@ -126,10 +128,13 @@ def test_read_in_SG_values_for_dual_x_drivers(sc):
     sg_y2_motor = 54
     sg_x1_motor = 55
     sg_x2_motor = 56
-    status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor)
+    status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor,
+                                             sg_x1_motor, sg_x2_motor)
     sc.process_grbl_push(status)
-    assert_all_sg_values_equal(sc, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor)
-    assert sc.spindle_mains_frequency_hertz == 7 # ensures that function has continued processing status parts
+    assert_all_sg_values_equal(sc, sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor,
+                               sg_x2_motor)
+    assert sc.spindle_mains_frequency_hertz == 7  # ensures that function has continued processing status parts
+
 
 def test_invalid_values_handled_for_4_drivers(sc):
     sg_z_motor_axis = 30
@@ -139,7 +144,8 @@ def test_invalid_values_handled_for_4_drivers(sc):
     sg_y2_motor = "boop"
     status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor)
     sc.process_grbl_push(status)
-    assert sc.spindle_mains_frequency_hertz == None # ensures that function has stopped processing status parts
+    assert sc.spindle_mains_frequency_hertz == None  # ensures that function has stopped processing status parts
+
 
 def test_invalid_values_handled_for_5_drivers(sc):
     sg_z_motor_axis = 70
@@ -149,9 +155,11 @@ def test_invalid_values_handled_for_5_drivers(sc):
     sg_y2_motor = 71
     sg_x1_motor = "BOOP"
     sg_x2_motor = 76
-    status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor)
+    status = construct_status_with_sg_values(sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor,
+                                             sg_x1_motor, sg_x2_motor)
     sc.process_grbl_push(status)
-    assert sc.spindle_mains_frequency_hertz == None # ensures that function has stopped processing status parts
+    assert sc.spindle_mains_frequency_hertz == None  # ensures that function has stopped processing status parts
+
 
 def test_temp_sg_array_append_5_drivers(m):
     sg_z_motor_axis = 80
@@ -166,6 +174,7 @@ def test_temp_sg_array_append_5_drivers(m):
     m.s.record_sg_values_flag = True
     m.s.process_grbl_push(status)
     assert m.temp_sg_array[0] == five_driver_list
+
 
 def test_temp_sg_array_append_4_drivers(m):
     sg_z_motor_axis = 62
@@ -191,12 +200,14 @@ def default_pos_values(serial_comms):
     serial_comms.m_y = '0.000'
     serial_comms.m_z = '0.000'
 
+
 def test_value_change_x(sc):
     default_pos_values(sc)
     sc.process_grbl_push("<Idle|MPos:4.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.x_change
     assert not sc.y_change
     assert not sc.z_change
+
 
 def test_value_change_y(sc):
     default_pos_values(sc)
@@ -205,12 +216,14 @@ def test_value_change_y(sc):
     assert sc.y_change
     assert not sc.z_change
 
+
 def test_value_change_z(sc):
     default_pos_values(sc)
     sc.process_grbl_push("<Idle|MPos:0.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.x_change
     assert not sc.y_change
     assert sc.z_change
+
 
 def test_value_no_change_x(sc):
     default_pos_values(sc)
@@ -219,12 +232,14 @@ def test_value_no_change_x(sc):
     assert sc.y_change
     assert sc.z_change
 
+
 def test_value_no_change_y(sc):
     default_pos_values(sc)
     sc.process_grbl_push("<Idle|MPos:5.000,0.000,6.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert sc.x_change
     assert not sc.y_change
     assert sc.z_change
+
 
 def test_value_no_change_z(sc):
     default_pos_values(sc)
@@ -237,14 +252,14 @@ def test_value_no_change_z(sc):
     sc.process_grbl_push("<Idle|MPos:2.000,6.000,8.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>")
     assert not sc.z_change
 
-## TEST PIN VALUES READ IN PROPERLY 
+
+## TEST PIN VALUES READ IN PROPERLY
 ## --------------------------------
 
-def construct_status_with_pns(pins = None):
-
+def construct_status_with_pns(pins=None):
     # Use this to construct the test status passed out by mock serial object
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0"
-    if pins: 
+    if pins:
         pin_appendage = "|Pn:" + pins
         status += pin_appendage
 
@@ -252,23 +267,35 @@ def construct_status_with_pns(pins = None):
 
     return status
 
+
 def assert_pns_neutral(serial_comms, pns):
-    if "x" in pns: assert serial_comms.limit_x
-    else: assert not serial_comms.limit_x
-    if "X" in pns: assert serial_comms.limit_X
-    else: assert not serial_comms.limit_X
-    if "Z" in pns: assert serial_comms.limit_z
-    else: assert not serial_comms.limit_z
-    if "P" in pns: assert serial_comms.probe
-    else: assert not serial_comms.probe
-    if "G" in pns: assert serial_comms.dust_shoe_cover
-    else: assert not serial_comms.dust_shoe_cover
-    if "g" in pns: assert serial_comms.spare_door
-    else: assert not serial_comms.spare_door
+    if "x" in pns:
+        assert serial_comms.limit_x
+    else:
+        assert not serial_comms.limit_x
+    if "X" in pns:
+        assert serial_comms.limit_X
+    else:
+        assert not serial_comms.limit_X
+    if "Z" in pns:
+        assert serial_comms.limit_z
+    else:
+        assert not serial_comms.limit_z
+    if "P" in pns:
+        assert serial_comms.probe
+    else:
+        assert not serial_comms.probe
+    if "G" in pns:
+        assert serial_comms.dust_shoe_cover
+    else:
+        assert not serial_comms.dust_shoe_cover
+    if "g" in pns:
+        assert serial_comms.spare_door
+    else:
+        assert not serial_comms.spare_door
 
 
 def assert_pns_v12(serial_comms, pns):
-
     assert_pns_neutral(serial_comms, pns)
 
     if "y" in pns: assert serial_comms.limit_y
@@ -281,17 +308,25 @@ def assert_pns_v12(serial_comms, pns):
 
 
 def assert_pns_v13(serial_comms, pns):
-
     assert_pns_neutral(serial_comms, pns)
 
-    if "y" in pns: assert serial_comms.limit_Y_axis
-    else: assert not serial_comms.limit_Y_axis
-    if "Y" in pns: assert serial_comms.stall_Y
-    else: assert not serial_comms.stall_Y
-    if "S" in pns: assert serial_comms.stall_X
-    else: assert not serial_comms.stall_X
-    if "z" in pns: assert serial_comms.stall_Z
-    else: assert not serial_comms.stall_Z
+    if "y" in pns:
+        assert serial_comms.limit_Y_axis
+    else:
+        assert not serial_comms.limit_Y_axis
+    if "Y" in pns:
+        assert serial_comms.stall_Y
+    else:
+        assert not serial_comms.stall_Y
+    if "S" in pns:
+        assert serial_comms.stall_X
+    else:
+        assert not serial_comms.stall_X
+    if "z" in pns:
+        assert serial_comms.stall_Z
+    else:
+        assert not serial_comms.stall_Z
+
 
 def test_pin_selection_together_v12(sc):
     sc.fw_version = "1.4.0"
@@ -304,6 +339,7 @@ def test_pin_selection_together_v12(sc):
     sc.process_grbl_push(status)
     assert_pns_v12(sc, pins)
 
+
 def test_pin_selection_together_v13(sc):
     sc.fw_version = "2.4.0"
     pins = "xXZPGgyYSz"
@@ -314,6 +350,7 @@ def test_pin_selection_together_v13(sc):
     status = construct_status_with_pns(pins)
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
+
 
 def test_pin_selection_singles_v12(sc):
     sc.fw_version = "1.4.0"
@@ -402,11 +439,11 @@ def test_pin_selection_singles_v13(sc):
     sc.process_grbl_push(status)
     assert_pns_v13(sc, pins)
 
+
 ## TEST OVERRIDE READ IN
 ## --------------------------------
 
-def construct_status_with_override(feed_ov = None, rapid_ov = None, speed_ov = None):
-
+def construct_status_with_override(feed_ov=None, rapid_ov=None, speed_ov=None):
     # Use this to construct the test status passed out by mock serial object
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0"
     if feed_ov or rapid_ov or speed_ov:
@@ -422,6 +459,7 @@ def construct_status_with_override(feed_ov = None, rapid_ov = None, speed_ov = N
 
     return status
 
+
 def assert_status_end_processed(serial_comms):
     assert serial_comms.motor_driver_temp == 1
     assert serial_comms.pcb_temp == 2
@@ -434,12 +472,14 @@ def test_feed_override_read_in(sc):
     assert sc.feed_override_percentage == ov
     assert_status_end_processed(sc)
 
+
 def test_not_feed_override_read_in(sc):
     ov = 123
     status = construct_status_with_override(rapid_ov=ov, speed_ov=ov)
     sc.process_grbl_push(status)
     assert sc.feed_override_percentage != ov
     assert_status_end_processed(sc)
+
 
 def test_feed_override_read_in_fails_if_bad(sc):
     ov = ";"
@@ -457,12 +497,14 @@ def test_speed_override_read_in(sc):
     assert sc.speed_override_percentage == ov
     assert_status_end_processed(sc)
 
+
 def test_not_speed_override_read_in(sc):
     ov = 123
     status = construct_status_with_override(rapid_ov=ov, feed_ov=ov)
     sc.process_grbl_push(status)
     assert sc.speed_override_percentage != ov
     assert_status_end_processed(sc)
+
 
 def test_speed_override_read_in_fails_if_bad(sc):
     ov = ";"
@@ -472,20 +514,21 @@ def test_speed_override_read_in_fails_if_bad(sc):
     assert sc.motor_driver_temp != 1
     assert sc.pcb_temp != 2
 
+
 ## TEST LINE NUMBER READ IN
 
 def construct_status_with_line_numbers(l=None):
-
     # Use this to construct the test status passed out by mock serial object
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255"
 
-    if l: 
+    if l:
         line_appendage = "|Ln:" + str(l)
-        status+=line_appendage
+        status += line_appendage
 
     status += "|FS:0,0|Ld:0|TC:1,2>"
 
     return status
+
 
 def test_line_number_read_in(sc):
     status = construct_status_with_line_numbers(123)
@@ -494,6 +537,7 @@ def test_line_number_read_in(sc):
     assert sc.grbl_ln == 123
     assert_status_end_processed(sc)
 
+
 def test_line_number_read_in_when_nonsense(sc):
     status = construct_status_with_line_numbers("nonsense")
     sc.process_grbl_push(status)
@@ -501,30 +545,35 @@ def test_line_number_read_in_when_nonsense(sc):
     assert sc.motor_driver_temp != 1
     assert sc.pcb_temp != 2
 
+
 def test_line_number_read_in_when_no_number(sc):
     status = construct_status_with_line_numbers()
     sc.process_grbl_push(status)
     assert sc.grbl_ln == None
     assert_status_end_processed(sc)
 
+
 # TEST INRUSH COUNTER
 
-def construct_status_with_load_string(load_string = ""):
+def construct_status_with_load_string(load_string=""):
     # Use this to construct the test status passed out by mock serial object
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0" + load_string
     status += "|TC:1,2>"
     return status
+
 
 def test_inrush_counter_0_when_no_load(sc):
     status = construct_status_with_load_string()
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 0
 
+
 def test_inrush_counter_1_when_1_load(sc):
     sc.inrush_counter == 0
     status = construct_status_with_load_string("|Ld:12,11,1,3")
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 1
+
 
 def test_inrush_counter_increases_to_max_and_stops(sc):
     sc.inrush_counter = 0
@@ -533,9 +582,9 @@ def test_inrush_counter_increases_to_max_and_stops(sc):
         sc.process_grbl_push(status)
     assert sc.inrush_counter == sc.inrush_max
 
+
 def test_inrush_counter_resets_after_no_comms(sc):
     sc.inrush_counter = 3
     status = construct_status_with_load_string()
     sc.process_grbl_push(status)
     assert sc.inrush_counter == 0
-

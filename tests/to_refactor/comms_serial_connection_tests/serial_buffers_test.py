@@ -3,19 +3,19 @@ Created on 14 Feb 2022
 @author: Letty
 '''
 
-try: 
+try:
     import unittest
     from mock import Mock, MagicMock
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
-from time import sleep
-from random import randint
-
 import sys
+from random import randint
+from time import sleep
+
 sys.path.append('./src')
 
 try:
@@ -25,9 +25,6 @@ try:
 except:
     pass
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
-
 ########################################################
 # IMPORTANT!!
 # Run from easycut-smartbench folder, with 
@@ -35,8 +32,8 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Cmport = 'COM3'
 
-class MotorCommandsTest(unittest.TestCase):
 
+class MotorCommandsTest(unittest.TestCase):
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
     max_count = 10
@@ -48,7 +45,7 @@ class MotorCommandsTest(unittest.TestCase):
 
     job_object = []
 
-    comparison_string = ''.join(map(str,range(max_count+1)))
+    comparison_string = ''.join(map(str, range(max_count + 1)))
 
     def create_job_object(self, n_lines):
 
@@ -68,10 +65,10 @@ class MotorCommandsTest(unittest.TestCase):
 
             @serial_query("count")
             def do_something(self, buffer_type, counter):
-                if buffer_type == "command": 
+                if buffer_type == "command":
                     outerSelf.command_buffer = outerSelf.command_buffer + str(counter)
                     return "ok"
-                if buffer_type == "run": 
+                if buffer_type == "run":
                     outerSelf.run_buffer = outerSelf.run_buffer + str(counter)
                     print(outerSelf.run_buffer)
                     return "ok"
@@ -92,13 +89,13 @@ class MotorCommandsTest(unittest.TestCase):
         self.jd = Mock()
         self.m = router_machine.RouterMachine(Cmport, self.sm, self.sett, self.l, self.jd)
         self.m.s.s = DummySerial(self.give_me_a_PCB())
-        self.m.s.s.fd = 1 # this is needed to force it to run
+        self.m.s.s.fd = 1  # this is needed to force it to run
         self.m.s.start_services(1)
         self.m.s.setting_27 = ''
         sleep(0.01)
 
     def tearDown(self):
-      self.m.s.__del__()
+        self.m.s.__del__()
 
     def test_does_serial_think_its_connected(self):
         """Test that serial module thinks it is connected"""
@@ -108,7 +105,7 @@ class MotorCommandsTest(unittest.TestCase):
         """Test that we're getting statuses back"""
         assert self.m.s.m_state == "Idle", 'not idle'
 
-    def test_buffer_stability(self): 
+    def test_buffer_stability(self):
 
         command_counter = 0
         run_counter = 0
@@ -125,23 +122,24 @@ class MotorCommandsTest(unittest.TestCase):
 
         # sleep(5)
 
-        while True: 
+        while True:
 
-            decider = randint(1,3)
+            decider = randint(1, 3)
 
-            if decider == 1 and command_counter < self.max_count + 1: 
+            if decider == 1 and command_counter < self.max_count + 1:
                 self.m.s.write_command("count command " + str(command_counter))
                 command_counter = command_counter + 1
 
-            elif decider == 2 and realtime_counter < self.max_count + 1: 
+            elif decider == 2 and realtime_counter < self.max_count + 1:
                 self.m.s.write_realtime("count realtime " + str(realtime_counter))
                 realtime_counter = realtime_counter + 1
 
-            elif decider == 3 and protocol_counter < self.max_count + 1: 
+            elif decider == 3 and protocol_counter < self.max_count + 1:
                 self.m.s.write_protocol("count protocol " + str(protocol_counter), "COUNTING " + str(protocol_counter))
                 protocol_counter = protocol_counter + 1
 
-            elif self.command_buffer.endswith('10') and self.realtime_buffer.endswith('10') and self.protocol_buffer.endswith('10'):
+            elif self.command_buffer.endswith('10') and self.realtime_buffer.endswith(
+                    '10') and self.protocol_buffer.endswith('10'):
                 break
 
             sleep(0.01)
@@ -152,5 +150,5 @@ class MotorCommandsTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

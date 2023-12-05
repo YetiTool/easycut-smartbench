@@ -1,14 +1,16 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from kivy.properties import ObjectProperty
 import re
+import subprocess
 import traceback
 from datetime import datetime
+
 from kivy.clock import Clock
-import subprocess
-from asmcnc.skavaUI import popup_info
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupNoSSHFile, PopupFailedToSendSSHKey
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 <UploadSerialNumbersScreen>:
@@ -163,7 +165,7 @@ Builder.load_string(
                 
 
 """
-    )
+)
 
 
 def log(message):
@@ -188,9 +190,9 @@ class UploadSerialNumbersScreen(Screen):
         self.l = kwargs['l']
         self.kb = kwargs['keyboard']
         self.text_inputs = [self.zhead_serial_input, self.lb_serial_input,
-            self.ub_serial_input, self.console_serial_input, self.
-            ybench_serial_input, self.spindle_serial_input, self.
-            squareness_input]
+                            self.ub_serial_input, self.console_serial_input, self.
+                            ybench_serial_input, self.spindle_serial_input, self.
+                            squareness_input]
 
     def auto_generate_sns(self):
         self.zhead_serial_input.text = 'zh0000'
@@ -206,7 +208,7 @@ class UploadSerialNumbersScreen(Screen):
             '.')[0]
         self.get_software_version_before_release()
         self.fw_version = self.get_truncated_fw_version(str(self.m.
-            firmware_version()))
+                                                            firmware_version()))
         self.already_in_database = self.check_for_duplicates_and_autofill()
         self.kb.setup_text_inputs(self.text_inputs)
         if self.dev_mode:
@@ -222,13 +224,13 @@ class UploadSerialNumbersScreen(Screen):
     def check_for_duplicates_and_autofill(self):
         try:
             (self.zhead_serial_input.text, self.lb_serial_input.text, self.
-                ub_serial_input.text, self.console_serial_input.text, self.
-                ybench_serial_input.text, self.spindle_serial_input.text,
-                self.squareness_input.text) = (self.calibration_db.
-                get_all_serials_by_machine_serial(self.machine_serial_number))
+             ub_serial_input.text, self.console_serial_input.text, self.
+             ybench_serial_input.text, self.spindle_serial_input.text,
+             self.squareness_input.text) = (self.calibration_db.
+                                            get_all_serials_by_machine_serial(self.machine_serial_number))
             message = (
                 'This serial number is already in the database! You cannot overwrite.'
-                )
+            )
             log(message)
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
             return True
@@ -237,7 +239,7 @@ class UploadSerialNumbersScreen(Screen):
 
     def get_software_version_before_release(self):
         if self.set.sw_branch.endswith('ft') or self.set.sw_branch.endswith(
-            'enterprise_sql_instance') or self.dev_mode:
+                'enterprise_sql_instance') or self.dev_mode:
             self.sw_version = self.set.latest_sw_version
         else:
             self.sw_version = self.set.sw_version
@@ -250,14 +252,14 @@ class UploadSerialNumbersScreen(Screen):
             return
         if not self.already_in_database:
             all_serial_numbers = [self.machine_serial_number, self.
-                zhead_serial_input.text, self.lb_serial_input.text, self.
-                ub_serial_input.text, self.console_serial_input.text, self.
-                ybench_serial_input.text, self.spindle_serial_input.text,
-                self.sw_version, self.fw_version, self.squareness_input.text]
+            zhead_serial_input.text, self.lb_serial_input.text, self.
+                                  ub_serial_input.text, self.console_serial_input.text, self.
+                                  ybench_serial_input.text, self.spindle_serial_input.text,
+                                  self.sw_version, self.fw_version, self.squareness_input.text]
             self.calibration_db.insert_serial_numbers(*all_serial_numbers)
         self.error_label.text = 'Getting LB data...'
         Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data
-            (), 0.2)
+        (), 0.2)
 
     def check_valid_inputs(self):
         validated = True
@@ -302,9 +304,9 @@ class UploadSerialNumbersScreen(Screen):
         lb_match = bool(lb_pattern.match(self.lb_serial_input.text))
         ub_match = bool(ub_pattern.match(self.ub_serial_input.text))
         console_match = bool(console_pattern.match(self.
-            console_serial_input.text))
+                                                   console_serial_input.text))
         ybench_match = bool(ybench_pattern.match(self.ybench_serial_input.text)
-            )
+                            )
         validated = True
         if not machine_match:
             self.error_label.text = 'Machine serial invalid'
@@ -337,18 +339,20 @@ class UploadSerialNumbersScreen(Screen):
             'CalibrationQC')
         try:
             Y1_data = self.calibration_db.get_lower_beam_coefficents(self.
-                lb_serial_input.text.replace(' ', '').lower(), TMC_Y1, stage_id
-                )
+                                                                     lb_serial_input.text.replace(' ', '').lower(),
+                                                                     TMC_Y1, stage_id
+                                                                     )
             Y2_data = self.calibration_db.get_lower_beam_coefficents(self.
-                lb_serial_input.text.replace(' ', '').lower(), TMC_Y2, stage_id
-                )
+                                                                     lb_serial_input.text.replace(' ', '').lower(),
+                                                                     TMC_Y2, stage_id
+                                                                     )
             self.save_calibration_data_to_motor(TMC_Y1, Y1_data)
             self.save_calibration_data_to_motor(TMC_Y2, Y2_data)
             self.error_label.text = 'Uploading to ZH...'
             Clock.schedule_once(lambda dt: self.m.
-                upload_Y_calibration_settings_from_motor_classes(), 1)
+                                upload_Y_calibration_settings_from_motor_classes(), 1)
             self.poll_for_end_of_upload = Clock.schedule_interval(self.
-                report_info_back_to_user_and_return, 3)
+                                                                  report_info_back_to_user_and_return, 3)
         except:
             self.error_label.text = 'Could not get data'
             print traceback.format_exc()
@@ -357,7 +361,7 @@ class UploadSerialNumbersScreen(Screen):
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[
             'coefficients']
         self.m.TMC_motor[motor_index].calibrated_at_current_setting = data['cs'
-            ]
+        ]
         self.m.TMC_motor[motor_index].calibrated_at_sgt_setting = data['sgt']
         self.m.TMC_motor[motor_index].calibrated_at_toff_setting = data['toff']
         self.m.TMC_motor[motor_index].calibrated_at_temperature = data['temp']
@@ -379,7 +383,7 @@ class UploadSerialNumbersScreen(Screen):
             return
         try:
             self.calibration_db.send_ssh_keys(self.console_serial_input.
-                text, response)
+                                              text, response)
         except:
             PopupFailedToSendSSHKey()
 

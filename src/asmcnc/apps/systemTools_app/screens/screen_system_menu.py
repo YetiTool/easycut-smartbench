@@ -5,12 +5,10 @@ Menu screen for system tools app
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.systemTools_app.screens import popup_system
+
 Builder.load_string(
     """
 
@@ -200,7 +198,7 @@ Builder.load_string(
             padding_y: 5
 
 """
-    )
+)
 
 
 class SystemMenuScreen(Screen):
@@ -212,10 +210,10 @@ class SystemMenuScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
         self.id_list = [self.button_system_info, self.button_support_menu,
-            self.button_reboot, self.button_exit_software, self.
-            button_usb_first_aid, self.button_beta_testing, self.
-            button_grbl_settings, self.button_factory, self.
-            button_developer, self.button_go_back]
+                        self.button_reboot, self.button_exit_software, self.
+                        button_usb_first_aid, self.button_beta_testing, self.
+                        button_grbl_settings, self.button_factory, self.
+                        button_developer, self.button_go_back]
         self.update_strings()
 
     def go_back(self):
@@ -241,15 +239,15 @@ class SystemMenuScreen(Screen):
 
     def grbl_settings(self):
         popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l,
-            self.kb)
+                                               self.kb)
 
     def factory_settings(self):
         popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self
-            .l, self.kb)
+                                                  .l, self.kb)
 
     def developer(self):
         popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l,
-            self.kb)
+                                            self.kb)
 
     def update_strings(self):
         self.button_system_info.text = self.l.get_str('System Info')

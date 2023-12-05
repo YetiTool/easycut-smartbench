@@ -2,15 +2,9 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -160,7 +154,7 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
 """
-    )
+)
 
 
 class LowerBeamQCXYMove(Widget):
@@ -169,6 +163,7 @@ class LowerBeamQCXYMove(Widget):
         super(LowerBeamQCXYMove, self).__init__(**kwargs)
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
+
     feedSpeedJogX = 1200
     feedSpeedJogY = 1200
     jogMode = 'free'
@@ -203,16 +198,16 @@ class LowerBeamQCXYMove(Widget):
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)

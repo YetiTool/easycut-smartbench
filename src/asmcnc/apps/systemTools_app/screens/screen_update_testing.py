@@ -4,15 +4,14 @@ Update testing screen for system tools app
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty
+import subprocess
+
 from kivy.clock import Clock
-import subprocess, sys, os
-import csv, threading, time, textwrap
-from time import sleep
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
+
 Builder.load_string(
     """
 
@@ -241,7 +240,7 @@ Builder.load_string(
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
 """
-    )
+)
 repo = 'easycut'
 version = 'update_func_testing'
 home_dir = '/home/pi/'
@@ -261,7 +260,7 @@ class UpdateTestingScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         Clock.schedule_interval(self.update_display_text, self.
-            WIDGET_UPDATE_DELAY)
+                                WIDGET_UPDATE_DELAY)
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -286,7 +285,7 @@ class UpdateTestingScreen(Screen):
         full_cmd = cmd
         print full_cmd
         proc = subprocess.Popen(full_cmd, cwd=dir_path, stdout=subprocess.
-            PIPE, stderr=subprocess.STDOUT, shell=True)
+                                PIPE, stderr=subprocess.STDOUT, shell=True)
         stdout_buffer = []
         while True:
             line = proc.stdout.readline()
@@ -307,13 +306,13 @@ class UpdateTestingScreen(Screen):
 
     def install_git_repair(self):
         install_success = self.run_in_shell(repo,
-            'sudo aptitude install git-repair')
+                                            'sudo aptitude install git-repair')
 
     def _repair_repo(self):
         initial_run_success = self.run_in_shell(repo, 'git-repair --force')
         if initial_run_success[0] != 0:
             install_success = self.run_in_shell(repo,
-                'sudo aptitude install git-repair')
+                                                'sudo aptitude install git-repair')
             if install_success[0] == 0:
                 return self.run_in_shell(repo, 'git-repair --force')
             else:
@@ -323,33 +322,33 @@ class UpdateTestingScreen(Screen):
 
     def _git_fsck(self):
         return self.run_in_shell(repo, 'git --no-pager ' +
-            'fsck --lost-found' + ' --progress')
+                                 'fsck --lost-found' + ' --progress')
 
     def _prune_repo(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'prune' +
-            ' --progress')
+                                 ' --progress')
 
     def _gc_repo(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'gc --aggressive')
 
     def _fetch_tags(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'fetch --all -t' +
-            ' --progress')
+                                 ' --progress')
 
     def _do_platform_ansible_run(self):
         return self.run_in_shell('home',
-            '/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh')
+                                 '/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh')
 
     def _checkout_new_version(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' +
-            version + ' -f' + ' --progress')
+                                 version + ' -f' + ' --progress')
 
     def _ansible_reset_test(self):
         self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml'
-            )
+                          )
         if not self._do_platform_ansible_run()[0]:
             reset_outcome = self.run_in_shell(repo,
-                'git --no-pager reset --hard')
+                                              'git --no-pager reset --hard')
             print 'Reset outcome'
             print reset_outcome
             if self._do_platform_ansible_run():

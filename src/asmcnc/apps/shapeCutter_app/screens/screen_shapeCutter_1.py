@@ -5,9 +5,9 @@ Screen 1 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -311,7 +311,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter1ScreenClass(Screen):
@@ -326,7 +326,7 @@ Accuracy may be have been affected by transit, maintenance or a change in ambien
 Click the button below if you want to calibrate SmartBench.
 
 """
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter1ScreenClass, self).__init__(**kwargs)

@@ -4,11 +4,11 @@ Landing Screen for the Calibration App
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -39,7 +39,7 @@ Builder.load_string(
                 text: '[color=455A64]Moving to the next measurement point...[/color]'
                 markup: 'True'
 """
-    )
+)
 
 
 class WaitScreenClass(Screen):
@@ -52,7 +52,7 @@ class WaitScreenClass(Screen):
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_interval(self.
-            wait_for_movement_to_complete, 1)
+                                                        wait_for_movement_to_complete, 1)
 
     def wait_for_movement_to_complete(self, dt):
         if not self.m.state() == 'Jog':

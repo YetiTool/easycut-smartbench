@@ -4,28 +4,25 @@
 Info pop-up
 '''
 
-import kivy
 import os
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.image import Image
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.rst import RstDocument
-from kivy.clock import Clock
-from kivy.uix.checkbox import CheckBox
 from datetime import datetime
-from kivy.graphics import Color, Rectangle
+
+from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.checkbox import CheckBox
+from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.rst import RstDocument
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
+
 
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
 
 class PopupWelcome(Widget):
 
@@ -566,9 +563,11 @@ class PopupSoftwareUpdateSuccess(Widget):
 
         Clock.schedule_once(reboot, 6)
 
+
 # Popup asking the user if they are sure they want to continue with the update with a given warning_message
 class PopupSoftwareUpdateWarning(Widget):
-    def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method,
+                 prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
         self.sm = screen_manager
         self.set = settings_manager
         self.l = localization
@@ -587,8 +586,8 @@ class PopupSoftwareUpdateWarning(Widget):
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
                 log("Error getting update method. Please check screen_update_SW.py" + \
-                         "\nShould be: 'WiFi' or 'USB'" + \
-                         "\nBut was: " + update_method)
+                    "\nShould be: 'WiFi' or 'USB'" + \
+                    "\nBut was: " + update_method)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(560, None), halign='center', valign='middle', text=description,
@@ -1149,41 +1148,42 @@ class PopupShutdown(Widget):
 
         popup.open()
 
+
 class PopupScrollableInfo(Widget):
 
     def __init__(self, screen_manager, localization, popup_width, description):
-        
         self.sm = screen_manager
         self.l = localization
         label_width = popup_width - 20
-        
+
         title_string = self.l.get_str('Information')
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        scrollview = ScrollView(size_hint_y=4, padding=[10,10])
-        label = RstDocument(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        scrollview = ScrollView(size_hint_y=4, padding=[10, 10])
+        label = RstDocument(text_size=(label_width, None), markup=True, halign='left', valign='middle',
+                            text=description, color=[0, 0, 0, 1], background_color=[0.95, 0.95, 0.95, 1])
         scrollview.add_widget(label)
-        
-        ok_button = Button(text=ok_string, markup = True)
+
+        ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0])
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 10, 150, 0])
         btn_layout.add_widget(ok_button)
-        
+
         layout_plan = BoxLayout(orientation='vertical')
         layout_plan.add_widget(img)
         layout_plan.add_widget(scrollview)
         layout_plan.add_widget(btn_layout)
-        
+
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_size = '20sp',
+                      title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
                       size=(popup_width, 440),
-                      auto_dismiss= False
+                      auto_dismiss=False
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
@@ -1193,6 +1193,7 @@ class PopupScrollableInfo(Widget):
         ok_button.bind(on_press=popup.dismiss)
 
         popup.open()
+
 
 class PopupQRInfo(Widget):
 

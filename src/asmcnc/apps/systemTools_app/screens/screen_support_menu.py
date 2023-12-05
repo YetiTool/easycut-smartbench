@@ -5,12 +5,10 @@ Menu screen for system tools app
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
-import traceback
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.systemTools_app.screens import popup_system
+
 Builder.load_string(
     """
 
@@ -109,7 +107,7 @@ Builder.load_string(
             border: [dp(25)]*4
             padding_y: 5
 """
-    )
+)
 
 
 class SupportMenuScreen(Screen):
@@ -120,7 +118,7 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
         self.id_list = [self.button_download_logs, self.
-            button_reinstall_pika, self.button_git_fsck, self.button_go_back]
+        button_reinstall_pika, self.button_git_fsck, self.button_go_back]
         self.update_strings()
 
     def go_back(self):

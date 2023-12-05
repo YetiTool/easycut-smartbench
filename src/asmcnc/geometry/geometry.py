@@ -1,5 +1,6 @@
 import math
 
+
 def compute_polygon_points(sides, circumscribe_rad):
     polygon_vertices = []
     # https://stackoverflow.com/questions/21690008/how-to-generate-random-vertices-to-form-a-convex-polygon-in-c

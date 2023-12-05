@@ -4,13 +4,15 @@ Tutorial Screen for the Shape Cutter App
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
-from asmcnc.apps.shapeCutter_app.screens import popup_info
 from __builtin__ import False
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -295,7 +297,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutterTutorialScreenClass(Screen):
@@ -333,7 +335,7 @@ class ShapeCutterTutorialScreenClass(Screen):
 
     def append_instructions(self, n):
         self.user_instructions.text = self.user_instructions.text + str(self
-            .instructions_list[n])
+                                                                        .instructions_list[n])
 
     def flashy_arrows(self):
         arrow_flash = Clock.schedule_interval(lambda dt: arrow_opacity(), 0.2)

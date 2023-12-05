@@ -1,7 +1,7 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <LBCalibration2>:
@@ -29,7 +29,7 @@ Builder.load_string(
 
     
 """
-    )
+)
 
 
 class LBCalibration2(Screen):
@@ -53,7 +53,7 @@ class LBCalibration2(Screen):
     def run_calibration(self):
         self.m.tune_Y_for_calibration()
         self.poll_for_tuning_completion = Clock.schedule_interval(self.
-            start_calibrating, 5)
+                                                                  start_calibrating, 5)
 
     def start_calibrating(self, dt):
         if not self.m.tuning_in_progress:
@@ -61,10 +61,10 @@ class LBCalibration2(Screen):
             if not self.m.calibration_tuning_fail_info:
                 self.m.calibrate_Y()
                 self.poll_for_calibration_check = Clock.schedule_interval(self
-                    .check_calibration, 5)
+                                                                          .check_calibration, 5)
             else:
                 self.calibration_label.text = (self.m.
-                    calibration_tuning_fail_info)
+                                               calibration_tuning_fail_info)
 
     def check_calibration(self, dt):
         if not self.m.run_calibration:
@@ -76,7 +76,7 @@ class LBCalibration2(Screen):
                     self.finish_calibrating, 5)
             else:
                 self.calibration_label.text = (self.m.
-                    calibration_tuning_fail_info)
+                                               calibration_tuning_fail_info)
 
     def finish_calibrating(self, dt):
         if not self.m.checking_calibration_in_progress:
@@ -86,7 +86,7 @@ class LBCalibration2(Screen):
                 self.enter_next_screen()
             else:
                 self.calibration_label.text = (self.m.
-                    checking_calibration_fail_info)
+                                               checking_calibration_fail_info)
 
     def enter_next_screen(self):
         self.sm.current = 'lbc3'

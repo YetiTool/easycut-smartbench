@@ -5,82 +5,73 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
-import kivy
-import docutils
-import time
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
-from kivy.clock import Clock
-from asmcnc.geometry import job_envelope
-from asmcnc.skavaUI import widget_gcode_view
-import sys, os
-from os.path import expanduser
-from shutil import copy
 from datetime import datetime
 from functools import partial
-import re
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.geometry import job_envelope
+from asmcnc.skavaUI import widget_gcode_view
+
 ERROR_CODES = {'error:1':
-    'G-code words consist of a letter and a value. Letter was not found.',
-    'error:2':
-    'Numeric value format is not valid or missing an expected value.',
-    'error:3': "Grbl '$' system command was not recognized or supported.",
-    'error:4': 'Negative value received for an expected positive value.',
-    'error:5': 'Homing cycle is not enabled via settings.', 'error:6':
-    'Minimum step pulse time must be greater than 3 microseconds.',
-    'error:7': 'EEPROM read failed. Reset and restored to default values.',
-    'error:8':
-    "Grbl '$' command cannot be used unless Grbl is IDLE. Ensures smooth operation during a job."
+                   'G-code words consist of a letter and a value. Letter was not found.',
+               'error:2':
+                   'Numeric value format is not valid or missing an expected value.',
+               'error:3': "Grbl '$' system command was not recognized or supported.",
+               'error:4': 'Negative value received for an expected positive value.',
+               'error:5': 'Homing cycle is not enabled via settings.', 'error:6':
+                   'Minimum step pulse time must be greater than 3 microseconds.',
+               'error:7': 'EEPROM read failed. Reset and restored to default values.',
+               'error:8':
+                   "Grbl '$' command cannot be used unless Grbl is IDLE. Ensures smooth operation during a job."
     , 'error:9': 'G-code locked out during alarm or jog state.', 'error:10':
-    'Soft limits cannot be enabled without homing also enabled.',
-    'error:11':
-    'Max characters per line exceeded. Line was not processed and executed.',
-    'error:12':
-    "Compile Option Grbl '$' setting value exceeds the maximum step rate supported."
+                   'Soft limits cannot be enabled without homing also enabled.',
+               'error:11':
+                   'Max characters per line exceeded. Line was not processed and executed.',
+               'error:12':
+                   "Compile Option Grbl '$' setting value exceeds the maximum step rate supported."
     , 'error:13':
-    'Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.'
+                   'Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.'
     , 'error:14':
-    'Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.'
+                   'Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.'
     , 'error:15':
-    'Have you homed the machine yet? If not, please do so now. Jog target exceeds machine travel. Command ignored.'
+                   'Have you homed the machine yet? If not, please do so now. Jog target exceeds machine travel. Command ignored.'
     , 'error:16': "Jog command with no '=' or contains prohibited g-code.",
-    'error:17': 'Laser mode requires PWM output.', 'error:20':
-    'Unsupported or invalid g-code command found in block.', 'error:21':
-    'More than one g-code command from same modal group found in block.',
-    'error:22': 'Feed rate has not yet been set or is undefined.',
-    'error:23': 'G-code command in block requires an integer value.',
-    'error:24':
-    'Two G-code commands that both require the use of the XYZ axis words were detected in the block.'
+               'error:17': 'Laser mode requires PWM output.', 'error:20':
+                   'Unsupported or invalid g-code command found in block.', 'error:21':
+                   'More than one g-code command from same modal group found in block.',
+               'error:22': 'Feed rate has not yet been set or is undefined.',
+               'error:23': 'G-code command in block requires an integer value.',
+               'error:24':
+                   'Two G-code commands that both require the use of the XYZ axis words were detected in the block.'
     , 'error:25': 'A G-code word was repeated in the block.', 'error:26':
-    'A G-code command implicitly or explicitly requires XYZ axis words in the block, but none were detected.'
+                   'A G-code command implicitly or explicitly requires XYZ axis words in the block, but none were detected.'
     , 'error:27':
-    'N line number value is not within the valid range of 1 - 9,999,999.',
-    'error:28':
-    'A G-code command was sent, but is missing some required P or L value words in the line.'
+                   'N line number value is not within the valid range of 1 - 9,999,999.',
+               'error:28':
+                   'A G-code command was sent, but is missing some required P or L value words in the line.'
     , 'error:29':
-    'Grbl supports six work coordinate systems G54-G59. G59.1, G59.2, and G59.3 are not supported.'
+                   'Grbl supports six work coordinate systems G54-G59. G59.1, G59.2, and G59.3 are not supported.'
     , 'error:30':
-    'The G53 G-code command requires either a G0 seek or G1 feed motion mode to be active. A different motion was active.'
+                   'The G53 G-code command requires either a G0 seek or G1 feed motion mode to be active. A different motion was active.'
     , 'error:31':
-    'There are unused axis words in the block and G80 motion mode cancel is active.'
+                   'There are unused axis words in the block and G80 motion mode cancel is active.'
     , 'error:32':
-    'A G2 or G3 arc was commanded but there are no XYZ axis words in the selected plane to trace the arc.'
+                   'A G2 or G3 arc was commanded but there are no XYZ axis words in the selected plane to trace the arc.'
     , 'error:33':
-    'The motion command has an invalid target. G2, G3, and G38.2 generates this error, if the arc is impossible to generate or if the probe target is the current position.'
+                   'The motion command has an invalid target. G2, G3, and G38.2 generates this error, if the arc is impossible to generate or if the probe target is the current position.'
     , 'error:34':
-    'A G2 or G3 arc, traced with the radius definition, had a mathematical error when computing the arc geometry. Try either breaking up the arc into semi-circles or quadrants, or redefine them with the arc offset definition.'
+                   'A G2 or G3 arc, traced with the radius definition, had a mathematical error when computing the arc geometry. Try either breaking up the arc into semi-circles or quadrants, or redefine them with the arc offset definition.'
     , 'error:35':
-    'A G2 or G3 arc, traced with the offset definition, is missing the IJK offset word in the selected plane to trace the arc.'
+                   'A G2 or G3 arc, traced with the offset definition, is missing the IJK offset word in the selected plane to trace the arc.'
     , 'error:36':
-    "There are unused, leftover G-code words that aren't used by any command in the block."
+                   "There are unused, leftover G-code words that aren't used by any command in the block."
     , 'error:37':
-    'The G43.1 dynamic tool length offset command cannot apply an offset to an axis other than its configured axis. The Grbl default axis is the Z-axis.'
-    }
+                   'The G43.1 dynamic tool length offset command cannot apply an offset to an axis other than its configured axis. The Grbl default axis is the Z-axis.'
+               }
 Builder.load_string(
     """
 
@@ -223,7 +214,7 @@ Builder.load_string(
                         border: [dp(7.5)]*4
                              
 """
-    )
+)
 
 
 def log(message):
@@ -271,9 +262,9 @@ class CheckingScreen(Screen):
                 self.toggle_boundary_buttons(True)
                 self.job_checking_checked = self.l.get_str('Cannot Check Job')
                 self.check_outcome = self.l.get_str('Cannot check job'
-                    ) + ': ' + self.l.get_str(
+                                                    ) + ': ' + self.l.get_str(
                     'Unable to run boundary check on file.'
-                    ) + ' ' + self.l.get_str(
+                ) + ' ' + self.l.get_str(
                     'Please make sure file is in recognisable format.')
                 self.jd.reset_values()
         else:
@@ -286,8 +277,8 @@ class CheckingScreen(Screen):
             self.toggle_boundary_buttons(True)
             self.job_checking_checked = self.l.get_str('Cannot Check Job')
             self.check_outcome = self.l.get_str('Cannot check job'
-                ) + ': ' + self.l.get_str('Unable to run g-code check on file.'
-                ) + ' ' + self.l.get_str(
+                                                ) + ': ' + self.l.get_str('Unable to run g-code check on file.'
+                                                                          ) + ' ' + self.l.get_str(
                 'Please make sure file is in recognisable format.')
             self.jd.reset_values()
 
@@ -303,10 +294,10 @@ class CheckingScreen(Screen):
             self.toggle_boundary_buttons(False)
             self.check_outcome = self.l.get_str(
                 'The job would exceed the working volume of the machine in one or more axes.'
-                ) + '\n\n' + self.l.get_str('See help notes (right).')
+            ) + '\n\n' + self.l.get_str('See help notes (right).')
             self.jd.check_warning = self.l.get_str(
                 'The job would exceed the working volume of the machine in one or more axes.'
-                )
+            )
             self.jd.checked = True
             self.write_boundary_output(bounds_output)
 
@@ -315,50 +306,50 @@ class CheckingScreen(Screen):
         error_message = ''
         job_box = self.sm.get_screen('home').job_box
         if -(self.m.x_wco() + job_box.range_x[0]
-            ) >= self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance:
+        ) >= self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the N axis at the home end.').
-                replace('N', 'X') + '\n\n\t' + self.l.get_bold(
+                                             replace('N', 'X') + '\n\n\t' + self.l.get_bold(
                 "Try positioning the machine's N datum further away from home."
-                ).replace('N', 'X'))
+            ).replace('N', 'X'))
             errorfound += 1
         if -(self.m.y_wco() + job_box.range_y[0]
-            ) >= self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance:
+        ) >= self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the N axis at the home end.').
-                replace('N', 'Y') + '\n\n\t' + self.l.get_bold(
+                                             replace('N', 'Y') + '\n\n\t' + self.l.get_bold(
                 "Try positioning the machine's N datum further away from home."
-                ).replace('N', 'Y'))
+            ).replace('N', 'Y'))
             errorfound += 1
         if -(self.m.z_wco() + job_box.range_z[0]
-            ) >= self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance:
+        ) >= self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the Z axis at the lower end.') +
-                '\n\n\t' + self.l.get_bold(
-                "Try positioning the machine's Z datum higher up."))
+                                             '\n\n\t' + self.l.get_bold(
+                        "Try positioning the machine's Z datum higher up."))
             errorfound += 1
         if self.m.x_wco() + job_box.range_x[1
-            ] >= -self.m.limit_switch_safety_distance:
+        ] >= -self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the N axis at the far end.').
-                replace('N', 'X') + '\n\n\t' + self.l.get_bold(
+                                             replace('N', 'X') + '\n\n\t' + self.l.get_bold(
                 "Try positioning the machine's N datum closer to home.").
-                replace('N', 'X'))
+                                             replace('N', 'X'))
             errorfound += 1
         if self.m.y_wco() + job_box.range_y[1
-            ] >= -self.m.limit_switch_safety_distance:
+        ] >= -self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the N axis at the far end.').
-                replace('N', 'Y') + '\n\n\t' + self.l.get_bold(
+                                             replace('N', 'Y') + '\n\n\t' + self.l.get_bold(
                 "Try positioning the machine's N datum closer to home.").
-                replace('N', 'Y'))
+                                             replace('N', 'Y'))
             errorfound += 1
         if self.m.z_wco() + job_box.range_z[1
-            ] >= -self.m.limit_switch_safety_distance:
+        ] >= -self.m.limit_switch_safety_distance:
             error_message = error_message + ('\n\n\t' + self.l.get_str(
                 'The job extent over-reaches the Z axis at the upper end.') +
-                '\n\n\t' + self.l.get_bold(
-                "Try positioning the machine's Z datum lower down."))
+                                             '\n\n\t' + self.l.get_bold(
+                        "Try positioning the machine's Z datum lower down."))
             errorfound += 1
         if errorfound > 0:
             return error_message
@@ -367,33 +358,33 @@ class CheckingScreen(Screen):
 
     def write_boundary_output(self, bounds_output):
         self.display_output = self.l.get_bold('BOUNDARY CONFLICT HELP'
-            ) + '\n\n' + self.l.get_str(
+                                              ) + '\n\n' + self.l.get_str(
             'It looks like your job exceeds the bounds of the machine'
-            ) + ':\n\n' + bounds_output + '\n\n' + self.l.get_str(
+        ) + ':\n\n' + bounds_output + '\n\n' + self.l.get_str(
             'The job datum is set in the wrong place.') + ' ' + self.l.get_str(
             "Press Adjust datums and then reposition the X, Y or Z datums as suggested above so that the job box is within the machine's boundaries."
-            ).replace(self.l.get_str('Adjust datums'), self.l.get_bold(
+        ).replace(self.l.get_str('Adjust datums'), self.l.get_bold(
             'Adjust datums')) + ' ' + self.l.get_str(
             'Use the manual move controls and set datum buttons to achieve this.'
-            ).replace(self.l.get_str('set datum'), self.l.get_bold('set datum')
-            ) + ' ' + self.l.get_str(
+        ).replace(self.l.get_str('set datum'), self.l.get_bold('set datum')
+                  ) + ' ' + self.l.get_str(
             'You should then reload the job and re-run this check.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'If you have already tried to reposition the datum, but cannot get the job to fit within the machine bounds, your job may simply be set up incorrectly in your CAD/CAM software.'
-            ) + ' ' + self.l.get_str(
+        ) + ' ' + self.l.get_str(
             'Common causes include setting the CAD/CAM job datum far away from the actual design, or exporting the job from the CAM software in the wrong units.'
-            ) + ' ' + self.l.get_str('Check your design and export settings.'
-            ) + ' ' + self.l.get_str(
+        ) + ' ' + self.l.get_str('Check your design and export settings.'
+                                 ) + ' ' + self.l.get_str(
             'You should then reload the job and re-run the check.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.'
-            ) + ' ' + self.l.get_str(
+        ) + ' ' + self.l.get_str(
             'If this is the case, you may want to press Check G-code.'
-            ).replace(self.l.get_str('Check G-code'), self.l.get_bold(
+        ).replace(self.l.get_str('Check G-code'), self.l.get_bold(
             'Check G-code')) + '\n\n' + self.l.get_bold('WARNING'
-            ) + '[b]:[/b] ' + self.l.get_bold(
+                                                        ) + '[b]:[/b] ' + self.l.get_bold(
             "Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen."
-            ) + '\n\n'
+        ) + '\n\n'
 
     def toggle_boundary_buttons(self, hide_boundary_buttons):
         if hide_boundary_buttons:
@@ -439,27 +430,28 @@ class CheckingScreen(Screen):
             self.display_output = ''
             if self.m.state() == 'Idle':
                 self.job_checking_checked = self.l.get_str('Starting Check'
-                    ) + '...'
+                                                           ) + '...'
                 self.check_outcome = self.l.get_str('Looking for gcode errors'
-                    ) + '...'
+                                                    ) + '...'
                 Clock.schedule_once(partial(self.check_grbl_stream, self.jd
-                    .job_gcode), 0.1)
+                                            .job_gcode), 0.1)
             else:
                 self.job_checking_checked = self.l.get_str('Cannot check job')
                 self.check_outcome = self.l.get_str('Cannot check job'
-                    ) + ': ' + self.l.get_str('machine is not idle.'
-                    ) + ' ' + self.l.get_str(
+                                                    ) + ': ' + self.l.get_str('machine is not idle.'
+                                                                              ) + ' ' + self.l.get_str(
                     'Please ensure machine is in idle state before attempting to reload the file.'
-                    )
+                )
                 self.jd.reset_values()
         else:
             self.job_checking_checked = self.l.get_str('Cannot check job')
             self.check_outcome = self.l.get_str('Cannot check job'
-                ) + ': ' + self.l.get_str('no serial connection.'
-                ) + ' ' + self.l.get_str(
+                                                ) + ': ' + self.l.get_str('no serial connection.'
+                                                                          ) + ' ' + self.l.get_str(
                 'Please ensure your machine is connected, and reload the file.'
-                )
+            )
             self.jd.reset_values()
+
     loop_for_job_progress = None
 
     def check_grbl_stream(self, objectifile, dt):
@@ -467,17 +459,17 @@ class CheckingScreen(Screen):
             self.serial_function_called = True
             self.m.s.check_job(objectifile)
             self.loop_for_job_progress = Clock.schedule_interval(self.
-                poll_for_gcode_check_progress, 0.6)
+                                                                 poll_for_gcode_check_progress, 0.6)
             self.error_out_event = Clock.schedule_interval(partial(self.
-                get_error_log), 0.1)
+                                                                   get_error_log), 0.1)
 
     def poll_for_gcode_check_progress(self, dt):
         percent_thru_job = int(round(self.m.s.g_count * 1.0 / (len(self.jd.
-            job_gcode) + 4) * 1.0 * 100.0))
+                                                                   job_gcode) + 4) * 1.0 * 100.0))
         if percent_thru_job > 100:
             percent_thru_job = 100
         self.job_checking_checked = self.l.get_str('Checking job'
-            ) + ': ' + str(percent_thru_job) + ' %'
+                                                   ) + ': ' + str(percent_thru_job) + ' %'
 
     def get_error_log(self, dt):
         if self.error_log != []:
@@ -490,7 +482,7 @@ class CheckingScreen(Screen):
                     self.check_outcome = self.l.get_str(
                         'Errors found in G-code.') + '\n\n' + self.l.get_str(
                         'Please review your job before attempting to reload it.'
-                        )
+                    )
                     self.jd.check_warning = self.l.get_str(
                         'Errors found in G-code.')
                     self.jd.checked = True
@@ -498,7 +490,7 @@ class CheckingScreen(Screen):
                     self.check_outcome = self.l.get_str(
                         'Errors found in G-code.') + '\n\n' + self.l.get_str(
                         'Please review and re-load your job before attempting to run it.'
-                        )
+                    )
                     self.jd.check_warning = self.l.get_str(
                         'Errors found in G-code.')
                     self.jd.checked = True
@@ -507,15 +499,15 @@ class CheckingScreen(Screen):
                 self.job_checking_checked = self.l.get_str('Advisories')
                 self.check_outcome = self.l.get_str(
                     'This file will run, but it might not run in the way you expect.'
-                    ) + '\n\n' + self.l.get_str(
+                ) + '\n\n' + self.l.get_str(
                     'Please review your job before running it.')
                 self.jd.check_warning = self.l.get_str(
                     'This file will run, but it might not run in the way you expect.'
-                    )
+                )
                 self.jd.checked = True
                 self.job_ok = True
                 self.sm.get_screen('home'
-                    ).gcode_has_been_checked_and_its_ok = True
+                                   ).gcode_has_been_checked_and_its_ok = True
             else:
                 self.job_checking_checked = self.l.get_str('File is OK!')
                 self.check_outcome = self.l.get_str(
@@ -524,7 +516,7 @@ class CheckingScreen(Screen):
                 self.jd.checked = True
                 self.job_ok = True
                 self.sm.get_screen('home'
-                    ).gcode_has_been_checked_and_its_ok = True
+                                   ).gcode_has_been_checked_and_its_ok = True
             self.write_error_output(self.error_log)
             if self.job_ok == False:
                 self.jd.reset_values()
@@ -538,46 +530,46 @@ class CheckingScreen(Screen):
                 'SPINDLE WARNING') + '\n\n'
             self.display_output = self.display_output + self.l.get_str(
                 'This file has no command to turn the spindle on.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'This may be intended behaviour, but if you are trying to do a cut you should review your file before trying to run it!'
-                ) + '\n\n'
+            ) + '\n\n'
         if self.flag_max_feed_rate or self.flag_min_feed_rate:
             self.display_output = self.display_output + self.l.get_bold(
                 'FEED RATE WARNING') + '\n\n'
             if self.flag_min_feed_rate:
                 self.display_output = self.display_output + (self.l.get_str
-                    (
-                    'This file contains feed rate commands as low as N00 mm/min.'
-                    ).replace('N00', str(self.as_low_as)) + '\n\n' + self.l
-                    .get_str(
+                                                                 (
+                                                                 'This file contains feed rate commands as low as N00 mm/min.'
+                                                             ).replace('N00', str(self.as_low_as)) + '\n\n' + self.l
+                                                             .get_str(
                     'The recommended minimum feed rate is 100 mm/min.') +
-                    '\n\n')
+                                                             '\n\n')
             if self.flag_max_feed_rate:
                 self.display_output = self.display_output + (self.l.get_str
-                    (
-                    'This file contains feed rate commands as high as N00 mm/min.'
-                    ).replace('N00', str(self.as_high_as)) + '\n\n' + self.
-                    l.get_str(
+                                                                 (
+                                                                 'This file contains feed rate commands as high as N00 mm/min.'
+                                                             ).replace('N00', str(self.as_high_as)) + '\n\n' + self.
+                                                             l.get_str(
                     'The recommended maximum feed rate is 5000 mm/min.') +
-                    '\n\n')
+                                                             '\n\n')
         error_summary = []
         no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log,
-            self.jd.job_gcode)))
+                                                                self.jd.job_gcode)))
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
                 error_description = self.l.get_str(ERROR_CODES.get(f[0], ''))
                 error_summary.append(self.l.get_bold('Line') + '[b] ' + str
-                    (idx) + ':[/b]')
+                (idx) + ':[/b]')
                 error_summary.append(f[0].replace(':', ' ').replace('error',
-                    self.l.get_str('error')).capitalize() + ': ' +
-                    error_description + '\n\n')
+                                                                    self.l.get_str('error')).capitalize() + ': ' +
+                                     error_description + '\n\n')
                 error_summary.append('G-code: "' + f[1] + '"\n\n')
         if error_summary == []:
             self.display_output = self.display_output + ''
         else:
             self.display_output = self.display_output + self.l.get_bold(
                 'ERROR SUMMARY') + '\n\n' + '\n\n'.join(map(str, error_summary)
-                )
+                                                        )
 
     def stop_check_in_serial(self, pass_no):
         check_again = False

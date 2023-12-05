@@ -17,7 +17,8 @@ class Cutter:
         self.cutting_feedrate = cutting_feedrate  # type: float
         self.plunge_rate = plunge_rate  # type: float
         self.cutting_direction = cutting_direction  # type: str
-        self.allowable_toolpath_offsets = AllowableToolpathOffsets(**allowable_toolpath_offsets)  # type: AllowableToolpathOffsets
+        self.allowable_toolpath_offsets = AllowableToolpathOffsets(
+            **allowable_toolpath_offsets)  # type: AllowableToolpathOffsets
         self.max_depth_per_pass = max_depth_per_pass  # type: float
         self.max_depth_total = max_depth_total  # type: float
         self.stepover = stepover  # type: float

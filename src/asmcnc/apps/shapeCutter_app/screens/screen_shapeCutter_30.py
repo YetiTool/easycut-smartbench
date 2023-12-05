@@ -5,10 +5,11 @@ Screen 30 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -291,7 +292,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter30ScreenClass(Screen):
@@ -303,7 +304,7 @@ class ShapeCutter30ScreenClass(Screen):
 
 
 You should set the Z datum from the top of your material."""
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter30ScreenClass, self).__init__(**kwargs)
@@ -316,7 +317,7 @@ You should set the Z datum from the top of your material."""
     def get_info(self):
         info = (
             "The Z datum is SmartBench's reference point for the surface of the material."
-            )
+        )
         popup_info.PopupInfo(self.shapecutter_sm, info)
 
     def go_back(self):

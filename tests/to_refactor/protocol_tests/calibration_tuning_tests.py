@@ -3,19 +3,19 @@ Created on 15 Feb 2022
 @author: Letty
 '''
 
-try: 
+try:
     import unittest
     from mock import Mock, MagicMock
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
     from random import randint
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
+import sys
 from time import sleep
 
-import sys
 sys.path.append('./src')
 
 try:
@@ -25,9 +25,6 @@ try:
 except:
     pass
 
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-
-
 ########################################################
 # IMPORTANT!!
 # Run from easycut-smartbench folder, with 
@@ -35,9 +32,9 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 Cmport = 'COM3'
 
-class MotorCommandsTest(unittest.TestCase):
 
-    sg_values = [-12,-20,15,46,-2]
+class MotorCommandsTest(unittest.TestCase):
+    sg_values = [-12, -20, 15, 46, -2]
     # sg_values = [500,500,500,500,500]
 
     normalized_SGs = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-12,-20,15,-999,-2>"
@@ -49,10 +46,9 @@ class MotorCommandsTest(unittest.TestCase):
 
     status = normalized_SGs
 
-
     def give_status(self):
 
-        if randint(0,1) == 0: 
+        if randint(0, 1) == 0:
             status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
 
         else:
@@ -60,7 +56,9 @@ class MotorCommandsTest(unittest.TestCase):
 
         return status
 
-    test_arr = [[[832, 1023, -999, 1023, 1023], [838, 1023, -999, 1023, 1023], [841, 1023, -999, 1023, 1023], [847, 1023, -999, 1023, 1023], [846, 1023, -999, 1023, 1023], [843, 1023, -999, 1023, 1023], [829, 1023, -999, 1023, 1023], [830, 1023, -999, 1023, 1023]]*(11)]*(21)
+    test_arr = [[[832, 1023, -999, 1023, 1023], [838, 1023, -999, 1023, 1023], [841, 1023, -999, 1023, 1023],
+                 [847, 1023, -999, 1023, 1023], [846, 1023, -999, 1023, 1023], [843, 1023, -999, 1023, 1023],
+                 [829, 1023, -999, 1023, 1023], [830, 1023, -999, 1023, 1023]] * (11)] * (21)
 
     def give_me_a_PCB(outerSelf):
 
@@ -85,7 +83,7 @@ class MotorCommandsTest(unittest.TestCase):
 
         self.m = router_machine.RouterMachine(Cmport, self.sm, self.sett, self.l, self.jd)
         self.m.s.s = DummySerial(self.give_me_a_PCB())
-        self.m.s.s.fd = 1 # this is needed to force it to run
+        self.m.s.s.fd = 1  # this is needed to force it to run
         self.m.s.start_services(1)
         self.m.s.motor_driver_temp = self.temp_to_test_against
 
@@ -94,7 +92,7 @@ class MotorCommandsTest(unittest.TestCase):
         sleep(0.01)
 
     def tearDown(self):
-      self.m.s.__del__()
+        self.m.s.__del__()
 
     # def test_does_serial_think_its_connected(self):
     #     """Test that serial module thinks it is connected"""
@@ -111,8 +109,7 @@ class MotorCommandsTest(unittest.TestCase):
         self.m.s.record_sg_values_flag = False
         self.m.are_sg_values_in_range_after_calibration(['X', 'Y', 'Z'])
         print(self.m.checking_calibration_fail_info)
-        assert(self.m.checking_calibration_fail_info.startswith("All values -999 for idx: 0"))
-
+        assert (self.m.checking_calibration_fail_info.startswith("All values -999 for idx: 0"))
 
     # def test_get_abs_maximums_from_sg_array_x(self):
     #     self.m.temp_sg_array = []
@@ -121,7 +118,6 @@ class MotorCommandsTest(unittest.TestCase):
     #     self.m.s.record_sg_values_flag = False
     #     val = self.m.get_abs_maximums_from_sg_array(self.m.temp_sg_array, 1)
     #     self.assertEqual(val, -20)
-
 
     # def test_get_abs_maximums_from_sg_array_y(self):
     #     self.m.temp_sg_array = []
@@ -142,8 +138,6 @@ class MotorCommandsTest(unittest.TestCase):
 
     #             self.assertEqual(len(tuning_array[toff][sgt]), 8)
     #             for sg in range(0,8):
-
-
 
     #                 self.assertEqual(len(tuning_array[toff][sgt][sg]), 5)
     #                 self.assertEqual(tuning_array[toff][sgt][sg], self.sg_values)
@@ -185,8 +179,6 @@ class MotorCommandsTest(unittest.TestCase):
     #     out = self.m.find_best_combo_per_motor_or_axis(self.test_arr, 800, 0)
 
     #     print out
-
-
 
     # temps_in = [
     #                 30,
@@ -255,8 +247,6 @@ class MotorCommandsTest(unittest.TestCase):
 
     # ]
 
-
-
     # def test_get_target(self):
 
     #     for idx, val in enumerate(self.temps_in):
@@ -265,25 +255,7 @@ class MotorCommandsTest(unittest.TestCase):
     #         target = self.m.get_target_SG_from_current_temperature('X', val)
     #         self.assertEqual(target, self.targets_out[idx])
 
+
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

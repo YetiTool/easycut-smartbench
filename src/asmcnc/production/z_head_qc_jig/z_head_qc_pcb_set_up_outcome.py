@@ -1,9 +1,11 @@
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadPCBSetUpOutcome>:
@@ -144,13 +146,13 @@ Builder.load_string(
             id: status_container 
             pos: self.pos
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
     print 'Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message)
+                                         ] + ' ' + str(message)
 
 
 class ZHeadPCBSetUpOutcome(Screen):
@@ -168,7 +170,7 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def go_to_qc_home(self):
@@ -180,27 +182,33 @@ class ZHeadPCBSetUpOutcome(Screen):
     def on_enter(self):
         self.fw_update_label.text = 'Firmware: ' + str(self.m.s.fw_version)
         self.z_current_label.text = 'Z Current: ' + 'active ' + str(self.m.
-            TMC_motor[TMC_Z].ActiveCurrentScale) + '; ' + 'idle ' + str(self
+                                                                    TMC_motor[
+                                                                        TMC_Z].ActiveCurrentScale) + '; ' + 'idle ' + str(
+            self
             .m.TMC_motor[TMC_Z].standStillCurrentScale) + ';'
         self.x_current_label.text = 'X Current: ' + 'X1 active ' + str(self
-            .m.TMC_motor[TMC_X1].ActiveCurrentScale) + '; ' + 'X1 idle ' + str(
+                                                                       .m.TMC_motor[
+                                                                           TMC_X1].ActiveCurrentScale) + '; ' + 'X1 idle ' + str(
             self.m.TMC_motor[TMC_X1].standStillCurrentScale
-            ) + '; ' + 'X2 active ' + str(self.m.TMC_motor[TMC_X2].
-            ActiveCurrentScale) + '; ' + 'X2 idle ' + str(self.m.TMC_motor[
-            TMC_X2].standStillCurrentScale) + '; '
+        ) + '; ' + 'X2 active ' + str(self.m.TMC_motor[TMC_X2].
+                                      ActiveCurrentScale) + '; ' + 'X2 idle ' + str(self.m.TMC_motor[
+                                                                                        TMC_X2].standStillCurrentScale) + '; '
         self.y_current_label.text = 'Y Current: ' + 'Y1 active ' + str(self
-            .m.TMC_motor[TMC_Y1].ActiveCurrentScale) + '; ' + 'Y1 idle ' + str(
+                                                                       .m.TMC_motor[
+                                                                           TMC_Y1].ActiveCurrentScale) + '; ' + 'Y1 idle ' + str(
             self.m.TMC_motor[TMC_Y1].standStillCurrentScale
-            ) + '; ' + 'Y2 active ' + str(self.m.TMC_motor[TMC_Y2].
-            ActiveCurrentScale) + '; ' + 'Y2 idle ' + str(self.m.TMC_motor[
-            TMC_Y2].standStillCurrentScale) + '; '
+        ) + '; ' + 'Y2 active ' + str(self.m.TMC_motor[TMC_Y2].
+                                      ActiveCurrentScale) + '; ' + 'Y2 idle ' + str(self.m.TMC_motor[
+                                                                                        TMC_Y2].standStillCurrentScale) + '; '
         self.thermal_coefficients_label.text = ('Thermal coefficients: ' +
-            'X1: ' + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) +
-            '; ' + 'X2: ' + str(self.m.TMC_motor[TMC_X2].
-            temperatureCoefficient) + '; ' + 'Y1: ' + str(self.m.TMC_motor[
-            TMC_Y1].temperatureCoefficient) + '; ' + 'Y2: ' + str(self.m.
-            TMC_motor[TMC_Y2].temperatureCoefficient) + '; ' + 'Z: ' + str(
-            self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ';')
+                                                'X1: ' + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) +
+                                                '; ' + 'X2: ' + str(self.m.TMC_motor[TMC_X2].
+                                                                    temperatureCoefficient) + '; ' + 'Y1: ' + str(
+                    self.m.TMC_motor[
+                        TMC_Y1].temperatureCoefficient) + '; ' + 'Y2: ' + str(self.m.
+                                                                              TMC_motor[
+                                                                                  TMC_Y2].temperatureCoefficient) + '; ' + 'Z: ' + str(
+                    self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ';')
         if self.fw_update_success:
             self.fw_update_image.source = self.success_image
         else:
@@ -209,7 +217,7 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.update_images(self.x_current_correct, self.x_current_image)
         self.update_images(self.y_current_correct, self.y_current_image)
         self.update_images(self.thermal_coefficients_correct, self.
-            thermal_coefficients_image)
+                           thermal_coefficients_image)
 
     def update_images(self, correct, image):
         if correct:

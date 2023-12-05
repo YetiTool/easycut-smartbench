@@ -2,16 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
-import os, sys
-import socket
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -102,7 +97,7 @@ Builder.load_string(
             markup: True
             font_size: 0.01625*app.width
 """
-    )
+)
 
 
 class WorkCoordinates(Widget):
@@ -114,7 +109,7 @@ class WorkCoordinates(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.
-            GRBL_REPORT_INTERVAL)
+                                GRBL_REPORT_INTERVAL)
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():

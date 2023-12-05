@@ -3,8 +3,8 @@ Created on 31 March 2021
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <AlarmScreen4>:
@@ -155,7 +155,7 @@ Builder.load_string(
 				width: dp(0.305625*app.width)
 				padding:[dp(0.241875)*app.width, 0, 0, 0]
 """
-    )
+)
 
 
 class AlarmScreen4(Screen):
@@ -167,8 +167,8 @@ class AlarmScreen4(Screen):
         self.icon.source = './asmcnc/core_UI/sequence_alarm/img/qr-code.png'
         self.description_label.text = (self.a.l.get_str(
             'Learn more about the cause of the alarm by visiting our knowledge base at'
-            ) + '\n' +
-            'https://www.yetitool.com/support/knowledge-base/alarm-screens')
+        ) + '\n' +
+                                       'https://www.yetitool.com/support/knowledge-base/alarm-screens')
         self.next_button.text = self.a.l.get_str('Next') + '...'
 
     def next_screen(self):

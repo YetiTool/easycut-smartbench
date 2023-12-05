@@ -1,8 +1,11 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 import traceback
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
 Builder.load_string(
     """
 <ZHeadQCDB2>:
@@ -12,7 +15,7 @@ Builder.load_string(
         font_size: dp(0.0625*app.width)
 
 """
-    )
+)
 
 
 class ZHeadQCDB2(Screen):
@@ -26,18 +29,18 @@ class ZHeadQCDB2(Screen):
     def send_calibration_payload(self, motor_index):
         self.calibration_db.set_up_connection()
         stage = self.calibration_db.get_stage_id_by_description('CalibrationQC'
-            )
+                                                                )
         sg_coefficients = self.m.TMC_motor[motor_index
-            ].calibration_dataset_SG_values
+        ].calibration_dataset_SG_values
         cs = self.m.TMC_motor[motor_index].calibrated_at_current_setting
         sgt = self.m.TMC_motor[motor_index].calibrated_at_sgt_setting
         toff = self.m.TMC_motor[motor_index].calibrated_at_toff_setting
         temperature = self.m.TMC_motor[motor_index].calibrated_at_temperature
         coefficients = sg_coefficients + [cs] + [sgt] + [toff] + [temperature]
         self.calibration_db.setup_z_head_coefficients(self.serial_number,
-            motor_index, stage)
+                                                      motor_index, stage)
         self.calibration_db.insert_calibration_coefficients(self.
-            serial_number, motor_index, stage, coefficients)
+                                                            serial_number, motor_index, stage, coefficients)
 
     def on_enter(self):
         Clock.schedule_once(self.prep_data_send, 0.2)
@@ -46,7 +49,7 @@ class ZHeadQCDB2(Screen):
         self.calibration_db.process_status_running_data_for_database_insert(
             self.m.measured_running_data(), self.serial_number)
         self.calibration_db.insert_calibration_check_stage(self.
-            serial_number, 12)
+                                                           serial_number, 12)
         self.do_data_send_when_ready()
 
     def do_data_send_when_ready(self):
@@ -55,7 +58,7 @@ class ZHeadQCDB2(Screen):
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
         if self.calibration_db.send_data_through_publisher(self.
-            serial_number, 12):
+                                                                   serial_number, 12):
             try:
                 self.send_calibration_payload(TMC_Z)
                 self.send_calibration_payload(TMC_X1)

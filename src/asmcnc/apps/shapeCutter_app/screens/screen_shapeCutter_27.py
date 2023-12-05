@@ -5,10 +5,11 @@ Screen 27 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string(
     """
 
@@ -316,7 +317,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter27ScreenClass(Screen):
@@ -327,7 +328,7 @@ class ShapeCutter27ScreenClass(Screen):
     title_label = StringProperty('[b]Set job XY datum[/b]')
     user_instructions = StringProperty(
         "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
-        )
+    )
     image_source = StringProperty(
         './asmcnc/apps/shapeCutter_app/img/27_rect.png')
 
@@ -342,20 +343,20 @@ class ShapeCutter27ScreenClass(Screen):
         if self.j.shape_dict['shape'] == 'circle':
             self.user_instructions = (
                 "Mark the shape's datum position on the material. This is always in the centre of your circle. "
-                )
+            )
             self.image_source = './asmcnc/apps/shapeCutter_app/img/27_circ.png'
             self.image_box.padding = 120, 0, 0, 0
         elif self.j.shape_dict['shape'] == 'rectangle':
             self.user_instructions = (
                 "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
-                )
+            )
             self.image_source = './asmcnc/apps/shapeCutter_app/img/27_rect.png'
             self.image_box.padding = 25, 0, 0, 0
 
     def get_info(self):
         info = (
             "The X-Y datum is SmartBench's reference point for the job coordinates."
-            )
+        )
         popup_info.PopupInfo(self.shapecutter_sm, info)
 
     def go_back(self):

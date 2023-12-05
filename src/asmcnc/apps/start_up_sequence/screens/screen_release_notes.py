@@ -3,12 +3,14 @@ Created on 6 Aug 2021
 @author: Dennis
 Screen shown after update to display new release notes
 """
-import kivy, os
+import os
+from datetime import datetime
+
 from kivy.lang import Builder
+from kivy.properties import StringProperty, DictProperty
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty, DictProperty
-from datetime import datetime
+
 Builder.load_string(
     """
 
@@ -108,7 +110,7 @@ Builder.load_string(
                 color: hex('f9f9f9ff')
 
 """
-    )
+)
 
 
 def log(message):
@@ -127,7 +129,7 @@ def filter_version_to_filename(character):
 class ScrollReleaseNotes(ScrollView):
     text = StringProperty('')
     color_dict = DictProperty({'background': 'e5e5e5ff', 'link': '1976d2ff',
-        'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
+                               'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
 
 
 class ReleaseNotesScreen(Screen):
@@ -141,18 +143,18 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs['version']
         self.l = kwargs['localization']
         self.release_notes_filename = '../' + self.version.replace('.', ''
-            ) + '.txt'
+                                                                   ) + '.txt'
         self.scroll_release_notes.release_notes.source = (self.
-            release_notes_filename)
+                                                          release_notes_filename)
         self.update_strings()
 
     def update_strings(self):
         self.version_number_label.text = self.l.get_str(
             'Software updated successfully to version').replace(self.l.
-            get_str('version'), self.version)
+                                                                get_str('version'), self.version)
         self.please_read_label.text = self.l.get_str(
             'These release notes contain critical information about how SmartBench has changed (in English).'
-            )
+        )
         self.url_label.text = self.l.get_str('For full release notes, go to:') + '\n' + """https://www.yetitool.com
 /SUPPORT
 /KNOWLEDGE-BASE
@@ -164,5 +166,5 @@ updates-release-notes"""
     def next_screen(self):
         os.system(
             'sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt'
-            )
+        )
         self.start_seq.next_in_sequence()

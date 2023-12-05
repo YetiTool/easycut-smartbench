@@ -4,14 +4,17 @@ Beta testers screen for system tools app
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from asmcnc.comms import usb_storage
-from asmcnc.apps.systemTools_app.screens import popup_system
-from asmcnc.skavaUI import popup_info
+import os
+import sys
+
 from kivy.clock import Clock
-import os, sys
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -294,7 +297,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BetaTestingScreen(Screen):
@@ -309,7 +312,7 @@ class BetaTestingScreen(Screen):
         self.user_branch.text = self.set.sw_branch.strip('* ')
         self.beta_version.text = self.set.latest_sw_beta
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l
-            )
+                                                 )
         self.language_button.values = self.l.supported_languages
         self.language_button.text = self.l.lang
         self.text_inputs = [self.user_branch]
@@ -334,7 +337,7 @@ class BetaTestingScreen(Screen):
             message = self.l.get_str('Please wait') + '...\n' + self.l.get_str(
                 'Console will reboot to finish update.')
             wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.
-                l, description=message)
+                                              l, description=message)
 
             def nested_branch_update(dt):
                 self.set.update_config()
@@ -342,7 +345,7 @@ class BetaTestingScreen(Screen):
                     None, ' ')
                 checkout_exit_code = os.system(
                     'cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout '
-                     + branch_name_formatted)
+                    + branch_name_formatted)
                 pull_exit_code = os.system('git pull')
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
@@ -352,11 +355,12 @@ class BetaTestingScreen(Screen):
                     wait_popup.popup.dismiss()
                     message = self.l.get_str(
                         'Failed to checkout and pull branch.'
-                        ) + '\n' + self.l.get_str(
+                    ) + '\n' + self.l.get_str(
                         'Please check the spelling of your branch and your internet connection.'
-                        )
+                    )
                     error_popup = popup_info.PopupError(self.systemtools_sm
-                        .sm, self.l, message)
+                                                        .sm, self.l, message)
+
             Clock.schedule_once(nested_branch_update, 0.5)
 
     def update_to_latest_beta(self):

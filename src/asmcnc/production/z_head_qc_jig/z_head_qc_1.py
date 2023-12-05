@@ -1,11 +1,14 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
 from datetime import datetime
-from asmcnc.skavaUI import widget_status_bar
-from asmcnc.skavaUI import popup_info
-from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.skavaUI import popup_info
+from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadQC1>:
@@ -405,7 +408,7 @@ Builder.load_string(
             pos: self.pos
 
 """
-    )
+)
 
 
 def log(message):
@@ -421,18 +424,18 @@ class ZHeadQC1(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self):
         self.m.is_laser_enabled = True
         self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
         self.poll_for_limits = Clock.schedule_interval(self.
-            update_checkboxes, 0.4)
+                                                       update_checkboxes, 0.4)
         self.poll_for_temps_power = Clock.schedule_interval(self.
-            temp_power_check, 5)
+                                                            temp_power_check, 5)
         self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, 0.4)
+                                                       update_status_text, 0.4)
 
     def on_leave(self):
         Clock.unschedule(self.poll_for_status)
@@ -442,7 +445,7 @@ class ZHeadQC1(Screen):
     def update_status_text(self, dt):
         try:
             self.console_status_text.text = self.sm.get_screen('home'
-                ).gcode_monitor_widget.consoleStatusText.text
+                                                               ).gcode_monitor_widget.consoleStatusText.text
         except:
             pass
 
@@ -452,7 +455,7 @@ class ZHeadQC1(Screen):
     def scrape_fw_version(self, dt):
         try:
             self.fw_version_label.text = 'FW: ' + str(str(self.m.s.
-                fw_version).split('; HW')[0])
+                                                          fw_version).split('; HW')[0])
             if self.poll_for_fw != None:
                 Clock.unschedule(self.poll_for_fw)
         except:
@@ -466,18 +469,18 @@ class ZHeadQC1(Screen):
             self.bake_grbl_check.source = (
                 './asmcnc/skavaUI/img/template_cancel.png')
             popup_info.PopupError(self.sm, self.l,
-                "X current read in as 0! Can't set correct Z travel.")
+                                  "X current read in as 0! Can't set correct Z travel.")
 
     def test_motor_chips(self):
         self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.
-            y_min_jog_abs_limit, 6000)
+                               y_min_jog_abs_limit, 6000)
         self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit, 750)
         Clock.schedule_once(self.try_start_motor_chips_test, 0.4)
 
     def try_start_motor_chips_test(self, dt):
         if self.m.s.m_state == 'Idle':
             self.m.send_command_to_motor('REPORT RAW SG SET', command=
-                REPORT_RAW_SG, value=1)
+            REPORT_RAW_SG, value=1)
             self.m.s.write_command('$J=G91 X700 Z-63 F8035')
             Clock.schedule_once(self.check_sg_values, 3)
         elif self.m.s.m_state == 'Jog':
@@ -494,7 +497,7 @@ class ZHeadQC1(Screen):
             else:
                 pass_fail = pass_fail * False
                 fail_report.append('X1 motor SG value: ' + str(self.m.s.
-                    sg_x1_motor))
+                                                               sg_x1_motor))
                 fail_report.append('Should be between %s and %s.' % (
                     lower_sg_limit, upper_sg_limit))
             if lower_sg_limit <= self.m.s.sg_x2_motor <= upper_sg_limit:
@@ -502,7 +505,7 @@ class ZHeadQC1(Screen):
             else:
                 pass_fail = pass_fail * False
                 fail_report.append('X2 motor SG value: ' + str(self.m.s.
-                    sg_x2_motor))
+                                                               sg_x2_motor))
                 fail_report.append('Should be between %s and %s.' % (
                     lower_sg_limit, upper_sg_limit))
         elif lower_sg_limit <= self.m.s.sg_x_motor_axis <= upper_sg_limit:
@@ -510,7 +513,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('X motor/axis SG value: ' + str(self.m.s.
-                sg_x_motor_axis))
+                                                               sg_x_motor_axis))
             fail_report.append('Should be between %s and %s.' % (
                 lower_sg_limit, upper_sg_limit))
         if lower_sg_limit <= self.m.s.sg_z_motor_axis <= upper_sg_limit:
@@ -518,20 +521,20 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('Z motor/axis SG value: ' + str(self.m.s.
-                sg_z_motor_axis))
+                                                               sg_z_motor_axis))
             fail_report.append('Should be between %s and %s.' % (
                 lower_sg_limit, upper_sg_limit))
         if not pass_fail:
             fail_report_string = '\n'.join(fail_report)
             popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm,
-                fail_report_string)
+                                                          fail_report_string)
             self.motor_chips_check.source = (
                 './asmcnc/skavaUI/img/template_cancel.png')
         else:
             self.motor_chips_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
         self.m.send_command_to_motor('REPORT RAW SG UNSET', command=
-            REPORT_RAW_SG, value=0)
+        REPORT_RAW_SG, value=0)
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
@@ -595,7 +598,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('PCB Temperature: ' + str(self.m.s.pcb_temp) +
-                ' degrees C')
+                               ' degrees C')
             fail_report.append(
                 'Should be greater than 10 and less than 70 deg C.')
         if 15 < self.m.s.motor_driver_temp < 100:
@@ -603,7 +606,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('Motor Driver Temperature: ' + str(self.m.s.
-                motor_driver_temp) + ' degrees C')
+                                                                  motor_driver_temp) + ' degrees C')
             fail_report.append(
                 'Should be greater than 15 and less than 100 deg C.')
         if 0 < self.m.s.transistor_heatsink_temp < 100:
@@ -619,7 +622,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('Microcontroller voltage: ' + str(self.m.s.
-                microcontroller_mV) + ' mV')
+                                                                 microcontroller_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4500 and less than 5500 mV.')
         if 4500 < self.m.s.LED_mV < 5500:
@@ -627,7 +630,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('LED (dust shoe) voltage: ' + str(self.m.s.
-                LED_mV) + ' mV')
+                                                                 LED_mV) + ' mV')
             fail_report.append(
                 'Should be greater than 4500 and less than 5500 mV.')
         if 22000 < self.m.s.PSU_mV < 26000:
@@ -635,7 +638,7 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail * False
             fail_report.append('24V PSU Voltage: ' + str(self.m.s.PSU_mV) +
-                ' mV')
+                               ' mV')
             fail_report.append(
                 'Should be greater than 22000 and less than 26000 mV.')
         if self.m.s.power_loss_detected == True:
@@ -649,7 +652,7 @@ class ZHeadQC1(Screen):
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = '\n'.join(fail_report)
             popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm,
-                fail_report_string)
+                                                          fail_report_string)
             self.temp_voltage_power_check.source = (
                 './asmcnc/skavaUI/img/template_cancel.png')
         else:

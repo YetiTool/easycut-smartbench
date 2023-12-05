@@ -2,11 +2,11 @@
 Created on nov 2020
 @author: Letty
 """
+import os
+
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -159,7 +159,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class WelcomeTextScreen(Screen):
@@ -184,7 +184,7 @@ class WelcomeTextScreen(Screen):
             'Thank you for purchasing SmartBench.')
         self.next_steps_label.text = self.l.get_str(
             'Please follow the next steps to set up your Console, and complete your warranty registration process.'
-            )
+        )
         self.minutes_label.text = self.l.get_str(
             'It will only a take a few minutes.')
         self.next_button.text = self.l.get_str('Next') + '...'
@@ -192,12 +192,12 @@ class WelcomeTextScreen(Screen):
     def update_seen(self):
         show_user_welcome_app = os.popen(
             'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
-            ).read()
+        ).read()
         if not show_user_welcome_app:
             os.system(
                 "sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt"
-                )
+            )
         elif 'True' in show_user_welcome_app:
             os.system(
                 'sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt'
-                )
+            )

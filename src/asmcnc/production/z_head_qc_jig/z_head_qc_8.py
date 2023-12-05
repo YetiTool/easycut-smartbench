@@ -1,8 +1,9 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_status_bar
-import datetime
+
 Builder.load_string(
     """
 <ZHeadQC8>:
@@ -53,7 +54,7 @@ Builder.load_string(
             pos: self.pos
 
 """
-    )
+)
 
 
 class ZHeadQC8(Screen):
@@ -63,7 +64,7 @@ class ZHeadQC8(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def disconnect(self):
@@ -84,7 +85,7 @@ class ZHeadQC8(Screen):
     def do_connection(self, dt):
         self.m.reconnect_serial_connection()
         self.poll_for_reconnection = Clock.schedule_interval(self.
-            try_start_services, 0.4)
+                                                             try_start_services, 0.4)
 
     def try_start_services(self, dt):
         if self.m.s.is_connected():

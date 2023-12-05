@@ -4,13 +4,16 @@ Tabbed maintenance screen, for setting the laser datum; monitoring brush life.
 
 @author: Letty
 """
-import os
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
-from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, widget_maintenance_brush_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, \
+    widget_maintenance_laser_buttons, widget_maintenance_laser_switch, widget_maintenance_brush_use, \
+    widget_maintenance_brush_life, widget_maintenance_brush_monitor, widget_maintenance_brush_save, \
+    widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, widget_maintenance_touchplate_offset, \
+    widget_maintenance_z_lubrication_reminder, widget_maintenance_spindle_health_check
+
 Builder.load_string(
     """
 
@@ -431,7 +434,7 @@ Builder.load_string(
                     allow_stretch: True
 
 """
-    )
+)
 
 
 class MaintenanceScreenClass(Screen):
@@ -450,14 +453,15 @@ class MaintenanceScreenClass(Screen):
             machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine
-            =self.m, screen_manager=self.sm, localization=self.l, job=self.jd)
+                                                                        =self.m, screen_manager=self.sm,
+                                                                        localization=self.l, job=self.jd)
         self.z_move_container.add_widget(self.z_move_widget)
         self.laser_datum_buttons_widget = (widget_maintenance_laser_buttons
-            .LaserDatumButtons(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                           .LaserDatumButtons(machine=self.m, screen_manager=self.sm,
+                                                              localization=self.l))
         self.laser_button_container.add_widget(self.laser_datum_buttons_widget)
         self.laser_switch_widget = (widget_maintenance_laser_switch.
-            LaserOnOffWidget(machine=self.m, screen_manager=self.sm))
+                                    LaserOnOffWidget(machine=self.m, screen_manager=self.sm))
         self.switch_container.add_widget(self.laser_switch_widget)
         self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(
             machine=self.m, screen_manager=self.sm, localization=self.l)
@@ -469,37 +473,37 @@ class MaintenanceScreenClass(Screen):
             machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_save_container.add_widget(self.brush_save_widget)
         self.monitor_percentage = (1 - self.m.spindle_brush_use_seconds /
-            self.m.spindle_brush_lifetime_seconds)
+                                   self.m.spindle_brush_lifetime_seconds)
         self.brush_monitor_widget = (widget_maintenance_brush_monitor.
-            BrushMonitorWidget(machine=self.m, screen_manager=self.sm,
-            input_percentage=self.monitor_percentage))
+                                     BrushMonitorWidget(machine=self.m, screen_manager=self.sm,
+                                                        input_percentage=self.monitor_percentage))
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
         self.spindle_settings_widget = (widget_maintenance_spindle_settings
-            .SpindleSettingsWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                        .SpindleSettingsWidget(machine=self.m, screen_manager=self.sm,
+                                                               localization=self.l))
         self.spindle_settings_container.add_widget(self.spindle_settings_widget
-            )
+                                                   )
         self.z_misc_save_widget = (widget_maintenance_z_misc_save.
-            ZMiscSaveWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                   ZMiscSaveWidget(machine=self.m, screen_manager=self.sm,
+                                                   localization=self.l))
         self.z_misc_save_container.add_widget(self.z_misc_save_widget)
         self.touchplate_offset_widget = (widget_maintenance_touchplate_offset
-            .TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                         .TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm,
+                                                                 localization=self.l))
         self.touchplate_offset_container.add_widget(self.
-            touchplate_offset_widget)
+                                                    touchplate_offset_widget)
         self.z_lubrication_reminder_widget = (
             widget_maintenance_z_lubrication_reminder.
             ZLubricationReminderWidget(machine=self.m, screen_manager=self.
-            sm, localization=self.l))
+                                       sm, localization=self.l))
         self.z_lubrication_reminder_container.add_widget(self.
-            z_lubrication_reminder_widget)
+                                                         z_lubrication_reminder_widget)
         if self.m.theateam():
             self.add_plus_tab()
         self.update_strings()
         self.text_inputs = [self.brush_use_widget.brush_use, self.
-            brush_life_widget.brush_life, self.touchplate_offset_widget.
-            touchplate_offset]
+        brush_life_widget.brush_life, self.touchplate_offset_widget.
+                            touchplate_offset]
 
     def quit_to_lobby(self):
         self.on_tab_switch()
@@ -512,11 +516,11 @@ class MaintenanceScreenClass(Screen):
             self.laser_switch_widget.laser_switch.active = False
         self.laser_switch_widget.toggle_laser()
         self.brush_use_widget.brush_use.text = str(int(self.m.
-            spindle_brush_use_seconds / 3600))
+                                                       spindle_brush_use_seconds / 3600))
         self.brush_life_widget.brush_life.text = str(int(self.m.
-            spindle_brush_lifetime_seconds / 3600))
+                                                         spindle_brush_lifetime_seconds / 3600))
         value = (1 - self.m.spindle_brush_use_seconds / self.m.
-            spindle_brush_lifetime_seconds)
+                 spindle_brush_lifetime_seconds)
         self.brush_monitor_widget.set_percentage(value)
         if self.m.spindle_digital:
             string_digital = 'digital'
@@ -529,29 +533,30 @@ class MaintenanceScreenClass(Screen):
         else:
             self.spindle_settings_widget.stylus_switch.active = False
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.
-            spindle_brand) + ' ' + string_digital + ' ' + str(self.m.
+                                                                    spindle_brand) + ' ' + string_digital + ' ' + str(
+            self.m.
             spindle_voltage) + 'V'
         if 'SC2' in self.m.spindle_brand:
             self.spindle_settings_widget.show_spindle_data_container()
         else:
             self.spindle_settings_widget.hide_spindle_data_container()
         self.spindle_settings_widget.cooldown_time_slider.value = (self.m.
-            spindle_cooldown_time_seconds)
+                                                                   spindle_cooldown_time_seconds)
         self.spindle_settings_widget.cooldown_speed_slider.value = (self.m.
-            spindle_cooldown_rpm)
+                                                                    spindle_cooldown_rpm)
         self.spindle_settings_widget.rpm_override = (self.m.
-            spindle_cooldown_rpm_override)
+                                                     spindle_cooldown_rpm_override)
         self.spindle_settings_widget.spindle_brand.values = (self.
-            spindle_settings_widget.brand_list_sc1)
+                                                             spindle_settings_widget.brand_list_sc1)
         try:
             self.m.s.setting_51
             if self.m.theateam():
                 self.spindle_settings_widget.spindle_brand.values = (self.
-                    spindle_settings_widget.brand_list_sc2)
+                                                                     spindle_settings_widget.brand_list_sc2)
         except:
             pass
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.
-            z_touch_plate_thickness)
+                                                                   z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
         if self.m.theateam() and self.plus_tab.disabled:
             self.add_plus_tab()
@@ -566,7 +571,7 @@ class MaintenanceScreenClass(Screen):
         elif self.landing_tab == 'spindle_tab':
             self.tab_panel.switch_to(self.spindle_tab)
         elif self.m.theateam(
-            ) and self.landing_tab == 'spindle_health_check_tab':
+        ) and self.landing_tab == 'spindle_health_check_tab':
             self.tab_panel.switch_to(self.plus_tab)
         else:
             try:
@@ -579,7 +584,7 @@ class MaintenanceScreenClass(Screen):
             './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png')
         self.laser_datum_buttons_widget.save_button.disabled = True
         self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled,
-            self.m.laser_offset_x_value, self.m.laser_offset_y_value)
+                                                self.m.laser_offset_x_value, self.m.laser_offset_y_value)
         if self.m.is_laser_enabled == True:
             self.sm.get_screen('home').default_datum_choice = 'laser'
         else:
@@ -595,9 +600,9 @@ class MaintenanceScreenClass(Screen):
         self.spindle_health_check_widget = (
             widget_maintenance_spindle_health_check.
             WidgetSpindleHealthCheck(machine=self.m, screen_manager=self.sm,
-            localization=self.l))
+                                     localization=self.l))
         self.spindle_health_check_container.add_widget(self.
-            spindle_health_check_widget)
+                                                       spindle_health_check_widget)
 
     def update_strings(self):
         self.laser_datum_label.text = self.l.get_bold('LASER')
@@ -626,5 +631,5 @@ class MaintenanceScreenClass(Screen):
         if self.tab_panel.current_tab != self.laser_tab:
             self.laser_datum_buttons_widget.save_button_image.source = (
                 './asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png'
-                )
+            )
             self.laser_datum_buttons_widget.save_button.disabled = True

@@ -1,12 +1,14 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
-from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
-from asmcnc.skavaUI.popup_info import PopupWait, PopupWarning
-from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+from asmcnc.apps.systemTools_app.screens.calibration.widget_current_adjustment import CurrentAdjustmentWidget
+from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.skavaUI.popup_info import PopupWait, PopupWarning
+
 Builder.load_string(
     """
 <CurrentAdjustment>:
@@ -237,7 +239,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class CurrentAdjustment(Screen):
@@ -251,47 +253,52 @@ class CurrentAdjustment(Screen):
         self.l = kwargs['l']
         self.kb = kwargs['keyboard']
         self.xy_move_container.add_widget(widget_final_test_xy_move.
-            FinalTestXYMove(machine=self.m, screen_manager=self.
-            systemtools_sm.sm))
+                                          FinalTestXYMove(machine=self.m, screen_manager=self.
+                                                          systemtools_sm.sm))
         self.x1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.
-            m, motor=TMC_X1, localization=self.l, systemtools=self.
-            systemtools_sm)
+                                                                    m, motor=TMC_X1, localization=self.l,
+                                                                    systemtools=self.
+                                                                    systemtools_sm)
         self.current_adjustment_container.add_widget(self.
-            x1_current_adjustment_widget)
+                                                     x1_current_adjustment_widget)
         self.x2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.
-            m, motor=TMC_X2, localization=self.l, systemtools=self.
-            systemtools_sm)
+                                                                    m, motor=TMC_X2, localization=self.l,
+                                                                    systemtools=self.
+                                                                    systemtools_sm)
         self.current_adjustment_container.add_widget(self.
-            x2_current_adjustment_widget)
+                                                     x2_current_adjustment_widget)
         self.y1_current_adjustment_widget = CurrentAdjustmentWidget(m=self.
-            m, motor=TMC_Y1, localization=self.l, systemtools=self.
-            systemtools_sm)
+                                                                    m, motor=TMC_Y1, localization=self.l,
+                                                                    systemtools=self.
+                                                                    systemtools_sm)
         self.current_adjustment_container.add_widget(self.
-            y1_current_adjustment_widget)
+                                                     y1_current_adjustment_widget)
         self.y2_current_adjustment_widget = CurrentAdjustmentWidget(m=self.
-            m, motor=TMC_Y2, localization=self.l, systemtools=self.
-            systemtools_sm)
+                                                                    m, motor=TMC_Y2, localization=self.l,
+                                                                    systemtools=self.
+                                                                    systemtools_sm)
         self.current_adjustment_container.add_widget(self.
-            y2_current_adjustment_widget)
+                                                     y2_current_adjustment_widget)
         self.z_current_adjustment_widget = CurrentAdjustmentWidget(m=self.m,
-            motor=TMC_Z, localization=self.l, systemtools=self.systemtools_sm)
+                                                                   motor=TMC_Z, localization=self.l,
+                                                                   systemtools=self.systemtools_sm)
         self.current_adjustment_container.add_widget(self.
-            z_current_adjustment_widget)
+                                                     z_current_adjustment_widget)
         self.clear_sg_vals()
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(
             machine=self.m, screen_manager=self.systemtools_sm.sm))
         self.text_inputs = [self.x1_current_adjustment_widget.
-            current_current_label, self.x2_current_adjustment_widget.
-            current_current_label, self.y1_current_adjustment_widget.
-            current_current_label, self.y2_current_adjustment_widget.
-            current_current_label, self.z_current_adjustment_widget.
-            current_current_label]
+                            current_current_label, self.x2_current_adjustment_widget.
+                            current_current_label, self.y1_current_adjustment_widget.
+                            current_current_label, self.y2_current_adjustment_widget.
+                            current_current_label, self.z_current_adjustment_widget.
+                            current_current_label]
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
         self.m.s.FINAL_TEST = True
         self.update_protocol_status_label_event = Clock.schedule_interval(self
-            .update_protocol_status_label, 0.1)
+                                                                          .update_protocol_status_label, 0.1)
 
     def on_leave(self):
         self.m.s.FINAL_TEST = False
@@ -305,7 +312,7 @@ class CurrentAdjustment(Screen):
     def back_to_fac_settings(self):
         if not self.m.state().startswith('Idle'):
             PopupWarning(self.systemtools_sm.sm, self.l,
-                "SB not Idle!! Can't reset currents!")
+                         "SB not Idle!! Can't reset currents!")
             return
         self.raw_sg_toggle_button.state = 'normal'
         self.toggle_raw_sg_values()
@@ -316,7 +323,7 @@ class CurrentAdjustment(Screen):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('current_adjustment',
-            'current_adjustment')
+                                        'current_adjustment')
 
     def measure(self):
         if self.m.s.sg_x_motor_axis != -999:
@@ -367,17 +374,17 @@ class CurrentAdjustment(Screen):
     def reset_currents(self):
         if not self.m.state().startswith('Idle'):
             PopupWarning(self.systemtools_sm.sm, self.l,
-                "SB not Idle!! Can't reset currents!")
+                         "SB not Idle!! Can't reset currents!")
             return False
         self.wait_popup_for_reset_currents = PopupWait(self.systemtools_sm.
-            sm, self.l)
+                                                       sm, self.l)
         if not self.x1_current_adjustment_widget.reset_current(
-            ) or not self.x2_current_adjustment_widget.reset_current(
-            ) or not self.y1_current_adjustment_widget.reset_current(
-            ) or not self.y2_current_adjustment_widget.reset_current(
-            ) or not self.z_current_adjustment_widget.reset_current():
+        ) or not self.x2_current_adjustment_widget.reset_current(
+        ) or not self.y1_current_adjustment_widget.reset_current(
+        ) or not self.y2_current_adjustment_widget.reset_current(
+        ) or not self.z_current_adjustment_widget.reset_current():
             PopupWarning(self.systemtools_sm.sm, self.l,
-                'Issue resetting currents!')
+                         'Issue resetting currents!')
         self.wait_while_currents_reset()
 
     def wait_while_currents_reset(self, dt=0):
@@ -385,27 +392,27 @@ class CurrentAdjustment(Screen):
             Clock.schedule_once(self.wait_while_currents_reset, 0.2)
         else:
             Clock.schedule_once(lambda dt: self.
-                wait_popup_for_reset_currents.popup.dismiss(), 0.1)
+                                wait_popup_for_reset_currents.popup.dismiss(), 0.1)
 
     def toggle_raw_sg_values(self):
         if self.raw_sg_toggle_button.state == 'normal':
             self.m.send_command_to_motor('REPORT RAW SG UNSET', command=
-                REPORT_RAW_SG, value=0)
+            REPORT_RAW_SG, value=0)
         else:
             self.m.send_command_to_motor('REPORT RAW SG SET', command=
-                REPORT_RAW_SG, value=1)
+            REPORT_RAW_SG, value=1)
 
     def confirm_store_values(self):
         if self.m.state().startswith('Idle'):
             PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm,
-                self.l, self)
+                                           self.l, self)
         else:
             PopupWarning(self.systemtools_sm.sm, self.l,
-                "SB not Idle!! Can't store")
+                         "SB not Idle!! Can't store")
 
     def store_values_and_wait_for_handshake(self):
         self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,
-            self.l)
+                                                    self.l)
         Clock.schedule_once(self.do_tmc_value_store, 0.2)
 
     def do_tmc_value_store(self, dt=0):
@@ -418,7 +425,7 @@ class CurrentAdjustment(Screen):
             self.wait_popup_for_tmc_read_in = None
         else:
             Clock.schedule_once(self.
-                wait_while_values_stored_and_read_back_in, 0.2)
+                                wait_while_values_stored_and_read_back_in, 0.2)
 
     def update_protocol_status_label(self, dt=0):
         if self.m.s.write_protocol_buffer:

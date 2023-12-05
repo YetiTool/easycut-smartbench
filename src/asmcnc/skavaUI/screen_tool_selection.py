@@ -4,9 +4,9 @@ Created on 30 June 2021
 
 Screen to select router or CNC stylus tool
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -85,7 +85,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class ToolSelectionScreen(Screen):

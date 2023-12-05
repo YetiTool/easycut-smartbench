@@ -2,16 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
-import os, sys
-import socket
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -138,7 +133,7 @@ Builder.load_string(
             valign: 'middle'
 
 """
-    )
+)
 
 
 class StatusBar(Widget):
@@ -154,9 +149,9 @@ class StatusBar(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.
-            GRBL_REPORT_INTERVAL)
+                                GRBL_REPORT_INTERVAL)
         Clock.schedule_interval(self.refresh_ip_label_value, self.
-            IP_REPORT_INTERVAL)
+                                IP_REPORT_INTERVAL)
 
     def on_enter(self):
         self.refresh_ip_label_value()
@@ -164,26 +159,26 @@ class StatusBar(Widget):
     def check_limit_switch(self):
         if self.m.s.limit_x:
             self.grbl_xm_label.text = ('m[b][color=ff0000]x[/color][/b]:\n' +
-                str(round(self.m.mpos_x(), 2)))
+                                       str(round(self.m.mpos_x(), 2)))
         elif self.m.s.limit_X:
             self.grbl_xm_label.text = ('m[b][color=ff0000]X[/color][/b]:\n' +
-                str(round(self.m.mpos_x(), 2)))
+                                       str(round(self.m.mpos_x(), 2)))
         else:
             self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
         if self.m.s.limit_Y_axis:
             self.grbl_ym_label.text = ('m[b][color=ff0000]Y[/color][/b]:\n' +
-                str(round(self.m.mpos_y(), 2)))
+                                       str(round(self.m.mpos_y(), 2)))
         elif self.m.s.limit_Y:
             self.grbl_ym_label.text = ('m[b][color=ff0000]Y[/color][/b]:\n' +
-                str(round(self.m.mpos_y(), 2)))
+                                       str(round(self.m.mpos_y(), 2)))
         elif self.m.s.limit_y:
             self.grbl_ym_label.text = ('m[b][color=ff0000]y[/color][/b]:\n' +
-                str(round(self.m.mpos_y(), 2)))
+                                       str(round(self.m.mpos_y(), 2)))
         else:
             self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
         if self.m.s.limit_z:
             self.grbl_zm_label.text = ('m[b][color=ff0000]Z[/color][/b]:\n' +
-                str(round(self.m.mpos_z(), 2)))
+                                       str(round(self.m.mpos_z(), 2)))
         else:
             self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
 

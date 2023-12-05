@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 '''
 ########################################################
@@ -7,12 +7,16 @@ Run from easycut-smartbench folder, with
 python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 '''
 
-import sys, os, subprocess
+import os
+import subprocess
+import sys
+
 sys.path.append('./src')
 os.chdir('./src')
 
 from kivy.config import Config
 from kivy.clock import Clock
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
@@ -20,25 +24,17 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import unittest
-from mock import Mock, MagicMock, patch
+from mock import Mock
 
-
-import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from asmcnc.comms import localization
 from kivy.lang import Builder
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
-from asmcnc.comms import server_connection
-from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+from settings import settings_manager  # @UnresolvedImport
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -144,9 +140,9 @@ Builder.load_string("""
             id: status_container
 """)
 
+
 # Declare both screens
 class TestScreen(Screen):
-
     common_move_widget = Mock()
     do_toggle = False
 
@@ -158,10 +154,14 @@ class TestScreen(Screen):
         self.db = kwargs['db']
         self.status_container.add_widget(widget_sg_status_bar.SGStatusBar(machine=self.m, screen_manager=self.sm))
 
-    def check_all(self): self.m.check_x_y_z_calibration()
-    def check_zh(self): self.m.check_x_z_calibration()
-    def check_y(self): self.m.check_y_calibration()
+    def check_all(self):
+        self.m.check_x_y_z_calibration()
 
+    def check_zh(self):
+        self.m.check_x_z_calibration()
+
+    def check_y(self):
+        self.m.check_y_calibration()
 
     def toggle_pin(self):
         self.m.toggle_reset_pin()
@@ -184,7 +184,7 @@ class TestScreen(Screen):
         if self.m.TMC_registers_have_been_read_in():
             self.register_label.text = "X1 threshold: " + str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.update_label(), 1)
 
     def store_params(self):
@@ -208,19 +208,18 @@ class TestScreen(Screen):
     def fw_update_wo_comms_break(self):
 
         cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-        proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
 
-        if exit_code == 0: 
+        if exit_code == 0:
             did_fw_update_succeed = "Success!"
 
-        else: 
+        else:
             did_fw_update_succeed = "Update failed."
 
         print(did_fw_update_succeed)
         print(str(stdout))
-
 
     def test_fw_update(self):
 
@@ -236,10 +235,9 @@ class TestScreen(Screen):
             if self.do_toggle: self.m.set_mode_of_reset_pin()
 
             cmd = "grbl_file=/home/pi/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
-
 
             connect()
 
@@ -259,10 +257,10 @@ class TestScreen(Screen):
                 Clock.schedule_once(update_complete, 2)
 
         def update_complete(dt):
-            if self.exit_code == 0: 
+            if self.exit_code == 0:
                 did_fw_update_succeed = "Success!"
 
-            else: 
+            else:
                 did_fw_update_succeed = "Update failed."
 
             print(did_fw_update_succeed)
@@ -271,37 +269,9 @@ class TestScreen(Screen):
         disconnect_and_update()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ScreenTest(App):
 
     def build(self):
-
         print("Starting App:")
 
         # Establish screens
@@ -314,7 +284,7 @@ class ScreenTest(App):
         sett = settings_manager.Settings(sm)
 
         # Initialise 'j'ob 'd'ata object
-        jd = job_data.JobData(localization = l, settings_manager = sett)
+        jd = job_data.JobData(localization=l, settings_manager=sett)
 
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
@@ -334,5 +304,6 @@ class ScreenTest(App):
         sm.current = "door"
 
         return sm
+
 
 ScreenTest().run()

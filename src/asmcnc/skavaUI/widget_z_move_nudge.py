@@ -1,6 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
 from asmcnc.skavaUI import widget_z_height
+
 Builder.load_string(
     """
 
@@ -82,7 +84,7 @@ Builder.load_string(
             font_size: dp(0.025*app.width)
 
 """
-    )
+)
 
 
 class ZMoveNudge(Widget):
@@ -94,20 +96,21 @@ class ZMoveNudge(Widget):
         self.jd = kwargs['job']
         self.virtual_z_container.add_widget(widget_z_height.VirtualZ(
             machine=self.m, screen_manager=self.sm, job=self.jd))
+
     jogMode = 'free'
 
     def jog_z(self, case):
         self.m.set_led_colour('WHITE')
         feed_speed = self.sm.get_screen('nudge'
-            ).nudge_speed_widget.feedSpeedJogZ
+                                        ).nudge_speed_widget.feedSpeedJogZ
         self.jogMode = self.sm.get_screen('nudge').xy_move_widget.jogMode
         if self.jogMode == 'free':
             if case == 'Z-':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_min_jog_abs_limit, feed_speed)
+                                                z_min_jog_abs_limit, feed_speed)
             if case == 'Z+':
                 self.m.jog_absolute_single_axis('Z', self.m.
-                    z_max_jog_abs_limit, feed_speed)
+                                                z_max_jog_abs_limit, feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'Z+':
                 self.m.jog_relative('Z', 0.01, feed_speed)

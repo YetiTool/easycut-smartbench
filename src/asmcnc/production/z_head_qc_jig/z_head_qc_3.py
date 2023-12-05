@@ -1,7 +1,9 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
 import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQC3>:
@@ -43,7 +45,7 @@ Builder.load_string(
                 font_size: dp(0.0625*app.width)
 
 """
-    )
+)
 
 
 class ZHeadQC3(Screen):
@@ -67,9 +69,9 @@ class ZHeadQC3(Screen):
     def start_calibration_timer(self):
         if self.m.state().startswith('Idle'):
             self.m.jog_absolute_xy(self.m.x_min_jog_abs_limit, self.m.
-                y_min_jog_abs_limit, 6000)
+                                   y_min_jog_abs_limit, 6000)
             self.m.jog_absolute_single_axis('Z', self.m.z_max_jog_abs_limit,
-                750)
+                                            750)
             self.m.jog_relative('X', 30, 6000)
             self.m.jog_relative('X', -30, 6000)
             self.update_time(self.max_minutes * self.one_minute)
@@ -91,8 +93,9 @@ class ZHeadQC3(Screen):
                     seconds -= 1
                     self.seconds = seconds
                 self.calibrate_time.text = str(datetime.timedelta(seconds=
-                    seconds))
+                                                                  seconds))
                 Clock.schedule_once(lambda dt: count_down(seconds), 1)
+
         Clock.schedule_once(lambda dt: count_down(seconds), 0)
 
     def enter_prev_screen(self):

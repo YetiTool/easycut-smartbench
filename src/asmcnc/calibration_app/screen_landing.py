@@ -5,13 +5,14 @@ Landing Screen for the Calibration App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-from asmcnc.calibration_app import screen_prep_calibration
-from asmcnc.calibration_app import screen_wait
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_finished
+from asmcnc.calibration_app import screen_prep_calibration
 from asmcnc.calibration_app import screen_tape_measure
+from asmcnc.calibration_app import screen_wait
+
 Builder.load_string(
     """
 
@@ -140,7 +141,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 """
-    )
+)
 
 
 class CalibrationLandingScreenClass(Screen):
@@ -163,7 +164,7 @@ class CalibrationLandingScreenClass(Screen):
     def next_screen(self):
         if not self.sm.has_screen('wait'):
             wait_screen = screen_wait.WaitScreenClass(name='wait',
-                screen_manager=self.sm, machine=self.m)
+                                                      screen_manager=self.sm, machine=self.m)
             self.sm.add_widget(wait_screen)
         if not self.sm.has_screen('tape_measure_alert'):
             tape_measure_screen = screen_tape_measure.TapeMeasureScreenClass(
@@ -172,7 +173,8 @@ class CalibrationLandingScreenClass(Screen):
             self.sm.add_widget(tape_measure_screen)
         if not self.sm.has_screen('calibration_complete'):
             final_screen = screen_finished.FinishedCalScreenClass(name=
-                'calibration_complete', screen_manager=self.sm, machine=self.m)
+                                                                  'calibration_complete', screen_manager=self.sm,
+                                                                  machine=self.m)
             self.sm.add_widget(final_screen)
         if not self.sm.has_screen('prep'):
             prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(
@@ -182,5 +184,5 @@ class CalibrationLandingScreenClass(Screen):
 
     def on_leave(self):
         if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
+                'errorScreen'):
             self.sm.remove_widget(self.sm.get_screen('calibration_landing'))

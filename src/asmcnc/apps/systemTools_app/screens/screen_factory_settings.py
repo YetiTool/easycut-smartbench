@@ -6,22 +6,23 @@ Menu screen for system tools app
 """
 import os
 import sys
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
+
 from kivy.clock import Clock
-from kivy.uix.spinner import Spinner
-from asmcnc.skavaUI import popup_info
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.systemTools_app.screens import popup_factory_settings
 from asmcnc.apps.systemTools_app.screens import popup_system
-from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
-from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
-from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
-from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
-from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
-from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
+from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
+from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
+from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import CalibrationTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_current_adjustment import CurrentAdjustment
+from asmcnc.apps.systemTools_app.screens.calibration.screen_overnight_test import OvernightTesting
+from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers import UploadSerialNumbersScreen
 from asmcnc.production.database.calibration_database import CalibrationDatabase
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -557,16 +558,16 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class FactorySettingsScreen(Screen):
     latest_machine_model_values = ['SmartBench V1.3 PrecisionPro CNC Router',
-        'SmartBench Mini V1.3 PrecisionPro']
+                                   'SmartBench Mini V1.3 PrecisionPro']
     old_machine_model_values = ['SmartBench V1.0 CNC Router',
-        'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router',
-        'SmartBench V1.2 Precision CNC Router',
-        'SmartBench V1.2 PrecisionPro CNC Router']
+                                'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router',
+                                'SmartBench V1.2 Precision CNC Router',
+                                'SmartBench V1.2 PrecisionPro CNC Router']
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath = '/home/pi/smartbench_serial_number.txt'
     dev_mode = False
@@ -586,7 +587,7 @@ class FactorySettingsScreen(Screen):
         self.latest_platform_version.text = self.set.latest_platform_version
         self.machine_serial.text = '$50 = ' + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.
-            z_touch_plate_thickness)
+                                                     z_touch_plate_thickness)
         self.calibration_db = CalibrationDatabase()
         try:
             serial_number_string = self.get_serial_number()
@@ -607,12 +608,12 @@ class FactorySettingsScreen(Screen):
         self.usb_stick.usb_notifications = False
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(self.
-            connect_to_db_when_creds_loaded, 1)
+                                                           connect_to_db_when_creds_loaded, 1)
         if self.m.theateam():
             self.sc2_compatability_toggle.state = 'down'
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
         self.text_inputs = [self.z_touch_plate_entry, self.serial_prefix,
-            self.serial_number_input, self.product_number_input]
+                            self.serial_number_input, self.product_number_input]
 
     def connect_to_db_when_creds_loaded(self, dt):
         try:
@@ -621,7 +622,7 @@ class FactorySettingsScreen(Screen):
                     Clock.unschedule(self.poll_for_creds_file)
                 os.system(
                     'cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py'
-                    )
+                )
                 print 'Credentials file found on USB'
                 self.calibration_db.set_up_connection()
         except:
@@ -651,7 +652,7 @@ class FactorySettingsScreen(Screen):
         if not os.path.exists(csv_path):
             os.mkdir(csv_path)
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version(
-            '2.5.0', 'Get $54 state'):
+                '2.5.0', 'Get $54 state'):
             if self.m.s.setting_54:
                 self.setting_54_label.text = '$54 = 1'
                 self.setting_54_toggle.state = 'down'
@@ -669,11 +670,11 @@ class FactorySettingsScreen(Screen):
 
     def set_toggle_buttons(self):
         if self.systemtools_sm.sm.get_screen('go'
-            ).show_spindle_overload == False:
+                                             ).show_spindle_overload == False:
             self.show_spindle_overload_toggle.state = 'normal'
             self.show_spindle_overload_toggle.text = 'Show spindle overload'
         elif self.systemtools_sm.sm.get_screen('go'
-            ).show_spindle_overload == True:
+                                               ).show_spindle_overload == True:
             self.show_spindle_overload_toggle.state = 'down'
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
         if self.m.reminders_enabled == True:
@@ -690,14 +691,14 @@ class FactorySettingsScreen(Screen):
             warning_message = (
                 'Touchplate offset should be between 1.00 and 2.00 mm')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         if float(self.z_touch_plate_entry.text) < 1 or float(self.
-            z_touch_plate_entry.text) > 2:
+                                                                     z_touch_plate_entry.text) > 2:
             warning_message = (
                 'Touchplate offset should be between 1.00 and 2.00 mm')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         else:
             return True
@@ -706,41 +707,44 @@ class FactorySettingsScreen(Screen):
         if self.validate_touch_plate_thickness():
             self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
             self.machine_touchplate_thickness.text = str(self.m.
-                z_touch_plate_thickness)
+                                                         z_touch_plate_thickness)
 
     def validate_serial_number(self):
         if str(self.serial_number_input.text) == '' or str(self.
-            product_number_input.text) == '' or str(self.serial_prefix.text
+                                                                   product_number_input.text) == '' or str(
+            self.serial_prefix.text
             ) == '':
             warning_message = 'Serial number format should be: YS6-0000-.00'
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         elif len(str(self.serial_number_input.text)) != 4:
             warning_message = (
                 'Second part of the serial number should be 4 digits long.')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         elif not (str(self.product_number_input.text) == '01' or str(self.
-            product_number_input.text) == '02' or str(self.
-            product_number_input.text) == '03'):
+                                                                             product_number_input.text) == '02' or str(
+            self.
+                    product_number_input.text) == '03'):
             warning_message = 'Product code should 01, 02, or 03.'
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         elif len(str(self.serial_prefix.text)) != 3:
             warning_message = (
                 'First part of the serial number should be 3 characters long.')
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         elif len(str(self.serial_prefix.text) + str(self.
-            serial_number_input.text) + '.' + str(self.product_number_input
-            .text)) != 10:
+                                                            serial_number_input.text) + '.' + str(
+            self.product_number_input
+                    .text)) != 10:
             warning_message = 'Serial number format should be: YS6-0000-.00'
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
         else:
             return True
@@ -751,23 +755,26 @@ class FactorySettingsScreen(Screen):
         self.product_number_input.focus = False
         if self.validate_serial_number():
             full_serial_number = str(self.serial_number_input.text
-                ) + '.' + str(self.product_number_input.text)
+                                     ) + '.' + str(self.product_number_input.text)
             self.m.write_dollar_setting(50, full_serial_number)
             self.machine_serial.text = 'updating...'
 
             def update_text_with_serial():
                 self.machine_serial.text = '$50 = ' + str(self.m.
-                    serial_number())
+                                                          serial_number())
                 self.write_serial_number_to_file()
+
             Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def check_serial_number_for_factory_reset(self):
         if not (str(self.serial_number_input.text) + '.' + str(self.
-            product_number_input.text)).endswith(str(self.m.serial_number())):
+                                                                       product_number_input.text)).endswith(
+            str(self.m.serial_number())):
             return False
         elif len(str(self.serial_prefix.text) + str(self.
-            serial_number_input.text) + '.' + str(self.product_number_input
-            .text)) != 10:
+                                                            serial_number_input.text) + '.' + str(
+            self.product_number_input
+                    .text)) != 10:
             return False
         else:
             return True
@@ -791,10 +798,10 @@ class FactorySettingsScreen(Screen):
             if not self.set.do_git_fsck():
                 message = 'git FSCK errors found! repo corrupt.'
                 popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l,
-                    message, self.set.details_of_fsck)
+                                             message, self.set.details_of_fsck)
                 return False
             if self.write_activation_code_to_file(
-                ) and self.write_serial_number_to_file():
+            ) and self.write_serial_number_to_file():
                 self.remove_creds_file()
                 self.remove_csv_files()
                 self.set.disable_ssh()
@@ -813,6 +820,7 @@ class FactorySettingsScreen(Screen):
                 return True
             else:
                 return False
+
         if self.dev_mode:
             if nested_factory_reset():
                 print 'doing factory reset...'
@@ -822,58 +830,58 @@ class FactorySettingsScreen(Screen):
                 if self.m.s.setting_54:
                     warning_message = (
                         'Please ensure $54 is set to 0 before doing a factory reset.'
-                        )
+                    )
                     popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                        warning_message)
+                                            warning_message)
                     return
             except:
                 pass
             if (self.smartbench_model.text ==
-                'SmartBench model detection failed'):
+                    'SmartBench model detection failed'):
                 warning_message = (
                     'Please ensure machine model is set before doing a factory reset.'
-                    )
+                )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
             elif not self.check_serial_number_for_factory_reset():
                 warning_message = (
                     'Please ensure machine has a serial number before doing a factory reset.'
-                    )
+                )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
             elif self.software_version_label.text != self.latest_software_version.text:
                 warning_message = (
                     'Please ensure machine is fully updated before doing a factory reset.'
-                    )
+                )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
             elif self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = (
                     'Please ensure machine is fully updated before doing a factory reset.'
-                    )
+                )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
             elif nested_factory_reset():
                 reset_warning = ('FACTORY RESET TRIGGERED\n\n' +
-                    """Maintenance reminders set and enabled.
-
-""" +
-                    """[b]VERY VERY IMPORTANT[/b]:
-ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.
-
-"""
-                     +
-                    'Not doing this may corrupt the warranty registration start up sequence.'
-                    )
+                                 """Maintenance reminders set and enabled.
+             
+             """ +
+                                 """[b]VERY VERY IMPORTANT[/b]:
+             ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.
+             
+             """
+                                 +
+                                 'Not doing this may corrupt the warranty registration start up sequence.'
+                                 )
                 popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700,
-                    reset_warning)
+                                     reset_warning)
                 Clock.schedule_once(self.shutdown_console, 5)
             else:
                 warning_message = (
                     'There was an issue doing the factory reset! Get Letty for help.'
-                    )
+                )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
 
     def close_sw(self, dt):
         sys.exit()
@@ -887,7 +895,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 warning_message = (
                     'Please ensure $54 is set to 0 before doing an update.')
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
                 return
         except:
             pass
@@ -899,7 +907,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             if not self.set.do_git_fsck():
                 message = 'git FSCK errors found! repo corrupt.'
                 popup_system.PopupFSCKErrors(self.systemtools_sm.sm, self.l,
-                    message, self.set.details_of_fsck)
+                                             message, self.set.details_of_fsck)
                 self.console_update_button.text = 'Full Console Update (wifi)'
                 return False
             if self.set.get_sw_update_via_wifi():
@@ -909,8 +917,9 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 message = (
                     'Could not get software update, please check connection.')
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message
-                    )
+                                        )
                 self.console_update_button.text = 'Full Console Update (wifi)'
+
         Clock.schedule_once(nested_full_console_update, 1)
 
     def toggle_reminders(self):
@@ -924,16 +933,16 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
     def toggle_spindle_mode(self):
         if self.show_spindle_overload_toggle.state == 'normal':
             self.systemtools_sm.sm.get_screen('go'
-                ).show_spindle_overload = False
+                                              ).show_spindle_overload = False
             self.show_spindle_overload_toggle.text = 'Show spindle overload'
         elif self.show_spindle_overload_toggle.state == 'down':
             self.systemtools_sm.sm.get_screen('go'
-                ).show_spindle_overload = True
+                                              ).show_spindle_overload = True
             self.show_spindle_overload_toggle.text = 'Hide spindle overload'
 
     def toggle_setting_54(self):
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version(
-            '2.5.0', 'Toggle $54'):
+                '2.5.0', 'Toggle $54'):
             if self.setting_54_toggle.state == 'normal':
                 self.setting_54_label.text = '$54 = 0'
                 self.m.write_dollar_setting(54, 0)
@@ -946,15 +955,15 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             self.setting_54_label.text = '$54 = N/A'
             self.setting_54_toggle.state = 'normal'
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'FW not compatible!')
+                                  'FW not compatible!')
 
     def setting_54_info(self):
         info = ('$54 available on FW 2.5 and up\n\n' +
-            """$54 should be set to 1 for all final test procedures
-
-""" +
-            '$54 should be set to 0 when SB is ready to be factory reset and packed'
-            )
+                """$54 should be set to 1 for all final test procedures
+    
+    """ +
+                '$54 should be set to 0 when SB is ready to be factory reset and packed'
+                )
         popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
 
     def diagnostics(self):
@@ -962,8 +971,8 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 
     def update_product_code_with_model(self):
         if (self.smartbench_model.text ==
-            'SmartBench V1.2 Standard CNC Router' or self.smartbench_model.
-            text == 'SmartBench V1.2 Precision CNC Router'):
+                'SmartBench V1.2 Standard CNC Router' or self.smartbench_model.
+                        text == 'SmartBench V1.2 Precision CNC Router'):
             self.product_number_input.text = '02'
         elif 'PrecisionPro' in self.smartbench_model.text:
             self.product_number_input.text = '03'
@@ -979,7 +988,8 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.
-            serial_prefix.text) + str(self.serial_number_input.text))))
+                                                               serial_prefix.text) + str(
+            self.serial_number_input.text))))
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
         ActiveTempStartReduce = ActiveTempStart[0:15]
         Activation_Code_1 = int(ActiveTempStartReduce[0]) * 171350
@@ -997,10 +1007,10 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
         Activation_Code_13 = int(ActiveTempStartReduce[6]) * 53262890
         Activation_Code_14 = int(ActiveTempStartReduce[6]) * 89201233
         Final_Activation_Code = (Activation_Code_1 + Activation_Code_2 +
-            Activation_Code_3 + Activation_Code_4 + Activation_Code_5 +
-            Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
-            Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
-            Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
+                                 Activation_Code_3 + Activation_Code_4 + Activation_Code_5 +
+                                 Activation_Code_6 + Activation_Code_7 + Activation_Code_8 +
+                                 Activation_Code_9 + Activation_Code_10 + Activation_Code_11 +
+                                 Activation_Code_12 + Activation_Code_13 + Activation_Code_14)
         print str(Final_Activation_Code) + '\n'
         return Final_Activation_Code
 
@@ -1019,10 +1029,10 @@ $51 is currently set to """
             except:
                 message += 'N/A'
             popup_factory_settings.PopupSC2Decision(self.systemtools_sm.sm,
-                self.l, message)
+                                                    self.l, message)
         else:
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'Please ensure machine is idle before continuing')
+                                  'Please ensure machine is idle before continuing')
             self.undo_toggle()
 
     def toggle_sc2_compatability(self):
@@ -1033,7 +1043,7 @@ $51 is currently set to """
             except:
                 warning_message = 'Problem removing SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
         else:
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
             try:
@@ -1041,7 +1051,7 @@ $51 is currently set to """
             except:
                 warning_message = 'Problem creating SC2 compatability file!!'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                    warning_message)
+                                        warning_message)
 
     def undo_toggle(self):
         if self.sc2_compatability_toggle.state == 'normal':
@@ -1053,13 +1063,13 @@ $51 is currently set to """
         try:
             file_ser = open(self.machine_serial_number_filepath, 'w+')
             file_ser.write(str(self.serial_prefix.text) + str(self.
-                serial_number_input.text))
+                                                              serial_number_input.text))
             file_ser.close()
             return True
         except:
             warning_message = 'Problem saving serial number!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
 
     def write_activation_code_to_file(self):
@@ -1072,7 +1082,7 @@ $51 is currently set to """
         except:
             warning_message = 'Problem saving activation code!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l,
-                warning_message)
+                                    warning_message)
             return False
 
     def get_serial_number(self):
@@ -1091,28 +1101,28 @@ $51 is currently set to """
     def set_user_to_view_privacy_notice(self):
         user_has_seen_privacy_notice = os.popen(
             'grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt'
-            ).read()
+        ).read()
         if not user_has_seen_privacy_notice:
             os.system(
                 "sudo sed -i -e '$auser_has_seen_privacy_notice=False' /home/pi/easycut-smartbench/src/config.txt"
-                )
+            )
         elif 'True' in user_has_seen_privacy_notice:
             os.system(
                 'sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt'
-                )
+            )
 
     def welcome_user_to_smartbench(self):
         show_user_welcome_app = os.popen(
             'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
-            ).read()
+        ).read()
         if not show_user_welcome_app:
             os.system(
                 "sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt"
-                )
+            )
         elif 'False' in show_user_welcome_app:
             os.system(
                 'sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt'
-                )
+            )
 
     def set_check_config_flag(self):
         os.system(
@@ -1121,69 +1131,69 @@ $51 is currently set to """
     def set_wifi_never_connected(self):
         wifi_connected_before = os.popen(
             'grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt'
-            ).read()
+        ).read()
         if not wifi_connected_before:
             os.system(
                 "sudo sed -i -e '$awifi_connected_before=False' /home/pi/easycut-smartbench/src/config.txt"
-                )
+            )
         elif 'True' in wifi_connected_before:
             os.system(
                 'sudo sed -i "s/wifi_connected_before=True/wifi_connected_before=False/" config.txt'
-                )
+            )
 
     def enter_serial_number_screen(self):
         if self.calibration_db.conn != None:
             if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
                 serial_input_screen = UploadSerialNumbersScreen(name=
-                    'serial_input_screen', m=self.m, systemtools=self.
-                    systemtools_sm, calibration_db=self.calibration_db,
-                    settings=self.set, l=self.l, keyboard=self.kb)
+                                                                'serial_input_screen', m=self.m, systemtools=self.
+                                                                systemtools_sm, calibration_db=self.calibration_db,
+                                                                settings=self.set, l=self.l, keyboard=self.kb)
                 self.systemtools_sm.sm.add_widget(serial_input_screen)
             self.systemtools_sm.sm.current = 'serial_input_screen'
         else:
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'Database not connected!')
+                                  'Database not connected!')
 
     def enter_calibration_test(self):
         if self.calibration_db.conn != None:
             if self.get_serial_number():
                 if not self.systemtools_sm.sm.has_screen('calibration_testing'
-                    ):
+                                                         ):
                     calibration_testing = CalibrationTesting(name=
-                        'calibration_testing', m=self.m, systemtools=self.
-                        systemtools_sm, calibration_db=self.calibration_db,
-                        sm=self.systemtools_sm.sm, l=self.l)
+                                                             'calibration_testing', m=self.m, systemtools=self.
+                                                             systemtools_sm, calibration_db=self.calibration_db,
+                                                             sm=self.systemtools_sm.sm, l=self.l)
                     self.systemtools_sm.sm.add_widget(calibration_testing)
                 self.systemtools_sm.sm.current = 'calibration_testing'
             else:
                 popup_info.PopupError(self.systemtools_sm, self.l,
-                    'Serial number has not been entered!')
+                                      'Serial number has not been entered!')
         else:
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'Database not connected!')
+                                  'Database not connected!')
 
     def enter_overnight_test(self):
         if self.calibration_db.conn != None:
             if self.get_serial_number():
                 if not self.systemtools_sm.sm.has_screen('overnight_testing'):
                     overnight_testing = OvernightTesting(name=
-                        'overnight_testing', m=self.m, systemtools=self.
-                        systemtools_sm, calibration_db=self.calibration_db,
-                        sm=self.systemtools_sm.sm, l=self.l)
+                                                         'overnight_testing', m=self.m, systemtools=self.
+                                                         systemtools_sm, calibration_db=self.calibration_db,
+                                                         sm=self.systemtools_sm.sm, l=self.l)
                     self.systemtools_sm.sm.add_widget(overnight_testing)
                 self.systemtools_sm.sm.current = 'overnight_testing'
             else:
                 popup_info.PopupError(self.systemtools_sm, self.l,
-                    'Serial number has not been entered!')
+                                      'Serial number has not been entered!')
         else:
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'Database not connected!')
+                                  'Database not connected!')
 
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):
             current_adjustment = CurrentAdjustment(name=
-                'current_adjustment', m=self.m, systemtools=self.
-                systemtools_sm, l=self.l, keyboard=self.kb)
+                                                   'current_adjustment', m=self.m, systemtools=self.
+                                                   systemtools_sm, l=self.l, keyboard=self.kb)
             self.systemtools_sm.sm.add_widget(current_adjustment)
         self.systemtools_sm.sm.current = 'current_adjustment'
 
@@ -1192,17 +1202,18 @@ $51 is currently set to """
             if self.get_serial_number():
                 if not self.systemtools_sm.sm.has_screen('stall_jig'):
                     stall_jig_screen = screen_stall_jig.StallJigScreen(name
-                        ='stall_jig', systemtools=self.systemtools_sm,
-                        machine=self.m, localization=self.l, calibration_db
-                        =self.calibration_db)
+                                                                       ='stall_jig', systemtools=self.systemtools_sm,
+                                                                       machine=self.m, localization=self.l,
+                                                                       calibration_db
+                                                                       =self.calibration_db)
                     self.systemtools_sm.sm.add_widget(stall_jig_screen)
                 self.systemtools_sm.sm.current = 'stall_jig'
             else:
                 popup_info.PopupError(self.systemtools_sm, self.l,
-                    'Serial number has not been entered!')
+                                      'Serial number has not been entered!')
         else:
             popup_info.PopupError(self.systemtools_sm, self.l,
-                'Database not connected!')
+                                  'Database not connected!')
 
     def enter_set_thresholds(self):
         if not self.systemtools_sm.sm.has_screen('set_thresholds'):
@@ -1215,8 +1226,8 @@ $51 is currently set to """
     def enter_general_measurement(self):
         if not self.systemtools_sm.sm.has_screen('general_measurement'):
             general_measurement_screen = (screen_general_measurement.
-                GeneralMeasurementScreen(name='general_measurement',
-                systemtools=self.systemtools_sm, machine=self.m))
+                                          GeneralMeasurementScreen(name='general_measurement',
+                                                                   systemtools=self.systemtools_sm, machine=self.m))
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
         self.systemtools_sm.sm.current = 'general_measurement'
 
@@ -1225,7 +1236,7 @@ $51 is currently set to """
         zhqc2 = ZHeadQC2(m=self.m, l=self.l, sm=self.systemtools_sm.sm)
         confirm_func = zhqc2.run_digital_spindle_test
         confirm_popup = popup_system.PopupConfirmSpindleTest(confirm_func=
-            confirm_func)
+                                                             confirm_func)
         confirm_popup.open()
 
     def show_all_smartbench_models(self):
@@ -1234,5 +1245,5 @@ $51 is currently set to """
             self.ids.smartbench_model_button.text = 'Show all models'
         else:
             self.ids.smartbench_model.values = (self.
-                old_machine_model_values + self.latest_machine_model_values)
+                                                old_machine_model_values + self.latest_machine_model_values)
             self.ids.smartbench_model_button.text = 'Hide all models'

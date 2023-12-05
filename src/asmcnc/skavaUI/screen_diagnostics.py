@@ -3,19 +3,12 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-import kivy
+from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from __builtin__ import file, True
-from kivy.clock import Clock, mainthread
-import os, sys
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, widget_feed_override
-from asmcnc.geometry import job_envelope
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 
@@ -156,7 +149,7 @@ Builder.load_string(
             id: status_container
 
 """
-    )
+)
 
 
 class DiagnosticsScreen(Screen):

@@ -3,9 +3,10 @@ Created on 31 March 2021
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <AlarmScreen3>:
@@ -121,7 +122,7 @@ Builder.load_string(
  #            width: 100
  #            allow_stretch: True
 """
-    )
+)
 
 
 class AlarmScreen3(Screen):
@@ -132,7 +133,7 @@ class AlarmScreen3(Screen):
         super(AlarmScreen3, self).__init__(**kwargs)
         self.a = kwargs['alarm_manager']
         self.status_bar_widget = widget_status_bar.StatusBar(screen_manager
-            =self.a.sm, machine=self.a.m)
+                                                             =self.a.sm, machine=self.a.m)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
         self.camera_img.source = (

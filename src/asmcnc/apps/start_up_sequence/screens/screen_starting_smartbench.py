@@ -4,14 +4,13 @@ Landing Screen for the Calibration App
 
 @author: Letty
 """
-import sys, os
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
+import sys
 from datetime import datetime
-from asmcnc.skavaUI import popup_info
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -45,7 +44,7 @@ Builder.load_string(
                 markup: 'True'
                 color: hex('#455A64ff')
 """
-    )
+)
 
 
 def log(message):
@@ -78,7 +77,7 @@ class StartingSmartBenchScreen(Screen):
                 self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 6)
                 Clock.schedule_once(self.
-                    set_machine_value_driven_user_settings, 6.2)
+                                    set_machine_value_driven_user_settings, 6.2)
             else:
                 Clock.schedule_once(self.m.s.start_services, 1)
                 self.db.start_connection_to_database_thread()
@@ -96,10 +95,10 @@ class StartingSmartBenchScreen(Screen):
         else:
             self.sm.get_screen('home').default_datum_choice = 'spindle'
         if (self.set.sw_version != self.set.latest_sw_version and not self.
-            set.latest_sw_version.endswith('beta') and not self.set.
-            sw_branch == 'master'):
+                set.latest_sw_version.endswith('beta') and not self.set.
+                                                                       sw_branch == 'master'):
             self.sm.get_screen('lobby').trigger_update_popup = True
 
     def update_strings(self):
         self.starting_label.text = self.l.get_str('Starting SmartBench'
-            ) + '...'
+                                                  ) + '...'

@@ -2,16 +2,13 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
+from kivy.properties import StringProperty
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.uix.widget import Widget
+
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -214,8 +211,9 @@ Builder.load_string(
                
          
 """
-    )
+)
 from kivy.clock import Clock
+
 WIDGET_UPDATE_DELAY = 0.2
 STATUS_UPDATE_DELAY = 0.4
 
@@ -265,7 +263,7 @@ class GCodeMonitor(Widget):
 
     def update_status_text(self, dt):
         if self.m.state() == 'Alarm' and not any('Alarm' in s for s in self
-            .status_report_buffer):
+                .status_report_buffer):
             self.status_report_buffer.append(self.l.get_str(
                 'Please reset for status update'))
         self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
@@ -276,7 +274,7 @@ class GCodeMonitor(Widget):
         if self.popup_flag == True:
             description = self.l.get_str(
                 'Sending commands directly to the machine can change how it operates.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'Please exercise caution when using this feature.') + '\n\n'
             popup_info.PopupWarning(self.sm, self.l, description)
             self.popup_flag = False
@@ -285,9 +283,9 @@ class GCodeMonitor(Widget):
         else:
             message = self.l.get_str(
                 'This command is forbidden because it will alter the fundamental settings of the machine.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'If you need to alter the fundamental settings of the machine please contact YetiTool support.'
-                )
+            )
             popup_info.PopupWarning(self.sm, self.l, message)
 
     def validate_gcode_textinput(self, gcode_input):

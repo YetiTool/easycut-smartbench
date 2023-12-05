@@ -5,11 +5,12 @@ Landing Screen for the Calibration App
 @author: Letty
 """
 import gc
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
+
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -43,7 +44,7 @@ Builder.load_string(
                 text: '[color=455A64]Calibration Complete![/color]'
                 markup: 'True'
 """
-    )
+)
 
 
 class FinishedCalScreenClass(Screen):

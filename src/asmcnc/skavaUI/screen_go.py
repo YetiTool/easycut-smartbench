@@ -3,25 +3,23 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from __builtin__ import file, True, False
-from kivy.clock import Clock, mainthread
-from datetime import datetime
+import time
 import traceback
-import os, sys, time
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, popup_info
-from asmcnc.geometry import job_envelope
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
-from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
-from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase
+from __builtin__ import True, False
+from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
+from asmcnc.core_UI.job_go.widgets.widget_disabled_yeti_pilot import DisabledYetiPilotWidget, DisabledYPCase
+from asmcnc.core_UI.job_go.widgets.widget_yeti_pilot import YetiPilotWidget
+from asmcnc.skavaUI import widget_status_bar, widget_feed_override, widget_speed_override
+from asmcnc.skavaUI import widget_z_height, \
+    popup_info
+
 Builder.load_string(
     """
 
@@ -363,7 +361,7 @@ Builder.load_string(
             id: status_container
 
 """
-    )
+)
 
 
 def log(message):
@@ -402,11 +400,11 @@ class GoScreen(Screen):
         self.database = kwargs['database']
         self.yp = kwargs['yetipilot']
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.
-            m, screen_manager=self.sm, database=self.database)
+                                                              m, screen_manager=self.sm, database=self.database)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=
-            self.m, screen_manager=self.sm, database=self.database)
+                                                                 self.m, screen_manager=self.sm, database=self.database)
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine
-            =self.m, screen_manager=self.sm, job=self.jd))
+                                                                    =self.m, screen_manager=self.sm, job=self.jd))
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_widget_container.add_widget(self.speedOverride)
         self.status_container.add_widget(widget_status_bar.StatusBar(
@@ -414,22 +412,22 @@ class GoScreen(Screen):
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
         self.yp_widget = YetiPilotWidget(screen_manager=self.sm,
-            localization=self.l, machine=self.m, database=self.database,
-            yetipilot=self.yp)
+                                         localization=self.l, machine=self.m, database=self.database,
+                                         yetipilot=self.yp)
         self.disabled_yp_widget = DisabledYetiPilotWidget(screen_manager=
-            self.sm, localization=self.l, machine=self.m, database=self.
-            database, yetipilot=self.yp)
+                                                          self.sm, localization=self.l, machine=self.m, database=self.
+                                                          database, yetipilot=self.yp)
         self.update_strings()
 
     def on_pre_enter(self, *args):
         self.return_to_screen = self.jd.screen_to_return_to_after_job
         self.cancel_to_screen = self.jd.screen_to_return_to_after_cancel
         self.sm.get_screen('job_feedback'
-            ).return_to_screen = self.return_to_screen
+                           ).return_to_screen = self.return_to_screen
         self.poll_for_job_progress(0)
         if (str(self.m.serial_number()).endswith('03') or self.
-            show_spindle_overload == True
-            ) and self.m.stylus_router_choice != 'stylus':
+                show_spindle_overload == True
+        ) and self.m.stylus_router_choice != 'stylus':
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
@@ -444,33 +442,33 @@ class GoScreen(Screen):
             self.spindle_overload_container.spacing = 0
             self.spindle_widgets.spacing = 0
         if (self.m.stylus_router_choice != 'stylus' and self.
-            spindle_speed_showing == False):
+                spindle_speed_showing == False):
             self.override_and_progress_container.add_widget(self.
-                speed_override_container, index=1)
+                                                            speed_override_container, index=1)
             self.spindle_speed_showing = True
         elif self.m.stylus_router_choice == 'stylus' and self.spindle_speed_showing == True:
             self.override_and_progress_container.remove_widget(self.
-                speed_override_container)
+                                                               speed_override_container)
             self.spindle_speed_showing = False
         if self.m.stylus_router_choice == 'stylus':
             self.z_height_container.children[0
-                ].z_bit.source = './asmcnc/skavaUI/img/zBit_stylus.png'
+            ].z_bit.source = './asmcnc/skavaUI/img/zBit_stylus.png'
         else:
             self.z_height_container.children[0
-                ].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
+            ].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
         use_sc2 = self.m.is_using_sc2()
         self.show_hide_yp_container(use_sc2)
         self.loop_for_job_progress = Clock.schedule_interval(self.
-            poll_for_job_progress, 1)
+                                                             poll_for_job_progress, 1)
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.
-            poll_for_feeds_and_speeds, 0.2)
+                                                                 poll_for_feeds_and_speeds, 0.2)
         self.yp_widget.switch_reflects_yp()
         if not self.is_job_started_already:
             self.reset_go_screen_prior_to_job_start()
         if self.show_maintenance_prompts():
             self.check_brush_use_and_lifetime(self.m.
-                spindle_brush_use_seconds, self.m.
-                spindle_brush_lifetime_seconds)
+                                              spindle_brush_use_seconds, self.m.
+                                              spindle_brush_lifetime_seconds)
         if self.temp_suppress_prompts:
             self.temp_suppress_prompts = False
 
@@ -481,28 +479,28 @@ class GoScreen(Screen):
             self.yetipilot_container.opacity = 1
             self.yetipilot_container.parent.spacing = 10
             if self.m.is_spindle_health_check_active(
-                ) and not self.m.has_spindle_health_check_failed():
+            ) and not self.m.has_spindle_health_check_failed():
                 if not self.yp_widget.parent:
                     self.yetipilot_container.add_widget(self.yp_widget)
                 if self.disabled_yp_widget.parent:
                     self.yetipilot_container.remove_widget(self.
-                        disabled_yp_widget)
+                                                           disabled_yp_widget)
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget
-                        )
+                                                        )
                 if self.yp_widget.parent:
                     self.yetipilot_container.remove_widget(self.yp_widget)
                 if not self.m.has_spindle_health_check_failed():
                     self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED
-                        )
+                                                        )
                 elif self.is_job_started_already:
                     self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
                 else:
                     self.disabled_yp_widget.set_version(DisabledYPCase.
-                        FAILED_AND_CAN_RUN_AGAIN)
+                                                        FAILED_AND_CAN_RUN_AGAIN)
         else:
             if self.disabled_yp_widget.parent:
                 self.yetipilot_container.remove_widget(self.disabled_yp_widget)
@@ -518,7 +516,7 @@ class GoScreen(Screen):
 
     def show_maintenance_prompts(self):
         return (not self.is_job_started_already and not self.
-            temp_suppress_prompts and self.m.reminders_enabled)
+                temp_suppress_prompts and self.m.reminders_enabled)
 
     def get_sc2_brush_data(self):
         self.m.s.write_command('M3 S0')
@@ -527,7 +525,7 @@ class GoScreen(Screen):
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(),
-            'GET DIGITAL SPINDLE INFO')
+                                'GET DIGITAL SPINDLE INFO')
         Clock.schedule_once(self.read_spindle_info, 1)
 
     def read_spindle_info(self, dt):
@@ -536,8 +534,8 @@ class GoScreen(Screen):
         if self.m.s.spindle_production_year != 99:
             try:
                 self.check_brush_use_and_lifetime(self.m.s.
-                    spindle_brush_run_time_seconds, self.m.
-                    spindle_brush_lifetime_seconds)
+                                                  spindle_brush_run_time_seconds, self.m.
+                                                  spindle_brush_lifetime_seconds)
                 return
             except:
                 print traceback.format_exc()
@@ -549,48 +547,50 @@ class GoScreen(Screen):
             brush_lifetime_string = '[b]' + str(int(lifetime / 3600)) + '[/b]'
             brush_warning = self.l.get_bold(
                 'Check your spindle brushes before starting your job!'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'You have used your SmartBench for N00 hours since you updated your spindle brush settings.'
-                ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
-                ).replace('N00', brush_use_string) + ' ' + self.l.get_str(
+            ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
+                      ).replace('N00', brush_use_string) + ' ' + self.l.get_str(
                 'You have told us they only have a lifetime of N00 hours!'
-                ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
-                ).replace('N00', brush_lifetime_string)
+            ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
+                      ).replace('N00', brush_lifetime_string)
             brush_reminder_popup = popup_info.PopupReminder(self.sm, self.
-                am, self.m, self.l, brush_warning, 'brushes')
+                                                            am, self.m, self.l, brush_warning, 'brushes')
         if (self.m.time_since_z_head_lubricated_seconds >= self.m.
-            time_to_remind_user_to_lube_z_seconds):
+                time_to_remind_user_to_lube_z_seconds):
             time_since_lubricated_string = '[b]' + str(int(self.m.
-                time_since_z_head_lubricated_seconds / 3600)) + '[/b]'
+                                                           time_since_z_head_lubricated_seconds / 3600)) + '[/b]'
             lubrication_warning = self.l.get_bold(
                 'Lubricate the z head before starting your job!'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'You have used SmartBench for N00 hours since you last told us that you lubricated the Z head.'
-                ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
-                ).replace('N00', time_since_lubricated_string
-                ) + '\n\n' + self.l.get_str(
+            ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
+                      ).replace('N00', time_since_lubricated_string
+                                ) + '\n\n' + self.l.get_str(
                 'Will you lubricate the Z head now?'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 "Saying 'OK' will reset this reminder.")
             lubrication_reminder_popup = popup_info.PopupReminder(self.sm,
-                self.am, self.m, self.l, lubrication_warning, 'lubrication')
+                                                                  self.am, self.m, self.l, lubrication_warning,
+                                                                  'lubrication')
         if (self.m.time_since_calibration_seconds >= self.m.
-            time_to_remind_user_to_calibrate_seconds):
+                time_to_remind_user_to_calibrate_seconds):
             time_since_calibration_string = '[b]' + str(int(self.m.
-                time_since_calibration_seconds / 3600)) + '[/b]'
+                                                            time_since_calibration_seconds / 3600)) + '[/b]'
             calibration_warning = self.l.get_str(
                 'You have used SmartBench for N00 hours since its last calibration.'
-                ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
-                ).replace('N00', time_since_calibration_string
-                ) + '\n\n' + self.l.get_str(
+            ).replace(self.l.get_str('hours'), self.l.get_bold('hours')
+                      ).replace('N00', time_since_calibration_string
+                                ) + '\n\n' + self.l.get_str(
                 'A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str(
                 'A calibration procedure can take approximately 10 minutes with basic tools.'
-                ) + '\n\n' + self.l.get_str('Calibration is not compulsory.'
-                ) + '\n\n' + self.l.get_str(
+            ) + '\n\n' + self.l.get_str('Calibration is not compulsory.'
+                                        ) + '\n\n' + self.l.get_str(
                 'Will you calibrate SmartBench now?')
             caibration_reminder_popup = popup_info.PopupReminder(self.sm,
-                self.am, self.m, self.l, calibration_warning, 'calibration')
+                                                                 self.am, self.m, self.l, calibration_warning,
+                                                                 'calibration')
 
     def reset_go_screen_prior_to_job_start(self):
         print 'RESET GO SCREEN FIRES'
@@ -606,11 +606,11 @@ class GoScreen(Screen):
         self.time_taken_seconds = 0
         self.jd.percent_thru_job = 0
         if (self.jd.job_recovery_filepath == self.jd.filename and self.jd.
-            job_recovery_selected_line != -1):
+                job_recovery_selected_line != -1):
             self.progress_percentage_label.text = '- %'
         else:
             self.progress_percentage_label.text = str(self.jd.percent_thru_job
-                ) + ' %'
+                                                      ) + ' %'
         self.spindle_speed_max_percentage = 100
         self.spindle_speed_max_absolute = 0
         self.feed_rate_max_percentage = 100
@@ -632,11 +632,11 @@ class GoScreen(Screen):
                 self.start_or_pause_button_image.source = (
                     './asmcnc/skavaUI/img/pause.png')
                 self.database.send_event(0, 'Job resumed', 'Resumed job: ' +
-                    self.jd.job_name, 4)
+                                         self.jd.job_name, 4)
                 self.m.s.is_ready_to_assess_spindle_for_shutdown = True
         elif self.m.is_spindle_health_check_active(
-            ) and not self.m.has_spindle_health_check_run(
-            ) and self.m.is_using_sc2():
+        ) and not self.m.has_spindle_health_check_run(
+        ) and self.m.is_using_sc2():
             self.run_spindle_health_check(start_after_pass=True)
         else:
             if not self.m.has_spindle_health_check_passed():
@@ -646,22 +646,22 @@ class GoScreen(Screen):
                     self.disabled_yp_widget.set_version(DisabledYPCase.FAILED)
                 else:
                     self.disabled_yp_widget.set_version(DisabledYPCase.DISABLED
-                        )
+                                                        )
             self._start_running_job()
         self.listen_for_pauses = Clock.schedule_interval(lambda dt: self.
-            raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
+                                                         raise_pause_screens_if_paused(), self.POLL_FOR_PAUSE_SCREENS)
 
     def run_spindle_health_check(self, start_after_pass=False,
-        return_to_advanced_tab=False):
+                                 return_to_advanced_tab=False):
         if not self.sm.has_screen('spindle_health_check_active'):
             shc_screen = SpindleHealthCheckActiveScreen(name=
-                'spindle_health_check_active', screen_manager=self.sm,
-                machine=self.m, localization=self.l)
+                                                        'spindle_health_check_active', screen_manager=self.sm,
+                                                        machine=self.m, localization=self.l)
             self.sm.add_widget(shc_screen)
         self.sm.get_screen('spindle_health_check_active'
-            ).start_after_pass = start_after_pass
+                           ).start_after_pass = start_after_pass
         self.sm.get_screen('spindle_health_check_active'
-            ).return_to_advanced_tab = return_to_advanced_tab
+                           ).return_to_advanced_tab = return_to_advanced_tab
         self.sm.current = 'spindle_health_check_active'
 
     def _pause_job(self):
@@ -669,20 +669,21 @@ class GoScreen(Screen):
         self.sm.get_screen('spindle_shutdown').reason_for_pause = 'job_pause'
         self.sm.get_screen('spindle_shutdown').return_screen = 'go'
         self.sm.current = 'spindle_shutdown'
+
     POLL_FOR_PAUSE_SCREENS = 0.5
 
     def raise_pause_screens_if_paused(self, dt=0, override=False):
         if (self.m.s.is_job_streaming and self.m.is_machine_paused and self
-            .m.reason_for_machine_pause and self.m.reason_for_machine_pause !=
-            'Resuming' and not str(self.m.state()).startswith('Door:3') and
-            self.start_or_pause_button_image.source ==
-            './asmcnc/skavaUI/img/pause.png' or override):
+                .m.reason_for_machine_pause and self.m.reason_for_machine_pause !=
+                'Resuming' and not str(self.m.state()).startswith('Door:3') and
+                self.start_or_pause_button_image.source ==
+                './asmcnc/skavaUI/img/pause.png' or override):
             if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
             log('RAISE PAUSE SCREEN: ' + str(self.m.reason_for_machine_pause))
             self.sm.get_screen('spindle_shutdown'
-                ).reason_for_pause = self.m.reason_for_machine_pause
+                               ).reason_for_pause = self.m.reason_for_machine_pause
             self.sm.get_screen('spindle_shutdown').return_screen = 'go'
             self.sm.current = 'spindle_shutdown'
             self.start_or_pause_button_image.source = (
@@ -702,12 +703,12 @@ class GoScreen(Screen):
         def prep_gcode(job_to_modify):
             modified_gcode = []
             if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause(
-                ):
+            ):
                 modified_gcode.append('M56')
                 self.jd.job_recovery_offset += 1
             if (str(job_to_modify).count('M3') > str(job_to_modify).count(
-                'M30') or str(job_to_modify).count('M03') > 0
-                ) and self.m.stylus_router_choice != 'stylus':
+                    'M30') or str(job_to_modify).count('M03') > 0
+            ) and self.m.stylus_router_choice != 'stylus':
                 modified_gcode.append('AE')
                 modified_gcode.append('G4 P2')
                 modified_gcode.extend(job_to_modify)
@@ -717,11 +718,12 @@ class GoScreen(Screen):
             else:
                 modified_gcode.extend(job_to_modify)
             if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause(
-                ):
+            ):
                 modified_gcode.append('M56 P0')
             return modified_gcode
+
         if (self.jd.job_recovery_filepath == self.jd.filename and self.jd.
-            job_recovery_selected_line != -1):
+                job_recovery_selected_line != -1):
             modified_job_gcode = prep_gcode(self.jd.job_recovery_gcode)
         else:
             self.jd.job_recovery_offset = 0
@@ -742,6 +744,7 @@ class GoScreen(Screen):
             if line in culprits:
                 line = ''
             return line
+
         self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
         try:
             self.m.s.run_job(self.jd.job_gcode_modified)
@@ -774,15 +777,17 @@ class GoScreen(Screen):
     def poll_for_job_progress(self, dt):
         if len(self.jd.job_gcode_running) != 0:
             self.jd.percent_thru_job = int(round((self.m.s.g_count - min(0,
-                self.jd.job_recovery_offset)) * 1.0 / (len(self.jd.
-                job_gcode_running) - min(0, self.jd.job_recovery_offset) + 
-                4) * 1.0 * 100.0))
+                                                                         self.jd.job_recovery_offset)) * 1.0 / (
+                                                             len(self.jd.
+                                                                 job_gcode_running) - min(0,
+                                                                                          self.jd.job_recovery_offset) +
+                                                             4) * 1.0 * 100.0))
             if self.jd.percent_thru_job > 100:
                 self.jd.percent_thru_job = 100
             self.progress_percentage_label.text = str(self.jd.percent_thru_job
-                ) + ' %'
+                                                      ) + ' %'
         if len(self.jd.job_gcode_running
-            ) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
+               ) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
             if self.m.is_machine_paused:
                 return
             self.total_runtime_seconds += 1
@@ -809,42 +814,42 @@ class GoScreen(Screen):
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
         if abs(self.speedOverride.speed_override_percentage - 100) > abs(
-            self.spindle_speed_max_percentage - 100):
+                self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = (self.speedOverride.
-                speed_override_percentage)
+                                                 speed_override_percentage)
         if (self.speedOverride.spindle_rpm.text > self.
-            spindle_speed_max_absolute):
+                spindle_speed_max_absolute):
             self.spindle_speed_max_absolute = (self.speedOverride.
-                spindle_rpm.text)
+                                               spindle_rpm.text)
         if abs(self.feedOverride.feed_override_percentage - 100) > abs(self
-            .feed_rate_max_percentage - 100):
+                                                                               .feed_rate_max_percentage - 100):
             self.feed_rate_max_percentage = (self.feedOverride.
-                feed_override_percentage)
+                                             feed_override_percentage)
         if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
             self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 
     def update_overload_label(self, state):
         if state == 0:
             self.overload_status_label.text = '[color=4CA82B][b]' + str(state
-                ) + '[size=25px] %[/size][b][/color]'
+                                                                        ) + '[size=25px] %[/size][b][/color]'
         elif state == 20:
             self.overload_status_label.text = '[color=E6AA19][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         elif state == 40:
             self.overload_status_label.text = '[color=E27A1D][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         elif state == 60:
             self.overload_status_label.text = '[color=DE5003][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         elif state == 80:
             self.overload_status_label.text = '[color=DE5003][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         elif state == 90:
             self.overload_status_label.text = '[color=C11C17][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         elif state == 100:
             self.overload_status_label.text = '[color=C11C17][b]' + str(state
-                ) + '[size=25px] %[/size][/b][/color]'
+                                                                        ) + '[size=25px] %[/size][/b][/color]'
         else:
             log('Overload state not recognised: ' + str(state))
 
@@ -857,7 +862,7 @@ class GoScreen(Screen):
         self.feed_label.text = self.l.get_str('Feed') + '\n' + self.l.get_str(
             'rate')
         self.spindle_label.text = self.l.get_str('Spindle'
-            ) + '\n' + self.l.get_str('speed')
+                                                 ) + '\n' + self.l.get_str('speed')
         self.job_time_label.text = self.l.get_str('Total job time') + ':'
         self.file_lines_streamed_label.text = self.l.get_str(
             'File lines streamed') + ':'

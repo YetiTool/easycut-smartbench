@@ -1,6 +1,7 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-import sys, os
+import os
+import sys
 
 if len(sys.argv) != 2:
     print("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
@@ -8,6 +9,7 @@ if len(sys.argv) != 2:
 
 from kivy.config import Config
 from kivy.clock import Clock
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
@@ -27,11 +29,9 @@ path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
-import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
 from kivy.uix.label import Label
 from asmcnc.comms import localization
 from asmcnc.keyboard import custom_keyboard
@@ -42,10 +42,14 @@ from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
 
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
-from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
-from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
+from asmcnc.skavaUI import screen_error, screen_rebooting, \
+    screen_file_loading, screen_lobby
+from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, \
+    popup_nudge
+from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, \
+    screen_stop_or_resume_decision
+from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, \
+    screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
@@ -56,14 +60,13 @@ from asmcnc.core_UI.job_go.screens import screen_spindle_health_check
 from asmcnc.core_UI.job_go.popups import popup_yetipilot_settings
 from asmcnc.production.z_head_qc_jig import z_head_qc_pcb_set_up_outcome, z_head_qc_pcb_set_up
 
-try: 
+try:
     from mock import Mock, MagicMock
     from serial_mock.mock import MockSerial, DummySerial
     from random import randint
 
-except: 
+except:
     pass
-
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
@@ -71,6 +74,7 @@ Builder.load_string("""
 <BasicScreen>:
 
 """)
+
 
 class BasicScreen(Screen):
 
@@ -80,8 +84,8 @@ class BasicScreen(Screen):
 
 Cmport = 'COM3'
 
-class ScreenTest(App):
 
+class ScreenTest(App):
     lang_idx = 7
     cycle_languages = False
 
@@ -96,15 +100,15 @@ class ScreenTest(App):
     nl = "Nederlands (NL)"
 
     test_languages = [
-                        gb,
-                        it, 
-                        fi, 
-                        de,
-                        fr,
-                        pl,
-                        dk,
-                        ko
-                    ]
+        gb,
+        it,
+        fi,
+        de,
+        fr,
+        pl,
+        dk,
+        ko
+    ]
 
     # 0 - English (y)
     # 1 - Italian (y)
@@ -135,7 +139,7 @@ class ScreenTest(App):
         # Default values for dummy serial, which can be reassigned or added to if needed
         def set_up_dummy_serial(status, alarm_message):
             m.s.s = DummySerial(self.give_me_a_PCB(status, alarm_message))
-            m.s.s.fd = 1 # this is needed to force it to run
+            m.s.s.fd = 1  # this is needed to force it to run
             m.s.fw_version = self.fw_version
             m.s.setting_50 = 0.03
             m.s.yp = yp
@@ -171,7 +175,7 @@ class ScreenTest(App):
                     for widget in current_screen.walk():
                         if isinstance(widget, Label):
                             widget.font_name = l.font_regular
-                except: 
+                except:
                     print(str(sm.current) + " has no update strings function")
 
                 index += 1
@@ -186,7 +190,6 @@ class ScreenTest(App):
         def set_up_screens(screen_list):
             for screen, name in screen_list:
                 sm.add_widget(screen_maker.create_screen(screen, name))
-
 
         # Add tests as functions below
 
@@ -424,14 +427,16 @@ class ScreenTest(App):
 
             mode = "ejecting"
 
-            if mode == "connected": popup_mode = 'mounted'
-            elif mode == "ejected": popup_mode = True
-            elif mode == "ejecting": popup_mode = False
+            if mode == "connected":
+                popup_mode = 'mounted'
+            elif mode == "ejected":
+                popup_mode = True
+            elif mode == "ejecting":
+                popup_mode = False
 
             popup_info.PopupUSBInfo(sm, l, popup_mode)
 
             sm.current = 'basic'
-
 
         # ALARM/ERROR/DOOR
 
@@ -469,32 +474,33 @@ class ScreenTest(App):
             y_coord = -2487.003
             z_coord = -99.954
 
-
             alarm_message = "ALARM:" + str(alarm_number) + "\n"
 
             limit_status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>\n"
             sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
-                stall_pin + \
-                "|SGALARM:" + \
-                str(motor_id) + "," + \
-                str(step_size) + "," + \
-                str(sg_val) + "," + \
-                str(thresh) + "," + \
-                str(distance) + "," + \
-                str(temperature) + "," + \
-                str(x_coord) + "," + \
-                str(y_coord) + "," + \
-                str(z_coord) + ">\n"
+                              stall_pin + \
+                              "|SGALARM:" + \
+                              str(motor_id) + "," + \
+                              str(step_size) + "," + \
+                              str(sg_val) + "," + \
+                              str(thresh) + "," + \
+                              str(distance) + "," + \
+                              str(temperature) + "," + \
+                              str(x_coord) + "," + \
+                              str(y_coord) + "," + \
+                              str(z_coord) + ">\n"
 
-            if stall_alarm_test: status = sg_alarm_status
-            else: status = limit_status
+            if stall_alarm_test:
+                status = sg_alarm_status
+            else:
+                status = limit_status
 
             set_up_dummy_serial(status, alarm_message)
 
             set_up_screens([[screen_home.HomeScreen, 'home']])
 
             sm.current = 'home'
-        
+
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def error_screen_tests():
@@ -528,7 +534,7 @@ class ScreenTest(App):
                             [screen_door.DoorScreen, 'door']])
 
             sm.current = 'home'
-        
+
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def mstate_warning_screen_test():
@@ -538,7 +544,7 @@ class ScreenTest(App):
             set_up_screens([[screen_mstate_warning.WarningMState, 'mstate']])
 
             sm.current = 'mstate'
-        
+
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def serial_failure_screen_test():
@@ -553,7 +559,6 @@ class ScreenTest(App):
             # m.s.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
             # m.s.get_serial_screen('Could not write last command to serial buffer.')
 
-
         # FACTORY/PRODUCTION SCREENS
 
         def general_measurement_screen_test():
@@ -564,11 +569,11 @@ class ScreenTest(App):
             '''
 
             m.measured_running_data = [
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-                ]
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+            ]
 
             set_up_screens([[screen_general_measurement.GeneralMeasurementScreen, 'general_measurement']])
 
@@ -596,27 +601,28 @@ class ScreenTest(App):
 
             status = "<Alarm|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:" + alarm_pin + "|WCO:-166.126,-213.609,-21.822|SG:-999,-20,15,-20,-2>"
             sg_alarm_status = "<Alarm|MPos:-685.008,-2487.003,-100.752|Bf:34,255|FS:0,0|Pn:G" + \
-                stall_pin + \
-                "|SGALARM:" + \
-                str(motor_id) + "," + \
-                str(step_size) + "," + \
-                str(sg_val) + "," + \
-                str(thresh) + "," + \
-                str(distance) + "," + \
-                str(x_coord) + "," + \
-                str(y_coord) + "," + \
-                str(z_coord) + ">\n"
-            
+                              stall_pin + \
+                              "|SGALARM:" + \
+                              str(motor_id) + "," + \
+                              str(step_size) + "," + \
+                              str(sg_val) + "," + \
+                              str(thresh) + "," + \
+                              str(distance) + "," + \
+                              str(x_coord) + "," + \
+                              str(y_coord) + "," + \
+                              str(z_coord) + ">\n"
+
             status = sg_alarm_status
             # status = status
 
             set_up_dummy_serial(status, alarm_message)
 
-            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools = systemtools_sm, machine = m, job = jd, settings = sett, localization = l, calibration_db = db)
+            stall_jig_screen = screen_stall_jig.StallJigScreen(name='stall_jig', systemtools=systemtools_sm, machine=m,
+                                                               job=jd, settings=sett, localization=l, calibration_db=db)
             sm.add_widget(stall_jig_screen)
 
             sm.current = 'stall_jig'
-            
+
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def z_head_qc_pcb_outcome_screen_test():
@@ -638,17 +644,17 @@ class ScreenTest(App):
             zhqc_pcb_set_up = sm.get_screen("qcpcbsetup")
             zhqc_pcb_set_up_outcome = sm.get_screen("qcpcbsetupoutcome")
 
-            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X1, 0)
-            zhqc_pcb_set_up_outcome.x_current_correct*=zhqc_pcb_set_up.check_current(TMC_X2, 10)
-            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y1, 12)
-            zhqc_pcb_set_up_outcome.y_current_correct*=zhqc_pcb_set_up.check_current(TMC_Y2, 11)
-            zhqc_pcb_set_up_outcome.z_current_correct*=zhqc_pcb_set_up.check_current(TMC_Z, 2)
+            zhqc_pcb_set_up_outcome.x_current_correct *= zhqc_pcb_set_up.check_current(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.x_current_correct *= zhqc_pcb_set_up.check_current(TMC_X2, 10)
+            zhqc_pcb_set_up_outcome.y_current_correct *= zhqc_pcb_set_up.check_current(TMC_Y1, 12)
+            zhqc_pcb_set_up_outcome.y_current_correct *= zhqc_pcb_set_up.check_current(TMC_Y2, 11)
+            zhqc_pcb_set_up_outcome.z_current_correct *= zhqc_pcb_set_up.check_current(TMC_Z, 2)
 
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
-            zhqc_pcb_set_up_outcome.thermal_coefficients_correct*=zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct *= zhqc_pcb_set_up.check_temp_coeff(TMC_X1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct *= zhqc_pcb_set_up.check_temp_coeff(TMC_X2, 11)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct *= zhqc_pcb_set_up.check_temp_coeff(TMC_Y1, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct *= zhqc_pcb_set_up.check_temp_coeff(TMC_Y2, 0)
+            zhqc_pcb_set_up_outcome.thermal_coefficients_correct *= zhqc_pcb_set_up.check_temp_coeff(TMC_Z, 0)
 
         def z_head_qc_pcb_set_up_screen_test():
             m.s.fw_version = "2.5.5; HW: 35"
@@ -656,7 +662,6 @@ class ScreenTest(App):
             set_up_screens([[z_head_qc_pcb_set_up.ZHeadPCBSetUp, 'qcpcbsetup']])
 
             sm.current = 'qcpcbsetup'
-
 
         # YETIPILOT/PRO+ SCREENS
 
@@ -669,7 +674,8 @@ class ScreenTest(App):
             alarm_message = "\n"
 
             killtime = 9
-            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(killtime) + ", 240>\n"
+            killtime_status = "<Run|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G|Ld:75, 20, " + str(
+                killtime) + ", 240>\n"
 
             set_up_dummy_serial(killtime_status, alarm_message)
 
@@ -683,7 +689,7 @@ class ScreenTest(App):
             sm.get_screen('go').is_job_started_already = False
 
             sm.current = 'go'
-            
+
             Clock.schedule_once(m.s.start_services, 0.1)
 
         def job_pause_tests():
@@ -730,7 +736,8 @@ class ScreenTest(App):
             status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:G>\n"
             set_up_dummy_serial(status, alarm_message)
 
-            set_up_screens([[screen_spindle_health_check.SpindleHealthCheckActiveScreen, 'spindle_health_check_active']])
+            set_up_screens(
+                [[screen_spindle_health_check.SpindleHealthCheckActiveScreen, 'spindle_health_check_active']])
 
             sm.current = 'spindle_health_check_active'
 
@@ -742,7 +749,6 @@ class ScreenTest(App):
 
             popup_yetipilot_settings.PopupYetiPilotSettings(sm, l, m, db, yp, version=not yp.using_advanced_profile)
             sm.current = 'basic'
-
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
@@ -796,5 +802,6 @@ class ScreenTest(App):
             cycle_through_languages(self.test_languages)
 
         return sm
+
 
 ScreenTest().run()

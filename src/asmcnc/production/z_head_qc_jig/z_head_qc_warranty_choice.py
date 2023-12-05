@@ -1,10 +1,14 @@
-from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+import glob
+import re
+import traceback
+
 from kivy.clock import Clock
-import traceback, glob, os, re
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadWarrantyChoice>:
@@ -97,7 +101,7 @@ Builder.load_string(
             pos: self.pos
 
 """
-    )
+)
 
 
 class ZHeadWarrantyChoice(Screen):
@@ -111,7 +115,7 @@ class ZHeadWarrantyChoice(Screen):
         self.m = kwargs['m']
         self.usb = kwargs['usb']
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
     def on_enter(self):
@@ -141,9 +145,9 @@ class ZHeadWarrantyChoice(Screen):
         if self.connection_button.state == 'normal':
             self.connection_button.text = 'Reconnecting...'
             Clock.schedule_once(lambda dt: self.m.
-                reconnect_serial_connection(), 0.2)
+                                reconnect_serial_connection(), 0.2)
             self.poll_for_reconnection = Clock.schedule_interval(self.
-                try_start_services, 1)
+                                                                 try_start_services, 1)
         else:
             self.connection_button.text = 'Reconnect Z Head'
             self.m.s.grbl_scanner_running = False
@@ -176,7 +180,7 @@ class ZHeadWarrantyChoice(Screen):
                 self.fw_on_usb = re.split('GRBL|\\.', str(glob.glob(
                     '/media/usb/GRBL*.hex')[0]))[1]
                 self.usb_change_button.text = ('FW on USB: ' + self.
-                    fw_on_usb + '\n\n' + 'Change USB?')
+                                               fw_on_usb + '\n\n' + 'Change USB?')
             except:
                 print traceback.format_exc()
             return

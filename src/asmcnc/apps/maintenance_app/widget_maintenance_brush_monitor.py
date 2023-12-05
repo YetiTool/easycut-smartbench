@@ -2,14 +2,10 @@
 Created on 19 August 2020
 @author: Letty
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
+from kivy.properties import NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
+
 Builder.load_string(
     """
 
@@ -51,7 +47,7 @@ Builder.load_string(
 
         
 """
-    )
+)
 
 
 class BrushMonitorWidget(Widget):
@@ -75,11 +71,11 @@ class BrushMonitorWidget(Widget):
 
     def update_monitor(self):
         self.fuel_bar.size = [self.empty_monitor.width * self.
-            monitor_percentage, self.empty_monitor.height * 0.9]
+        monitor_percentage, self.empty_monitor.height * 0.9]
         self.fuel_bar.x = self.empty_monitor.x + self.empty_monitor.width * (
-            1 - self.monitor_percentage)
+                1 - self.monitor_percentage)
         self.percentage.text = str(int(round(self.monitor_percentage * 100))
-            ) + '%'
+                                   ) + '%'
         if self.monitor_percentage > 0.5:
             self.fuel_bar.source = (
                 './asmcnc/apps/maintenance_app/img/green_bar.png')

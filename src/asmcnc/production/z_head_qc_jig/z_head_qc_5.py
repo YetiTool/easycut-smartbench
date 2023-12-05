@@ -1,7 +1,6 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
-import datetime
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQC5>:
@@ -32,7 +31,7 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class ZHeadQC5(Screen):

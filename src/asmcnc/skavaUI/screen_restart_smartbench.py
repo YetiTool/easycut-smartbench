@@ -3,9 +3,9 @@ Created on 9 Aug 2021
 @author: Dennis
 Screen shown after exiting release notes telling the user to restart
 """
-import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -54,7 +54,7 @@ Builder.load_string(
                     allow_stretch: True
 
 """
-    )
+)
 
 
 class RestartSmartbenchScreen(Screen):

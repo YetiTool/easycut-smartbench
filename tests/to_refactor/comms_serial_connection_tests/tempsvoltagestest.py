@@ -3,26 +3,25 @@ Created on 25 Jan 2022
 @author: Letty
 '''
 
-try: 
+try:
     import unittest
     from mock import Mock, MagicMock
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
+import sys
 from time import sleep
 
-import sys
 sys.path.append('./src')
-
 
 try:
     from asmcnc.comms import serial_connection
     from asmcnc.comms import localization
 
-except: 
+except:
     pass
 
 ########################################################
@@ -79,7 +78,6 @@ except:
 
 
 class TempsVoltagesTest(unittest.TestCase):
-
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
     param = None
@@ -106,48 +104,46 @@ class TempsVoltagesTest(unittest.TestCase):
 
         return YETIPCB
 
-
-    def status_and_PCB_constructor(self, case=None, 
-                        pcb_temp=0,
-                        motor_driver_temp=0,
-                        transistor_heatsink_temp=0,
-                        microcontroller_mV=0,
-                        LED_mV=0,
-                        PSU_mV=0,
-                        spindle_speed_monitor_mV=0
-                        ):
+    def status_and_PCB_constructor(self, case=None,
+                                   pcb_temp=0,
+                                   motor_driver_temp=0,
+                                   transistor_heatsink_temp=0,
+                                   microcontroller_mV=0,
+                                   LED_mV=0,
+                                   PSU_mV=0,
+                                   spindle_speed_monitor_mV=0
+                                   ):
 
         # Use this to construct the test status passed out by mock serial object
 
-        if case == 1 or case==None:
+        if case == 1 or case == None:
 
             self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
         elif case == 2:
 
             self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|TC:" + \
-                str(motor_driver_temp) + "," + \
-                str(pcb_temp) + "|V:" + \
-                str(microcontroller_mV) + "," + \
-                str(LED_mV) + "," + \
-                str(PSU_mV) + "," + \
-                str(spindle_speed_monitor_mV) + ">"
+                          str(motor_driver_temp) + "," + \
+                          str(pcb_temp) + "|V:" + \
+                          str(microcontroller_mV) + "," + \
+                          str(LED_mV) + "," + \
+                          str(PSU_mV) + "," + \
+                          str(spindle_speed_monitor_mV) + ">"
 
         elif case == 3:
 
             self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|TC:" + \
-                str(motor_driver_temp) + "," + \
-                str(pcb_temp) + "," + \
-                str(transistor_heatsink_temp) + "|V:" + \
-                str(microcontroller_mV) + "," + \
-                str(LED_mV) + "," + \
-                str(PSU_mV) + "," + \
-                str(spindle_speed_monitor_mV) + ">"
-
+                          str(motor_driver_temp) + "," + \
+                          str(pcb_temp) + "," + \
+                          str(transistor_heatsink_temp) + "|V:" + \
+                          str(microcontroller_mV) + "," + \
+                          str(LED_mV) + "," + \
+                          str(PSU_mV) + "," + \
+                          str(spindle_speed_monitor_mV) + ">"
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:
         self.serial_module.s = DummySerial(self.give_me_a_PCB())
-        self.serial_module.s.fd = 1 # this is needed to force it to run
+        self.serial_module.s.fd = 1  # this is needed to force it to run
         self.serial_module.start_services(1)
         sleep(0.01)
 
@@ -165,10 +161,8 @@ class TempsVoltagesTest(unittest.TestCase):
         self.serial_module = serial_connection.SerialConnection(self.m, self.sm, self.sett, self.l, self.jd)
         # self.serial_module.VERBOSE_ALL_RESPONSE = True
 
-
     def tearDown(self):
-      self.serial_module.__del__()
-
+        self.serial_module.__del__()
 
     def test_does_serial_think_its_connected(self):
         """Test that serial module thinks it is connected"""
@@ -180,7 +174,6 @@ class TempsVoltagesTest(unittest.TestCase):
         self.status_and_PCB_constructor(1)
         assert self.serial_module.m_state == "Idle", 'not idle'
 
-
     ## CASE 1 TESTS:
     def test_pcb_temperature_case_107_112(self):
         """ 
@@ -190,7 +183,6 @@ class TempsVoltagesTest(unittest.TestCase):
         self.status_and_PCB_constructor(self.case_107_112)
         self.assertEqual(self.serial_module.pcb_temp, None), 'pcb temp error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     def test_motor_driver_temperature_case_107_112(self):
         """ 
@@ -237,16 +229,15 @@ class TempsVoltagesTest(unittest.TestCase):
         self.assertEqual(self.serial_module.PSU_mV, None), 'PSU voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
 
-
     def test_spindle_speed_monitor_voltage_case_107_112(self):
         """ 
         Test that spindle speed monitor voltage is None, but that serial continues to work
         This is relevant to FW between v107 and v112
         """
         self.status_and_PCB_constructor(self.case_107_112)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, None), 'spindle speed monitor voltage error, case 1'
+        self.assertEqual(self.serial_module.spindle_speed_monitor_mV,
+                         None), 'spindle speed monitor voltage error, case 1'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     ## CASE 2 TESTS:
     def test_pcb_temperature_case_136_140(self):
@@ -254,18 +245,18 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that PCB temperature works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, pcb_temp = self.t_pcb_temp)
+        self.status_and_PCB_constructor(self.case_136_140, pcb_temp=self.t_pcb_temp)
         self.assertEqual(self.serial_module.pcb_temp, self.t_pcb_temp), 'pcb temp error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     def test_motor_driver_temperature_case_136_140(self):
         """ 
         Test that motor driver temperature works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, motor_driver_temp = self.t_motor_driver_temp)
-        self.assertEqual(self.serial_module.motor_driver_temp, self.t_motor_driver_temp), 'motor_driver temp error, case 2'
+        self.status_and_PCB_constructor(self.case_136_140, motor_driver_temp=self.t_motor_driver_temp)
+        self.assertEqual(self.serial_module.motor_driver_temp,
+                         self.t_motor_driver_temp), 'motor_driver temp error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_transistor_heatsink_temperature_case_136_140(self):
@@ -282,8 +273,9 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that microcontroller voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, microcontroller_mV = self.t_microcontroller_mV)
-        self.assertEqual(self.serial_module.microcontroller_mV, self.t_microcontroller_mV), 'microcontroller voltage error, case 2'
+        self.status_and_PCB_constructor(self.case_136_140, microcontroller_mV=self.t_microcontroller_mV)
+        self.assertEqual(self.serial_module.microcontroller_mV,
+                         self.t_microcontroller_mV), 'microcontroller voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_LED_voltage_case_136_140(self):
@@ -291,7 +283,7 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that LED voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, LED_mV = self.t_LED_mV)
+        self.status_and_PCB_constructor(self.case_136_140, LED_mV=self.t_LED_mV)
         self.assertEqual(self.serial_module.LED_mV, self.t_LED_mV), 'LED voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -300,20 +292,19 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that PSU voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, PSU_mV = self.t_PSU_mV)
+        self.status_and_PCB_constructor(self.case_136_140, PSU_mV=self.t_PSU_mV)
         self.assertEqual(self.serial_module.PSU_mV, self.t_PSU_mV), 'PSU voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     def test_spindle_speed_monitor_voltage_case_136_140(self):
         """ 
         Test that spindle speed monitor voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_136_140, spindle_speed_monitor_mV = self.t_spindle_speed_monitor_mV)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, self.t_spindle_speed_monitor_mV), 'spindle speed monitor voltage error, case 2'
+        self.status_and_PCB_constructor(self.case_136_140, spindle_speed_monitor_mV=self.t_spindle_speed_monitor_mV)
+        self.assertEqual(self.serial_module.spindle_speed_monitor_mV,
+                         self.t_spindle_speed_monitor_mV), 'spindle speed monitor voltage error, case 2'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     ## CASE 3 TESTS:
     def test_pcb_temperature_case_228_NOW(self):
@@ -321,18 +312,18 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that PCB temperature works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, pcb_temp = self.t_pcb_temp)
+        self.status_and_PCB_constructor(self.case_228_NOW, pcb_temp=self.t_pcb_temp)
         self.assertEqual(self.serial_module.pcb_temp, self.t_pcb_temp), 'pcb temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     def test_motor_driver_temperature_case_228_NOW(self):
         """ 
         Test that motor driver temperature works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, motor_driver_temp = self.t_motor_driver_temp)
-        self.assertEqual(self.serial_module.motor_driver_temp, self.t_motor_driver_temp), 'motor_driver temp error, case 3'
+        self.status_and_PCB_constructor(self.case_228_NOW, motor_driver_temp=self.t_motor_driver_temp)
+        self.assertEqual(self.serial_module.motor_driver_temp,
+                         self.t_motor_driver_temp), 'motor_driver temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_transistor_heatsink_temperature_case_228_NOW(self):
@@ -340,8 +331,9 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that transistor heatsink temperature works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, transistor_heatsink_temp = self.t_transistor_heatsink_temp)
-        self.assertEqual(self.serial_module.transistor_heatsink_temp, self.t_transistor_heatsink_temp), 'transistor heatsink temp error, case 3'
+        self.status_and_PCB_constructor(self.case_228_NOW, transistor_heatsink_temp=self.t_transistor_heatsink_temp)
+        self.assertEqual(self.serial_module.transistor_heatsink_temp,
+                         self.t_transistor_heatsink_temp), 'transistor heatsink temp error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_microcontroller_voltage_case_228_NOW(self):
@@ -349,8 +341,9 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that microcontroller voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, microcontroller_mV = self.t_microcontroller_mV)
-        self.assertEqual(self.serial_module.microcontroller_mV, self.t_microcontroller_mV), 'microcontroller voltage error, case 3'
+        self.status_and_PCB_constructor(self.case_228_NOW, microcontroller_mV=self.t_microcontroller_mV)
+        self.assertEqual(self.serial_module.microcontroller_mV,
+                         self.t_microcontroller_mV), 'microcontroller voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
     def test_LED_voltage_case_228_NOW(self):
@@ -358,7 +351,7 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that LED voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, LED_mV = self.t_LED_mV)
+        self.status_and_PCB_constructor(self.case_228_NOW, LED_mV=self.t_LED_mV)
         self.assertEqual(self.serial_module.LED_mV, self.t_LED_mV), 'LED voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
@@ -367,22 +360,21 @@ class TempsVoltagesTest(unittest.TestCase):
         Test that PSU voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, PSU_mV = self.t_PSU_mV)
+        self.status_and_PCB_constructor(self.case_228_NOW, PSU_mV=self.t_PSU_mV)
         self.assertEqual(self.serial_module.PSU_mV, self.t_PSU_mV), 'PSU voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
-
 
     def test_spindle_speed_monitor_voltage_case_228_NOW(self):
         """ 
         Test that spindle speed monitor voltage works!
         This is relevant to FW between v136 and v140
         """
-        self.status_and_PCB_constructor(self.case_228_NOW, spindle_speed_monitor_mV = self.t_spindle_speed_monitor_mV)
-        self.assertEqual(self.serial_module.spindle_speed_monitor_mV, self.t_spindle_speed_monitor_mV), 'spindle speed monitor voltage error, case 3'
+        self.status_and_PCB_constructor(self.case_228_NOW, spindle_speed_monitor_mV=self.t_spindle_speed_monitor_mV)
+        self.assertEqual(self.serial_module.spindle_speed_monitor_mV,
+                         self.t_spindle_speed_monitor_mV), 'spindle speed monitor voltage error, case 3'
         assert self.serial_module.is_connected(), 'not connected'
 
 
-
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

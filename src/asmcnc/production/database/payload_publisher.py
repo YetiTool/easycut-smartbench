@@ -1,17 +1,19 @@
-import uuid
 import csv
 import json
-import traceback
-from datetime import datetime
 import os
+import traceback
+import uuid
+from datetime import datetime
 
-try: import pika
-except: 
+try:
+    import pika
+except:
     pika = None
     print(traceback.format_exc())
 
-try: import paramiko
-except: 
+try:
+    import paramiko
+except:
     paramiko = None
     print(traceback.format_exc())
 
@@ -19,8 +21,9 @@ CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
 WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
-if os.getcwd().endswith("easycut-smartbench"): 
+if os.getcwd().endswith("easycut-smartbench"):
     CSV_PATH = './src' + CSV_PATH[1:]
+
 
 def log(message):
     timestamp = datetime.now()
@@ -79,7 +82,7 @@ class DataPublisher(object):
         self.creds = creds
         self.machine_serial = machine_serial
 
-        try: 
+        try:
             pika_credentials = pika.PlainCredentials(
                 username='calibration',
                 password=creds.password
@@ -98,7 +101,7 @@ class DataPublisher(object):
                 queue=QUEUE
             )
 
-        except: 
+        except:
             log(traceback.format_exc())
 
     def send_file_paramiko_sftp(self, file_path):
@@ -124,8 +127,8 @@ class DataPublisher(object):
 
     def run_data_send(self, statuses, table, stage):
         csv_name = json_to_csv(statuses, self.machine_serial, table, stage)
-        
-        try: 
+
+        try:
             self.send_file_paramiko_sftp(csv_name)
         except:
             print(traceback.format_exc())

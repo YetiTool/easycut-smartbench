@@ -3,12 +3,9 @@ Created on 17 August 2020
 @author: Letty
 widget to hold brush use input and buttons
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -133,7 +130,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BrushUseWidget(Widget):

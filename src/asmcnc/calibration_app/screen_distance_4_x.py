@@ -8,12 +8,11 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -200,7 +199,7 @@ Builder.load_string(
                         
             
 """
-    )
+)
 
 
 class DistanceScreen4xClass(Screen):
@@ -260,7 +259,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         set_new_steps_sequence = ['$100 =' + str(self.new_x_steps), '$$']
         self.m.s.start_sequential_stream(set_new_steps_sequence)
         self.poll_for_success = Clock.schedule_interval(self.
-            check_for_successful_completion, 1)
+                                                        check_for_successful_completion, 1)
 
     def check_for_successful_completion(self, dt):
         if self.m.s.is_sequential_streaming == False:
@@ -271,7 +270,8 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name=
-            'distance1x', screen_manager=self.sm, machine=self.m)
+                                                                      'distance1x', screen_manager=self.sm,
+                                                                      machine=self.m)
         self.sm.add_widget(distance_screen1x)
         self.sm.current = 'distance1x'
 
@@ -282,17 +282,18 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
     def next_screen(self):
         from asmcnc.calibration_app import screen_distance_1_x
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name=
-            'distance1x', screen_manager=self.sm, machine=self.m)
+                                                                      'distance1x', screen_manager=self.sm,
+                                                                      machine=self.m)
         self.sm.add_widget(distance_screen1x)
         self.m.request_homing_procedure('distance1x', 'calibration_complete')
 
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
     def on_leave(self):
         if (self.sm.current != 'alarmScreen' and self.sm.current !=
-            'errorScreen'):
+                'errorScreen'):
             self.sm.remove_widget(self.sm.get_screen('distance4x'))

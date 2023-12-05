@@ -1,9 +1,10 @@
 import sys
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQCConnecting>:
@@ -39,13 +40,13 @@ Builder.load_string(
     
 
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
     print 'Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f')[:12
-        ] + ' ' + str(message)
+                                         ] + ' ' + str(message)
 
 
 class ZHeadQCConnecting(Screen):
@@ -70,20 +71,20 @@ class ZHeadQCConnecting(Screen):
             log('Waiting to get FW version')
             self.connecting_label.text = 'Waiting to get FW version'
             Clock.schedule_once(lambda dt: self.
-                ensure_hw_version_and_registers_are_loaded_in(), 0.5)
+                                ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
         if not self.m.TMC_registers_have_been_read_in(
-            ) and self.m.s.fw_version.startswith('2'):
+        ) and self.m.s.fw_version.startswith('2'):
             log('Waiting to get TMC registers')
             self.connecting_label.text = 'Waiting to get TMC registers'
             Clock.schedule_once(lambda dt: self.
-                ensure_hw_version_and_registers_are_loaded_in(), 1)
+                                ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
         if not self.usb.is_available():
             log('Getting USB')
             self.connecting_label.text = 'Getting USB'
             Clock.schedule_once(lambda dt: self.
-                ensure_hw_version_and_registers_are_loaded_in(), 1)
+                                ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
         self.progress_to_next_screen()
 

@@ -5,9 +5,9 @@ Screen 11 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -289,7 +289,7 @@ Builder.load_string(
                                     allow_stretch: True              
 
 """
-    )
+)
 
 
 class ShapeCutter11ScreenClass(Screen):
@@ -302,7 +302,7 @@ class ShapeCutter11ScreenClass(Screen):
 """)
     warning_message = StringProperty(
         '[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter11ScreenClass, self).__init__(**kwargs)

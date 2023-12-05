@@ -3,22 +3,17 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
-from __builtin__ import file
-from kivy.clock import Clock
-import os, sys, threading
 from datetime import datetime
-from multiprocessing import Process, Manager
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands
-from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view
-from asmcnc.skavaUI import popup_info
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.geometry import job_envelope
-from time import sleep
+from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, \
+    widget_quick_commands
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_summary, widget_gcode_view
+
 Builder.load_string(
     """
 
@@ -261,7 +256,7 @@ Builder.load_string(
             id: status_container
 
 """
-    )
+)
 
 
 def log(message):
@@ -281,7 +276,7 @@ class HomeScreen(Screen):
     def __init__(self, **kwargs):
         super(HomeScreen, self).__init__(**kwargs)
         Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.
-            home_tab))
+                                                                   home_tab))
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job']
@@ -289,38 +284,39 @@ class HomeScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=
-            self.jd)
+                                                                      self.jd)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
         self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed
-            (machine=self.m, screen_manager=self.sm))
+                                              (machine=self.m, screen_manager=self.sm))
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.sm))
         self.virtual_bed_control_container.add_widget(
             widget_virtual_bed_control.VirtualBedControl(machine=self.m,
-            screen_manager=self.sm, localization=self.l), index=100)
+                                                         screen_manager=self.sm, localization=self.l), index=100)
         self.xy_move_widget = widget_xy_move.XYMove(machine=self.m,
-            screen_manager=self.sm, localization=self.l)
+                                                    screen_manager=self.sm, localization=self.l)
         self.common_move_widget = widget_common_move.CommonMove(machine=
-            self.m, screen_manager=self.sm)
+                                                                self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
         self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m,
-            screen_manager=self.sm, job=self.jd))
+                                                             screen_manager=self.sm, job=self.jd))
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine
-            =self.m, screen_manager=self.sm, localization=self.l)
+                                                                      =self.m, screen_manager=self.sm,
+                                                                      localization=self.l)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         self.quick_commands_container.add_widget(widget_quick_commands.
-            QuickCommands(machine=self.m, screen_manager=self.sm, job=self.
-            jd, localization=self.l))
+                                                 QuickCommands(machine=self.m, screen_manager=self.sm, job=self.
+                                                               jd, localization=self.l))
         self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
         self.m.stylus_router_choice = 'router'
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.
-            current_tab == self.pos_tab):
+                current_tab == self.pos_tab):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
@@ -350,7 +346,7 @@ class HomeScreen(Screen):
             self.gcode_summary_widget.hide_summary()
         else:
             self.file_data_label.text = ('[color=333333]' + self.jd.
-                job_name + '[/color]')
+                                         job_name + '[/color]')
         if self.jd.job_recovery_cancel_line != None:
             if self.jd.job_recovery_cancel_line == -1:
                 self.job_recovery_button_image.source = (
@@ -361,11 +357,11 @@ class HomeScreen(Screen):
             if self.jd.job_recovery_selected_line == -1:
                 if self.jd.job_recovery_from_beginning:
                     self.file_data_label.text += ('\n[color=FF0000]' + self
-                        .l.get_str('Restart from beginning') + '[/color]')
+                                                  .l.get_str('Restart from beginning') + '[/color]')
             else:
                 self.file_data_label.text += ('\n[color=FF0000]' + self.l.
-                    get_str('From line N').replace('N', str(self.jd.
-                    job_recovery_selected_line)) + '[/color]')
+                                              get_str('From line N').replace('N', str(self.jd.
+                                                                                      job_recovery_selected_line)) + '[/color]')
         else:
             self.job_recovery_button_image.source = (
                 './asmcnc/skavaUI/img/recover_job_disabled.png')
@@ -378,7 +374,7 @@ class HomeScreen(Screen):
         try:
             log('> draw_file_in_xy_plane')
             self.gcode_preview_widget.draw_file_in_xy_plane(self.
-                non_modal_gcode_list)
+                                                            non_modal_gcode_list)
             log('< draw_file_in_xy_plane')
         except:
             print 'Unable to draw gcode'

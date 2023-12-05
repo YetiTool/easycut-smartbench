@@ -5,13 +5,11 @@ Screen to help production move through final test more quickly
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
-from kivy.properties import ObjectProperty
-from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
-import os, sys
+from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
+
 Builder.load_string(
     """
 
@@ -176,7 +174,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class FinalTestScreen(Screen):
@@ -205,11 +203,11 @@ class FinalTestScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.systemtools_sm.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.
-            GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm
-            .sm, localization=self.l))
+                                                GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm
+                                                             .sm, localization=self.l))
         self.move_container.add_widget(widget_final_test_xy_move.
-            FinalTestXYMove(machine=self.m, screen_manager=self.
-            systemtools_sm.sm))
+                                       FinalTestXYMove(machine=self.m, screen_manager=self.
+                                                       systemtools_sm.sm))
         self.text_inputs = [self.y_over_count, self.x_over_count]
 
     def on_enter(self):
@@ -275,7 +273,7 @@ class FinalTestScreen(Screen):
 
     def y_home_x_mid(self):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit,
-            self.fast_y_speed)
+                                        self.fast_y_speed)
         self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
         self.m.set_led_colour('BLUE')
 
@@ -286,10 +284,10 @@ class FinalTestScreen(Screen):
     def set_x_steps(self):
         try:
             x_overstep = float(self.x_over_count.text
-                ) * self.x_calibration_scale_factor
+                               ) * self.x_calibration_scale_factor
             print x_overstep
             self.m.write_dollar_setting(100, float(self.m.s.setting_100) -
-                x_overstep, reset_grbl_after_stream=False)
+                                        x_overstep, reset_grbl_after_stream=False)
             self.x_over_count.text = ''
         except:
             pass
@@ -297,10 +295,10 @@ class FinalTestScreen(Screen):
     def set_y_steps(self):
         try:
             y_overstep = float(self.y_over_count.text
-                ) * self.y_calibration_scale_factor
+                               ) * self.y_calibration_scale_factor
             print y_overstep
             self.m.write_dollar_setting(101, float(self.m.s.setting_101) -
-                y_overstep, reset_grbl_after_stream=False)
+                                        y_overstep, reset_grbl_after_stream=False)
             self.y_over_count.text = ''
         except:
             pass

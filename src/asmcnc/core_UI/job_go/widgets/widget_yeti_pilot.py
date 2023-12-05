@@ -1,6 +1,8 @@
-from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
 from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
+
 Builder.load_string(
     """
 
@@ -121,7 +123,7 @@ Builder.load_string(
 
                 
 """
-    )
+)
 
 
 class YetiPilotWidget(Widget):
@@ -141,8 +143,8 @@ class YetiPilotWidget(Widget):
 
     def toggle_button_img(self, state):
         self.yp_toggle_img.source = (
-            './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
-            'down' else 'off'))
+                './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
+                                                                          'down' else 'off'))
 
     def switch_reflects_yp(self):
         self.switch.state = 'down' if self.yp.use_yp else 'normal'
@@ -162,8 +164,9 @@ class YetiPilotWidget(Widget):
 
     def open_yp_settings(self):
         self.yp_settings_popup = PopupYetiPilotSettings(self.sm, self.l,
-            self.m, self.db, self.yp, version=not self.yp.
-            using_advanced_profile, closing_func=self.update_profile_selection)
+                                                        self.m, self.db, self.yp, version=not self.yp.
+                                                        using_advanced_profile,
+                                                        closing_func=self.update_profile_selection)
 
     def update_profile_selection(self, *args):
         if self.yp.using_basic_profile:
@@ -171,11 +174,11 @@ class YetiPilotWidget(Widget):
                 self.disable_yeti_pilot()
                 return
             self.profile_selection.text = self.yp.get_active_material_type(
-                ) + '; ' + self.yp.get_active_cutter_diameter(
-                ) + ', ' + self.yp.get_active_cutter_type()
+            ) + '; ' + self.yp.get_active_cutter_diameter(
+            ) + ', ' + self.yp.get_active_cutter_type()
         elif self.yp.using_advanced_profile:
             if not self.m.has_spindle_health_check_passed():
                 self.disable_yeti_pilot()
                 return
             self.profile_selection.text = self.l.get_str('Advanced profile'
-                ) + ': ' + str(int(self.yp.get_total_target_power())) + ' W'
+                                                         ) + ': ' + str(int(self.yp.get_total_target_power())) + ' W'

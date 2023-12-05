@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys
+import traceback
+
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
-import traceback
-from kivy.clock import Clock
 
 try:
     import hgtk
@@ -47,7 +48,6 @@ class Keyboard(VKeyboard):
         self.on_key_up = self.key_up
         self.set_keyboard_background()
 
-
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
 
         '''
@@ -69,18 +69,17 @@ class Keyboard(VKeyboard):
 
         '''
 
-        try: 
+        try:
             # if the given function returns True, exit the "loop" :)
             if func(list_of_items[i]): return
 
             # passing "-1" as the time argument schedules the call before the next frame if possible
-            Clock.schedule_once(lambda dt: self.generic_for_loop_alternative(func, list_of_items, i+1, end_func), -1)
+            Clock.schedule_once(lambda dt: self.generic_for_loop_alternative(func, list_of_items, i + 1, end_func), -1)
 
         except IndexError as e:
             # When we get to the end of the list of things, call a final function if it exists
             if end_func:
                 end_func()
-
 
     # Set up text input fields to raise the custom keyboard
     def setup_text_inputs(self, text_inputs):
@@ -111,7 +110,7 @@ class Keyboard(VKeyboard):
                     else:
                         self.text_instance.insert_text(u'\n')
                 if keycode == "Han/Yeong":
-                    #https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
+                    # https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
                     self.previous_layout = self.layout
                 if keycode == "escape":
@@ -123,7 +122,7 @@ class Keyboard(VKeyboard):
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
 
                     if self.layout == self.numeric_layout:
-                        self.width = Window.width/3
+                        self.width = Window.width / 3
                     else:
                         self.width = Window.width
 
@@ -131,7 +130,7 @@ class Keyboard(VKeyboard):
 
                     # Make sure keyboard never goes off-screen and becomes unusable/unreachable
                     if self.pos[0] + self.width > Window.width:
-                        self.pos = (Window.width-self.width, self.pos[1])
+                        self.pos = (Window.width - self.width, self.pos[1])
                     if self.pos[1] < 0:
                         self.pos = (self.pos[0], 0)
                     if self.pos[0] < 0:
@@ -142,7 +141,7 @@ class Keyboard(VKeyboard):
             self.text_instance.insert_text(internal)
 
     def set_keyboard_background(self):
-        if self.do_translation == (True,True) and sys.platform != 'darwin':
+        if self.do_translation == (True, True) and sys.platform != 'darwin':
             self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
             if self.layout == self.numeric_layout:
                 self.background = "./asmcnc/keyboard/images/numeric_background_" + str(Window.width) + ".png"
@@ -153,7 +152,7 @@ class Keyboard(VKeyboard):
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
     # On focus behaviour is bound to all text inputs
-    def on_focus_raise_keyboard(self,instance,value):
+    def on_focus_raise_keyboard(self, instance, value):
         if value:
             try:
                 instance.get_focus_previous().focus = False
@@ -167,14 +166,15 @@ class Keyboard(VKeyboard):
 
     # Functions to raise keyboard
     def raise_keyboard_if_none_exists(self):
-        self.generic_for_loop_alternative(self.return_if_keyboard_exists, Window.children, i=0, end_func=self.add_keyboard_instance)
+        self.generic_for_loop_alternative(self.return_if_keyboard_exists, Window.children, i=0,
+                                          end_func=self.add_keyboard_instance)
 
     def return_if_keyboard_exists(self, child):
         if isinstance(child, Keyboard):
             return True
 
     def add_keyboard_instance(self):
-        try: 
+        try:
             Window.add_widget(self)
         except:
             print(traceback.format_exc())
@@ -192,5 +192,3 @@ class Keyboard(VKeyboard):
 
     def defocus_text_input(self, text_input):
         text_input.focus = False
-
-

@@ -5,12 +5,11 @@ Screen 33 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import widget_sC_work_coordinates, widget_sC_virtual_bed
-from asmcnc.geometry import job_envelope
+
 Builder.load_string(
     """
 
@@ -360,7 +359,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter33ScreenClass(Screen):
@@ -369,7 +368,7 @@ class ShapeCutter33ScreenClass(Screen):
     title_label = StringProperty('[b]Trace bounding box[/b]')
     user_instructions = StringProperty(
         'Press the [b]Trace[/b] button to make the machine walk around the outline of the job before it starts. '
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter33ScreenClass, self).__init__(**kwargs)
@@ -377,8 +376,9 @@ class ShapeCutter33ScreenClass(Screen):
         self.m = kwargs['machine']
         self.j = kwargs['job_parameters']
         self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(machine
-            =self.m, job_parameters=self.j, screen_manager=self.
-            shapecutter_sm.sm)
+                                                                     =self.m, job_parameters=self.j,
+                                                                     screen_manager=self.
+                                                                     shapecutter_sm.sm)
         self.virtual_bed_container.add_widget(self.virtual_bed_widget)
         self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(
             machine=self.m, screen_manager=self.shapecutter_sm.sm)

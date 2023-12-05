@@ -3,12 +3,9 @@ Created on 17 August 2020
 @author: Letty
 widget to allow user to change touchplate offset
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -100,7 +97,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class ZLubricationReminderWidget(Widget):
@@ -118,25 +115,25 @@ class ZLubricationReminderWidget(Widget):
     def update_time_left(self):
         self.update_strings()
         self.time_in_hours = int(self.m.
-            time_since_z_head_lubricated_seconds / 3600)
+                                 time_since_z_head_lubricated_seconds / 3600)
         if self.time_in_hours < 30:
             self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self
-                .time_in_hours) + ' ' + self.hours_label + '[/color]'
+                                                                         .time_in_hours) + ' ' + self.hours_label + '[/color]'
         elif self.time_in_hours < 40:
             self.hours_since_lubrication.text = '[color=f9ce1dff]' + str(self
-                .time_in_hours) + ' ' + self.hours_label + '[/color]'
+                                                                         .time_in_hours) + ' ' + self.hours_label + '[/color]'
         elif self.time_in_hours < 45:
             self.hours_since_lubrication.text = '[color=ff9903ff]' + str(self
-                .time_in_hours) + ' ' + self.hours_label + '[/color]'
+                                                                         .time_in_hours) + ' ' + self.hours_label + '[/color]'
         else:
             self.hours_since_lubrication.text = '[color=e64a19ff]' + str(self
-                .time_in_hours) + ' ' + self.hours_label + '[/color]'
+                                                                         .time_in_hours) + ' ' + self.hours_label + '[/color]'
         self.update_font_size(self.hours_since_lubrication)
 
     def reset_to_0(self):
         self.time_in_hours = 0
         self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.
-            time_in_hours) + ' ' + self.hours_label + '[/color]'
+                                                                     time_in_hours) + ' ' + self.hours_label + '[/color]'
         self.update_font_size(self.hours_since_lubrication)
 
     def update_strings(self):

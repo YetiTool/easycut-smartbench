@@ -1,8 +1,8 @@
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
-from asmcnc.skavaUI import popup_info
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
+
 Builder.load_string(
     """
 
@@ -192,13 +192,13 @@ Builder.load_string(
 					# padding: [193.5, 0, 0, 0]
 
 """
-    )
+)
 
 
 class ScrollPrivacyNotice(ScrollView):
     text = StringProperty('')
     color_dict = DictProperty({'background': 'e5e5e5ff', 'link': '1976d2ff',
-        'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
+                               'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
 
 
 class WiFiAndDataConsentScreen3(Screen):
@@ -226,7 +226,7 @@ class WiFiAndDataConsentScreen3(Screen):
     def update_strings(self):
         self.header_label.text = self.l.get_str('Wi-Fi and Data Consent')
         self.scroll_privacy_notice.privacy_notice.source = (self.
-            privacy_notice_path + self.l.lang + '.rst')
+                                                            privacy_notice_path + self.l.lang + '.rst')
         self.user_info.text = self.l.get_str(
             'I have read and understood the privacy notice')
         self.decline_button.text = self.l.get_str('Decline')

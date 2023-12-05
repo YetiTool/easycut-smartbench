@@ -5,12 +5,10 @@ Created July 2020
 
 Spindle cooldown screen
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
 from kivy.clock import Clock
-from datetime import datetime
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -122,7 +120,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class SpindleCooldownScreen(Screen):
@@ -137,7 +135,7 @@ class SpindleCooldownScreen(Screen):
         self.l = kwargs['localization']
         self.seconds = self.m.spindle_cooldown_time_seconds
         self.cool_down_label.text = self.l.get_str('Cooling down spindle'
-            ) + '...'
+                                                   ) + '...'
 
     def on_pre_enter(self):
         self.m.cooldown_zUp_and_spindle_on()

@@ -5,11 +5,12 @@ Created March 2020
 
 Basic screen 
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+import sys
+
 from kivy.clock import Clock
-import sys, os
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -69,7 +70,7 @@ Builder.load_string(
                 halign: 'center'
 
 """
-    )
+)
 
 
 class PowerCycleScreen(Screen):
@@ -84,7 +85,7 @@ class PowerCycleScreen(Screen):
 
     def on_enter(self):
         self.wait_for_install = Clock.schedule_once(self.
-            finished_installing, 30)
+                                                    finished_installing, 30)
         self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
 
     def update_label(self, dt):

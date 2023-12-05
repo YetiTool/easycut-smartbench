@@ -1,10 +1,13 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
 from datetime import datetime
-from asmcnc.skavaUI import popup_info
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.skavaUI import popup_info
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <ZHeadQC2>:
@@ -202,7 +205,7 @@ Builder.load_string(
             id: status_container 
             pos: self.pos
 """
-    )
+)
 
 
 def log(message):
@@ -225,14 +228,14 @@ class ZHeadQC2(Screen):
         self.spindle_pass_fail = True
         self.digital_spindle_pass_fail = True
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m,
-            screen_manager=self.sm)
+                                                             screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
         self.poll_for_status = Clock.schedule_interval(self.
-            update_status_text, 0.4)
+                                                       update_status_text, 0.4)
 
     def on_enter(self):
         self.poll_for_limits = Clock.schedule_interval(self.
-            update_checkboxes, 0.4)
+                                                       update_checkboxes, 0.4)
 
     def enter_prev_screen(self):
         self.sm.current = 'qc1'
@@ -244,7 +247,7 @@ class ZHeadQC2(Screen):
     def update_status_text(self, dt):
         try:
             self.console_status_text.text = self.sm.get_screen('home'
-                ).gcode_monitor_widget.consoleStatusText.text
+                                                               ).gcode_monitor_widget.consoleStatusText.text
         except:
             pass
 
@@ -269,27 +272,27 @@ class ZHeadQC2(Screen):
             self.spindle_brush_reset()
         else:
             popup_info.PopupError(self.sm, self.l,
-                'Machine should be in idle state for this test')
+                                  'Machine should be in idle state for this test')
 
     def spindle_brush_reset(self):
 
         def read_info(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(),
-                'GET DIGITAL SPINDLE INFO')
+                                    'GET DIGITAL SPINDLE INFO')
             Clock.schedule_once(get_info, 1)
 
         def get_info(dt):
             self.initial_run_time = self.m.s.spindle_brush_run_time_seconds
             if self.initial_run_time == 0:
                 fail_report.append('Spindle brush run time was 0 before reset.'
-                    )
+                                   )
             self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(),
-                'RESET DIGITAL SPINDLE BRUSH TIME')
+                                    'RESET DIGITAL SPINDLE BRUSH TIME')
             Clock.schedule_once(read_info_again, 3)
 
         def read_info_again(dt):
             self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(),
-                'GET DIGITAL SPINDLE INFO')
+                                    'GET DIGITAL SPINDLE INFO')
             Clock.schedule_once(compare_info, 1)
 
         def compare_info(dt):
@@ -298,10 +301,11 @@ class ZHeadQC2(Screen):
                 self.test_rpm(fail_report)
             else:
                 fail_report.append('Spindle brush time after reset was ' +
-                    str(self.m.s.spindle_brush_run_time_seconds) +
-                    '. Should be 0')
+                                   str(self.m.s.spindle_brush_run_time_seconds) +
+                                   '. Should be 0')
                 self.m.s.write_command('M5')
                 self.test_rpm(fail_report)
+
         fail_report = []
         self.brush_reset_test_count += 1
         self.m.s.write_command('M3 S0')
@@ -314,11 +318,12 @@ class ZHeadQC2(Screen):
             log('Spindle RPM: %s' % spindle_rpm)
             if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append('Spindle RPM was ' + str(spindle_rpm) +
-                    '. Should be 8000-12000')
+                                   '. Should be 8000-12000')
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
+
         rpm_to_run = (10000 if self.m.spindle_voltage == 230 else self.m.
-            convert_from_110_to_230(10000))
+                      convert_from_110_to_230(10000))
         self.m.s.write_command('M3 S' + str(rpm_to_run))
         Clock.schedule_once(read_rpm, 3)
 
@@ -327,34 +332,34 @@ class ZHeadQC2(Screen):
         log('Digital Spindle Temperature: %s' % temperature)
         if temperature < 0 or temperature > 50:
             fail_report.append('Temperature was ' + str(temperature) +
-                '. Should be 0-50')
+                               '. Should be 0-50')
         load = self.m.s.digital_spindle_ld_qdA
         log('Digital Spindle Load: %s' % load)
         if load < 50 or load > 10000:
             fail_report.append('Load was ' + str(load) + '. Should be 50-10000'
-                )
+                               )
         killtime = self.m.s.digital_spindle_kill_time
         log('Digital Spindle KillTime: %s' % killtime)
         if killtime != 255:
             fail_report.append('KillTime was ' + str(killtime) +
-                '. Should be 255')
+                               '. Should be 255')
         voltage = self.m.s.digital_spindle_mains_voltage
         log('Digital Spindle Voltage: %s' % voltage)
         if voltage < 100 or voltage > 255:
             fail_report.append('Voltage was ' + str(voltage) +
-                '. Should be 100-255')
+                               '. Should be 100-255')
         if not fail_report:
             log('Test passed')
             self.digital_spindle_check.source = (
                 './asmcnc/skavaUI/img/file_select_select.png')
-        elif self.brush_reset_test_count < 5 and (self.initial_run_time == 
-            0 or self.m.s.spindle_brush_run_time_seconds != 0):
+        elif self.brush_reset_test_count < 5 and (self.initial_run_time ==
+                                                  0 or self.m.s.spindle_brush_run_time_seconds != 0):
             self.spindle_brush_reset()
         else:
             log('Test failed')
             fail_report_string = '\n'.join(fail_report)
             popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm,
-                fail_report_string)
+                                                          fail_report_string)
             self.digital_spindle_check.source = (
                 './asmcnc/skavaUI/img/template_cancel.png')
 
@@ -378,17 +383,18 @@ class ZHeadQC2(Screen):
                         './asmcnc/skavaUI/img/template_cancel.png')
                     test = self.string_overload_summary.split('**')
                     popup_z_head_qc.PopupSpindleDiagnosticsInfo(self.sm,
-                        test[1], test[2], test[3], test[4], test[5])
+                                                                test[1], test[2], test[3], test[4], test[5])
                 else:
                     self.spindle_speed_check.source = (
                         './asmcnc/skavaUI/img/file_select_select.png')
                 self.spindle_pass_fail = True
             except:
                 log('Could not show outcome')
+
         Clock.schedule_once(lambda dt: show_outcome(), 45)
 
     def analogue_spindle_check(self, M3_command, ld_expected_mV,
-        speed_expected_mV):
+                               speed_expected_mV):
         self.spindle_test_counter = 1
 
         def overload_check(ld_mid_range_mV, speed_mid_range_mV):
@@ -403,32 +409,33 @@ class ZHeadQC2(Screen):
                 speed_V_tolerance = int(0.1 * speed_mid_range_mV)
             if self.spindle_test_counter == 1:
                 self.string_overload_summary = (self.
-                    string_overload_summary + '\n' + 'Ld range: ' + '\n' +
-                    str(ld_mid_range_mV - ld_tolerance) + ' - ' + str(
-                    ld_mid_range_mV + ld_tolerance) + ' mV')
+                                                string_overload_summary + '\n' + 'Ld range: ' + '\n' +
+                                                str(ld_mid_range_mV - ld_tolerance) + ' - ' + str(
+                            ld_mid_range_mV + ld_tolerance) + ' mV')
                 self.string_overload_summary = (self.
-                    string_overload_summary + '\n' + 'Speed V range: ' +
-                    '\n' + str(speed_mid_range_mV - speed_V_tolerance) +
-                    ' - ' + str(speed_mid_range_mV + speed_V_tolerance) + ' mV'
-                    )
+                                                string_overload_summary + '\n' + 'Speed V range: ' +
+                                                '\n' + str(speed_mid_range_mV - speed_V_tolerance) +
+                                                ' - ' + str(speed_mid_range_mV + speed_V_tolerance) + ' mV'
+                                                )
             elif self.spindle_test_counter > 3:
                 return
             overload_value = self.m.s.spindle_load_voltage
             spindle_speed_value = self.m.s.spindle_speed_monitor_mV
             self.string_overload_summary = (self.string_overload_summary +
-                '\n' + 'Test ' + str(self.spindle_test_counter) +
-                ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +
-                str(spindle_speed_value) + ' mV')
+                                            '\n' + 'Test ' + str(self.spindle_test_counter) +
+                                            ':\n  V_Ld: ' + str(overload_value) + ' mV' + '\n  V_s: ' +
+                                            str(spindle_speed_value) + ' mV')
             self.is_it_within_tolerance(overload_value, ld_mid_range_mV,
-                ld_tolerance)
+                                        ld_tolerance)
             self.is_it_within_tolerance(spindle_speed_value,
-                speed_mid_range_mV, speed_V_tolerance)
+                                        speed_mid_range_mV, speed_V_tolerance)
             self.spindle_test_counter += 1
+
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
         self.string_overload_summary = (self.string_overload_summary + '**' +
-            '[b]' + str(M3_command).strip('M3 S') + ' RPM[/b]')
+                                        '[b]' + str(M3_command).strip('M3 S') + ' RPM[/b]')
         overload_check_event = Clock.schedule_interval(lambda dt:
-            overload_check(ld_expected_mV, speed_expected_mV), 2.5)
+                                                       overload_check(ld_expected_mV, speed_expected_mV), 2.5)
         Clock.schedule_once(lambda dt: Clock.unschedule(
             overload_check_event), 8)
 

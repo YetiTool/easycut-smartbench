@@ -4,16 +4,19 @@ Created on 19 Aug 2017
 @author: Ed
 edited by Archie 2023 for use in dwt app
 """
+import json
 import os
 import sys
-import json
+
 import kivy
 from chardet import detect
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
+
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -218,34 +221,37 @@ Builder.load_string(
 
 
 """
-    )
+)
 configs_dir = './asmcnc/apps/drywall_cutter_app/config/configurations/'
 
 
 def date_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=False)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=False)
 
 
 def date_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=True)
 
 
 def name_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted(f for
-        f in files if not filesystem.is_dir(f))
+                                                                     f in files if not filesystem.is_dir(f))
 
 
 def name_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     reverse=True)
 
 
 decode_and_encode = lambda x: unicode(x, detect(x)['encoding'] or 'utf-8'
-    ).encode('utf-8')
+                                      ).encode('utf-8')
 
 
 class ConfigFileSaver(Screen):
@@ -256,8 +262,8 @@ class ConfigFileSaver(Screen):
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
     json_config_order = {u'shape_type': 0, u'units': 1,
-        u'canvas_shape_dims': 2, u'cutter_type': 3, u'toolpath_offset': 4,
-        u'cutting_depths': 5, u'datum_position': 6}
+                         u'canvas_shape_dims': 2, u'cutter_type': 3, u'toolpath_offset': 4,
+                         u'cutting_depths': 5, u'datum_position': 6}
 
     def __init__(self, **kwargs):
         super(ConfigFileSaver, self).__init__(**kwargs)
@@ -267,25 +273,25 @@ class ConfigFileSaver(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.check_for_job_cache_dir()
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.list_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            icon_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            list_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_icon)
+                                                 alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_list)
+                                                 alternate_update_effect_bounds_list)
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -296,15 +302,15 @@ class ConfigFileSaver(Screen):
     def update_y_bounds_try_except(sefl, scrollview_object):
         try:
             if (not scrollview_object._viewport or not scrollview_object.
-                effect_y):
+                    effect_y):
                 return
             scrollable_height = (scrollview_object.height -
-                scrollview_object.viewport_size[1])
+                                 scrollview_object.viewport_size[1])
             scrollview_object.effect_y.min = (0 if scrollable_height < 0 else
-                scrollable_height)
+                                              scrollable_height)
             scrollview_object.effect_y.max = scrollable_height
             scrollview_object.effect_y.value = (scrollview_object.effect_y.
-                max * scrollview_object.scroll_y)
+                                                max * scrollview_object.scroll_y)
         except:
             pass
 
@@ -373,10 +379,10 @@ class ConfigFileSaver(Screen):
     def display_selected_file(self):
         if sys.platform == 'win32':
             self.file_selected_label.text = self.filechooser.selection[0
-                ].split('\\')[-1]
+            ].split('\\')[-1]
         else:
             self.file_selected_label.text = self.filechooser.selection[0
-                ].split('/')[-1]
+            ].split('/')[-1]
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
         self.metadata_preview.text = self.to_human_readable(json_obj)
@@ -387,14 +393,15 @@ class ConfigFileSaver(Screen):
 
         def format_key(json_key):
             return json_key.replace('_', ' ').title()
+
         result = ''
         for key, value in json_obj.items():
             if isinstance(value, dict):
                 result += ' ' * indent + format_key(key
-                    ) + ':\n' + self.to_human_readable(value, indent + 4)
+                                                    ) + ':\n' + self.to_human_readable(value, indent + 4)
             else:
                 result += ' ' * indent + format_key(key) + ': ' + str(value
-                    ) + '\n'
+                                                                      ) + '\n'
         return result
 
     def save_config_and_return_to_dwt(self):
@@ -403,7 +410,7 @@ class ConfigFileSaver(Screen):
             self.sm.current = 'drywall_cutter'
         else:
             popup_info.PopupInfo(screen_manager=self.sm, localization=self.
-                l, popup_width=500, description=self.l.get_str(
+                                 l, popup_width=500, description=self.l.get_str(
                 'File names must be between 1 and 40 characters long.'))
 
     def validate_file_name(self, file_name):

@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -148,7 +149,7 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos
 """
-    )
+)
 
 
 class XYMoveRecovery(Widget):
@@ -157,27 +158,28 @@ class XYMoveRecovery(Widget):
         super(XYMoveRecovery, self).__init__(**kwargs)
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
     def buttonJogXY(self, case):
         x_feed_speed = self.sm.get_screen('nudge'
-            ).nudge_speed_widget.feedSpeedJogX
+                                          ).nudge_speed_widget.feedSpeedJogX
         y_feed_speed = self.sm.get_screen('nudge'
-            ).nudge_speed_widget.feedSpeedJogY
+                                          ).nudge_speed_widget.feedSpeedJogY
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)

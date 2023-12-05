@@ -2,16 +2,12 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-from kivy.clock import Clock
+
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -242,7 +238,7 @@ Builder.load_string(
                         allow_stretch: True  
                         opacity: 0        
 """
-    )
+)
 
 
 class SC31XYMove(Widget):
@@ -253,6 +249,7 @@ class SC31XYMove(Widget):
         self.sm = kwargs['screen_manager']
         self.j = kwargs['job_parameters']
         self.l = kwargs['localization']
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
@@ -289,16 +286,16 @@ class SC31XYMove(Widget):
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)
@@ -361,14 +358,14 @@ class SC31XYMove(Widget):
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC31',
-                'sC31')
+                                          'sC31')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC31',
-                'sC31')
+                                          'sC31')
         else:
             self.m.go_y_datum()
 

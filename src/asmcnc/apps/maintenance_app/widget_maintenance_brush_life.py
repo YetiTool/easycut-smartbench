@@ -3,12 +3,9 @@ Created on 19 August 2020
 @author: Letty
 widget to hold brush life input and buttons
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -133,7 +130,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class BrushLifeWidget(Widget):
@@ -148,7 +145,7 @@ class BrushLifeWidget(Widget):
 
     def restore(self):
         self.brush_life.text = str(int(self.m.
-            spindle_brush_lifetime_seconds / 3600))
+                                       spindle_brush_lifetime_seconds / 3600))
 
     def reset_to_120(self):
         self.brush_life.text = '120'

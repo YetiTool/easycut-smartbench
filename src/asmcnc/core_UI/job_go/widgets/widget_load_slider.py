@@ -1,8 +1,9 @@
-from kivy.uix.widget import Widget
+from functools import partial
+
 from kivy.lang import Builder
 from kivy.uix.button import Button
-from functools import partial
-from kivy.graphics import Color
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -77,7 +78,7 @@ Builder.load_string(
 
                 
 """
-    )
+)
 
 
 class PowerAdjustButtons(Button):
@@ -114,15 +115,15 @@ class LoadSliderWidget(Widget):
         btn_str = str(val) if val < 0 else '+' + str(val)
         button_adjust_func = partial(self.button_adjust_slider, val)
         container.add_widget(PowerAdjustButtons(text=btn_str, on_press=
-            button_adjust_func, color=dark_grey))
+        button_adjust_func, color=dark_grey))
 
     def button_adjust_slider(self, val, instance=None):
         if (self.power_slider.min <= self.power_slider.value + val <= self.
-            power_slider.max):
+                power_slider.max):
             self.power_slider.value += val
 
     def on_slider_value_change(self, instance=None, value=None):
         self.load_label.text = '[b]' + str(int(self.power_slider.value)
-            ) + ' W' + '[/b]'
+                                           ) + ' W' + '[/b]'
         tool_load = int(self.power_slider.value) - self.yp.get_free_load()
         self.yp.set_tool_load(tool_load)

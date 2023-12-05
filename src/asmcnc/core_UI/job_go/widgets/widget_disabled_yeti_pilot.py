@@ -1,8 +1,8 @@
-from kivy.uix.widget import Widget
 from kivy.lang import Builder
+from kivy.uix.widget import Widget
+
 from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import SpindleHealthCheckActiveScreen
-from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty
+
 Builder.load_string(
     """
 
@@ -74,7 +74,7 @@ Builder.load_string(
                         allow_stretch: False
                 
 """
-    )
+)
 
 
 class DisabledYPCase:
@@ -118,14 +118,14 @@ class DisabledYetiPilotWidget(Widget):
         else:
             self.health_check_button.disabled = True
             self.health_check_button_img.source = (self.
-                health_check_disabled_img)
+                                                   health_check_disabled_img)
 
     def get_translated_text_based_on_case(self, case):
         translated_text = ''
         if case == DisabledYPCase.DISABLED:
             translated_text += self.l.get_str(
                 'Enable Spindle motor health check in the Maintenance app to change this.'
-                )
+            )
         else:
             translated_text += self.l.get_str(
                 'Spindle motor health check failed.')
@@ -147,9 +147,9 @@ class DisabledYetiPilotWidget(Widget):
     def run_spindle_health_check(self):
         if not self.sm.has_screen('spindle_health_check_active'):
             shc_screen = SpindleHealthCheckActiveScreen(name=
-                'spindle_health_check_active', screen_manager=self.sm,
-                machine=self.m, localization=self.l)
+                                                        'spindle_health_check_active', screen_manager=self.sm,
+                                                        machine=self.m, localization=self.l)
             self.sm.add_widget(shc_screen)
         self.sm.get_screen('spindle_health_check_active'
-            ).start_after_pass = False
+                           ).start_after_pass = False
         self.sm.current = 'spindle_health_check_active'

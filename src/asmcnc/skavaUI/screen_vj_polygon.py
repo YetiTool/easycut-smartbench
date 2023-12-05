@@ -1,8 +1,8 @@
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-from asmcnc.skavaUI import widget_vj_polygon
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -16,7 +16,7 @@ Builder.load_string(
 			id: polygon_vj
 
 """
-    )
+)
 
 
 class ScreenVJPolygon(Screen):

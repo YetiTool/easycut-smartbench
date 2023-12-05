@@ -4,13 +4,14 @@ Screen 23 for the Shape Cutter App
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
-from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -505,7 +506,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter23ScreenClass(Screen):
@@ -530,11 +531,11 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.xy_feed.text = '{:.2f}'.format(float(self.j.parameter_dict[
-            'feed rates']['xy feed rate']))
+                                                      'feed rates']['xy feed rate']))
         self.z_feed.text = '{:.2f}'.format(float(self.j.parameter_dict[
-            'feed rates']['z feed rate']))
+                                                     'feed rates']['z feed rate']))
         self.spindle_speed.text = '{:.0f}'.format(float(self.j.
-            parameter_dict['feed rates']['spindle speed']))
+                                                        parameter_dict['feed rates']['spindle speed']))
         if self.j.parameter_dict['feed rates']['units'] == 'inches':
             self.unit_toggle.active = True
             self.xy_feed_units.text = 'inches/min'
@@ -551,7 +552,7 @@ class ShapeCutter23ScreenClass(Screen):
         message = ', loading feeds and speeds look-up table...'
         popup_info.PopupWait(self.shapecutter_sm, message)
         Clock.schedule_once(lambda dt: popup_info.
-            PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1.5)
+                            PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1.5)
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
@@ -584,20 +585,20 @@ class ShapeCutter23ScreenClass(Screen):
             self.z_feed_units.text = 'inches/min'
             if not self.xy_feed.text == '':
                 self.xy_feed.text = '{:.2f}'.format(float(self.xy_feed.text
-                    ) / 25.4)
+                                                          ) / 25.4)
             if not self.z_feed.text == '':
                 self.z_feed.text = '{:.2f}'.format(float(self.z_feed.text) /
-                    25.4)
+                                                   25.4)
         elif self.unit_toggle.active == False:
             self.j.parameter_dict['feed rates']['units'] = 'mm'
             self.xy_feed_units.text = 'mm/min'
             self.z_feed_units.text = 'mm/min'
             if not self.xy_feed.text == '':
                 self.xy_feed.text = '{:.2f}'.format(float(self.xy_feed.text
-                    ) * 25.4)
+                                                          ) * 25.4)
             if not self.z_feed.text == '':
                 self.z_feed.text = '{:.2f}'.format(float(self.z_feed.text) *
-                    25.4)
+                                                   25.4)
 
     def check_dimensions(self):
         if not self.xy_feed.text == '' and not self.z_feed.text == '':
@@ -607,27 +608,27 @@ class ShapeCutter23ScreenClass(Screen):
                 self.j.parameter_dict['feed rates']['units'] = 'mm'
             input_dim_list = [('xy feed rate', float(self.xy_feed.text)), (
                 'z feed rate', float(self.z_feed.text)), ('spindle speed',
-                float(self.spindle_speed.text))]
+                                                          float(self.spindle_speed.text))]
             for dim, input in input_dim_list:
                 setting = self.j.validate_feed_rates(dim, input)
                 if not setting == True:
                     if dim == 'spindle speed':
                         description = ('The ' + dim +
-                            " input isn't valid.\n\n" + 'The ' + dim +
-                            ' should be greater than 6000' +
-                            """ and less than 25000 RPM.
-
-""" +
-                            'Please re-enter your parameters.')
+                                       " input isn't valid.\n\n" + 'The ' + dim +
+                                       ' should be greater than 6000' +
+                                       """ and less than 25000 RPM.
+           
+           """ +
+                                       'Please re-enter your parameters.')
                     else:
                         description = ('The ' + dim +
-                            " input isn't valid.\n\n" + dim +
-                            """ value should be greater than 0.
-
-""" +
-                            'Please re-enter your parameters.')
+                                       " input isn't valid.\n\n" + dim +
+                                       """ value should be greater than 0.
+           
+           """ +
+                                       'Please re-enter your parameters.')
                     popup_input_error.PopupInputError(self.shapecutter_sm,
-                        description)
+                                                      description)
                     return False
             self.shapecutter_sm.next_screen()
         else:

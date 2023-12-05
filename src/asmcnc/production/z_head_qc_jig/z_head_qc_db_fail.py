@@ -1,7 +1,8 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.comms.logging import log_exporter
-import os, sys
+
 Builder.load_string(
     """
 <ZHeadQCDBFail>:
@@ -50,7 +51,7 @@ Builder.load_string(
                 size_hint_x: 0.3
 
 """
-    )
+)
 
 
 class ZHeadQCDBFail(Screen):

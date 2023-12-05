@@ -11,13 +11,14 @@ Step 3: Inform
 
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, StringProperty
-from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.calibration_app import screen_distance_1_x
 from asmcnc.calibration_app import screen_distance_1_y
+
 Builder.load_string(
     """
 
@@ -243,7 +244,7 @@ Builder.load_string(
                                 text:'[color=455A64]Test[/color]'
                                 markup: True         
 """
-    )
+)
 
 
 class BacklashScreenClass(Screen):
@@ -266,7 +267,7 @@ class BacklashScreenClass(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = ('[color=000000] ' + self.axis +
-            ' backlash:[/color]')
+                                 ' backlash:[/color]')
 
     def update_instruction(self, dt):
         if not self.m.state() == 'Jog':
@@ -306,9 +307,9 @@ Nudging will move the Z head away from Y-home."""
         self.disable_buttons()
         self.user_instructions_text.text = (
             'Please wait while the machine moves to the next measurement point...'
-            )
+        )
         self.poll_for_jog_finish = Clock.schedule_interval(self.
-            update_instruction, 0.5)
+                                                           update_instruction, 0.5)
         self.test_instructions_label.text = ''
         self.test_ok_label.text = '[color=455A64]Test[/color]'
 
@@ -326,7 +327,7 @@ Nudging will move the Z head towards X-home."""
 
     def screen_x_3(self):
         self.user_instructions_text.text = 'The backlash value is ' + str(self
-            .nudge_counter) + ' mm.\n\n'
+                                                                          .nudge_counter) + ' mm.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
@@ -336,8 +337,8 @@ Nudging will move the Z head towards X-home."""
 
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X', -660, 9999)
-        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel + 
-            182, 9999)
+        self.m.jog_absolute_single_axis('Y', -self.m.grbl_y_max_travel +
+                                        182, 9999)
         self.m.jog_relative('Y', -10, 9999)
         self.m.jog_relative('Y', 10, 9999)
         self.sub_screen_count = 0
@@ -348,9 +349,9 @@ Nudging will move the Z head towards X-home."""
         self.disable_buttons()
         self.user_instructions_text.text = (
             'Please wait while the machine moves to the next measurement point...'
-            )
+        )
         self.poll_for_jog_finish = Clock.schedule_interval(self.
-            update_instruction, 0.5)
+                                                           update_instruction, 0.5)
         self.test_instructions_label.text = ''
         self.test_ok_label.text = '[color=455A64]Test[/color]'
 
@@ -368,7 +369,7 @@ Nudging will move the Z head towards Y-home."""
 
     def screen_y_3(self):
         self.user_instructions_text.text = 'The backlash value is ' + str(self
-            .nudge_counter) + ' mm.\n\n'
+                                                                          .nudge_counter) + ' mm.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
@@ -378,14 +379,15 @@ Nudging will move the Z head towards Y-home."""
 
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert'
-            ).return_to_screen = 'calibration_complete'
+                           ).return_to_screen = 'calibration_complete'
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
 
     def test(self):
         jog_relative_to_stream = ['G91 ' + self.axis + str(self.
-            backlash_move_distance) + ' F6000', 'G91 ' + self.axis + str(-1 *
-            self.backlash_move_distance) + ' F6000']
+                                                           backlash_move_distance) + ' F6000',
+                                  'G91 ' + self.axis + str(-1 *
+                                                           self.backlash_move_distance) + ' F6000']
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         self.sm.get_screen('wait').return_to_screen = 'backlash'
         self.sm.current = 'wait'

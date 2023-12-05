@@ -2,14 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 
@@ -106,7 +103,7 @@ Builder.load_string(
             text_size: self.size
             color: [0,0,0,0.5]      
 """
-    )
+)
 
 
 class FeedOverride(Widget):
@@ -125,15 +122,15 @@ class FeedOverride(Widget):
 
     def update_feed_percentage_override_label(self):
         self.feed_rate_label.text = str(self.m.s.feed_override_percentage
-            ) + '%'
+                                        ) + '%'
 
     def feed_up(self):
         if self.m.s.feed_override_percentage >= 200:
             return
         self.disable_buttons()
         for i in range(5):
-            Clock.schedule_once(lambda dt: self.m.feed_override_up_1(), 
-                0.06 * i)
+            Clock.schedule_once(lambda dt: self.m.feed_override_up_1(),
+                                0.06 * i)
         Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
         Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
@@ -147,8 +144,8 @@ class FeedOverride(Widget):
             return
         self.disable_buttons()
         for i in range(5):
-            Clock.schedule_once(lambda dt: self.m.feed_override_down_1(), 
-                0.06 * i)
+            Clock.schedule_once(lambda dt: self.m.feed_override_down_1(),
+                                0.06 * i)
         Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
         Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 

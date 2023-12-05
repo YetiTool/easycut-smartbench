@@ -5,11 +5,9 @@ Created March 2019
 
 Prepare to home
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -105,7 +103,7 @@ Builder.load_string(
             size_hint_y: 1                
 
 """
-    )
+)
 
 
 class HomingScreenPrepare(Screen):
@@ -125,16 +123,16 @@ class HomingScreenPrepare(Screen):
         if self.m.is_squaring_XY_needed_after_homing == True:
             self.instruction_label.text = self.l.get_str(
                 'Ensure SmartBench is clear and remove extraction hose from Z head.'
-                )
+            )
         else:
             self.instruction_label.text = self.l.get_str(
                 'Ensure SmartBench is clear.')
 
     def begin_homing(self):
         self.sm.get_screen('homing_active'
-            ).cancel_to_screen = self.cancel_to_screen
+                           ).cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('homing_active'
-            ).return_to_screen = self.return_to_screen
+                           ).return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
 
     def cancel(self):
@@ -146,7 +144,7 @@ class HomingScreenPrepare(Screen):
         if self.m.is_squaring_XY_needed_after_homing == True:
             self.instruction_label.text = self.l.get_str(
                 'Ensure SmartBench is clear and remove extraction hose from Z head.'
-                )
+            )
         else:
             self.instruction_label.text = self.l.get_str(
                 'Ensure SmartBench is clear.')

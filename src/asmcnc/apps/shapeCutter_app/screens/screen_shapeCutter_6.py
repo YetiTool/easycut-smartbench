@@ -5,9 +5,9 @@ Screen 6 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -297,7 +297,7 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter6ScreenClass(Screen):
@@ -306,7 +306,7 @@ class ShapeCutter6ScreenClass(Screen):
     title_label = StringProperty('[b]Fit extraction hose[/b]')
     user_instructions = StringProperty(
         'Securely attach the extraction hose to the lower X beam. Check the hose can move freely.'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter6ScreenClass, self).__init__(**kwargs)

@@ -2,12 +2,11 @@
 Created on nov 2020
 @author: Letty
 """
-from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -317,18 +316,18 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class LanguageSelectScreen(Screen):
     flag_img_path = (
         './asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/')
     welcome_to_smartbench_labels = ['Welcome to SmartBench',
-        'Willkommen bei SmartBench', 'Benvenuto in Smartbench',
-        'Benvenuti in Smartbench', 'Tervetuloa Smartbenchiin',
-        'Witamy w SmartBench', 'Velkommen til SmartBench',
-        'SmartBench\xec\x97\x90 \xec\x98\xa4\xec\x8b\xa0 \xea\xb2\x83\xec\x9d\x84 \xed\x99\x98\xec\x98\x81\xed\x95\xa9\xeb\x8b\x88\xeb\x8b\xa4'
-        ]
+                                    'Willkommen bei SmartBench', 'Benvenuto in Smartbench',
+                                    'Benvenuti in Smartbench', 'Tervetuloa Smartbenchiin',
+                                    'Witamy w SmartBench', 'Velkommen til SmartBench',
+                                    'SmartBench\xec\x97\x90 \xec\x98\xa4\xec\x8b\xa0 \xea\xb2\x83\xec\x9d\x84 \xed\x99\x98\xec\x98\x81\xed\x95\xa9\xeb\x8b\x88\xeb\x8b\xa4'
+                                    ]
     welcome_i = 0
     update_welcome_header = None
 
@@ -346,21 +345,21 @@ class LanguageSelectScreen(Screen):
         self.row_3_col_1.text = self.l.approved_languages[6]
         self.row_3_col_2.text = self.l.approved_languages[7]
         self.row_1_col_1_image.source = self.get_image_filename(self.
-            row_1_col_1)
+                                                                row_1_col_1)
         self.row_1_col_2_image.source = self.get_image_filename(self.
-            row_1_col_2)
+                                                                row_1_col_2)
         self.row_1_col_3_image.source = self.get_image_filename(self.
-            row_1_col_3)
+                                                                row_1_col_3)
         self.row_2_col_1_image.source = self.get_image_filename(self.
-            row_2_col_1)
+                                                                row_2_col_1)
         self.row_2_col_2_image.source = self.get_image_filename(self.
-            row_2_col_2)
+                                                                row_2_col_2)
         self.row_2_col_3_image.source = self.get_image_filename(self.
-            row_2_col_3)
+                                                                row_2_col_3)
         self.row_3_col_1_image.source = self.get_image_filename(self.
-            row_3_col_1)
+                                                                row_3_col_1)
         self.row_3_col_2_image.source = self.get_image_filename(self.
-            row_3_col_2)
+                                                                row_3_col_2)
         self.row_3_col_2.font_name = self.l.korean_font
 
     def get_image_filename(self, value):
@@ -368,7 +367,7 @@ class LanguageSelectScreen(Screen):
 
     def on_enter(self):
         self.update_welcome_header = Clock.schedule_interval(self.
-            change_welcome_label, 1)
+                                                             change_welcome_label, 1)
 
     def change_welcome_label(self, dt):
         if self.welcome_i == 7:
@@ -376,7 +375,7 @@ class LanguageSelectScreen(Screen):
         else:
             self.header_label.font_name = self.l.standard_font
         self.header_label.text = self.welcome_to_smartbench_labels[self.
-            welcome_i]
+        welcome_i]
         if self.welcome_i < 7:
             self.welcome_i += 1
         else:
@@ -388,7 +387,7 @@ class LanguageSelectScreen(Screen):
             radio_button.color = [25 / 255.0, 118 / 255.0, 210 / 255.0, 1]
             self.l.load_in_new_language(language_label.text)
             [self.sm.get_screen(screen).update_strings() for screen in self
-                .start_seq.screen_sequence]
+            .start_seq.screen_sequence]
             if current_font != self.l.font_regular:
                 for screen in (self.start_seq.screen_sequence[1:] + [
                     'rebooting']):

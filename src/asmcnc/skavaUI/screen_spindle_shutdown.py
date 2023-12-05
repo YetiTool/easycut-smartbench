@@ -5,12 +5,12 @@ Created March 2019
 
 Prepare to home
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
 from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -78,7 +78,7 @@ Builder.load_string(
             size_hint_y: 1                
 
 """
-    )
+)
 
 
 def log(message):
@@ -115,26 +115,26 @@ class SpindleShutdownScreen(Screen):
     def on_enter(self):
         log('Pausing job...')
         if self.reason_for_pause == 'spindle_overload':
-            self.db.send_event(1, 'Job paused', 
-                'Paused job (Spindle overload): ' + self.jd.job_name, 3)
+            self.db.send_event(1, 'Job paused',
+                               'Paused job (Spindle overload): ' + self.jd.job_name, 3)
         elif self.reason_for_pause == 'job_pause':
             self.db.send_event(0, 'Job paused', 'Paused job (User): ' +
-                self.jd.job_name, 3)
+                               self.jd.job_name, 3)
         self.z_rest_poll = None
         self.spindle_decel_poll = Clock.schedule_once(self.
-            start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
+                                                      start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
 
     def start_polling_for_z_rest(self, dt):
         self.z_rest_poll = Clock.schedule_interval(self.poll_for_z_rest,
-            self.poll_interval_between_checking_z_rest)
+                                                   self.poll_interval_between_checking_z_rest)
 
     def poll_for_z_rest(self, dt):
         current_z_pos = self.m.z_pos_str()
         if current_z_pos == self.last_z_pos:
             self.sm.get_screen('stop_or_resume_job_decision'
-                ).reason_for_pause = self.reason_for_pause
+                               ).reason_for_pause = self.reason_for_pause
             self.sm.get_screen('stop_or_resume_job_decision'
-                ).return_screen = self.return_screen
+                               ).return_screen = self.return_screen
             self.sm.current = 'stop_or_resume_job_decision'
         else:
             self.last_z_pos = current_z_pos

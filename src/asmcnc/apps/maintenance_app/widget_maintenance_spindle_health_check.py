@@ -1,8 +1,6 @@
 from kivy.lang import Builder
-from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.graphics import RoundedRectangle
+
 Builder.load_string(
     """
 
@@ -80,7 +78,7 @@ Builder.load_string(
                             allow_stretch: False
 
 """
-    )
+)
 
 
 class WidgetSpindleHealthCheck(BoxLayout):
@@ -96,12 +94,12 @@ class WidgetSpindleHealthCheck(BoxLayout):
 
     def set_switch_state_to_health_check(self):
         self.switch.state = 'down' if self.m.is_spindle_health_check_active(
-            ) else 'normal'
+        ) else 'normal'
 
     def toggle_button_img(self, state):
         self.yp_toggle_img.source = (
-            './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
-            'down' else 'off'))
+                './asmcnc/core_UI/job_go/img/yp_toggle_%s.png' % ('on' if state ==
+                                                                          'down' else 'off'))
 
     def toggle_yeti_pilot_availability(self, switch):
         self.toggle_button_img(switch.state)
@@ -112,10 +110,10 @@ class WidgetSpindleHealthCheck(BoxLayout):
         self.title_text.text = self.l.get_bold('Spindle motor health check')
         self.body_text.text = '[color=e64a19ff]' + self.l.get_str(
             'Disable this if your tool is not rated to at least 24,000 rpm.'
-            ) + '\n\n' + '[/color]' + self.l.get_str(
+        ) + '\n\n' + '[/color]' + self.l.get_str(
             'The health check will run the spindle at 24,000 rpm for 6 seconds before every job.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'This checks that your Spindle motor is working correctly, and calibrates it for YetiPilot.'
-            ) + '\n\n' + self.l.get_str(
+        ) + '\n\n' + self.l.get_str(
             'If you disable this, there will not be an option to use YetiPilot during a job.'
-            ) + '\n\n'
+        ) + '\n\n'

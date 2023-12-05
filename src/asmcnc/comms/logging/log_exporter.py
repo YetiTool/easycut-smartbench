@@ -1,6 +1,6 @@
-from datetime import datetime
 import os
 import sys
+from datetime import datetime
 
 WORKING_DIR = 'A:\\Logs\\'
 export_logs_folder = '/home/pi/exported_logs'

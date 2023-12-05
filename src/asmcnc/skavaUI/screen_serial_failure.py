@@ -7,13 +7,10 @@ Currently forces user to reboot, as I'm not sure how to get a successful re-esta
 
 @author: Letty
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
-import sys, os
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -100,7 +97,7 @@ Builder.load_string(
                             text_size: self.size
                             font_size: str(0.0375*app.width) + 'sp'
 """
-    )
+)
 
 
 class SerialFailureClass(Screen):
@@ -129,11 +126,11 @@ class SerialFailureClass(Screen):
 
     def update_strings(self):
         self.title_string.text = self.l.get_bold('SERIAL CONNECTION ERROR'
-            ) + '\n' + self.l.get_str(
+                                                 ) + '\n' + self.l.get_str(
             'There is a problem communicating with SmartBench.')
         self.user_instruction = self.l.get_str(
             'Please check that Z head is connected, and then reboot the console.'
-            )
+        )
         self.reboot_string.text = self.l.get_str('Reboot')
         self.update_font_size(self.reboot_string)
 

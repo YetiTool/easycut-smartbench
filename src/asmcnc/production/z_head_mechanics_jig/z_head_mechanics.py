@@ -1,13 +1,16 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.skavaUI import popup_info
-from asmcnc.production.z_head_mechanics_jig.popup_z_head_mechanics import *
 import matplotlib
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.production.z_head_mechanics_jig.popup_z_head_mechanics import *
+from asmcnc.skavaUI import popup_info
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
+
 Builder.load_string(
     """
 <ZHeadMechanics>:
@@ -208,7 +211,7 @@ Builder.load_string(
             opacity: 0
 
 """
-    )
+)
 
 
 class ZHeadMechanics(Screen):
@@ -233,7 +236,7 @@ class ZHeadMechanics(Screen):
         self.m.set_motor_current('Z', self.phase_one_current)
         self.current_realtime.text = str(self.phase_one_current)
         self.m.send_command_to_motor('ENABLE MOTOR DRIVERS', motor=TMC_Z,
-            command=SET_MOTOR_ENERGIZED, value=1)
+                                     command=SET_MOTOR_ENERGIZED, value=1)
         self.test_running = True
         self.begin_test_button.disabled = True
         self.calibrate_button.disabled = True
@@ -265,7 +268,7 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel,
-                    self.z_axis_max_speed / 5)
+                                                self.z_axis_max_speed / 5)
                 Clock.schedule_once(self.record_down_values, 0.4)
             else:
                 Clock.schedule_once(self.start_moving_down, 0.1)
@@ -274,7 +277,7 @@ class ZHeadMechanics(Screen):
         if self.test_running:
             if self.m.state().startswith('Idle'):
                 self.m.jog_absolute_single_axis('Z', -1, self.
-                    z_axis_max_speed / 5)
+                                                z_axis_max_speed / 5)
                 Clock.schedule_once(self.record_up_values, 0.4)
             else:
                 if self.m.s.sg_z_motor_axis != -999:
@@ -297,7 +300,7 @@ class ZHeadMechanics(Screen):
             self.m.set_motor_current('Z', self.phase_two_current)
             self.current_realtime.text = str(self.phase_two_current)
             self.m.jog_absolute_single_axis('Z', self.z_axis_max_travel,
-                self.z_axis_max_speed)
+                                            self.z_axis_max_speed)
             Clock.schedule_once(self.continue_phase_two, 0.4)
 
     def continue_phase_two(self, dt):
@@ -322,12 +325,12 @@ class ZHeadMechanics(Screen):
         self.load_up_peak.text = str(max(self.sg_values_up))
         self.load_down_peak.text = str(max(self.sg_values_down))
         self.load_up_average.text = str(sum(self.sg_values_up) / len(self.
-            sg_values_up))
+                                                                     sg_values_up))
         self.load_down_average.text = str(sum(self.sg_values_down) / len(
             self.sg_values_down))
         plt.rcParams['figure.figsize'] = 7.9, 3.55
         plt.plot(self.z_pos_values_down, self.sg_values_down, 'b', label=
-            'Z SG Down')
+        'Z SG Down')
         plt.plot(self.z_pos_values_up, self.sg_values_up, 'r', label='Z SG Up')
         plt.legend()
         plt.title('Z motor load vs Z coordinate')
@@ -336,18 +339,18 @@ class ZHeadMechanics(Screen):
         ax = plt.gca()
         ax.set_ylim([0, 100])
         ax.set_xlim([min(self.z_pos_values_down + self.z_pos_values_up),
-            max(self.z_pos_values_down + self.z_pos_values_up)])
+                     max(self.z_pos_values_down + self.z_pos_values_up)])
         loc = plticker.MultipleLocator(base=10)
         ax.yaxis.set_major_locator(loc)
         plt.tight_layout()
         plt.grid()
         plt.savefig(
             './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-            )
+        )
         plt.close()
         self.load_graph.source = (
             './asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png'
-            )
+        )
         self.load_graph.reload()
         self.load_graph.opacity = 1
 
@@ -362,7 +365,7 @@ class ZHeadMechanics(Screen):
         self.calibrate_button.disabled = False
         self.test_progress_label.text = 'Waiting...'
         self.m.send_command_to_motor('DISABLE MOTOR DRIVERS', motor=TMC_Z,
-            command=SET_MOTOR_ENERGIZED, value=0)
+                                     command=SET_MOTOR_ENERGIZED, value=0)
         self.sg_values_down = []
         self.sg_values_up = []
         self.z_pos_values_down = []
@@ -378,14 +381,14 @@ class ZHeadMechanics(Screen):
         self.stop_button.disabled = True
         self.test_progress_label.text = 'Calibrating...'
         self.m.send_command_to_motor('ENABLE MOTOR DRIVERS', motor=TMC_Z,
-            command=SET_MOTOR_ENERGIZED, value=1)
+                                     command=SET_MOTOR_ENERGIZED, value=1)
         self.m.calibrate_Z()
         Clock.schedule_once(self.wait_for_calibration_end, 1)
 
     def wait_for_calibration_end(self, dt):
         if not self.m.run_calibration:
             self.m.send_command_to_motor('DISABLE MOTOR DRIVERS', motor=
-                TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+            TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
             popup_info.PopupInfo(self.sm, self.l, 500, 'Calibration complete!')
             self.begin_test_button.disabled = False
             self.calibrate_button.disabled = False
@@ -396,7 +399,7 @@ class ZHeadMechanics(Screen):
 
     def update_realtime_load(self, dt):
         if (self.m.s.sg_z_motor_axis == -999 or self.m.s.sg_z_motor_axis ==
-            None):
+                None):
             self.load_realtime.text = '-'
         else:
             self.load_realtime.text = str(self.m.s.sg_z_motor_axis)

@@ -18,6 +18,7 @@ except:
 RUN WITH python tests/manual_tests/visual_screen_tests/test_dwt_parameter_change_hook.py FROM EASYCUT-SMARTBENCH DIR
 """
 
+
 class TestApp(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
@@ -59,4 +60,3 @@ class TestScreen(Screen):
 
 if __name__ == '__main__':
     TestApp().run()
-

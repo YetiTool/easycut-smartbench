@@ -5,22 +5,22 @@ Created on 19 Aug 2017
 
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 """
+import os
+import sys
+from itertools import takewhile
+from shutil import copy
+
 import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
-from kivy.uix.widget import Widget
+from chardet import detect
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from itertools import takewhile
-from chardet import detect
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.comms import usb_storage
-from asmcnc.skavaUI import screen_file_loading
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -303,7 +303,7 @@ Builder.load_string(
 
                 
 """
-    )
+)
 job_cache_dir = './jobCache/'
 job_q_dir = './jobQ/'
 ftp_file_dir = '../../router_ftp/'
@@ -311,28 +311,31 @@ ftp_file_dir = '../../router_ftp/'
 
 def date_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=False)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=False)
 
 
 def date_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     key=lambda fi: os.stat(fi)
+                                                                     .st_mtime, reverse=True)
 
 
 def name_order_sort(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted(f for
-        f in files if not filesystem.is_dir(f))
+                                                                     f in files if not filesystem.is_dir(f))
 
 
 def name_order_sort_reverse(files, filesystem):
     return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), reverse=True)
+                                                                      f in files if not filesystem.is_dir(f)),
+                                                                     reverse=True)
 
 
 decode_and_encode = lambda x: unicode(x, detect(x)['encoding'] or 'utf-8'
-    ).encode('utf-8')
+                                      ).encode('utf-8')
 
 
 class LocalFileChooser(Screen):
@@ -353,25 +356,25 @@ class LocalFileChooser(Screen):
         self.usb_status_label.text = self.l.get_str(
             'USB connected: Please do not remove USB until file is loaded.')
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
+                                                scrolling_stop)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
+                                                scrolling_start)
         self.list_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
+                                                         scroll.ScrollEffect)
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            icon_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            list_layout_fc.ids.scrollview._update_effect_bounds)
+                                                   list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_icon)
+                                                 alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_list)
+                                                 alternate_update_effect_bounds_list)
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -382,15 +385,15 @@ class LocalFileChooser(Screen):
     def update_y_bounds_try_except(sefl, scrollview_object):
         try:
             if (not scrollview_object._viewport or not scrollview_object.
-                effect_y):
+                    effect_y):
                 return
             scrollable_height = (scrollview_object.height -
-                scrollview_object.viewport_size[1])
+                                 scrollview_object.viewport_size[1])
             scrollview_object.effect_y.min = (0 if scrollable_height < 0 else
-                scrollable_height)
+                                              scrollable_height)
             scrollview_object.effect_y.max = scrollable_height
             scrollview_object.effect_y.value = (scrollview_object.effect_y.
-                max * scrollview_object.scroll_y)
+                                                max * scrollview_object.scroll_y)
         except:
             pass
 
@@ -418,9 +421,9 @@ class LocalFileChooser(Screen):
 
     def on_pre_leave(self):
         self.sm.get_screen('usb_filechooser'
-            ).filechooser_usb.sort_func = self.filechooser.sort_func
+                           ).filechooser_usb.sort_func = self.filechooser.sort_func
         self.sm.get_screen('usb_filechooser'
-            ).image_sort.source = self.image_sort.source
+                           ).image_sort.source = self.image_sort.source
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser':
             self.usb_stick.disable()
@@ -440,7 +443,7 @@ class LocalFileChooser(Screen):
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0)
                     Rectangle(pos=self.usb_status_label.pos, size=self.
-                        usb_status_label.size)
+                              usb_status_label.size)
             else:
                 self.button_usb.disabled = True
                 self.image_usb.source = (
@@ -481,7 +484,7 @@ class LocalFileChooser(Screen):
     def open_USB(self):
         if not self.is_filechooser_scrolling:
             self.sm.get_screen('usb_filechooser').set_USB_path(self.
-                usb_stick.get_path())
+                                                               usb_stick.get_path())
             self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
             self.sm.current = 'usb_filechooser'
 
@@ -521,10 +524,10 @@ class LocalFileChooser(Screen):
     def display_selected_file(self):
         if sys.platform == 'win32':
             self.file_selected_label.text = self.filechooser.selection[0
-                ].split('\\')[-1]
+            ].split('\\')[-1]
         else:
             self.file_selected_label.text = self.filechooser.selection[0
-                ].split('/')[-1]
+            ].split('/')[-1]
         self.get_metadata()
         self.load_button.disabled = False
         self.image_select.source = (
@@ -544,23 +547,24 @@ class LocalFileChooser(Screen):
         def format_metadata(y):
             mini_list = y.split(': ')
             return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' +
-                mini_list[1])
+                       mini_list[1])
+
         try:
             with open(self.filechooser.selection[0]) as previewed_file:
                 try:
                     if ('(YetiTool SmartBench MES-Data)' in previewed_file.
-                        readline()):
+                            readline()):
                         metadata_or_gcode_preview = map(format_metadata, [
                             decode_and_encode(i).strip('\n\r()') for i in
                             takewhile(not_end_of_metadata, previewed_file) if
                             decode_and_encode(i).split(':', 1)[1].strip(
-                            '\n\r() ')])
+                                '\n\r() ')])
                     else:
                         previewed_file.seek(0)
                         metadata_or_gcode_preview = [self.l.get_bold(
                             'G-Code Preview (first 20 lines)'), ''] + [
-                            decode_and_encode(next(previewed_file, '')).
-                            strip('\n\r') for x in xrange(20)]
+                                                        decode_and_encode(next(previewed_file, '')).
+                                                        strip('\n\r') for x in xrange(20)]
                     self.metadata_preview.text = '\n'.join(
                         metadata_or_gcode_preview)
                 except:
@@ -568,7 +572,7 @@ class LocalFileChooser(Screen):
                         'Could not preview file.')
         except:
             self.metadata_preview.text = self.l.get_bold('Could not open file.'
-                )
+                                                         )
 
     def get_FTP_files(self):
         if sys.platform != 'win32':
@@ -591,11 +595,11 @@ class LocalFileChooser(Screen):
     def delete_popup(self, **kwargs):
         if kwargs['file_selection'] == 'all':
             popup_info.PopupDeleteFile(screen_manager=self.sm, localization
-                =self.l, function=self.delete_all, file_selection='all')
+            =self.l, function=self.delete_all, file_selection='all')
         else:
             popup_info.PopupDeleteFile(screen_manager=self.sm, localization
-                =self.l, function=self.delete_selected, file_selection=
-                kwargs['file_selection'])
+            =self.l, function=self.delete_selected, file_selection=
+                                       kwargs['file_selection'])
 
     def delete_selected(self, filename):
         self.refresh_filechooser()

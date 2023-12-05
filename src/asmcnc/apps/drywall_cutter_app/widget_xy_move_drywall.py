@@ -1,5 +1,6 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+
 Builder.load_string(
     """
 <XYMoveDrywall>
@@ -177,7 +178,7 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
 """
-    )
+)
 
 
 class XYMoveDrywall(Widget):
@@ -187,6 +188,7 @@ class XYMoveDrywall(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
     fast_x_speed = 6000
@@ -208,16 +210,16 @@ class XYMoveDrywall(Widget):
         if self.jogMode == 'free':
             if case == 'X-':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_min_jog_abs_limit, x_feed_speed)
+                                                x_min_jog_abs_limit, x_feed_speed)
             if case == 'X+':
                 self.m.jog_absolute_single_axis('X', self.m.
-                    x_max_jog_abs_limit, x_feed_speed)
+                                                x_max_jog_abs_limit, x_feed_speed)
             if case == 'Y-':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_min_jog_abs_limit, y_feed_speed)
+                                                y_min_jog_abs_limit, y_feed_speed)
             if case == 'Y+':
                 self.m.jog_absolute_single_axis('Y', self.m.
-                    y_max_jog_abs_limit, y_feed_speed)
+                                                y_max_jog_abs_limit, y_feed_speed)
         elif self.jogMode == 'plus_0-01':
             if case == 'X+':
                 self.m.jog_relative('X', 0.01, x_feed_speed)

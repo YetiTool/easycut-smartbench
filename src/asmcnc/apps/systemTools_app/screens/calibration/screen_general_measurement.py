@@ -1,10 +1,9 @@
-from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.clock import Clock
-from asmcnc.comms.yeti_grbl_protocol.c_defines import *
-from asmcnc.skavaUI import popup_info
+from kivy.uix.screenmanager import Screen
+
 try:
     import matplotlib
+
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import matplotlib.ticker as plticker
@@ -136,7 +135,7 @@ Builder.load_string(
                 on_press: root.display_results()
 
 """
-    )
+)
 
 
 class GeneralMeasurementScreen(Screen):
@@ -144,7 +143,7 @@ class GeneralMeasurementScreen(Screen):
     y_idx = 0
     descriptors = {(1): 'x pos', (2): 'y pos', (3): 'z pos', (4): 'SG X', (
         5): 'SG Y', (6): 'SG Y1', (7): 'SG Y2', (8): 'SG Z', (12): 't', (13
-        ): 'F'}
+                                                                         ): 'F'}
 
     def __init__(self, **kwargs):
         super(GeneralMeasurementScreen, self).__init__(**kwargs)
@@ -173,7 +172,7 @@ class GeneralMeasurementScreen(Screen):
 
     def set_index(self, axis, label):
         value = [i for i in self.descriptors if self.descriptors[i] ==
-            label.text][0]
+                 label.text][0]
         if axis == 'X':
             self.x_idx = value
         if axis == 'Y':
@@ -183,21 +182,21 @@ class GeneralMeasurementScreen(Screen):
         try:
             plt.rcParams['figure.figsize'] = 7, 3.55
             xVar, yVar = zip(*((x, y) for x, y in zip(self.get_x_axis(),
-                self.get_y_axis()) if y != -999 and y != None))
+                                                      self.get_y_axis()) if y != -999 and y != None))
             plt.plot(xVar, yVar, 'bx')
             plt.xlabel(self.descriptors[self.x_idx])
             plt.ylabel(self.descriptors[self.y_idx])
             plt.title(self.descriptors[self.x_idx] + 'vs' + self.
-                descriptors[self.y_idx])
+                      descriptors[self.y_idx])
             plt.tight_layout()
             plt.grid()
             plt.savefig(
                 './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
-                )
+            )
             plt.close()
             self.load_graph.source = (
                 './asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png'
-                )
+            )
             self.load_graph.reload()
             self.load_graph.opacity = 1
             self.plot_title.text = ''

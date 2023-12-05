@@ -4,10 +4,10 @@ Created on 1 February 2021
 
 Screen to provide user with important safety information prior to every job start.
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -198,7 +198,7 @@ Builder.load_string(
                   
 
 """
-    )
+)
 
 
 class RoundedButton(Button):
@@ -224,11 +224,11 @@ class JobstartWarningScreen(Screen):
         self.header_label.text = self.l.get_str('Safety Warning')
         self.risk_of_fire.text = self.l.get_str('Risk of fire')
         self.causes_of_fire.text = self.l.get_str('Common causes of fire'
-            ) + ':\n- ' + self.l.get_str(
+                                                  ) + ':\n- ' + self.l.get_str(
             'Processing combustible materials, e.g. woods'
-            ) + '\n- ' + self.l.get_str(
+        ) + '\n- ' + self.l.get_str(
             'Using dull cutters which produce heat through friction'
-            ) + '\n- ' + self.l.get_str('Variation in extraction') + '\n'
+        ) + '\n- ' + self.l.get_str('Variation in extraction') + '\n'
         self.never_unattended.text = self.l.get_bold(
             'Never leave CNC machines unattended')
         self.scan_label.text = self.l.get_bold('SCAN ME')

@@ -7,7 +7,8 @@ Job Cancelled Screen for the Shape Cutter App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -56,7 +57,7 @@ Builder.load_string(
                     markup: True
 
 """
-    )
+)
 
 
 class ShapeCutterExitScreenClass(Screen):

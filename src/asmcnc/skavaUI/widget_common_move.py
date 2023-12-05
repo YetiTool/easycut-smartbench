@@ -2,13 +2,9 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
+
 Builder.load_string(
     """
 
@@ -109,7 +105,7 @@ Builder.load_string(
          
         
 """
-    )
+)
 
 
 class CommonMove(Widget):
@@ -119,6 +115,7 @@ class CommonMove(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.set_jog_speeds()
+
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750

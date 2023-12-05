@@ -3,8 +3,8 @@ Created on 31 March 2021
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <AlarmScreen1>:
@@ -137,7 +137,7 @@ Builder.load_string(
 				width: dp(0.305625*app.width)
 				padding:[dp(0.241875)*app.width, 0, 0, 0]
 """
-    )
+)
 
 
 class AlarmScreen1(Screen):

@@ -5,10 +5,11 @@ Screen 26 for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -292,7 +293,7 @@ Builder.load_string(
                                     allow_stretch: True              
 
 """
-    )
+)
 
 
 class ShapeCutter26ScreenClass(Screen):
@@ -305,7 +306,7 @@ class ShapeCutter26ScreenClass(Screen):
 """)
     warning_message = StringProperty(
         '[b]WARNING: Homing will cause the machine to move, so make sure the machine is clear before pressing the button![/b]'
-        )
+    )
 
     def __init__(self, **kwargs):
         super(ShapeCutter26ScreenClass, self).__init__(**kwargs)
@@ -352,7 +353,7 @@ class ShapeCutter26ScreenClass(Screen):
             gcode_generated = self.j.generate_gCode()
         except:
             description = ('There was a problem generating your cut.\n\n' +
-                'Please go back and check your parameters before continuing.')
+                           'Please go back and check your parameters before continuing.')
             self.homing_button.disabled = True
             popup_input_error.PopupInputError(self.shapecutter_sm, description)
         if gcode_generated == True:

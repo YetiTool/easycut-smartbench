@@ -5,9 +5,8 @@ Template Screen for the Shape Cutter App
 @author: Letty
 """
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.metrics import MetricsBase
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 
@@ -124,7 +123,7 @@ Builder.load_string(
                     source: "./asmcnc/apps/shapeCutter_app/img/background.png"
 
 """
-    )
+)
 
 
 class ShapeCutterTemplateButtonsScreenClass(Screen):

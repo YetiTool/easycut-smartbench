@@ -1,6 +1,8 @@
-from kivy.uix.screenmanager import Screen
-from kivy.lang import Builder
 import re
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 Builder.load_string(
     """
 <ZHeadQCDB1>:
@@ -47,7 +49,7 @@ Builder.load_string(
                 size_hint_y: 0.6
 
 """
-    )
+)
 
 
 class ZHeadQCDB1(Screen):
