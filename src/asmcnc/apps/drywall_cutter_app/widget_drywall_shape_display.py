@@ -1,8 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <DrywallShapeDisplay>
 
     shape_dims_image:shape_dims_image
@@ -54,7 +54,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: d_input
-                    font_size: dp(25)
+                    font_size: dp(0.03125*app.width)
                     halign: 'center'
                     input_filter: 'int'
                     multiline: False
@@ -75,7 +75,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: l_input
-                    font_size: dp(25)
+                    font_size: dp(0.03125*app.width)
                     halign: 'center'
                     input_filter: 'int'
                     multiline: False
@@ -96,7 +96,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: r_input
-                    font_size: dp(25)
+                    font_size: dp(0.03125*app.width)
                     halign: 'center'
                     input_filter: 'int'
                     multiline: False
@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: x_input
-                    font_size: dp(25)
+                    font_size: dp(0.03125*app.width)
                     halign: 'center'
                     input_filter: 'int'
                     multiline: False
@@ -138,7 +138,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: y_input
-                    font_size: dp(25)
+                    font_size: dp(0.03125*app.width)
                     halign: 'center'
                     input_filter: 'int'
                     multiline: False
@@ -148,7 +148,7 @@ Builder.load_string("""
 
             Label:
                 id: x_datum_label
-                font_size: dp(25)
+                font_size: dp(0.03125*app.width)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'X:'
@@ -157,54 +157,48 @@ Builder.load_string("""
 
             Label:
                 id: y_datum_label
-                font_size: dp(25)
+                font_size: dp(0.03125*app.width)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
                 color: 0,0,0,1
 
-""")
+"""
+    )
 
 
 class DrywallShapeDisplay(Widget):
-
-    image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
+    image_filepath = './asmcnc/apps/drywall_cutter_app/img/'
 
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
-
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
-
-        self.d_input.bind(text=self.d_input_change) # Diameter of circle
-        self.l_input.bind(text=self.l_input_change) # Length of line
-        self.r_input.bind(text=self.r_input_change) # Radius of corners
-        self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
-        self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
-
+        self.d_input.bind(text=self.d_input_change)
+        self.l_input.bind(text=self.l_input_change)
+        self.r_input.bind(text=self.r_input_change)
+        self.x_input.bind(text=self.x_input_change)
+        self.y_input.bind(text=self.y_input_change)
         Clock.schedule_interval(self.poll_position, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
-            image_source += "_" + rotation
-        self.shape_dims_image.source = image_source + "_dims.png"
+            image_source += '_' + rotation
+        self.shape_dims_image.source = image_source + '_dims.png'
         self.shape_dims_image.opacity = 1
-
         if swap_lengths:
             x = self.x_input.text
             y = self.y_input.text
             self.x_input.text = y
             self.y_input.text = x
-
         if shape == 'circle':
             self.enable_input(self.d_input, (468, 310))
             self.place_widget(self.x_datum_label, (278, 27))
             self.place_widget(self.y_datum_label, (403, 196))
         else:
             self.disable_input(self.d_input)
-
         if shape in ['square', 'rectangle']:
             if shape == 'square':
                 self.enable_input(self.r_input, (421, 311))
@@ -212,24 +206,22 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.y_input, (248, 327))
                 self.place_widget(self.x_datum_label, (365, 35))
                 self.place_widget(self.y_datum_label, (398, 113))
+            elif rotation == 'horizontal':
+                self.enable_input(self.r_input, (463, 311))
+                self.enable_input(self.x_input, (43, 175))
+                self.enable_input(self.y_input, (248, 327))
+                self.place_widget(self.x_datum_label, (407, 35))
+                self.place_widget(self.y_datum_label, (416, 114))
             else:
-                if rotation == 'horizontal':
-                    self.enable_input(self.r_input, (463, 311))
-                    self.enable_input(self.x_input, (43, 175))
-                    self.enable_input(self.y_input, (248, 327))
-                    self.place_widget(self.x_datum_label, (407, 35))
-                    self.place_widget(self.y_datum_label, (416, 114))
-                else:
-                    self.enable_input(self.r_input, (419, 333))
-                    self.enable_input(self.x_input, (98, 155))
-                    self.enable_input(self.y_input, (248, 331))
-                    self.place_widget(self.x_datum_label, (367, 10))
-                    self.place_widget(self.y_datum_label, (395, 63))
+                self.enable_input(self.r_input, (419, 333))
+                self.enable_input(self.x_input, (98, 155))
+                self.enable_input(self.y_input, (248, 331))
+                self.place_widget(self.x_datum_label, (367, 10))
+                self.place_widget(self.y_datum_label, (395, 63))
         else:
             self.disable_input(self.r_input)
             self.disable_input(self.x_input)
             self.disable_input(self.y_input)
-
         if shape == 'line':
             if rotation == 'horizontal':
                 self.enable_input(self.l_input, (250, 228))
@@ -241,11 +233,9 @@ class DrywallShapeDisplay(Widget):
                 self.place_widget(self.y_datum_label, (350, 56))
         else:
             self.disable_input(self.l_input)
-
         if shape == 'geberit':
             self.place_widget(self.x_datum_label, (360, 19))
             self.place_widget(self.y_datum_label, (390, 77))
-
         self.dwt_config.on_parameter_change('rotation', rotation)
 
     def enable_input(self, text_input, pos):
@@ -267,36 +257,47 @@ class DrywallShapeDisplay(Widget):
             self.shape_toolpath_image.opacity = 0
         else:
             if shape == 'rectangle':
-                self.shape_toolpath_image.source = self.image_filepath + shape + "_" + rotation + "_" + toolpath + "_toolpath.png"
+                self.shape_toolpath_image.source = (self.image_filepath +
+                    shape + '_' + rotation + '_' + toolpath + '_toolpath.png')
             else:
-                self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
+                self.shape_toolpath_image.source = (self.image_filepath +
+                    shape + '_' + toolpath + '_toolpath.png')
             self.shape_toolpath_image.opacity = 1
 
     def d_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
+        self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(
+            value or 0))
 
     def l_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
+        self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(
+            value or 0))
 
     def r_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
+        self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(
+            value or 0))
 
     def x_input_change(self, instance, value):
         if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
+            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=
+                False)
+        self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(
+            value or 0))
 
     def y_input_change(self, instance, value):
         if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=
+                False)
+        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(
+            value or 0))
 
     def rotation_required(self):
-        if "rectangle" in self.shape_dims_image.source:
-            if "vertical" in self.shape_dims_image.source:
-                return float(self.x_input.text or 0) < float(self.y_input.text or 0)
+        if 'rectangle' in self.shape_dims_image.source:
+            if 'vertical' in self.shape_dims_image.source:
+                return float(self.x_input.text or 0) < float(self.y_input.
+                    text or 0)
             else:
-                return float(self.x_input.text or 0) > float(self.y_input.text or 0)
+                return float(self.x_input.text or 0) > float(self.y_input.
+                    text or 0)
         else:
             return False
 
@@ -305,9 +306,7 @@ class DrywallShapeDisplay(Widget):
         current_y = round(abs(self.m.mpos_y()), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
-
         if self.dwt_config.active_config.datum_position.x != current_x:
             self.dwt_config.active_config.datum_position.x = current_x
-
         if self.dwt_config.active_config.datum_position.y != current_y:
             self.dwt_config.active_config.datum_position.y = current_y
