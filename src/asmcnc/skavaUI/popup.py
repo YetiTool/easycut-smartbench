@@ -41,7 +41,7 @@ class PopupSystem(Popup):
 
     def __init__(self, title_string, main_string, popup_type, buttons,
                  popup_width=300, popup_height=300, popup_image=None,
-                 **kwargs):
+                 dismiss_text="Ok", dismiss_callback=None, **kwargs):
         super(PopupSystem, self).__init__(**kwargs)
 
         self.title = self.l.get_str(title_string)
@@ -52,6 +52,8 @@ class PopupSystem(Popup):
         self.buttons = buttons
         self.popup_type = popup_type
         self.popup_image = popup_image
+        self.dismiss_text = dismiss_text
+        self.dismiss_callback = dismiss_callback
 
         self.build()
         self.open()
@@ -75,7 +77,12 @@ class PopupSystem(Popup):
         button_layout = BoxLayout(orientation="horizontal", spacing=10, padding=0)
         for button in self.build_buttons():
             button_layout.add_widget(button)
+        button_layout.add_widget(Button(text=self.dismiss_text, on_release=self.dismiss))
         return button_layout
+
+    def on_dismiss(self, *args):
+        if self.dismiss_callback is not None:
+            self.dismiss_callback()
 
     def build_buttons(self):
         return [Button(text=self.l.get_bold(button_text), on_release=callback)
