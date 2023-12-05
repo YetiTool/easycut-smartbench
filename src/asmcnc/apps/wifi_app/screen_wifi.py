@@ -221,7 +221,7 @@ Builder.load_string(
                                 valign: 'top'
                                 markup: True
                                 size_hint: (None, None)
-                                size: 200, 24
+                                size: dp(200.0/800.0)*app.width, dp(24.0/480.0)*app.height
                                 text: ''
                                 font_size: str(0.025*app.width) + 'sp'
                                 text_size: self.size
@@ -340,7 +340,7 @@ Builder.load_string(
                             halign: 'left'
                             valign: 'middle'
                             markup: True
-                            size: 55, 40
+                            size: dp(55.0/800)*app.width, dp(40.0/480.0)*app.height
                             text: 'GB'
                             font_size: str(0.025*app.width) + 'sp'
                             text_size: self.size
