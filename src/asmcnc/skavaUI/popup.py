@@ -30,6 +30,7 @@ class PopupSystem(Popup):
     separator_height = ObjectProperty(dp(4))
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
+    size_hint = ObjectProperty((None, None))
     size = ObjectProperty((utils.get_scaled_width(300), utils.get_scaled_height(350)))
 
     """
