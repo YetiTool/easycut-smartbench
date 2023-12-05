@@ -104,7 +104,7 @@ Builder.load_string(
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: dp(100.0/480)*app.height
 
             ToggleButton:
                 font_size: str(0.01875 * app.width) + 'sp'

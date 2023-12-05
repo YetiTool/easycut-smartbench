@@ -127,6 +127,7 @@ Builder.load_string(
                         text_size: self.width, None
                         padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         markup: True
+                        
                
 
         BoxLayout:

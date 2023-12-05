@@ -150,7 +150,7 @@ Builder.load_string(
             x: 662
             y: 420
             size_hint: None, None            
-            height: 30
+            height: dp(30.0/480)*app.height
             width: 0.0375*app.width
             text: 'Z'
             markup: True

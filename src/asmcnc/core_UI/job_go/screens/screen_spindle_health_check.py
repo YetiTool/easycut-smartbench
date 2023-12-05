@@ -25,7 +25,7 @@ Builder.load_string(
         padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
         size_hint: (None, None)
-        height: 480
+        height: dp(480.0/480.0)*app.height
         width: 1.0*app.width
         canvas:
             Color: 
@@ -61,7 +61,7 @@ Builder.load_string(
                 padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
                 orientation: 'horizontal'          
                 size_hint: (None, None)
-                height: 251
+                height: dp(251.0/480.0)*app.height
                 width: 1.0*app.width
                 pos: self.parent.pos
 
@@ -71,7 +71,7 @@ Builder.load_string(
                     padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
+                    height: dp(121.0/480.0)*app.height
                     width: 0.225*app.width
                     Image:
                         id: spindle_icon
@@ -89,7 +89,7 @@ Builder.load_string(
                     padding:[0, 0, 0, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
+                    height: dp(121.0/480.0)*app.height
                     width: 0.25*app.width
                     Label:
                         id: countdown
@@ -107,7 +107,7 @@ Builder.load_string(
                     padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
+                    height: dp(121.0/480.0)*app.height
                     width: 0.225*app.width
                     Image:
                         id: countdown_icon

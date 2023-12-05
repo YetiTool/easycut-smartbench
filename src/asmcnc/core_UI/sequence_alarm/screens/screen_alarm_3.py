@@ -107,7 +107,7 @@ Builder.load_string(
             x: 660
             y: 321.60
             size_hint: None, None
-            height: 100
+            height: dp(100.0/480.0)*app.height
             width: 0.15*app.width
             allow_stretch: True
             opacity: 1
