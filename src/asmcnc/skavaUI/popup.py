@@ -31,7 +31,7 @@ class PopupSystem(Popup):
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
     size_hint = ObjectProperty((None, None))
-    size = ObjectProperty((utils.get_scaled_width(300), utils.get_scaled_height(350)))
+    size = ListProperty([300, 350])
 
     """
     title_string: string to be used as title
