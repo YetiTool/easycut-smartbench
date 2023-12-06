@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created March 2019
 
 @author: Ed
 
 Prepare to home
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -14,7 +14,8 @@ import sys, os
 from kivy.clock import Clock
 
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <HomingScreenPrepare>:
 
@@ -103,46 +104,48 @@ Builder.load_string("""
         Label:
             size_hint_y: 1                
 
-""")
+"""
+)
 
 
 class HomingScreenPrepare(Screen):
-
-
-    cancel_to_screen = 'lobby'   
-    return_to_screen = 'lobby'
+    cancel_to_screen = "lobby"
+    return_to_screen = "lobby"
 
     default_font_size = 30
 
     def __init__(self, **kwargs):
-        
         super(HomingScreenPrepare, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):
-        self.m.set_led_colour('ORANGE')
+        self.m.set_led_colour("ORANGE")
         if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
+            self.instruction_label.text = self.l.get_str(
+                "Ensure SmartBench is clear and remove extraction hose from Z head."
+            )
         else:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
-    
+            self.instruction_label.text = self.l.get_str("Ensure SmartBench is clear.")
+
     def begin_homing(self):
-        self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
-        self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
-        self.sm.current = 'homing_active'
-    
+        self.sm.get_screen("homing_active").cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen("homing_active").return_to_screen = self.return_to_screen
+        self.sm.current = "homing_active"
+
     def cancel(self):
         self.sm.current = self.cancel_to_screen
-        
+
     def update_strings(self):
-        self.press_to_home_label.text = self.l.get_str('Then, press button to home.')
+        self.press_to_home_label.text = self.l.get_str("Then, press button to home.")
         if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
+            self.instruction_label.text = self.l.get_str(
+                "Ensure SmartBench is clear and remove extraction hose from Z head."
+            )
         else:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
+            self.instruction_label.text = self.l.get_str("Ensure SmartBench is clear.")
 
         self.update_font_size(self.press_to_home_label, self.instruction_label)
 

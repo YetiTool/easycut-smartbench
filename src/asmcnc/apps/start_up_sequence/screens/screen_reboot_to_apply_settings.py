@@ -1,14 +1,16 @@
-'''
+"""
 Created on 15th September 2021
 @author: Letty
 Reboot to apply language settings
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string("""
+
+Builder.load_string(
+    """
 <ApplySettingsScreen>:
 
 	title_label : title_label
@@ -128,37 +130,39 @@ Builder.load_string("""
 					height: dp(122)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
-""")
+"""
+)
+
 
 class ApplySettingsScreen(Screen):
+    def __init__(self, **kwargs):
+        super(ApplySettingsScreen, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.update_strings()
 
-	def __init__(self, **kwargs):
-		super(ApplySettingsScreen, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.sm=kwargs['screen_manager']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
-		self.update_strings()
+    def next_screen(self):
+        self.start_seq.exit_sequence(False)  # used for test
+        self.sm.current = "rebooting"
 
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def next_screen(self):
-		self.start_seq.exit_sequence(False) # used for test
-		self.sm.current = 'rebooting'
+    def update_strings(self):
+        self.title_label.text = self.l.get_str("Reboot!")
+        self.success_label.text = self.l.get_bold(
+            "Reboot to finish applying your settings, and get started!"
+        )
+        self.next_button.text = self.l.get_str("Reboot!")
 
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
+        self.update_font_size(self.next_button)
 
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("Reboot!")
-		self.success_label.text = self.l.get_bold("Reboot to finish applying your settings, and get started!")
-		self.next_button.text = self.l.get_str("Reboot!")
+    def update_font_size(self, value):
+        text_length = self.l.get_text_length(value.text)
 
-		self.update_font_size(self.next_button)
-
-	def update_font_size(self, value):
-		text_length = self.l.get_text_length(value.text)
-
-		if text_length > 20:
-			value.font_size = 25
-		else:
-			value.font_size = 30
+        if text_length > 20:
+            value.font_size = 25
+        else:
+            value.font_size = 30

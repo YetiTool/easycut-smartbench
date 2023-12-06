@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created Mayh 2019
 
 @author: Letty
 
 Basic screen 
-'''
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -14,7 +14,8 @@ import sys, os
 
 
 # Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <RebootingScreen>:
 
@@ -46,24 +47,24 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'            
 
-""")
+"""
+)
+
 
 class RebootingScreen(Screen):
-    
     def __init__(self, **kwargs):
         super(RebootingScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
-        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
-    
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
+        self.reboot_label.text = self.l.get_str("Rebooting") + "..."
+
     def on_pre_enter(self):
-        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
+        self.reboot_label.text = self.l.get_str("Rebooting") + "..."
         self.reboot_label.font_name = self.l.font_regular
 
     def on_enter(self):
         Clock.schedule_once(self.reboot, 1)
-        
+
     def reboot(self, dt):
         if sys.platform != "win32" and sys.platform != "darwin":
-            os.system('sudo reboot')
-        
+            os.system("sudo reboot")

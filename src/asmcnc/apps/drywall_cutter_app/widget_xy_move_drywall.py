@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <XYMoveDrywall>
     jogModeButtonImage:jogModeButtonImage
     speed_toggle:speed_toggle
@@ -169,99 +170,118 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-""")
+"""
+)
 
 
 class XYMoveDrywall(Widget):
-
     def __init__(self, **kwargs):
-
         super(XYMoveDrywall, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
 
         self.set_jog_speeds()
 
-    jogMode = 'free'
+    jogMode = "free"
     jog_mode_button_press_counter = 0
 
     fast_x_speed = 6000
     fast_y_speed = 6000
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == "normal":
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
 
     def buttonJogXY(self, case):
-
         x_feed_speed = self.feedSpeedJogX
         y_feed_speed = self.feedSpeedJogY
 
-        if self.jogMode == 'free':
-            if case == 'X-': self.m.jog_absolute_single_axis('X',
-                                                             self.m.x_min_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'X+': self.m.jog_absolute_single_axis('X',
-                                                             self.m.x_max_jog_abs_limit,
-                                                             x_feed_speed)
-            if case == 'Y-': self.m.jog_absolute_single_axis('Y',
-                                                             self.m.y_min_jog_abs_limit,
-                                                             y_feed_speed)
-            if case == 'Y+': self.m.jog_absolute_single_axis('Y',
-                                                             self.m.y_max_jog_abs_limit,
-                                                             y_feed_speed)
+        if self.jogMode == "free":
+            if case == "X-":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_min_jog_abs_limit, x_feed_speed
+                )
+            if case == "X+":
+                self.m.jog_absolute_single_axis(
+                    "X", self.m.x_max_jog_abs_limit, x_feed_speed
+                )
+            if case == "Y-":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_min_jog_abs_limit, y_feed_speed
+                )
+            if case == "Y+":
+                self.m.jog_absolute_single_axis(
+                    "Y", self.m.y_max_jog_abs_limit, y_feed_speed
+                )
 
-        elif self.jogMode == 'plus_0-01':
-            if case == 'X+': self.m.jog_relative('X', 0.01, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.01, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.01, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.01, y_feed_speed)
+        elif self.jogMode == "plus_0-01":
+            if case == "X+":
+                self.m.jog_relative("X", 0.01, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.01, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.01, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.01, y_feed_speed)
 
-        elif self.jogMode == 'plus_0-1':
-            if case == 'X+': self.m.jog_relative('X', 0.1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.1, y_feed_speed)
+        elif self.jogMode == "plus_0-1":
+            if case == "X+":
+                self.m.jog_relative("X", 0.1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -0.1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 0.1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -0.1, y_feed_speed)
 
-        elif self.jogMode == 'plus_1':
-            if case == 'X+': self.m.jog_relative('X', 1, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -1, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 1, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -1, y_feed_speed)
+        elif self.jogMode == "plus_1":
+            if case == "X+":
+                self.m.jog_relative("X", 1, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -1, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 1, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -1, y_feed_speed)
 
-        elif self.jogMode == 'plus_10':
-            if case == 'X+': self.m.jog_relative('X', 10, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -10, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 10, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
+        elif self.jogMode == "plus_10":
+            if case == "X+":
+                self.m.jog_relative("X", 10, x_feed_speed)
+            if case == "X-":
+                self.m.jog_relative("X", -10, x_feed_speed)
+            if case == "Y+":
+                self.m.jog_relative("Y", 10, y_feed_speed)
+            if case == "Y-":
+                self.m.jog_relative("Y", -10, y_feed_speed)
 
     def jogModeCycled(self):
-
         self.jog_mode_button_press_counter += 1
         if self.jog_mode_button_press_counter % 5 == 0:
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
+            self.jogMode = "free"
+            self.jogModeButtonImage.source = (
+                "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+            )
         if self.jog_mode_button_press_counter % 5 == 1:
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
+            self.jogMode = "plus_10"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_10.png"
         if self.jog_mode_button_press_counter % 5 == 2:
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
+            self.jogMode = "plus_1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_1.png"
         if self.jog_mode_button_press_counter % 5 == 3:
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
+            self.jogMode = "plus_0-1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-1.png"
         if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
+            self.jogMode = "plus_0-01"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-01.png"
 
     def cancelXYJog(self):
-        if self.jogMode == 'free':
+        if self.jogMode == "free":
             self.m.quit_jog()
 
     def probe_z(self):

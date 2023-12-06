@@ -1,39 +1,43 @@
-'''
+"""
 Created on 22 Feb 2023
 @author: Letty
-'''
+"""
 import sys
-sys.path.append('./src')
 
-try: 
+sys.path.append("./src")
+
+try:
     import unittest
     import pytest
     from mock import Mock, MagicMock
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import localization
 from asmcnc.job.yetipilot import yetipilot
 
-'''
+"""
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/yetipilot/test_yetipilot_units.py
 ######################################
-'''
+"""
+
 
 # FIXTURES
 @pytest.fixture
 def yp():
-
     m = Mock()
     sm = Mock()
     jd = Mock()
     l = localization.Localization()
-    yp = yetipilot.YetiPilot(machine=m, screen_manager=sm, job_data=jd, localization=l, test=True)
+    yp = yetipilot.YetiPilot(
+        machine=m, screen_manager=sm, job_data=jd, localization=l, test=True
+    )
     return yp
+
 
 def test_yp_init(yp):
     assert yp.m
@@ -45,12 +49,15 @@ def test_start(yp):
     yp.enable()
     assert yp.use_yp
 
+
 def test_stop(yp):
     yp.disable()
     assert not yp.use_yp
 
+
 def test_load_parameters_from_json(yp):
     yp.load_parameters()
+
 
 def test_feed_override_wrapper(yp):
     test_func = Mock()
@@ -61,6 +68,7 @@ def test_feed_override_wrapper(yp):
     yp.feed_override_wrapper(test_func)
     test_func.assert_called()
 
+
 def test_get_feed_adjustment_percentage(yp):
     yp.get_all_profiles()
     yp.use_profile(yp.available_profiles[0])
@@ -68,11 +76,25 @@ def test_get_feed_adjustment_percentage(yp):
     feed_up_args = (True, 1, False)
     no_feed_up_args = (False, 0, True)
 
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=-45) == -40
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=45) == 0
-    assert yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=17) == 0
-    assert yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=45) == 20
-    assert yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=17) == 17
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=-45)
+        == -40
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=45)
+        == 0
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *no_feed_up_args, feed_multiplier=17)
+        == 0
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=45) == 20
+    )
+    assert (
+        yp.get_feed_adjustment_percentage(950, *feed_up_args, feed_multiplier=17) == 17
+    )
+
 
 def test_get_multiplier(yp):
     yp.get_all_profiles()
