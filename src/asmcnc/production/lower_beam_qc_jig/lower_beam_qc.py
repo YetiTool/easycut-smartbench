@@ -5,15 +5,18 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.uix.button import  Button
+from kivy.uix.button import Button
 
 from asmcnc.skavaUI import widget_status_bar, popup_info
-from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
+from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import (
+    LowerBeamQCXYMove,
+)
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 import sys, os
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <LowerBeamQC>:
 
 	vac_toggle:vac_toggle
@@ -166,175 +169,215 @@ Builder.load_string("""
 			id: status_container 
 			pos: self.pos
 
-""")
+"""
+)
 
 
 class PopupMotorChipsTest(Widget):
+    def __init__(self, screen_manager, report_string):
+        self.sm = screen_manager
 
-	def __init__(self, screen_manager, report_string):
+        # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label1 = Label(
+            size_hint_y=1,
+            text_size=(None, None),
+            markup=True,
+            halign="left",
+            valign="middle",
+            text=report_string,
+            color=[0, 0, 0, 1],
+            padding=[10, 10],
+        )
 
-		self.sm = screen_manager
+        ok_button = Button(text="[b]Ok[/b]", markup=True)
+        ok_button.background_normal = ""
+        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
-		# img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-		label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=report_string, color=[0,0,0,1], padding=[10,10])
+        text_layout = BoxLayout(orientation="horizontal", spacing=0, padding=0)
+        text_layout.add_widget(label1)
 
-		ok_button = Button(text='[b]Ok[/b]', markup = True)
-		ok_button.background_normal = ''
-		ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        btn_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=15,
+            padding=[150, 10, 150, 0],
+            size_hint_y=0.3,
+        )
+        btn_layout.add_widget(ok_button)
 
-		text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
-		text_layout.add_widget(label1)
+        layout_plan = BoxLayout(
+            orientation="vertical", spacing=10, padding=[10, 10, 10, 10]
+        )
+        # layout_plan.add_widget(img)
+        layout_plan.add_widget(text_layout)
+        layout_plan.add_widget(btn_layout)
 
-		btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0], size_hint_y = 0.3)
-		btn_layout.add_widget(ok_button)
+        popup = Popup(
+            title="Output",
+            title_color=[0, 0, 0, 1],
+            title_size="20sp",
+            content=layout_plan,
+            size_hint=(None, None),
+            size=(700, 400),
+            auto_dismiss=False,
+        )
 
-		layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
-		# layout_plan.add_widget(img)
-		layout_plan.add_widget(text_layout)
-		layout_plan.add_widget(btn_layout)
+        popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
+        popup.separator_color = [249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0]
+        popup.separator_height = "4dp"
 
-		popup = Popup(title='Output',
-					  title_color=[0, 0, 0, 1],
-					  title_size = '20sp',
-					  content=layout_plan,
-					  size_hint=(None, None),
-					  size=(700, 400),
-					  auto_dismiss= False
-					  )
+        ok_button.bind(on_press=popup.dismiss)
 
-		popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-		popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
-		popup.separator_height = '4dp'
-
-		ok_button.bind(on_press=popup.dismiss)
-
-		popup.open()
+        popup.open()
 
 
 class LowerBeamQC(Screen):
-	def __init__(self, **kwargs):
-		super(LowerBeamQC, self).__init__(**kwargs)
+    def __init__(self, **kwargs):
+        super(LowerBeamQC, self).__init__(**kwargs)
 
-		self.sm = kwargs['sm']
-		self.m = kwargs['m']
-		self.l = kwargs['l']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
+        self.l = kwargs["l"]
 
-		# Movement widget
-		self.xy_move_widget = LowerBeamQCXYMove(machine=self.m, screen_manager=self.sm, localization=self.l)
-		self.xy_move_container.add_widget(self.xy_move_widget)
+        # Movement widget
+        self.xy_move_widget = LowerBeamQCXYMove(
+            machine=self.m, screen_manager=self.sm, localization=self.l
+        )
+        self.xy_move_container.add_widget(self.xy_move_widget)
 
-		# Green status bar
-		self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-		self.status_container.add_widget(self.status_bar_widget)
+        # Green status bar
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
+        self.status_container.add_widget(self.status_bar_widget)
 
-		self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)       # Status monitor widget
-		self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, 0.4)      # Poll for status
+        self.poll_for_status = Clock.schedule_interval(
+            self.update_status_text, 0.4
+        )  # Status monitor widget
+        self.poll_for_checks = Clock.schedule_interval(
+            self.update_checkboxes, 0.4
+        )  # Poll for status
 
-	def on_enter(self):
-		self.warranty_toggle.state = 'normal'
+    def on_enter(self):
+        self.warranty_toggle.state = "normal"
 
-	def update_status_text(self, dt):
-		try:
-			self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+    def update_status_text(self, dt):
+        try:
+            self.console_status_text.text = self.sm.get_screen(
+                "home"
+            ).gcode_monitor_widget.consoleStatusText.text
 
-		except:
-			pass
+        except:
+            pass
 
-	def test_motor_chips(self):
-		self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
-		self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
-		self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
-		Clock.schedule_once(self.check_sg_values, 3)
+    def test_motor_chips(self):
+        self.m.send_command_to_motor(
+            "REPORT RAW SG SET", command=REPORT_RAW_SG, value=1
+        )
+        self.m.jog_absolute_single_axis("Y", self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_relative("Y", 500, 6000)  # move for 5 seconds at 6000 mm/min
+        Clock.schedule_once(self.check_sg_values, 3)
 
-	def is_relative_move_safe(self, distance):
-		if self.m.mpos_y() + distance > self.m.y_max_jog_abs_limit:
-			return False
-		elif self.m.mpos_y() + distance < self.m.y_min_jog_abs_limit:
-			return False
-		else:
-			return True
+    def is_relative_move_safe(self, distance):
+        if self.m.mpos_y() + distance > self.m.y_max_jog_abs_limit:
+            return False
+        elif self.m.mpos_y() + distance < self.m.y_min_jog_abs_limit:
+            return False
+        else:
+            return True
 
-	def get_closest_limit(self, position):
-		if abs(position - self.m.y_min_jog_abs_limit) < abs(position - self.m.y_max_jog_abs_limit):
-			return self.m.y_min_jog_abs_limit
-		else:
-			return self.m.y_max_jog_abs_limit
+    def get_closest_limit(self, position):
+        if abs(position - self.m.y_min_jog_abs_limit) < abs(
+            position - self.m.y_max_jog_abs_limit
+        ):
+            return self.m.y_min_jog_abs_limit
+        else:
+            return self.m.y_max_jog_abs_limit
 
-	def new_test_motor_chips(self):
-		self.m.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+    def new_test_motor_chips(self):
+        self.m.send_command_to_motor(
+            "REPORT RAW SG SET", command=REPORT_RAW_SG, value=1
+        )
 
-		if self.is_relative_move_safe(500):
-			self.m.jog_relative('Y', 500, 6000)
-		elif self.is_relative_move_safe(-500):
-			self.m.jog_relative('Y', -500, 6000)
-		else:
-			self.m.jog_absolute_single_axis('Y', self.get_closest_limit(self.m.mpos_y()), 6000)
-			self.m.jog_relative('Y', 500, 6000)
+        if self.is_relative_move_safe(500):
+            self.m.jog_relative("Y", 500, 6000)
+        elif self.is_relative_move_safe(-500):
+            self.m.jog_relative("Y", -500, 6000)
+        else:
+            self.m.jog_absolute_single_axis(
+                "Y", self.get_closest_limit(self.m.mpos_y()), 6000
+            )
+            self.m.jog_relative("Y", 500, 6000)
 
-		Clock.schedule_once(self.check_sg_values, 3)
+        Clock.schedule_once(self.check_sg_values, 3)
 
+    def check_sg_values(self, dt):
+        pass_fail = True
+        fail_report = []
 
-	def check_sg_values(self, dt):
+        lower_sg_limit = 200
+        upper_sg_limit = 800
 
-		pass_fail = True
-		fail_report = []
+        if lower_sg_limit <= self.m.s.sg_y1_motor <= upper_sg_limit:
+            pass_fail = pass_fail * (True)
 
-		lower_sg_limit = 200
-		upper_sg_limit = 800
+        else:
+            pass_fail = pass_fail * (False)
+            fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y1_motor))
+            fail_report.append(
+                "Should be between %s and %s." % (lower_sg_limit, upper_sg_limit)
+            )
 
-		if lower_sg_limit <= self.m.s.sg_y1_motor <= upper_sg_limit:
-			pass_fail = pass_fail*(True)
+        if lower_sg_limit <= self.m.s.sg_y2_motor <= upper_sg_limit:
+            pass_fail = pass_fail * (True)
 
-		else:
-			pass_fail = pass_fail*(False)
-			fail_report.append("Y1 motor SG value: " + str(self.m.s.sg_y1_motor))
-			fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+        else:
+            pass_fail = pass_fail * (False)
+            fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y2_motor))
+            fail_report.append(
+                "Should be between %s and %s." % (lower_sg_limit, upper_sg_limit)
+            )
 
-		if lower_sg_limit <= self.m.s.sg_y2_motor <= upper_sg_limit:
-			pass_fail = pass_fail*(True)
+        if not pass_fail:
+            fail_report_string = "\n".join(fail_report)
+            PopupMotorChipsTest(self.sm, fail_report_string)
+            self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
-		else:
-			pass_fail = pass_fail*(False)
-			fail_report.append("Y2 motor SG value: " + str(self.m.s.sg_y2_motor))
-			fail_report.append("Should be between %s and %s." % (lower_sg_limit, upper_sg_limit))
+        else:
+            self.motor_chips_check.source = (
+                "./asmcnc/skavaUI/img/file_select_select.png"
+            )
 
-		if not pass_fail:
-			fail_report_string = "\n".join(fail_report)
-			PopupMotorChipsTest(self.sm, fail_report_string)
-			self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+        self.m.send_command_to_motor(
+            "REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0
+        )
 
-		else:
-			self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+    def set_vac(self):
+        if self.vac_toggle.state == "normal":
+            self.m.vac_off()
+        else:
+            self.m.vac_on()
 
-		self.m.send_command_to_motor("REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0)
+    def update_checkboxes(self, dt):
+        self.y_home_switch()
 
-	def set_vac(self):
-		if self.vac_toggle.state == 'normal':
-			self.m.vac_off()
-		else:
-			self.m.vac_on()
+    def y_home_switch(self):
+        if self.m.s.limit_Y_axis:
+            self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
-	def update_checkboxes(self, dt):
-		self.y_home_switch()
+    def disable_alarms(self):
+        self.m.s.write_command("$21 = 0")
 
-	def y_home_switch(self):
-		if self.m.s.limit_Y_axis:
-			self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-		else:
-			self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    def enable_alarms(self):
+        self.m.s.write_command("$21 = 1")
 
-	def disable_alarms(self):
-		self.m.s.write_command('$21 = 0')
+    def shutdown_console(self):
+        if sys.platform != "win32" and sys.platform != "darwin":
+            os.system("sudo shutdown -h now")
 
-	def enable_alarms(self):
-		self.m.s.write_command('$21 = 1')
+    def switch_screen(self):
+        self.sm.current = "qcWarranty"
 
-	def shutdown_console(self):
-		if sys.platform != 'win32' and sys.platform != 'darwin':
-			os.system('sudo shutdown -h now')
-
-	def switch_screen(self):
-		self.sm.current = 'qcWarranty'
-
-	def stop(self):
-		popup_info.PopupStop(self.m, self.sm, self.l)
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)

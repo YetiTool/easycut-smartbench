@@ -1,18 +1,24 @@
-'''
+"""
 Created on 4 March 2020
 Screen 28 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed, popup_info
+from asmcnc.apps.shapeCutter_app.screens import (
+    widget_sC28_xy_move,
+    widget_sC_work_coordinates,
+    widget_sC_virtual_bed,
+    popup_info,
+)
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter28ScreenClass>
 
@@ -283,97 +289,100 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter28ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]28[/b]")
     title_label = StringProperty("[b]Set job XY datum[/b]")
     user_instructions = StringProperty()
-    
+
     def __init__(self, **kwargs):
         super(ShapeCutter28ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-        self.j=kwargs['job_parameters']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.j = kwargs["job_parameters"]
 
-        self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, localization=self.l, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+        self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(
+            machine=self.m,
+            localization=self.l,
+            screen_manager=self.shapecutter_sm.sm,
+            job_parameters=self.j,
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(machine=self.m,  job_parameters = self.j, screen_manager=self.shapecutter_sm.sm)
+        self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(
+            machine=self.m, job_parameters=self.j, screen_manager=self.shapecutter_sm.sm
+        )
         self.virtual_bed_container.add_widget(self.virtual_bed_widget)
-        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(
+            machine=self.m, screen_manager=self.shapecutter_sm.sm
+        )
         self.work_coords_container.add_widget(self.work_coords_widget)
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.xy_move_widget.set_jog_speeds()
         self.m.laser_on()
-    
+
     def on_pre_leave(self):
         self.m.laser_off()
 
-# Action buttons
+    # Action buttons
     def get_info(self):
         info = "Move the machine by using the arrow buttons.\n\nSet the datum by using the SET buttons.\n\nMove the machine to the datum by using the GO buttons."
         popup_info.PopupInfo(self.shapecutter_sm, info)
-    
+
     def go_back(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.previous_screen()
         else:
             pass
-    
+
     def next_screen(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.next_screen()
         else:
             pass
-    
-# Tab functions
+
+    # Tab functions
 
     def prepare(self):
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.prepare_tab()
         else:
-            pass  
-    
+            pass
 
     def load(self):
-
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.load_tab()
         else:
-            pass  
+            pass
 
-    
     def define(self):
-
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.define_tab()
         else:
-            pass  
-    
+            pass
+
     def position(self):
-        
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.position_tab()
         else:
-            pass  
+            pass
 
-    
     def check(self):
-        
-        if not self.m.state().startswith('Jog'):
+        if not self.m.state().startswith("Jog"):
             self.shapecutter_sm.check_tab()
         else:
-            pass 
+            pass
 
-    
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
+
+
 # Screen specific

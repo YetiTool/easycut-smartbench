@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append('./src')
+sys.path.append("./src")
 
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 from kivy.app import App
@@ -18,18 +18,20 @@ except:
 RUN WITH python tests/manual_tests/visual_screen_tests/test_dwt_parameter_change_hook.py FROM EASYCUT-SMARTBENCH DIR
 """
 
+
 class TestApp(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
 
-        sm.add_widget(TestScreen(name='test_screen'))
+        sm.add_widget(TestScreen(name="test_screen"))
 
-        sm.current = 'test_screen'
+        sm.current = "test_screen"
 
         return sm
 
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <TestScreen>:
     GridLayout:
         rows: 3
@@ -49,14 +51,14 @@ Builder.load_string("""
         Button:
             text: 'Change'
             on_press: root.dwt_config.save_temp_config()
-""")
+"""
+)
 
 
 class TestScreen(Screen):
     dwt_config = DWTConfig()
-    shape_options = ['Circle', 'Square', 'Line', 'Geberit']
+    shape_options = ["Circle", "Square", "Line", "Geberit"]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     TestApp().run()
-

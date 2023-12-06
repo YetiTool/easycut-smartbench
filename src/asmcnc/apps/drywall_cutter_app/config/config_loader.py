@@ -3,18 +3,24 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+configurations_dir = "asmcnc/apps/drywall_cutter_app/config/configurations"
+cutters_dir = "asmcnc/apps/drywall_cutter_app/config/cutters"
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
+TEMP_CONFIG_PATH = os.path.join(configurations_dir, "..", "temp", "temp_config.json")
 DEBUG_MODE = True
 
 
 def debug(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
-            print('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
-                kwargs))
+            print(
+                "Calling function: "
+                + func.__name__
+                + " with args: "
+                + str(args)
+                + " and kwargs: "
+                + str(kwargs)
+            )
         return func(*args, **kwargs)
 
     return wrapper
@@ -48,12 +54,14 @@ class DWTConfig(object):
         if not os.path.exists(file_path):
             return False
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             cfg = json.load(f)
 
         field_count = len(cfg)
 
-        valid_field_count = len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+        valid_field_count = (
+            len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+        )
 
         if field_count != valid_field_count:
             return False
@@ -76,16 +84,20 @@ class DWTConfig(object):
         if not os.path.exists(file_path):
             return False
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             cfg = json.load(f)
 
-        valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
+        valid_field_names = inspect.getargspec(
+            config_classes.Configuration.__init__
+        ).args[1:]
 
         for field_name in valid_field_names:
             if field_name not in cfg:
-                cfg[field_name] = getattr(config_classes.Configuration.default(), field_name)
+                cfg[field_name] = getattr(
+                    config_classes.Configuration.default(), field_name
+                )
 
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(cfg, f, indent=4, default=lambda o: o.__dict__)
 
         return True
@@ -101,14 +113,16 @@ class DWTConfig(object):
         file_path = os.path.join(configurations_dir, config_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Configuration file does not exist. ' + file_path + ' ' + os.getcwd())
+            raise Exception(
+                "Configuration file does not exist. " + file_path + " " + os.getcwd()
+            )
 
         if not self.is_valid_configuration(config_name):
             if not self.fix_config(config_name):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
         self.load_cutter(self.active_config.cutter_type)
@@ -123,7 +137,7 @@ class DWTConfig(object):
         """
         file_path = os.path.join(configurations_dir, config_name)
 
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
     @debug
@@ -137,9 +151,11 @@ class DWTConfig(object):
         file_path = os.path.join(cutters_dir, cutter_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Cutter file does not exist. ' + file_path + ' ' + os.getcwd())
+            raise Exception(
+                "Cutter file does not exist. " + file_path + " " + os.getcwd()
+            )
 
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))
 
     @staticmethod
@@ -151,17 +167,17 @@ class DWTConfig(object):
         """
         cutters = {}
         for f_name in os.listdir(cutters_dir):
-            if not f_name.endswith('.json'):
+            if not f_name.endswith(".json"):
                 continue
 
             file_path = os.path.join(cutters_dir, f_name)
 
             if os.path.isfile(file_path):
-                with open(file_path, 'r') as f:
+                with open(file_path, "r") as f:
                     cutter = json.load(f)
 
-                    if 'cutter_description' in cutter:
-                        cutters[cutter['cutter_description']] = f_name
+                    if "cutter_description" in cutter:
+                        cutters[cutter["cutter_description"]] = f_name
         return cutters
 
     @debug
@@ -172,7 +188,7 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.save_config(os.path.join("..", "temp", "temp_config.json"))
 
     @debug
     def load_temp_config(self):
@@ -182,7 +198,7 @@ class DWTConfig(object):
 
         This is used to load the configuration when the Drywall Cutter screen is loaded.
         """
-        self.load_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.load_config(os.path.join("..", "temp", "temp_config.json"))
 
     @debug
     def on_parameter_change(self, parameter_name, parameter_value):
@@ -196,8 +212,8 @@ class DWTConfig(object):
         :param parameter_value: The new value of the parameter.
         """
 
-        if '.' in parameter_name:
-            parameter_names = parameter_name.split('.')
+        if "." in parameter_name:
+            parameter_names = parameter_name.split(".")
             parameter = self.active_config
 
             for parameter_name in parameter_names[:-1]:

@@ -1,7 +1,7 @@
-'''
+"""
 Created on nov 2020
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -9,7 +9,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <WelcomeTextScreen>:
@@ -158,37 +159,47 @@ Builder.load_string("""
 
 
 
-""")
+"""
+)
+
 
 class WelcomeTextScreen(Screen):
+    def __init__(self, **kwargs):
+        super(WelcomeTextScreen, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
+        self.update_strings()
 
+    def next_screen(self):
+        self.update_seen()
+        self.start_seq.next_in_sequence()
 
-	def __init__(self, **kwargs):
-		super(WelcomeTextScreen, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.sm=kwargs['screen_manager']
-		self.l=kwargs['localization']
-		self.update_strings()
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def next_screen(self):
-		self.update_seen()
-		self.start_seq.next_in_sequence()
+    def update_strings(self):
+        self.header_label.text = self.l.get_str("Welcome to SmartBench")
+        self.thankyou_label.text = self.l.get_str(
+            "Thank you for purchasing SmartBench."
+        )
+        self.next_steps_label.text = self.l.get_str(
+            "Please follow the next steps to set up your Console, and complete your warranty registration process."
+        )
+        self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
+        self.next_button.text = self.l.get_str("Next") + "..."
 
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
+    def update_seen(self):
+        show_user_welcome_app = os.popen(
+            'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
+        ).read()
 
-	def update_strings(self):
-		self.header_label.text = self.l.get_str("Welcome to SmartBench")
-		self.thankyou_label.text = self.l.get_str("Thank you for purchasing SmartBench.")
-		self.next_steps_label.text = self.l.get_str("Please follow the next steps to set up your Console, and complete your warranty registration process.")
-		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
-		self.next_button.text = self.l.get_str("Next") + "..."
+        if not show_user_welcome_app:
+            os.system(
+                "sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt"
+            )
 
-	def update_seen(self):
-		show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
-
-		if not show_user_welcome_app:
-			os.system("sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt")
-
-		elif 'True' in show_user_welcome_app:
-			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt')
+        elif "True" in show_user_welcome_app:
+            os.system(
+                'sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt'
+            )
