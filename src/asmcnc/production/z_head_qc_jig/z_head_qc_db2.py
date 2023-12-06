@@ -51,7 +51,7 @@ class ZHeadQCDB2(Screen):
 
     def do_data_send_when_ready(self):
         if self.calibration_db.processing_running_data:
-            print 'Poll for sending ZH QC statuses when ready'
+            print('Poll for sending ZH QC statuses when ready')
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
         if self.calibration_db.send_data_through_publisher(self.
@@ -63,7 +63,7 @@ class ZHeadQCDB2(Screen):
                 self.sm.current = 'qcDB3'
                 return
             except:
-                print traceback.format_exc()
+                print(traceback.format_exc())
         self.sm.current = 'qcDB4'
 
     def set_serial_no(self, serial_number):

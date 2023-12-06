@@ -83,7 +83,7 @@ class ZHeadQCHome(Screen):
             self.hw_version = int(self.m.s.hw_version)
             self.update_usb_button_label()
         except:
-            print "Can't get HW version or hex file"
+            print("Can't get HW version or hex file")
 
     def go_back_to_pcb_setup(self):
         self.sm.current = 'qcpcbsetup'
@@ -122,7 +122,7 @@ class ZHeadQCHome(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print pi.get_mode(17)
+            print(pi.get_mode(17))
             pi.stop()
             cmd = ('grbl_file=' + self.get_fw_filepath() +
                 ' && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i'

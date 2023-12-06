@@ -1,4 +1,6 @@
 import traceback
+from datetime import datetime
+
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -64,6 +66,10 @@ Builder.load_string(
 """
     )
 
+def log(message):
+    timestamp = datetime.now()
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
+
 
 class LBCalibration4(Screen):
     serial_number = ''
@@ -121,7 +127,7 @@ class LBCalibration4(Screen):
                 next_screen_name = 'lbc5'
             except Exception as e:
                 next_screen_name = 'lbc6'
-                print traceback.format_exc()
+                print(traceback.format_exc())
         else:
             next_screen_name = 'lbc6'
         self.sm.get_screen(next_screen_name).set_serial_no(self.serial_number)

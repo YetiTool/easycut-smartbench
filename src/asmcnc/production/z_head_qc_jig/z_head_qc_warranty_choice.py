@@ -125,8 +125,8 @@ class ZHeadWarrantyChoice(Screen):
             if self.poll_for_fw != None:
                 Clock.unschedule(self.poll_for_fw)
         except:
-            print 'could not detect fw/update label'
-            print traceback.format_exc()
+            print('could not detect fw/update label')
+            print(traceback.format_exc())
 
     def after_apr21(self):
         self.sm.current = 'qcW136'
@@ -178,6 +178,6 @@ class ZHeadWarrantyChoice(Screen):
                 self.usb_change_button.text = ('FW on USB: ' + self.
                     fw_on_usb + '\n\n' + 'Change USB?')
             except:
-                print traceback.format_exc()
+                print(traceback.format_exc())
             return
         Clock.schedule_once(lambda dt: self.load_usb_stick_with_hex_file(), 1)

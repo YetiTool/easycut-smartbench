@@ -368,7 +368,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class GoScreen(Screen):
@@ -540,7 +540,7 @@ class GoScreen(Screen):
                     spindle_brush_lifetime_seconds)
                 return
             except:
-                print traceback.format_exc()
+                print(traceback.format_exc())
         popup_info.PopupError(self.sm, self.l, self.l.get_str('Error!'))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
@@ -593,7 +593,7 @@ class GoScreen(Screen):
                 self.am, self.m, self.l, calibration_warning, 'calibration')
 
     def reset_go_screen_prior_to_job_start(self):
-        print 'RESET GO SCREEN FIRES'
+        print('RESET GO SCREEN FIRES')
         self.start_or_pause_button_image.source = './asmcnc/skavaUI/img/go.png'
         self.btn_back_img.source = './asmcnc/skavaUI/img/back.png'
         self.btn_back.disabled = False
