@@ -5,7 +5,7 @@ Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino 
 '''
 
 from kivy.config import Config
-from __builtin__ import True
+
 
 import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta

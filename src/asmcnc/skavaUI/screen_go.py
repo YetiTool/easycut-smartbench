@@ -13,7 +13,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty  # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file, True, False
+
 from kivy.clock import Clock, mainthread
 from datetime import datetime
 import traceback

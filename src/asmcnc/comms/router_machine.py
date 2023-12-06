@@ -22,7 +22,7 @@ from datetime import datetime
 import os.path
 from os import path
 
-from __builtin__ import True
+
 
 from asmcnc.skavaUI import popup_info
 
