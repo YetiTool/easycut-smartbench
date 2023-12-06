@@ -25,6 +25,8 @@ from os import path
 
 from kivy.config import Config
 from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
 if sys.platform.startswith("linux"):
@@ -152,7 +154,7 @@ class SkavaUI(App):
     test_no = 0
 
     width = Window.width
-    height = Window.height
+    height = Window.height if Window.height == 480 else Window.height - 32
 
     def build(self):
 
@@ -304,6 +306,12 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+
         return sm
 
 if __name__ == '__main__':
