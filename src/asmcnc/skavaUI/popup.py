@@ -84,7 +84,7 @@ class PopupSystem(Popup):
         self.popup_image = popup_image
         self.button_one_text = self.l.get_str(button_one_text)
         self.button_one_callback = button_one_callback
-        self.button_two_text = self.l.get_str(button_two_text)
+        self.button_two_text = self.l.get_str(button_two_text) if button_two_text is not None else None
         self.button_two_callback = button_two_callback
 
         self.build()
