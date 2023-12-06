@@ -78,8 +78,8 @@ class PopupSystem(Popup):
 
         self.title = self.l.get_str(kwargs["title"])
         self.size_hint = (None, None)
-        self.width = dp(float(popup_width)/800.0)*Window.width
-        self.height = dp(float(popup_height)/480.0)*Window.height
+        self.width = utils.get_scaled_width(popup_width)
+        self.height = utils.get_scaled_height(popup_height)
 
         self.main_string = self.l.get_str(main_string)
         self.popup_type = popup_type
