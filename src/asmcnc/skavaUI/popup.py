@@ -30,13 +30,16 @@ class PopupSystem(Popup):
 
     # Default properties
     separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-    separator_height = 4
+    separator_height = '4dp'
 
     # You can override these properties in the constructor, pass them as kwargs
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
     title_color = ObjectProperty([0, 0, 0, 1])
     title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
+
+    button_one_background_normal = 'atlas://data/images/defaulttheme/button'
+    button_two_background_down = 'atlas://data/images/defaulttheme/button'
 
     """
     title: string to be used as the title
@@ -68,13 +71,17 @@ class PopupSystem(Popup):
 
     def __init__(self, main_string, popup_type,
                  popup_width=300, popup_height=350, popup_image=None,
-                 button_one_text="Ok", button_one_callback=None,
-                 button_two_text=None, button_two_callback=None,
+                 button_one_text="Ok", button_one_callback=None, button_one_background_color=None,
+                 button_two_text=None, button_two_callback=None, button_two_background_color=None,
                  **kwargs):
         super(PopupSystem, self).__init__(**kwargs)
 
         if button_one_callback is None:
             button_one_callback = self.dismiss
+        if button_one_background_color is not None:
+            self.button_one_background_normal = ""
+        if button_two_background_color is not None:
+            self.button_two_background_down = ""
 
         self.title = self.l.get_str(kwargs["title"])
         self.size_hint = (None, None)
@@ -82,7 +89,6 @@ class PopupSystem(Popup):
         self.height = dp(utils.get_scaled_height(popup_height))
         self.popup_width = popup_width
         self.popup_height = popup_height
-
         self.main_string = self.l.get_str(main_string)
         self.popup_type = popup_type
         self.popup_image = popup_image
@@ -120,14 +126,15 @@ class PopupSystem(Popup):
             button_layout.add_widget(button)
         return button_layout
 
-    def dismiss(self, callback, *largs, **kwargs):
-        super(PopupSystem, self).dismiss(*largs, **kwargs)
+    def on_button_pressed(self, callback):
+        self.dismiss()
         callback()
 
     def build_buttons(self):
-        buttons = [Button(text=self.button_one_text, callback=partial(self.dismiss, self.button_one_callback),
+        buttons = [Button(text=self.button_one_text, callback=lambda x: self.on_button_pressed(self.button_one_callback),
                           font_size=str(utils.get_scaled_width(14)) + "sp")]
         if self.button_two_text is not None:
-            buttons.append(Button(text=self.button_two_text, callback=partial(self.dismiss, self.button_two_callback),
+            buttons.append(Button(text=self.button_two_text,
+                                  callback=lambda x: self.on_button_pressed(self.button_two_callback),
                                   font_size=str(utils.get_scaled_width(14)) + "sp"))
         return buttons
