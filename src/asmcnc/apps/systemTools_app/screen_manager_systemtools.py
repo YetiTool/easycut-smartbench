@@ -61,7 +61,7 @@ class ScreenManagerSystemTools(object):
             else:
                 count +=1
                 Clock.schedule_once(lambda dt: get_logs(count), 0.2)
-                print count
+                print(count)
 
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)

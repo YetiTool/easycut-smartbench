@@ -17,7 +17,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
+
 from kivy.clock import Clock
 
 import sys, os

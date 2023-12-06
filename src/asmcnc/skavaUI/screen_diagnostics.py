@@ -12,7 +12,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file, True
+
 from kivy.clock import Clock, mainthread
 
 import os, sys

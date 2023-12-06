@@ -478,7 +478,7 @@ class ConfigFileChooser(Screen):
                 self.filechooser.selection = []
 
             except:
-                print "attempt to delete folder, or undeletable file"
+                print("attempt to delete folder, or undeletable file")
 
             self.refresh_filechooser()
 
@@ -494,7 +494,7 @@ class ConfigFileChooser(Screen):
                         self.refresh_filechooser()
 
                 except:
-                    print "attempt to delete folder, or undeletable file"
+                    print("attempt to delete folder, or undeletable file")
 
         self.filechooser.selection = []
         self.refresh_filechooser()

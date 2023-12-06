@@ -33,6 +33,7 @@ from asmcnc.apps.app_manager import AppManagerClass
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
+from asmcnc.keyboard.custom_keyboard import Keyboard
 from asmcnc.comms import usb_storage
 from asmcnc.comms import smartbench_flurry_database_connection
 
@@ -63,6 +64,7 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_db1 import ZHeadQCDB1
 from asmcnc.production.z_head_qc_jig.z_head_qc_db2 import ZHeadQCDB2
 from asmcnc.production.z_head_qc_jig.z_head_qc_db_success import ZHeadQCDBSuccess
 from asmcnc.production.z_head_qc_jig.z_head_qc_db_fail import ZHeadQCDBFail
+from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHeadMechanicsMonitor
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
@@ -85,6 +87,8 @@ class ZHeadQC(App):
 
         l = Localization()
 
+        kb = Keyboard(localization=l)
+
         jd = JobData(localization = l, settings_manager = sett)
 
         m = RouterMachine(Cmport, sm, sett, l, jd)
@@ -106,7 +110,7 @@ class ZHeadQC(App):
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(door_screen)
 
-        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
         sm.add_widget(home_screen)
 
         squaring_decision_screen = SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
@@ -177,6 +181,9 @@ class ZHeadQC(App):
 
         z_head_qc_db_fail = ZHeadQCDBFail(name='qcDB4', sm = sm, m = m)
         sm.add_widget(z_head_qc_db_fail)
+
+        z_head_mechanics_monitor = ZHeadMechanicsMonitor(name = 'monitor', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_mechanics_monitor)
 
         sm.current = 'qcconnecting'
         return sm
