@@ -1,21 +1,18 @@
-'''
+"""
 Created on 1 Feb 2018
 @author: Ed
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
 from asmcnc.skavaUI import widget_z_height
 from kivy.clock import Clock
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ZMove>
 
@@ -25,12 +22,12 @@ Builder.load_string("""
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding: 20
-        spacing: 10
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        spacing:0.0125*app.width
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             BoxLayout:
@@ -38,6 +35,7 @@ Builder.load_string("""
                 id: virtual_z_container
                 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -60,10 +58,11 @@ Builder.load_string("""
     
     
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -84,6 +83,7 @@ Builder.load_string("""
                         allow_stretch: True   
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -105,6 +105,7 @@ Builder.load_string("""
                         allow_stretch: True   
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -124,6 +125,7 @@ Builder.load_string("""
                         allow_stretch: True   
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -148,80 +150,83 @@ Builder.load_string("""
             x: 662
             y: 420
             size_hint: None, None            
-            height: 30
-            width: 30
+            height: dp(30.0/480.0)*app.height
+            width: 0.0375*app.width
             text: 'Z'
             markup: True
             bold: True
             color: 0,0,0,0.2
-            font_size: 20     
+            font_size: 0.025*app.width     
         
-""")
-    
+"""
+    )
+
 
 class ZMove(Widget):
 
     def __init__(self, **kwargs):
         super(ZMove, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.jd=kwargs['job']
-        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm, job=self.jd))
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
+        self.jd = kwargs['job']
+        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(
+            machine=self.m, screen_manager=self.sm, job=self.jd))
 
     def jog_z(self, case):
-
         self.m.set_led_colour('WHITE')
-
-        feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
-        
+        feed_speed = self.sm.get_screen('home'
+            ).common_move_widget.feedSpeedJogZ
         if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
-            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_min_jog_abs_limit,
-                                                             feed_speed)
-            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_max_jog_abs_limit,
-                                                             feed_speed)
-
+            if case == 'Z-':
+                self.m.jog_absolute_single_axis('Z', self.m.
+                    z_min_jog_abs_limit, feed_speed)
+            if case == 'Z+':
+                self.m.jog_absolute_single_axis('Z', self.m.
+                    z_max_jog_abs_limit, feed_speed)
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-01':
-            if case == 'Z+': self.m.jog_relative('Z', 0.01, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -0.01, feed_speed)
-        
+            if case == 'Z+':
+                self.m.jog_relative('Z', 0.01, feed_speed)
+            if case == 'Z-':
+                self.m.jog_relative('Z', -0.01, feed_speed)
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-1':
-            if case == 'Z+': self.m.jog_relative('Z', 0.1, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -0.1, feed_speed)
-        
+            if case == 'Z+':
+                self.m.jog_relative('Z', 0.1, feed_speed)
+            if case == 'Z-':
+                self.m.jog_relative('Z', -0.1, feed_speed)
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_1':
-            if case == 'Z+': self.m.jog_relative('Z', 1, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -1, feed_speed)
-        
+            if case == 'Z+':
+                self.m.jog_relative('Z', 1, feed_speed)
+            if case == 'Z-':
+                self.m.jog_relative('Z', -1, feed_speed)
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_10':
-            if case == 'Z+': self.m.jog_relative('Z', 10, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -10, feed_speed)
-        
+            if case == 'Z+':
+                self.m.jog_relative('Z', 10, feed_speed)
+            if case == 'Z-':
+                self.m.jog_relative('Z', -10, feed_speed)
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job':
-            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_min_jog_abs_limit,
-                                                             feed_speed)
-            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_max_jog_abs_limit,
-                                                             feed_speed)
+            if case == 'Z-':
+                self.m.jog_absolute_single_axis('Z', self.m.
+                    z_min_jog_abs_limit, feed_speed)
+            if case == 'Z+':
+                self.m.jog_absolute_single_axis('Z', self.m.
+                    z_max_jog_abs_limit, feed_speed)
 
     def quit_jog_z(self):
-        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free': self.m.quit_jog()
-        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job': self.m.quit_jog()
+        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
+            self.m.quit_jog()
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job':
+            self.m.quit_jog()
 
     def probe_z(self):
         self.m.probe_z()
         self.disable_z_datum_reminder()
-     
+
     def set_jobstart_z(self):
         self.m.set_jobstart_z()
         self.disable_z_datum_reminder()
-     
+
     def go_to_jobstart_z(self):
         self.m.go_to_jobstart_z()
 
     def disable_z_datum_reminder(self):
         self.sm.get_screen('home').has_datum_been_reset = True
-
-    
