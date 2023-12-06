@@ -37,7 +37,7 @@ class PopupSystem(Popup):
     auto_dismiss = ObjectProperty(False)
 
     """
-    title_string: string to be used as title
+    title: string to be used as title (pass the localized string)
     main_string: string to be used as main text
     popup_type: type of popup (enum) see PopupType class above
     popup_width: width of popup, default 300
@@ -64,7 +64,7 @@ class PopupSystem(Popup):
     This will dismiss the popup and call the callback function when the button is pressed.
     """
 
-    def __init__(self, title_string, main_string, popup_type,
+    def __init__(self, main_string, popup_type,
                  popup_width=300, popup_height=350, popup_image=None,
                  button_one_text="Ok", button_one_callback=None,
                  button_two_text=None, button_two_callback=None,
@@ -74,7 +74,6 @@ class PopupSystem(Popup):
         if button_one_callback is None:
             button_one_callback = self.dismiss
 
-        self.title = self.l.get_str(title_string)
         self.size_hint = (None, None)
         self.width = dp(float(popup_width)/800.0)*Window.width
         self.height = dp(float(popup_height)/480.0)*Window.height
