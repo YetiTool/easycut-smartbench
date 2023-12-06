@@ -168,7 +168,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class UploadSerialNumbersScreen(Screen):
@@ -351,7 +351,7 @@ class UploadSerialNumbersScreen(Screen):
                 report_info_back_to_user_and_return, 3)
         except:
             self.error_label.text = 'Could not get data'
-            print traceback.format_exc()
+            print(traceback.format_exc())
 
     def save_calibration_data_to_motor(self, motor_index, data):
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[

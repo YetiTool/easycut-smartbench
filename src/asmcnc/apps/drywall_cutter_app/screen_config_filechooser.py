@@ -473,7 +473,7 @@ class ConfigFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                print 'attempt to delete folder, or undeletable file'
+                print('attempt to delete folder, or undeletable file')
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -486,7 +486,7 @@ class ConfigFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    print 'attempt to delete folder, or undeletable file'
+                    print('attempt to delete folder, or undeletable file')
         self.filechooser.selection = []
         self.refresh_filechooser()
 

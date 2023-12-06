@@ -5,6 +5,8 @@ Created June 2022
 
 Stall detection experiment
 """
+import traceback
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -191,7 +193,7 @@ Builder.load_string(
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class StallJigScreen(Screen):
@@ -751,7 +753,7 @@ class StallJigScreen(Screen):
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 11)
         except:
             log('Could not insert final test stage into DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
         data_send_successful = self.calibration_db.send_data_through_publisher(
             self.sn_for_db, 9)
         cal_data_send_successful = (self.calibration_db.

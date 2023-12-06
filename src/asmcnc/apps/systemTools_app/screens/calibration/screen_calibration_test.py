@@ -927,7 +927,7 @@ MAX_Z_SPEED = 150.0
 
 def log(message):
     timestamp = datetime.now()
-    print timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message)
+    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class CalibrationTesting(Screen):
@@ -1505,7 +1505,7 @@ class CalibrationTesting(Screen):
                 self.sent_data_check.source = self.red_cross
         except:
             self.sent_data_check.source = self.red_cross
-            print traceback.format_exc()
+            print(traceback.format_exc())
         self.data_send_label.text = 'Sent data?'
         self.data_send_button.disabled = False
         log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1523,7 +1523,7 @@ class CalibrationTesting(Screen):
                 self.calibration_db.insert_final_test_statistics(*statistics)
                 return True
             except:
-                print traceback.format_exc()
+                print(traceback.format_exc())
                 return False
         finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1534,7 +1534,7 @@ class CalibrationTesting(Screen):
                 stage_id)
         except:
             log('Could not insert final test stage into DB!!')
-            print traceback.format_exc()
+            print(traceback.format_exc())
             message = (
                 'Issue contacting database - if you continue data send may fail!'
                 )

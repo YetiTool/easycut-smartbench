@@ -271,7 +271,7 @@ class UpdateTestingScreen(Screen):
 
     def add_to_user_friendly_buffer(self, message):
         self.output_view_buffer.append(str(message))
-        print message
+        print(message)
 
     def update_display_text(self, dt):
         self.output_view.text = '\n'.join(self.output_view_buffer)
@@ -284,14 +284,14 @@ class UpdateTestingScreen(Screen):
         elif input_repo == 'home':
             dir_path = home_dir
         full_cmd = cmd
-        print full_cmd
+        print(full_cmd)
         proc = subprocess.Popen(full_cmd, cwd=dir_path, stdout=subprocess.
             PIPE, stderr=subprocess.STDOUT, shell=True)
         stdout_buffer = []
         while True:
             line = proc.stdout.readline()
             stdout_buffer.append(line)
-            print line,
+            print(line),
             if line == '' and proc.poll() != None:
                 break
         stdout, stderr = proc.communicate()
@@ -350,10 +350,10 @@ class UpdateTestingScreen(Screen):
         if not self._do_platform_ansible_run()[0]:
             reset_outcome = self.run_in_shell(repo,
                 'git --no-pager reset --hard')
-            print 'Reset outcome'
-            print reset_outcome
+            print('Reset outcome')
+            print(reset_outcome)
             if self._do_platform_ansible_run():
-                print 'success!'
+                print('success!')
 
     def add_remotes(self):
         pass

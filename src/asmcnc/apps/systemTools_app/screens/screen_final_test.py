@@ -287,7 +287,7 @@ class FinalTestScreen(Screen):
         try:
             x_overstep = float(self.x_over_count.text
                 ) * self.x_calibration_scale_factor
-            print x_overstep
+            print(x_overstep)
             self.m.write_dollar_setting(100, float(self.m.s.setting_100) -
                 x_overstep, reset_grbl_after_stream=False)
             self.x_over_count.text = ''
@@ -298,7 +298,7 @@ class FinalTestScreen(Screen):
         try:
             y_overstep = float(self.y_over_count.text
                 ) * self.y_calibration_scale_factor
-            print y_overstep
+            print(y_overstep)
             self.m.write_dollar_setting(101, float(self.m.s.setting_101) -
                 y_overstep, reset_grbl_after_stream=False)
             self.y_over_count.text = ''
