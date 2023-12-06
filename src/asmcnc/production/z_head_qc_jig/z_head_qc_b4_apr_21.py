@@ -96,13 +96,22 @@ Builder.load_string("""
                     background_color: [1,0,0,1]
                     background_normal: ''
         # Row 2
-                Button:
-                    text: '  2. Bake GRBL Settings'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    on_press: root.bake_grbl_settings()
+                GridLayout:
+                    cols: 2
+                    Button:
+                        text: '  2. Bake GRBL Settings'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        on_press: root.bake_grbl_settings()
+                    Button: 
+                        text: '  2a. GRBL Monitor'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        on_press: root.open_monitor()
                 Button:
                     text: '  10. DISABLE ALARMS'
                     text_size: self.size
@@ -383,6 +392,10 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+    def open_monitor(self):
+        self.sm.get_screen('monitor').parent_screen = 'qcW112'
+        self.sm.current = "monitor"
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True

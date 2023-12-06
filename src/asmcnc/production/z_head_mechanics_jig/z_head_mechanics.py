@@ -395,6 +395,7 @@ class ZHeadMechanics(Screen):
 
 
     def go_to_monitor(self):
+        self.sm.get_screen('monitor').parent_screen = 'mechanics'
         self.sm.current = 'monitor'
 
     def go_to_manual_move(self):
