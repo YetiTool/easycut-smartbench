@@ -36,6 +36,7 @@ class PopupSystem(Popup):
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
     title_color = ObjectProperty([0, 0, 0, 1])
+    title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
 
     """
     title: string to be used as the title
@@ -93,7 +94,8 @@ class PopupSystem(Popup):
     def build(self):
         image = Image(source=self.popup_type.value or self.popup_image)
         main_label = Label(size_hint_y=1, text_size=(utils.get_scaled_width(360), None), halign="center",
-                           valign="middle", text=self.main_string, color=(0, 0, 0, 1), padding=(40, 20), markup=True)
+                           valign="middle", text=self.main_string, color=(0, 0, 0, 1), padding=(40, 20), markup=True,
+                           font_size=str(utils.get_scaled_width(14)) + "sp")
 
         button_layout = self.build_button_layout()
 
@@ -116,7 +118,9 @@ class PopupSystem(Popup):
         callback()
 
     def build_buttons(self):
-        buttons = [Button(text=self.button_one_text, callback=partial(self.dismiss, self.button_one_callback))]
+        buttons = [Button(text=self.button_one_text, callback=partial(self.dismiss, self.button_one_callback),
+                          font_size=str(utils.get_scaled_width(14)) + "sp")]
         if self.button_two_text is not None:
-            buttons.append(Button(text=self.button_two_text, callback=partial(self.dismiss, self.button_two_callback)))
+            buttons.append(Button(text=self.button_two_text, callback=partial(self.dismiss, self.button_two_callback),
+                                  font_size=str(utils.get_scaled_width(14)) + "sp"))
         return buttons
