@@ -35,9 +35,10 @@ class PopupSystem(Popup):
     # You can override these properties in the constructor, pass them as kwargs
     background = StringProperty('./asmcnc/apps/shapeCutter_app/img/popup_background.png')
     auto_dismiss = ObjectProperty(False)
+    title_color = ObjectProperty([0, 0, 0, 1])
 
     """
-    title: string to be used as title (pass the localized string)
+    title: string to be used as the title
     main_string: string to be used as main text
     popup_type: type of popup (enum) see PopupType class above
     popup_width: width of popup, default 300
@@ -74,6 +75,7 @@ class PopupSystem(Popup):
         if button_one_callback is None:
             button_one_callback = self.dismiss
 
+        self.title = self.l.get_str(kwargs["title"])
         self.size_hint = (None, None)
         self.width = dp(float(popup_width)/800.0)*Window.width
         self.height = dp(float(popup_height)/480.0)*Window.height
