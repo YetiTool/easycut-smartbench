@@ -12,7 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-from __builtin__ import False
+
 
 Builder.load_string("""
 

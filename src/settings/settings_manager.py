@@ -6,7 +6,7 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
-from __builtin__ import True, False
+
 from datetime import datetime
 from requests import get
 
