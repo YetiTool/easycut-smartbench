@@ -46,7 +46,6 @@ class PopupTempPowerDiagnosticsInfo(Widget):
         
         popup = Popup(title='Output',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -96,7 +95,6 @@ class PopupSpindleDiagnosticsInfo(Widget):
 
         popup = Popup(title='Output',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -136,7 +134,6 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
 
         popup = Popup(title=outcome,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

@@ -21,6 +21,8 @@ Builder.load_string("""
     y_set_threshold:y_set_threshold
     z_set_threshold:z_set_threshold
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -135,10 +137,22 @@ class SetThresholdsScreen(Screen):
         self.systemtools_sm = kwargs['systemtools']
         self.m = kwargs['m']
         self.l = kwargs['l']
+        self.kb = kwargs['keyboard']
+
+        self.text_inputs = [
+                            self.x_threshold_input,
+                            self.y_threshold_input,
+                            self.z_threshold_input
+                            ]
 
     def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         self.show_thresholds()
         self.update_set_thresholds()
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def show_thresholds(self):
         self.x_threshold_input.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)

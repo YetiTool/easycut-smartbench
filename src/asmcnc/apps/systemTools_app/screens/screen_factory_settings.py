@@ -49,6 +49,8 @@ Builder.load_string("""
     console_update_button: console_update_button
     sc2_compatability_toggle:sc2_compatability_toggle
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -546,6 +548,7 @@ class FactorySettingsScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
         self.usb_stick = kwargs['usb_stick']
 
         self.software_version_label.text = self.set.sw_version
@@ -585,6 +588,12 @@ class FactorySettingsScreen(Screen):
             self.sc2_compatability_toggle.state = 'down'
             self.sc2_compatability_toggle.text = 'Disable SC2 compatability'
 
+        self.text_inputs = [
+                            self.z_touch_plate_entry, 
+                            self.serial_prefix,
+                            self.serial_number_input,
+                            self.product_number_input,
+                            ]
 
     def connect_to_db_when_creds_loaded(self, dt):
 
@@ -621,6 +630,7 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
         self.get_smartbench_model()
+        self.kb.setup_text_inputs(self.text_inputs)
 
         csv_path = './asmcnc/production/database/csvs'
 
@@ -638,6 +648,10 @@ class FactorySettingsScreen(Screen):
                 self.setting_54_toggle.text = 'Set $54=1'
         else:
             self.setting_54_label.text = '$54 = N/A'
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def set_toggle_buttons(self):
 
@@ -781,6 +795,7 @@ class FactorySettingsScreen(Screen):
                 self.set_user_to_view_privacy_notice()
                 self.welcome_user_to_smartbench()
                 self.set_check_config_flag()
+                self.set_wifi_never_connected()
                 return True
             else:
                 return False
@@ -1054,11 +1069,19 @@ class FactorySettingsScreen(Screen):
 
     def set_check_config_flag(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
+
+    def set_wifi_never_connected(self):
+        wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
+
+        if not wifi_connected_before:
+            os.system("sudo sed -i -e '$awifi_connected_before=False' /home/pi/easycut-smartbench/src/config.txt")
+        elif 'True' in wifi_connected_before:
+            os.system('sudo sed -i "s/wifi_connected_before=True/wifi_connected_before=False/" config.txt')
             
     def enter_serial_number_screen(self):
         if self.calibration_db.conn != None:
             if not self.systemtools_sm.sm.has_screen('serial_input_screen'):
-                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l)
+                serial_input_screen = UploadSerialNumbersScreen(name='serial_input_screen', m = self.m, systemtools = self.systemtools_sm, calibration_db = self.calibration_db, settings = self.set, l = self.l, keyboard = self.kb)
                 self.systemtools_sm.sm.add_widget(serial_input_screen)
             
             self.systemtools_sm.sm.current = 'serial_input_screen'
@@ -1095,7 +1118,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_current_adjustment(self):
         if not self.systemtools_sm.sm.has_screen('current_adjustment'):
-            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l)
+            current_adjustment = CurrentAdjustment(name='current_adjustment', m = self.m, systemtools = self.systemtools_sm, l = self.l, keyboard = self.kb)
             self.systemtools_sm.sm.add_widget(current_adjustment)
         
         self.systemtools_sm.sm.current = 'current_adjustment'
@@ -1117,7 +1140,7 @@ class FactorySettingsScreen(Screen):
 
     def enter_set_thresholds(self):
         if not self.systemtools_sm.sm.has_screen('set_thresholds'):
-            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l)
+            set_thresholds_screen = screen_set_thresholds.SetThresholdsScreen(name='set_thresholds', systemtools = self.systemtools_sm, m = self.m, l = self.l, keyboard = self.kb)
             self.systemtools_sm.sm.add_widget(set_thresholds_screen)
         
         self.systemtools_sm.sm.current = 'set_thresholds'

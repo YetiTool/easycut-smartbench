@@ -20,6 +20,8 @@ Builder.load_string("""
     qr_image:qr_image
 
     exit_button:exit_button
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         orientation: 'vertical'
@@ -163,12 +165,23 @@ class UpgradeScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.upgrade_code_input]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         # Reset app
         self.update_strings()
         self.hide_error_message()
         self.m.write_dollar_setting(51, 1)
+
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

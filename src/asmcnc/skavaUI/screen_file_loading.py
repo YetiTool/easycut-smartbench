@@ -363,7 +363,7 @@ class LoadingScreen(Screen):
                                     if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
                                         self.sm.get_screen('check_job').as_high_as = float(feed_rate)
 
-                            except: print 'Failed to extract feed rate. Probable G-code error!'
+                            except: print('Failed to extract feed rate. Probable G-code error!')
 
                         # strip line numbers
                         if "N" in l_block:

@@ -117,7 +117,7 @@ Builder.load_string("""
                         font_size: dp(24)
                         halign: "left"
                         valign: "middle"
-                        bold: True
+                        markup: True
                         text_size: self.size
 
                     BoxLayout:
@@ -251,11 +251,11 @@ Builder.load_string("""
                         Label:
                             id: get_data_label
                             color: 0,0,0,1
-                            font_size: dp(30)
+                            font_size: dp(29)
                             halign: "center"
                             valign: "middle"
                             text_size: self.size
-                            bold: True
+                            markup: True
 
                         BoxLayout:
                             size_hint_x: 0.5
@@ -437,8 +437,8 @@ class SpindleSettingsWidget(Widget):
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")
         self.seconds_label.text = self.l.get_str("seconds")
-        self.cooldown_settings_label.text = self.l.get_str("SPINDLE COOLDOWN SETTINGS")
-        self.get_data_label.text = self.l.get_str("Get data")
+        self.cooldown_settings_label.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
+        self.get_data_label.text = self.l.get_bold("Get data")
         self.min_speed_label.text = "10000 " + self.l.get_str("RPM")
         self.max_speed_label.text = "20000 " + self.l.get_str("RPM")
         self.min_time_label.text = "1 " + self.l.get_str("seconds")
@@ -447,7 +447,9 @@ class SpindleSettingsWidget(Widget):
         self.update_font_size(self.cooldown_settings_label)
 
     def update_font_size(self, value):
-        if len(value.text) > 40:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 33:
             value.font_size = 22
         else: 
             value.font_size = 24

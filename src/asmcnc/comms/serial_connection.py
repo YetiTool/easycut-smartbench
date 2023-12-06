@@ -184,7 +184,7 @@ class SerialConnection(object):
                 for comport in port_list:
 
                     print("Windows port to try: ")
-                    print comport
+                    print(comport)
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
@@ -200,7 +200,7 @@ class SerialConnection(object):
                 if line.startswith('tty.usbmodem'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
-                    print line
+                    print(line)
 
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
@@ -908,7 +908,7 @@ class SerialConnection(object):
 
     def process_grbl_push(self, message):
 
-        if self.VERBOSE_ALL_PUSH_MESSAGES: print message
+        if self.VERBOSE_ALL_PUSH_MESSAGES: print(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
@@ -1772,7 +1772,7 @@ class SerialConnection(object):
         if reset_grbl_after_cancel or self._reset_grbl_after_stream:
             self._reset_grbl_after_stream = False
             self.m._grbl_soft_reset()
-            print "GRBL Reset after sequential stream cancelled"
+            print("GRBL Reset after sequential stream cancelled")
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):

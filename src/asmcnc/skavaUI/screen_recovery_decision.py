@@ -35,7 +35,7 @@ Builder.load_string("""
                 on_press: root.back_to_home()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                         center_x: self.parent.center_x
@@ -192,7 +192,9 @@ class RecoveryDecisionScreen(Screen):
         self.recover_job_button.text = self.l.get_str('Recover job')
 
     def update_font_size(self, value):
-        if len(value.text) > 50:
+        text_length = self.l.get_text_length(value.text)
+
+        if text_length > 50:
             value.font_size = 28
         else: 
             value.font_size = 30

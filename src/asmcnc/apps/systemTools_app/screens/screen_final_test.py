@@ -31,6 +31,8 @@ Builder.load_string("""
     x_pos_label : x_pos_label
     x_neg_label : x_neg_label
 
+    on_touch_down: root.on_touch()
+
     BoxLayout:
         padding: 0
         spacing: 0
@@ -196,18 +198,26 @@ class FinalTestScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # WIDGET SETUP
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm.sm, localization=self.l))
         self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
+        self.text_inputs = [self.y_over_count, self.x_over_count]
+
     def on_enter(self):
         self.m.send_any_gcode_command("AZ")
         self.m.set_led_colour('BLUE')
+        self.kb.setup_text_inputs(self.text_inputs)
 
     def on_leave(self):
         self.m.send_any_gcode_command("AX")
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
