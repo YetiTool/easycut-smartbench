@@ -68,7 +68,7 @@ class CalibrationDatabase(object):
             from asmcnc.production.database import credentials
 
         except ImportError:
-            if sys.platform != 'win32':
+            if sys.platform != 'win32' and sys.platform != 'darwin':
                 log("Can't import credentials (trying to get local folder creds)")
                 import credentials
 
