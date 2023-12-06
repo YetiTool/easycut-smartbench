@@ -78,8 +78,10 @@ class PopupSystem(Popup):
 
         self.title = self.l.get_str(kwargs["title"])
         self.size_hint = (None, None)
-        self.width = utils.get_scaled_width(popup_width)
-        self.height = utils.get_scaled_height(popup_height)
+        self.width = dp(utils.get_scaled_width(popup_width))
+        self.height = dp(utils.get_scaled_height(popup_height))
+        self.popup_width = popup_width
+        self.popup_height = popup_height
 
         self.main_string = self.l.get_str(main_string)
         self.popup_type = popup_type
@@ -93,13 +95,15 @@ class PopupSystem(Popup):
 
     def build(self):
         image = Image(source=self.popup_type.value or self.popup_image)
-        main_label = Label(size_hint_y=1, text_size=(utils.get_scaled_width(360), None), halign="center",
-                           valign="middle", text=self.main_string, color=(0, 0, 0, 1), padding=(40, 20), markup=True,
-                           font_size=str(utils.get_scaled_width(14)) + "sp")
+        main_label = Label(size_hint_y=1, text_size=(dp(utils.get_scaled_width(self.popup_width - 30)), None),
+                           halign="center", valign="middle", text=self.main_string, color=(0, 0, 0, 1),
+                           padding=(40, 20), markup=True, font_size=str(utils.get_scaled_width(14)) + "sp")
 
         button_layout = self.build_button_layout()
 
-        main_layout = BoxLayout(orientation="vertical", spacing=10, padding=(40, 20))
+        main_layout = BoxLayout(orientation="vertical",
+                                spacing=(utils.get_scaled_width(10), utils.get_scaled_height(10)),
+                                padding=(utils.get_scaled_width(40), utils.get_scaled_height(20)))
 
         main_layout.add_widget(image)
         main_layout.add_widget(main_label)
@@ -108,7 +112,10 @@ class PopupSystem(Popup):
         self.content = main_layout
 
     def build_button_layout(self):
-        button_layout = BoxLayout(orientation="horizontal", spacing=10, padding=0)
+        button_layout = BoxLayout(orientation="horizontal",
+                                  spacing=(utils.get_scaled_width(10), utils.get_scaled_height(10)),
+                                  padding=0)
+
         for button in self.build_buttons():
             button_layout.add_widget(button)
         return button_layout
