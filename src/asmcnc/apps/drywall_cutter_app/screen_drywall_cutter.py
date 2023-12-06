@@ -250,7 +250,7 @@ class DrywallCutterScreen(Screen):
         else:
             self.rotate_button.disabled = True
 
-        self.rotation = 'horizontal'
+        self.rotation = self.dwt_config.active_config.rotation
         self.drywall_shape_display_widget.select_shape(shape, self.rotation)
         self.select_toolpath(new_toolpath)
 
