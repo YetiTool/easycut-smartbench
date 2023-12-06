@@ -3,15 +3,15 @@
 
 Popup system for easycut-smartbench
 """
+from enum import Enum
 from kivy.core.window import Window
 from kivy.metrics import dp
-from kivy.properties import ObjectProperty, StringProperty, ListProperty, partial
+from kivy.properties import ObjectProperty, StringProperty, partial
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from enum import Enum
 
 from asmcnc.skavaUI import utils
 
