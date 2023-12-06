@@ -131,10 +131,11 @@ class PopupSystem(Popup):
         callback()
 
     def build_buttons(self):
-        buttons = [Button(text=self.button_one_text, callback=lambda x: self.on_button_pressed(self.button_one_callback),
+        buttons = [Button(text=self.button_one_text,
+                          on_release=lambda x: self.on_button_pressed(self.button_one_callback),
                           font_size=str(utils.get_scaled_width(14)) + "sp")]
         if self.button_two_text is not None:
             buttons.append(Button(text=self.button_two_text,
-                                  callback=lambda x: self.on_button_pressed(self.button_two_callback),
+                                  on_release=lambda x: self.on_button_pressed(self.button_two_callback),
                                   font_size=str(utils.get_scaled_width(14)) + "sp"))
         return buttons
