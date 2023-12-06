@@ -311,6 +311,7 @@ class SkavaUI(App):
             sm.size_hint = (None, None)
             sm.size = (self.width, self.height)
             root.add_widget(sm)
+            return root
 
         return sm
 
