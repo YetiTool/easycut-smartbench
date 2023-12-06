@@ -103,7 +103,8 @@ class PopupSystem(Popup):
         image = Image(source=self.popup_type.value or self.popup_image)
         main_label = Label(size_hint_y=1, text_size=(dp(utils.get_scaled_width(self.popup_width - 30)), None),
                            halign="center", valign="middle", text=self.main_string, color=(0, 0, 0, 1),
-                           padding=(40, 20), markup=True, font_size=str(utils.get_scaled_width(14)) + "sp")
+                           padding=(utils.get_scaled_width(40), utils.get_scaled_height(20)),
+                           markup=True, font_size=str(utils.get_scaled_width(14)) + "sp")
 
         button_layout = self.build_button_layout()
 
