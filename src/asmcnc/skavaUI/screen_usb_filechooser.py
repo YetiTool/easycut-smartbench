@@ -301,7 +301,7 @@ class USBFileChooser(Screen):
 
         self.usb_path = usb_path
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+        if verbose: print('Filechooser_usb path: ' + self.filechooser_usb.path)
 
     def on_enter(self):
 
@@ -380,7 +380,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing filechooser'
+        if verbose: print('Refreshing filechooser')
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 self.display_selected_file()
@@ -459,7 +459,7 @@ class USBFileChooser(Screen):
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination          
             file_name = os.path.basename(file_selection)
             new_file_path = job_cache_dir + file_name
-            print new_file_path
+            print(new_file_path)
             
             self.go_to_loading_screen(new_file_path)
         

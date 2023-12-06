@@ -415,7 +415,7 @@ class Settings(object):
 ## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
-        print "pigpio daemon started"
+        print("pigpio daemon started")
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):
