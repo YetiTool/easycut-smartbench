@@ -116,6 +116,6 @@ class PopupSystem(Popup):
 
     def build_buttons(self):
         buttons = [Button(text=self.button_one_text, callback=partial(self.dismiss, self.button_one_callback))]
-        if self.button_two_text:
+        if self.button_two_text is not None:
             buttons.append(Button(text=self.button_two_text, callback=partial(self.dismiss, self.button_two_callback)))
         return buttons
