@@ -464,7 +464,7 @@ class DrywallShapeDisplay(Widget):
         if not self.swapping_lengths:
             if self.rotation_required():
                 self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-            if self.rectangle_with_equal_sides():
+            if self.rectangle_with_equal_sides() and False: # DISABLE
                 toolpath = self.dwt_config.active_config.toolpath_offset
                 self.sm.get_screen('drywall_cutter').select_shape('square')
                 self.sm.get_screen('drywall_cutter').select_toolpath(toolpath)
