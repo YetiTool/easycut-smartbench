@@ -533,11 +533,11 @@ class LobbyScreen(Screen):
 
     def help_popup(self):
         # popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
-        popup.PopupSystem(sm=self.sm, m=self.m, l=self.l,
-                          title_string='Welcome to SmartBench',
-                          main_string=self.welcome_popup_description,
-                          popup_type=popup.PopupType.INFO,
-                          buttons={})
+        welcome_popup = popup.PopupSystem(sm=self.sm, m=self.m, l=self.l,
+                                          title_string='Welcome to SmartBench',
+                                          main_string=self.welcome_popup_description,
+                                          popup_type=popup.PopupType.INFO)
+        welcome_popup.open()
 
     def pro_app(self):
         self.am.start_pro_app()
